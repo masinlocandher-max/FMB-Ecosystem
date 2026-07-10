@@ -27,14 +27,22 @@ jobs:
       - name: Prepare website
         shell: bash
         run: |
+          set -euo pipefail
           rm -rf _site _overlay
           mkdir -p _site _overlay
+
           unzip -q with-love-fmb-apple.zip -d _site
-          tar -xzf site-overlay.tar.gz -C _overlay
+          cat build/overlay.part-* | base64 --decode > /tmp/site-overlay-v2.tar.gz
+          tar -xzf /tmp/site-overlay-v2.tar.gz -C _overlay
           cp -R _overlay/site/. _site/
+
           rm -rf '_site/assets/{images,video,css,js}' || true
           find _site -name '.DS_Store' -delete
           touch _site/.nojekyll
+
+          test -f _site/index.html
+          test -f _site/assets/data/source-library.json
+          test -f _site/assets/images/cognita-official-logo.svg
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
