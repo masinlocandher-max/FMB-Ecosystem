@@ -2,61 +2,102 @@
 
 Official personal website and editorial home of **Francine Marie Bautista**.
 
+- Planned domain: `www.francinemariebautista.com`
+- Contact email: `Withlovefmb@gmail.com`
+- Location: Masinloc, Zambales, Philippines
+- Instagram: `@bb.fmb`
+- Main company: [SENZ Strategic Communications](https://senzpr.com/)
+- Education platform: Cognita Institute of AI
+
+## Website architecture
+
+### Public access
+
+Visitors can see the complete website structure, topic descriptions, reading previews, project introductions, journal previews, ebook listings, contact information, and emergency mental-health contacts.
+
+Emergency information must never be hidden behind membership, payment, login, or Herra access.
+
+### Free membership
+
+Free membership is the access gate for:
+
+- continuing full Source of Truth readings
+- opening complete journal and blog entries
+- accessing free ebooks
+- purchasing paid ebooks
+- sending an authenticated message after email verification
+
+The interface is implemented, but real account creation and email verification require a secure backend and email provider.
+
+### Herra paid access
+
+Herra is a separately paid AI companion service. A free website membership does not automatically include Herra.
+
+Herra must never present herself as a doctor, therapist, emergency service, or substitute for professional care. Crisis screens must direct people to real emergency and crisis services before offering Herra.
+
+Real Herra access still requires authentication, billing, subscription entitlements, model hosting, safety monitoring, logging rules, privacy controls, and cancellation/refund handling.
+
+## Source of Truth
+
+The searchable library includes structured previews and full source data for:
+
+1. Women's Health
+2. Transgender Health
+3. Bahaghari: LGBTQIA+ identity, respect, stereotypes, allyship, and coming out at one's own pace
+4. Mental Health
+
+Full structured reading records are stored in the deployed website at:
+
+`assets/data/source-library.json`
+
+Health content is educational and source-led. It is not individualized diagnosis or treatment.
+
+## Project identities
+
+- SENZ uses its official identity and links to `https://senzpr.com/`.
+- Cognita uses the official wordmark system derived from the Cognita source repository.
+- Cogniya is not part of this website architecture.
+
+## Contact and messaging
+
+The contact interface collects:
+
+- full name
+- email address
+- role or organization
+- message type
+- subject
+- message
+- consent acknowledgment
+
+Sending is designed to require free membership and verified email first. The present static deployment does not yet create accounts, issue verification links, save messages, or send email.
+
 ## Repository structure
 
-- `with-love-fmb-apple.zip` contains the original visual assets, portraits, logo files, and opening video.
-- `site-overlay.tar.gz` contains the corrected HTML, CSS, JavaScript, privacy page, 404 page, and robots file.
-- `.github/workflows/pages.yml` builds and deploys the finished website to GitHub Pages.
-- `DOMAIN_SETUP.md` contains the verified custom-domain steps.
+- `with-love-fmb-apple.zip`: original visual assets, portraits, logo files, and opening video
+- `build/overlay.part-*`: base64 parts of the corrected website overlay
+- `.github/workflows/pages.yml`: reconstructs the overlay and deploys the finished site
+- `DOMAIN_SETUP.md`: GitHub Pages and DNS guide
 
-The deploy workflow extracts the original archive, overlays the corrected files, removes the accidental brace-named folder, and publishes the finished `_site` artifact.
+The deployment workflow verifies that the homepage, Source of Truth data, and Cognita identity asset exist before publishing.
 
-## Fixes applied
-
-- Expanded About Me section and positioning
-- Added SENZ, MABAYANI, Cognita, and Cogniya context
-- Replaced fake email verification with honest private reflection mode
-- Made clear that the contact form is not connected yet
-- Made Sinag transparent as a scripted companion
-- Added crisis-language safety handoff
-- Added privacy page, 404 page, robots file, skip link, accessibility improvements, image dimensions, and resilient JavaScript guards
-- Added GitHub Pages deployment workflow
-
-## Important launch status
-
-The site is safe to preview publicly, but these features remain intentionally limited until real services are connected:
-
-- The contact form validates only; it does not send or store messages.
-- Unspoken Thoughts stays in the visitor's browser and clears locally.
-- Sinag is scripted; it is not a human, therapist, or connected AI service.
-- Journal entries and bookshelf titles are still placeholders.
-- Final project URLs and official social links still need to be added.
-
-## Turn on GitHub Pages
+## GitHub Pages
 
 1. Open **Settings > Pages**.
-2. Under **Build and deployment**, select **GitHub Actions**.
-3. Open **Actions** and run **Deploy With love, FMB**, or push a new commit to `main`.
-4. Test the deployment URL on desktop and mobile.
+2. Choose **GitHub Actions** as the source.
+3. Enter `www.francinemariebautista.com` under **Custom domain** after the domain is active.
+4. Configure the DNS records in `DOMAIN_SETUP.md`.
+5. Enable **Enforce HTTPS** when GitHub makes it available.
 
-## Services still needed
+## Backend still required
 
-### Contact
+Before the site can honestly provide full production membership and commerce, connect:
 
-Connect a dedicated public business email, a hosted form endpoint, or a serverless function connected to an email provider.
-
-### Unspoken Thoughts community mode
-
-A public submission system needs secure storage, authentication or email verification, explicit consent, moderation, abuse prevention, rate limiting, reporting, and deletion rules.
-
-### Content
-
-Still needed before the full public launch:
-
-- Exact custom domain
-- Public business email
-- Official social links
-- Final journal articles
-- Real bookshelf titles and notes
-- Live links for SENZ, MABAYANI, Cognita, and Cogniya
-- Updated privacy notice after forms, analytics, email, or database services are connected
+- authentication and member database
+- transactional email verification
+- secure contact-message storage and delivery
+- ebook storage, ownership records, and protected delivery
+- payment provider and webhook verification
+- Herra subscription entitlements and AI service
+- moderation, abuse prevention, rate limiting, audit logs, and deletion workflows
+- final privacy, terms, refund, and cancellation policies
