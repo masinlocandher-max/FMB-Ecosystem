@@ -38,6 +38,9 @@ jobs:
           cp -R _overlay/site/. _site/
           cp CNAME _site/CNAME
 
+          find _site -type f \( -name '*.html' -o -name '*.js' -o -name '*.json' -o -name '*.md' \) -print0 \
+            | xargs -0 sed -i 's/Sinag/Herra/g; s/sinag/herra/g'
+
           rm -rf '_site/assets/{images,video,css,js}' || true
           find _site -name '.DS_Store' -delete
           touch _site/.nojekyll
@@ -62,6 +65,7 @@ jobs:
           grep -q 'journal_entries' _site/supabase/schema.sql
           grep -q 'security_events' _site/supabase/schema.sql
           grep -q 'privacy_requests' _site/supabase/schema.sql
+          ! grep -Rni --include='*.html' --include='*.js' --include='*.json' --include='*.md' 'Sinag' _site
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
