@@ -1,6 +1,8 @@
 name: Deploy With love, FMB
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -22,7 +24,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Prepare website
+      - name: Prepare and verify website
         shell: bash
         run: |
           set -euo pipefail
@@ -30,8 +32,9 @@ jobs:
           mkdir -p _site _overlay
 
           unzip -q with-love-fmb-apple.zip -d _site
-          cat build/overlay.part-* | base64 --decode > /tmp/site-overlay-v2.tar.gz
-          tar -xzf /tmp/site-overlay-v2.tar.gz -C _overlay
+          cat build/v4/overlay.part-* | base64 --decode > /tmp/fmb-member-overlay.tar.gz
+          echo "10d1a44f99fb7e424082a68f135d06122c1e9babf4d4d86849ded49e4d57c81c  /tmp/fmb-member-overlay.tar.gz" | sha256sum -c -
+          tar -xzf /tmp/fmb-member-overlay.tar.gz -C _overlay
           cp -R _overlay/site/. _site/
 
           rm -rf '_site/assets/{images,video,css,js}' || true
@@ -39,8 +42,23 @@ jobs:
           touch _site/.nojekyll
 
           test -f _site/index.html
+          test -f _site/assets/js/app.js
+          test -f _site/assets/js/config.example.js
           test -f _site/assets/data/source-library.json
+          test -f _site/assets/data/journal-library.json
+          test -f _site/privacy.html
+          test -f _site/membership-agreement.html
+          test -f _site/community-guidelines.html
+          test -f _site/data-rights.html
+          test -f _site/supabase/schema.sql
+          test -f _site/supabase/functions/member-write/index.ts
           test -f _site/assets/images/cognita-official-logo.svg
+
+          grep -q 'SUPABASE_URL' _site/assets/js/config.js
+          grep -q 'freedom_wall_posts' _site/supabase/schema.sql
+          grep -q 'journal_entries' _site/supabase/schema.sql
+          grep -q 'security_events' _site/supabase/schema.sql
+          grep -q 'privacy_requests' _site/supabase/schema.sql
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
