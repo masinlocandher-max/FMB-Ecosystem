@@ -22,12 +22,16 @@ Then open `http://localhost:8000`.
 
 ## Custom domain
 
-1. Add the exact domain to a root-level file named `CNAME`.
-2. In **GitHub > Repository Settings > Pages**, choose **GitHub Actions** as the source.
-3. At the domain registrar, point the domain to GitHub Pages using the DNS records shown in GitHub's custom-domain instructions.
-4. Enable **Enforce HTTPS** after DNS propagation.
+This repository deploys through a custom GitHub Actions workflow, so a repository `CNAME` file is not required.
 
-Do not add a `CNAME` file until the final domain spelling is confirmed.
+1. In **Repository Settings > Pages**, select **GitHub Actions** as the publishing source.
+2. In the same Pages screen, enter the exact custom domain and save it.
+3. At the domain registrar, add the appropriate GitHub Pages DNS records.
+4. Add both the apex domain and `www` version when possible so GitHub can redirect between them.
+5. Enable **Enforce HTTPS** after DNS propagation and certificate issuance.
+6. Verify the domain through GitHub for stronger takeover protection.
+
+See `DOMAIN_SETUP.md` for the current DNS values and step-by-step instructions.
 
 ## Replace the temporary portrait
 
@@ -46,7 +50,9 @@ Recommended export:
 - Add the final logo files
 - Add the final portrait and project images
 - Confirm the public contact email and social links
-- Add privacy policy if forms, analytics, or mailing-list tools are introduced
+- Replace the SVG social preview with a 1200 x 630 PNG or WebP image
+- Add a canonical URL and sitemap after the domain is connected
+- Add a privacy policy if forms, analytics, or mailing-list tools are introduced
 - Connect analytics only after a consent/privacy decision
 
 ## Deployment
