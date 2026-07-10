@@ -42,7 +42,8 @@ jobs:
           test -f _site/assets/senz.svg
           test -f _site/assets/cognita.svg
           test -f _site/assets/mabayani.svg
-          grep -q 'A place to feel seen' _site/index.html
+          grep -q 'Built to be felt. Made to matter.' _site/index.html
+          grep -q 'Need a hand?' _site/index.html
           grep -q 'Privacy and care' _site/privacy-policy.html
 
       - name: Publish directly to gh-pages
