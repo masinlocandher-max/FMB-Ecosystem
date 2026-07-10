@@ -2,308 +2,43 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>With love, FMB | Francine Marie Bautista</title>
-<meta name="description" content="The official website of Francine Marie Bautista, creative director, strategist, storyteller, educator, and founder.">
+<meta name="description" content="The official creative home of Francine Marie Bautista.">
 <link rel="canonical" href="https://www.francinemariebautista.com/">
 <style>
-:root {
-  --ink:#21142f;
-  --muted:#6f6579;
-  --purple:#5b1a8f;
-  --purple2:#8b3ed0;
-  --gold:#c89522;
-  --bg:#fbf9fe;
-  --card:rgba(255,255,255,.78);
-  --line:rgba(55,30,76,.10);
-  --shadow:0 24px 80px rgba(62,29,88,.12);
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;
-  color:var(--ink);
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
-  background:
-    radial-gradient(circle at 8% 0%,rgba(196,145,255,.22),transparent 28%),
-    radial-gradient(circle at 100% 18%,rgba(244,210,255,.38),transparent 30%),
-    linear-gradient(180deg,#fff 0%,#fbf8ff 52%,#f7f2fb 100%);
-  min-height:100vh;
-}
-body.modal-open{overflow:hidden}
-a{color:inherit;text-decoration:none}
-button{font:inherit}
-img{display:block;max-width:100%;height:auto}
-.wrap{width:min(1160px,calc(100% - 32px));margin:auto}
-.nav{
-  position:sticky;top:14px;z-index:20;
-  margin-top:14px;padding:10px 12px 10px 16px;
-  display:flex;align-items:center;justify-content:space-between;gap:16px;
-  background:rgba(255,255,255,.72);backdrop-filter:blur(24px) saturate(150%);
-  border:1px solid var(--line);border-radius:24px;box-shadow:0 10px 40px rgba(42,20,56,.08)
-}
-.brand{display:flex;align-items:center;gap:10px;min-width:0}
-.brand img{width:190px;max-height:52px;object-fit:contain}
-.navlinks{display:flex;gap:8px;align-items:center}
-.navlinks a,.navlinks button{border:0;background:transparent;padding:11px 14px;border-radius:16px;cursor:pointer;color:var(--muted)}
-.navlinks a:hover,.navlinks button:hover{background:#f5eefb;color:var(--ink)}
-.pill{background:var(--ink)!important;color:#fff!important;padding:12px 18px!important}
-.hero{min-height:82vh;display:grid;grid-template-columns:1.06fr .94fr;gap:56px;align-items:center;padding:72px 0 54px}
-.eyebrow{letter-spacing:.16em;text-transform:uppercase;font-size:.78rem;color:var(--purple);font-weight:700}
-h1{font-size:clamp(3.4rem,8vw,7.4rem);line-height:.9;letter-spacing:-.065em;margin:18px 0 22px;max-width:820px}
-.lede{font-size:clamp(1.08rem,2vw,1.35rem);line-height:1.65;color:var(--muted);max-width:650px}
-.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
-.btn{border:1px solid var(--line);background:rgba(255,255,255,.74);padding:15px 21px;border-radius:18px;cursor:pointer;box-shadow:0 8px 24px rgba(52,23,75,.06)}
-.btn.primary{background:linear-gradient(135deg,var(--purple),#7e2cbc);color:#fff;border-color:transparent}
-.hero-art{position:relative;min-height:520px;display:grid;place-items:center}
-.hero-art:before{content:"";position:absolute;width:82%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(154,72,206,.26),rgba(255,255,255,0) 66%);filter:blur(8px)}
-.hero-art img{position:relative;width:min(520px,92%);object-fit:contain;filter:drop-shadow(0 34px 50px rgba(84,29,122,.17))}
-.section{padding:80px 0}
-.section-head{display:flex;justify-content:space-between;gap:24px;align-items:end;margin-bottom:28px}
-.section-head h2{font-size:clamp(2.2rem,5vw,4.2rem);letter-spacing:-.045em;margin:0}
-.section-head p{max-width:520px;color:var(--muted);line-height:1.65;margin:0}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.card{padding:28px;border:1px solid var(--line);border-radius:30px;background:var(--card);backdrop-filter:blur(20px);box-shadow:0 18px 50px rgba(55,25,74,.07)}
-.card .num{width:38px;height:38px;display:grid;place-items:center;border-radius:50%;background:#f2e8fa;color:var(--purple);font-weight:700}
-.card h3{font-size:1.45rem;margin:26px 0 10px}
-.card p{color:var(--muted);line-height:1.65;margin:0}
-.card button{margin-top:24px;border:0;background:transparent;padding:0;color:var(--purple);font-weight:700;cursor:pointer}
-.comfort{padding:70px 34px;text-align:center;border-radius:38px;background:linear-gradient(135deg,rgba(83,21,132,.96),rgba(139,56,194,.92));color:#fff;box-shadow:var(--shadow)}
-.comfort p{font-size:clamp(1.8rem,4.5vw,4rem);line-height:1.12;letter-spacing:-.04em;max-width:900px;margin:0 auto}
-.founder{display:grid;grid-template-columns:.85fr 1.15fr;gap:52px;align-items:center}
-.photo-shell{padding:12px;border-radius:36px;background:rgba(255,255,255,.76);border:1px solid var(--line);box-shadow:var(--shadow)}
-.founder-photo{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center top;border-radius:26px}
-.founder h2{font-size:clamp(2.7rem,5vw,5rem);letter-spacing:-.055em;line-height:.95;margin:12px 0 22px}
-.founder p{color:var(--muted);font-size:1.12rem;line-height:1.75}
-.roles{display:flex;flex-wrap:wrap;gap:9px;margin:24px 0}
-.role{padding:10px 13px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.72);font-size:.9rem}
-.join{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:stretch}
-.join-card{padding:38px;border-radius:34px;border:1px solid var(--line);background:rgba(255,255,255,.76);box-shadow:0 16px 46px rgba(50,24,68,.07)}
-.join-card h2{font-size:clamp(2rem,4vw,3.4rem);margin:0 0 14px;letter-spacing:-.04em}
-.join-card p{color:var(--muted);line-height:1.7}
-.join-note{display:grid;place-items:center;text-align:center;background:#21142f;color:#fff}
-footer{padding:56px 0 44px;color:var(--muted)}
-.footer-inner{display:flex;justify-content:space-between;gap:28px;align-items:center;border-top:1px solid var(--line);padding-top:28px}
-.footer-inner img{width:170px;object-fit:contain}
-.loader{
-  position:fixed;inset:0;z-index:999;display:grid;place-items:center;
-  background:radial-gradient(circle at center,#fff 0%,#f7edff 55%,#efe0fa 100%);
-  transition:opacity .7s ease,visibility .7s ease
-}
-.loader.hide{opacity:0;visibility:hidden}
-.loader-box{text-align:center;padding:28px}
-.loader-logo{width:150px;margin:0 auto 24px;animation:breathe 1.7s ease-in-out infinite;object-fit:contain}
-.loader p{margin:0;color:#5f4b6b;font-size:1.06rem}
-@keyframes breathe{50%{transform:translateY(-5px) scale(1.025);filter:drop-shadow(0 12px 24px rgba(111,38,163,.22))}}
-.modal{position:fixed;inset:0;z-index:100;display:none;place-items:center;padding:18px;background:rgba(26,15,35,.28);backdrop-filter:blur(12px)}
-.modal.open{display:grid}
-.dialog{width:min(680px,100%);max-height:min(82vh,780px);overflow:auto;background:rgba(255,255,255,.93);border:1px solid rgba(255,255,255,.8);border-radius:30px;box-shadow:0 30px 90px rgba(26,12,37,.26);padding:28px}
-.dialog-top{display:flex;justify-content:space-between;gap:20px;align-items:center}
-.dialog h3{font-size:2rem;letter-spacing:-.035em;margin:0}
-.close{width:42px;height:42px;border:0;border-radius:50%;background:#f2edf5;cursor:pointer;font-size:1.35rem}
-.dialog p{color:var(--muted);line-height:1.75}
-.dialog-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
-@media(max-width:860px){
- .navlinks a{display:none}
- .brand img{width:150px}
- .hero,.founder,.join{grid-template-columns:1fr}
- .hero{padding-top:52px;gap:12px}
- .hero-art{min-height:370px}
- .cards{grid-template-columns:1fr}
- .section-head{display:block}
- .section-head p{margin-top:14px}
- .founder{gap:28px}
- .footer-inner{align-items:flex-start;flex-direction:column}
-}
-@media(prefers-reduced-motion:reduce){
- *{scroll-behavior:auto!important;animation:none!important;transition:none!important}
-}
+:root{--ink:#21142f;--muted:#6f6579;--purple:#5d1d91;--gold:#c99a2e;--line:rgba(55,30,76,.12);--glass:rgba(255,255,255,.82)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;background:radial-gradient(circle at 10% 0,rgba(194,140,248,.2),transparent 28%),linear-gradient(#fff,#f8f3fc);min-height:100vh}a{text-decoration:none;color:inherit}button{font:inherit}.wrap{width:min(1160px,calc(100% - 32px));margin:auto}
+.helpbar{position:relative;z-index:60;background:#21142f;color:#fff}.helpbar-inner{min-height:48px;display:flex;align-items:center;justify-content:center;gap:14px;text-align:center;font-size:.92rem}.helpbar button{border:0;border-radius:999px;padding:9px 15px;background:#fff;color:#21142f;font-weight:750;cursor:pointer}.helpbar strong{font-weight:750}
+.nav{position:sticky;top:10px;z-index:40;margin-top:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.76);backdrop-filter:blur(24px) saturate(150%);border:1px solid var(--line);border-radius:24px;box-shadow:0 12px 40px rgba(42,20,56,.08)}.brand{font-size:1.15rem;font-weight:760;letter-spacing:-.03em}.navlinks{display:flex;align-items:center;gap:8px}.navlinks a,.navlinks button{border:0;background:transparent;padding:10px 13px;border-radius:14px;color:var(--muted);cursor:pointer}.navlinks .contact{background:var(--ink);color:#fff}
+.hero{min-height:76vh;display:grid;grid-template-columns:1fr 1fr;gap:42px;align-items:center;padding:58px 0}.hero-copy h1{font-size:clamp(3.3rem,8vw,7.1rem);line-height:.9;letter-spacing:-.065em;margin:15px 0 23px}.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:.78rem;color:var(--purple);font-weight:760}.lede{font-size:clamp(1.05rem,2vw,1.3rem);line-height:1.65;color:var(--muted);max-width:640px}.hero-card{min-height:460px;border-radius:38px;border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(237,221,250,.72));box-shadow:0 26px 80px rgba(71,31,98,.15);display:grid;place-items:center;text-align:center;padding:42px}.hero-mark{font-size:7rem;line-height:1}.hero-card p{color:var(--muted);max-width:360px;line-height:1.6}.actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:28px}.btn{padding:14px 20px;border:1px solid var(--line);border-radius:17px;background:rgba(255,255,255,.82);cursor:pointer}.btn.primary{background:linear-gradient(135deg,#551682,#8739bd);color:#fff;border-color:transparent}
+.section{padding:76px 0}.section h2{font-size:clamp(2.3rem,5vw,4.4rem);letter-spacing:-.05em;margin:0 0 14px}.intro{color:var(--muted);line-height:1.7;max-width:650px}.projects{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}.project{border:1px solid var(--line);border-radius:30px;background:var(--glass);backdrop-filter:blur(18px);overflow:hidden;box-shadow:0 16px 50px rgba(55,25,74,.07)}.project-art{aspect-ratio:16/9;display:grid;place-items:center;padding:22px;font-weight:820;font-size:1.7rem;letter-spacing:.08em}.senz{background:linear-gradient(145deg,#fff,#eef5ff);color:#073bdb}.cognita{background:linear-gradient(145deg,#07112e,#020717);color:#fff}.mabayani{background:linear-gradient(145deg,#f8f2e7,#e8dcc8);color:#092b58}.project-body{padding:24px}.project h3{font-size:1.35rem;margin:0 0 10px}.project p{color:var(--muted);line-height:1.65}.project button{border:0;background:transparent;padding:0;color:var(--purple);font-weight:760;cursor:pointer}
+.founder{display:grid;grid-template-columns:.85fr 1.15fr;gap:48px;align-items:center}.portrait{aspect-ratio:4/5;border-radius:34px;background:linear-gradient(145deg,#ebeef4,#cfd5df);display:grid;place-items:center;color:#6e7480;text-align:center;padding:30px;border:1px solid var(--line)}.founder p{color:var(--muted);line-height:1.75;font-size:1.08rem}.roles{display:flex;flex-wrap:wrap;gap:8px;margin-top:21px}.role{padding:9px 12px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:.9rem}
+.floating-help{position:fixed;right:20px;bottom:20px;z-index:70;width:66px;height:66px;border-radius:50%;border:1px solid rgba(255,255,255,.5);background:linear-gradient(145deg,#6b22a4,#3f0c67);color:#fff;box-shadow:0 20px 50px rgba(64,15,97,.34);display:grid;place-items:center;cursor:pointer;font-size:1.55rem}.floating-help:after{content:"Need help now";position:absolute;right:76px;white-space:nowrap;background:#21142f;color:#fff;padding:10px 13px;border-radius:13px;font-size:.82rem;font-weight:720;box-shadow:0 10px 30px rgba(0,0,0,.15)}
+.modal{position:fixed;inset:0;z-index:100;display:none;place-items:center;padding:18px;background:rgba(24,13,32,.38);backdrop-filter:blur(12px)}.modal.open{display:grid}.dialog{width:min(700px,100%);max-height:88vh;overflow:auto;background:#fff;border-radius:30px;padding:27px;box-shadow:0 30px 90px rgba(20,8,28,.3)}.dialog-top{display:flex;justify-content:space-between;align-items:center;gap:18px}.dialog h3{font-size:2rem;letter-spacing:-.04em;margin:0}.close{width:42px;height:42px;border:0;border-radius:50%;background:#f2edf5;font-size:1.35rem;cursor:pointer}.calm{color:var(--muted);line-height:1.7}.urgent-note{padding:16px;border-radius:18px;background:#fff2f2;border:1px solid #f3cccc;line-height:1.55}.help-grid{display:grid;gap:12px;margin-top:20px}.help-card{padding:18px;border:1px solid var(--line);border-radius:20px;background:#faf8fc}.help-card strong{display:block;font-size:1.08rem;margin-bottom:7px}.numbers{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.number{display:inline-flex;padding:10px 12px;border-radius:12px;background:#21142f;color:#fff;font-weight:760}.source-note{font-size:.8rem;color:var(--muted);margin-top:18px;line-height:1.5}footer{padding:50px 0;color:var(--muted);border-top:1px solid var(--line)}
+@media(max-width:850px){.hero,.founder{grid-template-columns:1fr}.projects{grid-template-columns:1fr}.hero{padding-top:44px}.hero-card{min-height:330px}.navlinks a:not(.contact){display:none}.helpbar-inner{padding:8px 0;align-items:flex-start}.floating-help:after{display:none}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 </style>
 </head>
 <body>
-<div class="loader" id="loader" aria-hidden="true">
-  <div class="loader-box">
-    <img class="loader-logo" src="data:image/webp;base64,UklGRiKH...TRUNCATED..." alt="">
-    <p>Take your time. You are welcome here.</p>
-  </div>
-</div>
-
-<header class="wrap nav">
-  <a class="brand" href="#top" aria-label="With love, FMB home">
-    <img src="data:image/webp;base64,UklGRk5j...TRUNCATED..." alt="With love, FMB">
-  </a>
-  <nav class="navlinks" aria-label="Main navigation">
-    <a href="#work">Work</a>
-    <a href="#founder">Founder</a>
-    <button data-modal="joinModal">Join</button>
-    <a class="pill" href="mailto:Withlovefmb@gmail.com">Contact</a>
-  </nav>
-</header>
-
+<div class="helpbar"><div class="wrap helpbar-inner"><span><strong>Need help right now?</strong> Crisis and mental health contacts are one tap away.</span><button data-help>See help now</button></div></div>
+<header class="wrap nav"><a class="brand" href="#top">With love, FMB</a><nav class="navlinks"><a href="#projects">Projects</a><a href="#founder">Founder</a><button data-help>Help now</button><a class="contact" href="mailto:Withlovefmb@gmail.com">Contact</a></nav></header>
 <main id="top">
-<section class="wrap hero">
-  <div>
-    <div class="eyebrow">Ideas with clarity, stories with heart</div>
-    <h1>Built to be felt. Made to matter.</h1>
-    <p class="lede">With love, FMB is the creative home of Francine Marie Bautista, where strategy, culture, communication, and human connection meet.</p>
-    <div class="actions">
-      <a class="btn primary" href="#work">Explore the work</a>
-      <button class="btn" data-modal="welcomeModal">A gentle introduction</button>
-    </div>
-  </div>
-  <div class="hero-art">
-    <img src="data:image/webp;base64,UklGRiKH...TRUNCATED..." alt="With love, FMB butterfly emblem">
-  </div>
-</section>
-
-<section class="wrap section" id="work">
-  <div class="section-head">
-    <h2>Selected worlds</h2>
-    <p>Each project begins with a clear purpose. The interface keeps the first view simple, then lets people explore at their own pace.</p>
-  </div>
-  <div class="cards">
-    <article class="card">
-      <div class="num">01</div>
-      <h3>SENZ Strategic Communications</h3>
-      <p>Brand strategy, public relations, creative production, digital work, and sharper communication for people and organizations that need to be understood.</p>
-      <button data-modal="senzModal">See how it works</button>
-    </article>
-    <article class="card">
-      <div class="num">02</div>
-      <h3>Cognita Institute of AI</h3>
-      <p>A selective learning environment designed to help people understand and use artificial intelligence with confidence and responsibility.</p>
-      <button data-modal="cognitaModal">Explore the idea</button>
-    </article>
-    <article class="card">
-      <div class="num">03</div>
-      <h3>MABAYANI</h3>
-      <p>A digital home for local history, language, memory, and community participation, created to make cultural knowledge easier to preserve and share.</p>
-      <button data-modal="mabayaniModal">Read the story</button>
-    </article>
-  </div>
-</section>
-
-<section class="wrap section">
-  <div class="comfort">
-    <p>You do not have to arrive with everything figured out. Curiosity is already a beginning.</p>
-  </div>
-</section>
-
-<section class="wrap section founder" id="founder">
-  <div class="photo-shell">
-    <img class="founder-photo" src="data:image/webp;base64,UklGRoL9...TRUNCATED..." alt="Founder Francine Marie Bautista">
-  </div>
-  <div>
-    <div class="eyebrow">The woman behind the work</div>
-    <h2>Francine Marie Bautista</h2>
-    <p>Francine Marie Bautista is a creative director, strategist, storyteller, educator, and founder whose work brings together branding, communications, culture, technology, and human connection.</p>
-    <p>She builds ideas that help people, communities, and meaningful work become clearer, more visible, and more confidently understood.</p>
-    <div class="roles">
-      <span class="role">Founder</span>
-      <span class="role">Creative Director</span>
-      <span class="role">Brand Strategist</span>
-      <span class="role">Author and Speaker</span>
-      <span class="role">Cultural Advocate</span>
-    </div>
-    <div class="actions">
-      <a class="btn primary" href="#work">Discover her work</a>
-      <button class="btn" data-modal="founderNote">A note from Francine</button>
-    </div>
-  </div>
-</section>
-
-<section class="wrap section join">
-  <div class="join-card">
-    <div class="eyebrow">A thoughtful community</div>
-    <h2>Come as you are.</h2>
-    <p>This space is built with care. People are invited to participate with kindness, respect, and room for one another's stories.</p>
-    <button class="btn primary" data-modal="joinModal">Learn about joining</button>
-  </div>
-  <div class="join-card join-note">
-    <div>
-      <p style="font-size:1.65rem;color:#fff;margin:0 0 12px">A quieter corner of the internet.</p>
-      <p style="color:rgba(255,255,255,.72);margin:0">Thoughtful. Human. Unhurried.</p>
-    </div>
-  </div>
-</section>
+<section class="wrap hero"><div class="hero-copy"><div class="eyebrow">Ideas with clarity, stories with heart</div><h1>Built to be felt. Made to matter.</h1><p class="lede">The creative home of Francine Marie Bautista, connecting strategic communications, AI education, cultural preservation, and thoughtful community work.</p><div class="actions"><a class="btn primary" href="#projects">Explore the work</a><button class="btn" data-help>Find support</button></div></div><div class="hero-card"><div><div class="hero-mark">✦</div><h2>With love, FMB</h2><p>A space for meaningful work, brave beginnings, and ideas designed to help people feel seen and understood.</p></div></div></section>
+<section class="wrap section" id="projects"><div class="eyebrow">Three purposeful worlds</div><h2>Work designed to move people forward.</h2><p class="intro">This website also serves as a clear gateway to the projects Francine is building, helping visitors understand what each platform offers and where they can take part.</p><div class="projects"><article class="project"><div class="project-art senz">SENZ</div><div class="project-body"><h3>SENZ Strategic Communications</h3><p>Strategy, PR, marketing, digital solutions, and creative production for brands and leaders who need clarity, trust, and stronger visibility.</p><button>Discover SENZ</button></div></article><article class="project"><div class="project-art cognita">COGNITA</div><div class="project-body"><h3>Cognita Institute of AI</h3><p>Practical AI education, digital literacy, and future-ready skills in a selective learning environment built for confident, responsible use.</p><button>Explore Cognita</button></div></article><article class="project"><div class="project-art mabayani">MABAYANI</div><div class="project-body"><h3>MABAYANI</h3><p>A heritage-centered platform for history, language, memory, documentation, storytelling, and meaningful public participation.</p><button>Enter MABAYANI</button></div></article></div></section>
+<section class="wrap section founder" id="founder"><div class="portrait">Updated founder portrait will be placed here without stretching or distortion.</div><div><div class="eyebrow">The woman behind the work</div><h2>Francine Marie Bautista</h2><p>Francine Marie Bautista is a creative director, strategist, storyteller, educator, and founder whose work brings together branding, communications, culture, technology, and human connection.</p><p>She creates platforms and campaigns that help people, communities, and meaningful ideas become clearer, more visible, and more confidently understood.</p><div class="roles"><span class="role">Founder</span><span class="role">Creative Director</span><span class="role">Brand Strategist</span><span class="role">Author and Speaker</span><span class="role">Cultural Advocate</span></div></div></section>
 </main>
-
-<footer class="wrap">
-  <div class="footer-inner">
-    <img src="data:image/webp;base64,UklGRk5j...TRUNCATED..." alt="With love, FMB">
-    <div>Francine Marie Bautista<br>Masinloc, Zambales, Philippines</div>
-    <div><a href="mailto:Withlovefmb@gmail.com">Withlovefmb@gmail.com</a></div>
-  </div>
-</footer>
-
-<div class="modal" id="welcomeModal" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
-  <div class="dialog">
-    <div class="dialog-top"><h3 id="welcomeTitle">Welcome in</h3><button class="close" aria-label="Close">×</button></div>
-    <p>This is a home for ideas, stories, projects, and moments of reflection. You can look around slowly. There is no pressure to read everything at once.</p>
-    <div class="dialog-actions"><button class="btn primary close-action">Start exploring</button></div>
-  </div>
-</div>
-
-<div class="modal" id="joinModal" role="dialog" aria-modal="true" aria-labelledby="joinTitle">
-  <div class="dialog">
-    <div class="dialog-top"><h3 id="joinTitle">Before you join</h3><button class="close" aria-label="Close">×</button></div>
-    <p>This space is built with care. We ask everyone to treat other people's stories, privacy, and feelings with the same care they would hope to receive.</p>
-    <p>Joining simply means agreeing to participate respectfully and allowing the website to keep the basic information needed to manage your account safely.</p>
-    <div class="dialog-actions">
-      <button class="btn primary close-action">Continue</button>
-      <a class="btn" href="membership-agreement.html">Read the full details</a>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="founderNote" role="dialog" aria-modal="true" aria-labelledby="noteTitle">
-  <div class="dialog">
-    <div class="dialog-top"><h3 id="noteTitle">A note from Francine</h3><button class="close" aria-label="Close">×</button></div>
-    <p>Thank you for being here. This space holds the work I care about, the questions I keep returning to, and the hope that a thoughtful idea can help someone feel seen, understood, or brave enough to begin.</p>
-    <p>With love, FMB</p>
-  </div>
-</div>
-
-<div class="modal" id="senzModal" role="dialog" aria-modal="true" aria-labelledby="senzTitle">
-  <div class="dialog"><div class="dialog-top"><h3 id="senzTitle">SENZ</h3><button class="close" aria-label="Close">×</button></div><p>SENZ helps brands, leaders, and organizations become clearer, sharper, and harder to ignore through strategy, messaging, creative production, digital work, and public relations.</p></div>
-</div>
-<div class="modal" id="cognitaModal" role="dialog" aria-modal="true" aria-labelledby="cognitaTitle">
-  <div class="dialog"><div class="dialog-top"><h3 id="cognitaTitle">Cognita Institute of AI</h3><button class="close" aria-label="Close">×</button></div><p>Cognita is designed as a selective AI academy, not a course marketplace. Its goal is structured learning, practical confidence, and responsible use of artificial intelligence.</p></div>
-</div>
-<div class="modal" id="mabayaniModal" role="dialog" aria-modal="true" aria-labelledby="mabayaniTitle">
-  <div class="dialog"><div class="dialog-top"><h3 id="mabayaniTitle">MABAYANI</h3><button class="close" aria-label="Close">×</button></div><p>MABAYANI brings history, dictionary work, quizzes, and community contribution into one accessible digital experience for cultural preservation and learning.</p></div>
-</div>
-
+<footer><div class="wrap">With love, FMB<br>Francine Marie Bautista, Masinloc, Zambales, Philippines</div></footer>
+<button class="floating-help" data-help aria-label="Open urgent help contacts">♡</button>
+<div class="modal" id="helpModal" role="dialog" aria-modal="true" aria-labelledby="helpTitle"><div class="dialog"><div class="dialog-top"><h3 id="helpTitle">You do not have to face this alone.</h3><button class="close" aria-label="Close">×</button></div><p class="calm">Take one small step now. Call someone, stay near another person, or go to the nearest emergency room. You deserve immediate support.</p><div class="urgent-note"><strong>If you may hurt yourself or someone else, or you are in immediate danger:</strong><br>Call <a href="tel:911"><strong>911</strong></a> now, or ask someone nearby to take you to the nearest emergency department. Move away from anything you could use to hurt yourself and stay with another person while help is coming.</div><div class="help-grid"><div class="help-card"><strong>National Center for Mental Health Crisis Hotline</strong><span>For suicidal thoughts, severe emotional distress, panic, or a mental health crisis.</span><div class="numbers"><a class="number" href="tel:1553">1553</a><a class="number" href="tel:09178998727">0917 899 8727</a><a class="number" href="tel:09663514518">0966 351 4518</a><a class="number" href="tel:09086392672">0908 639 2672</a></div></div><div class="help-card"><strong>Emergency services</strong><span>For immediate medical danger, an active suicide attempt, serious injury, violence, or when someone cannot stay safe.</span><div class="numbers"><a class="number" href="tel:911">Call 911</a></div></div><div class="help-card"><strong>LoveYourself Philippines</strong><span>Community-based support and services that include mental health, LGBTQIA+ care, sexual health, and HIV-related services.</span><div class="numbers"><a class="number" href="https://loveyourself.ph" target="_blank" rel="noopener">Visit LoveYourself PH</a></div></div></div><p class="source-note">Hotline availability and mobile network charges can change. If one number does not connect, try another number or call 911. This page supports access to care and is not a replacement for professional emergency help.</p></div></div>
 <script>
-const loader=document.getElementById('loader');
-window.addEventListener('load',()=>setTimeout(()=>loader.classList.add('hide'),1100));
-setTimeout(()=>loader.classList.add('hide'),2400);
-
-let lastFocus=null;
-function openModal(id){
-  const modal=document.getElementById(id);
-  if(!modal)return;
-  lastFocus=document.activeElement;
-  modal.classList.add('open');
-  document.body.classList.add('modal-open');
-  modal.querySelector('.close')?.focus();
-}
-function closeModal(modal){
-  modal.classList.remove('open');
-  document.body.classList.remove('modal-open');
-  lastFocus?.focus();
-}
-document.querySelectorAll('[data-modal]').forEach(btn=>btn.addEventListener('click',()=>openModal(btn.dataset.modal)));
-document.querySelectorAll('.modal').forEach(modal=>{
-  modal.addEventListener('click',e=>{if(e.target===modal)closeModal(modal)});
-  modal.querySelectorAll('.close,.close-action').forEach(btn=>btn.addEventListener('click',()=>closeModal(modal)));
-});
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){
-    const open=document.querySelector('.modal.open');
-    if(open)closeModal(open);
-  }
-});
+const modal=document.getElementById('helpModal');
+const openHelp=()=>{modal.classList.add('open');document.body.style.overflow='hidden';modal.querySelector('.close').focus()};
+const closeHelp=()=>{modal.classList.remove('open');document.body.style.overflow=''};
+document.querySelectorAll('[data-help]').forEach(b=>b.addEventListener('click',openHelp));
+modal.querySelector('.close').addEventListener('click',closeHelp);
+modal.addEventListener('click',e=>{if(e.target===modal)closeHelp()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeHelp()});
 </script>
 </body>
 </html>
