@@ -3,101 +3,79 @@
 Official personal website and editorial home of **Francine Marie Bautista**.
 
 - Planned domain: `www.francinemariebautista.com`
-- Contact email: `Withlovefmb@gmail.com`
+- Temporary host: GitHub Pages
+- Contact: `Withlovefmb@gmail.com`
 - Location: Masinloc, Zambales, Philippines
 - Instagram: `@bb.fmb`
-- Main company: [SENZ Strategic Communications](https://senzpr.com/)
+- Main company: SENZ Strategic Communications
 - Education platform: Cognita Institute of AI
 
-## Website architecture
+## Current phase
 
-### Public access
+This version completes the free-site architecture before Herra and payment processing.
 
-Visitors can see the complete website structure, topic descriptions, reading previews, project introductions, journal previews, ebook listings, contact information, and emergency mental-health contacts.
+### Public features
 
-Emergency information must never be hidden behind membership, payment, login, or Herra access.
+- personal website, portfolio, quotes, projects, and contact information
+- searchable Source of Truth previews
+- emergency mental-health contacts kept outside membership
+- local-only Unspoken Thoughts reflection that is not uploaded
+- public approved Freedom Wall feed with server timestamps
 
-### Free membership
+### Free verified membership
 
-Free membership is the access gate for:
+- passwordless email magic-link access
+- recorded acceptance of the Privacy Notice, Membership Agreement, and Community Guidelines
+- member-only full Source of Truth reader
+- private personal journal
+- Freedom Wall submission and status history
+- verified contact messages
+- member data and rights information
+- moderator and administrator Freedom Wall queue
 
-- continuing full Source of Truth readings
-- opening complete journal and blog entries
-- accessing free ebooks
-- purchasing paid ebooks
-- sending an authenticated message after email verification
+## Backend choice
 
-The interface is implemented, but real account creation and email verification require a secure backend and email provider.
+The live member database is designed for Supabase, not a normal Google Drive or Sheet. Supabase provides authentication, Postgres storage, Row Level Security, and authenticated Edge Functions.
 
-### Herra paid access
+Google Drive may be used later only for encrypted, restricted backups. See `GOOGLE_DRIVE_BACKUP.md`.
 
-Herra is a separately paid AI companion service. A free website membership does not automatically include Herra.
+## Privacy and security
 
-Herra must never present herself as a doctor, therapist, emergency service, or substitute for professional care. Crisis screens must direct people to real emergency and crisis services before offering Herra.
+Security-relevant member writes may record the account ID, IP address, browser or user-agent information, action, resource identifier, and timestamp. This collection is explicitly disclosed in the Privacy Notice and Membership Agreement. It is not hidden.
 
-Real Herra access still requires authentication, billing, subscription entitlements, model hosting, safety monitoring, logging rules, privacy controls, and cancellation/refund handling.
+Private journals are visible only to their authenticated owner under Row Level Security. Freedom Wall posts remain pending until moderation. Emergency information is never paywalled or membership-gated.
 
-## Source of Truth
+## Main files
 
-The searchable library includes structured previews and full source data for:
+- `index.html`: complete public and member interface
+- `privacy.html`: long-form operational Privacy Notice
+- `membership-agreement.html`: free membership terms
+- `community-guidelines.html`: Freedom Wall and community rules
+- `data-rights.html`: access, correction, export, deletion, and account-closure process
+- `assets/js/app.js`: public interactions, authentication, journal, wall, moderation, messaging, and reader
+- `assets/js/config.js`: public Supabase configuration placeholder
+- `supabase/schema.sql`: tables, indexes, Row Level Security, and retention cleanup
+- `supabase/functions/member-write/index.ts`: authenticated writes, validation, rate limiting, IP and security logs
+- `SUPABASE_SETUP.md`: deployment steps
+- `ADMIN_MODERATION.md`: moderation standard
+- `GOOGLE_DRIVE_BACKUP.md`: encrypted-backup rules
 
-1. Women's Health
-2. Transgender Health
-3. Bahaghari: LGBTQIA+ identity, respect, stereotypes, allyship, and coming out at one's own pace
-4. Mental Health
+## Important launch status
 
-Full structured reading records are stored in the deployed website at:
+The interface and backend code are complete, but real membership remains inactive until a Supabase project is created and its public configuration is added. The site never pretends that an account or journal has been saved when the backend is not connected.
 
-`assets/data/source-library.json`
+Before inviting members:
 
-Health content is educational and source-led. It is not individualized diagnosis or treatment.
+1. Create and configure Supabase.
+2. Run the database schema and deploy the Edge Function.
+3. Configure email verification and allowed redirect URLs.
+4. Create the first administrator.
+5. Test two-account data isolation.
+6. Review the legal documents with a Philippine lawyer or privacy professional.
+7. Establish breach response, moderation, retention cleanup, and encrypted backups.
+8. Activate GitHub Pages.
+9. Connect the custom domain after it becomes active.
 
-## Project identities
+## Domain
 
-- SENZ uses its official identity and links to `https://senzpr.com/`.
-- Cognita uses the official wordmark system derived from the Cognita source repository.
-- Cogniya is not part of this website architecture.
-
-## Contact and messaging
-
-The contact interface collects:
-
-- full name
-- email address
-- role or organization
-- message type
-- subject
-- message
-- consent acknowledgment
-
-Sending is designed to require free membership and verified email first. The present static deployment does not yet create accounts, issue verification links, save messages, or send email.
-
-## Repository structure
-
-- `with-love-fmb-apple.zip`: original visual assets, portraits, logo files, and opening video
-- `build/overlay.part-*`: base64 parts of the corrected website overlay
-- `.github/workflows/pages.yml`: reconstructs the overlay and deploys the finished site
-- `DOMAIN_SETUP.md`: GitHub Pages and DNS guide
-
-The deployment workflow verifies that the homepage, Source of Truth data, and Cognita identity asset exist before publishing.
-
-## GitHub Pages
-
-1. Open **Settings > Pages**.
-2. Choose **GitHub Actions** as the source.
-3. Enter `www.francinemariebautista.com` under **Custom domain** after the domain is active.
-4. Configure the DNS records in `DOMAIN_SETUP.md`.
-5. Enable **Enforce HTTPS** when GitHub makes it available.
-
-## Backend still required
-
-Before the site can honestly provide full production membership and commerce, connect:
-
-- authentication and member database
-- transactional email verification
-- secure contact-message storage and delivery
-- ebook storage, ownership records, and protected delivery
-- payment provider and webhook verification
-- Herra subscription entitlements and AI service
-- moderation, abuse prevention, rate limiting, audit logs, and deletion workflows
-- final privacy, terms, refund, and cancellation policies
+The website already includes metadata for `www.francinemariebautista.com`, but the domain is awaiting activation. The temporary GitHub Pages preview works without the custom domain.
