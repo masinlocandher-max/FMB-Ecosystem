@@ -1,18 +1,30 @@
 # Custom domain setup for With love, FMB
 
-Use this after the exact domain spelling is confirmed.
+Primary planned address: **www.francinemariebautista.com**
 
-## 1. Enable Pages and add the domain
+The domain is currently awaiting activation. Complete these steps after the registrar marks it active.
 
-1. Open **Settings > Pages** in this repository.
+## 1. Enable GitHub Pages
+
+1. Open **Settings > Pages** in `masinlocandher-max/Withlovefmb`.
 2. Under **Build and deployment**, choose **GitHub Actions**.
-3. Under **Custom domain**, enter the final domain and click **Save**.
+3. Under **Custom domain**, enter `www.francinemariebautista.com` and click **Save**.
 
-For a custom GitHub Actions workflow, GitHub does not create a `CNAME` file, and an existing `CNAME` file is ignored and not required.
+This repository uses a custom GitHub Actions workflow, so a repository `CNAME` file is not required for the deployment artifact.
 
-## 2. Apex-domain DNS
+## 2. Configure the www address
 
-For a root domain such as `example.com`, add these `A` records:
+Add this DNS record at the domain registrar:
+
+| Type | Name | Value |
+|---|---|---|
+| CNAME | www | masinlocandher-max.github.io |
+
+Do not include `https://` or `/Withlovefmb` in the CNAME value.
+
+## 3. Configure the root domain
+
+To allow `francinemariebautista.com` to redirect to the `www` address, add these apex records:
 
 | Type | Name | Value |
 |---|---|---|
@@ -21,32 +33,24 @@ For a root domain such as `example.com`, add these `A` records:
 | A | @ | 185.199.110.153 |
 | A | @ | 185.199.111.153 |
 
-Remove conflicting parking, forwarding, or default records.
-
-## 3. www DNS
-
-Add:
-
-| Type | Name | Value |
-|---|---|---|
-| CNAME | www | masinlocandher-max.github.io |
-
-Do not include `/Withlovefmb` in the CNAME target. Configure both the apex and `www` versions so GitHub Pages can redirect between them.
+Remove conflicting parking, forwarding, or default `A` and `CNAME` records before adding the GitHub Pages records.
 
 ## 4. Security and HTTPS
 
-- Add the custom domain in GitHub before changing DNS.
-- Verify the domain in GitHub account settings to reduce takeover risk.
-- Do not use wildcard DNS records such as `*.example.com`.
-- DNS changes may take up to 24 hours.
+- Add the custom domain in GitHub before or alongside the DNS change.
+- Verify `francinemariebautista.com` in GitHub account settings to reduce domain-takeover risk.
+- Do not create wildcard records such as `*.francinemariebautista.com`.
+- Return to **Settings > Pages** after DNS resolves.
 - Enable **Enforce HTTPS** when GitHub makes the option available.
 
-## 5. Finish after the domain is live
+## 5. Website domain configuration already completed
 
-Update the site with the exact domain for:
+The current website build already includes:
 
-- Canonical URL
-- Open Graph URL and absolute preview-image URL
-- Sitemap
-- `robots.txt` sitemap entry
-- Public business email and official social links
+- canonical URL for `https://www.francinemariebautista.com/`
+- Open Graph domain metadata
+- domain-aware `robots.txt`
+- sitemap for the official domain
+- public email `Withlovefmb@gmail.com`
+- Instagram `@bb.fmb`
+- location `Masinloc, Zambales, Philippines`
