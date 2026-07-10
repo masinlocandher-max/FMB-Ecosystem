@@ -19,45 +19,28 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Build and verify the exact website
+      - name: Prepare the current website
         shell: bash
         run: |
           set -euo pipefail
-          rm -rf _site _overlay
-          mkdir -p _site _overlay
+          rm -rf _site
+          mkdir -p _site
 
-          unzip -q with-love-fmb-apple.zip -d _site
-          cat build/v4/overlay.part-* | base64 --decode > /tmp/fmb-member-overlay.tar.gz
-          echo "10d1a44f99fb7e424082a68f135d06122c1e9babf4d4d86849ded49e4d57c81c  /tmp/fmb-member-overlay.tar.gz" | sha256sum -c -
-          tar -xzf /tmp/fmb-member-overlay.tar.gz -C _overlay
-          cp -R _overlay/site/. _site/
+          cp index.html _site/index.html
           cp CNAME _site/CNAME
-
-          find _site -type f \( -name '*.html' -o -name '*.js' -o -name '*.json' -o -name '*.md' \) -print0 \
-            | xargs -0 sed -i 's/Sinag/Herra/g; s/sinag/herra/g'
-
-          find _site -name '.DS_Store' -delete
+          cp -R assets _site/assets
           touch _site/.nojekyll
 
           test -f _site/index.html
           test -f _site/CNAME
           test "$(cat _site/CNAME)" = "www.francinemariebautista.com"
-          test -f _site/assets/css/styles.css
-          test -f _site/assets/video/fmb-opening.mp4
-          test -f _site/assets/js/app.js
-          test -f _site/assets/data/source-library.json
-          test -f _site/assets/data/journal-library.json
-          test -f _site/privacy.html
-          test -f _site/membership-agreement.html
-          test -f _site/community-guidelines.html
-          test -f _site/data-rights.html
-          test -f _site/assets/images/logo-full.png
-          test -f _site/assets/images/logo-icon.png
-          test -f _site/assets/images/portrait-new.jpg
-          test -f _site/assets/images/cognita-official-logo.svg
-
-          grep -q 'SUPABASE_URL' _site/assets/js/config.js
-          ! grep -Rni --include='*.html' --include='*.js' --include='*.json' --include='*.md' 'Sinag' _site
+          test -f _site/assets/icon.svg
+          test -f _site/assets/signature.svg
+          test -f _site/assets/founder.svg
+          test -f _site/assets/senz.svg
+          test -f _site/assets/cognita.svg
+          test -f _site/assets/mabayani.svg
+          grep -q 'Built to be felt. Made to matter.' _site/index.html
 
       - name: Publish directly to gh-pages
         shell: bash
@@ -71,6 +54,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add --all
-          git commit -m "Publish With love, FMB website"
+          git commit -m "Publish current With love, FMB website"
           git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push --force origin gh-pages
