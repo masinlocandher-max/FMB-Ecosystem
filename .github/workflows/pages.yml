@@ -1,4 +1,4 @@
-name: Deploy With love, FMB
+name: Publish With love, FMB
 
 on:
   push:
@@ -6,25 +6,20 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: pages
+  group: publish-gh-pages
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Prepare and verify website
+      - name: Build and verify the exact website
         shell: bash
         run: |
           set -euo pipefail
@@ -41,7 +36,6 @@ jobs:
           find _site -type f \( -name '*.html' -o -name '*.js' -o -name '*.json' -o -name '*.md' \) -print0 \
             | xargs -0 sed -i 's/Sinag/Herra/g; s/sinag/herra/g'
 
-          rm -rf '_site/assets/{images,video,css,js}' || true
           find _site -name '.DS_Store' -delete
           touch _site/.nojekyll
 
@@ -49,7 +43,6 @@ jobs:
           test -f _site/CNAME
           test "$(cat _site/CNAME)" = "www.francinemariebautista.com"
           test -f _site/assets/js/app.js
-          test -f _site/assets/js/config.example.js
           test -f _site/assets/data/source-library.json
           test -f _site/assets/data/journal-library.json
           test -f _site/privacy.html
@@ -67,14 +60,12 @@ jobs:
           grep -q 'privacy_requests' _site/supabase/schema.sql
           ! grep -Rni --include='*.html' --include='*.js' --include='*.json' --include='*.md' 'Sinag' _site
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v4
+      - name: Publish built HTML to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: _site
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./_site
+          force_orphan: true
+          keep_files: false
+          cname: www.francinemariebautista.com
