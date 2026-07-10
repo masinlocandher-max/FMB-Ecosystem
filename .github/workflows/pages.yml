@@ -1,0 +1,49 @@
+name: Deploy With love, FMB
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Prepare website
+        shell: bash
+        run: |
+          rm -rf _site _overlay
+          mkdir -p _site _overlay
+          unzip -q with-love-fmb-apple.zip -d _site
+          tar -xzf site-overlay.tar.gz -C _overlay
+          cp -R _overlay/site/. _site/
+          rm -rf '_site/assets/{images,video,css,js}' || true
+          find _site -name '.DS_Store' -delete
+          touch _site/.nojekyll
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

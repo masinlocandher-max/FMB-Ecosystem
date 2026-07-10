@@ -1,60 +1,62 @@
-# With Love, FMB
+# With love, FMB
 
-Official personal website and creative home of **Francine Marie Bautista (FMB)**: founder, author, speaker, brand strategist, creative director, storyteller, and cultural advocate.
+Official personal website and editorial home of **Francine Marie Bautista**.
 
-## Website sections
+## Repository structure
 
-- Home
-- About
-- Work and ventures
-- Notes and quotes
-- Contact
+- `with-love-fmb-apple.zip` contains the original visual assets, portraits, logo files, and opening video.
+- `site-overlay.tar.gz` contains the corrected HTML, CSS, JavaScript, privacy page, 404 page, and robots file.
+- `.github/workflows/pages.yml` builds and deploys the finished website to GitHub Pages.
+- `DOMAIN_SETUP.md` contains the verified custom-domain steps.
 
-## Local preview
+The deploy workflow extracts the original archive, overlays the corrected files, removes the accidental brace-named folder, and publishes the finished `_site` artifact.
 
-This is a lightweight static website. Open `index.html` directly in a browser, or run a local server:
+## Fixes applied
 
-```bash
-python3 -m http.server 8000
-```
+- Expanded About Me section and positioning
+- Added SENZ, MABAYANI, Cognita, and Cogniya context
+- Replaced fake email verification with honest private reflection mode
+- Made clear that the contact form is not connected yet
+- Made Sinag transparent as a scripted companion
+- Added crisis-language safety handoff
+- Added privacy page, 404 page, robots file, skip link, accessibility improvements, image dimensions, and resilient JavaScript guards
+- Added GitHub Pages deployment workflow
 
-Then open `http://localhost:8000`.
+## Important launch status
 
-## Custom domain
+The site is safe to preview publicly, but these features remain intentionally limited until real services are connected:
 
-This repository deploys through a custom GitHub Actions workflow, so a repository `CNAME` file is not required.
+- The contact form validates only; it does not send or store messages.
+- Unspoken Thoughts stays in the visitor's browser and clears locally.
+- Sinag is scripted; it is not a human, therapist, or connected AI service.
+- Journal entries and bookshelf titles are still placeholders.
+- Final project URLs and official social links still need to be added.
 
-1. In **Repository Settings > Pages**, select **GitHub Actions** as the publishing source.
-2. In the same Pages screen, enter the exact custom domain and save it.
-3. At the domain registrar, add the appropriate GitHub Pages DNS records.
-4. Add both the apex domain and `www` version when possible so GitHub can redirect between them.
-5. Enable **Enforce HTTPS** after DNS propagation and certificate issuance.
-6. Verify the domain through GitHub for stronger takeover protection.
+## Turn on GitHub Pages
 
-See `DOMAIN_SETUP.md` for the current DNS values and step-by-step instructions.
+1. Open **Settings > Pages**.
+2. Under **Build and deployment**, select **GitHub Actions**.
+3. Open **Actions** and run **Deploy With love, FMB**, or push a new commit to `main`.
+4. Test the deployment URL on desktop and mobile.
 
-## Replace the temporary portrait
+## Services still needed
 
-The current portrait is a branded placeholder. Replace `assets/francine-placeholder.svg` with the final optimized portrait, or update the image path in `index.html`.
+### Contact
 
-Recommended export:
+Connect a dedicated public business email, a hosted form endpoint, or a serverless function connected to an email provider.
 
-- File: `assets/francine-portrait.webp`
-- Size: 1600 x 2000 px
-- Format: WebP
-- Target weight: below 400 KB
+### Unspoken Thoughts community mode
 
-## Launch checklist
+A public submission system needs secure storage, authentication or email verification, explicit consent, moderation, abuse prevention, rate limiting, reporting, and deletion rules.
 
-- Confirm the exact domain
-- Add the final logo files
-- Add the final portrait and project images
-- Confirm the public contact email and social links
-- Replace the SVG social preview with a 1200 x 630 PNG or WebP image
-- Add a canonical URL and sitemap after the domain is connected
-- Add a privacy policy if forms, analytics, or mailing-list tools are introduced
-- Connect analytics only after a consent/privacy decision
+### Content
 
-## Deployment
+Still needed before the full public launch:
 
-A GitHub Pages workflow is included in `.github/workflows/deploy.yml`. Every push to `main` deploys the site after Pages is enabled in the repository settings.
+- Exact custom domain
+- Public business email
+- Official social links
+- Final journal articles
+- Real bookshelf titles and notes
+- Live links for SENZ, MABAYANI, Cognita, and Cogniya
+- Updated privacy notice after forms, analytics, email, or database services are connected
