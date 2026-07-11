@@ -1,0 +1,38 @@
+:root{--reader-width:900px}
+.reading-page{padding:150px 0 90px}
+.reading-wrap{width:min(var(--reader-width),calc(100% - 28px));margin:auto}
+.reading-hero{position:relative;overflow:hidden;padding:64px 52px;border-radius:38px;text-align:center;background:radial-gradient(circle at 50% 18%,rgba(255,255,255,.72),transparent 34%),linear-gradient(145deg,#fff,#f0ddf7 58%,#d8b8e7);border:1px solid rgba(255,255,255,.8);box-shadow:var(--shadow)}
+.reading-hero:after{content:"";position:absolute;width:320px;height:320px;border-radius:50%;right:-150px;bottom:-170px;background:radial-gradient(circle,rgba(111,22,165,.24),transparent 70%)}
+.reading-hero>*{position:relative;z-index:1}
+.reading-mark{width:120px;height:120px;margin:0 auto 24px;object-fit:contain;mix-blend-mode:multiply}
+.reading-hero h1{font-size:clamp(50px,8vw,84px);font-weight:500;line-height:.96;letter-spacing:-.035em;color:var(--violet-900)}
+.reading-hero .lead{max-width:700px;margin:20px auto 0;color:var(--muted);font-size:18px}
+.reading-note{max-width:720px;margin:24px auto 0;padding:14px 16px;border-radius:18px;background:rgba(255,255,255,.58);border:1px solid rgba(76,13,115,.1);color:var(--muted);font-size:13px}
+.reading-toc{display:grid;grid-template-columns:1fr 1fr;gap:9px 24px;margin-top:34px;text-align:left}
+.reading-toc a{display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px;color:var(--violet-900)}
+.reading-chapter{margin-top:28px;padding:48px 50px;border-radius:30px;background:rgba(255,255,255,.74);border:1px solid var(--line);box-shadow:0 18px 58px rgba(45,23,56,.08)}
+.reading-chapter h2{font-size:clamp(40px,5.4vw,60px);font-weight:500;line-height:1.02;color:var(--violet-900);margin-bottom:22px}
+.reading-chapter h3{font-size:30px;font-weight:600;line-height:1.12;color:var(--violet-900);margin:30px 0 10px}
+.reading-chapter p{margin-bottom:17px;color:#403247}
+.reading-chapter ul,.reading-chapter ol{padding-left:22px;margin:0 0 18px}
+.reading-chapter li{margin-bottom:9px;color:#403247}
+.reader-quote{margin:25px 0;padding:20px 22px;border-left:4px solid var(--gold);background:linear-gradient(90deg,rgba(214,170,66,.12),rgba(170,88,211,.08));font-family:'Cormorant Garamond',serif;font-size:29px;line-height:1.3;font-style:italic;color:var(--violet-900)}
+.reader-prompt{margin-top:24px;padding:18px 20px;border:1px solid var(--line);border-radius:18px;background:var(--violet-100)}
+.reader-prompt strong{display:block;color:var(--violet-900);margin-bottom:5px}
+.reader-callout{margin:24px 0;padding:22px;border-radius:20px;background:linear-gradient(145deg,var(--violet-950),var(--violet-700));color:#fff}
+.reader-callout h3{color:#fff;margin-top:0}
+.reader-callout p,.reader-callout li{color:rgba(255,255,255,.82)}
+.reader-sources{display:grid;gap:10px;margin-top:18px}
+.reader-source{padding:14px 16px;border-radius:16px;background:var(--violet-100);color:var(--violet-900);font-size:13px;font-weight:700}
+.reader-signoff{margin-top:28px;padding:58px 28px;border-radius:32px;text-align:center;background:radial-gradient(circle at 50% 0,rgba(255,255,255,.3),transparent 40%),linear-gradient(145deg,var(--violet-950),var(--violet-700));color:#fff;box-shadow:var(--shadow)}
+.reader-signoff img{width:84px;height:84px;object-fit:contain;mix-blend-mode:multiply;margin:0 auto 20px}
+.reader-signoff p{font-family:'Cormorant Garamond',serif;font-size:clamp(38px,6vw,58px);line-height:1.1}
+.reading-progress{position:fixed;top:0;left:0;right:0;z-index:200;height:3px;background:rgba(76,13,115,.08)}
+.reading-progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--violet-600))}
+.library-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.library-card{display:flex;flex-direction:column;justify-content:space-between;min-height:320px;padding:30px;border-radius:28px;background:rgba(255,255,255,.72);border:1px solid var(--line);box-shadow:0 16px 50px rgba(45,23,56,.08);transition:transform .3s,box-shadow .3s}
+.library-card:hover{transform:translateY(-4px);box-shadow:0 24px 66px rgba(45,23,56,.13)}
+.library-card h3{font-size:34px;font-weight:600;line-height:1.08;color:var(--violet-900);margin:10px 0}
+.library-card p{color:var(--muted)}
+.library-card .text-link{margin-top:24px}
+@media(max-width:760px){.reading-hero{padding:48px 24px}.reading-toc,.library-grid{grid-template-columns:1fr}.reading-chapter{padding:34px 24px}.reading-page{padding-top:140px}.reader-signoff{padding:46px 22px}}
