@@ -1,0 +1,19 @@
+{
+  "driveFolderUrl": "https://drive.google.com/drive/folders/1H_BtsC3gNlqFFA_2-wjkAKDGG2ylMexM",
+  "playlists": [
+    {
+      "id": "anxious-moments",
+      "title": "For Anxious Moments",
+      "description": "Slow, gentle music for moments when your mind needs less noise.",
+      "driveFolderUrl": "https://drive.google.com/drive/folders/1R18fnkGSb6SJfseTScTNbFvvHbIDny9o",
+      "tracks": []
+    },
+    {
+      "id": "made-by-fmb",
+      "title": "Made by FMB",
+      "description": "Original songs, instrumentals, and sound pieces created by FMB.",
+      "driveFolderUrl": "https://drive.google.com/drive/folders/1kj7bQF8owSlqAp43T3a6QzaGhGeDSeSL",
+      "tracks": []
+    }
+  ]
+}
