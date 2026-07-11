@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 619" role="img" aria-labelledby="title desc">
+  <title id="title">With love, FMB hero banner</title>
+  <desc id="desc">Official With love, FMB banner featuring the brand emblem and founder portrait.</desc>
+  <image href="hero-1.svg" x="0" y="0" width="275" height="619"/>
+  <image href="hero-2.svg" x="275" y="0" width="275" height="619"/>
+  <image href="hero-3.svg" x="550" y="0" width="275" height="619"/>
+  <image href="hero-4.svg" x="825" y="0" width="275" height="619"/>
+</svg>
