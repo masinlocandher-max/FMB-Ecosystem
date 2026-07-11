@@ -1,146 +1,227 @@
-# Supabase setup for the free member system
+# Supabase production setup
 
-This guide activates verified email membership, private journals, Freedom Wall moderation, contact messages, privacy requests, and disclosed security logging.
+This guide activates real registration, member profiles, private journals, saved content, moderated community posts, contact messages, administrator tools, music entries, and managed media.
 
 ## 1. Create a dedicated project
 
-Create a new Supabase project specifically for With love, FMB. Use a strong database password and enable multi-factor authentication on administrator accounts.
+Create a Supabase project used only for With love, FMB.
 
-Do not reuse a project that contains unrelated customer or business data.
+- Use a strong database password.
+- Enable multi-factor authentication for owner and administrator access.
+- Do not mix unrelated customer, agency, or school data into this project.
+- Keep the service-role key and database password outside GitHub and browser code.
 
-## 2. Install the database schema
+## 2. Install the production schema
 
 Open the Supabase SQL Editor and run:
 
-`supabase/schema.sql`
-
-The schema creates:
-
-- member profiles
-- recorded policy acceptances
-- private journal entries
-- Freedom Wall posts and moderation status
-- verified contact messages
-- security events
-- privacy and data-rights requests
-
-It also enables Row Level Security and creates owner, moderator, administrator, public-feed, and retention policies.
-
-## 3. Deploy the authenticated write function
-
-Install the Supabase CLI, then run:
-
-```bash
-supabase login
-supabase link --project-ref YOUR_PROJECT_REF
-supabase functions deploy member-write
+```text
+supabase/schema.sql
 ```
 
-The function validates authenticated writes, applies rate limits, checks suspension status, records consent evidence, and creates security events for protected operations.
+The script creates or upgrades:
 
-Never place the Supabase service-role key in website JavaScript, GitHub source files, screenshots, or public configuration.
+- member profiles
+- legal acceptance records
+- private journals
+- saved content
+- moderated community posts
+- managed content and wellness resources
+- music entries
+- media records
+- contact and volunteer messages
+- administrator activity records
+- avatar and site-media storage buckets
+- protected administrator functions
+- Row Level Security and column-level permissions
+
+Read any SQL error before continuing. Do not open registration after a partial or failed migration.
+
+## 3. Confirm the security rules
+
+The production schema is designed so that:
+
+- a new account always receives the `member` role
+- a member cannot edit `role`, `status`, verified email, or joined date
+- only an administrator can change another member’s role or status
+- a suspended account cannot use protected member tools
+- journals and saved content are readable only by their owner
+- moderators may review community posts but cannot read journals
+- unpublished posts are not public
+- public posts require a published status
+- contact messages and administrator activity are administrator-only
+- avatar uploads are restricted to the owner’s folder
+- site-media uploads are administrator-only
+
+Do not weaken these policies to solve a frontend error. Fix the frontend query or data model instead.
 
 ## 4. Configure authentication
 
 In Supabase Authentication settings:
 
-1. Enable email sign-in and email confirmation.
-2. Set the temporary Site URL to the GitHub Pages preview address.
-3. Add allowed redirect URLs for:
-   - the GitHub Pages preview
-   - `https://www.francinemariebautista.com/`
-   - `https://francinemariebautista.com/`
-   - localhost only while testing
-4. Customize the magic-link email so it clearly identifies With love, FMB.
-5. Configure a trusted transactional SMTP provider before a larger public launch.
+1. Enable email and password sign-in.
+2. Require email confirmation.
+3. Set the Site URL to the live website URL.
+4. Add redirect URLs for:
+   - the custom domain
+   - the temporary GitHub Pages preview
+   - local development only while testing
+5. Make sure these pages are allowed:
+   - `member.html`
+   - `reset-password.html`
+6. Configure a trusted transactional SMTP provider before a larger public launch.
+7. Customize verification and password-reset emails so the sender and website name are clear.
 
-## 5. Add the public website configuration
+The current frontend uses email and password authentication. It does not claim to use magic-link-only access.
 
-Copy:
+## 5. Add the public browser configuration
 
-`assets/js/config.example.js`
-
-to:
-
-`assets/js/config.js`
-
-Then add only the public project URL and publishable or anon key:
+Update `assets/js/config.js` with only the public project URL and public anon key:
 
 ```javascript
-window.FMB_CONFIG = {
-  SUPABASE_URL: "https://YOUR_PROJECT.supabase.co",
-  SUPABASE_ANON_KEY: "YOUR_PUBLIC_ANON_KEY"
-};
+(function(){
+  const base = new URL('./', window.location.href).href;
+  window.FMB_CONFIG = {
+    SUPABASE_URL: 'https://YOUR_PROJECT.supabase.co',
+    SUPABASE_ANON_KEY: 'YOUR_PUBLIC_ANON_KEY',
+    SITE_URL: base,
+    AUTH_REDIRECT_URL: new URL('member.html', base).href
+  };
+})();
 ```
 
-The anon key is designed for browser use only when Row Level Security is correctly enabled. The service-role key must remain server-side.
+The anon key is intended for browser use only when Row Level Security is correct. Never use the service-role key in this file.
 
 ## 6. Create the first administrator
 
-1. Register normally through the website using the administrator email.
-2. Confirm the magic-link email.
-3. In the Supabase Table Editor, change that profile role from `member` to `admin`.
-4. Sign out and sign in again.
-5. Confirm that the moderation queue becomes available.
+1. Register normally through `auth.html`.
+2. Confirm the verification email.
+3. Open the `profiles` table in Supabase.
+4. Change that account’s role from `member` to `admin`.
+5. Confirm that status remains `active`.
+6. Sign out and sign in again.
+7. Open `admin.html` and verify that real data loads.
 
-Use separate everyday and administrator accounts where practical.
+After the first administrator exists, role and suspension changes should be made through the protected dashboard function rather than direct browser queries.
 
-## 7. Required isolation test
+## 7. Test authentication
 
-Before launch, create two test member accounts.
+Test all of the following with real email accounts:
+
+- new registration
+- duplicate-email behavior
+- invalid password validation
+- email confirmation
+- sign in with correct and incorrect credentials
+- local remembered session
+- session-only sign in
+- sign out
+- password reset request
+- valid reset link
+- expired or reused reset link
+- password change from the member dashboard
+- suspended-account rejection
+
+## 8. Run the two-account isolation test
+
+Create Account A and Account B.
 
 Confirm that:
 
-- Account A cannot read, update, or delete Account B's journal.
-- Account A cannot read Account B's private contact messages or privacy requests.
-- Pending and rejected wall posts are not public.
-- Published wall posts contain the approved alias, content, and server timestamp only.
-- Moderators can review wall posts but cannot read private journals.
-- Only administrators can access protected security-event records.
+- Account A cannot read, update, or delete Account B’s profile.
+- Account A cannot read, update, or delete Account B’s journal.
+- Account A cannot read or remove Account B’s saved content.
+- Account A cannot read Account B’s unpublished community posts.
+- Account A cannot upload an avatar into Account B’s folder.
+- neither account can assign itself an administrator role
+- neither account can remove its own suspension through a direct API request
 
-Do not invite real members until these tests pass.
+Do not invite real members until these checks pass.
 
-## 8. Consent and security test
+## 9. Test administrator permissions
+
+Confirm that an administrator can:
+
+- view real member counts
+- search and filter members
+- change roles through the protected function
+- suspend and reactivate accounts
+- moderate community submissions
+- create, edit, publish, unpublish, and delete managed content
+- manage music entries
+- upload and remove managed media
+- resolve and archive messages
+
+Also confirm that a normal member receives no administrator data even when manually opening `admin.html` or calling the underlying tables.
+
+## 10. Add real music
+
+The music player loads published rows from `music_entries`.
+
+Each playable entry needs:
+
+- title
+- artist
+- category
+- valid public audio URL
+- optional description and cover image
+- `published` status
+
+Upload approved audio through the administrator media library or use another stable public source that supports browser audio playback. Confirm the MIME type, CORS behavior, mobile playback, and usage rights.
+
+## 11. Test forms and moderation
 
 Confirm that:
 
-- membership cannot be completed without the required legal checkboxes
-- policy version, acceptance time, and member ID are recorded
-- sensitive-data consent is specific and recorded
-- optional marketing consent is separate and can remain unchecked
-- security events record only the disclosed fields needed for abuse prevention
-- IP and user-agent information do not appear in the public Freedom Wall or member journal interface
-- suspended accounts cannot create protected records
-- rate limits block repeated abusive submissions
+- the contact form creates one real contact record
+- the volunteer form creates one volunteer record
+- repeated submissions trigger the rate limit
+- messages are private to administrators
+- pending community posts are not public
+- publishing adds a public timestamp
+- requesting changes shows the review note to the submitting member
+- deleting or unpublishing a post removes it from the public feed
 
-## 9. Retention and deletion
+## 12. Review privacy and operations
 
-Schedule the cleanup function defined in the schema.
+Before registration opens:
 
-Operational targets in the current Privacy Notice include:
+- review the Privacy Policy, Membership Agreement, Community Guidelines, and Data Rights process with a qualified Philippine professional
+- assign who will moderate posts and answer privacy requests
+- create an incident and breach-response procedure
+- define message, account, content, and backup retention procedures
+- document administrator access and MFA requirements
+- test account export and deletion manually
+- make sure emergency information remains public
 
-- security events normally retained for 90 days unless needed for a documented investigation or legal obligation
-- deleted journal, wall, and contact records purged within the stated deletion window
-- member content retained only while the account or record remains active, subject to lawful exceptions
+## 13. Replace fragile external media
 
-Document every exception instead of keeping data indefinitely.
+The approved hero, founder portrait, icon, and signature are connected through managed asset URLs. The volunteer gallery still uses approved Google Drive thumbnails because the original files have not yet been copied into the managed media library.
 
-## 10. Go-live checklist
+Before a large launch, upload the original volunteer images to `site-media` or the repository, then replace every Drive thumbnail URL and retest all ten slides.
 
-Before opening registration:
+## 14. Final go-live test
 
-- complete the two-account isolation test
-- review database policies after every schema change
-- configure administrator MFA
-- establish an incident and breach-response process
-- assign moderation responsibility and response times
-- test data access, export, correction, restriction, deletion, and account closure
-- configure automated retention cleanup
-- create encrypted backups under `GOOGLE_DRIVE_BACKUP.md`
-- review the Privacy Notice, Membership Agreement, Community Guidelines, and Data Rights page with a Philippine lawyer or privacy professional
-- confirm that emergency information remains public
-- verify that the website never claims a record was saved when Supabase is unavailable
+Test on:
 
-## Herra and payments
+- Android Chrome
+- iPhone Safari
+- desktop Chrome
+- desktop Safari or Firefox
+- a slow mobile connection
+- keyboard-only navigation
+- reduced-motion mode
+- a screen reader smoke test
 
-Herra subscriptions and payment processing are intentionally outside this free-membership phase. They require separate billing, entitlement, AI safety, privacy, refund, and cancellation systems.
+Then verify:
+
+- GitHub Actions quality workflow passes
+- custom domain serves HTTPS
+- no browser console errors appear
+- every internal link works
+- every approved image loads
+- no removed cultural module remains
+- database logs show no unexpected permission failures
+- real email verification and reset messages arrive
+
+Only then should public registration be announced.
