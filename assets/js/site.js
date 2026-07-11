@@ -6,6 +6,29 @@
   if(loader){window.addEventListener('load',()=>setTimeout(()=>loader.classList.add('hide'),650));setTimeout(()=>loader.classList.add('hide'),2200)}
   const toggle=$('#navToggle'),links=$('#navLinks');
   if(toggle&&links){toggle.addEventListener('click',()=>{const open=links.classList.toggle('open');toggle.setAttribute('aria-expanded',String(open))});links.addEventListener('click',e=>{if(e.target.tagName==='A'){links.classList.remove('open');toggle.setAttribute('aria-expanded','false')}})}
+
+  const bookshelf=$('#bookshelf .bookshelf');
+  if(bookshelf){
+    bookshelf.innerHTML=`
+      <article class="book-feature reveal in">
+        <div class="book-feature-inner">
+          <div>
+            <p class="eyebrow" style="color:#f0d58b">Life and identity</p>
+            <h3>Finding Your Way Back to Yourself</h3>
+            <p>A complete guide about life, identity, feeling left behind, feeling lost, coming out, self-doubt, belonging, and learning to trust yourself again.</p>
+            <div class="book-meta"><span>Life</span><span>Identity</span><span>Feeling lost</span><span>Self-doubt</span><span>Belonging</span></div>
+          </div>
+          <div class="actions" style="justify-content:flex-start"><a class="pill" style="background:#fff;color:#4c0d73;box-shadow:none" href="reading.html">Open the guide</a></div>
+        </div>
+      </article>
+      <div class="book-stack">
+        <a class="mini-card" href="womens-health.html"><p class="eyebrow">Women's health</p><h3>Your Body Is Worth Listening To</h3><p>Periods, preventive care, sexual health, mental health, body awareness, and speaking up during appointments.</p><small>Open the full reading</small></a>
+        <a class="mini-card" href="skin-care-makeup.html"><p class="eyebrow">Skin care and makeup</p><h3>Care Without the Pressure</h3><p>A simple routine, sunscreen, acne care, makeup basics, product hygiene, and beauty without shame.</p><small>Open the full reading</small></a>
+        <a class="mini-card" href="coming-out-respect.html"><p class="eyebrow">LGBTQIA+</p><h3>Coming Out and Learning to Respect</h3><p>Safety, privacy, coming-out choices, and a direct message to straight and cisgender people.</p><small>Open the full reading</small></a>
+        <a class="mini-card" href="men-can-cry.html"><p class="eyebrow">Men and emotions</p><h3>Men Can Cry</h3><p>Healthier masculinity, emotional honesty, asking for help, respect, grooming, and skin care.</p><small>Open the full reading</small></a>
+      </div>`;
+  }
+
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const items=$$('.reveal');
   if(reduced||!('IntersectionObserver' in window)){items.forEach(el=>el.classList.add('in'))}else{const io=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('in');io.unobserve(entry.target)}}),{threshold:.12,rootMargin:'0px 0px -35px 0px'});items.forEach(el=>io.observe(el))}
