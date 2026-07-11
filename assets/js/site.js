@@ -7,6 +7,20 @@
     if(document.querySelector(`link[href="${href}"]`))return;
     const link=document.createElement('link');link.rel='stylesheet';link.href=href;document.head.appendChild(link);
   }
+  function ensureAppMetadata(){
+    if(!document.querySelector('link[rel="manifest"]')){
+      const manifest=document.createElement('link');manifest.rel='manifest';manifest.href='manifest.webmanifest';document.head.appendChild(manifest);
+    }
+    if(!document.querySelector('meta[name="theme-color"]')){
+      const theme=document.createElement('meta');theme.name='theme-color';theme.content='#510b77';document.head.appendChild(theme);
+    }
+    if(!document.querySelector('meta[name="apple-mobile-web-app-capable"]')){
+      const capable=document.createElement('meta');capable.name='apple-mobile-web-app-capable';capable.content='yes';document.head.appendChild(capable);
+    }
+    if(!document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]')){
+      const statusBar=document.createElement('meta');statusBar.name='apple-mobile-web-app-status-bar-style';statusBar.content='default';document.head.appendChild(statusBar);
+    }
+  }
   function loadScript(src){
     return new Promise((resolve,reject)=>{
       const existing=document.querySelector(`script[src="${src}"]`);
@@ -26,6 +40,7 @@
 
   ensureStylesheet('assets/css/icon-fix.css');
   ensureStylesheet('assets/css/repair.css');
+  ensureAppMetadata();
 
   if(!document.querySelector('.skip-link')){
     const skip=document.createElement('a');skip.className='skip-link';skip.href='#main-content';skip.textContent='Skip to main content';document.body.prepend(skip);
