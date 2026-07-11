@@ -40,6 +40,24 @@
       <a class="glass-card" href="music.html"><p class="eyebrow">Music</p><h3>For Quieter Moments</h3><p>Open gentle listening and original work by FMB.</p></a>`;
   }
 
+  const readingPage=$('.reading-page');
+  if(readingPage){
+    document.body.classList.add('ebook-protected');
+    const toast=document.createElement('div');
+    toast.className='ebook-guard-toast';
+    toast.setAttribute('role','status');
+    toast.textContent='This reading is protected. Please read it here.';
+    document.body.appendChild(toast);
+    let toastTimer;
+    const warn=()=>{clearTimeout(toastTimer);toast.classList.add('show');toastTimer=setTimeout(()=>toast.classList.remove('show'),1800)};
+    ['copy','cut','dragstart','contextmenu'].forEach(type=>document.addEventListener(type,event=>{event.preventDefault();warn()}));
+    document.addEventListener('keydown',event=>{
+      const key=event.key.toLowerCase();
+      const blocked=(event.ctrlKey||event.metaKey)&&['c','x','p','s','u'].includes(key);
+      if(blocked){event.preventDefault();warn()}
+    });
+  }
+
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const items=$$('.reveal');
   if(reduced||!('IntersectionObserver' in window)){items.forEach(el=>el.classList.add('in'))}else{const io=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('in');io.unobserve(entry.target)}}),{threshold:.12,rootMargin:'0px 0px -35px 0px'});items.forEach(el=>io.observe(el))}
