@@ -1,27 +1,50 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Privacy and Care | With love, FMB</title>
 <meta name="description" content="A clear and caring privacy guide for the With love, FMB community.">
 <link rel="icon" href="assets/icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-:root{--ink:#21142f;--muted:#726879;--purple:#64218e;--line:rgba(55,31,70,.12);--glass:rgba(255,255,255,.82);--shadow:0 24px 70px rgba(47,22,62,.13)}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",sans-serif;background:radial-gradient(circle at 8% 0,rgba(191,139,238,.24),transparent 29%),linear-gradient(180deg,#fff,#f6effa)}a{color:var(--purple)}.wrap{width:min(820px,calc(100% - 28px));margin:auto}.nav{margin-top:14px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:16px;border:1px solid var(--line);border-radius:24px;background:var(--glass);backdrop-filter:blur(24px);box-shadow:0 14px 42px rgba(45,23,60,.09)}.nav img{width:160px;height:50px;object-fit:contain}.nav a:last-child{padding:11px 15px;border-radius:15px;background:#21142f;color:#fff;text-decoration:none}.hero{padding:70px 0 34px}.eyebrow{font-size:.78rem;text-transform:uppercase;letter-spacing:.16em;color:var(--purple);font-weight:780}h1{font-size:clamp(3rem,8vw,5.7rem);line-height:.94;letter-spacing:-.055em;margin:14px 0 20px}.lead{font-size:1.17rem;line-height:1.7;color:var(--muted)}.card{margin:18px 0;padding:26px;border:1px solid var(--line);border-radius:28px;background:rgba(255,255,255,.84);box-shadow:0 16px 45px rgba(44,22,57,.07)}h2{font-size:1.45rem;margin:0 0 10px;letter-spacing:-.025em}.card p,.card li{color:var(--muted);line-height:1.72}.card ul{padding-left:20px}.comfort{margin:30px 0;padding:30px;border-radius:30px;background:linear-gradient(135deg,#2a1837,#6b288b);color:#fff}.comfort p{font-size:1.25rem;line-height:1.6;margin:0}.updated{font-size:.85rem;color:var(--muted);margin:28px 0 56px}@media(max-width:560px){.nav img{width:135px}.nav{border-radius:21px}.hero{padding-top:52px}.card{padding:22px;border-radius:24px}}
+:root{--deep-violet:#4C0D73;--imperial-purple:#7E1DBD;--orchid-mist:#9A5BAF;--ivory-white:#F8F4EC;--champagne-gold:#D0A44B;--ink:#2A1733;--muted:#746879;--line:rgba(76,13,115,.11);--glass:rgba(255,255,255,.8);--shadow:0 24px 70px rgba(50,18,70,.12)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:'Proxima Nova','Avenir Next','Helvetica Neue',Arial,sans-serif;background:radial-gradient(circle at 8% 0,rgba(154,91,175,.18),transparent 29%),linear-gradient(180deg,#FFFEFC,var(--ivory-white))}
+a{color:var(--deep-violet)}
+.wrap{width:min(830px,calc(100% - 28px));margin:auto}
+.nav{margin-top:14px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:16px;border:1px solid var(--line);border-radius:24px;background:var(--glass);backdrop-filter:blur(24px);box-shadow:0 14px 42px rgba(45,23,60,.09)}
+.nav img{width:160px;height:50px;object-fit:contain}
+.nav a:last-child{padding:11px 15px;border-radius:15px;background:var(--deep-violet);color:#fff;text-decoration:none}
+.hero{padding:72px 0 34px}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.16em;color:var(--champagne-gold);font-weight:700}
+h1,h2{font-family:'Cormorant Garamond',serif;color:var(--deep-violet)}
+h1{font-size:clamp(50px,8vw,82px);line-height:.94;letter-spacing:-.04em;font-weight:500;margin:14px 0 20px}
+.lead{font-size:18px;line-height:1.72;color:var(--muted)}
+.card{margin:18px 0;padding:27px;border:1px solid var(--line);border-radius:28px;background:rgba(255,255,255,.84);box-shadow:0 16px 45px rgba(44,22,57,.07)}
+h2{font-size:29px;font-weight:600;margin:0 0 10px}
+.card p,.card li{color:var(--muted);line-height:1.72}
+.card ul{padding-left:20px}
+.comfort{margin:30px 0;padding:30px;border-radius:30px;background:linear-gradient(135deg,var(--deep-violet),var(--imperial-purple));color:#fff}
+.comfort p{font-family:'Cormorant Garamond',serif;font-size:27px;line-height:1.4;margin:0}
+.updated{font-size:13px;color:var(--muted);margin:28px 0 56px}
+@media(max-width:560px){.nav img{width:135px}.nav{border-radius:21px}.hero{padding-top:52px}.card{padding:22px;border-radius:24px}}
 </style>
 </head>
 <body>
 <header class="wrap nav"><a href="index.html" aria-label="With love, FMB home"><img src="assets/signature.svg" alt="With love, FMB"></a><a href="index.html">Back home</a></header>
 <main class="wrap">
-<section class="hero"><div class="eyebrow">Privacy and care</div><h1>A gentle, clear promise.</h1><p class="lead">The With love, FMB community is meant to feel safe, simple, and human. This page explains what happens when you join and share a thought.</p></section>
-<section class="card"><h2>What you may share</h2><p>You may choose a name or nickname, add an email if you wish, and write thoughts in your community space. Your email is optional.</p></section>
-<section class="card"><h2>Where your information stays</h2><p>At this stage, your profile details and submitted thoughts are stored only in the browser on the device you use. The website does not send them to a server or to Francine Marie Bautista.</p><p>Because they stay on your device, changing devices, using another browser, or clearing browser data may remove them.</p></section>
-<section class="card"><h2>Your thoughts belong to you</h2><p>Your community space is for expression, not performance. Thoughts are not published publicly, reviewed, or answered. They remain part of your local history until you remove the profile or clear the browser data.</p></section>
-<section class="card"><h2>Your choices</h2><p>You can edit your display name and optional email inside your profile. You can also remove your local profile and its thought history from the device at any time.</p></section>
-<section class="card"><h2>Support and urgent help</h2><p>The community space is not an emergency or counseling service. The Help area keeps crisis and mental health contacts visible so support is easier to reach when it is needed.</p></section>
+<section class="hero"><p class="eyebrow">Privacy and care</p><h1>A gentle, clear promise.</h1><p class="lead">The With love, FMB community is meant to feel safe, simple, and human. This page explains what happens when you join and prepare a private message.</p></section>
+<section class="card"><h2>What you may share</h2><p>You may choose a name or nickname, add an email if you wish, and prepare a private message in your community space. Your email is optional.</p></section>
+<section class="card"><h2>What stays on your device</h2><p>Your local profile and the history of messages you prepared are stored in the browser on the device you use. Changing devices, using another browser, or clearing browser data may remove them.</p></section>
+<section class="card"><h2>What happens when you send a message</h2><p>The website opens your email app with the message addressed to <a href="mailto:withlovefmb@gmail.com">withlovefmb@gmail.com</a>. The message is not posted on the website. It is only sent after you review it and tap send in your email app.</p></section>
+<section class="card"><h2>Your messages are not public</h2><p>There is no public freedom wall. Other visitors cannot see what you write. A local copy of the message may remain in your browser history until you remove your profile or clear the browser data.</p></section>
+<section class="card"><h2>Your choices</h2><p>You can edit your display name and optional email inside your profile. You can also remove your local profile and its saved message history from the device at any time.</p></section>
+<section class="card"><h2>Support and urgent help</h2><p>The community space is not an emergency or counseling service. The Help section keeps crisis and mental health contacts visible so support is easier to reach when it is needed.</p></section>
 <section class="comfort"><p>Joining should feel like entering a caring room, not signing a complicated contract. This guide exists so you can choose with clarity and comfort.</p></section>
-<p class="updated">Last updated July 11, 2026. Questions may be sent to <a href="mailto:Withlovefmb@gmail.com">Withlovefmb@gmail.com</a>.</p>
+<p class="updated">Last updated July 11, 2026. Questions may be sent to <a href="mailto:withlovefmb@gmail.com">withlovefmb@gmail.com</a>.</p>
 </main>
 </body>
 </html>
