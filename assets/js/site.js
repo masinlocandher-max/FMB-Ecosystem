@@ -7,6 +7,15 @@
   const toggle=$('#navToggle'),links=$('#navLinks');
   if(toggle&&links){toggle.addEventListener('click',()=>{const open=links.classList.toggle('open');toggle.setAttribute('aria-expanded',String(open))});links.addEventListener('click',e=>{if(e.target.tagName==='A'){links.classList.remove('open');toggle.setAttribute('aria-expanded','false')}})}
 
+  const topPromo=$('.support-glass');
+  if(topPromo){
+    topPromo.setAttribute('aria-label','Work with FMB website services');
+    topPromo.innerHTML=`
+      <strong>Make your own website!</strong>
+      <a class="support-chip light" href="mailto:withlovefmb@gmail.com?subject=Website%20Project%20with%20FMB">Work with FMB</a>
+      <a class="support-chip" href="https://senzpr.com" target="_blank" rel="noopener">Branding and digital needs</a>`;
+  }
+
   const bookshelf=$('#bookshelf .bookshelf');
   if(bookshelf){
     bookshelf.innerHTML=`
