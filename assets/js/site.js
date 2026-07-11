@@ -1,5 +1,11 @@
 (function(){
   'use strict';
+  if(!document.querySelector('link[href="assets/css/icon-fix.css"]')){
+    const iconFix=document.createElement('link');
+    iconFix.rel='stylesheet';
+    iconFix.href='assets/css/icon-fix.css';
+    document.head.appendChild(iconFix);
+  }
   const $=s=>document.querySelector(s);
   const $$=s=>document.querySelectorAll(s);
   const loader=$('#loader');
