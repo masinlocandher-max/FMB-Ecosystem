@@ -1,103 +1,166 @@
 (function(){
   'use strict';
-  if(!document.querySelector('link[href="assets/css/icon-fix.css"]')){
-    const iconFix=document.createElement('link');
-    iconFix.rel='stylesheet';
-    iconFix.href='assets/css/icon-fix.css';
-    document.head.appendChild(iconFix);
+  const $=selector=>document.querySelector(selector);
+  const $$=selector=>document.querySelectorAll(selector);
+
+  function ensureStylesheet(href){
+    if(document.querySelector(`link[href="${href}"]`))return;
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href=href;
+    document.head.appendChild(link);
   }
-  const $=s=>document.querySelector(s);
-  const $$=s=>document.querySelectorAll(s);
+  ensureStylesheet('assets/css/icon-fix.css');
+  ensureStylesheet('assets/css/repair.css');
+
+  if(!document.querySelector('.skip-link')){
+    const skip=document.createElement('a');
+    skip.className='skip-link';
+    skip.href='#main-content';
+    skip.textContent='Skip to main content';
+    document.body.prepend(skip);
+    const main=document.querySelector('main');
+    if(main&&!main.id)main.id='main-content';
+  }
+
   const loader=$('#loader');
-  if(loader){window.addEventListener('load',()=>setTimeout(()=>loader.classList.add('hide'),650));setTimeout(()=>loader.classList.add('hide'),2200)}
-  const toggle=$('#navToggle'),links=$('#navLinks');
-  if(toggle&&links){toggle.addEventListener('click',()=>{const open=links.classList.toggle('open');toggle.setAttribute('aria-expanded',String(open))});links.addEventListener('click',e=>{if(e.target.tagName==='A'){links.classList.remove('open');toggle.setAttribute('aria-expanded','false')}})}
+  if(loader){
+    const hideLoader=()=>loader.classList.add('hide');
+    window.addEventListener('load',()=>setTimeout(hideLoader,350),{once:true});
+    setTimeout(hideLoader,2200);
+  }
+
+  const toggle=$('#navToggle');
+  const links=$('#navLinks');
+  if(toggle&&links){
+    const closeMenu=()=>{links.classList.remove('open');toggle.setAttribute('aria-expanded','false')};
+    toggle.addEventListener('click',()=>{
+      const open=links.classList.toggle('open');
+      toggle.setAttribute('aria-expanded',String(open));
+    });
+    links.addEventListener('click',event=>{if(event.target.closest('a'))closeMenu()});
+    document.addEventListener('keydown',event=>{if(event.key==='Escape')closeMenu()});
+    document.addEventListener('click',event=>{if(!event.target.closest('.nav-glass'))closeMenu()});
+  }
 
   const topPromo=$('.support-glass');
   if(topPromo){
-    topPromo.setAttribute('aria-label','Work with FMB website services');
-    topPromo.innerHTML=`
-      <strong>Make your own website!</strong>
-      <a class="support-chip light" href="mailto:withlovefmb@gmail.com?subject=Website%20Project%20with%20FMB">Work with FMB</a>
-      <a class="support-chip" href="https://senzpr.com" target="_blank" rel="noopener">Branding and digital needs</a>`;
+    topPromo.setAttribute('aria-label','Work with FMB and website support links');
+    const group=`
+      <div class="promo-group">
+        <strong>Work with FMB</strong>
+        <a class="support-chip light" href="mailto:withlovefmb@gmail.com?subject=Website%20Project%20with%20FMB">Start a website project</a>
+        <a class="support-chip" href="https://senzpr.com" target="_blank" rel="noopener noreferrer">Branding and digital needs</a>
+        <a class="support-chip" href="index.html#support">Need urgent help? Open support contacts</a>
+      </div>`;
+    topPromo.innerHTML=`<div class="promo-marquee">${group}<div class="promo-group" aria-hidden="true">${group.replace('<div class="promo-group">','').replace(/<\/div>$/,'')}</div></div>`;
   }
 
   const landingHero=$('.hero');
   if(landingHero){
-    const banner=landingHero.querySelector('.hero-banner');
-    const bannerImage=banner?.querySelector('img');
-    const heroCard=landingHero.querySelector('.hero-card');
+    const bannerImage=landingHero.querySelector('.hero-banner img');
     if(bannerImage){
       bannerImage.src='assets/hero-banner.svg';
-      bannerImage.alt='With love, FMB official banner featuring Francine Marie Bautista';
+      bannerImage.alt='With love, FMB official banner featuring Francine Marie Bautista and the purple and gold brand emblem';
       bannerImage.removeAttribute('width');
       bannerImage.removeAttribute('height');
+      bannerImage.setAttribute('fetchpriority','high');
     }
-    if(heroCard)heroCard.remove();
-    const heroStyle=document.createElement('style');
-    heroStyle.textContent=`
-      .hero{padding:132px 0 0!important;min-height:0!important;background:#fff!important}
-      .hero-banner{width:100%!important;max-width:none!important;margin:0!important;border:0!important;border-radius:0!important;background:#fff!important;box-shadow:none!important;overflow:hidden!important}
-      .hero-banner img{display:block!important;width:100%!important;height:auto!important;aspect-ratio:16/9!important;object-fit:contain!important;object-position:center!important;background:#fff!important}
-      @media(max-width:800px){.hero{padding-top:132px!important}.hero-banner{border-radius:0!important}}
-    `;
-    document.head.appendChild(heroStyle);
-  }
-
-  const bookshelf=$('#bookshelf .bookshelf');
-  if(bookshelf){
-    bookshelf.innerHTML=`
-      <article class="book-feature reveal in">
-        <div class="book-feature-inner">
-          <div>
-            <p class="eyebrow" style="color:#f0d58b">Life and identity</p>
-            <h3>Finding Your Way Back to Yourself</h3>
-            <p>A complete guide about life, identity, feeling left behind, feeling lost, coming out, self-doubt, belonging, and learning to trust yourself again.</p>
-            <div class="book-meta"><span>Life</span><span>Identity</span><span>Feeling lost</span><span>Self-doubt</span><span>Belonging</span></div>
-          </div>
-          <div class="actions" style="justify-content:flex-start"><a class="pill" style="background:#fff;color:#4c0d73;box-shadow:none" href="reading.html">Open the guide</a></div>
-        </div>
-      </article>
-      <div class="book-stack">
-        <a class="mini-card" href="womens-health.html"><p class="eyebrow">Women's health</p><h3>Your Body Is Worth Listening To</h3><p>Periods, preventive care, sexual health, mental health, body awareness, and speaking up during appointments.</p><small>Open the full reading</small></a>
-        <a class="mini-card" href="skin-care-makeup.html"><p class="eyebrow">Skin care and makeup</p><h3>Care Without the Pressure</h3><p>A simple routine, sunscreen, acne care, makeup basics, product hygiene, and beauty without shame.</p><small>Open the full reading</small></a>
-        <a class="mini-card" href="coming-out-respect.html"><p class="eyebrow">LGBTQIA+</p><h3>Coming Out and Learning to Respect</h3><p>Safety, privacy, coming-out choices, and a direct message to straight and cisgender people.</p><small>Open the full reading</small></a>
-        <a class="mini-card" href="men-can-cry.html"><p class="eyebrow">Men and emotions</p><h3>Men Can Cry</h3><p>Healthier masculinity, emotional honesty, asking for help, respect, grooming, and skin care.</p><small>Open the full reading</small></a>
-      </div>`;
-  }
-
-  const memberLibrary=$('#readPanel .member-grid');
-  if(memberLibrary){
-    memberLibrary.innerHTML=`
-      <a class="glass-card" href="reading.html"><p class="eyebrow">Life and identity</p><h3>Finding Your Way Back to Yourself</h3><p>For feeling lost, left behind, unsure, unseen, or afraid to begin again.</p></a>
-      <a class="glass-card" href="womens-health.html"><p class="eyebrow">Women's health</p><h3>Your Body Is Worth Listening To</h3><p>Body awareness, periods, preventive care, sexual health, mental health, and medical self-advocacy.</p></a>
-      <a class="glass-card" href="skin-care-makeup.html"><p class="eyebrow">Skin care and makeup</p><h3>Care Without the Pressure</h3><p>Simple routines, sun protection, acne care, makeup basics, and safer product habits.</p></a>
-      <a class="glass-card" href="coming-out-respect.html"><p class="eyebrow">LGBTQIA+</p><h3>Coming Out and Learning to Respect</h3><p>For LGBTQIA+ people and the straight and cisgender people who want to respond well.</p></a>
-      <a class="glass-card" href="men-can-cry.html"><p class="eyebrow">Men and emotions</p><h3>Men Can Cry</h3><p>Emotional honesty, asking for help, respect, skin care, and a healthier masculinity.</p></a>
-      <a class="glass-card" href="music.html"><p class="eyebrow">Music</p><h3>For Quieter Moments</h3><p>Open gentle listening and original work by FMB.</p></a>`;
-  }
-
-  const readingPage=$('.reading-page');
-  if(readingPage){
-    document.body.classList.add('ebook-protected');
-    const toast=document.createElement('div');
-    toast.className='ebook-guard-toast';
-    toast.setAttribute('role','status');
-    toast.textContent='This reading is protected. Please read it here.';
-    document.body.appendChild(toast);
-    let toastTimer;
-    const warn=()=>{clearTimeout(toastTimer);toast.classList.add('show');toastTimer=setTimeout(()=>toast.classList.remove('show'),1800)};
-    ['copy','cut','dragstart','contextmenu'].forEach(type=>document.addEventListener(type,event=>{event.preventDefault();warn()}));
-    document.addEventListener('keydown',event=>{
-      const key=event.key.toLowerCase();
-      const blocked=(event.ctrlKey||event.metaKey)&&['c','x','p','s','u'].includes(key);
-      if(blocked){event.preventDefault();warn()}
-    });
   }
 
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const items=$$('.reveal');
-  if(reduced||!('IntersectionObserver' in window)){items.forEach(el=>el.classList.add('in'))}else{const io=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('in');io.unobserve(entry.target)}}),{threshold:.12,rootMargin:'0px 0px -35px 0px'});items.forEach(el=>io.observe(el))}
+  const revealItems=$$('.reveal');
+  if(reduced||!('IntersectionObserver' in window)){
+    revealItems.forEach(item=>item.classList.add('in'));
+  }else{
+    const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
+      if(entry.isIntersecting){entry.target.classList.add('in');observer.unobserve(entry.target)}
+    }),{threshold:.1,rootMargin:'0px 0px -24px 0px'});
+    revealItems.forEach(item=>observer.observe(item));
+  }
+
+  $$('a[target="_blank"]').forEach(link=>{
+    const rel=new Set((link.getAttribute('rel')||'').split(/\s+/).filter(Boolean));
+    rel.add('noopener');rel.add('noreferrer');
+    link.setAttribute('rel',[...rel].join(' '));
+  });
+
+  $$('img').forEach(image=>{
+    if(!image.hasAttribute('decoding'))image.decoding='async';
+    if(image.closest('.hero-banner')||image.classList.contains('loader-icon'))return;
+    if(!image.hasAttribute('loading'))image.loading='lazy';
+    image.addEventListener('error',()=>{
+      image.classList.add('image-missing');
+      image.setAttribute('aria-hidden','true');
+      const parent=image.parentElement;
+      if(parent&&!parent.querySelector('.image-fallback')){
+        const fallback=document.createElement('span');
+        fallback.className='image-fallback';
+        fallback.textContent='Image temporarily unavailable';
+        parent.appendChild(fallback);
+      }
+    },{once:true});
+  });
+
+  async function loadCommunityFeed(){
+    const feed=$('#communityFeed');
+    if(!feed)return;
+    const status=$('#communityFeedStatus');
+    if(!window.FMB?.configured){
+      feed.innerHTML='<div class="empty">The public community feed will open after the secure member service is connected.</div>';
+      if(status)status.textContent='No private information is shown while the service is offline.';
+      return;
+    }
+    const client=window.FMB.createClient('local');
+    const {data,error}=await client.from('freedom_wall_posts')
+      .select('id,alias,content,published_at')
+      .eq('status','published')
+      .order('published_at',{ascending:false})
+      .limit(9);
+    if(error){
+      feed.innerHTML='<div class="empty">The community feed could not be loaded right now.</div>';
+      if(status)status.textContent='Please try again later.';
+      return;
+    }
+    if(!data?.length){
+      feed.innerHTML='<div class="empty">No approved community posts have been published yet.</div>';
+      if(status)status.textContent='Posts appear only after review.';
+      return;
+    }
+    feed.innerHTML=data.map(post=>`<article class="community-post"><p>${window.FMB.escapeHtml(post.content)}</p><footer><strong>${window.FMB.escapeHtml(post.alias)}</strong><time datetime="${window.FMB.escapeHtml(post.published_at||'')}">${post.published_at?new Date(post.published_at).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}):''}</time></footer></article>`).join('');
+    if(status)status.textContent='Only approved posts are shown publicly.';
+  }
+  loadCommunityFeed();
+
   const contact=$('#contactForm');
-  if(contact){contact.addEventListener('submit',e=>{e.preventDefault();const name=$('#contactName')?.value.trim()||'Website visitor';const subject=$('#contactSubject')?.value.trim()||'Message from the With love, FMB website';const message=$('#contactMessage')?.value.trim();if(!message){$('#contactMessage')?.focus();return}location.href=`mailto:withlovefmb@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message+'\n\nFrom: '+name)}`})}
+  if(contact){
+    const button=contact.querySelector('button[type="submit"]');
+    const status=$('#contactStatus');
+    const setStatus=(message,type='')=>{
+      if(!status)return;
+      status.textContent=message;
+      status.className=`inline-status${type?' '+type:''}`;
+      status.hidden=false;
+    };
+    contact.addEventListener('submit',async event=>{
+      event.preventDefault();
+      const name=window.FMB?.cleanText($('#contactName')?.value,80)||'';
+      const email=String($('#contactEmail')?.value||'').trim().toLowerCase();
+      const subject=window.FMB?.cleanText($('#contactSubject')?.value,120)||'';
+      const message=window.FMB?.cleanText($('#contactMessage')?.value,4000)||'';
+      if(!name||!email||!subject||!message){setStatus('Please complete every required field.','error');return}
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){setStatus('Please enter a valid email address.','error');return}
+      if(!window.FMB?.configured){
+        setStatus('The secure message service is not connected yet. Please email withlovefmb@gmail.com directly.','error');
+        return;
+      }
+      button.disabled=true;button.classList.add('is-loading');button.textContent='Sending…';
+      const client=window.FMB.createClient('local');
+      const {error}=await client.rpc('submit_contact_message',{p_name:name,p_email:email,p_subject:subject,p_message:message,p_kind:'contact'});
+      button.disabled=false;button.classList.remove('is-loading');button.textContent='Send message';
+      if(error){setStatus('Your message could not be sent right now. Please try again later.','error');return}
+      contact.reset();
+      setStatus('Your message was sent successfully.','success');
+    });
+  }
 })();
