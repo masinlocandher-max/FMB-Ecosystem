@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>My Space | With love, FMB</title>
+<meta name="description" content="The verified member space for With love, FMB.">
+<link rel="icon" href="assets/icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+<div class="top-shell"><header class="nav-glass"><a class="nav-brand" href="index.html"><img class="nav-icon" src="assets/icon.svg" alt=""><span class="nav-word">with love, <em>fmb</em></span></a><nav class="nav-links" id="navLinks"><a href="reading.html">Read</a><a href="music.html">Music</a><a href="privacy-policy.html">Privacy policy</a></nav><div class="nav-actions"><button class="nav-btn" id="signOut">Sign out</button><button class="nav-toggle" id="navToggle" aria-expanded="false" aria-label="Open menu"><span></span><span></span></button></div></header></div>
+<main class="member-shell"><div class="wrap"><header class="member-header"><div><p class="eyebrow">Your member space</p><h1 id="greeting">Kumusta ka?</h1><p class="section-lede" id="memberEmail">A quiet place to read, write, and share.</p></div><a class="pill secondary" href="index.html">Back home</a></header><div class="status" id="memberStatus" role="status"></div>
+<nav class="member-tabs" aria-label="Member tools"><button class="member-tab active" data-panel="readPanel">Read</button><button class="member-tab" data-panel="writePanel">Write</button><button class="member-tab" data-panel="sharePanel">Share</button><button class="member-tab" data-panel="profilePanel">Profile</button></nav>
+<section class="member-panel" id="readPanel"><div class="member-grid"><a class="glass-card" href="reading.html"><p class="eyebrow">Reading room</p><h3>Finding Your Way Back to Yourself</h3><p>Read about life, identity, feeling lost, coming out, self-doubt, and belonging.</p></a><a class="glass-card" href="music.html"><p class="eyebrow">Music</p><h3>For quieter moments</h3><p>Open the music space for gentle listening and original work by FMB.</p></a></div></section>
+<section class="member-panel" id="writePanel" hidden><div class="split"><form class="glass-card form-grid" id="noteForm"><p class="eyebrow">Private note</p><h3>Write what you need to leave here.</h3><div class="field"><label for="noteTitle">Title, optional</label><input id="noteTitle" maxlength="120" placeholder="A short title"></div><div class="field"><label for="noteBody">Your note</label><textarea id="noteBody" maxlength="5000" required placeholder="Write freely"></textarea></div><button class="pill" type="submit">Save note</button><p class="form-note">Private notes are for your account only when the member database is connected.</p></form><article class="glass-card"><p class="eyebrow">Your notes</p><h3>Saved writing</h3><div class="thought-list" id="noteList"><div class="empty">Your saved notes will appear here.</div></div></article></div></section>
+<section class="member-panel" id="sharePanel" hidden><div class="split"><form class="glass-card form-grid" id="communityForm"><p class="eyebrow">Share to community</p><h3>Say something others may need to hear.</h3><div class="field"><label for="communityAlias">Name shown with the post</label><input id="communityAlias" maxlength="40" placeholder="Name or nickname" required></div><div class="field"><label for="communityBody">Post</label><textarea id="communityBody" maxlength="2000" required placeholder="Write your post"></textarea></div><label class="check-row"><input id="communityConsent" type="checkbox" required><span>I understand that this post will be reviewed before it appears in the community.</span></label><button class="pill" type="submit">Send for review</button></form><article class="glass-card"><p class="eyebrow">Private message</p><h3>Share without posting.</h3><p>Send a private email to With love, FMB. It will not appear in the community.</p><div class="actions" style="justify-content:flex-start"><a class="pill secondary" href="mailto:withlovefmb@gmail.com?subject=Private%20message%20from%20a%20member">Open private email</a></div></article></div></section>
+<section class="member-panel" id="profilePanel" hidden><div class="split"><form class="glass-card form-grid" id="profileForm"><p class="eyebrow">Profile</p><h3>Your details</h3><div class="field"><label for="profileName">Name or nickname</label><input id="profileName" maxlength="50"></div><div class="field"><label for="profileEmail">Verified email</label><input id="profileEmail" type="email" disabled></div><button class="pill" type="submit">Save profile</button></form><article class="glass-card"><p class="eyebrow">Privacy</p><h3>Your choices stay clear.</h3><p>Read how your profile, notes, and community posts are handled.</p><div class="actions" style="justify-content:flex-start"><a class="pill secondary" href="privacy-policy.html">Open Privacy Policy</a></div></article></div></section>
+</div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/site.js"></script>
+<script src="assets/js/member.js"></script>
+</body>
+</html>
