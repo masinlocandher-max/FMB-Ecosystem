@@ -69,7 +69,7 @@
   const landingHero=$('.hero');
   if(landingHero){
     const image=landingHero.querySelector('.hero-banner img');
-    if(image){image.src='assets/hero-banner.svg';image.alt='With love, FMB official banner featuring Francine Marie Bautista and the purple and gold brand emblem';image.removeAttribute('width');image.removeAttribute('height');image.setAttribute('fetchpriority','high')}
+    if(image){image.src='assets/images/hero.webp';image.alt='With love, FMB official banner featuring Francine Marie Bautista and the purple and gold brand emblem';image.removeAttribute('width');image.removeAttribute('height');image.setAttribute('fetchpriority','high')}
   }
 
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
