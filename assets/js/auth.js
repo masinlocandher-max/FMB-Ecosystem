@@ -1,16 +1,164 @@
 (function(){
   'use strict';
-  const $=s=>document.querySelector(s);
-  const config=window.FMB_CONFIG||{};
-  const configured=Boolean(config.SUPABASE_URL&&config.SUPABASE_ANON_KEY&&window.supabase);
-  const client=configured?window.supabase.createClient(config.SUPABASE_URL,config.SUPABASE_ANON_KEY):null;
-  const signinTab=$('#signinTab'),signupTab=$('#signupTab'),signinPanel=$('#signinPanel'),signupPanel=$('#signupPanel');
-  function showPanel(name){const signup=name==='signup';signinTab.classList.toggle('active',!signup);signupTab.classList.toggle('active',signup);signinPanel.hidden=signup;signupPanel.hidden=!signup;history.replaceState(null,'',signup?'#signup':'#signin')}
-  signinTab.addEventListener('click',()=>showPanel('signin'));signupTab.addEventListener('click',()=>showPanel('signup'));showPanel(location.hash==='#signup'?'signup':'signin');
-  function setStatus(id,message,type){const el=$(id);el.textContent=message;el.className='status show'+(type?' '+type:'')}
-  function noService(id){setStatus(id,'Account verification is being connected. No account was created or changed.','error')}
-  $('#signinForm').addEventListener('submit',async e=>{e.preventDefault();if(!configured){noService('#signinStatus');return}const email=$('#signinEmail').value.trim(),password=$('#signinPassword').value;setStatus('#signinStatus','Signing you in...');const {data,error}=await client.auth.signInWithPassword({email,password});if(error){setStatus('#signinStatus',error.message,'error');return}if(!data.user?.email_confirmed_at){setStatus('#signinStatus','Please verify your email before opening your profile.','error');return}location.href='member.html'});
-  $('#signupForm').addEventListener('submit',async e=>{e.preventDefault();const name=$('#displayName').value.trim(),email=$('#signupEmail').value.trim(),password=$('#signupPassword').value,confirm=$('#confirmPassword').value;if(password!==confirm){setStatus('#signupStatus','The passwords do not match.','error');return}if(!configured){noService('#signupStatus');return}setStatus('#signupStatus','Creating your profile...');const redirectTo=config.AUTH_REDIRECT_URL||new URL('member.html',location.href).href;const {data,error}=await client.auth.signUp({email,password,options:{emailRedirectTo:redirectTo,data:{display_name:name}}});if(error){setStatus('#signupStatus',error.message,'error');return}if(data.session){location.href='member.html';return}setStatus('#signupStatus','Check your email and open the verification link. Then return here to sign in.','success')});
-  $('#resetPassword').addEventListener('click',async()=>{const email=$('#signinEmail').value.trim();if(!email){setStatus('#signinStatus','Enter your email first.','error');return}if(!configured){noService('#signinStatus');return}const redirectTo=new URL('auth.html#signin',location.href).href;const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo});setStatus('#signinStatus',error?error.message:'Check your email for the password reset link.',error?'error':'success')});
-  if(configured){client.auth.getSession().then(({data})=>{if(data.session&&data.session.user?.email_confirmed_at)location.href='member.html'})}
+  const $=selector=>document.querySelector(selector);
+  const signinTab=$('#signinTab');
+  const signupTab=$('#signupTab');
+  const signinPanel=$('#signinPanel');
+  const signupPanel=$('#signupPanel');
+
+  function showPanel(name){
+    const signup=name==='signup';
+    signinTab.classList.toggle('active',!signup);
+    signupTab.classList.toggle('active',signup);
+    signinTab.setAttribute('aria-selected',String(!signup));
+    signupTab.setAttribute('aria-selected',String(signup));
+    signinPanel.hidden=signup;
+    signupPanel.hidden=!signup;
+    history.replaceState(null,'',signup?'#signup':'#signin');
+  }
+  signinTab.addEventListener('click',()=>showPanel('signin'));
+  signupTab.addEventListener('click',()=>showPanel('signup'));
+  showPanel(location.hash==='#signup'?'signup':'signin');
+
+  document.querySelectorAll('[data-toggle-password]').forEach(button=>button.addEventListener('click',()=>{
+    const input=document.getElementById(button.dataset.togglePassword);
+    if(!input)return;
+    const visible=input.type==='text';
+    input.type=visible?'password':'text';
+    button.textContent=visible?'Show':'Hide';
+    button.setAttribute('aria-label',visible?'Show password':'Hide password');
+  }));
+
+  function setStatus(selector,message,type=''){
+    const element=$(selector);
+    element.textContent=message;
+    element.className=`status show${type?' '+type:''}`;
+  }
+  function setLoading(button,loading,label){
+    button.disabled=loading;
+    button.classList.toggle('is-loading',loading);
+    if(loading){button.dataset.original=button.textContent;button.textContent=label}
+    else if(button.dataset.original){button.textContent=button.dataset.original;delete button.dataset.original}
+  }
+  function serviceUnavailable(selector){
+    setStatus(selector,'The secure account service has not been connected yet. No account or password was created or changed.','error');
+  }
+  function validEmail(email){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)}
+  function passwordChecks(value){
+    return {length:value.length>=10,lower:/[a-z]/.test(value),upper:/[A-Z]/.test(value),number:/\d/.test(value)};
+  }
+  function validPassword(value){return Object.values(passwordChecks(value)).every(Boolean)}
+
+  const signupPassword=$('#signupPassword');
+  signupPassword.addEventListener('input',()=>{
+    const checks=passwordChecks(signupPassword.value);
+    Object.entries(checks).forEach(([rule,valid])=>document.querySelector(`[data-rule="${rule}"]`)?.classList.toggle('valid',valid));
+  });
+
+  const localClient=window.FMB?.createClient('local');
+  const sessionClient=window.FMB?.createClient('session');
+
+  async function redirectExistingSession(){
+    if(!window.FMB?.configured)return;
+    for(const client of [localClient,sessionClient]){
+      if(!client)continue;
+      const {data}=await client.auth.getSession();
+      if(data.session?.user?.email_confirmed_at){location.replace('member.html');return}
+    }
+  }
+  redirectExistingSession();
+
+  $('#signinForm').addEventListener('submit',async event=>{
+    event.preventDefault();
+    const email=$('#signinEmail').value.trim().toLowerCase();
+    const password=$('#signinPassword').value;
+    const remember=$('#rememberSession').checked;
+    if(!validEmail(email)){setStatus('#signinStatus','Enter a valid email address.','error');return}
+    if(!password){setStatus('#signinStatus','Enter your password.','error');return}
+    if(!window.FMB?.configured){serviceUnavailable('#signinStatus');return}
+    const button=$('#signinButton');
+    setLoading(button,true,'Signing in…');
+    const client=window.FMB.createClient(remember?'local':'session');
+    const {data,error}=await client.auth.signInWithPassword({email,password});
+    if(error){
+      setLoading(button,false);
+      const message=error.message?.toLowerCase().includes('email not confirmed')?'Open the verification email before signing in.':'The email or password is incorrect.';
+      setStatus('#signinStatus',message,'error');
+      return;
+    }
+    if(!data.user?.email_confirmed_at){
+      await client.auth.signOut();
+      setLoading(button,false);
+      setStatus('#signinStatus','Open the verification email before signing in.','error');
+      return;
+    }
+    const {data:profile}=await client.from('profiles').select('status').eq('id',data.user.id).maybeSingle();
+    if(profile?.status==='suspended'){
+      await client.auth.signOut();
+      setLoading(button,false);
+      setStatus('#signinStatus','This profile is suspended. Contact withlovefmb@gmail.com if you believe this is a mistake.','error');
+      return;
+    }
+    location.replace('member.html');
+  });
+
+  $('#signupForm').addEventListener('submit',async event=>{
+    event.preventDefault();
+    const fullName=window.FMB?.cleanText($('#fullName').value,80)||'';
+    const email=$('#signupEmail').value.trim().toLowerCase();
+    const password=signupPassword.value;
+    const confirmation=$('#confirmPassword').value;
+    if(fullName.length<2){setStatus('#signupStatus','Enter your full name.','error');return}
+    if(!validEmail(email)){setStatus('#signupStatus','Enter a valid email address.','error');return}
+    if(!validPassword(password)){setStatus('#signupStatus','Use at least 10 characters with a lowercase letter, uppercase letter, and number.','error');return}
+    if(password!==confirmation){setStatus('#signupStatus','The passwords do not match.','error');return}
+    if(!$('#legalConsent').checked){setStatus('#signupStatus','Read and accept the membership, privacy, and community terms before continuing.','error');return}
+    if(!window.FMB?.configured){serviceUnavailable('#signupStatus');return}
+
+    const button=$('#signupButton');
+    setLoading(button,true,'Creating profile…');
+    const client=window.FMB.createClient('local');
+    const base=window.FMB.config.SITE_URL||location.origin+location.pathname.replace(/[^/]*$/,'');
+    const redirectTo=window.FMB.config.AUTH_REDIRECT_URL||new URL('member.html',base).href;
+    const {data,error}=await client.auth.signUp({
+      email,
+      password,
+      options:{
+        emailRedirectTo:redirectTo,
+        data:{
+          full_name:fullName,
+          display_name:fullName,
+          username:window.FMB.usernameFrom(fullName),
+          accepted_membership_version:'2026-07-12',
+          accepted_privacy_version:'2026-07-12',
+          accepted_guidelines_version:'2026-07-12'
+        }
+      }
+    });
+    setLoading(button,false);
+    if(error){
+      const duplicate=['user_already_exists','email_exists'].includes(error.code)||/already registered|already exists/i.test(error.message||'');
+      setStatus('#signupStatus',duplicate?'A profile may already use this email. Try signing in or resetting the password.':'The profile could not be created. Please review the details and try again.','error');
+      return;
+    }
+    if(data.session){location.replace('member.html');return}
+    $('#signupForm').reset();
+    document.querySelectorAll('#passwordRules span').forEach(rule=>rule.classList.remove('valid'));
+    setStatus('#signupStatus','Check your email and open the verification link. Then return to sign in.','success');
+  });
+
+  $('#resetPassword').addEventListener('click',async()=>{
+    const email=$('#signinEmail').value.trim().toLowerCase();
+    if(!validEmail(email)){setStatus('#signinStatus','Enter the email connected to your profile first.','error');$('#signinEmail').focus();return}
+    if(!window.FMB?.configured){serviceUnavailable('#signinStatus');return}
+    const button=$('#resetPassword');
+    setLoading(button,true,'Sending…');
+    const client=window.FMB.createClient('local');
+    const base=window.FMB.config.SITE_URL||location.origin+location.pathname.replace(/[^/]*$/,'');
+    const redirectTo=new URL('reset-password.html',base).href;
+    const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo});
+    setLoading(button,false);
+    if(error){setStatus('#signinStatus','The reset request could not be sent right now. Please try again later.','error');return}
+    setStatus('#signinStatus','If a profile uses that email, a password reset link is on the way.','success');
+  });
 })();
