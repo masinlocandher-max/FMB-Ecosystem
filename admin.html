@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Admin Dashboard | With love, FMB</title>
+<meta name="description" content="Secure administrator dashboard for With love, FMB.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="assets/icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css">
+<link rel="stylesheet" href="assets/css/icon-fix.css">
+<link rel="stylesheet" href="assets/css/repair.css">
+</head>
+<body>
+<div class="top-shell"><header class="nav-glass"><a class="nav-brand" href="index.html"><img class="nav-icon" src="assets/icon.svg" alt=""><span class="nav-word">with love, <em>fmb</em></span></a><nav class="nav-links" id="navLinks"><a href="index.html">Public site</a><a href="member.html">Member space</a><a href="privacy-policy.html">Privacy</a></nav><div class="nav-actions"><button class="nav-btn" id="adminSignOut" type="button">Sign out</button><button class="nav-toggle" id="navToggle" aria-expanded="false" aria-label="Open menu"><span></span><span></span></button></div></header></div>
+<main class="admin-shell" id="main-content"><div class="wrap">
+<header class="admin-head"><div><p class="eyebrow">Administrator access</p><h1>Website dashboard</h1><p class="section-lede" id="adminIdentity">Verifying secure access…</p></div><a class="pill secondary" href="index.html">Open public site</a></header>
+<div class="status" id="adminStatus" role="status" aria-live="polite"></div>
+<nav class="admin-nav" aria-label="Administrator sections"><button class="active" data-admin-panel="overviewPanel">Overview</button><button data-admin-panel="membersPanel">Members</button><button data-admin-panel="moderationPanel">Moderation</button><button data-admin-panel="contentPanel">Content</button><button data-admin-panel="musicPanel">Music</button><button data-admin-panel="mediaPanel">Media</button><button data-admin-panel="messagesPanel">Messages</button></nav>
+
+<section class="admin-panel" id="overviewPanel">
+<div class="admin-kpis"><article class="admin-kpi"><span>Total members</span><strong id="totalMembers">0</strong></article><article class="admin-kpi"><span>New this month</span><strong id="recentMembers">0</strong></article><article class="admin-kpi"><span>Published content</span><strong id="publishedContent">0</strong></article><article class="admin-kpi"><span>Pending reviews</span><strong id="pendingPosts">0</strong></article></div>
+<div class="split" style="margin-top:22px"><article class="glass-card"><p class="eyebrow">Recent registrations</p><h3>Newest members</h3><div id="recentRegistrationList"><div class="empty">Loading…</div></div></article><article class="glass-card"><p class="eyebrow">Activity overview</p><h3>Recent administrative actions</h3><div id="activityList"><div class="empty">Loading…</div></div></article></div>
+</section>
+
+<section class="admin-panel" id="membersPanel" hidden>
+<div class="section-head"><div><p class="eyebrow">Member management</p><h2 class="section-title">Manage access without seeing passwords.</h2></div><p class="section-lede">Roles and account status are changed through a protected administrator function.</p></div>
+<div class="admin-toolbar"><input id="memberSearch" type="search" placeholder="Search name, username, or email" aria-label="Search members"><select id="memberRoleFilter" aria-label="Filter by role"><option value="">All roles</option><option value="member">Member</option><option value="moderator">Moderator</option><option value="admin">Admin</option></select><select id="memberStatusFilter" aria-label="Filter by status"><option value="">All statuses</option><option value="active">Active</option><option value="suspended">Suspended</option></select><button class="pill secondary" id="refreshMembers" type="button">Refresh</button></div>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>Member</th><th>Email</th><th>Joined</th><th>Role</th><th>Status</th><th>Action</th></tr></thead><tbody id="memberRows"><tr><td colspan="6">Loading members…</td></tr></tbody></table></div>
+</section>
+
+<section class="admin-panel" id="moderationPanel" hidden>
+<div class="section-head"><div><p class="eyebrow">Community moderation</p><h2 class="section-title">Review before publishing.</h2></div><p class="section-lede">Approve, reject, or request changes. Private journals are never shown here.</p></div>
+<div class="admin-toolbar"><select id="moderationFilter"><option value="pending">Pending</option><option value="changes_requested">Changes requested</option><option value="published">Published</option><option value="rejected">Rejected</option><option value="all">All posts</option></select><button class="pill secondary" id="refreshModeration" type="button">Refresh</button></div>
+<div class="admin-list" id="moderationList"><div class="empty">Loading community posts…</div></div>
+</section>
+
+<section class="admin-panel" id="contentPanel" hidden>
+<div class="section-head"><div><p class="eyebrow">Content and wellness resources</p><h2 class="section-title">Publish verified, useful material.</h2></div><p class="section-lede">Manage mental health, women’s health, LGBTQIA+, healthy masculinity, reading, emergency, and supportive content.</p></div>
+<div class="admin-editor"><aside class="admin-list" id="contentList"><div class="empty">Loading content…</div></aside><form class="glass-card form-grid" id="contentForm" novalidate><input id="contentId" type="hidden"><div class="field"><label for="contentTitle">Title</label><input id="contentTitle" maxlength="180" required></div><div class="field"><label for="contentSlug">Slug</label><input id="contentSlug" maxlength="100" pattern="[a-z0-9-]+" required></div><div class="field"><label for="contentCategory">Category</label><select id="contentCategory"><option value="mental-health">Mental health</option><option value="womens-health">Women’s health</option><option value="lgbtqia">LGBTQIA+</option><option value="healthy-masculinity">Healthy masculinity</option><option value="reading">Reading</option><option value="supportive">Supportive content</option><option value="emergency">Emergency resource</option><option value="general">General</option></select></div><div class="field"><label for="contentAudience">Audience, comma separated</label><input id="contentAudience" maxlength="200" placeholder="women, lgbtqia, men"></div><div class="field"><label for="contentExcerpt">Excerpt</label><textarea id="contentExcerpt" maxlength="500"></textarea></div><div class="field"><label for="contentBody">Body</label><textarea id="contentBody" maxlength="50000"></textarea></div><div class="field"><label for="contentSource">Verified source URL, when applicable</label><input id="contentSource" type="url" maxlength="500"></div><div class="field"><label for="contentCover">Cover image URL</label><input id="contentCover" type="url" maxlength="500"></div><div class="field"><label for="contentStatus">Publishing status</label><select id="contentStatus"><option value="draft">Draft</option><option value="published">Published</option></select></div><label class="check-row"><input id="contentFeatured" type="checkbox"><span>Feature this item</span></label><div class="field"><label for="contentOrder">Sort order</label><input id="contentOrder" type="number" value="0"></div><div class="form-actions"><button class="pill" id="saveContent" type="submit">Save content</button><button class="pill secondary" id="newContent" type="button">New</button><button class="text-link" id="deleteContent" type="button" disabled>Delete</button></div></form></div>
+</section>
+
+<section class="admin-panel" id="musicPanel" hidden>
+<div class="section-head"><div><p class="eyebrow">Music management</p><h2 class="section-title">Manage real playable entries.</h2></div><p class="section-lede">Only published entries with valid public audio files appear in the player.</p></div>
+<div class="admin-editor"><aside class="admin-list" id="musicList"><div class="empty">Loading music…</div></aside><form class="glass-card form-grid" id="musicForm" novalidate><input id="musicId" type="hidden"><div class="field"><label for="musicTitle">Title</label><input id="musicTitle" maxlength="180" required></div><div class="field"><label for="musicArtist">Artist</label><input id="musicArtist" maxlength="120" value="FMB" required></div><div class="field"><label for="musicDescription">Description</label><textarea id="musicDescription" maxlength="1000"></textarea></div><div class="field"><label for="musicCategory">Category</label><input id="musicCategory" maxlength="100" value="Made by FMB"></div><div class="field"><label for="musicAudio">Public audio URL</label><input id="musicAudio" type="url" maxlength="1000" required></div><div class="field"><label for="musicCover">Cover image URL</label><input id="musicCover" type="url" maxlength="1000"></div><div class="field"><label for="musicStatus">Publishing status</label><select id="musicStatus"><option value="draft">Draft</option><option value="published">Published</option></select></div><div class="field"><label for="musicOrder">Sort order</label><input id="musicOrder" type="number" value="0"></div><div class="form-actions"><button class="pill" id="saveMusic" type="submit">Save music</button><button class="pill secondary" id="newMusic" type="button">New</button><button class="text-link" id="deleteMusic" type="button" disabled>Delete</button></div></form></div>
+</section>
+
+<section class="admin-panel" id="mediaPanel" hidden>
+<div class="section-head"><div><p class="eyebrow">Media library</p><h2 class="section-title">Upload and organize approved files.</h2></div><p class="section-lede">Images and audio are validated before upload. Deleting media can break pages that still reference it.</p></div>
+<form class="glass-card form-grid" id="mediaForm" style="margin-bottom:20px"><div class="field"><label for="mediaFile">File</label><input id="mediaFile" type="file" accept="image/jpeg,image/png,image/webp,image/svg+xml,audio/mpeg,audio/mp4,audio/wav,audio/ogg" required></div><div class="field"><label for="mediaAlt">Alt text or description</label><input id="mediaAlt" maxlength="300"></div><button class="pill" id="uploadMedia" type="submit">Upload media</button></form>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>File</th><th>Type</th><th>Size</th><th>Created</th><th>Action</th></tr></thead><tbody id="mediaRows"><tr><td colspan="5">Loading media…</td></tr></tbody></table></div>
+</section>
+
+<section class="admin-panel" id="messagesPanel" hidden>
+<div class="section-head"><div><p class="eyebrow">Contact management</p><h2 class="section-title">Respond, resolve, and archive.</h2></div><p class="section-lede">Messages are private and visible only to administrators.</p></div>
+<div class="admin-toolbar"><select id="messageFilter"><option value="new">New</option><option value="resolved">Resolved</option><option value="archived">Archived</option><option value="all">All messages</option></select><button class="pill secondary" id="refreshMessages" type="button">Refresh</button></div>
+<div class="admin-list" id="messageList"><div class="empty">Loading messages…</div></div>
+</section>
+</div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/supabase-client.js"></script>
+<script src="assets/js/site.js"></script>
+<script src="assets/js/admin.js"></script>
+</body>
+</html>
