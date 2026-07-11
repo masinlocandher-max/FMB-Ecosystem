@@ -1,0 +1,1 @@
+Inject the production image, mobile menu, and marquee hotfix references into all HTML pages.
