@@ -10,16 +10,61 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/site.css">
+<style>
+.volunteer-gallery{padding:0 0 76px}
+.volunteer-gallery-shell{position:relative;overflow:hidden;border-radius:32px;background:rgba(255,255,255,.66);border:1px solid var(--line);box-shadow:0 20px 60px rgba(45,23,56,.1)}
+.volunteer-gallery-track{display:flex;transition:transform .55s var(--ease);touch-action:pan-y;will-change:transform}
+.volunteer-slide{min-width:100%;padding:12px}
+.volunteer-slide img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:24px;background:#eee;user-select:none;-webkit-user-drag:none}
+.volunteer-gallery-ui{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 18px 20px}
+.volunteer-gallery-hint{color:var(--muted);font-size:13px;font-weight:700}
+.volunteer-gallery-count{color:var(--violet-900);font-size:13px;font-weight:800}
+.volunteer-gallery-buttons{display:flex;gap:8px}
+.volunteer-gallery-button{width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--violet-900);font-size:20px;font-weight:800}
+.volunteer-gallery-button:disabled{opacity:.35;cursor:not-allowed}
+.volunteer-dots{display:flex;justify-content:center;gap:7px;padding:0 18px 20px}
+.volunteer-dot{width:7px;height:7px;border:0;border-radius:50%;background:rgba(76,13,115,.2);padding:0}
+.volunteer-dot.active{width:22px;border-radius:999px;background:var(--violet-700)}
+@media(min-width:900px){.volunteer-gallery-shell{max-width:760px;margin:auto}.volunteer-slide img{aspect-ratio:4/5}}
+</style>
 </head>
 <body>
 <div class="top-shell"><header class="nav-glass"><a class="nav-brand" href="index.html"><img class="nav-icon" src="assets/icon.svg" alt=""><span class="nav-word">with love, <em>fmb</em></span></a><nav class="nav-links" id="navLinks"><a href="index.html#community">Community</a><a href="index.html#future">Future projects</a><a href="privacy-policy.html">Privacy policy</a></nav><div class="nav-actions"><a class="nav-btn" href="auth.html#signin">Sign in</a><a class="nav-btn primary" href="auth.html#signup">Create profile</a><button class="nav-toggle" id="navToggle" aria-expanded="false" aria-label="Open menu"><span></span><span></span></button></div></header></div>
-<main class="page-top"><section class="statement"><p class="eyebrow">Volunteer with us</p><h2>Bring care, good judgment, and useful skills.</h2><p>Volunteer roles are for people who can work calmly, respect privacy, and understand the limits of the role.</p></section>
+<main class="page-top">
+<section class="statement"><p class="eyebrow">Volunteer with us</p><h2>Bring care, good judgment, and useful skills.</h2><p>Volunteer roles are for people who can work calmly, respect privacy, and understand the limits of the role.</p></section>
+<section class="volunteer-gallery" aria-label="Volunteer photo gallery"><div class="wrap"><div class="volunteer-gallery-shell reveal"><div class="volunteer-gallery-track" id="volunteerGalleryTrack">
+<figure class="volunteer-slide"><img src="https://drive.google.com/thumbnail?id=1_gXBamuF60ke6V0GtxvF98BorqLvRKso&sz=w1600" alt="Volunteer activity photo 1" loading="eager"></figure>
+<figure class="volunteer-slide"><img src="https://drive.google.com/thumbnail?id=1VBRDOuzWa7HDevVG6vKluNOtHDw6j6Ml&sz=w1600" alt="Volunteer activity photo 2" loading="lazy"></figure>
+<figure class="volunteer-slide"><img src="https://drive.google.com/thumbnail?id=1eZ8LDbMYc7bTkZNS4elVZROgSf2zf2ti&sz=w1600" alt="Volunteer activity photo 3" loading="lazy"></figure>
+<figure class="volunteer-slide"><img src="https://drive.google.com/thumbnail?id=16HR97y-nbmA8np_iJ927oF-NQgDLJWA9&sz=w1600" alt="Volunteer activity photo 4" loading="lazy"></figure>
+<figure class="volunteer-slide"><img src="https://drive.google.com/thumbnail?id=1oS9wFGOwpf_mP8oS7QSngKdcrYQvs-qS&sz=w1600" alt="Volunteer activity photo 5" loading="lazy"></figure>
+<figure class="volunteer-slide"><img src="https://drive.google.com/thumbnail?id=1wrQuRsMCxaR6xQ4sIkAdRJVruTp5ikPF&sz=w1600" alt="Volunteer activity photo 6" loading="lazy"></figure>
+<figure class="volunteer-slide"><img src="https://drive.google.com/thumbnail?id=1pRyKlhgsfdPR6laXGp1iGRO0serlyohf&sz=w1600" alt="Volunteer activity photo 7" loading="lazy"></figure>
+<figure class="volunteer-slide"><img src="https://drive.google.com/thumbnail?id=1gmWI7BRUXFi4FUvsUrzjsGYLneLTSDaY&sz=w1600" alt="Volunteer activity photo 8" loading="lazy"></figure>
+<figure class="volunteer-slide"><img src="https://drive.google.com/thumbnail?id=1cf6XV9jZBNBz01f6jim4MsWOzbWRkQFN&sz=w1600" alt="Volunteer activity photo 9" loading="lazy"></figure>
+<figure class="volunteer-slide"><img src="https://drive.google.com/thumbnail?id=1lykJ3HHpOKOCDafSRINmZlaZtf4DiUmA&sz=w1600" alt="Volunteer activity photo 10" loading="lazy"></figure>
+</div><div class="volunteer-gallery-ui"><span class="volunteer-gallery-hint">Swipe right to see the next photo</span><div class="volunteer-gallery-buttons"><button class="volunteer-gallery-button" id="volunteerPrev" aria-label="Previous photo">‹</button><button class="volunteer-gallery-button" id="volunteerNext" aria-label="Next photo">›</button></div><span class="volunteer-gallery-count" id="volunteerCount">1 / 10</span></div><div class="volunteer-dots" id="volunteerDots" aria-label="Choose a photo"></div></div></div></section>
 <section class="section tint"><div class="wrap"><div class="grid-3"><article class="card"><div class="card-body"><p class="card-tag">Peer volunteers</p><h3>Listen and guide</h3><p>Welcome members, listen without judging, and point people to public resources. Peer volunteers are not counselors and do not handle emergencies alone.</p><strong>Helpful background:</strong><p>Community work, student leadership, peer support, social work training, or lived experience handled with care.</p></div></article><article class="card"><div class="card-body"><p class="card-tag">Research volunteers</p><h3>Check facts and sources</h3><p>Help review reading materials, health resources, cultural records, and historical notes. Sources must be clear and claims must not be invented.</p><strong>Helpful background:</strong><p>Research, education, libraries, health communication, history, language, or fact-checking.</p></div></article><article class="card"><div class="card-body"><p class="card-tag">Site care volunteers</p><h3>Test and maintain</h3><p>Help check broken links, mobile display, accessibility, forms, content updates, and simple technical issues.</p><strong>Helpful background:</strong><p>Web development, design, quality testing, accessibility, content management, or documentation.</p></div></article></div></div></section>
 <section class="section"><div class="wrap split"><article class="glass-card"><p class="eyebrow">What volunteers can expect</p><h2>Clear roles and clear limits.</h2><p>Volunteers should receive a role description, a contact person, simple training, and a way to report concerns.</p><p>No volunteer should be asked to act as a therapist, crisis responder, lawyer, or medical professional unless they are qualified and formally assigned.</p></article><form class="glass-card form-grid" id="volunteerForm"><p class="eyebrow">Apply to volunteer</p><h3>Tell us where you can help.</h3><div class="field"><label for="volunteerName">Name</label><input id="volunteerName" required maxlength="80"></div><div class="field"><label for="volunteerRole">Role</label><select id="volunteerRole" required><option value="">Choose a role</option><option>Peer volunteer</option><option>Research volunteer</option><option>Site care volunteer</option></select></div><div class="field"><label for="volunteerMessage">Experience and availability</label><textarea id="volunteerMessage" required maxlength="3000"></textarea></div><button class="pill" type="submit">Email volunteer application</button><p class="form-note">Applications go to withlovefmb@gmail.com.</p></form></div></section>
 <section class="section tint"><div class="wrap"><div class="section-head"><div><p class="eyebrow">Future community work</p><h2 class="section-title">Projects that can grow with the right people.</h2></div></div><div class="grid-3"><article class="mini-card"><h3>Reading circles</h3><p>Small guided discussions around identity, confidence, digital skills, and community care.</p></article><article class="mini-card"><h3>Research days</h3><p>Source review, oral history preparation, local language work, and careful cultural documentation.</p></article><article class="mini-card"><h3>Community service</h3><p>Resource drives, learning sessions, and partnerships with groups already doing trusted work.</p></article></div></div></section></main>
 <footer class="footer"><div class="wrap"><div class="footer-grid"><div><img class="footer-logo" src="assets/signature.svg" alt="With love, FMB"><p>Careful work, clear roles, and respect for the people we serve.</p></div><div><h4>Explore</h4><div class="footer-links"><a href="index.html">Home</a><a href="about.html">About FMB</a><a href="reading.html">Reading room</a><a href="music.html">Music</a></div></div><div><h4>Contact</h4><div class="footer-links"><a href="mailto:withlovefmb@gmail.com">withlovefmb@gmail.com</a><a href="https://www.instagram.com/bb.fmb/" target="_blank" rel="noopener">@bb.fmb</a><span>Masinloc, Zambales, Philippines 2211</span></div></div></div></div></footer>
 <script src="assets/js/site.js"></script>
 <script>
+const volunteerTrack=document.getElementById('volunteerGalleryTrack');
+const volunteerSlides=[...volunteerTrack.children];
+const volunteerPrev=document.getElementById('volunteerPrev');
+const volunteerNext=document.getElementById('volunteerNext');
+const volunteerCount=document.getElementById('volunteerCount');
+const volunteerDots=document.getElementById('volunteerDots');
+let volunteerIndex=0;
+let volunteerTouchStartX=0;
+volunteerSlides.forEach((_,index)=>{const dot=document.createElement('button');dot.className='volunteer-dot'+(index===0?' active':'');dot.setAttribute('aria-label','Show photo '+(index+1));dot.addEventListener('click',()=>showVolunteerSlide(index));volunteerDots.appendChild(dot)});
+function showVolunteerSlide(index){volunteerIndex=Math.max(0,Math.min(index,volunteerSlides.length-1));volunteerTrack.style.transform='translateX(-'+(volunteerIndex*100)+'%)';volunteerCount.textContent=(volunteerIndex+1)+' / '+volunteerSlides.length;volunteerPrev.disabled=volunteerIndex===0;volunteerNext.disabled=volunteerIndex===volunteerSlides.length-1;[...volunteerDots.children].forEach((dot,i)=>dot.classList.toggle('active',i===volunteerIndex))}
+volunteerPrev.addEventListener('click',()=>showVolunteerSlide(volunteerIndex-1));
+volunteerNext.addEventListener('click',()=>showVolunteerSlide(volunteerIndex+1));
+volunteerTrack.addEventListener('touchstart',event=>{volunteerTouchStartX=event.changedTouches[0].clientX},{passive:true});
+volunteerTrack.addEventListener('touchend',event=>{const distance=event.changedTouches[0].clientX-volunteerTouchStartX;if(Math.abs(distance)<45)return;if(distance>0)showVolunteerSlide(volunteerIndex+1);else showVolunteerSlide(volunteerIndex-1)},{passive:true});
+showVolunteerSlide(0);
 document.getElementById('volunteerForm').addEventListener('submit',function(event){event.preventDefault();const name=document.getElementById('volunteerName').value.trim();const role=document.getElementById('volunteerRole').value;const message=document.getElementById('volunteerMessage').value.trim();location.href='mailto:withlovefmb@gmail.com?subject='+encodeURIComponent('Volunteer application: '+role)+'&body='+encodeURIComponent('Name: '+name+'\nRole: '+role+'\n\n'+message)});
 </script>
 </body>
