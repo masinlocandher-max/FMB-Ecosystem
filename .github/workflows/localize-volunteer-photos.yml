@@ -1,0 +1,208 @@
+name: Localize volunteer photos
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/localize-volunteer-photos.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  localize-volunteer-photos:
+    runs-on: ubuntu-latest
+    env:
+      TARGET_BRANCH: main
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Download and optimize approved volunteer photos
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .volunteer-downloads assets/images/volunteer
+
+          ids=(
+            '1_gXBamuF60ke6V0GtxvF98BorqLvRKso'
+            '1VBRDOuzWa7HDevVG6vKluNOtHDw6j6Ml'
+            '1eZ8LDbMYc7bTkZNS4elVZROgSf2zf2ti'
+            '16HR97y-nbmA8np_iJ927oF-NQgDLJWA9'
+            '1oS9wFGOwpf_mP8oS7QSngKdcrYQvs-qS'
+            '1wrQuRsMCxaR6xQ4sIkAdRJVruTp5ikPF'
+            '1pRyKlhgsfdPR6laXGp1iGRO0serlyohf'
+            '1gmWI7BRUXFi4FUvsUrzjsGYLneLTSDaY'
+            '1cf6XV9jZBNBz01f6jim4MsWOzbWRkQFN'
+            '1lykJ3HHpOKOCDafSRINmZlaZtf4DiUmA'
+          )
+
+          for i in "${!ids[@]}"; do
+            number=$(printf '%02d' "$((i + 1))")
+            curl --fail --location --retry 3 --retry-delay 2 \
+              --user-agent 'Mozilla/5.0' \
+              --output ".volunteer-downloads/photo-${number}" \
+              "https://drive.google.com/thumbnail?id=${ids[$i]}&sz=w1600"
+          done
+
+          file .volunteer-downloads/*
+          python -m pip install --disable-pip-version-check --quiet Pillow
+          python <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageOps
+
+          source = Path('.volunteer-downloads')
+          destination = Path('assets/images/volunteer')
+          destination.mkdir(parents=True, exist_ok=True)
+
+          for index, path in enumerate(sorted(source.glob('photo-*')), start=1):
+              with Image.open(path) as image:
+                  image.verify()
+              with Image.open(path) as image:
+                  image = ImageOps.exif_transpose(image).convert('RGB')
+                  if image.width > 1600:
+                      height = round(image.height * (1600 / image.width))
+                      image = image.resize((1600, height), Image.Resampling.LANCZOS)
+                  output = destination / f'volunteer-{index:02d}.webp'
+                  image.save(output, 'WEBP', quality=90, method=6)
+                  print(output, image.size)
+          PY
+          rm -rf .volunteer-downloads
+
+      - name: Replace external volunteer photo URLs
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          ids = [
+              '1_gXBamuF60ke6V0GtxvF98BorqLvRKso',
+              '1VBRDOuzWa7HDevVG6vKluNOtHDw6j6Ml',
+              '1eZ8LDbMYc7bTkZNS4elVZROgSf2zf2ti',
+              '16HR97y-nbmA8np_iJ927oF-NQgDLJWA9',
+              '1oS9wFGOwpf_mP8oS7QSngKdcrYQvs-qS',
+              '1wrQuRsMCxaR6xQ4sIkAdRJVruTp5ikPF',
+              '1pRyKlhgsfdPR6laXGp1iGRO0serlyohf',
+              '1gmWI7BRUXFi4FUvsUrzjsGYLneLTSDaY',
+              '1cf6XV9jZBNBz01f6jim4MsWOzbWRkQFN',
+              '1lykJ3HHpOKOCDafSRINmZlaZtf4DiUmA',
+          ]
+
+          for path in Path('.').glob('*.html'):
+              text = path.read_text(encoding='utf-8')
+              updated = text
+              for index, file_id in enumerate(ids, start=1):
+                  pattern = re.compile(
+                      rf'https://drive\.google\.com/thumbnail\?id={re.escape(file_id)}(?:&amp;|&)sz=w1600'
+                  )
+                  updated = pattern.sub(f'assets/images/volunteer/volunteer-{index:02d}.webp', updated)
+              if updated != text:
+                  path.write_text(updated, encoding='utf-8')
+
+          readme = Path('README.md')
+          if readme.exists():
+              text = readme.read_text(encoding='utf-8')
+              text = text.replace(
+                  '10. Replace remaining externally hosted volunteer gallery photos with repository or managed-media copies when the approved originals are available.\n11. Confirm the custom domain, HTTPS, email delivery, and GitHub Pages deployment.\n12. Open public registration only after the full checklist passes.',
+                  '10. Confirm the custom domain, HTTPS, email delivery, and deployment.\n11. Open public registration only after the full checklist passes.'
+              )
+              text = text.replace(
+                  'The volunteer gallery still uses approved Google Drive thumbnails because the original files have not yet been copied into the managed media library.',
+                  'The volunteer gallery uses optimized local repository copies of the approved photos.'
+              )
+              readme.write_text(text, encoding='utf-8')
+
+          setup = Path('SUPABASE_SETUP.md')
+          if setup.exists():
+              text = setup.read_text(encoding='utf-8')
+              text = text.replace(
+                  'The approved hero, founder portrait, icon, and signature are connected through managed asset URLs. The volunteer gallery still uses approved Google Drive thumbnails because the original files have not yet been copied into the managed media library.\n\nBefore a large launch, upload the original volunteer images to `site-media` or the repository, then replace every Drive thumbnail URL and retest all ten slides.',
+                  'The approved hero, founder portrait, icon, signature, and volunteer gallery photos are stored as local repository assets. Keep the originals archived separately and replace a local file only with another approved version.'
+              )
+              setup.write_text(text, encoding='utf-8')
+
+      - name: Verify all volunteer photos are local
+        shell: bash
+        run: |
+          set -euo pipefail
+          for number in $(seq -w 1 10); do
+            test -s "assets/images/volunteer/volunteer-${number}.webp"
+          done
+          ! grep -R --line-number --fixed-strings 'drive.google.com/thumbnail' --include='*.html' .
+          python scripts/quality_check.py
+          find . -type f -name '*.js' -not -path './.git/*' -print0 | while IFS= read -r -d '' file; do
+            node --check "$file"
+          done
+
+      - name: Save localized photos to main
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git add -A
+          python <<'PY'
+          from __future__ import annotations
+          import base64, json, os, subprocess, urllib.error, urllib.parse, urllib.request
+          from pathlib import Path
+
+          repository = os.environ['GITHUB_REPOSITORY']
+          branch = os.environ['TARGET_BRANCH']
+          token = os.environ['GH_TOKEN']
+          api = f'https://api.github.com/repos/{repository}/contents'
+          raw = subprocess.check_output(['git', 'diff', '--cached', '--name-status', '-z'])
+          fields = raw.decode('utf-8').split('\0')
+          changes = []
+          index = 0
+          while index < len(fields) and fields[index]:
+              status = fields[index]
+              path = fields[index + 1]
+              index += 2
+              if status.startswith(('R', 'C')):
+                  path = fields[index]
+                  index += 1
+              changes.append((status[0], path))
+
+          def request(method, path, payload=None):
+              url = f'{api}/{urllib.parse.quote(path, safe="/")}'
+              if method == 'GET':
+                  url += '?' + urllib.parse.urlencode({'ref': branch})
+              data = None if payload is None else json.dumps(payload).encode('utf-8')
+              req = urllib.request.Request(url, data=data, method=method, headers={
+                  'Authorization': f'Bearer {token}',
+                  'Accept': 'application/vnd.github+json',
+                  'X-GitHub-Api-Version': '2022-11-28',
+                  'User-Agent': 'with-love-fmb-volunteer-photo-repair',
+              })
+              try:
+                  with urllib.request.urlopen(req) as response:
+                      return json.load(response)
+              except urllib.error.HTTPError as error:
+                  if method == 'GET' and error.code == 404:
+                      return None
+                  raise RuntimeError(error.read().decode('utf-8', errors='replace')) from error
+
+          for status, path in changes:
+              if path == '.github/workflows/localize-volunteer-photos.yml':
+                  continue
+              current = request('GET', path)
+              if status == 'D':
+                  if current:
+                      request('DELETE', path, {'message': f'Remove obsolete file: {path}', 'sha': current['sha'], 'branch': branch})
+                  continue
+              file_path = Path(path)
+              if not file_path.is_file():
+                  continue
+              payload = {
+                  'message': f'Store approved volunteer photo locally: {path}',
+                  'content': base64.b64encode(file_path.read_bytes()).decode('ascii'),
+                  'branch': branch,
+              }
+              if current:
+                  payload['sha'] = current['sha']
+              request('PUT', path, payload)
+              print(f'Uploaded {path}')
+          PY
