@@ -1,0 +1,1 @@
+Static audit trigger for the repaired website.
