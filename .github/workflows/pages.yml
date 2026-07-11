@@ -26,7 +26,7 @@ jobs:
           rm -rf _site
           mkdir -p _site
 
-          for page in index.html about.html reading.html music.html auth.html member.html community.html volunteer.html herra.html privacy-policy.html; do
+          for page in index.html about.html reading.html womens-health.html skin-care-makeup.html coming-out-respect.html men-can-cry.html music.html auth.html member.html community.html volunteer.html herra.html privacy-policy.html; do
             cp "$page" "_site/$page"
           done
           cp CNAME _site/CNAME
@@ -39,6 +39,7 @@ jobs:
           test -f _site/assets/founder.svg
           test -f _site/assets/hero-banner.svg
           test -f _site/assets/css/site.css
+          test -f _site/assets/css/readings.css
           test -f _site/assets/js/auth.js
           test -f _site/assets/js/member.js
           test -f _site/assets/js/music.js
@@ -48,6 +49,14 @@ jobs:
           grep -q 'For Anxious Moments' _site/music.html
           grep -q 'Cultural Historian' _site/about.html
           grep -q 'Privacy Policy' _site/privacy-policy.html
+          grep -q 'Your Body Is Worth Listening To' _site/womens-health.html
+          grep -q 'Skin Care and Makeup Without the Pressure' _site/skin-care-makeup.html
+          grep -q 'Coming Out, Being Known, and Learning to Respect' _site/coming-out-respect.html
+          grep -q 'Men Can Cry' _site/men-can-cry.html
+          grep -q 'With love, FMB' _site/womens-health.html
+          grep -q 'With love, FMB' _site/skin-care-makeup.html
+          grep -q 'With love, FMB' _site/coming-out-respect.html
+          grep -q 'With love, FMB' _site/men-can-cry.html
 
       - name: Publish directly to gh-pages
         shell: bash
