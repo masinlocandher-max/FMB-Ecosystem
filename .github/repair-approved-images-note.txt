@@ -1,0 +1,1 @@
+This branch replaces the broken remote image wrappers with the approved local website images.
