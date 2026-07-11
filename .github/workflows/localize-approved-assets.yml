@@ -5,6 +5,11 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/localize-approved-assets.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/localize-approved-assets.yml'
+      - '.github/localize-assets-trigger.txt'
 
 permissions:
   contents: write
@@ -12,11 +17,14 @@ permissions:
 jobs:
   localize-assets:
     runs-on: ubuntu-latest
+    env:
+      TARGET_BRANCH: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ env.TARGET_BRANCH }}
 
       - name: Download approved image files
         shell: bash
@@ -138,4 +146,4 @@ jobs:
             exit 0
           fi
           git commit -m 'Store approved website images locally'
-          git push origin HEAD:main
+          git push origin HEAD:"$TARGET_BRANCH"
