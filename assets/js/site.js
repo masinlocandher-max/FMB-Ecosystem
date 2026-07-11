@@ -16,6 +16,28 @@
       <a class="support-chip" href="https://senzpr.com" target="_blank" rel="noopener">Branding and digital needs</a>`;
   }
 
+  const landingHero=$('.hero');
+  if(landingHero){
+    const banner=landingHero.querySelector('.hero-banner');
+    const bannerImage=banner?.querySelector('img');
+    const heroCard=landingHero.querySelector('.hero-card');
+    if(bannerImage){
+      bannerImage.src='assets/hero-banner.svg';
+      bannerImage.alt='With love, FMB official banner featuring Francine Marie Bautista';
+      bannerImage.removeAttribute('width');
+      bannerImage.removeAttribute('height');
+    }
+    if(heroCard)heroCard.remove();
+    const heroStyle=document.createElement('style');
+    heroStyle.textContent=`
+      .hero{padding:132px 0 0!important;min-height:0!important;background:#fff!important}
+      .hero-banner{width:100%!important;max-width:none!important;margin:0!important;border:0!important;border-radius:0!important;background:#fff!important;box-shadow:none!important;overflow:hidden!important}
+      .hero-banner img{display:block!important;width:100%!important;height:auto!important;aspect-ratio:16/9!important;object-fit:contain!important;object-position:center!important;background:#fff!important}
+      @media(max-width:800px){.hero{padding-top:132px!important}.hero-banner{border-radius:0!important}}
+    `;
+    document.head.appendChild(heroStyle);
+  }
+
   const bookshelf=$('#bookshelf .bookshelf');
   if(bookshelf){
     bookshelf.innerHTML=`
