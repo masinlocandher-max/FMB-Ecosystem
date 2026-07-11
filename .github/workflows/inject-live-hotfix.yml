@@ -1,0 +1,32 @@
+name: Inject live hotfix
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/live-hotfix-trigger.txt'
+permissions:
+  contents: write
+jobs:
+  inject:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inject CSS and JS into HTML pages
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          for p in Path('.').glob('*.html'):
+              s=p.read_text(encoding='utf-8')
+              if 'assets/css/live-hotfix.css' not in s:
+                  s=s.replace('</head>','<link rel="stylesheet" href="assets/css/live-hotfix.css?v=20260712b">\n</head>')
+              if 'assets/js/live-hotfix.js' not in s:
+                  s=s.replace('</body>','<script src="assets/js/live-hotfix.js?v=20260712b"></script>\n</body>')
+              p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit injected references
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add '*.html'
+          git diff --cached --quiet || git commit -m 'Load live image menu and marquee hotfix'
+          git push
