@@ -10,16 +10,28 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "assets/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "src": "assets/images/icon-transparent.png",
+      "sizes": "803x745",
+      "type": "image/png",
+      "purpose": "any"
     }
   ],
   "shortcuts": [
-    {"name": "Reading room", "url": "./index.html#bookshelf"},
-    {"name": "Music", "url": "./music.html"},
-    {"name": "Support contacts", "url": "./index.html#support"},
-    {"name": "Member profile", "url": "./member.html"}
+    {
+      "name": "Reading room",
+      "url": "./index.html#bookshelf"
+    },
+    {
+      "name": "Music",
+      "url": "./music.html"
+    },
+    {
+      "name": "Support contacts",
+      "url": "./index.html#support"
+    },
+    {
+      "name": "Member profile",
+      "url": "./member.html"
+    }
   ]
 }
