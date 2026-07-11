@@ -196,9 +196,7 @@ Before registration opens:
 
 ## 13. Replace fragile external media
 
-The approved hero, founder portrait, icon, and signature are connected through managed asset URLs. The volunteer gallery still uses approved Google Drive thumbnails because the original files have not yet been copied into the managed media library.
-
-Before a large launch, upload the original volunteer images to `site-media` or the repository, then replace every Drive thumbnail URL and retest all ten slides.
+The approved hero, founder portrait, icon, signature, and volunteer gallery photos are stored as local repository assets. Keep the originals archived separately and replace a local file only with another approved version.
 
 ## 14. Final go-live test
 
