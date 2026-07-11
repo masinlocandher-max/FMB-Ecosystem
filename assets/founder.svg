@@ -1,16 +1,98 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 525" width="420" height="525" preserveAspectRatio="xMidYMid meet" role="img">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 525" role="img" aria-labelledby="title desc" preserveAspectRatio="xMidYMid meet" width="420" height="525">
   <defs>
     <style>
-      .founder-container {
-        background-color: #f5f5f5;
+      .frame-container {
+        filter: drop-shadow(0 12px 24px rgba(123, 44, 191, 0.15));
+      }
+      
+      .gold-accent {
+        stroke: url(#goldGradient);
+        stroke-width: 3;
+        fill: none;
+      }
+      
+      .frame-outer {
+        stroke: #7B2CBF;
+        stroke-width: 8;
+        fill: none;
+        rx: 12;
+      }
+      
+      .frame-inner {
+        stroke: #D4A574;
+        stroke-width: 2;
+        fill: none;
+        rx: 10;
+        opacity: 0.8;
+      }
+      
+      .corner-accent {
+        fill: #7B2CBF;
+        opacity: 0.6;
+      }
+      
+      .shine-effect {
+        opacity: 0.1;
+        mix-blend-mode: screen;
       }
     </style>
+    
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#D4A574;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#C4956F;stop-opacity:1" />
+    </linearGradient>
+    
+    <filter id="softShadow">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2"/>
+      <feOffset dx="0" dy="4" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.15"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
+  
   <metadata>
-    <title>Founder Portrait</title>
+    <title>Founder Portrait - Enhanced</title>
   </metadata>
-  <title>Founder Portrait</title>
-  <desc>Professional portrait of the founder</desc>
-  <rect width="420" height="525" class="founder-container" fill="#f5f5f5"/>
-  <image href="founder.webp" x="0" y="0" width="420" height="525" preserveAspectRatio="xMidYMid meet"/>
+  
+  <title id="title">Founder Portrait</title>
+  <desc id="desc">Professional portrait of the founder with elegant frame design</desc>
+  
+  <!-- Outer shadow background -->
+  <g class="frame-container">
+    <!-- Main frame background (subtle gradient) -->
+    <rect x="15" y="15" width="390" height="495" rx="12" fill="#F9F7F4" opacity="0.5"/>
+    
+    <!-- Outer purple frame -->
+    <rect x="20" y="20" width="380" height="485" rx="10" class="frame-outer"/>
+    
+    <!-- Inner gold accent -->
+    <rect x="25" y="25" width="370" height="475" rx="8" class="frame-inner"/>
+    
+    <!-- Image container -->
+    <g clip-path="url(#imageClip)">
+      <rect x="30" y="30" width="360" height="465" rx="6" fill="#F5F5F5"/>
+      <image href="founder.webp" x="30" y="30" width="360" height="465" preserveAspectRatio="xMidYMid slice"/>
+    </g>
+    
+    <!-- Corner accent dots -->
+    <circle cx="35" cy="35" r="4" class="corner-accent"/>
+    <circle cx="385" cy="35" r="4" class="corner-accent"/>
+    <circle cx="35" cy="490" r="4" class="corner-accent"/>
+    <circle cx="385" cy="490" r="4" class="corner-accent"/>
+    
+    <!-- Subtle shine effect -->
+    <rect x="30" y="30" width="360" height="465" rx="6" class="shine-effect" fill="white"/>
+  </g>
+  
+  <!-- Clipping path for image -->
+  <defs>
+    <clipPath id="imageClip">
+      <rect x="30" y="30" width="360" height="465" rx="6"/>
+    </clipPath>
+  </defs>
 </svg>
