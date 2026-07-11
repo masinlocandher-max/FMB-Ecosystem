@@ -26,31 +26,28 @@ jobs:
           rm -rf _site
           mkdir -p _site
 
-          cp index.html _site/index.html
-          cp about.html _site/about.html
-          cp reading.html _site/reading.html
-          cp privacy-policy.html _site/privacy-policy.html
+          for page in index.html about.html reading.html music.html auth.html member.html community.html volunteer.html herra.html privacy-policy.html; do
+            cp "$page" "_site/$page"
+          done
           cp CNAME _site/CNAME
           cp -R assets _site/assets
           touch _site/.nojekyll
 
-          test -f _site/index.html
-          test -f _site/about.html
-          test -f _site/reading.html
-          test -f _site/privacy-policy.html
-          test -f _site/CNAME
           test "$(cat _site/CNAME)" = "www.francinemariebautista.com"
           test -f _site/assets/icon.svg
           test -f _site/assets/signature.svg
           test -f _site/assets/founder.svg
           test -f _site/assets/hero-banner.svg
-          test -f _site/assets/senz.svg
-          test -f _site/assets/cognita.svg
-          test -f _site/assets/mabayani.svg
-          grep -q 'A beautifully held corner of the internet.' _site/index.html
-          grep -q 'Finding Your Way Back to Yourself' _site/reading.html
+          test -f _site/assets/css/site.css
+          test -f _site/assets/js/auth.js
+          test -f _site/assets/js/member.js
+          test -f _site/assets/js/music.js
+          test -f _site/assets/data/music-library.json
+          grep -q 'Sign in' _site/index.html
+          grep -q 'Create profile' _site/auth.html
+          grep -q 'For Anxious Moments' _site/music.html
           grep -q 'Cultural Historian' _site/about.html
-          grep -q 'Privacy and care' _site/privacy-policy.html
+          grep -q 'Privacy Policy' _site/privacy-policy.html
 
       - name: Publish directly to gh-pages
         shell: bash
