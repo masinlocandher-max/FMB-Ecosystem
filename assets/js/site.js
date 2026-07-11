@@ -7,6 +7,23 @@
     if(document.querySelector(`link[href="${href}"]`))return;
     const link=document.createElement('link');link.rel='stylesheet';link.href=href;document.head.appendChild(link);
   }
+  function loadScript(src){
+    return new Promise((resolve,reject)=>{
+      const existing=document.querySelector(`script[src="${src}"]`);
+      if(existing){if(existing.dataset.loaded==='true'||(src.includes('supabase')&&window.supabase)||(src.includes('supabase-client')&&window.FMB)){resolve();return}existing.addEventListener('load',resolve,{once:true});existing.addEventListener('error',reject,{once:true});return}
+      const script=document.createElement('script');script.src=src;script.defer=false;script.addEventListener('load',()=>{script.dataset.loaded='true';resolve()},{once:true});script.addEventListener('error',reject,{once:true});document.head.appendChild(script);
+    });
+  }
+  async function ensureMemberServices(){
+    if(window.FMB)return true;
+    try{
+      if(!window.supabase)await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2');
+      await loadScript('assets/js/config.js');
+      await loadScript('assets/js/supabase-client.js');
+      return Boolean(window.FMB);
+    }catch{return false}
+  }
+
   ensureStylesheet('assets/css/icon-fix.css');
   ensureStylesheet('assets/css/repair.css');
 
@@ -70,22 +87,24 @@
   }
 
   async function setupReadingSave(){
-    const hero=$('.reading-page .reading-hero');
+    const hero=$('.reading-page .reading-hero, .reader .reader-cover');
     if(!hero)return;
     const title=hero.querySelector('h1')?.textContent.trim()||document.title.split('|')[0].trim();
     const category=hero.querySelector('.eyebrow')?.textContent.trim()||'Reading';
-    const itemKey=location.pathname.split('/').pop()||'reading';
+    const itemKey=location.pathname.split('/').pop()||'reading.html';
     const wrapper=document.createElement('div');wrapper.className='actions';
-    const button=document.createElement('button');button.type='button';button.className='pill secondary';button.textContent='Save to profile';
+    const button=document.createElement('button');button.type='button';button.className='pill secondary';button.textContent='Preparing save option…';button.disabled=true;
     wrapper.appendChild(button);hero.appendChild(wrapper);
-    if(!window.FMB?.configured){button.textContent='Sign in to save';button.addEventListener('click',()=>location.href='auth.html#signin');return}
+    const ready=await ensureMemberServices();
+    if(!ready||!window.FMB?.configured){button.disabled=false;button.textContent='Sign in to save';button.addEventListener('click',()=>location.href='auth.html#signin');return}
     const client=await activeClient();
-    if(!client){button.textContent='Sign in to save';button.addEventListener('click',()=>location.href='auth.html#signin');return}
+    if(!client){button.disabled=false;button.textContent='Sign in to save';button.addEventListener('click',()=>location.href='auth.html#signin');return}
     const {data:{session}}=await client.auth.getSession();
     const user=session?.user;
-    if(!user)return;
+    if(!user){button.disabled=false;button.textContent='Sign in to save';button.addEventListener('click',()=>location.href='auth.html#signin');return}
     const {data:saved}=await client.from('saved_content').select('id').eq('user_id',user.id).eq('item_key',itemKey).maybeSingle();
-    if(saved){button.textContent='Saved';button.dataset.savedId=saved.id}
+    button.disabled=false;
+    if(saved){button.textContent='Saved';button.dataset.savedId=saved.id}else button.textContent='Save to profile';
     button.addEventListener('click',async()=>{
       button.disabled=true;
       if(button.dataset.savedId){
@@ -133,4 +152,6 @@
       contact.reset();setStatus('Your message was sent successfully.','success');
     });
   }
+
+  if('serviceWorker' in navigator&&location.protocol==='https:')window.addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js').catch(()=>{}),{once:true});
 })();
