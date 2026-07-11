@@ -29,6 +29,17 @@
       </div>`;
   }
 
+  const memberLibrary=$('#readPanel .member-grid');
+  if(memberLibrary){
+    memberLibrary.innerHTML=`
+      <a class="glass-card" href="reading.html"><p class="eyebrow">Life and identity</p><h3>Finding Your Way Back to Yourself</h3><p>For feeling lost, left behind, unsure, unseen, or afraid to begin again.</p></a>
+      <a class="glass-card" href="womens-health.html"><p class="eyebrow">Women's health</p><h3>Your Body Is Worth Listening To</h3><p>Body awareness, periods, preventive care, sexual health, mental health, and medical self-advocacy.</p></a>
+      <a class="glass-card" href="skin-care-makeup.html"><p class="eyebrow">Skin care and makeup</p><h3>Care Without the Pressure</h3><p>Simple routines, sun protection, acne care, makeup basics, and safer product habits.</p></a>
+      <a class="glass-card" href="coming-out-respect.html"><p class="eyebrow">LGBTQIA+</p><h3>Coming Out and Learning to Respect</h3><p>For LGBTQIA+ people and the straight and cisgender people who want to respond well.</p></a>
+      <a class="glass-card" href="men-can-cry.html"><p class="eyebrow">Men and emotions</p><h3>Men Can Cry</h3><p>Emotional honesty, asking for help, respect, skin care, and a healthier masculinity.</p></a>
+      <a class="glass-card" href="music.html"><p class="eyebrow">Music</p><h3>For Quieter Moments</h3><p>Open gentle listening and original work by FMB.</p></a>`;
+  }
+
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const items=$$('.reveal');
   if(reduced||!('IntersectionObserver' in window)){items.forEach(el=>el.classList.add('in'))}else{const io=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('in');io.unobserve(entry.target)}}),{threshold:.12,rootMargin:'0px 0px -35px 0px'});items.forEach(el=>io.observe(el))}
