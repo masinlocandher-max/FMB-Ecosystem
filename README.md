@@ -110,9 +110,8 @@ The interface reports this state instead of pretending a request succeeded.
 7. Test visitor, member, suspended-member, moderator, and administrator access.
 8. Test two-account data isolation.
 9. Review the Privacy Policy, Membership Agreement, Community Guidelines, and Data Rights process with a qualified Philippine professional.
-10. Replace remaining externally hosted volunteer gallery photos with repository or managed-media copies when the approved originals are available.
-11. Confirm the custom domain, HTTPS, email delivery, and GitHub Pages deployment.
-12. Open public registration only after the full checklist passes.
+10. Confirm the custom domain, HTTPS, email delivery, and deployment.
+11. Open public registration only after the full checklist passes.
 
 See `SUPABASE_SETUP.md` for the detailed process.
 
