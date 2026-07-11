@@ -1,48 +1,23 @@
-const CACHE_NAME='with-love-fmb-v3';
-const PUBLIC_SHELL=[
-  './',
-  './index.html',
-  './404.html',
-  './manifest.webmanifest',
-  './assets/css/site.css',
-  './assets/css/icon-fix.css',
-  './assets/css/repair.css',
-  './assets/js/site.js',
-  './assets/images/icon-transparent.png',
-  './assets/images/signature-transparent.png',
-  './assets/images/hero.webp'
-];
-const PRIVATE_PATHS=['/auth.html','/member.html','/admin.html','/reset-password.html'];
-
-self.addEventListener('install',event=>{
-  event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(PUBLIC_SHELL)).then(()=>self.skipWaiting()));
+// Emergency cache reset for the Cloudflare-hosted site.
+// The previous service worker could keep serving old HTML and broken image paths.
+self.addEventListener('install', event => {
+  event.waitUntil(self.skipWaiting());
 });
 
-self.addEventListener('activate',event=>{
-  event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE_NAME).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));
+self.addEventListener('activate', event => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.map(key => caches.delete(key)));
+    await self.clients.claim();
+    const clients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    for (const client of clients) {
+      client.postMessage({ type: 'FMB_CACHE_PURGED' });
+    }
+    await self.registration.unregister();
+  })());
 });
 
-self.addEventListener('fetch',event=>{
-  const request=event.request;
-  if(request.method!=='GET')return;
-  const url=new URL(request.url);
-  if(url.origin!==self.location.origin)return;
-  const isPrivate=PRIVATE_PATHS.some(path=>url.pathname.endsWith(path));
-  if(isPrivate){event.respondWith(fetch(request,{cache:'no-store'}));return}
-
-  if(request.mode==='navigate'){
-    event.respondWith(fetch(request).then(response=>{
-      if(response.ok){const copy=response.clone();caches.open(CACHE_NAME).then(cache=>cache.put(request,copy))}
-      return response;
-    }).catch(async()=>await caches.match(request)||await caches.match('./index.html')));
-    return;
-  }
-
-  event.respondWith(caches.match(request).then(cached=>{
-    const network=fetch(request).then(response=>{
-      if(response.ok){const copy=response.clone();caches.open(CACHE_NAME).then(cache=>cache.put(request,copy))}
-      return response;
-    });
-    return cached||network;
-  }));
+self.addEventListener('fetch', () => {
+  // Intentionally do not intercept requests. Every page and image must come
+  // from the current Cloudflare deployment while the stale cache is cleared.
 });
