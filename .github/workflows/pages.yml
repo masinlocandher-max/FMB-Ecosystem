@@ -27,23 +27,29 @@ jobs:
           mkdir -p _site
 
           cp index.html _site/index.html
+          cp about.html _site/about.html
+          cp reading.html _site/reading.html
           cp privacy-policy.html _site/privacy-policy.html
           cp CNAME _site/CNAME
           cp -R assets _site/assets
           touch _site/.nojekyll
 
           test -f _site/index.html
+          test -f _site/about.html
+          test -f _site/reading.html
           test -f _site/privacy-policy.html
           test -f _site/CNAME
           test "$(cat _site/CNAME)" = "www.francinemariebautista.com"
           test -f _site/assets/icon.svg
           test -f _site/assets/signature.svg
           test -f _site/assets/founder.svg
+          test -f _site/assets/hero-banner.svg
           test -f _site/assets/senz.svg
           test -f _site/assets/cognita.svg
           test -f _site/assets/mabayani.svg
-          grep -q 'Built to be felt. Made to matter.' _site/index.html
-          grep -q 'Need a hand?' _site/index.html
+          grep -q 'A beautifully held corner of the internet.' _site/index.html
+          grep -q 'Finding Your Way Back to Yourself' _site/reading.html
+          grep -q 'Cultural Historian' _site/about.html
           grep -q 'Privacy and care' _site/privacy-policy.html
 
       - name: Publish directly to gh-pages
