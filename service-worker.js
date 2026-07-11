@@ -1,4 +1,4 @@
-const CACHE_NAME='with-love-fmb-v2';
+const CACHE_NAME='with-love-fmb-v3';
 const PUBLIC_SHELL=[
   './',
   './index.html',
@@ -8,9 +8,9 @@ const PUBLIC_SHELL=[
   './assets/css/icon-fix.css',
   './assets/css/repair.css',
   './assets/js/site.js',
-  './assets/icon.svg',
-  './assets/signature.svg',
-  './assets/hero-banner.svg'
+  './assets/images/icon-transparent.png',
+  './assets/images/signature-transparent.png',
+  './assets/images/hero.webp'
 ];
 const PRIVATE_PATHS=['/auth.html','/member.html','/admin.html','/reset-password.html'];
 
