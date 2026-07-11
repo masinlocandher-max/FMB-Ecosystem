@@ -1,8 +1,9 @@
-const CACHE_NAME='with-love-fmb-v1';
+const CACHE_NAME='with-love-fmb-v2';
 const PUBLIC_SHELL=[
   './',
   './index.html',
   './404.html',
+  './manifest.webmanifest',
   './assets/css/site.css',
   './assets/css/icon-fix.css',
   './assets/css/repair.css',
