@@ -3,35 +3,52 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Sign in or Create Profile | With love, FMB</title>
-<meta name="description" content="Sign in or create a verified With love, FMB profile.">
+<title>Sign In or Join | With love, FMB</title>
+<meta name="description" content="Sign in or create a verified With love, FMB community profile.">
 <link rel="icon" href="assets/icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/site.css">
+<link rel="stylesheet" href="assets/css/icon-fix.css">
+<link rel="stylesheet" href="assets/css/repair.css">
 </head>
 <body>
-<div class="top-shell"><header class="nav-glass"><a class="nav-brand" href="index.html"><img class="nav-icon" src="assets/icon.svg" alt=""><span class="nav-word">with love, <em>fmb</em></span></a><nav class="nav-links" id="navLinks"><a href="index.html#bookshelf">Bookshelf</a><a href="music.html">Music</a><a href="privacy-policy.html">Privacy policy</a></nav><div class="nav-actions"><a class="nav-btn" href="index.html">Back home</a><button class="nav-toggle" id="navToggle" aria-expanded="false" aria-label="Open menu"><span></span><span></span></button></div></header></div>
-<main class="auth-layout">
-<section class="auth-shell">
-  <article class="auth-story"><img src="assets/icon.svg" alt=""><p class="eyebrow" style="color:#f0d58b">Your member space</p><h1>Keep your place here.</h1><p>Create a profile to read full materials, keep private notes, send messages, and share posts to the community for review.</p><p style="font-size:13px">Your email must be verified before the member page opens.</p></article>
+<div class="top-shell"><div class="support-glass" aria-label="Work with FMB"></div><header class="nav-glass"><a class="nav-brand" href="index.html"><img class="nav-icon" src="assets/icon.svg" alt=""><span class="nav-word">with love, <em>fmb</em></span></a><nav class="nav-links" id="navLinks"><a href="index.html#safe-space">Safe space</a><a href="index.html#bookshelf">Read</a><a href="music.html">Music</a><a href="privacy-policy.html">Privacy</a></nav><div class="nav-actions"><a class="nav-btn" href="index.html">Back home</a><button class="nav-toggle" id="navToggle" aria-expanded="false" aria-label="Open menu"><span></span><span></span></button></div></header></div>
+<main class="auth-layout" id="main-content">
+<section class="auth-shell" aria-labelledby="auth-title">
+  <article class="auth-story"><img src="assets/icon.svg" alt=""><p class="eyebrow" style="color:#f0d58b">Our member space</p><h1 id="auth-title">Keep your place here.</h1><p>Create a profile to save useful content, keep private notes, update your profile, and submit supportive community posts for review.</p><p style="font-size:13px">Email verification protects our members and must be completed before the dashboard opens.</p></article>
   <article class="auth-card">
-    <div class="auth-tabs"><button class="auth-tab active" id="signinTab" type="button">Sign in</button><button class="auth-tab" id="signupTab" type="button">Create profile</button></div>
-    <section class="auth-panel" id="signinPanel">
-      <h2>Welcome back.</h2><p>Sign in with the email and password you used for your profile.</p>
-      <form class="form-grid" id="signinForm"><div class="field"><label for="signinEmail">Email</label><input id="signinEmail" name="email" type="email" autocomplete="email" required></div><div class="field"><label for="signinPassword">Password</label><input id="signinPassword" name="password" type="password" autocomplete="current-password" minlength="8" required></div><button class="pill" type="submit">Sign in</button><button class="text-link" id="resetPassword" type="button">Forgot your password?</button><div class="status" id="signinStatus" role="status"></div></form>
+    <div class="auth-tabs" role="tablist" aria-label="Account access"><button class="auth-tab active" id="signinTab" type="button" role="tab" aria-controls="signinPanel" aria-selected="true">Sign in</button><button class="auth-tab" id="signupTab" type="button" role="tab" aria-controls="signupPanel" aria-selected="false">Create profile</button></div>
+    <section class="auth-panel" id="signinPanel" role="tabpanel" aria-labelledby="signinTab">
+      <h2>Welcome back.</h2><p>Use the verified email and password connected to your profile.</p>
+      <form class="form-grid" id="signinForm" novalidate>
+        <div class="field"><label for="signinEmail">Email</label><input id="signinEmail" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" required></div>
+        <div class="field"><label for="signinPassword">Password</label><div class="password-wrap"><input id="signinPassword" name="password" type="password" autocomplete="current-password" required><button class="password-toggle" type="button" data-toggle-password="signinPassword" aria-label="Show password">Show</button></div></div>
+        <label class="check-row"><input id="rememberSession" type="checkbox" checked><span>Keep this session signed in on this device.</span></label>
+        <div class="form-actions"><button class="pill" id="signinButton" type="submit">Sign in</button><button class="text-link" id="resetPassword" type="button">Forgot password?</button></div>
+        <div class="status" id="signinStatus" role="status" aria-live="polite"></div>
+      </form>
     </section>
-    <section class="auth-panel" id="signupPanel" hidden>
-      <h2>Create your profile.</h2><p>Use an email you can open. A verification message will be sent before your profile can be used.</p>
-      <form class="form-grid" id="signupForm"><div class="field"><label for="displayName">Name or nickname</label><input id="displayName" name="displayName" maxlength="50" autocomplete="name" required></div><div class="field"><label for="signupEmail">Email</label><input id="signupEmail" name="email" type="email" autocomplete="email" required></div><div class="field"><label for="signupPassword">Password</label><input id="signupPassword" name="password" type="password" autocomplete="new-password" minlength="8" required></div><div class="field"><label for="confirmPassword">Confirm password</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" required></div><label class="check-row"><input id="privacyConsent" type="checkbox" required><span>I have read the <a href="privacy-policy.html" target="_blank" rel="noopener">Privacy Policy</a> and I agree to create a profile.</span></label><button class="pill" type="submit">Create profile</button><div class="status" id="signupStatus" role="status"></div></form>
+    <section class="auth-panel" id="signupPanel" role="tabpanel" aria-labelledby="signupTab" hidden>
+      <h2>Join our community.</h2><p>Use an email you can open. A verification message will be sent before the profile becomes active.</p>
+      <form class="form-grid" id="signupForm" novalidate>
+        <div class="field"><label for="fullName">Full name</label><input id="fullName" name="fullName" maxlength="80" autocomplete="name" required></div>
+        <div class="field"><label for="signupEmail">Email</label><input id="signupEmail" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" required></div>
+        <div class="field"><label for="signupPassword">Password</label><div class="password-wrap"><input id="signupPassword" name="password" type="password" autocomplete="new-password" minlength="10" required><button class="password-toggle" type="button" data-toggle-password="signupPassword" aria-label="Show password">Show</button></div><div class="password-rules" id="passwordRules" aria-live="polite"><span data-rule="length">At least 10 characters</span><span data-rule="lower">One lowercase letter</span><span data-rule="upper">One uppercase letter</span><span data-rule="number">One number</span></div></div>
+        <div class="field"><label for="confirmPassword">Confirm password</label><div class="password-wrap"><input id="confirmPassword" type="password" autocomplete="new-password" minlength="10" required><button class="password-toggle" type="button" data-toggle-password="confirmPassword" aria-label="Show password">Show</button></div></div>
+        <label class="check-row"><input id="legalConsent" type="checkbox" required><span>I have read and agree to the <a href="membership-agreement.html" target="_blank" rel="noopener">Membership Agreement</a>, <a href="privacy-policy.html" target="_blank" rel="noopener">Privacy Policy</a>, and <a href="community-guidelines.html" target="_blank" rel="noopener">Community Guidelines</a>.</span></label>
+        <button class="pill" id="signupButton" type="submit">Create profile</button>
+        <div class="status" id="signupStatus" role="status" aria-live="polite"></div>
+      </form>
     </section>
-    <p class="form-note" style="margin-top:22px">Account verification is handled through email. No payment is needed to create a profile.</p>
+    <p class="form-note" style="margin-top:22px">Creating a profile is free. Passwords are handled by the authentication provider and are never visible to administrators.</p>
   </article>
 </section>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/config.js"></script>
+<script src="assets/js/supabase-client.js"></script>
 <script src="assets/js/site.js"></script>
 <script src="assets/js/auth.js"></script>
 </body>
