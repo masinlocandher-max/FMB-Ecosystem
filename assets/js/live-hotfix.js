@@ -1,6 +1,14 @@
 (function(){
   'use strict';
+  function loadAsset(tag,attrs){
+    const key=attrs.href||attrs.src;
+    if(document.querySelector(`${tag}[href="${key}"],${tag}[src="${key}"]`))return;
+    const el=document.createElement(tag);Object.entries(attrs).forEach(([name,value])=>el.setAttribute(name,value));document.head.appendChild(el);
+  }
   function boot(){
+    loadAsset('link',{rel:'stylesheet',href:'assets/css/reading-library.css?v=20260712'});
+    loadAsset('script',{src:'assets/js/reading-library.js?v=20260712',defer:'defer'});
+
     const musicSection=document.getElementById('music');
     if(musicSection)musicSection.remove();
     document.querySelectorAll('a[href="music.html"],a[href$="/music.html"]').forEach(link=>link.remove());
