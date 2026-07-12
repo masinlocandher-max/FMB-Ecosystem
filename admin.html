@@ -24,6 +24,7 @@
 
 <section class="admin-panel" id="overviewPanel">
 <div class="admin-kpis"><article class="admin-kpi"><span>Total members</span><strong id="totalMembers">0</strong></article><article class="admin-kpi"><span>New this month</span><strong id="recentMembers">0</strong></article><article class="admin-kpi"><span>Published content</span><strong id="publishedContent">0</strong></article><article class="admin-kpi"><span>Pending reviews</span><strong id="pendingPosts">0</strong></article></div>
+<article class="glass-card" id="membershipControl" style="margin-top:22px"><p class="eyebrow">Membership launch control</p><h3 id="membershipState">Checking live registration status…</h3><p id="membershipStateDetail">Registration stays closed unless the live Supabase schema confirms readiness and an administrator opens it.</p><div class="actions" style="justify-content:flex-start"><button class="pill" id="toggleMembership" type="button" disabled>Checking…</button></div></article>
 <div class="split" style="margin-top:22px"><article class="glass-card"><p class="eyebrow">Recent registrations</p><h3>Newest members</h3><div id="recentRegistrationList"><div class="empty">Loading…</div></div></article><article class="glass-card"><p class="eyebrow">Activity overview</p><h3>Recent administrative actions</h3><div id="activityList"><div class="empty">Loading…</div></div></article></div>
 </section>
 
@@ -66,6 +67,7 @@
 <script src="assets/js/supabase-client.js"></script>
 <script src="assets/js/site.js"></script>
 <script src="assets/js/admin.js"></script>
+<script src="assets/js/membership-admin.js"></script>
 <script src="assets/js/live-hotfix.js?v=20260712b"></script>
 </body>
 </html>
