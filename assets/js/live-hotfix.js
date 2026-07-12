@@ -6,8 +6,9 @@
     const el=document.createElement(tag);Object.entries(attrs).forEach(([name,value])=>el.setAttribute(name,value));document.head.appendChild(el);
   }
   function boot(){
-    loadAsset('link',{rel:'stylesheet',href:'assets/css/reading-library.css?v=20260712'});
-    loadAsset('script',{src:'assets/js/reading-library.js?v=20260712',defer:'defer'});
+    loadAsset('link',{rel:'stylesheet',href:'assets/css/reading-library.css?v=20260712d'});
+    loadAsset('link',{rel:'stylesheet',href:'assets/css/apple-mobile.css?v=20260712d'});
+    loadAsset('script',{src:'assets/js/reading-library.js?v=20260712d',defer:'defer'});
 
     const musicSection=document.getElementById('music');
     if(musicSection)musicSection.remove();
@@ -20,35 +21,43 @@
         .replace(/Read, listen, pause/gi,'Read, reflect, pause');
     });
 
-    const readingPage=document.querySelector('.reading-page');
-    const readingWrap=readingPage&&readingPage.querySelector('.reading-wrap');
-    if(readingWrap){
-      loadAsset('link',{rel:'stylesheet',href:'assets/css/reading-book.css?v=20260712a'});
-      const hero=readingWrap.querySelector('.reading-hero');
-      if(hero&&!hero.querySelector('.fmb-book-meta')){
-        const meta=document.createElement('div');meta.className='fmb-book-meta';meta.innerHTML='<span>Written by Francine Marie Bautista</span><span>With love, FMB Reading Collection</span><span>Original digital edition</span>';hero.appendChild(meta);
-      }
-      if(hero&&!readingWrap.querySelector('.fmb-author-note')){
-        const author=document.createElement('section');author.className='fmb-author-note';author.setAttribute('aria-labelledby','author-note-title');author.innerHTML='<img src="assets/images/icon-transparent.png" alt="With love, FMB emblem"><div><p class="eyebrow">A note from the author</p><h2 id="author-note-title">This reading was written with care.</h2><p>I created this material to make thoughtful information feel clearer, gentler, and easier to approach. Please read at your own pace, keep what helps, and seek qualified professional support whenever the subject requires medical, legal, psychological, or emergency guidance.</p><p class="fmb-author-byline">Francine Marie Bautista, FMB<br>Author and Founder, With love, FMB</p></div>';
-        hero.insertAdjacentElement('afterend',author);
-      }
-      if(!readingWrap.querySelector('.fmb-legal-page')){
-        const legal=document.createElement('section');legal.className='fmb-legal-page';legal.setAttribute('aria-labelledby','legal-title');legal.innerHTML='<p class="eyebrow" style="color:#f3d98f">Copyright and use notice</p><h2 id="legal-title">Please respect the work behind this reading.</h2><p><strong>Copyright © 2026 Francine Marie Bautista. All rights reserved.</strong> This reading material is an original work authored and published by Francine Marie Bautista under With love, FMB.</p><p style="margin-top:14px">No part of this material may be copied, reproduced, republished, adapted, translated, recorded, distributed, uploaded, sold, used for training, or shared in whole or in substantial part without the author’s prior written permission or clear documented consent.</p><p style="margin-top:14px">Brief quotations may be used for commentary, education, or review when legally permitted, provided that Francine Marie Bautista and With love, FMB are clearly credited and the use does not misrepresent the original work. Linking to the official webpage is encouraged.</p><p style="margin-top:14px">For permission requests, partnerships, classroom use, publication, media use, or reproduction, contact <strong>withlovefmb@gmail.com</strong> before using the material.</p><p class="fmb-rights-line">Original digital edition • FrancineMarieBautista.com • With love, FMB</p>';
-        const signoff=readingWrap.querySelector('.reader-signoff');
-        if(signoff)signoff.insertAdjacentElement('beforebegin',legal);else readingWrap.appendChild(legal);
-      }
-    }
-
     const toggle=document.getElementById('navToggle');
     const links=document.getElementById('navLinks');
+    const mobileBar=document.querySelector('.mobile-bar');
     if(toggle&&links){
       let backdrop=document.querySelector('.nav-backdrop');
       if(!backdrop){backdrop=document.createElement('div');backdrop.className='nav-backdrop';document.body.appendChild(backdrop)}
-      const sync=()=>{const open=links.classList.contains('open');backdrop.classList.toggle('open',open);document.body.classList.toggle('modal-open',open)};
+      const sync=()=>{
+        const open=links.classList.contains('open');
+        backdrop.classList.toggle('open',open);
+        document.body.classList.toggle('modal-open',open);
+        if(mobileBar)mobileBar.classList.toggle('is-hidden',open);
+      };
       toggle.addEventListener('click',()=>setTimeout(sync,0));
       backdrop.addEventListener('click',()=>{links.classList.remove('open');toggle.setAttribute('aria-expanded','false');sync()});
       links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setTimeout(sync,0)));
     }
+
+    if(mobileBar){
+      mobileBar.style.gridTemplateColumns=`repeat(${mobileBar.children.length},minmax(0,1fr))`;
+      let lastY=window.scrollY;
+      let ticking=false;
+      const reveal=()=>mobileBar.classList.remove('is-hidden');
+      const update=()=>{
+        const currentY=window.scrollY;
+        if(!document.body.classList.contains('modal-open')){
+          if(currentY>lastY+8&&currentY>180)mobileBar.classList.add('is-hidden');
+          else if(currentY<lastY-8||currentY<90)reveal();
+        }
+        lastY=currentY;
+        ticking=false;
+      };
+      window.addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(update)}},{passive:true});
+      window.addEventListener('pageshow',reveal);
+      mobileBar.addEventListener('focusin',reveal);
+      mobileBar.addEventListener('pointerdown',reveal,{passive:true});
+    }
+
     document.querySelectorAll('img').forEach(img=>{
       img.addEventListener('error',()=>{
         const src=img.getAttribute('src')||'';
