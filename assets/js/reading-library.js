@@ -32,7 +32,7 @@
       if(cards[1]){
         const media=cards[1].querySelector('.card-media');
         const img=media&&media.querySelector('img');
-        if(img){img.alt='Cognita Institute of AI';media.classList.add('project-logo-fallback')}
+        if(img){img.src='assets/images/projects/cognita-hero.svg';img.alt='Cognita Institute of AI hero banner';img.onerror=()=>{media.classList.add('project-logo-fallback');img.src='assets/cognita.svg'}}
       }
     }
   }
