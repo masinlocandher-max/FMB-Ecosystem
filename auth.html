@@ -33,13 +33,14 @@
     </section>
     <section class="auth-panel" id="signupPanel" role="tabpanel" aria-labelledby="signupTab" hidden>
       <h2>Join our community.</h2><p>Use an email you can open. A verification message will be sent before the profile becomes active.</p>
+      <p class="form-note" id="membershipReadiness" role="status" aria-live="polite">Checking whether membership is open…</p>
       <form class="form-grid" id="signupForm" novalidate>
         <div class="field"><label for="fullName">Full name</label><input id="fullName" name="fullName" maxlength="80" autocomplete="name" required></div>
         <div class="field"><label for="signupEmail">Email</label><input id="signupEmail" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" required></div>
         <div class="field"><label for="signupPassword">Password</label><div class="password-wrap"><input id="signupPassword" name="password" type="password" autocomplete="new-password" minlength="10" required><button class="password-toggle" type="button" data-toggle-password="signupPassword" aria-label="Show password">Show</button></div><div class="password-rules" id="passwordRules" aria-live="polite"><span data-rule="length">At least 10 characters</span><span data-rule="lower">One lowercase letter</span><span data-rule="upper">One uppercase letter</span><span data-rule="number">One number</span></div></div>
         <div class="field"><label for="confirmPassword">Confirm password</label><div class="password-wrap"><input id="confirmPassword" type="password" autocomplete="new-password" minlength="10" required><button class="password-toggle" type="button" data-toggle-password="confirmPassword" aria-label="Show password">Show</button></div></div>
         <label class="check-row"><input id="legalConsent" type="checkbox" required><span>I have read and agree to the <a href="membership-agreement.html" target="_blank" rel="noopener">Membership Agreement</a>, <a href="privacy-policy.html" target="_blank" rel="noopener">Privacy Policy</a>, and <a href="community-guidelines.html" target="_blank" rel="noopener">Community Guidelines</a>.</span></label>
-        <button class="pill" id="signupButton" type="submit">Create profile</button>
+        <button class="pill" id="signupButton" type="submit" disabled>Checking membership…</button>
         <div class="status" id="signupStatus" role="status" aria-live="polite"></div>
       </form>
     </section>
@@ -52,6 +53,7 @@
 <script src="assets/js/supabase-client.js"></script>
 <script src="assets/js/site.js"></script>
 <script src="assets/js/auth.js"></script>
+<script src="assets/js/registration-readiness.js"></script>
 <script src="assets/js/live-hotfix.js?v=20260712b"></script>
 </body>
 </html>
