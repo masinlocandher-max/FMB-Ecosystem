@@ -58,6 +58,32 @@
       mobileBar.addEventListener('pointerdown',reveal,{passive:true});
     }
 
+    const page=location.pathname.split('/').pop()||'index.html';
+    if(page==='auth.html'){
+      const card=document.querySelector('.auth-card');
+      if(card&&!card.querySelector('[data-admin-access-link]')){
+        const note=document.createElement('p');
+        note.className='form-note';
+        note.style.marginTop='12px';
+        note.dataset.adminAccessLink='true';
+        note.append('FMB administrator? ');
+        const link=document.createElement('a');
+        link.className='text-link';
+        link.href='admin-login.html';
+        link.textContent='Open administrator access';
+        note.append(link,'.');
+        card.appendChild(note);
+      }
+    }
+
+    const footerGroups=[...document.querySelectorAll('.footer .footer-links')];
+    if(footerGroups.length&&!document.querySelector('.footer a[href="admin-login.html"]')){
+      const link=document.createElement('a');
+      link.href='admin-login.html';
+      link.textContent='Administrator access';
+      footerGroups[footerGroups.length-1].appendChild(link);
+    }
+
     document.querySelectorAll('img').forEach(img=>{
       img.addEventListener('error',()=>{
         const src=img.getAttribute('src')||'';
