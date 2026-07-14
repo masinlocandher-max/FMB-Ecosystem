@@ -1,16 +1,142 @@
 {
-  "playlists": [
+  "version": "2026-07-14-preview-1",
+  "collections": [
     {
-      "id": "anxious-moments",
-      "title": "For Anxious Moments",
-      "description": "Slow, gentle music for moments when your mind needs less noise.",
-      "tracks": []
+      "id": "calm",
+      "title": "Calm",
+      "description": "Calm is our quiet listening collection for moments that need less noise. Soft instrumental music, gentle transitions, and unhurried melodies create space to breathe, pause, and return to the present. Listen while resting, reading, reflecting, or whenever the day feels a little too heavy.",
+      "cover_url": "assets/images/music/calm-cover.jpg",
+      "tracks": [
+        {
+          "id": "calm-01",
+          "title": "Quiet Enough to Breathe",
+          "version": "Track 01",
+          "artist": "With Love, FMB",
+          "description": "A gentle instrumental for moments when the world feels too loud. Soft movement and spacious melodies invite the listener to slow down, breathe naturally, and settle into the present.",
+          "moment": "Resting, reading, quiet reflection, journaling, or preparing to sleep.",
+          "src": "assets/audio/calm/FMB-Calm-01-Quiet-Enough-to-Breathe-Web.mp3",
+          "duration_seconds": 212.832,
+          "credits": ["Partners: Our creative partners", "Collaborated and directed by: Francine Marie Bautista (FMB)", "Vocals: None"]
+        },
+        {
+          "id": "calm-01a",
+          "title": "Quiet Enough to Breathe",
+          "version": "Track 01A",
+          "artist": "With Love, FMB",
+          "description": "An alternate quiet arrangement that leaves room between every phrase. Its unhurried pace supports a softer atmosphere for pausing, breathing, and letting the day become less demanding.",
+          "moment": "Slow mornings, evening rest, reading, reflection, or a quiet break.",
+          "src": "assets/audio/calm/FMB-Calm-01A-Quiet-Enough-to-Breathe-Web.mp3",
+          "duration_seconds": 212.832,
+          "credits": ["Partners: Our creative partners", "Collaborated and directed by: Francine Marie Bautista (FMB)", "Vocals: None"]
+        },
+        {
+          "id": "calm-02",
+          "title": "Open Window Rain",
+          "version": "Track 02",
+          "artist": "With Love, FMB",
+          "description": "A peaceful instrumental shaped by the feeling of listening to rain through an open window. Gentle textures create a cool, familiar space for stillness and quiet thought.",
+          "moment": "Rainy afternoons, reading, working quietly, resting, or journaling.",
+          "src": "assets/audio/calm/FMB-Calm-02-Open-Window-Rain-Web.mp3",
+          "duration_seconds": 199.512,
+          "credits": ["Partners: Our creative partners", "Collaborated and directed by: Francine Marie Bautista (FMB)", "Vocals: None"]
+        },
+        {
+          "id": "calm-02a",
+          "title": "Open Window Rain",
+          "version": "Track 02A",
+          "artist": "With Love, FMB",
+          "description": "An alternate rain-inspired arrangement with a gentle, flowing character. It brings the ease of a quiet room, fresh air, and the steady comfort of weather passing outside.",
+          "moment": "Unhurried work, reflection, evening rest, reading, or watching the rain.",
+          "src": "assets/audio/calm/FMB-Calm-02A-Open-Window-Rain-Web.mp3",
+          "duration_seconds": 123.552,
+          "credits": ["Partners: Our creative partners", "Collaborated and directed by: Francine Marie Bautista (FMB)", "Vocals: None"]
+        },
+        {
+          "id": "calm-03",
+          "title": "Quietly Hopeful",
+          "version": "Track 03",
+          "artist": "With Love, FMB",
+          "description": "A soft instrumental about hope that does not need to be loud. Warm melodies move gently forward, offering a small sense of light without pressure or urgency.",
+          "moment": "Beginning again, reflective mornings, journaling, resting, or rebuilding confidence.",
+          "src": "assets/audio/calm/FMB-Calm-03-Quietly-Hopeful-Web.mp3",
+          "duration_seconds": 188.712,
+          "credits": ["Partners: Our creative partners", "Collaborated and directed by: Francine Marie Bautista (FMB)", "Vocals: None"]
+        },
+        {
+          "id": "calm-03a",
+          "title": "Quietly Hopeful",
+          "version": "Track 03A",
+          "artist": "With Love, FMB",
+          "description": "An alternate expression of quiet hope, carried by patient movement and gentle warmth. It is a reminder that progress can be soft, private, and taken one moment at a time.",
+          "moment": "Quiet planning, reflection, slow mornings, reading, or personal resets.",
+          "src": "assets/audio/calm/FMB-Calm-03A-Quietly-Hopeful-Web.mp3",
+          "duration_seconds": 318.312,
+          "credits": ["Partners: Our creative partners", "Collaborated and directed by: Francine Marie Bautista (FMB)", "Vocals: None"]
+        },
+        {
+          "id": "calm-04",
+          "title": "Soft Harbor",
+          "version": "Track 04",
+          "artist": "With Love, FMB",
+          "description": "A restful instrumental inspired by the feeling of arriving somewhere safe after a long day. Its warm, steady atmosphere creates room to pause without needing to explain anything.",
+          "moment": "After work, before sleep, during reflection, reading, or taking a quiet break.",
+          "src": "assets/audio/calm/FMB-Calm-04-Soft-Harbor-Web.mp3",
+          "duration_seconds": 168.648,
+          "credits": ["Partners: Our creative partners", "Collaborated and directed by: Francine Marie Bautista (FMB)", "Vocals: None"]
+        },
+        {
+          "id": "calm-04a",
+          "title": "Soft Harbor",
+          "version": "Track 04A",
+          "artist": "With Love, FMB",
+          "description": "An alternate harbor-inspired arrangement with a gentle sense of shelter and return. The music stays calm and steady, allowing the listener to rest without being hurried.",
+          "moment": "Evening routines, quiet reading, deep rest, journaling, or slowing down.",
+          "src": "assets/audio/calm/FMB-Calm-04A-Soft-Harbor-Web.mp3",
+          "duration_seconds": 183.432,
+          "credits": ["Partners: Our creative partners", "Collaborated and directed by: Francine Marie Bautista (FMB)", "Vocals: None"]
+        },
+        {
+          "id": "calm-05",
+          "title": "Soft Harbor Drift",
+          "version": "Track 05",
+          "artist": "With Love, FMB",
+          "description": "A spacious instrumental that moves like calm water near a protected shore. Gentle layers drift without demanding attention, making the track suitable for stillness and quiet focus.",
+          "moment": "Reading, meditation, quiet work, resting, or watching the evening settle.",
+          "src": "assets/audio/calm/FMB-Calm-05-Soft-Harbor-Drift-Web.mp3",
+          "duration_seconds": 179.232,
+          "credits": ["Partners: Our creative partners", "Collaborated and directed by: Francine Marie Bautista (FMB)", "Vocals: None"]
+        },
+        {
+          "id": "calm-05a",
+          "title": "Soft Harbor Drift",
+          "version": "Track 05A",
+          "artist": "With Love, FMB",
+          "description": "An alternate drifting arrangement with soft movement and an open, peaceful atmosphere. It is designed for moments when the listener wants sound nearby without noise or pressure.",
+          "moment": "Long-form reading, reflection, evening rest, focused work, or quiet company.",
+          "src": "assets/audio/calm/FMB-Calm-05A-Soft-Harbor-Drift-Web.mp3",
+          "duration_seconds": 179.232,
+          "credits": ["Partners: Our creative partners", "Collaborated and directed by: Francine Marie Bautista (FMB)", "Vocals: None"]
+        }
+      ]
     },
     {
-      "id": "made-by-fmb",
-      "title": "Made by FMB",
-      "description": "Original songs, instrumentals, and sound pieces created by FMB.",
-      "tracks": []
+      "id": "original-soundtracks",
+      "title": "Original Soundtracks",
+      "description": "Founder-led songs and sound pieces carrying the voice, values, and creative direction of With Love, FMB.",
+      "cover_url": "assets/images/music/with-love-fmb-cover.png",
+      "tracks": [
+        {
+          "id": "ost-with-love-fmb",
+          "title": "With Love, FMB",
+          "version": "Original soundtrack",
+          "artist": "With Love, FMB",
+          "description": "An original soundtrack about creating honestly, holding softness and strength together, and existing fully with creativity, kindness, and love.",
+          "moment": "Creative work, reflection, rebuilding confidence, or beginning again.",
+          "src": "assets/audio/ost/FMB-OST-With-Love-FMB-Remastered.mp3",
+          "duration_seconds": 198.6,
+          "credits": ["Written by: Francine Marie Bautista (FMB)", "Musical direction by: Francine Marie Bautista (FMB)"]
+        }
+      ]
     }
   ]
 }

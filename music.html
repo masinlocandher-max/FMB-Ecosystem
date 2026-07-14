@@ -3,13 +3,136 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>With love, FMB</title>
-<meta name="robots" content="noindex">
-<meta http-equiv="refresh" content="0;url=index.html#bookshelf">
-<link rel="canonical" href="https://www.francinemariebautista.com/">
-<script>location.replace('index.html#bookshelf');</script>
+<title>Listening Room Preview | With love, FMB</title>
+<meta name="description" content="A private preview of the With love, FMB Listening Room, featuring the Calm collection and the original soundtrack With Love, FMB.">
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+<meta name="theme-color" content="#3a0855">
+<meta property="og:title" content="Listening Room | With love, FMB">
+<meta property="og:description" content="Quiet music, gentle space, and original sound from With love, FMB.">
+<meta property="og:image" content="https://www.francinemariebautista.com/assets/images/music/with-love-fmb-cover.png">
+<meta property="og:image:alt" content="With Love, FMB original soundtrack cover">
+<meta property="og:type" content="music.album">
+<meta property="og:site_name" content="With love, FMB">
+<link rel="canonical" href="https://www.francinemariebautista.com/music.html">
+<link rel="icon" href="assets/images/icon-transparent.png">
+<link rel="preload" as="image" href="assets/images/music/calm-cover.jpg">
+<link rel="preload" as="image" href="assets/images/music/with-love-fmb-cover.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css?v=20260714k">
+<link rel="stylesheet" href="assets/css/icon-fix.css">
+<link rel="stylesheet" href="assets/css/repair.css">
+<link rel="stylesheet" href="assets/css/live-hotfix.css?v=20260714h">
+<link rel="stylesheet" href="assets/css/music-ui.css?v=20260714-preview1">
 </head>
-<body>
-<p>Returning to With love, FMB…</p>
+<body class="music-app">
+<div class="top-shell">
+  <div class="support-glass" role="region" aria-label="With Love, FMB partner brands"></div>
+  <header class="nav-glass">
+    <a class="nav-brand" href="index.html" aria-label="With love, FMB home"><img class="nav-icon" src="assets/images/icon-transparent.png" alt=""><span class="nav-word">with love, <em>fmb</em></span></a>
+    <nav class="nav-links" id="navLinks" aria-label="Main navigation"><a href="index.html">Home</a><a href="reading.html">Read</a><a href="music.html" aria-current="page">Listen</a><a href="about.html">About</a></nav>
+    <div class="nav-actions"><a class="nav-btn" href="auth.html#signin">Sign in</a><a class="nav-btn primary" href="auth.html#signup">Join free</a><button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-label="Open menu" aria-controls="navLinks"><span></span><span></span></button></div>
+  </header>
+</div>
+
+<main class="listening-room" id="main-content">
+  <section class="listening-hero" aria-labelledby="listeningTitle">
+    <div class="listening-hero-copy reveal">
+      <p class="music-kicker">With love, FMB Listening Room</p>
+      <h1 id="listeningTitle">A softer place to <em>listen.</em></h1>
+      <p class="listening-lede">Quiet music for resting, reading, reflecting, or finding a little more room inside the day. Begin wherever you are.</p>
+      <div class="listening-actions"><a class="pill" href="#player">Start listening</a><a class="pill secondary" href="#collections">Explore collections</a></div>
+      <p class="preview-note"><span aria-hidden="true"></span>Private, unpublished preview</p>
+    </div>
+    <div class="cover-composition reveal d1" aria-label="Featured With love, FMB music covers">
+      <figure class="hero-cover hero-cover-calm"><img src="assets/images/music/calm-cover.jpg" width="1536" height="1536" alt="Calm collection cover, Quiet music. Gentle mind. Peacefully you."><figcaption><strong>Calm</strong><span>Quiet listening collection</span></figcaption></figure>
+      <figure class="hero-cover hero-cover-ost"><img src="assets/images/music/with-love-fmb-cover.png" width="1254" height="1254" alt="With Love, FMB original soundtrack cover featuring Francine Marie Bautista"><figcaption><strong>With Love, FMB</strong><span>Original soundtrack</span></figcaption></figure>
+      <span class="cover-orbit cover-orbit-one" aria-hidden="true"></span><span class="cover-orbit cover-orbit-two" aria-hidden="true"></span>
+    </div>
+  </section>
+
+  <section class="player-section" id="player" aria-labelledby="nowTitle">
+    <div class="player-card-main">
+      <div class="player-art-wrap">
+        <img class="player-art" id="featuredArt" src="assets/images/music/calm-cover.jpg" width="1536" height="1536" alt="Current track artwork">
+        <div class="player-art-glow" aria-hidden="true"></div>
+        <span class="player-collection" id="nowCollection">Calm</span>
+      </div>
+      <div class="player-content">
+        <div class="player-heading">
+          <div><p class="music-kicker" id="listeningState">Public listening</p><h2 id="nowTitle" aria-live="polite">Quiet Enough to Breathe</h2><p class="now-version" id="nowVersion">Track 01</p></div>
+          <button class="icon-control quiet-control" id="detailsButton" type="button" aria-expanded="false" aria-controls="trackDetails" aria-label="Show track details">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 10.5v6M12 7.5h.01"></path></svg>
+          </button>
+        </div>
+        <p class="player-description" id="playerNote">A gentle instrumental for moments when the world feels too loud.</p>
+        <div class="track-details" id="trackDetails" hidden><p id="trackMoment"></p><div class="track-credit-list" id="trackCredits"></div></div>
+
+        <audio id="audioPlayer" preload="metadata" controlslist="nodownload noplaybackrate" disableremoteplayback></audio>
+        <div class="progress-control">
+          <input id="progressControl" type="range" min="0" max="1000" value="0" step="1" aria-label="Track progress">
+          <div class="time-row"><span id="currentTime">0:00</span><span id="duration">0:00</span></div>
+        </div>
+        <div class="primary-controls" aria-label="Music controls">
+          <button class="icon-control secondary-control" id="shuffleButton" type="button" aria-pressed="false" aria-label="Shuffle collection">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3.5c4.8 0 4.2 10 9 10H20"></path><path d="m17 14 3 3-3 3"></path><path d="M4 17h3.5c1.4 0 2.3-.8 3.1-2"></path><path d="M14.1 9c.7-1.2 1.3-2 2.4-2H20"></path><path d="m17 4 3 3-3 3"></path></svg>
+          </button>
+          <button class="icon-control" id="prevButton" type="button" aria-label="Previous track"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M18 6l-9 6 9 6Z"></path></svg></button>
+          <button class="icon-control play-control" id="mainPlayButton" type="button" aria-label="Play">
+            <svg class="play-symbol" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6Z"></path></svg>
+            <svg class="pause-symbol" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M9 7v10M15 7v10"></path></svg>
+          </button>
+          <button class="icon-control" id="nextButton" type="button" aria-label="Next track"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M6 6l9 6-9 6Z"></path></svg></button>
+          <button class="icon-control secondary-control" id="repeatButton" type="button" aria-pressed="false" aria-label="Repeat track">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 2l3 3-3 3"></path><path d="M3 11V9a4 4 0 0 1 4-4h13"></path><path d="m7 22-3-3 3-3"></path><path d="M21 13v2a4 4 0 0 1-4 4H4"></path></svg>
+          </button>
+        </div>
+        <div class="volume-control"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 10v4h4l5 4V6l-5 4Z"></path><path d="M17 9c1.5 1.6 1.5 4.4 0 6"></path></svg><input id="volumeControl" type="range" min="0" max="1" value="0.75" step="0.05" aria-label="Volume"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="collections-section" id="collections" aria-labelledby="collectionsTitle">
+    <div class="collections-heading"><div><p class="music-kicker">Choose what the moment needs</p><h2 id="collectionsTitle">Our listening collections</h2></div><p>Move gently between calm instrumentals and original With Love, FMB sound. More collections will open when every track is ready.</p></div>
+    <div class="collection-tabs" id="collectionTabs" role="tablist" aria-label="Music collections"></div>
+    <div class="playlist-list" id="playlistGrid" aria-live="polite"><div class="music-loading">Preparing the listening room.</div></div>
+  </section>
+
+  <section class="coming-collections" aria-labelledby="comingTitle">
+    <div class="coming-copy"><p class="music-kicker">In preparation</p><h2 id="comingTitle">More ways to meet the day.</h2><p>These rooms will open after their music, artwork, descriptions, and credits are complete.</p></div>
+    <article class="coming-card relax-card"><span>01</span><div><p>Coming collection</p><h3>Relax</h3><small>For releasing the pace of a long day.</small></div></article>
+    <article class="coming-card lift-card"><span>02</span><div><p>Coming collection</p><h3>Lift the Mood</h3><small>For moments that need energy and lightness.</small></div></article>
+  </section>
+
+  <section class="listening-note" aria-label="Listening care note"><img src="assets/images/icon-transparent.png" alt="" width="120" height="120"><div><p class="music-kicker">Listen in your own way</p><h2>There is no correct way to pause.</h2><p>Let the music stay in the background while you read, rest, write, work quietly, or simply take a breath. Keep what helps and leave what does not.</p></div></section>
+</main>
+
+<div class="mini-player" id="miniPlayer" hidden>
+  <img class="mini-cover" id="miniCover" src="assets/images/music/calm-cover.jpg" alt="">
+  <div class="mini-meta"><strong id="miniTitle">Quiet Enough to Breathe</strong><span id="miniArtist">With Love, FMB</span></div>
+  <div class="mini-actions"><button id="miniPrev" type="button" aria-label="Previous track"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M18 6l-9 6 9 6Z"></path></svg></button><button id="miniPlay" type="button" aria-label="Play"><svg class="play-symbol" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6Z"></path></svg><svg class="pause-symbol" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M9 7v10M15 7v10"></path></svg></button><button id="miniNext" type="button" aria-label="Next track"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M6 6l9 6-9 6Z"></path></svg></button></div>
+</div>
+
+<dialog class="membership-dialog" id="membershipDialog" aria-labelledby="membershipTitle">
+  <button class="dialog-close" id="dialogClose" type="button" aria-label="Close registration invitation"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17"></path></svg></button>
+  <img src="assets/images/icon-transparent.png" width="86" height="86" alt="">
+  <p class="music-kicker">Free member listening</p>
+  <h2 id="membershipTitle">Continue listening with us.</h2>
+  <p>Create a free profile to continue the Calm collection, move through the full listening room, and keep supportive resources together in one private space.</p>
+  <div class="dialog-actions"><a class="pill" href="auth.html#signup">Create a free profile</a><a class="pill secondary" href="auth.html#signin">Sign in</a></div>
+  <button class="maybe-later" id="maybeLater" type="button">Maybe later</button>
+</dialog>
+
+<footer class="footer"><div class="wrap"><div class="footer-grid"><div><img class="footer-logo" src="assets/images/signature-transparent.png" alt="With love, FMB"><p>Our personal, creative, and community-centered digital home.</p></div><div><h4>Explore</h4><div class="footer-links"><a href="index.html">Home</a><a href="reading.html">Reading room</a><a href="music.html">Listening room</a><a href="about.html">About FMB</a></div></div><div><h4>Policies and contact</h4><div class="footer-links"><a href="mailto:withlovefmb@gmail.com">withlovefmb@gmail.com</a><a href="privacy-policy.html">Privacy Policy</a><a href="membership-agreement.html">Membership Agreement</a><a href="community-guidelines.html">Community Guidelines</a><a href="data-rights.html">Data Rights</a></div></div></div><div class="footer-bottom"><span>© 2026 Francine Marie Bautista. All rights reserved.</span><span>With love, FMB</span></div></div></footer>
+<nav class="mobile-bar music-mobile-bar" aria-label="Mobile navigation"><a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 11 8-7 8 7v9H4Z"></path><path d="M9 20v-6h6v6"></path></svg><span>Home</span></a><a href="reading.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2Z"></path><path d="M7 4v14a2 2 0 0 0 2 2"></path></svg><span>Read</span></a><a class="active" href="music.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l10-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="16" cy="16" r="3"></circle></svg><span>Listen</span></a><a href="auth.html#signup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"></path></svg><span>Profile</span></a></nav>
+
+<noscript><div class="noscript-note">JavaScript is needed to use the Listening Room player.</div></noscript>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/supabase-client.js"></script>
+<script src="assets/js/site.js?v=20260714k"></script>
+<script src="assets/js/live-hotfix.js?v=20260714g"></script>
+<script src="assets/js/music.js?v=20260714-preview1"></script>
 </body>
 </html>

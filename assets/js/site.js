@@ -61,6 +61,7 @@
     const items=[
       {label:'Home',description:'Start here and see what you receive',href:onHome?'#top':'index.html#top',current:onHome&&!location.hash},
       {label:'Explore',description:'Read, reflect, and find useful resources',href:href('safe-space'),current:['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html'].includes(page)},
+      {label:'Listen',description:'Open calm music and original sound',href:'music.html',current:page==='music.html'},
       {label:'Community',description:'Join a moderated, kinder space',href:href('community'),current:page==='community.html'},
       {label:'Our projects',description:'Discover SENZ and Cognita',href:href('work'),current:false},
       {label:'About',description:'Meet FMB and explore our work',href:'about.html',current:page==='about.html'},
@@ -75,7 +76,7 @@
     if(menuToggle)menuToggle.setAttribute('aria-controls','navLinks');
     const mobileBar=$('.mobile-bar:not(.member-mobile-bar):not(.admin-mobile-bar)');
     if(mobileBar){
-      mobileBar.innerHTML=`<a class="active" href="${onHome?'#top':'index.html#top'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 11 8-7 8 7v9H4Z"/><path d="M9 20v-6h6v6"/></svg><span>Home</span></a><a href="${href('safe-space')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2Z"/><path d="M7 4v14a2 2 0 0 0 2 2"/></svg><span>Explore</span></a><a href="auth.html#signup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"/><path d="M19 5v5M16.5 7.5h5"/></svg><span>Join</span></a><a href="${href('support')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-4.4 7-11a4 4 0 0 0-7-2.6A4 4 0 0 0 5 10c0 6.6 7 11 7 11Z"/></svg><span>Help</span></a>`;
+      mobileBar.innerHTML=`<a${onHome?' class="active"':''} href="${onHome?'#top':'index.html#top'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 11 8-7 8 7v9H4Z"/><path d="M9 20v-6h6v6"/></svg><span>Home</span></a><a${['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html'].includes(page)?' class="active"':''} href="${href('safe-space')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2Z"/><path d="M7 4v14a2 2 0 0 0 2 2"/></svg><span>Explore</span></a><a${page==='music.html'?' class="active"':''} href="music.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg><span>Listen</span></a><a href="auth.html#signin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"/></svg><span>Profile</span></a>`;
     }
   }
   setupFriendlyNavigation();
