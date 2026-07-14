@@ -47,9 +47,9 @@
 
     finished=true;
     heading.textContent='Administrator access is ready.';
-    detail.textContent=`Welcome, ${data?.full_name||'Francine Marie Bautista'}. Opening the private dashboard now.`;
+    detail.textContent=`Welcome, ${data?.full_name||'Francine Marie Bautista'}. Opening your security settings so you can choose your password.`;
     show('Administrator verified successfully.','success');
-    setTimeout(()=>location.replace('admin.html'),900);
+    setTimeout(()=>location.replace('member.html#settingsPanel'),1100);
   }
 
   if(!window.FMB?.configured){
