@@ -10,17 +10,6 @@
     loadAsset('link',{rel:'stylesheet',href:'assets/css/apple-mobile.css?v=20260714f'});
     loadAsset('script',{src:'assets/js/reading-library.js?v=20260714f',defer:'defer'});
 
-    const musicSection=document.getElementById('music');
-    if(musicSection)musicSection.remove();
-    document.querySelectorAll('a[href="music.html"],a[href$="/music.html"]').forEach(link=>link.remove());
-    document.querySelectorAll('p,h1,h2,h3,span').forEach(node=>{
-      if(node.children.length)return;
-      node.textContent=node.textContent
-        .replace(/,?\s*music,?\s*/gi,', ')
-        .replace(/wellness guides,\s*and future resources/gi,'wellness guides and future resources')
-        .replace(/Read, listen, pause/gi,'Read, reflect, pause');
-    });
-
     const toggle=document.getElementById('navToggle');
     const links=document.getElementById('navLinks');
     const mobileBar=document.querySelector('.mobile-bar');
