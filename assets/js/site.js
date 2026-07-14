@@ -224,9 +224,9 @@
       ?`Priority review: ${readable(value)}. This date is currently full, but FMB’s assistant will review the context.`
       :`Preferred date: ${readable(value)}. ${availability.long}.`;
     function render(){
-      monthLabel.textContent=visibleMonth.toLocaleDateString(undefined,{month:'long',year:'numeric'});
-      calendar.innerHTML='';
       const year=visibleMonth.getFullYear(),month=visibleMonth.getMonth(),firstDay=new Date(year,month,1).getDay(),days=new Date(year,month+1,0).getDate();
+      monthLabel.textContent=new Date(year,month,1,12).toLocaleDateString(undefined,{month:'long',year:'numeric'});
+      calendar.innerHTML='';
       for(let i=0;i<firstDay;i++){const blank=document.createElement('span');blank.className='calendar-blank';calendar.appendChild(blank)}
       for(let day=1;day<=days;day++){
         const date=new Date(year,month,day),value=iso(date),button=document.createElement('button');
