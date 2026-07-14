@@ -138,7 +138,13 @@
     setLoading(button,false);
     if(error){
       const duplicate=['user_already_exists','email_exists'].includes(error.code)||/already registered|already exists/i.test(error.message||'');
-      setStatus('#signupStatus',duplicate?'A profile may already use this email. Try signing in or resetting the password.':'The profile could not be created. Please review the details and try again.','error');
+      const rateLimited=error.code==='over_email_send_rate_limit'||/rate limit|too many requests/i.test(error.message||'');
+      const message=duplicate
+        ? 'A profile may already use this email. Try signing in or resetting the password.'
+        : rateLimited
+          ? 'Verification email sending is temporarily at its limit. Please wait before trying again. If this email already has a profile, use Sign in instead.'
+          : 'The profile could not be created. Please review the details and try again.';
+      setStatus('#signupStatus',message,'error');
       return;
     }
     if(data.session){location.replace('member.html');return}
@@ -158,7 +164,11 @@
     const redirectTo=new URL('reset-password.html',base).href;
     const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo});
     setLoading(button,false);
-    if(error){setStatus('#signinStatus','The reset request could not be sent right now. Please try again later.','error');return}
+    if(error){
+      const rateLimited=error.code==='over_email_send_rate_limit'||/rate limit|too many requests/i.test(error.message||'');
+      setStatus('#signinStatus',rateLimited?'Password reset email sending is temporarily at its limit. Please wait before trying again.':'The reset request could not be sent right now. Please try again later.','error');
+      return;
+    }
     setStatus('#signinStatus','If a profile uses that email, a password reset link is on the way.','success');
   });
 })();
