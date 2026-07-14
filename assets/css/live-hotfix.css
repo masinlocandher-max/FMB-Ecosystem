@@ -7,7 +7,7 @@
 .promo-group .brand-chip{min-height:34px!important}
 .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 .promo-group .brand-chip-logo{position:relative;display:flex!important;flex:0 0 142px!important;justify-content:center;min-width:142px!important;width:142px!important;height:34px!important;padding:0!important;overflow:visible!important;border:0!important;background:transparent!important;box-shadow:none!important}
-.promo-group .brand-chip-logo img{display:block!important;width:142px!important;height:88px!important;max-width:none!important;flex:0 0 auto!important;object-fit:contain!important;filter:drop-shadow(0 2px 4px rgba(255,255,255,.78));transform:scale(1.12)}
+.promo-group .brand-chip-logo img{display:block!important;width:142px!important;height:88px!important;max-width:none!important;flex:0 0 auto!important;padding:0!important;border-radius:0!important;background:transparent!important;object-fit:contain!important;filter:drop-shadow(0 2px 5px rgba(36,81,217,.16));transform:scale(1.12)}
 .promo-group .cognita-chip{flex-basis:164px!important;min-width:164px!important;width:164px!important}
 .promo-group .cognita-chip img{width:164px!important}
 .support-glass:hover .promo-marquee,.support-glass:focus-within .promo-marquee{animation-play-state:paused!important}

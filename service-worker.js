@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260715-1';
+const CACHE_NAME='fmb-app-shell-20260715-2';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -79,6 +79,23 @@ self.addEventListener('fetch',event=>{
   }
 
   if(!['style','script','image','font','audio'].includes(request.destination))return;
+
+  if(['style','script'].includes(request.destination)){
+    event.respondWith((async()=>{
+      try{
+        const response=await fetch(new Request(request,{cache:'no-store'}));
+        if(response.ok){
+          const cache=await caches.open(CACHE_NAME);
+          cache.put(request,response.clone()).catch(()=>{});
+        }
+        return response;
+      }catch{
+        return await caches.match(request)||await caches.match(url.pathname)||Response.error();
+      }
+    })());
+    return;
+  }
+
   event.respondWith((async()=>{
     const cached=await caches.match(request,{ignoreSearch:true});
     const fresh=fetch(request).then(async response=>{
