@@ -33,7 +33,7 @@
       if(cards[1]){
         const media=cards[1].querySelector('.card-media');
         const img=media&&media.querySelector('img');
-        if(img){img.classList.remove('image-missing');img.removeAttribute('aria-hidden');img.src='assets/images/projects/cognita-transparent.png';img.alt='Cognita Institute of AI logo'}
+        if(img){img.classList.remove('image-missing');img.removeAttribute('aria-hidden');img.src='assets/images/projects/cognita-transparent.png?v=20260714-approved';img.alt='Cognita Institute of AI logo'}
       }
     }
   }
