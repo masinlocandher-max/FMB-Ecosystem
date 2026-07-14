@@ -43,8 +43,8 @@
   ensureAppMetadata();
 
   if(!document.querySelector('.skip-link')){
-    const skip=document.createElement('a');skip.className='skip-link';skip.href='#main-content';skip.textContent='Skip to main content';document.body.prepend(skip);
     const main=document.querySelector('main');if(main&&!main.id)main.id='main-content';
+    const skip=document.createElement('a');skip.className='skip-link';skip.href=main?.id?`#${main.id}`:'#main-content';skip.textContent='Skip to main content';document.body.prepend(skip);
   }
 
   const loader=$('#loader');
@@ -99,7 +99,7 @@
   const landingHero=$('.hero');
   if(landingHero){
     const image=landingHero.querySelector('.hero-banner img');
-    if(image){image.src='assets/images/hero.webp';image.alt='With love, FMB official banner featuring Francine Marie Bautista and the purple and gold brand emblem';image.removeAttribute('width');image.removeAttribute('height');image.setAttribute('fetchpriority','high')}
+    if(image){image.src='assets/images/hero.webp';image.alt='With love, FMB official banner featuring Francine Marie Bautista and the purple and gold brand emblem';image.width=1600;image.height=900;image.setAttribute('fetchpriority','high');image.decoding='async'}
   }
 
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -205,23 +205,39 @@
     const firstAllowedMonth=new Date(today.getFullYear(),today.getMonth(),1);
     const lastAllowedMonth=new Date(today.getFullYear(),today.getMonth()+2,1);
     let visibleMonth=new Date(firstAllowedMonth),selectedDate='';
-    const prev=$('#calendarPrev'),next=$('#calendarNext'),dateInput=$('#workDate'),selectedLabel=$('#selectedWorkDate');
+    const prev=$('#calendarPrev'),next=$('#calendarNext'),dateInput=$('#workDate'),availabilityInput=$('#workAvailability'),selectedLabel=$('#selectedWorkDate');
     const iso=date=>`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
     const readable=value=>new Date(`${value}T12:00:00`).toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'});
     const sameMonth=(a,b)=>a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth();
+    const dayDistance=date=>Math.round((Date.UTC(date.getFullYear(),date.getMonth(),date.getDate())-Date.UTC(today.getFullYear(),today.getMonth(),today.getDate()))/86400000);
+    const availabilityFor=date=>{
+      const distance=dayDistance(date),weekday=date.getDay();
+      if(distance<0)return{key:'past',short:'Unavailable',long:'Unavailable'};
+      if(distance<=2)return{key:'full',short:'Full',long:'Full, priority review'};
+      if(distance<=21&&(weekday===0||weekday===1||weekday===3||weekday===5))return{key:'full',short:'Full',long:'Full, priority review'};
+      if(distance<=21)return{key:'limited',short:'Limited',long:'Limited availability'};
+      if(weekday===0)return{key:'full',short:'Full',long:'Full, priority review'};
+      if(weekday===1||weekday===5)return{key:'limited',short:'Limited',long:'Limited availability'};
+      return{key:'open',short:'Open',long:'Open availability'};
+    };
+    const selectedCopy=(value,availability)=>availability.key==='full'
+      ?`Priority review: ${readable(value)}. This date is currently full, but FMB’s assistant will review the context.`
+      :`Preferred date: ${readable(value)}. ${availability.long}.`;
     function render(){
-      monthLabel.textContent=visibleMonth.toLocaleDateString(undefined,{month:'long',year:'numeric'});
-      calendar.innerHTML='';
       const year=visibleMonth.getFullYear(),month=visibleMonth.getMonth(),firstDay=new Date(year,month,1).getDay(),days=new Date(year,month+1,0).getDate();
+      monthLabel.textContent=new Date(year,month,1,12).toLocaleDateString(undefined,{month:'long',year:'numeric'});
+      calendar.innerHTML='';
       for(let i=0;i<firstDay;i++){const blank=document.createElement('span');blank.className='calendar-blank';calendar.appendChild(blank)}
       for(let day=1;day<=days;day++){
         const date=new Date(year,month,day),value=iso(date),button=document.createElement('button');
-        button.type='button';button.className='calendar-day';button.textContent=String(day);button.dataset.date=value;
-        button.setAttribute('aria-label',`Choose ${readable(value)}`);
+        const availability=availabilityFor(date);
+        button.type='button';button.className=`calendar-day ${availability.key}`;button.dataset.date=value;
+        button.innerHTML=`<span class="calendar-date-number">${day}</span>${date>=today?`<span class="calendar-status">${availability.short}</span>`:''}`;
+        button.setAttribute('aria-label',`${readable(value)}. ${availability.long}${availability.key==='full'?'. Select to request priority review':''}`);
         if(date<today)button.disabled=true;
         if(value===iso(today))button.classList.add('today');
         if(value===selectedDate){button.classList.add('selected');button.setAttribute('aria-pressed','true')}else button.setAttribute('aria-pressed','false');
-        button.addEventListener('click',()=>{selectedDate=value;dateInput.value=value;selectedLabel.textContent=`Preferred date: ${readable(value)}`;render()});
+        button.addEventListener('click',()=>{selectedDate=value;dateInput.value=value;availabilityInput.value=availability.long;selectedLabel.textContent=selectedCopy(value,availability);selectedLabel.dataset.availability=availability.key;render()});
         calendar.appendChild(button);
       }
       prev.disabled=sameMonth(visibleMonth,firstAllowedMonth);
@@ -242,11 +258,12 @@
       if(!ready||!window.FMB?.configured){setStatus('The secure inquiry service is temporarily unavailable. Please email withlovefmb@gmail.com.','error');return}
       button.disabled=true;button.textContent='Sending inquiry…';
       const client=window.FMB.createClient('local');
-      const message=[`Service: ${service}`,`Preferred date: ${readable(selectedDate)}`,phone?`Phone or Messenger: ${phone}`:'',`Project brief:\n${brief}`].filter(Boolean).join('\n\n');
+      const availability=availabilityFor(new Date(`${selectedDate}T12:00:00`));
+      const message=[`Service: ${service}`,`Preferred date: ${readable(selectedDate)}`,`Calendar status: ${availability.long}`,phone?`Phone or Messenger: ${phone}`:'',`Project brief:\n${brief}`].filter(Boolean).join('\n\n');
       const {error}=await client.rpc('submit_contact_message',{p_name:name,p_email:email,p_subject:`Work with FMB: ${service}`.slice(0,120),p_message:message,p_kind:'contact'});
       button.disabled=false;button.textContent='Send work inquiry';
       if(error){setStatus('The inquiry could not be sent right now. Please try again or email withlovefmb@gmail.com.','error');return}
-      form.reset();selectedDate='';selectedLabel.textContent='Choose a preferred date from the calendar.';render();setStatus('Your work inquiry was sent. FMB will review the brief and reply by email.','success');
+      form.reset();selectedDate='';selectedLabel.textContent='Choose a preferred date from the calendar.';delete selectedLabel.dataset.availability;render();setStatus('Your request was sent. FMB’s assistant will review the date and context, then reply by email.','success');
     });
   }
   setupWorkCalendar();
