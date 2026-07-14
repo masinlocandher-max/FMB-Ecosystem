@@ -61,8 +61,8 @@
 
   const topPromo=$('.support-glass');
   if(topPromo){
-    topPromo.setAttribute('aria-label','Work with FMB and website support links');
-    const items=`<strong>Work with FMB</strong><a class="support-chip light" href="mailto:withlovefmb@gmail.com?subject=Website%20Project%20with%20FMB">Start a website project</a><a class="support-chip" href="https://senzpr.com" target="_blank" rel="noopener noreferrer">Branding and digital needs</a><a class="support-chip" href="index.html#support">Need urgent help? Open support contacts</a>`;
+    topPromo.setAttribute('aria-label','With Love, FMB partner brands');
+    const items=`<span class="brand-marquee-label">With Love, FMB is brought to you by:</span><a class="support-chip light brand-chip" href="https://senzpr.com" target="_blank" rel="noopener noreferrer"><img src="assets/senz.svg" alt="">SENZ</a><a class="support-chip brand-chip" href="https://thecognitainstitute.com" target="_blank" rel="noopener noreferrer"><img src="assets/cognita.svg" alt="">Cognita Institute</a><a class="support-chip" href="about.html#work-with-fmb">Work with FMB</a>`;
     topPromo.innerHTML=`<div class="promo-marquee"><div class="promo-group">${items}</div><div class="promo-group" aria-hidden="true">${items}</div></div>`;
   }
 
@@ -167,6 +167,59 @@
       contact.reset();setStatus('Your message was sent successfully.','success');
     });
   }
+
+  function setupWorkCalendar(){
+    const calendar=$('#calendarDays'),monthLabel=$('#calendarMonth'),form=$('#workWithFmbForm');
+    if(!calendar||!monthLabel||!form)return;
+    const today=new Date();today.setHours(0,0,0,0);
+    const firstAllowedMonth=new Date(today.getFullYear(),today.getMonth(),1);
+    const lastAllowedMonth=new Date(today.getFullYear(),today.getMonth()+2,1);
+    let visibleMonth=new Date(firstAllowedMonth),selectedDate='';
+    const prev=$('#calendarPrev'),next=$('#calendarNext'),dateInput=$('#workDate'),selectedLabel=$('#selectedWorkDate');
+    const iso=date=>`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+    const readable=value=>new Date(`${value}T12:00:00`).toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+    const sameMonth=(a,b)=>a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth();
+    function render(){
+      monthLabel.textContent=visibleMonth.toLocaleDateString(undefined,{month:'long',year:'numeric'});
+      calendar.innerHTML='';
+      const year=visibleMonth.getFullYear(),month=visibleMonth.getMonth(),firstDay=new Date(year,month,1).getDay(),days=new Date(year,month+1,0).getDate();
+      for(let i=0;i<firstDay;i++){const blank=document.createElement('span');blank.className='calendar-blank';calendar.appendChild(blank)}
+      for(let day=1;day<=days;day++){
+        const date=new Date(year,month,day),value=iso(date),button=document.createElement('button');
+        button.type='button';button.className='calendar-day';button.textContent=String(day);button.dataset.date=value;
+        button.setAttribute('aria-label',`Choose ${readable(value)}`);
+        if(date<today)button.disabled=true;
+        if(value===iso(today))button.classList.add('today');
+        if(value===selectedDate){button.classList.add('selected');button.setAttribute('aria-pressed','true')}else button.setAttribute('aria-pressed','false');
+        button.addEventListener('click',()=>{selectedDate=value;dateInput.value=value;selectedLabel.textContent=`Preferred date: ${readable(value)}`;render()});
+        calendar.appendChild(button);
+      }
+      prev.disabled=sameMonth(visibleMonth,firstAllowedMonth);
+      next.disabled=sameMonth(visibleMonth,lastAllowedMonth);
+    }
+    prev.addEventListener('click',()=>{visibleMonth=new Date(visibleMonth.getFullYear(),visibleMonth.getMonth()-1,1);render()});
+    next.addEventListener('click',()=>{visibleMonth=new Date(visibleMonth.getFullYear(),visibleMonth.getMonth()+1,1);render()});
+    render();
+
+    const button=form.querySelector('button[type="submit"]'),status=$('#workFormStatus');
+    const setStatus=(message,type='')=>{status.textContent=message;status.className=`inline-status${type?' '+type:''}`;status.hidden=false};
+    form.addEventListener('submit',async event=>{
+      event.preventDefault();
+      const name=String($('#workName')?.value||'').trim().slice(0,80),email=String($('#workEmail')?.value||'').trim().toLowerCase(),phone=String($('#workPhone')?.value||'').trim().slice(0,80),service=String($('#workService')?.value||'').trim().slice(0,120),brief=String($('#workBrief')?.value||'').trim().slice(0,3000);
+      if(!name||!email||!service||!brief||!selectedDate){setStatus('Please complete the form and choose a preferred date.','error');return}
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){setStatus('Please enter a valid email address.','error');return}
+      const ready=await ensureMemberServices();
+      if(!ready||!window.FMB?.configured){setStatus('The secure inquiry service is temporarily unavailable. Please email withlovefmb@gmail.com.','error');return}
+      button.disabled=true;button.textContent='Sending inquiry…';
+      const client=window.FMB.createClient('local');
+      const message=[`Service: ${service}`,`Preferred date: ${readable(selectedDate)}`,phone?`Phone or Messenger: ${phone}`:'',`Project brief:\n${brief}`].filter(Boolean).join('\n\n');
+      const {error}=await client.rpc('submit_contact_message',{p_name:name,p_email:email,p_subject:`Work with FMB: ${service}`.slice(0,120),p_message:message,p_kind:'contact'});
+      button.disabled=false;button.textContent='Send work inquiry';
+      if(error){setStatus('The inquiry could not be sent right now. Please try again or email withlovefmb@gmail.com.','error');return}
+      form.reset();selectedDate='';selectedLabel.textContent='Choose a preferred date from the calendar.';render();setStatus('Your work inquiry was sent. FMB will review the brief and reply by email.','success');
+    });
+  }
+  setupWorkCalendar();
 
   if('serviceWorker' in navigator&&location.protocol==='https:')window.addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js').catch(()=>{}),{once:true});
 })();
