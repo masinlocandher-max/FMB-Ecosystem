@@ -1,3 +1,4 @@
+html{overflow-x:hidden}
 .music-app{overflow-x:hidden;background:#fbf8fc;color:var(--ink)}
 .music-app::before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(circle at 8% 8%,rgba(212,179,230,.32),transparent 28%),radial-gradient(circle at 92% 17%,rgba(239,209,226,.42),transparent 27%),linear-gradient(180deg,#fff 0,#faf5fc 62%,#f4ebf7 100%)}
 .music-app button,.music-app input{font:inherit}
