@@ -27,33 +27,9 @@
 {
   "@context": "https://schema.org",
   "@graph": [
-    {
-      "@type": "WebSite",
-      "@id": "https://www.francinemariebautista.com/#website",
-      "url": "https://www.francinemariebautista.com/",
-      "name": "With love, FMB",
-      "description": "An inclusive digital home for wellness resources, thoughtful reading, music, community, volunteering, and creative projects.",
-      "inLanguage": "en-PH",
-      "publisher": {"@id": "https://www.francinemariebautista.com/#person"}
-    },
-    {
-      "@type": "Person",
-      "@id": "https://www.francinemariebautista.com/#person",
-      "name": "Francine Marie Bautista",
-      "url": "https://www.francinemariebautista.com/",
-      "image": "https://www.francinemariebautista.com/assets/images/founder.webp",
-      "jobTitle": ["Founder", "Brand Strategist", "Creative Director", "Educator", "Communications Practitioner"],
-      "sameAs": ["https://www.instagram.com/bb.fmb/"]
-    },
-    {
-      "@type": "Organization",
-      "@id": "https://www.francinemariebautista.com/#organization",
-      "name": "With love, FMB",
-      "url": "https://www.francinemariebautista.com/",
-      "logo": "https://www.francinemariebautista.com/assets/images/icon-transparent.png",
-      "founder": {"@id": "https://www.francinemariebautista.com/#person"},
-      "email": "mailto:withlovefmb@gmail.com"
-    }
+    {"@type":"WebSite","@id":"https://www.francinemariebautista.com/#website","url":"https://www.francinemariebautista.com/","name":"With love, FMB","description":"An inclusive digital home for wellness resources, thoughtful reading, music, community, volunteering, and creative projects.","inLanguage":"en-PH","publisher":{"@id":"https://www.francinemariebautista.com/#person"}},
+    {"@type":"Person","@id":"https://www.francinemariebautista.com/#person","name":"Francine Marie Bautista","url":"https://www.francinemariebautista.com/","image":"https://www.francinemariebautista.com/assets/images/founder.webp","jobTitle":["Founder","Brand Strategist","Creative Director","Educator","Communications Practitioner"],"sameAs":["https://www.instagram.com/bb.fmb/"]},
+    {"@type":"Organization","@id":"https://www.francinemariebautista.com/#organization","name":"With love, FMB","url":"https://www.francinemariebautista.com/","logo":"https://www.francinemariebautista.com/assets/images/icon-transparent.png","founder":{"@id":"https://www.francinemariebautista.com/#person"},"email":"mailto:withlovefmb@gmail.com"}
   ]
 }
 </script>
@@ -61,13 +37,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/site.css?v=20260714g">
+<link rel="stylesheet" href="assets/css/site.css?v=20260714h">
 <link rel="stylesheet" href="assets/css/icon-fix.css">
 <link rel="stylesheet" href="assets/css/repair.css">
 <style>
 .volunteer-gallery{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;padding:4px 0 16px;scrollbar-width:none;cursor:grab}.volunteer-gallery::-webkit-scrollbar{display:none}.volunteer-slide{flex:0 0 100%;scroll-snap-align:start;overflow:hidden;border-radius:32px;border:1px solid rgba(58,8,85,.12);background:rgba(255,255,255,.68);box-shadow:0 18px 58px rgba(45,23,56,.1)}.volunteer-slide img{display:block;width:100%;height:clamp(360px,62vw,720px);object-fit:cover}.volunteer-swipe{display:flex;align-items:center;justify-content:center;gap:10px;margin:8px 0 22px;color:var(--violet-800);font-size:13px;font-weight:750}.volunteer-swipe::after{content:'→';font-size:20px}.volunteer-dots{display:flex;justify-content:center;gap:7px;margin-top:-4px}.volunteer-dots span{width:7px;height:7px;border-radius:50%;background:rgba(76,13,115,.22)}@media(max-width:520px){.volunteer-slide{border-radius:22px}.volunteer-slide img{height:68vh;min-height:420px;max-height:620px}.volunteer-gallery{gap:12px}}
 </style>
-<link rel="stylesheet" href="assets/css/live-hotfix.css?v=20260714g">
+<link rel="stylesheet" href="assets/css/live-hotfix.css?v=20260714h">
 </head>
 <body>
 <div class="loader" id="loader" aria-hidden="true"><div class="loader-inner"><img class="loader-icon" src="assets/images/icon-transparent.png" alt=""><p>Take your time. You are welcome here.</p></div></div>
@@ -75,8 +51,8 @@
   <div class="support-glass" aria-label="Work with FMB"></div>
   <header class="nav-glass">
     <a class="nav-brand" href="#top" aria-label="With love, FMB home"><img class="nav-icon" src="assets/images/icon-transparent.png" alt=""><span class="nav-word">with love, <em>fmb</em></span></a>
-    <nav class="nav-links" id="navLinks" aria-label="Main navigation"><a href="#safe-space">Safe space</a><a href="#bookshelf">Read</a><a href="music.html">Music</a><a href="#community">Community</a><a href="#work">Our projects</a><a href="about.html">About FMB</a></nav>
-    <div class="nav-actions"><a class="nav-btn" href="auth.html#signin">Sign in</a><a class="nav-btn primary" href="auth.html#signup">Join our community</a><button class="nav-toggle" id="navToggle" aria-expanded="false" aria-label="Open menu"><span></span><span></span></button></div>
+    <nav class="nav-links" id="navLinks" aria-label="Main navigation"><a href="#top">Home</a><a href="#safe-space">Explore</a><a href="#community">Community</a><a href="#work">Our projects</a><a href="about.html">About</a><a href="#support">Get help</a></nav>
+    <div class="nav-actions"><a class="nav-btn" href="auth.html#signin">Sign in</a><a class="nav-btn primary" href="auth.html#signup">Join free</a><button class="nav-toggle" id="navToggle" aria-expanded="false" aria-label="Open menu" aria-controls="navLinks"><span></span><span></span></button></div>
   </header>
 </div>
 <main id="top">
@@ -85,9 +61,16 @@
   <div class="hero-card reveal d1">
     <p class="eyebrow">You are welcome here</p>
     <h1 class="hero-title" id="welcome-title">Welcome to our safe space.</h1>
-    <p class="hero-sub">A gentle digital home for real conversations, thoughtful reading, wellness resources, music, and community without shame or pressure.</p>
+    <p class="hero-sub">Explore useful resources without an account. Join free to unlock private daily check-ins, affirmations, a dated journal, full readings, saved resources, and our moderated community.</p>
     <div class="hero-audience" aria-label="Who this space is for"><span>Women</span><span>LGBTQIA+</span><span>Men</span></div>
-    <div class="hero-actions"><a class="pill" href="#safe-space">Explore our space</a><a class="pill secondary" href="auth.html#signup">Join our community</a></div>
+    <div class="hero-actions"><a class="pill" href="#what-you-get">See what is here</a><a class="pill secondary" href="auth.html#signup">Join free</a></div>
+    <div class="entry-benefits" id="what-you-get" aria-label="What visitors and members receive">
+      <article><span class="entry-benefit-icon" aria-hidden="true">01</span><div><h2>Explore freely</h2><p>Read previews and open trusted support contacts without creating an account.</p></div></article>
+      <article><span class="entry-benefit-icon" aria-hidden="true">02</span><div><h2>Care for yourself privately</h2><p>Members receive a daily affirmation, mood check-in, and dated private journal.</p></div></article>
+      <article><span class="entry-benefit-icon" aria-hidden="true">03</span><div><h2>Unlock the full library</h2><p>A free member account opens complete readings and lets you save helpful resources.</p></div></article>
+      <article><span class="entry-benefit-icon" aria-hidden="true">04</span><div><h2>Share more safely</h2><p>Community posts are reviewed before they appear publicly.</p></div></article>
+    </div>
+    <p class="entry-trust-note">Emergency and crisis contacts always remain public. Private journals are never placed in the community feed.</p>
   </div>
 </section>
 
@@ -160,6 +143,6 @@
 <script src="assets/js/config.js"></script>
 <script src="assets/js/supabase-client.js"></script>
 <script src="assets/js/site.js?v=20260714h"></script>
-<script src="assets/js/live-hotfix.js?v=20260714g"></script>
+<script src="assets/js/live-hotfix.js?v=20260714h"></script>
 </body>
 </html>

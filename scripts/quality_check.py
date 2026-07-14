@@ -135,6 +135,26 @@ def check_membership_features(errors: list[str]) -> None:
         errors.append("assets/js/community.js: public community feed must only request published posts")
 
 
+def check_navigation_experience(errors: list[str]) -> None:
+    index = (ROOT / "index.html").read_text(encoding="utf-8")
+    site_js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
+    site_css = (ROOT / "assets/css/site.css").read_text(encoding="utf-8")
+    for marker in (
+        'id="what-you-get"',
+        "Explore freely",
+        "Care for yourself privately",
+        "Unlock the full library",
+        "Share more safely",
+    ):
+        if marker not in index:
+            errors.append(f"index.html: missing first-visit benefit: {marker}")
+    for marker in ("setupFriendlyNavigation", "nav-mobile-actions", "Get help", "Join free"):
+        if marker not in site_js:
+            errors.append(f"assets/js/site.js: missing navigation UX marker: {marker}")
+    if ".entry-benefits" not in site_css:
+        errors.append("assets/css/site.css: first-visit benefit styles are missing")
+
+
 def main() -> int:
     errors: list[str] = []
     html_files = sorted(ROOT.glob("*.html"))
@@ -147,6 +167,7 @@ def main() -> int:
             check_json(path, errors)
     check_config(errors)
     check_membership_features(errors)
+    check_navigation_experience(errors)
 
     if errors:
         print("Quality check failed:\n")

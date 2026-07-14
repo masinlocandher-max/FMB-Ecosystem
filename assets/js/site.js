@@ -50,10 +50,40 @@
   const loader=$('#loader');
   if(loader){const hide=()=>loader.classList.add('hide');window.addEventListener('load',()=>setTimeout(hide,350),{once:true});setTimeout(hide,2200)}
 
+  function setupFriendlyNavigation(){
+    const nav=$('.nav-glass'),links=$('#navLinks'),actions=nav?.querySelector('.nav-actions');
+    if(!nav||!links||!actions)return;
+    const page=location.pathname.split('/').pop()||'index.html';
+    const protectedPages=new Set(['member.html','admin.html','admin-login.html','admin-activate.html','auth.html','reset-password.html']);
+    if(protectedPages.has(page))return;
+    const onHome=page==='index.html';
+    const href=section=>onHome?`#${section}`:`index.html#${section}`;
+    const items=[
+      {label:'Home',description:'Start here and see what you receive',href:onHome?'#top':'index.html#top',current:onHome&&!location.hash},
+      {label:'Explore',description:'Read, reflect, and find useful resources',href:href('safe-space'),current:['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html'].includes(page)},
+      {label:'Community',description:'Join a moderated, kinder space',href:href('community'),current:page==='community.html'},
+      {label:'Our projects',description:'Discover SENZ and Cognita',href:href('work'),current:false},
+      {label:'About',description:'Meet FMB and explore our work',href:'about.html',current:page==='about.html'},
+      {label:'Get help',description:'Open public crisis and support contacts',href:href('support'),current:false,help:true}
+    ];
+    links.innerHTML=`<div class="nav-menu-intro"><strong>Where would you like to go?</strong><span>Choose what you need. You can always return home.</span></div>${items.map(item=>`<a class="nav-menu-link${item.help?' nav-help-link':''}" href="${item.href}"${item.current?' aria-current="page"':''}><span class="nav-link-label">${item.label}</span><small>${item.description}</small></a>`).join('')}<div class="nav-mobile-actions"><a class="pill secondary" href="auth.html#signin">Sign in</a><a class="pill" href="auth.html#signup">Join free</a></div>`;
+    const signIn=actions.querySelector('a[href*="auth.html#signin"]');
+    const join=actions.querySelector('a[href*="auth.html#signup"]');
+    const menuToggle=actions.querySelector('#navToggle');
+    if(signIn)signIn.textContent='Sign in';
+    if(join)join.textContent='Join free';
+    if(menuToggle)menuToggle.setAttribute('aria-controls','navLinks');
+    const mobileBar=$('.mobile-bar:not(.member-mobile-bar):not(.admin-mobile-bar)');
+    if(mobileBar){
+      mobileBar.innerHTML=`<a class="active" href="${onHome?'#top':'index.html#top'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 11 8-7 8 7v9H4Z"/><path d="M9 20v-6h6v6"/></svg><span>Home</span></a><a href="${href('safe-space')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2Z"/><path d="M7 4v14a2 2 0 0 0 2 2"/></svg><span>Explore</span></a><a href="auth.html#signup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"/><path d="M19 5v5M16.5 7.5h5"/></svg><span>Join</span></a><a href="${href('support')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-4.4 7-11a4 4 0 0 0-7-2.6A4 4 0 0 0 5 10c0 6.6 7 11 7 11Z"/></svg><span>Help</span></a>`;
+    }
+  }
+  setupFriendlyNavigation();
+
   const toggle=$('#navToggle'),links=$('#navLinks');
   if(toggle&&links){
-    const close=()=>{links.classList.remove('open');toggle.setAttribute('aria-expanded','false')};
-    toggle.addEventListener('click',()=>{const open=links.classList.toggle('open');toggle.setAttribute('aria-expanded',String(open))});
+    const close=()=>{links.classList.remove('open');toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Open menu')};
+    toggle.addEventListener('click',()=>{const open=links.classList.toggle('open');toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Close menu':'Open menu')});
     links.addEventListener('click',event=>{if(event.target.closest('a'))close()});
     document.addEventListener('keydown',event=>{if(event.key==='Escape')close()});
     document.addEventListener('click',event=>{if(!event.target.closest('.nav-glass'))close()});
