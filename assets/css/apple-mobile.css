@@ -4,7 +4,7 @@
   body{padding-bottom:calc(98px + env(safe-area-inset-bottom,0px));overscroll-behavior-y:none}
   button,a{-webkit-tap-highlight-color:transparent}
   .top-shell{padding:8px 8px 0!important}
-  .support-glass{width:100%!important;min-height:34px!important;border-radius:18px!important;background:rgba(73,14,105,.78)!important;border:1px solid rgba(255,255,255,.24)!important;box-shadow:0 8px 26px rgba(40,8,55,.14)!important;backdrop-filter:blur(24px) saturate(180%)!important;-webkit-backdrop-filter:blur(24px) saturate(180%)!important}
+  .support-glass{width:100%!important;min-height:34px!important;border-radius:18px!important;background:linear-gradient(100deg,rgba(242,226,249,.94),rgba(255,255,255,.96),rgba(231,218,246,.94))!important;border:1px solid rgba(81,11,119,.13)!important;box-shadow:0 8px 26px rgba(40,8,55,.12)!important;backdrop-filter:blur(24px) saturate(180%)!important;-webkit-backdrop-filter:blur(24px) saturate(180%)!important}
   .promo-group{gap:8px!important;padding:4px 8px!important}
   .support-chip{padding:6px 10px!important;font-size:11px!important}
   .nav-glass{width:100%!important;min-height:62px!important;margin-top:6px!important;padding:8px 10px 8px 14px!important;border-radius:24px!important;background:rgba(255,255,255,.76)!important;border:1px solid rgba(255,255,255,.88)!important;box-shadow:0 14px 38px rgba(36,7,51,.14)!important;backdrop-filter:blur(30px) saturate(190%)!important;-webkit-backdrop-filter:blur(30px) saturate(190%)!important}
@@ -26,6 +26,12 @@
   .section[id]{scroll-margin-top:124px;scroll-margin-bottom:110px}
   .pill,.nav-btn{min-height:48px}
   .card,.glass-card,.support-card,.reading-cover-card{backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+}
+@media(max-width:800px) and (display-mode:standalone){
+  body{min-height:100dvh}
+  .top-shell{padding-top:max(8px,env(safe-area-inset-top,0px))!important}
+  .nav-glass{margin-top:5px!important}
+  .mobile-bar{bottom:max(8px,env(safe-area-inset-bottom,0px))!important}
 }
 @media(max-width:520px){
   .support-glass{min-height:42px!important}

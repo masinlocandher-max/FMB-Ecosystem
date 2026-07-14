@@ -25,6 +25,10 @@
 .landing-home .entry-benefit-icon{width:32px;height:32px;flex-basis:32px;border-radius:11px;background:linear-gradient(145deg,#f2e7f8,#fff);box-shadow:inset 0 0 0 1px rgba(81,11,119,.07)}
 .landing-home .entry-trust-note{margin:16px 0 0!important;padding:14px 16px 0;border-top:1px solid var(--line);color:var(--muted);font-size:12px;line-height:1.55;text-align:center}
 .landing-home .entry-trust-note strong{color:var(--violet-900)}
+.app-install-card{display:none;align-items:center;justify-content:space-between;gap:18px;margin-top:18px;padding:18px 20px;border:1px solid rgba(81,11,119,.1);border-radius:22px;background:linear-gradient(145deg,rgba(247,238,251,.96),rgba(255,255,255,.92));text-align:left}
+.app-install-card[hidden]{display:none!important}
+.app-install-card h3{margin:2px 0 4px;color:var(--violet-900);font-family:inherit;font-size:18px;font-weight:850}
+.app-install-card p:last-child{color:var(--muted);font-size:12px;line-height:1.5}
 .landing-home .statement{position:relative;padding-top:96px;padding-bottom:96px}
 .landing-home .statement::before{content:'';display:block;width:70px;height:1px;margin:0 auto 28px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
 .landing-home .statement h2{text-wrap:balance}
@@ -47,6 +51,9 @@
   .hero-benefits-heading{grid-template-columns:1fr;gap:10px}
   .landing-home .entry-benefits{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+@media(max-width:800px){
+  .app-install-card{display:flex}
+}
 @media(max-width:520px){
   .landing-home .hero{padding:118px 10px 54px!important}
   .landing-home .hero-banner{border-radius:24px!important}
@@ -67,6 +74,8 @@
   .landing-home .entry-benefits h3{font-size:13px}
   .landing-home .entry-benefits p{font-size:11.5px}
   .landing-home .entry-trust-note{padding-left:5px;padding-right:5px;text-align:left}
+  .app-install-card{display:flex;align-items:flex-start;flex-direction:column;padding:17px 16px}
+  .app-install-card .pill{width:100%}
   .landing-home .statement{padding:70px 18px!important}
   .landing-home .section{padding:70px 0!important}
   .landing-home .section-head{gap:14px;margin-bottom:28px}
@@ -75,6 +84,7 @@
   .volunteer-slide{flex-basis:88%;border-radius:22px;scroll-snap-align:start}
   .volunteer-slide img{height:clamp(360px,118vw,520px)}
 }
+@media(display-mode:standalone){.app-install-card{display:none!important}}
 @media(max-width:370px){
   .landing-home .entry-benefits{grid-template-columns:1fr}
   .landing-home .entry-benefits article{min-height:0}

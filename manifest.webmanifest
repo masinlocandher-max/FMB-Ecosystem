@@ -1,37 +1,56 @@
 {
   "name": "With love, FMB",
   "short_name": "With love, FMB",
-  "description": "An inclusive digital safe space for women, LGBTQIA+ people, and men.",
-  "start_url": "./index.html",
-  "scope": "./",
+  "id": "/",
+  "description": "An inclusive digital space for reading, reflection, private member tools, and a moderated community.",
+  "start_url": "/?source=installed-app",
+  "scope": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "background_color": "#fffdf9",
   "theme_color": "#510b77",
   "orientation": "portrait-primary",
+  "categories": ["lifestyle", "health", "education"],
   "icons": [
     {
-      "src": "assets/images/icon-transparent.png",
-      "sizes": "803x745",
+      "src": "/assets/images/app-icon-192.png",
+      "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "/assets/images/app-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/images/app-icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "shortcuts": [
     {
-      "name": "Reading room",
-      "url": "./index.html#bookshelf"
+      "name": "Member today",
+      "short_name": "Today",
+      "url": "/member.html#dashboardPanel"
     },
     {
-      "name": "Music",
-      "url": "./music.html"
+      "name": "Private journal",
+      "short_name": "Journal",
+      "url": "/member.html#writePanel"
+    },
+    {
+      "name": "Community",
+      "url": "/community.html"
     },
     {
       "name": "Support contacts",
-      "url": "./index.html#support"
-    },
-    {
-      "name": "Member profile",
-      "url": "./member.html"
+      "short_name": "Help",
+      "url": "/#support"
     }
-  ]
+  ],
+  "launch_handler": {"client_mode": "navigate-existing"}
 }

@@ -17,8 +17,17 @@
     if(!document.querySelector('meta[name="apple-mobile-web-app-capable"]')){
       const capable=document.createElement('meta');capable.name='apple-mobile-web-app-capable';capable.content='yes';document.head.appendChild(capable);
     }
+    if(!document.querySelector('meta[name="mobile-web-app-capable"]')){
+      const capable=document.createElement('meta');capable.name='mobile-web-app-capable';capable.content='yes';document.head.appendChild(capable);
+    }
     if(!document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]')){
       const statusBar=document.createElement('meta');statusBar.name='apple-mobile-web-app-status-bar-style';statusBar.content='default';document.head.appendChild(statusBar);
+    }
+    if(!document.querySelector('meta[name="apple-mobile-web-app-title"]')){
+      const title=document.createElement('meta');title.name='apple-mobile-web-app-title';title.content='With love, FMB';document.head.appendChild(title);
+    }
+    if(!document.querySelector('link[rel="apple-touch-icon"]')){
+      const icon=document.createElement('link');icon.rel='apple-touch-icon';icon.sizes='180x180';icon.href='assets/images/apple-touch-icon.png';document.head.appendChild(icon);
     }
   }
   function loadScript(src){
@@ -32,7 +41,7 @@
     if(window.FMB)return true;
     try{
       if(!window.supabase)await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2');
-      await loadScript('assets/js/config.js');
+      await loadScript('assets/js/config.js?v=20260715-member-launch');
       await loadScript('assets/js/supabase-client.js');
       return Boolean(window.FMB);
     }catch{return false}
@@ -102,6 +111,46 @@
     if(image){image.src='assets/images/hero.webp';image.alt='With love, FMB official banner featuring Francine Marie Bautista and the purple and gold brand emblem';image.width=1600;image.height=900;image.setAttribute('fetchpriority','high');image.decoding='async'}
   }
 
+  function setupInstallExperience(){
+    const card=$('#appInstallCard');
+    const button=$('#installAppButton');
+    const help=$('#installAppHelp');
+    if(!card||!button||!help)return;
+    const standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+    const mobile=window.matchMedia('(max-width: 800px)').matches;
+    if(standalone||!mobile)return;
+    let promptEvent=null;
+    const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+    const show=()=>{card.hidden=false};
+    if(isiOS){
+      help.textContent='In Safari, tap Share, then choose Add to Home Screen.';
+      button.textContent='Show install steps';
+      button.addEventListener('click',()=>{
+        help.textContent='Tap the Share button in Safari, scroll down, choose Add to Home Screen, then tap Add.';
+        help.focus?.();
+      });
+      show();
+    }
+    window.addEventListener('beforeinstallprompt',event=>{
+      event.preventDefault();
+      promptEvent=event;
+      button.textContent='Install app';
+      help.textContent='Install our member space for faster access from your home screen.';
+      show();
+    });
+    button.addEventListener('click',async()=>{
+      if(!promptEvent)return;
+      button.disabled=true;
+      await promptEvent.prompt();
+      const choice=await promptEvent.userChoice;
+      button.disabled=false;
+      if(choice.outcome==='accepted')card.hidden=true;
+      promptEvent=null;
+    });
+    window.addEventListener('appinstalled',()=>{card.hidden=true;promptEvent=null});
+  }
+  setupInstallExperience();
+
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const revealItems=$$('.reveal');
   if(reduced||!('IntersectionObserver' in window))revealItems.forEach(item=>item.classList.add('in'));
@@ -115,6 +164,17 @@
     if(!image.hasAttribute('decoding'))image.decoding='async';
     if(!image.closest('.hero-banner')&&!image.classList.contains('loader-icon')&&!image.hasAttribute('loading'))image.loading='lazy';
     image.addEventListener('error',()=>{
+      const src=(image.getAttribute('src')||'').split('?')[0];
+      const fixes={
+        'assets/icon.svg':'assets/images/icon-transparent.png',
+        'assets/founder.svg':'assets/images/founder.webp',
+        'assets/signature.svg':'assets/images/signature-transparent.png'
+      };
+      if(image.dataset.retry!=='1'&&fixes[src]){
+        image.dataset.retry='1';
+        image.src=fixes[src];
+        return;
+      }
       image.classList.add('image-missing');image.setAttribute('aria-hidden','true');
       const parent=image.parentElement;
       if(parent&&!parent.querySelector('.image-fallback')){const fallback=document.createElement('span');fallback.className='image-fallback';fallback.textContent='Image temporarily unavailable';parent.appendChild(fallback)}
@@ -268,5 +328,5 @@
   }
   setupWorkCalendar();
 
-  if('serviceWorker' in navigator&&location.protocol==='https:')window.addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js').catch(()=>{}),{once:true});
+  if('serviceWorker' in navigator&&location.protocol==='https:')window.addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js',{updateViaCache:'none'}).catch(()=>{}),{once:true});
 })();

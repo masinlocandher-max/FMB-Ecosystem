@@ -4,6 +4,11 @@ const source=fs.readFileSync(new URL('../assets/js/config.js',import.meta.url),'
 const url=source.match(/SUPABASE_URL:\s*'([^']+)'/)?.[1];
 const key=source.match(/SUPABASE_ANON_KEY:\s*'([^']+)'/)?.[1];
 const requireOpen=process.argv.includes('--require-open');
+const headers={
+  apikey:key,
+  Authorization:`Bearer ${key}`,
+  'Content-Type':'application/json'
+};
 
 if(!url||!key){
   console.error('Supabase public configuration is missing.');
@@ -12,11 +17,7 @@ if(!url||!key){
 
 const response=await fetch(`${url}/rest/v1/rpc/get_membership_status`,{
   method:'POST',
-  headers:{
-    apikey:key,
-    Authorization:`Bearer ${key}`,
-    'Content-Type':'application/json'
-  },
+  headers,
   body:'{}'
 });
 
@@ -41,3 +42,16 @@ if(requireOpen&&status.registration_open!==true){
   console.error('Registration is safely closed. Open it from the administrator dashboard only after completing member tests.');
   process.exit(1);
 }
+
+const adminProbe=await fetch(`${url}/rest/v1/rpc/admin_set_membership_open`,{
+  method:'POST',
+  headers,
+  body:JSON.stringify({p_open:status.registration_open===true})
+});
+
+if(adminProbe.ok){
+  console.error('Security check failed: anonymous visitors can change membership registration.');
+  process.exit(1);
+}
+
+console.log('Anonymous membership-control mutation: denied');

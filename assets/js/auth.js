@@ -5,6 +5,12 @@
   const signupTab=$('#signupTab');
   const signinPanel=$('#signinPanel');
   const signupPanel=$('#signupPanel');
+  const verificationActions=$('#verificationActions');
+  const verificationEmail=$('#verificationEmail');
+  const resendConfirmation=$('#resendConfirmation');
+  const resendHelp=$('#resendHelp');
+  const openSignIn=$('#openSignIn');
+  const pendingEmailKey='fmb-pending-verification-email';
 
   function showPanel(name){
     const signup=name==='signup';
@@ -48,6 +54,18 @@
     return {length:value.length>=10,lower:/[a-z]/.test(value),upper:/[A-Z]/.test(value),number:/\d/.test(value)};
   }
   function validPassword(value){return Object.values(passwordChecks(value)).every(Boolean)}
+  function authBase(){
+    const configuredBase=window.FMB?.config?.SITE_URL;
+    if(configuredBase)return configuredBase;
+    if(/(^|\.)francinemariebautista\.com$/i.test(location.hostname))return 'https://www.francinemariebautista.com/';
+    return location.origin+location.pathname.replace(/[^/]*$/,'');
+  }
+  function showVerification(email){
+    if(!verificationActions||!verificationEmail)return;
+    verificationEmail.textContent=email;
+    verificationActions.hidden=false;
+    sessionStorage.setItem(pendingEmailKey,email);
+  }
 
   const signupPassword=$('#signupPassword');
   signupPassword.addEventListener('input',()=>{
@@ -118,7 +136,7 @@
     const button=$('#signupButton');
     setLoading(button,true,'Creating profile…');
     const client=window.FMB.createClient('local');
-    const base=window.FMB.config.SITE_URL||location.origin+location.pathname.replace(/[^/]*$/,'');
+    const base=authBase();
     const redirectTo=window.FMB.config.AUTH_REDIRECT_URL||new URL('member.html',base).href;
     const {data,error}=await client.auth.signUp({
       email,
@@ -151,6 +169,7 @@
     $('#signupForm').reset();
     document.querySelectorAll('#passwordRules span').forEach(rule=>rule.classList.remove('valid'));
     setStatus('#signupStatus','Check your email and open the verification link. Then return to sign in.','success');
+    showVerification(email);
   });
 
   $('#resetPassword').addEventListener('click',async()=>{
@@ -160,7 +179,7 @@
     const button=$('#resetPassword');
     setLoading(button,true,'Sending…');
     const client=window.FMB.createClient('local');
-    const base=window.FMB.config.SITE_URL||location.origin+location.pathname.replace(/[^/]*$/,'');
+    const base=authBase();
     const redirectTo=new URL('reset-password.html',base).href;
     const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo});
     setLoading(button,false);
@@ -171,4 +190,33 @@
     }
     setStatus('#signinStatus','If a profile uses that email, a password reset link is on the way.','success');
   });
+
+  openSignIn?.addEventListener('click',()=>showPanel('signin'));
+  resendConfirmation?.addEventListener('click',async()=>{
+    const email=(verificationEmail?.textContent||sessionStorage.getItem(pendingEmailKey)||'').trim().toLowerCase();
+    if(!validEmail(email)){setStatus('#signupStatus','Enter the email used for the profile first.','error');return}
+    if(!window.FMB?.configured){serviceUnavailable('#signupStatus');return}
+    setLoading(resendConfirmation,true,'Sending again…');
+    const client=window.FMB.createClient('local');
+    const redirectTo=window.FMB.config.AUTH_REDIRECT_URL||new URL('member.html',authBase()).href;
+    const {error}=await client.auth.resend({type:'signup',email,options:{emailRedirectTo:redirectTo}});
+    setLoading(resendConfirmation,false);
+    if(error){
+      const rateLimited=error.code==='over_email_send_rate_limit'||/rate limit|too many requests/i.test(error.message||'');
+      setStatus('#signupStatus',rateLimited?'Please wait before requesting another verification email. Check Spam, Promotions, and All Mail first.':'The verification message could not be resent right now.','error');
+      return;
+    }
+    resendConfirmation.disabled=true;
+    let seconds=60;
+    resendHelp.textContent=`Verification sent. You can request another message in ${seconds} seconds.`;
+    const timer=setInterval(()=>{
+      seconds-=1;
+      if(seconds<=0){clearInterval(timer);resendConfirmation.disabled=false;resendHelp.textContent='Check Inbox, Spam, Promotions, and All Mail before requesting another message.';return}
+      resendHelp.textContent=`Verification sent. You can request another message in ${seconds} seconds.`;
+    },1000);
+    setStatus('#signupStatus','A fresh verification message was requested.','success');
+  });
+
+  const pendingEmail=sessionStorage.getItem(pendingEmailKey);
+  if(validEmail(pendingEmail||''))showVerification(pendingEmail);
 })();
