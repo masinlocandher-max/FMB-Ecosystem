@@ -1,17 +1,17 @@
 /* Live production hotfix: mobile navigation, marquee motion, and resilient images */
-.support-glass{display:block!important;min-height:44px!important;padding:0!important;overflow:hidden!important;touch-action:pan-y;contain:paint}
-.promo-marquee{display:flex!important;align-items:center!important;width:max-content!important;min-width:0!important;animation:fmb-live-marquee 22s linear infinite!important;transform:translate3d(0,0,0);backface-visibility:hidden;will-change:transform}
-.promo-group{display:flex!important;align-items:center!important;flex:0 0 auto!important;min-width:0!important;gap:12px!important;padding:7px 16px!important;white-space:nowrap!important}
+.support-glass{display:block!important;min-height:46px!important;padding:0!important;overflow:hidden!important;touch-action:pan-y;contain:paint}
+.promo-marquee{display:flex!important;align-items:center!important;width:max-content!important;min-width:0!important;animation:fmb-clean-marquee 30s linear infinite!important;transform:translate3d(0,0,0);backface-visibility:hidden;will-change:transform}
+.promo-group{display:grid!important;grid-template-columns:auto 118px 138px;align-items:center!important;justify-content:center;flex:0 0 auto!important;width:auto!important;min-width:0!important;gap:12px!important;padding:7px 16px!important;white-space:nowrap!important}
+.promo-group[aria-hidden="true"]{display:grid!important}
 .promo-group .brand-marquee-label{font-size:12px!important;color:#fff!important}
 .promo-group .brand-chip{min-height:30px!important}
 .promo-group .brand-chip img{display:block!important;width:25px!important;height:25px!important;flex:0 0 25px!important}
 .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 .promo-group .brand-chip-logo{position:relative;justify-content:center;min-width:118px!important;width:118px!important;height:32px!important;padding:0 9px!important;overflow:hidden!important;background:rgba(255,255,255,.96)!important}
-.promo-group .brand-chip-logo img{width:104px!important;height:70px!important;max-width:none!important;flex:0 0 auto!important;object-fit:contain!important;transform:scale(1.3)}
+.promo-group .brand-chip-logo img{width:104px!important;height:70px!important;max-width:none!important;flex:0 0 auto!important;object-fit:contain!important;transform:scale(1.22)}
 .promo-group .cognita-chip{min-width:138px!important;width:138px!important}
 .promo-group .cognita-chip img{width:124px!important}
-@keyframes fmb-live-marquee{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-50%,0,0)}}
-.support-glass:hover .promo-marquee,.support-glass:focus-within .promo-marquee{animation-play-state:paused!important}
+@keyframes fmb-clean-marquee{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-50%,0,0)}}
 .nav-backdrop{display:none;position:fixed;inset:0;z-index:118;background:rgba(28,5,39,.36);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
 .nav-backdrop.open{display:block}
 @media(min-width:961px){
@@ -23,15 +23,15 @@
  .hero-card .hero-audience,.hero-card .hero-actions{justify-content:flex-start}
 }
 @media(max-width:800px){
- .support-glass{min-height:40px!important}
- .promo-marquee{animation-duration:17s!important}
- .promo-group{gap:8px!important;padding:5px 10px!important}
- .promo-group .brand-marquee-label{font-size:11px!important}
+ .support-glass{min-height:42px!important}
+ .promo-marquee{animation-duration:25s!important}
+ .promo-group{grid-template-columns:minmax(90px,1fr) minmax(74px,90px) minmax(84px,102px);gap:6px!important;padding:5px 8px!important}
+ .promo-group .brand-marquee-label{font-size:10px!important;line-height:1.08;white-space:normal!important}
  .promo-group .brand-chip img{width:22px!important;height:22px!important;flex-basis:22px!important}
- .promo-group .brand-chip-logo{min-width:104px!important;width:104px!important;height:30px!important;padding:0 7px!important}
- .promo-group .brand-chip-logo img{width:94px!important;height:64px!important;flex-basis:auto!important}
- .promo-group .cognita-chip{min-width:120px!important;width:120px!important}
- .promo-group .cognita-chip img{width:110px!important}
+ .promo-group .brand-chip-logo{min-width:0!important;width:100%!important;height:30px!important;padding:0 5px!important}
+ .promo-group .brand-chip-logo img{width:100%!important;height:58px!important;flex-basis:auto!important;transform:scale(1.18)}
+ .promo-group .cognita-chip{min-width:0!important;width:100%!important}
+ .promo-group .cognita-chip img{width:100%!important}
  .nav-glass{position:relative;z-index:120}
  .nav-links{top:108px!important;left:10px!important;right:10px!important;max-height:calc(100dvh - 130px);overflow:auto;padding:12px!important;background:rgba(255,255,255,.96)!important;border-radius:22px!important;box-shadow:0 24px 80px rgba(36,7,51,.28)!important}
  .nav-menu-intro{display:grid;gap:2px;padding:10px 13px 12px;border-bottom:1px solid rgba(81,11,119,.12)}
@@ -60,7 +60,7 @@ img.image-missing{display:none!important}
 .project-grid{margin-top:0}
 .project-card{background:rgba(255,255,255,.86)}
 #work .project-logo{aspect-ratio:16/8.5;padding:0;background:linear-gradient(145deg,#f8fbff,#edf4ff)}
-#work .project-logo img{display:block;width:100%;height:100%;padding:0!important;object-fit:cover!important;object-position:center;transform:scale(1.08)}
+#work .project-logo img{display:block;width:100%;height:100%;padding:clamp(24px,5vw,58px)!important;object-fit:contain!important;object-position:center;background:transparent!important;transform:none!important}
 @media(max-width:900px){.projects-hero{grid-template-columns:1fr}.projects-hero-logos{grid-template-columns:1fr 1px 1fr;gap:14px}.projects-hero-logos span{width:1px;height:70%;background:linear-gradient(180deg,transparent,rgba(36,81,217,.24),transparent)}.projects-hero-logos img{height:96px;transform:scale(1.16)}}
-@media(max-width:520px){.projects-hero{gap:22px;padding:28px 18px;border-radius:26px}.projects-hero-logos{grid-template-columns:1fr;padding:8px 10px}.projects-hero-logos span{width:70%;height:1px}.projects-hero-logos img{height:78px;transform:scale(1.18)}#work .project-logo{aspect-ratio:16/9}#work .project-logo img{transform:scale(1.12)}.entry-benefits{grid-template-columns:1fr}.entry-benefits article{padding:12px}.entry-trust-note{text-align:left}}
-@media(prefers-reduced-motion:reduce){.promo-marquee{animation:none!important;transform:none!important}.promo-group[aria-hidden="true"]{display:none!important}.support-glass{overflow-x:auto!important;scrollbar-width:none}.support-glass::-webkit-scrollbar{display:none}}
+@media(max-width:520px){.projects-hero{gap:22px;padding:28px 18px;border-radius:26px}.projects-hero-logos{grid-template-columns:1fr;padding:8px 10px}.projects-hero-logos span{width:70%;height:1px}.projects-hero-logos img{height:78px;transform:scale(1.18)}#work .project-logo{aspect-ratio:16/9}#work .project-logo img{padding:24px!important;transform:none!important}.entry-benefits{grid-template-columns:1fr}.entry-benefits article{padding:12px}.entry-trust-note{text-align:left}}
+@media(prefers-reduced-motion:reduce){.support-glass{overflow:hidden!important}.promo-marquee{animation:none!important;transform:none!important}.promo-group[aria-hidden="true"]{display:none!important}}

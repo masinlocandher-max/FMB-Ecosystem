@@ -21,8 +21,8 @@
 .reading-more a:hover{transform:translateY(-3px);box-shadow:0 20px 44px rgba(45,23,56,.11)}
 .reading-more h4{font-size:25px;color:var(--violet-900);line-height:1.08}
 .reading-more p{margin-top:8px;color:var(--muted);font-size:13px}
-#work .card-media{aspect-ratio:16/9;padding:0;background:#f5f9ff}
-#work .card-media img{display:block!important;width:100%;height:100%;object-fit:cover;object-position:center;padding:0!important;background:#081632!important}
+#work .card-media{aspect-ratio:16/9;padding:0;background:radial-gradient(circle at 18% 18%,rgba(143,211,255,.28),transparent 34%),linear-gradient(145deg,#fff,#edf4ff)}
+#work .card-media img{display:block!important;width:100%;height:100%;object-fit:contain!important;object-position:center;padding:clamp(24px,5vw,58px)!important;background:transparent!important;transform:none!important}
 #work .card-media.project-logo-fallback{display:grid;place-items:center;background:radial-gradient(circle at 50% 50%,#123e9e,#050b1d 72%)}
 #work .card-media.project-logo-fallback img{object-fit:contain;padding:34px!important}
 @media(max-width:900px){
@@ -49,6 +49,6 @@
   #work .grid-2{display:grid;grid-template-columns:1fr;gap:16px}
   #work .card{width:100%;border-radius:26px}
   #work .card-media{width:100%;aspect-ratio:16/9;min-height:0}
-  #work .card-media img{width:100%!important;height:100%!important;object-fit:cover!important}
+  #work .card-media img{width:100%!important;height:100%!important;object-fit:contain!important;padding:24px!important;background:transparent!important;transform:none!important}
   #work .card-body{padding:23px 20px!important}
 }
