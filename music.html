@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Listening Room Preview | With love, FMB</title>
-<meta name="description" content="A private preview of the With love, FMB Listening Room, featuring the Calm collection and the original soundtrack With Love, FMB.">
+<meta name="description" content="A private preview of the With love, FMB Listening Room, featuring the Calm collection and two versions of the original soundtrack With Love, FMB.">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
 <meta name="theme-color" content="#3a0855">
 <meta property="og:title" content="Listening Room | With love, FMB">
@@ -24,7 +24,7 @@
 <link rel="stylesheet" href="assets/css/icon-fix.css">
 <link rel="stylesheet" href="assets/css/repair.css">
 <link rel="stylesheet" href="assets/css/live-hotfix.css?v=20260714h">
-<link rel="stylesheet" href="assets/css/music-ui.css?v=20260714-preview2">
+<link rel="stylesheet" href="assets/css/music-ui.css?v=20260714-preview3">
 </head>
 <body class="music-app">
 <div class="top-shell">
@@ -37,6 +37,10 @@
 </div>
 
 <main class="listening-room" id="main-content">
+  <aside class="reviewer-access" id="reviewerAccess" hidden aria-label="Private reviewer access">
+    <div><strong>Full library review mode</strong><span>All tracks are unlocked here so the unpublished Listening Room can be checked from beginning to end. Ordinary visitors still receive one complete track.</span></div>
+    <a href="music.html">Exit reviewer mode</a>
+  </aside>
   <section class="listening-hero" aria-labelledby="listeningTitle">
     <div class="listening-hero-copy reveal">
       <p class="music-kicker">With love, FMB Listening Room</p>
@@ -63,7 +67,7 @@
         <div class="player-heading">
           <div><p class="music-kicker" id="listeningState">Public listening</p><h2 id="nowTitle" aria-live="polite">Quiet Enough to Breathe</h2><p class="now-version" id="nowVersion">Track 01</p></div>
           <button class="icon-control quiet-control" id="detailsButton" type="button" aria-expanded="false" aria-controls="trackDetails" aria-label="Show track details">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 10.5v6M12 7.5h.01"></path></svg>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 10.5v6M12 7.5h.01"></path></svg><span>Details</span>
           </button>
         </div>
         <p class="player-description" id="playerNote">A gentle instrumental for moments when the world feels too loud.</p>
@@ -96,6 +100,7 @@
   <section class="collections-section" id="collections" aria-labelledby="collectionsTitle">
     <div class="collections-heading"><div><p class="music-kicker">Choose what the moment needs</p><h2 id="collectionsTitle">Our listening collections</h2></div><p>Move gently between calm instrumentals and original With Love, FMB sound. More collections will open when every track is ready.</p></div>
     <div class="collection-tabs" id="collectionTabs" role="tablist" aria-label="Music collections"></div>
+    <p class="mobile-listening-guide">Choose a collection, then tap Play beside a track. Open Details above the player for descriptions and credits.</p>
     <div class="playlist-list" id="playlistGrid" aria-live="polite"><div class="music-loading">Preparing the listening room.</div></div>
   </section>
 
@@ -133,6 +138,6 @@
 <script src="assets/js/supabase-client.js"></script>
 <script src="assets/js/site.js?v=20260714k"></script>
 <script src="assets/js/live-hotfix.js?v=20260714i"></script>
-<script src="assets/js/music.js?v=20260714-preview1"></script>
+<script src="assets/js/music.js?v=20260714-preview2"></script>
 </body>
 </html>

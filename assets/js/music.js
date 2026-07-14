@@ -35,7 +35,8 @@
     dialog:$('#membershipDialog'),
     dialogClose:$('#dialogClose'),
     maybeLater:$('#maybeLater'),
-    playerSection:$('#player')
+    playerSection:$('#player'),
+    reviewerAccess:$('#reviewerAccess')
   };
 
   if(!elements.audio||!elements.grid)return;
@@ -46,12 +47,14 @@
   let currentTrack=null;
   let activeCollection='calm';
   let isMember=false;
+  const isReviewer=new URLSearchParams(location.search).get('review')==='francine-full-preview';
   let isReady=false;
   let isShuffled=false;
   let repeatTrack=false;
   let hasStarted=false;
   let guestTrackId=sessionStorage.getItem('fmb-listening-guest-track')||'';
   let guestComplete=sessionStorage.getItem('fmb-listening-guest-complete')==='true';
+  const fullAccess=()=>isMember||isReviewer;
 
   const escape=value=>window.FMB?.escapeHtml(value)||String(value||'').replace(/[&<>"']/g,character=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[character]));
   const formatTime=seconds=>{
@@ -82,10 +85,11 @@
       const button=row.querySelector('.song-play');
       if(!button)return;
       const active=row.dataset.trackId===currentTrack?.id;
-      button.setAttribute('aria-label',active&&playing?`Pause ${currentTrack.title}`:`Play ${row.dataset.trackTitle||'track'}`);
+      const action=active&&playing?'Pause':'Play';
+      button.setAttribute('aria-label',`${action} ${active&&playing?currentTrack.title:row.dataset.trackTitle||'track'}`);
       button.innerHTML=active&&playing
-        ?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7v10M15 7v10"></path></svg>'
-        :'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6Z"></path></svg>';
+        ?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7v10M15 7v10"></path></svg><span class="song-action-label">Pause</span>'
+        :'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6Z"></path></svg><span class="song-action-label">Play</span>';
     });
   }
 
@@ -114,7 +118,7 @@
   }
 
   function visitorMayOpen(track){
-    if(isMember)return true;
+    if(fullAccess())return true;
     if(guestComplete){showDialog();return false}
     if(guestTrackId&&guestTrackId!==track.id){showDialog();return false}
     return true;
@@ -147,7 +151,7 @@
 
   function playCurrent(){
     if(!isReady||!currentTrack)return;
-    if(!isMember&&guestComplete){showDialog();return}
+    if(!fullAccess()&&guestComplete){showDialog();return}
     elements.audio.play().catch(()=>{
       setPlayingState(false);
       elements.description.textContent='Tap play once more to begin. The browser paused the audio before it started.';
@@ -162,7 +166,7 @@
 
   function moveBy(direction,fromEnded=false){
     if(!queue.length||!currentTrack)return;
-    if(!isMember&&(guestTrackId||guestComplete)){
+    if(!fullAccess()&&(guestTrackId||guestComplete)){
       if(fromEnded){
         guestComplete=true;
         sessionStorage.setItem('fmb-listening-guest-complete','true');
@@ -201,7 +205,7 @@
       row.className='song-row';
       row.dataset.trackId=track.id;
       row.dataset.trackTitle=track.title;
-      row.innerHTML=`<div class="song-cover"><img src="${escape(track.cover_url)}" alt=""></div><div><div class="song-title">${escape(track.title)}</div><div class="song-artist">${escape(track.artist)}</div></div><span class="song-version">${escape(track.version)}</span><span class="song-duration">${formatTime(track.duration_seconds)}</span><button class="song-play" type="button" aria-label="Play ${escape(track.title)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6Z"></path></svg></button>`;
+      row.innerHTML=`<div class="song-cover"><img src="${escape(track.cover_url)}" alt=""></div><div><div class="song-title">${escape(track.title)}</div><div class="song-artist">${escape(track.artist)}</div><span class="song-version-mobile">${escape(track.version)}</span></div><span class="song-version">${escape(track.version)}</span><span class="song-duration">${formatTime(track.duration_seconds)}</span><button class="song-play" type="button" aria-label="Play ${escape(track.title)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6Z"></path></svg><span class="song-action-label">Play</span></button>`;
       row.querySelector('.song-play').addEventListener('click',()=>requestTrack(track));
       list.appendChild(row);
     });
@@ -250,8 +254,9 @@
   }
 
   function updateMemberExperience(){
-    elements.listeningState.textContent=isMember?'Member listening':'Public listening';
-    if(!isMember)return;
+    elements.listeningState.textContent=isReviewer?'Private reviewer listening':isMember?'Member listening':'Public listening';
+    if(elements.reviewerAccess)elements.reviewerAccess.hidden=!isReviewer;
+    if(!fullAccess())return;
     guestTrackId='';
     guestComplete=false;
     sessionStorage.removeItem('fmb-listening-guest-track');
@@ -259,6 +264,7 @@
     queue=shuffled(allTracks);
     isShuffled=true;
     elements.shuffle.setAttribute('aria-pressed','true');
+    if(!isMember)return;
     const signIn=document.querySelector('.nav-actions a[href*="auth.html#signin"]');
     const join=document.querySelector('.nav-actions a[href*="auth.html#signup"]');
     if(signIn){signIn.href='member.html';signIn.textContent='Member space'}
@@ -307,17 +313,17 @@
     elements.details.hidden=expanded;
   });
   elements.shuffle.addEventListener('click',()=>{
-    if(!isMember&&guestTrackId){showDialog();return}
+    if(!fullAccess()&&guestTrackId){showDialog();return}
     isShuffled=!isShuffled;
     queue=isShuffled?shuffled(allTracks):[...allTracks];
     elements.shuffle.setAttribute('aria-pressed',String(isShuffled));
-    if(!isMember&&!guestTrackId){
+    if(!fullAccess()&&!guestTrackId){
       const random=queue.find(track=>track.id!==currentTrack?.id)||queue[0];
       loadTrack(random,false);
     }
   });
   elements.repeat.addEventListener('click',()=>{
-    if(!isMember&&guestTrackId){showDialog();return}
+    if(!fullAccess()&&guestTrackId){showDialog();return}
     repeatTrack=!repeatTrack;
     elements.repeat.setAttribute('aria-pressed',String(repeatTrack));
   });
@@ -327,7 +333,7 @@
   elements.audio.addEventListener('contextmenu',event=>event.preventDefault());
   elements.audio.addEventListener('play',()=>{
     hasStarted=true;
-    if(!isMember&&!guestTrackId&&currentTrack){
+    if(!fullAccess()&&!guestTrackId&&currentTrack){
       guestTrackId=currentTrack.id;
       sessionStorage.setItem('fmb-listening-guest-track',guestTrackId);
     }
@@ -344,7 +350,7 @@
   });
   elements.audio.addEventListener('ended',()=>{
     setPlayingState(false);
-    if(isMember&&repeatTrack){elements.audio.currentTime=0;playCurrent();return}
+    if(fullAccess()&&repeatTrack){elements.audio.currentTime=0;playCurrent();return}
     moveBy(1,true);
   });
   elements.audio.addEventListener('error',()=>{
@@ -361,11 +367,11 @@
       updateMemberExperience();
       renderTabs();
       renderCollection(activeCollection);
-      const restored=!isMember&&guestTrackId?trackById(guestTrackId):null;
+      const restored=!fullAccess()&&guestTrackId?trackById(guestTrackId):null;
       const initial=restored||collections.find(collection=>collection.id==='calm')?.tracks[0]||allTracks[0];
       isReady=true;
       loadTrack(initial,false);
-      if(!isMember&&guestComplete)elements.description.textContent=initial.description;
+      if(!fullAccess()&&guestComplete)elements.description.textContent=initial.description;
     }catch(error){
       elements.grid.innerHTML='<div class="music-empty">The listening room could not be prepared right now. Please return later.</div>';
       elements.description.textContent='The music library is temporarily unavailable.';

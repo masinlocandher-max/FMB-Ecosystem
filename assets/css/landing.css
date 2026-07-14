@@ -1,5 +1,15 @@
 /* Landing page presentation. Scoped to keep the public home calm, clear, and responsive. */
 .landing-home{overflow-x:hidden}
+.landing-home .loader-icon{animation-duration:2.5s}
+.landing-home .support-glass{position:relative}
+.landing-home .support-glass::before,.landing-home .support-glass::after{content:'';position:absolute;top:0;bottom:0;z-index:3;width:24px;pointer-events:none}
+.landing-home .support-glass::before{left:0;background:linear-gradient(90deg,rgba(60,8,86,.98),transparent)}
+.landing-home .support-glass::after{right:0;background:linear-gradient(270deg,rgba(60,8,86,.98),transparent)}
+.landing-home .promo-marquee{animation-duration:30s!important}
+.landing-home .hero-banner.reveal{transform:translateY(14px) scale(.992);transition-duration:.9s}
+.landing-home .hero-card.reveal{transform:translateY(18px);transition-duration:.9s}
+.landing-home .hero-benefits.reveal{transform:translateY(16px);transition-duration:.85s}
+.landing-home .hero-banner.reveal.in,.landing-home .hero-card.reveal.in,.landing-home .hero-benefits.reveal.in{transform:none}
 .landing-home .hero{display:block!important;max-width:none!important;min-height:0!important;margin:0!important;padding:142px 18px 76px!important;background:radial-gradient(circle at 9% 12%,rgba(194,137,220,.22),transparent 30%),radial-gradient(circle at 92% 28%,rgba(126,43,166,.14),transparent 28%),linear-gradient(180deg,#fff 0,#f9f1fc 72%,#fff 100%)!important}
 .hero-shell{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(440px,.92fr);align-items:center;width:min(1320px,100%);margin:0 auto}
 .landing-home .hero-banner{position:relative;width:100%!important;max-width:none!important;margin:0!important;overflow:hidden!important;border:1px solid rgba(255,255,255,.92)!important;border-radius:38px!important;background:#fff!important;box-shadow:0 30px 90px rgba(50,16,65,.15)!important}
@@ -48,6 +58,8 @@
   .landing-home .entry-benefits{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:520px){
+  .landing-home .promo-marquee{animation-duration:25s!important}
+  .landing-home .support-glass::before,.landing-home .support-glass::after{width:16px}
   .landing-home .hero{padding:118px 10px 54px!important}
   .landing-home .hero-banner{border-radius:24px!important}
   .landing-home .hero-banner img{min-height:0!important;aspect-ratio:16/9!important;object-fit:contain!important}
@@ -79,4 +91,4 @@
   .landing-home .entry-benefits{grid-template-columns:1fr}
   .landing-home .entry-benefits article{min-height:0}
 }
-@media(prefers-reduced-motion:reduce){.volunteer-gallery{scroll-behavior:auto}}
+@media(prefers-reduced-motion:reduce){.volunteer-gallery{scroll-behavior:auto}.landing-home .loader-icon,.landing-home .promo-marquee{animation:none!important}.landing-home .hero-banner.reveal,.landing-home .hero-card.reveal,.landing-home .hero-benefits.reveal{opacity:1;transform:none;transition:none}}

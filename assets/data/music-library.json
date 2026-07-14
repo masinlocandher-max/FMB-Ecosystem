@@ -1,5 +1,5 @@
 {
-  "version": "2026-07-14-preview-1",
+  "version": "2026-07-14-preview-2",
   "collections": [
     {
       "id": "calm",
@@ -126,9 +126,20 @@
       "cover_url": "assets/images/music/with-love-fmb-cover.png?v=20260714b",
       "tracks": [
         {
+          "id": "ost-with-love-fmb-v1",
+          "title": "With Love, FMB",
+          "version": "OST 01 · Remastered",
+          "artist": "With Love, FMB",
+          "description": "An original soundtrack about creating honestly, holding softness and strength together, and existing fully with creativity, kindness, and love.",
+          "moment": "Creative work, reflection, rebuilding confidence, or beginning again.",
+          "src": "assets/audio/ost/FMB-OST-With-Love-FMB-Version-01.mp3",
+          "duration_seconds": 154.92,
+          "credits": ["Written by: Francine Marie Bautista (FMB)", "Musical direction by: Francine Marie Bautista (FMB)"]
+        },
+        {
           "id": "ost-with-love-fmb",
           "title": "With Love, FMB",
-          "version": "Original soundtrack",
+          "version": "OST 02 · Remastered",
           "artist": "With Love, FMB",
           "description": "An original soundtrack about creating honestly, holding softness and strength together, and existing fully with creativity, kindness, and love.",
           "moment": "Creative work, reflection, rebuilding confidence, or beginning again.",
