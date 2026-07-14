@@ -28,12 +28,12 @@
       if(cards[0]){
         const media=cards[0].querySelector('.card-media');
         const img=media&&media.querySelector('img');
-        if(img){img.src='assets/images/projects/senz-hero.jpg';img.alt='SENZ Strategic Communications hero banner';img.onerror=()=>{media.classList.add('project-logo-fallback');img.src='assets/senz.svg'}}
+        if(img){img.classList.remove('image-missing');img.removeAttribute('aria-hidden');img.src='assets/senz.svg';img.alt='SENZ Marketing and Digital Solutions hero banner'}
       }
       if(cards[1]){
         const media=cards[1].querySelector('.card-media');
         const img=media&&media.querySelector('img');
-        if(img){img.src='assets/images/projects/cognita-hero.svg';img.alt='Cognita Institute of AI hero banner';img.onerror=()=>{media.classList.add('project-logo-fallback');img.src='assets/cognita.svg'}}
+        if(img){img.classList.remove('image-missing');img.removeAttribute('aria-hidden');img.src='assets/cognita.svg';img.alt='Cognita Institute of Artificial Intelligence hero banner'}
       }
     }
   }

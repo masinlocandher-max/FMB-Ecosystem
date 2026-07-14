@@ -1,11 +1,20 @@
 /* Live production hotfix: mobile navigation, marquee motion, and resilient images */
-.support-glass{overflow:hidden!important;touch-action:pan-y}
-.promo-marquee{display:flex!important;width:max-content!important;min-width:200%!important;animation:fmb-live-marquee 18s linear infinite!important;transform:translate3d(-50%,0,0);backface-visibility:hidden}
-.promo-group{flex:0 0 auto!important;min-width:50%!important}
-@keyframes fmb-live-marquee{0%{transform:translate3d(-50%,0,0)}100%{transform:translate3d(0,0,0)}}
+.support-glass{display:block!important;min-height:44px!important;padding:0!important;overflow:hidden!important;touch-action:pan-y;contain:paint}
+.promo-marquee{display:flex!important;align-items:center!important;width:max-content!important;min-width:0!important;animation:fmb-live-marquee 22s linear infinite!important;transform:translate3d(0,0,0);backface-visibility:hidden;will-change:transform}
+.promo-group{display:flex!important;align-items:center!important;flex:0 0 auto!important;min-width:0!important;gap:12px!important;padding:7px 16px!important;white-space:nowrap!important}
+.promo-group .brand-marquee-label{font-size:12px!important;color:#fff!important}
+.promo-group .brand-chip{min-height:30px!important}
+.promo-group .brand-chip img{display:block!important;width:25px!important;height:25px!important;flex:0 0 25px!important}
+@keyframes fmb-live-marquee{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-50%,0,0)}}
+.support-glass:hover .promo-marquee,.support-glass:focus-within .promo-marquee{animation-play-state:paused!important}
 .nav-backdrop{display:none;position:fixed;inset:0;z-index:118;background:rgba(28,5,39,.36);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
 .nav-backdrop.open{display:block}
 @media(max-width:800px){
+ .support-glass{min-height:40px!important}
+ .promo-marquee{animation-duration:17s!important}
+ .promo-group{gap:8px!important;padding:5px 10px!important}
+ .promo-group .brand-marquee-label{font-size:11px!important}
+ .promo-group .brand-chip img{width:22px!important;height:22px!important;flex-basis:22px!important}
  .nav-glass{position:relative;z-index:120}
  .nav-links{top:108px!important;left:10px!important;right:10px!important;max-height:calc(100dvh - 130px);overflow:auto;padding:12px!important;background:rgba(255,255,255,.96)!important;border-radius:22px!important;box-shadow:0 24px 80px rgba(36,7,51,.28)!important}
  .nav-links a{display:block;padding:15px 14px!important;border-radius:14px;border-bottom:0!important;font-size:15px!important;font-weight:750!important;color:#3a0855!important}
@@ -17,4 +26,4 @@
 img.image-missing{display:none!important}
 .image-fallback{display:grid;place-items:center;min-height:160px;width:100%;padding:20px;text-align:center;color:#74677b;background:linear-gradient(145deg,#fff,#f2e7f8);font-size:13px}
 .hero-banner .image-fallback{min-height:260px}
-@media(prefers-reduced-motion:reduce){.promo-marquee{animation:fmb-live-marquee 18s linear infinite!important}}
+@media(prefers-reduced-motion:reduce){.promo-marquee{animation:none!important;transform:none!important}.promo-group[aria-hidden="true"]{display:none!important}.support-glass{overflow-x:auto!important;scrollbar-width:none}.support-glass::-webkit-scrollbar{display:none}}

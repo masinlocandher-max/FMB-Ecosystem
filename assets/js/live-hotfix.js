@@ -6,9 +6,9 @@
     const el=document.createElement(tag);Object.entries(attrs).forEach(([name,value])=>el.setAttribute(name,value));document.head.appendChild(el);
   }
   function boot(){
-    loadAsset('link',{rel:'stylesheet',href:'assets/css/reading-library.css?v=20260712d'});
-    loadAsset('link',{rel:'stylesheet',href:'assets/css/apple-mobile.css?v=20260712d'});
-    loadAsset('script',{src:'assets/js/reading-library.js?v=20260712d',defer:'defer'});
+    loadAsset('link',{rel:'stylesheet',href:'assets/css/reading-library.css?v=20260714f'});
+    loadAsset('link',{rel:'stylesheet',href:'assets/css/apple-mobile.css?v=20260714f'});
+    loadAsset('script',{src:'assets/js/reading-library.js?v=20260714f',defer:'defer'});
 
     const musicSection=document.getElementById('music');
     if(musicSection)musicSection.remove();
