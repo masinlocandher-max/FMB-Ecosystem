@@ -26,11 +26,10 @@ jobs:
           rm -rf _site
           mkdir -p _site
 
-          for page in index.html about.html reading.html womens-health.html skin-care-makeup.html coming-out-respect.html men-can-cry.html music.html auth.html member.html community.html volunteer.html herra.html privacy-policy.html; do
-            cp "$page" "_site/$page"
-          done
-          cp CNAME _site/CNAME
+          cp -- *.html _site/
+          cp CNAME manifest.webmanifest service-worker.js robots.txt sitemap.xml _site/
           cp -R assets _site/assets
+          cp -R mabayani _site/mabayani
           touch _site/.nojekyll
 
           test "$(cat _site/CNAME)" = "www.francinemariebautista.com"
@@ -44,6 +43,13 @@ jobs:
           test -f _site/assets/js/member.js
           test -f _site/assets/js/music.js
           test -f _site/assets/data/music-library.json
+          test -f _site/manifest.webmanifest
+          test -f _site/service-worker.js
+          test -f _site/admin.html
+          test -f _site/reset-password.html
+          test -f _site/community-guidelines.html
+          test -f _site/assets/images/app-icon-192.png
+          test -f _site/assets/images/app-icon-512.png
           grep -q 'Sign in' _site/index.html
           grep -q 'Create profile' _site/auth.html
           grep -q 'For Anxious Moments' _site/music.html
