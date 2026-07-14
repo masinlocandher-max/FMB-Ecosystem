@@ -117,6 +117,17 @@ create table if not exists public.journal_entries (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.daily_checkins (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  checkin_date date not null default current_date,
+  mood smallint not null check (mood between 1 and 5),
+  note text check (note is null or char_length(note) <= 240),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique(user_id,checkin_date)
+);
+
 create table if not exists public.saved_content (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
@@ -274,6 +285,8 @@ drop trigger if exists profiles_updated_at on public.profiles;
 create trigger profiles_updated_at before update on public.profiles for each row execute procedure public.set_updated_at();
 drop trigger if exists journal_updated_at on public.journal_entries;
 create trigger journal_updated_at before update on public.journal_entries for each row execute procedure public.set_updated_at();
+drop trigger if exists daily_checkins_updated_at on public.daily_checkins;
+create trigger daily_checkins_updated_at before update on public.daily_checkins for each row execute procedure public.set_updated_at();
 drop trigger if exists wall_updated_at on public.freedom_wall_posts;
 create trigger wall_updated_at before update on public.freedom_wall_posts for each row execute procedure public.set_updated_at();
 drop trigger if exists content_updated_at on public.content_items;
@@ -361,6 +374,7 @@ $$;
 alter table public.profiles enable row level security;
 alter table public.legal_acceptances enable row level security;
 alter table public.journal_entries enable row level security;
+alter table public.daily_checkins enable row level security;
 alter table public.saved_content enable row level security;
 alter table public.freedom_wall_posts enable row level security;
 alter table public.content_items enable row level security;
@@ -399,6 +413,13 @@ drop policy if exists "journal active owner update" on public.journal_entries;
 create policy "journal active owner update" on public.journal_entries for update using (user_id=auth.uid() and public.is_active_member()) with check (user_id=auth.uid() and public.is_active_member());
 drop policy if exists "journal active owner delete" on public.journal_entries;
 create policy "journal active owner delete" on public.journal_entries for delete using (user_id=auth.uid() and public.is_active_member());
+
+drop policy if exists "checkins active owner select" on public.daily_checkins;
+drop policy if exists "checkins active owner insert" on public.daily_checkins;
+drop policy if exists "checkins active owner update" on public.daily_checkins;
+create policy "checkins active owner select" on public.daily_checkins for select to authenticated using (user_id=(select auth.uid()) and public.is_active_member());
+create policy "checkins active owner insert" on public.daily_checkins for insert to authenticated with check (user_id=(select auth.uid()) and public.is_active_member());
+create policy "checkins active owner update" on public.daily_checkins for update to authenticated using (user_id=(select auth.uid()) and public.is_active_member()) with check (user_id=(select auth.uid()) and public.is_active_member());
 
 drop policy if exists "saved active owner all" on public.saved_content;
 create policy "saved active owner select" on public.saved_content for select using (user_id=auth.uid() and public.is_active_member());
@@ -462,6 +483,8 @@ grant update (display_name,full_name,username,bio,interests,avatar_url,updated_a
 
 grant select on public.legal_acceptances to authenticated;
 grant select,insert,update,delete on public.journal_entries to authenticated;
+revoke all on public.daily_checkins from public,anon,authenticated;
+grant select,insert,update on public.daily_checkins to authenticated;
 grant select,insert,update,delete on public.saved_content to authenticated;
 grant select on public.freedom_wall_posts to anon,authenticated;
 grant insert,update,delete on public.freedom_wall_posts to authenticated;

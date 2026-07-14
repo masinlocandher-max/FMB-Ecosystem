@@ -5,6 +5,20 @@
   let client=null;
   let user=null;
   let profile=null;
+  let checkins=[];
+  const moodNames={1:'Heavy',2:'Low',3:'Steady',4:'Hopeful',5:'Strong'};
+  const affirmations=[
+    'You deserve to meet this day without abandoning yourself.',
+    'A gentle pace is still a meaningful way forward.',
+    'You are allowed to protect your peace without explaining every boundary.',
+    'Your feelings can be honest without becoming the whole story.',
+    'You do not have to earn rest, care, or a softer beginning.',
+    'The next honest step is enough for today.',
+    'You can begin again without speaking badly about who you were before.',
+    'Being seen starts with refusing to disappear from yourself.',
+    'You are still worthy on the days when confidence feels far away.',
+    'Small acts of care can return you to yourself.'
+  ];
 
   function status(message,type=''){
     const element=$('#memberStatus');
@@ -21,6 +35,7 @@
   function showPanel(id){
     $$('.member-tab').forEach(button=>button.classList.toggle('active',button.dataset.panel===id));
     $$('.member-panel').forEach(panel=>panel.hidden=panel.id!==id);
+    $$('[data-open-panel]').forEach(link=>link.classList.toggle('active',link.dataset.openPanel===id));
     history.replaceState(null,'',`#${id}`);
   }
   $$('.member-tab').forEach(button=>button.addEventListener('click',()=>showPanel(button.dataset.panel)));
@@ -58,6 +73,22 @@
   function formatDate(value){
     if(!value)return 'Joined recently';
     return `Joined ${new Date(value).toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'})}`;
+  }
+  function localDateKey(date=new Date()){
+    const year=date.getFullYear();
+    const month=String(date.getMonth()+1).padStart(2,'0');
+    const day=String(date.getDate()).padStart(2,'0');
+    return `${year}-${month}-${day}`;
+  }
+  function readableDay(value,withYear=false){
+    return new Date(`${value}T12:00:00`).toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric',...(withYear?{year:'numeric'}:{})});
+  }
+  function setDailyAffirmation(){
+    const today=localDateKey();
+    const seed=Number(today.replaceAll('-',''));
+    $('#dailyAffirmation').textContent=affirmations[seed%affirmations.length];
+    $('#affirmationDate').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+    $('#memberToday').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'});
   }
   function passwordStrong(value){return value.length>=10&&/[a-z]/.test(value)&&/[A-Z]/.test(value)&&/\d/.test(value)}
 
@@ -104,7 +135,7 @@
     $('#communityAlias').value=name.slice(0,40);
     const selected=new Set(Array.isArray(profile.interests)?profile.interests:[]);
     $$('input[name="interests"]').forEach(input=>input.checked=selected.has(input.value));
-    if(['admin','moderator'].includes(profile.role))$('#adminLink').hidden=false;
+    if(profile.role==='admin')$('#adminLink').hidden=false;
   }
 
   async function loadNotes(){
@@ -113,7 +144,7 @@
     if(error){list.innerHTML='<div class="empty">Notes could not be loaded.</div>';return}
     $('#noteCount').textContent=String(data?.length||0);
     if(!data?.length){list.innerHTML='<div class="empty">Your saved notes will appear here.</div>';return}
-    list.innerHTML=data.map(note=>`<article class="entry" data-note-id="${window.FMB.escapeHtml(note.id)}"><strong>${window.FMB.escapeHtml(note.title||'Untitled note')}</strong><p>${window.FMB.escapeHtml(note.body)}</p><time>${new Date(note.created_at).toLocaleString()}</time><div class="actions" style="justify-content:flex-start;margin-top:12px"><button class="text-link delete-note" type="button">Delete</button></div></article>`).join('');
+    list.innerHTML=data.map(note=>`<article class="entry" data-note-id="${window.FMB.escapeHtml(note.id)}"><time class="journal-date" datetime="${window.FMB.escapeHtml(note.created_at)}">${new Date(note.created_at).toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'})}</time><strong>${window.FMB.escapeHtml(note.title||'Untitled journal entry')}</strong><p>${window.FMB.escapeHtml(note.body)}</p><small>${new Date(note.created_at).toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})}</small><div class="actions" style="justify-content:flex-start;margin-top:12px"><button class="text-link delete-note" type="button">Delete</button></div></article>`).join('');
     list.querySelectorAll('.delete-note').forEach(button=>button.addEventListener('click',async()=>{
       const article=button.closest('[data-note-id]');
       button.disabled=true;
@@ -130,7 +161,7 @@
     if(error){list.innerHTML='<div class="empty">Community submissions could not be loaded.</div>';return}
     $('#postCount').textContent=String(data?.length||0);
     if(!data?.length){list.innerHTML='<div class="empty">Submitted posts and their status will appear here.</div>';return}
-    list.innerHTML=data.map(post=>`<article class="entry"><strong>${window.FMB.escapeHtml(post.alias)} · ${window.FMB.escapeHtml(String(post.status).replaceAll('_',' '))}</strong><p>${window.FMB.escapeHtml(post.content)}</p>${post.moderation_note?`<p><small>Review note: ${window.FMB.escapeHtml(post.moderation_note)}</small></p>`:''}<time>${new Date(post.created_at).toLocaleString()}</time></article>`).join('');
+    list.innerHTML=data.map(post=>`<article class="entry"><strong>${window.FMB.escapeHtml(post.alias)}</strong><span class="community-state">${window.FMB.escapeHtml(String(post.status).replaceAll('_',' '))}</span><p>${window.FMB.escapeHtml(post.content)}</p>${post.moderation_note?`<p><small>Review note: ${window.FMB.escapeHtml(post.moderation_note)}</small></p>`:''}<time datetime="${window.FMB.escapeHtml(post.created_at)}">Submitted ${new Date(post.created_at).toLocaleDateString(undefined,{month:'long',day:'numeric',year:'numeric'})}</time></article>`).join('');
   }
 
   async function loadSaved(){
@@ -149,6 +180,43 @@
     }));
   }
 
+  function calculateStreak(rows){
+    const dates=new Set(rows.map(row=>row.checkin_date));
+    const cursor=new Date();
+    let streak=0;
+    while(dates.has(localDateKey(cursor))){
+      streak+=1;
+      cursor.setDate(cursor.getDate()-1);
+    }
+    return streak;
+  }
+
+  function renderCheckins(){
+    const list=$('#checkinList');
+    $('#checkinStreak').textContent=String(calculateStreak(checkins));
+    if(!checkins.length){list.innerHTML='<div class="empty">Your daily check-ins will appear here.</div>';return}
+    list.innerHTML=checkins.slice(0,7).map(item=>`<article class="checkin-day"><time datetime="${window.FMB.escapeHtml(item.checkin_date)}">${readableDay(item.checkin_date)}</time><strong>${window.FMB.escapeHtml(moodNames[item.mood]||'Checked in')}</strong><p>${window.FMB.escapeHtml(item.note||'No note added.')}</p></article>`).join('');
+  }
+
+  async function loadCheckins(){
+    const {data,error}=await client.from('daily_checkins').select('id,checkin_date,mood,note,created_at,updated_at').order('checkin_date',{ascending:false}).limit(45);
+    if(error){
+      $('#checkinList').innerHTML='<div class="empty">Daily check-ins could not be loaded right now.</div>';
+      $('#checkinSavedState').textContent='The private check-in service is temporarily unavailable.';
+      return;
+    }
+    checkins=data||[];
+    const today=checkins.find(item=>item.checkin_date===localDateKey());
+    if(today){
+      const mood=$(`input[name="checkinMood"][value="${today.mood}"]`);
+      if(mood)mood.checked=true;
+      $('#checkinNote').value=today.note||'';
+      $('#checkinSavedState').textContent='Today’s check-in is saved. You may update it anytime today.';
+      $('#saveCheckinButton').textContent='Update today’s check-in';
+    }
+    renderCheckins();
+  }
+
   $('#noteForm').addEventListener('submit',async event=>{
     event.preventDefault();
     const title=window.FMB.cleanText($('#noteTitle').value,120);
@@ -159,6 +227,21 @@
     setLoading(button,false);
     if(error){status('The note could not be saved.','error');return}
     $('#noteForm').reset();status('Your private note was saved.','success');loadNotes();
+  });
+
+  $('#checkinForm').addEventListener('submit',async event=>{
+    event.preventDefault();
+    const selected=$('input[name="checkinMood"]:checked');
+    if(!selected){status('Choose the feeling closest to where you are today.','error');return}
+    const mood=Number(selected.value);
+    const note=window.FMB.cleanText($('#checkinNote').value,240)||null;
+    const button=$('#saveCheckinButton');setLoading(button,true,'Saving…');
+    const {error}=await client.from('daily_checkins').upsert({user_id:user.id,checkin_date:localDateKey(),mood,note,updated_at:new Date().toISOString()},{onConflict:'user_id,checkin_date'});
+    setLoading(button,false);
+    if(error){status('Today’s check-in could not be saved. Please try again.','error');return}
+    $('#checkinSavedState').textContent='Today’s check-in is saved and remains private to your account.';
+    status('Your daily check-in was saved.','success');
+    await loadCheckins();
   });
 
   $('#communityForm').addEventListener('submit',async event=>{
@@ -227,14 +310,17 @@
   $('#settingsSignOut').addEventListener('click',signOut);
 
   async function init(){
+    setDailyAffirmation();
     if(!window.FMB?.configured){lockPage();return}
     client=await resolveClient();
     const {data,error}=await client.auth.getSession();
     if(error||!data.session){location.replace('auth.html#signin');return}
-    user=data.session.user;
+    const {data:{user:verifiedUser},error:userError}=await client.auth.getUser();
+    if(userError||!verifiedUser){location.replace('auth.html#signin');return}
+    user=verifiedUser;
     if(!user.email_confirmed_at){await client.auth.signOut();location.replace('auth.html#signin');return}
     await loadProfile();
-    await Promise.all([loadNotes(),loadPosts(),loadSaved()]);
+    await Promise.all([loadCheckins(),loadNotes(),loadPosts(),loadSaved()]);
     const initial=location.hash.slice(1);
     if(document.getElementById(initial)?.classList.contains('member-panel'))showPanel(initial);
   }

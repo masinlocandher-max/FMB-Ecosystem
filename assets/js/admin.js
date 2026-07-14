@@ -30,9 +30,11 @@
   function showPanel(id){
     $$('.admin-nav button').forEach(button=>button.classList.toggle('active',button.dataset.adminPanel===id));
     $$('.admin-panel').forEach(panel=>panel.hidden=panel.id!==id);
+    $$('[data-admin-open]').forEach(button=>button.classList.toggle('active',button.dataset.adminOpen===id));
     history.replaceState(null,'',`#${id}`);
   }
   $$('.admin-nav button').forEach(button=>button.addEventListener('click',()=>showPanel(button.dataset.adminPanel)));
+  $$('[data-admin-open]').forEach(button=>button.addEventListener('click',()=>{showPanel(button.dataset.adminOpen);scrollTo({top:0,behavior:'smooth'})}));
 
   async function resolveClient(){
     for(const mode of ['local','session']){
@@ -55,16 +57,18 @@
 
   async function loadOverview(){
     const monthStart=new Date();monthStart.setUTCDate(1);monthStart.setUTCHours(0,0,0,0);
-    const [total,recent,published,pending]=await Promise.all([
+    const [total,recent,published,pending,newMessages]=await Promise.all([
       count('profiles'),
       count('profiles',[['gte','joined_at',monthStart.toISOString()]]),
       count('content_items',[['eq','status','published']]),
-      count('freedom_wall_posts',[['eq','status','pending']])
+      count('freedom_wall_posts',[['eq','status','pending']]),
+      count('contact_messages',[['eq','status','new']])
     ]);
     $('#totalMembers').textContent=String(total);
     $('#recentMembers').textContent=String(recent);
     $('#publishedContent').textContent=String(published);
     $('#pendingPosts').textContent=String(pending);
+    $('#newMessages').textContent=String(newMessages);
 
     const {data:registrations}=await client.from('profiles').select('full_name,username,joined_at,status').order('joined_at',{ascending:false}).limit(8);
     $('#recentRegistrationList').innerHTML=registrations?.length?registrations.map(item=>`<article class="entry"><strong>${window.FMB.escapeHtml(item.full_name)}</strong><p>@${window.FMB.escapeHtml(item.username)} · ${window.FMB.escapeHtml(item.status)}</p><time>${formatDate(item.joined_at)}</time></article>`).join(''):'<div class="empty">No member registrations yet.</div>';
@@ -72,6 +76,12 @@
     const {data:activity}=await client.from('admin_activity').select('action,entity_type,created_at').order('created_at',{ascending:false}).limit(8);
     $('#activityList').innerHTML=activity?.length?activity.map(item=>`<article class="entry"><strong>${window.FMB.escapeHtml(item.action.replaceAll('_',' '))}</strong><p>${window.FMB.escapeHtml(item.entity_type)}</p><time>${formatDate(item.created_at)}</time></article>`).join(''):'<div class="empty">No administrative activity recorded yet.</div>';
   }
+
+  $('#refreshOverview').addEventListener('click',async()=>{
+    const button=$('#refreshOverview');setLoading(button,true,'Refreshing…');
+    await Promise.all([loadOverview(),loadMembers(),loadModeration(),loadMessages()]);
+    setLoading(button,false);setStatus('Dashboard information was refreshed.','success');
+  });
 
   async function loadMembers(){
     const {data,error}=await client.from('profiles').select('id,full_name,username,email,role,status,joined_at').order('joined_at',{ascending:false}).limit(500);
@@ -259,7 +269,9 @@
     client=await resolveClient();
     const {data,error}=await client.auth.getSession();
     if(error||!data.session){location.replace('auth.html#signin');return}
-    user=data.session.user;
+    const {data:{user:verifiedUser},error:userError}=await client.auth.getUser();
+    if(userError||!verifiedUser){location.replace('auth.html#signin');return}
+    user=verifiedUser;
     const {data:profile,error:profileError}=await client.from('profiles').select('full_name,role,status').eq('id',user.id).maybeSingle();
     if(profileError||!profile||profile.role!=='admin'||profile.status!=='active'){
       setStatus('Administrator access is required.','error');

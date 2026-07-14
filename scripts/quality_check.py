@@ -18,6 +18,13 @@ FORBIDDEN_PUBLIC_FEATURES = (
     "cultural archive",
     "heritage quiz",
 )
+MEMBER_READING_PAGES = (
+    "reading.html",
+    "womens-health.html",
+    "men-can-cry.html",
+    "coming-out-respect.html",
+    "skin-care-makeup.html",
+)
 
 
 class SiteParser(HTMLParser):
@@ -108,6 +115,26 @@ def check_config(errors: list[str]) -> None:
         errors.append("assets/js/config.js must never contain a service-role credential")
 
 
+def check_membership_features(errors: list[str]) -> None:
+    for name in MEMBER_READING_PAGES:
+        path = ROOT / name
+        text = path.read_text(encoding="utf-8")
+        if "assets/js/membership-gate.js" not in text:
+            errors.append(f"{name}: membership reading gate is missing")
+        if "assets/css/membership-gate.css" not in text:
+            errors.append(f"{name}: membership gate styles are missing")
+
+    member_js = (ROOT / "assets/js/member.js").read_text(encoding="utf-8")
+    if "daily_checkins" not in member_js:
+        errors.append("assets/js/member.js: daily check-in integration is missing")
+    if "status:'pending'" not in member_js:
+        errors.append("assets/js/member.js: community submissions must begin as pending")
+
+    community_js = (ROOT / "assets/js/community.js").read_text(encoding="utf-8")
+    if ".eq('status','published')" not in community_js:
+        errors.append("assets/js/community.js: public community feed must only request published posts")
+
+
 def main() -> int:
     errors: list[str] = []
     html_files = sorted(ROOT.glob("*.html"))
@@ -119,6 +146,7 @@ def main() -> int:
         if ".git" not in path.parts:
             check_json(path, errors)
     check_config(errors)
+    check_membership_features(errors)
 
     if errors:
         print("Quality check failed:\n")
