@@ -2,7 +2,7 @@
   "name": "With love, FMB",
   "short_name": "With love, FMB",
   "id": "/",
-  "description": "An inclusive digital space for reading, reflection, private member tools, and a moderated community.",
+  "description": "An inclusive digital space for open reading, calm music, on-device reflection, and a moderated community.",
   "start_url": "/?source=installed-app",
   "scope": "/",
   "display": "standalone",
@@ -33,18 +33,19 @@
   ],
   "shortcuts": [
     {
-      "name": "Member today",
-      "short_name": "Today",
-      "url": "/member.html#dashboardPanel"
+      "name": "Daily check-in",
+      "short_name": "Check in",
+      "url": "/daily.html#check-in"
     },
     {
       "name": "Private journal",
       "short_name": "Journal",
-      "url": "/member.html#writePanel"
+      "url": "/daily.html#journal"
     },
     {
-      "name": "Community",
-      "url": "/community.html"
+      "name": "Calm music",
+      "short_name": "Music",
+      "url": "/music.html"
     },
     {
       "name": "Support contacts",

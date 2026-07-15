@@ -4,12 +4,20 @@
       "id": "anxious-moments",
       "title": "For Anxious Moments",
       "description": "Slow, gentle music for moments when your mind needs less noise.",
-      "tracks": []
+      "tracks": [
+        {
+          "id": "quiet-return",
+          "title": "Quiet Return",
+          "artist": "With love, FMB",
+          "description": "An original 60-second ambient soundscape for reflection, grounding, and rest.",
+          "src": "assets/audio/quiet-return.mp3"
+        }
+      ]
     },
     {
       "id": "made-by-fmb",
       "title": "Made by FMB",
-      "description": "Original songs, instrumentals, and sound pieces created by FMB.",
+      "description": "A growing home for original songs, instrumentals, and approved sound pieces.",
       "tracks": []
     }
   ]

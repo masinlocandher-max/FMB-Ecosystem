@@ -124,6 +124,10 @@ def check_membership_features(errors: list[str]) -> None:
         if "assets/css/membership-gate.css" not in text:
             errors.append(f"{name}: membership gate styles are missing")
 
+    public_gate = (ROOT / "assets/js/membership-gate.js").read_text(encoding="utf-8")
+    if "The complete reading is open to everyone" not in public_gate:
+        errors.append("assets/js/membership-gate.js: temporary public reading access is missing")
+
     member_js = (ROOT / "assets/js/member.js").read_text(encoding="utf-8")
     if "daily_checkins" not in member_js:
         errors.append("assets/js/member.js: daily check-in integration is missing")
@@ -134,6 +138,22 @@ def check_membership_features(errors: list[str]) -> None:
     if ".eq('status','published')" not in community_js:
         errors.append("assets/js/community.js: public community feed must only request published posts")
 
+    daily_html = (ROOT / "daily.html").read_text(encoding="utf-8")
+    daily_js = (ROOT / "assets/js/daily.js").read_text(encoding="utf-8")
+    for marker in ('id="guestCheckinForm"', 'id="guestJournalForm"', 'id="guestCommunityForm"'):
+        if marker not in daily_html:
+            errors.append(f"daily.html: missing temporary public tool: {marker}")
+    for marker in ("localStorage", "submit_contact_message", "p_kind:'contact'"):
+        if marker not in daily_js:
+            errors.append(f"assets/js/daily.js: missing safe public-access marker: {marker}")
+
+    music = json.loads((ROOT / "assets/data/music-library.json").read_text(encoding="utf-8"))
+    tracks = [track for playlist in music.get("playlists", []) for track in playlist.get("tracks", [])]
+    if not any(track.get("id") == "quiet-return" for track in tracks):
+        errors.append("assets/data/music-library.json: Quiet Return is missing")
+    if not (ROOT / "assets/audio/quiet-return.mp3").exists():
+        errors.append("assets/audio/quiet-return.mp3 is missing")
+
 
 def check_navigation_experience(errors: list[str]) -> None:
     index = (ROOT / "index.html").read_text(encoding="utf-8")
@@ -141,14 +161,14 @@ def check_navigation_experience(errors: list[str]) -> None:
     site_css = (ROOT / "assets/css/site.css").read_text(encoding="utf-8")
     for marker in (
         'id="what-you-get"',
-        "Explore freely",
+        "Read every guide",
         "Care for yourself privately",
-        "Unlock the full library",
+        "Listen without signing in",
         "Share more safely",
     ):
         if marker not in index:
             errors.append(f"index.html: missing first-visit benefit: {marker}")
-    for marker in ("setupFriendlyNavigation", "nav-mobile-actions", "Get help", "Join free"):
+    for marker in ("setupFriendlyNavigation", "nav-mobile-actions", "Get help", "Open daily space"):
         if marker not in site_js:
             errors.append(f"assets/js/site.js: missing navigation UX marker: {marker}")
     if ".entry-benefits" not in site_css:

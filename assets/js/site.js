@@ -68,24 +68,25 @@
     const onHome=page==='index.html';
     const href=section=>onHome?`#${section}`:`index.html#${section}`;
     const items=[
-      {label:'Home',description:'Start here and see what you receive',href:onHome?'#top':'index.html#top',current:onHome&&!location.hash},
-      {label:'Explore',description:'Read, reflect, and find useful resources',href:href('safe-space'),current:['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html'].includes(page)},
-      {label:'Community',description:'Join a moderated, kinder space',href:href('community'),current:page==='community.html'},
+      {label:'Home',description:'Start here and see what is open',href:onHome?'#top':'index.html#top',current:onHome&&!location.hash},
+      {label:'Read',description:'Open every guide without an account',href:onHome?'#bookshelf':'index.html#bookshelf',current:['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html'].includes(page)},
+      {label:'Daily space',description:'Affirmation, check-in, journal, and sharing',href:'daily.html',current:page==='daily.html'},
+      {label:'Music',description:'Play our original calming soundscape',href:'music.html',current:page==='music.html'},
       {label:'Volunteer',description:'Serve through our founder-led initiative',href:'volunteer.html',current:page==='volunteer.html'},
       {label:'Our projects',description:'Discover SENZ and Cognita',href:href('work'),current:false},
       {label:'About',description:'Meet FMB and explore our work',href:'about.html',current:page==='about.html'},
       {label:'Get help',description:'Open public crisis and support contacts',href:href('support'),current:false,help:true}
     ];
-    links.innerHTML=`<div class="nav-menu-intro"><strong>Where would you like to go?</strong><span>Choose what you need. You can always return home.</span></div>${items.map(item=>`<a class="nav-menu-link${item.help?' nav-help-link':''}" href="${item.href}"${item.current?' aria-current="page"':''}><span class="nav-link-label">${item.label}</span><small>${item.description}</small></a>`).join('')}<div class="nav-mobile-actions"><a class="pill secondary" href="auth.html#signin">Sign in</a><a class="pill" href="auth.html#signup">Join free</a></div>`;
+    links.innerHTML=`<div class="nav-menu-intro"><strong>Where would you like to go?</strong><span>Reading, daily tools, and music are open without an account.</span></div>${items.map(item=>`<a class="nav-menu-link${item.help?' nav-help-link':''}" href="${item.href}"${item.current?' aria-current="page"':''}><span class="nav-link-label">${item.label}</span><small>${item.description}</small></a>`).join('')}<div class="nav-mobile-actions"><a class="pill secondary" href="auth.html#signin">Account, optional</a><a class="pill" href="daily.html">Open daily space</a></div>`;
     const signIn=actions.querySelector('a[href*="auth.html#signin"]');
     const join=actions.querySelector('a[href*="auth.html#signup"]');
     const menuToggle=actions.querySelector('#navToggle');
     if(signIn)signIn.textContent='Sign in';
-    if(join)join.textContent='Join free';
+    if(join)join.textContent='Create optional profile';
     if(menuToggle)menuToggle.setAttribute('aria-controls','navLinks');
     const mobileBar=$('.mobile-bar:not(.member-mobile-bar):not(.admin-mobile-bar)');
     if(mobileBar){
-      mobileBar.innerHTML=`<a class="active" href="${onHome?'#top':'index.html#top'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 11 8-7 8 7v9H4Z"/><path d="M9 20v-6h6v6"/></svg><span>Home</span></a><a href="${href('safe-space')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2Z"/><path d="M7 4v14a2 2 0 0 0 2 2"/></svg><span>Explore</span></a><a href="auth.html#signup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"/><path d="M19 5v5M16.5 7.5h5"/></svg><span>Join</span></a><a href="${href('support')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-4.4 7-11a4 4 0 0 0-7-2.6A4 4 0 0 0 5 10c0 6.6 7 11 7 11Z"/></svg><span>Help</span></a>`;
+      mobileBar.innerHTML=`<a class="${onHome?'active':''}" href="${onHome?'#top':'index.html#top'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 11 8-7 8 7v9H4Z"/><path d="M9 20v-6h6v6"/></svg><span>Home</span></a><a class="${['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html'].includes(page)?'active':''}" href="${onHome?'#bookshelf':'index.html#bookshelf'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2Z"/><path d="M7 4v14a2 2 0 0 0 2 2"/></svg><span>Read</span></a><a class="${page==='daily.html'?'active':''}" href="daily.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4Z"/><path d="M8 3v4M16 3v4M7 11h4M7 15h7"/></svg><span>Daily</span></a><a class="${page==='music.html'?'active':''}" href="music.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg><span>Music</span></a>`;
     }
   }
   setupFriendlyNavigation();
@@ -136,7 +137,7 @@
       event.preventDefault();
       promptEvent=event;
       button.textContent='Install app';
-      help.textContent='Install our member space for faster access from your home screen.';
+      help.textContent='Install our daily space for faster access from your home screen.';
       show();
     });
     button.addEventListener('click',async()=>{

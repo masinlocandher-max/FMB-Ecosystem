@@ -83,9 +83,9 @@
     if(window.FMB?.configured){
       const client=window.FMB.createClient('local');
       const {data,error}=await client.from('music_entries').select('id,title,artist,description,category,audio_url,cover_url,sort_order').eq('status','published').order('sort_order').order('created_at');
-      if(!error){
+      if(!error&&data?.length){
         const groups=new Map();
-        (data||[]).forEach(item=>{
+        data.forEach(item=>{
           const category=item.category||'Music';
           if(!groups.has(category))groups.set(category,{title:category,description:'',tracks:[]});
           groups.get(category).tracks.push({id:item.id,title:item.title,artist:item.artist,description:item.description,src:item.audio_url,cover_url:item.cover_url});

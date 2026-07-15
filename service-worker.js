@@ -1,10 +1,11 @@
-const CACHE_NAME='fmb-app-shell-20260715-4';
+const CACHE_NAME='fmb-app-shell-20260715-5';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
   '/about.html',
   '/auth.html',
   '/community.html',
+  '/daily.html',
   '/reading.html',
   '/music.html',
   '/womens-health.html',
@@ -29,13 +30,20 @@ const APP_SHELL=[
   '/assets/css/landing.css',
   '/assets/css/apple-mobile.css',
   '/assets/css/volunteer.css',
+  '/assets/css/daily.css',
+  '/assets/css/music-ui.css',
   '/assets/js/site.js',
   '/assets/js/live-hotfix.js',
   '/assets/js/volunteer.js',
+  '/assets/js/daily.js',
+  '/assets/js/music.js',
+  '/assets/data/music-library.json',
+  '/assets/audio/quiet-return.mp3',
   '/assets/images/icon-transparent.png',
   '/assets/images/app-icon-192.png',
   '/assets/images/app-icon-512.png',
-  '/assets/images/volunteer/francine-leading-with-love-fmb.webp'
+  '/assets/images/volunteer/francine-leading-with-love-fmb.webp',
+  '/assets/images/volunteer/community-and-volunteer-team.webp'
 ];
 
 self.addEventListener('install',event=>{
