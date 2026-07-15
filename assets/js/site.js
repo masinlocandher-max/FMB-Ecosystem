@@ -71,6 +71,7 @@
       {label:'Home',description:'Start here and see what you receive',href:onHome?'#top':'index.html#top',current:onHome&&!location.hash},
       {label:'Explore',description:'Read, reflect, and find useful resources',href:href('safe-space'),current:['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html'].includes(page)},
       {label:'Community',description:'Join a moderated, kinder space',href:href('community'),current:page==='community.html'},
+      {label:'Volunteer',description:'Serve through our founder-led initiative',href:'volunteer.html',current:page==='volunteer.html'},
       {label:'Our projects',description:'Discover SENZ and Cognita',href:href('work'),current:false},
       {label:'About',description:'Meet FMB and explore our work',href:'about.html',current:page==='about.html'},
       {label:'Get help',description:'Open public crisis and support contacts',href:href('support'),current:false,help:true}

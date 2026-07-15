@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260715-3';
+const CACHE_NAME='fmb-app-shell-20260715-4';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
