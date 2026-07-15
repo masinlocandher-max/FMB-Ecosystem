@@ -39,15 +39,22 @@ jobs:
           test -f _site/assets/hero-banner.svg
           test -f _site/assets/css/site.css
           test -f _site/assets/css/readings.css
+          test -f _site/assets/css/volunteer.css
           test -f _site/assets/js/auth.js
           test -f _site/assets/js/member.js
           test -f _site/assets/js/music.js
+          test -f _site/assets/js/volunteer.js
           test -f _site/assets/data/music-library.json
           test -f _site/manifest.webmanifest
           test -f _site/service-worker.js
           test -f _site/admin.html
           test -f _site/reset-password.html
           test -f _site/community-guidelines.html
+          test -f _site/volunteer.html
+          test -f _site/assets/images/volunteer/francine-leading-with-love-fmb.webp
+          test -f _site/assets/images/volunteer/francine-serving-with-volunteers.webp
+          test -f _site/assets/images/volunteer/francine-and-volunteer-team.webp
+          test -f _site/assets/images/volunteer/with-love-fmb-community-service.webp
           test -f _site/assets/images/app-icon-192.png
           test -f _site/assets/images/app-icon-512.png
           grep -q 'Sign in' _site/index.html
@@ -59,6 +66,8 @@ jobs:
           grep -q 'Skin Care and Makeup Without the Pressure' _site/skin-care-makeup.html
           grep -q 'Coming Out, Being Known, and Learning to Respect' _site/coming-out-respect.html
           grep -q 'Men Can Cry' _site/men-can-cry.html
+          grep -q 'Volunteerism led by Francine Marie Bautista' _site/volunteer.html
+          grep -q 'Good work should return as good' _site/index.html
           grep -q 'With love, FMB' _site/womens-health.html
           grep -q 'With love, FMB' _site/skin-care-makeup.html
           grep -q 'With love, FMB' _site/coming-out-respect.html
