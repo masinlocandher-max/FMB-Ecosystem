@@ -149,10 +149,10 @@ def check_membership_features(errors: list[str]) -> None:
 
     music = json.loads((ROOT / "assets/data/music-library.json").read_text(encoding="utf-8"))
     tracks = [track for playlist in music.get("playlists", []) for track in playlist.get("tracks", [])]
-    if not any(track.get("id") == "quiet-return" for track in tracks):
-        errors.append("assets/data/music-library.json: Quiet Return is missing")
-    if not (ROOT / "assets/audio/quiet-return.mp3").exists():
-        errors.append("assets/audio/quiet-return.mp3 is missing")
+    expected_music = {"calm-01", "calm-01a", "calm-02", "calm-02a", "calm-03", "calm-03a", "calm-04", "calm-04a", "calm-05", "calm-05a", "with-love-fmb-ost"}
+    music_ids = {track.get("id") for track in tracks}
+    if not expected_music.issubset(music_ids):
+        errors.append("assets/data/music-library.json: the approved Calm collection or With Love, FMB OST is incomplete")
 
 
 def check_navigation_experience(errors: list[str]) -> None:

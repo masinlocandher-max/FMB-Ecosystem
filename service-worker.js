@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260715-5';
+const CACHE_NAME='fmb-app-shell-20260715-6';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -38,7 +38,7 @@ const APP_SHELL=[
   '/assets/js/daily.js',
   '/assets/js/music.js',
   '/assets/data/music-library.json',
-  '/assets/audio/quiet-return.mp3',
+  '/assets/images/music/fmb-calm-official-album-cover.jpg',
   '/assets/images/icon-transparent.png',
   '/assets/images/app-icon-192.png',
   '/assets/images/app-icon-512.png',
