@@ -81,7 +81,7 @@
     const signIn=actions.querySelector('a[href*="auth.html#signin"]');
     const join=actions.querySelector('a[href*="auth.html#signup"]');
     const menuToggle=actions.querySelector('#navToggle');
-    if(signIn)signIn.textContent='Sign in';
+    if(signIn)signIn.textContent='Optional account';
     if(join)join.textContent='Create optional profile';
     if(menuToggle)menuToggle.setAttribute('aria-controls','navLinks');
     const mobileBar=$('.mobile-bar:not(.member-mobile-bar):not(.admin-mobile-bar)');

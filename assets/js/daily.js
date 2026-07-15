@@ -48,7 +48,7 @@
   const dateKey=today();
   const seed=Number(dateKey.replace(/-/g,''));
   $('#dailyAffirmation').textContent=affirmations[seed%affirmations.length];
-  $('#affirmationDate').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  $('#affirmationDate').textContent=new Date(`${dateKey}T12:00:00`).toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   $('#guestJournalDate').value=dateKey;
 
   function renderCheckins(){
