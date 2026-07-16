@@ -202,10 +202,11 @@ def check_sharing_and_footer(errors: list[str]) -> None:
         "FMB News is public and will remain open without an account",
         "Masinloc, Zambales 2211",
         "Republic of the Philippines",
+        "/assets/images/signature-transparent.png?v=20260716-footer-signature",
     ):
         if marker not in site_js:
             errors.append(f"assets/js/site.js: missing sharing or footer marker: {marker}")
-    for marker in (".content-action-panel", ".content-action-music", "body .footer:after", "opacity:.5"):
+    for marker in (".content-action-panel", ".content-action-music", "body .footer:after", "opacity:.5", ".footer-brand-lockup:before", "background:transparent"):
         if marker not in content_css:
             errors.append(f"assets/css/fmb-content.css: missing responsive sharing or footer style: {marker}")
 

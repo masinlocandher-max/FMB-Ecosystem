@@ -117,12 +117,14 @@
   function setupFooterBrand(){
     $$('.footer').forEach(footer=>{
       const existing=footer.querySelector('.footer-brand-lockup');
-      if(existing)return;
       const logo=footer.querySelector('.footer-logo');
       if(!logo)return;
+      logo.src='/assets/images/signature-transparent.png?v=20260716-footer-signature';
+      logo.alt='With love, FMB';
+      existing?.querySelector('.footer-icon')?.remove();
+      if(existing)return;
       const lockup=document.createElement('div');lockup.className='footer-brand-lockup';
-      const icon=document.createElement('img');icon.className='footer-icon';icon.src='assets/images/icon-transparent.png';icon.alt='';icon.setAttribute('aria-hidden','true');
-      logo.parentElement.insertBefore(lockup,logo);lockup.append(icon,logo);
+      logo.parentElement.insertBefore(lockup,logo);lockup.append(logo);
     });
   }
   setupFooterBrand();

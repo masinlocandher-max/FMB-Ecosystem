@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260716-sharing-footer-fix-2';
+const CACHE_NAME='fmb-app-shell-20260716-transparent-footer-signature';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',

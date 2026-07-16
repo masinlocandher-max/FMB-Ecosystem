@@ -19,9 +19,10 @@
 @keyframes fmb-partner-shine{0%,70%{left:-35%}100%{left:120%}}
 
 .footer-grid>div:first-child{align-self:start}
-.footer-brand-lockup{width:244px;max-width:100%;min-height:72px;margin:0 0 15px;padding:7px 12px;border:1px solid rgba(255,255,255,.35);border-radius:18px;background:rgba(255,255,255,.94);box-shadow:0 16px 38px rgba(25,0,35,.16)}
-.footer-brand-lockup .footer-icon{width:54px;height:54px;opacity:1;filter:none!important}
-.footer-brand-lockup .footer-logo{width:158px!important;height:60px;max-height:60px;margin:0!important;filter:none!important;mix-blend-mode:normal!important}
+.footer-brand-lockup{position:relative;display:block;width:265px;max-width:100%;min-height:86px;margin:0 0 15px;padding:0;border:0;background:transparent;box-shadow:none}
+.footer-brand-lockup:before{content:"";position:absolute;z-index:0;inset:-18px -28px;background:radial-gradient(ellipse,rgba(255,255,255,.5),rgba(255,255,255,.14) 48%,transparent 74%);filter:blur(5px);pointer-events:none}
+.footer-brand-lockup .footer-icon{display:none!important}
+.footer-brand-lockup .footer-logo{position:relative;z-index:1;display:block!important;width:255px!important;max-width:100%;height:86px;max-height:86px;margin:0!important;object-fit:contain;object-position:left center;filter:drop-shadow(0 0 8px rgba(255,255,255,.7))!important;mix-blend-mode:normal!important}
 .footer-links a{width:fit-content}
 .footer-contact-address{display:block;max-width:260px;color:rgba(255,255,255,.82)!important;font-size:12px;line-height:1.55}
 body .footer{position:relative;overflow:hidden;isolation:isolate}
@@ -242,6 +243,8 @@ body .footer>.wrap{position:relative;z-index:1}
   .content-action-tools{grid-template-columns:repeat(2,minmax(0,1fr))}
   .content-action-button{min-height:56px}
   body .footer:after{right:-70px;bottom:-55px;width:235px;opacity:.5}
+  .footer-brand-lockup{width:230px;min-height:78px}
+  .footer-brand-lockup .footer-logo{width:220px!important;height:78px;max-height:78px}
   .ebook-library-route .route-art{min-height:410px}
   .library-preview-stack{height:310px}
   .library-preview-book{width:145px}
