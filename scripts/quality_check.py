@@ -205,7 +205,7 @@ def check_advertising_flow(errors: list[str]) -> None:
     ):
         if marker not in site_js:
             errors.append(f"assets/js/site.js: missing advertising marker: {marker}")
-    for marker in (".promo-marquee", "animation:fmb-public-care-marquee", ".banner-divider", ".banner-advertise-button"):
+    for marker in (".top-shell", "position:fixed!important", ".promo-marquee", "animation:fmb-public-care-marquee", ".banner-divider", ".banner-advertise-button"):
         if marker not in banner_css:
             errors.append(f"assets/css/experience-refresh.css: missing moving banner marker: {marker}")
     for marker in ('id="workBusiness"', 'id="advertisePrefill"', "Request the advertising tier packages"):
