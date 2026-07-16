@@ -204,7 +204,7 @@ def check_sharing_and_footer(errors: list[str]) -> None:
         "news-article[id]",
         "Masinloc, Zambales 2211",
         "Republic of the Philippines",
-        "/assets/images/signature-transparent.png?v=20260716-footer-signature",
+        "/assets/images/signature-transparent.png?v=20260716-footer-contrast",
     ):
         if marker not in site_js:
             errors.append(f"assets/js/site.js: missing sharing or footer marker: {marker}")
@@ -237,15 +237,15 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
             errors.append(f"assets/js/site.js: missing mobile or item-action marker: {marker}")
 
     news = (ROOT / "news/index.html").read_text(encoding="utf-8")
-    for name in ("impeachment-briefing.png", "pax-silica-briefing.png", "good-news-briefing.png"):
+    for name in ("sara-duterte-impeachment.webp", "pax-silica-briefing.png", "good-news-briefing.png"):
         if name not in news:
             errors.append(f"news/index.html: missing sourced editorial visual: {name}")
         if not (ROOT / "assets/images/news" / name).exists():
             errors.append(f"assets/images/news/{name}: news sharing image is missing")
     if news.count('class="news-visual"') != 3:
         errors.append("news/index.html: every main story must have one sourced lead visual")
-    if news.count("FMB editorial illustration. Source context:") != 3:
-        errors.append("news/index.html: every editorial visual must show source context below it")
+    if news.count("<figcaption>") != 3 or "Photo: AP Photo/Basilio Sepe" not in news:
+        errors.append("news/index.html: every editorial visual must show its source or credit below it")
 
 
 def main() -> int:

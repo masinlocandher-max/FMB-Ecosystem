@@ -70,7 +70,7 @@ jobs:
           test -f _site/assets/css/fmb-mobile-clean.css
           test -f _site/assets/images/projects/senz-logo.png
           test -f _site/assets/images/projects/cognita-logo.png
-          test -f _site/assets/images/news/impeachment-briefing.png
+          test -f _site/assets/images/news/sara-duterte-impeachment.webp
           test -f _site/assets/images/news/pax-silica-briefing.png
           test -f _site/assets/images/news/good-news-briefing.png
           test -f _site/assets/images/volunteer/francine-leading-with-love-fmb.webp
@@ -109,15 +109,15 @@ jobs:
           grep -q 'data-share="messenger"' _site/assets/js/site.js
           grep -q 'Masinloc, Zambales 2211' _site/assets/js/site.js
           grep -q 'Republic of the Philippines' _site/assets/js/site.js
-          grep -q '/assets/images/signature-transparent.png?v=20260716-footer-signature' _site/assets/js/site.js
+          grep -q '/assets/images/signature-transparent.png?v=20260716-footer-contrast' _site/assets/js/site.js
           grep -q 'body .footer:after' _site/assets/css/fmb-content.css
           grep -q 'setupMobileChrome' _site/assets/js/site.js
           grep -q 'item-action-row' _site/assets/js/site.js
           grep -q 'ebook-card-shell' _site/assets/js/site.js
           grep -q '@media(max-width:800px)' _site/assets/css/fmb-mobile-clean.css
           grep -q 'mobile-chrome-compact' _site/assets/css/fmb-mobile-clean.css
-          grep -q 'FMB editorial illustration. Source context:' _site/news/index.html
-          grep -q 'impeachment-briefing.png' _site/news/impeachment/index.html
+          grep -q 'Photo: AP Photo/Basilio Sepe' _site/news/index.html
+          grep -q 'sara-duterte-impeachment.webp' _site/news/impeachment/index.html
           grep -q 'pax-silica-briefing.png' _site/news/pax-silica/index.html
           grep -q 'good-news-briefing.png' _site/news/good-news/index.html
 
