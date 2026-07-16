@@ -2,7 +2,7 @@
  * With love, FMB mobile luxury layer.
  * Every visual override is phone-only so the desktop website remains unchanged.
  */
-.mobile-menu-fab{display:none}
+.mobile-menu-fab,.mobile-menu-icon{display:none}
 
 @keyframes fmb-mobile-partner-marquee{
   to{transform:translate3d(calc(-50% - 7px),0,0)}
