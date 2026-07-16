@@ -67,7 +67,7 @@ In Supabase Authentication settings:
    - the temporary GitHub Pages preview
    - local development only while testing
 5. Make sure these pages are allowed:
-   - `member.html`
+   - `profile/`
    - `reset-password.html`
 6. Configure a trusted transactional SMTP provider before a larger public launch.
 7. Customize verification and password-reset emails so the sender and website name are clear.
@@ -85,7 +85,7 @@ Update `assets/js/config.js` with only the public project URL and public anon ke
     SUPABASE_URL: 'https://YOUR_PROJECT.supabase.co',
     SUPABASE_ANON_KEY: 'YOUR_PUBLIC_ANON_KEY',
     SITE_URL: base,
-    AUTH_REDIRECT_URL: new URL('member.html', base).href
+    AUTH_REDIRECT_URL: new URL('profile/', base).href
   };
 })();
 ```

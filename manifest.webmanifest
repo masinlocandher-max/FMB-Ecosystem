@@ -35,7 +35,7 @@
     {
       "name": "Reading room",
       "short_name": "Read",
-      "url": "/reading.html"
+      "url": "/ebooks/"
     },
     {
       "name": "Freedom Wall",
@@ -45,7 +45,7 @@
     {
       "name": "Calm music",
       "short_name": "Music",
-      "url": "/music.html"
+      "url": "/music/"
     },
     {
       "name": "Support contacts",

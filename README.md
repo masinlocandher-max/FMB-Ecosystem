@@ -22,6 +22,7 @@ The project remains an enhanced version of the existing static GitHub Pages code
 ### Public website
 
 - branded landing page and approved founder portrait
+- dedicated clean routes for Ebooks, Music, Community Engagements - AMDG, About FMB, and FMB & Co.
 - safe-space sections for women, LGBTQIA+ people, and men
 - long-form reading pages
 - public crisis and emergency contacts
@@ -117,11 +118,15 @@ See `SUPABASE_SETUP.md` for the detailed process.
 
 ## Main files
 
-- `index.html` – public landing page
-- `about.html` – founder profile
+- `index.html` – public landing page and website directory
+- `ebooks/index.html` – dedicated reading-library landing page
+- `music/index.html` – app-like music landing page and player
+- `communityengagements/index.html` – Community Engagements - AMDG
+- `aboutfmb/index.html` – founder authority profile
+- `fmbandco/index.html` – three-brand portfolio
 - `auth.html` – sign in and registration
 - `reset-password.html` – password recovery completion
-- `member.html` – private member dashboard
+- `profile/index.html` – private signed-in member dashboard
 - `admin.html` – protected administrator dashboard
 - `music.html` – music player
 - `volunteer.html` – volunteer roles and application

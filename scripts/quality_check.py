@@ -33,9 +33,12 @@ class SiteParser(HTMLParser):
         self.ids: list[str] = []
         self.references: list[tuple[str, str]] = []
         self.images_without_alt: list[str] = []
+        self.base_href: str | None = None
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         data = dict(attrs)
+        if tag == "base" and data.get("href"):
+            self.base_href = str(data["href"])
         if data.get("id"):
             self.ids.append(str(data["id"]))
         if tag in {"a", "link"} and data.get("href"):
@@ -46,7 +49,7 @@ class SiteParser(HTMLParser):
             self.images_without_alt.append(str(data.get("src", "unknown image")))
 
 
-def local_target(source: Path, reference: str) -> Path | None:
+def local_target(source: Path, reference: str, base_href: str | None = None) -> Path | None:
     value = unquote(reference.strip())
     if not value or value.startswith("#") or value.startswith(IGNORE_SCHEMES):
         return None
@@ -56,7 +59,7 @@ def local_target(source: Path, reference: str) -> Path | None:
     path = parsed.path
     if not path:
         return None
-    if path.startswith("/"):
+    if path.startswith("/") or base_href == "/":
         candidate = ROOT / path.lstrip("/")
     else:
         candidate = source.parent / path
@@ -81,7 +84,7 @@ def check_html(path: Path, errors: list[str]) -> None:
         errors.append(f"{path.relative_to(ROOT)}: images without alt: {', '.join(parser.images_without_alt)}")
 
     for kind, reference in parser.references:
-        target = local_target(path, reference)
+        target = local_target(path, reference, parser.base_href)
         if target is None:
             continue
         try:
@@ -150,6 +153,13 @@ def check_membership_features(errors: list[str]) -> None:
         if marker not in freedom_wall:
             errors.append(f"freedom-wall.html: missing transparent maintenance marker: {marker}")
 
+    profile_html = (ROOT / "profile/index.html").read_text(encoding="utf-8")
+    for marker in ('id="checkinForm"', 'id="noteForm"', 'id="communityForm"', "Freedom Wall"):
+        if marker not in profile_html:
+            errors.append(f"profile/index.html: missing signed-in member tool: {marker}")
+    if "/profile/" not in (ROOT / "assets/js/auth.js").read_text(encoding="utf-8"):
+        errors.append("assets/js/auth.js: successful sign-in must open /profile/")
+
     music = json.loads((ROOT / "assets/data/music-library.json").read_text(encoding="utf-8"))
     tracks = [track for playlist in music.get("playlists", []) for track in playlist.get("tracks", [])]
     expected_music = {"calm-01", "calm-01a", "calm-02", "calm-02a", "calm-03", "calm-03a", "calm-04", "calm-04a", "calm-05", "calm-05a", "with-love-fmb-ost-01", "with-love-fmb-ost-02"}
@@ -171,7 +181,7 @@ def check_navigation_experience(errors: list[str]) -> None:
     ):
         if marker not in index:
             errors.append(f"index.html: missing first-visit benefit: {marker}")
-    for marker in ("setupFriendlyNavigation", "nav-mobile-actions", "Get help", "Freedom Wall", "Listen now"):
+    for marker in ("setupFriendlyNavigation", "nav-mobile-actions", "Get help", "Freedom Wall", "Community Engagements", "FMB & Co."):
         if marker not in site_js:
             errors.append(f"assets/js/site.js: missing navigation UX marker: {marker}")
     if ".entry-benefits" not in site_css:
@@ -180,7 +190,15 @@ def check_navigation_experience(errors: list[str]) -> None:
 
 def main() -> int:
     errors: list[str] = []
-    html_files = sorted(ROOT.glob("*.html"))
+    route_pages = [
+        ROOT / "ebooks/index.html",
+        ROOT / "music/index.html",
+        ROOT / "communityengagements/index.html",
+        ROOT / "aboutfmb/index.html",
+        ROOT / "fmbandco/index.html",
+        ROOT / "profile/index.html",
+    ]
+    html_files = sorted(ROOT.glob("*.html")) + route_pages
     if not html_files:
         errors.append("No root HTML pages found")
     for path in html_files:
