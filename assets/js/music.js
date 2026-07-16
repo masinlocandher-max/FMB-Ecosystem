@@ -80,32 +80,15 @@
   }
 
   async function loadLibrary(){
-    let managedPlaylists=[];
-    if(window.FMB?.configured){
-      const client=window.FMB.createClient('local');
-      const {data,error}=await client.from('music_entries').select('id,title,artist,description,category,audio_url,cover_url,sort_order').eq('status','published').order('sort_order').order('created_at');
-      if(!error&&data?.length){
-        const groups=new Map();
-        data.forEach(item=>{
-          const category=item.category||'Music';
-          if(!groups.has(category))groups.set(category,{title:category,description:'',tracks:[]});
-          groups.get(category).tracks.push({id:item.id,title:item.title,artist:item.artist,description:item.description,src:item.audio_url,cover_url:item.cover_url});
-        });
-        managedPlaylists=[...groups.values()];
-      }
-    }
     try{
       const response=await fetch('assets/data/music-library.json',{cache:'no-store'});
       if(!response.ok)throw new Error('Unavailable');
       const data=await response.json();
       const approved=(data.playlists||[]).map(playlist=>({...playlist,tracks:(playlist.tracks||[]).map(track=>({...track,src:track.src||track.audio_url}))}));
-      renderPlaylists([...approved,...managedPlaylists]);
+      renderPlaylists(approved);
     }catch{
-      if(managedPlaylists.length)renderPlaylists(managedPlaylists);
-      else{
-        grid.innerHTML='<div class="music-empty">The music library could not be opened right now.</div>';
-        note.textContent='The music library could not be opened right now.';
-      }
+      grid.innerHTML='<div class="music-empty">The music library could not be opened right now.</div>';
+      note.textContent='The music library could not be opened right now.';
     }
   }
 

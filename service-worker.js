@@ -1,11 +1,10 @@
-const CACHE_NAME='fmb-app-shell-20260715-6';
+const CACHE_NAME='fmb-app-shell-20260716-1';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
   '/about.html',
   '/auth.html',
-  '/community.html',
-  '/daily.html',
+  '/freedom-wall.html',
   '/reading.html',
   '/music.html',
   '/womens-health.html',
@@ -21,6 +20,7 @@ const PUBLIC_PAGES=new Set([
 const APP_SHELL=[
   '/',
   '/index.html',
+  '/freedom-wall.html',
   '/auth.html',
   '/manifest.webmanifest',
   '/assets/css/site.css',
@@ -29,13 +29,12 @@ const APP_SHELL=[
   '/assets/css/live-hotfix.css',
   '/assets/css/landing.css',
   '/assets/css/apple-mobile.css',
+  '/assets/css/experience-refresh.css',
   '/assets/css/volunteer.css',
-  '/assets/css/daily.css',
   '/assets/css/music-ui.css',
   '/assets/js/site.js',
   '/assets/js/live-hotfix.js',
   '/assets/js/volunteer.js',
-  '/assets/js/daily.js',
   '/assets/js/music.js',
   '/assets/data/music-library.json',
   '/assets/images/music/fmb-calm-official-album-cover.jpg',

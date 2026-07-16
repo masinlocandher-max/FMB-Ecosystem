@@ -6,9 +6,10 @@
     const el=document.createElement(tag);Object.entries(attrs).forEach(([name,value])=>el.setAttribute(name,value));document.head.appendChild(el);
   }
   function boot(){
-    loadAsset('link',{rel:'stylesheet',href:'assets/css/reading-library.css?v=20260715-member-launch'});
-    loadAsset('link',{rel:'stylesheet',href:'assets/css/apple-mobile.css?v=20260715-member-launch'});
-    loadAsset('script',{src:'assets/js/reading-library.js?v=20260715-member-launch',defer:'defer'});
+    loadAsset('link',{rel:'stylesheet',href:'assets/css/reading-library.css?v=20260716-public-care'});
+    loadAsset('link',{rel:'stylesheet',href:'assets/css/apple-mobile.css?v=20260716-public-care'});
+    loadAsset('link',{rel:'stylesheet',href:'assets/css/experience-refresh.css?v=20260716-public-care'});
+    loadAsset('script',{src:'assets/js/reading-library.js?v=20260716-public-care',defer:'defer'});
 
     const toggle=document.getElementById('navToggle');
     const links=document.getElementById('navLinks');
@@ -45,32 +46,6 @@
       window.addEventListener('pageshow',reveal);
       mobileBar.addEventListener('focusin',reveal);
       mobileBar.addEventListener('pointerdown',reveal,{passive:true});
-    }
-
-    const page=location.pathname.split('/').pop()||'index.html';
-    if(page==='auth.html'){
-      const card=document.querySelector('.auth-card');
-      if(card&&!card.querySelector('[data-admin-access-link]')){
-        const note=document.createElement('p');
-        note.className='form-note';
-        note.style.marginTop='12px';
-        note.dataset.adminAccessLink='true';
-        note.append('FMB administrator? ');
-        const link=document.createElement('a');
-        link.className='text-link';
-        link.href='admin-login.html';
-        link.textContent='Open administrator access';
-        note.append(link,'.');
-        card.appendChild(note);
-      }
-    }
-
-    const footerGroups=[...document.querySelectorAll('.footer .footer-links')];
-    if(footerGroups.length&&!document.querySelector('.footer a[href="admin-login.html"]')){
-      const link=document.createElement('a');
-      link.href='admin-login.html';
-      link.textContent='Administrator access';
-      footerGroups[footerGroups.length-1].appendChild(link);
     }
 
     document.querySelectorAll('img').forEach(img=>{

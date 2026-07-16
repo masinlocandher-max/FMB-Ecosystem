@@ -139,17 +139,20 @@ def check_membership_features(errors: list[str]) -> None:
         errors.append("assets/js/community.js: public community feed must only request published posts")
 
     daily_html = (ROOT / "daily.html").read_text(encoding="utf-8")
-    daily_js = (ROOT / "assets/js/daily.js").read_text(encoding="utf-8")
+    if 'content="noindex,nofollow"' not in daily_html:
+        errors.append("daily.html: hidden member-tools advisory must remain noindex")
     for marker in ('id="guestCheckinForm"', 'id="guestJournalForm"', 'id="guestCommunityForm"'):
-        if marker not in daily_html:
-            errors.append(f"daily.html: missing temporary public tool: {marker}")
-    for marker in ("localStorage", "submit_contact_message", "p_kind:'contact'"):
-        if marker not in daily_js:
-            errors.append(f"assets/js/daily.js: missing safe public-access marker: {marker}")
+        if marker in daily_html:
+            errors.append(f"daily.html: public member tool must stay hidden: {marker}")
+
+    freedom_wall = (ROOT / "freedom-wall.html").read_text(encoding="utf-8")
+    for marker in ("With love, FMB reflection", "Visitor contributions are not yet open", "disabled"):
+        if marker not in freedom_wall:
+            errors.append(f"freedom-wall.html: missing transparent maintenance marker: {marker}")
 
     music = json.loads((ROOT / "assets/data/music-library.json").read_text(encoding="utf-8"))
     tracks = [track for playlist in music.get("playlists", []) for track in playlist.get("tracks", [])]
-    expected_music = {"calm-01", "calm-01a", "calm-02", "calm-02a", "calm-03", "calm-03a", "calm-04", "calm-04a", "calm-05", "calm-05a", "with-love-fmb-ost"}
+    expected_music = {"calm-01", "calm-01a", "calm-02", "calm-02a", "calm-03", "calm-03a", "calm-04", "calm-04a", "calm-05", "calm-05a", "with-love-fmb-ost-01", "with-love-fmb-ost-02"}
     music_ids = {track.get("id") for track in tracks}
     if not expected_music.issubset(music_ids):
         errors.append("assets/data/music-library.json: the approved Calm collection or With Love, FMB OST is incomplete")
@@ -162,13 +165,13 @@ def check_navigation_experience(errors: list[str]) -> None:
     for marker in (
         'id="what-you-get"',
         "Read every guide",
-        "Care for yourself privately",
         "Listen without signing in",
-        "Share more safely",
+        "Visit the Freedom Wall",
+        "Access public support",
     ):
         if marker not in index:
             errors.append(f"index.html: missing first-visit benefit: {marker}")
-    for marker in ("setupFriendlyNavigation", "nav-mobile-actions", "Get help", "Open daily space"):
+    for marker in ("setupFriendlyNavigation", "nav-mobile-actions", "Get help", "Freedom Wall", "Listen now"):
         if marker not in site_js:
             errors.append(f"assets/js/site.js: missing navigation UX marker: {marker}")
     if ".entry-benefits" not in site_css:
