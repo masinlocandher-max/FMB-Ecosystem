@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const release='20260716-mobile-luxury-4';
+  const release='20260716-mobile-menu-v5';
   function loadAsset(tag,attrs){
     const key=attrs.href||attrs.src;
     if(document.querySelector(`${tag}[href="${key}"],${tag}[src="${key}"]`))return;
@@ -37,7 +37,7 @@
     else loadAsset('link',{rel:'stylesheet',href:luxuryHref});
     loadAsset('script',{src:`/assets/js/reading-library.js?v=${release}`,defer:'defer'});
 
-    const transparentLogos={senz:'/assets/images/projects/senz-logo.png?v=20260716-clean-alpha',cognita:'/assets/images/projects/cognita-logo.png?v=20260716-clean-alpha'};
+    const transparentLogos={senz:'/assets/images/projects/senz-logo.png?v=20260716-banner-v5',cognita:'/assets/images/projects/cognita-logo.png?v=20260716-banner-v5'};
     const replacePartnerImages=()=>{
       document.querySelectorAll('img').forEach(img=>{
         const source=(img.getAttribute('src')||'').toLowerCase();
@@ -67,13 +67,17 @@
         });
       }
       partnerTrack.style.animationPlayState='running';
+      requestAnimationFrame(()=>partnerTrack.getAnimations?.().forEach(animation=>animation.play()));
     }
 
     const media=window.matchMedia('(max-width: 800px)');
     const toggle=document.getElementById('navToggle');
     const links=document.getElementById('navLinks');
     const publicMobileBar=document.querySelector('.mobile-bar:not(.member-mobile-bar):not(.admin-mobile-bar)');
-    if(toggle&&links&&publicMobileBar&&links.querySelector('.nav-menu-link')){
+    const coreFab=document.querySelector('.mobile-menu-fab[data-core-menu-bound="true"]');
+    if(coreFab){
+      document.body.classList.add('fmb-mobile-menu-ready');
+    }else if(toggle&&links&&links.querySelector('.nav-menu-link')){
       document.body.classList.add('fmb-mobile-menu-ready');
       links.dataset.mobileMenu='dialog';
       const introTitle=links.querySelector('.nav-menu-intro strong');
@@ -121,7 +125,7 @@
         backdrop.classList.toggle('open',open);
         document.body.classList.toggle('mobile-menu-open',open);
         document.body.classList.toggle('modal-open',open);
-        publicMobileBar.classList.toggle('is-hidden',open);
+        publicMobileBar?.classList.toggle('is-hidden',open);
       };
       const setMenu=(open,{returnFocus=true}={})=>{
         if(open&&!media.matches)return;

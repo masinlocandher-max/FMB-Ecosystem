@@ -11,12 +11,13 @@
 
 .partner-rail{position:relative}
 .partner-window{position:relative;isolation:isolate}
-.partner-track{width:100%;justify-content:center;gap:14px;padding:5px 12px;animation:none;transform:none;will-change:auto}
+.partner-track{width:max-content;justify-content:flex-start;gap:14px;padding:5px 12px;animation:fmb-content-partner-marquee 22s linear infinite;will-change:transform}
 .partner-window:after{content:"";position:absolute;z-index:2;top:0;bottom:0;left:-35%;width:24%;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,255,255,.82),transparent);transform:skewX(-18deg);animation:fmb-partner-shine 7s ease-in-out infinite}
 .partner-logo{position:relative;z-index:1;width:154px;height:44px;padding:5px 8px;overflow:hidden;border:1px solid rgba(81,11,119,.06);background:rgba(255,255,255,.82)}
 .partner-logo.cognita{width:174px;height:44px}
 .partner-logo img,.partner-logo.cognita img{position:absolute;inset:5px 8px;display:block;width:calc(100% - 16px)!important;height:calc(100% - 10px)!important;max-width:none;max-height:none;object-fit:contain}
 @keyframes fmb-partner-shine{0%,70%{left:-35%}100%{left:120%}}
+@keyframes fmb-content-partner-marquee{to{transform:translateX(calc(-50% - 7px))}}
 
 .footer-grid>div:first-child{align-self:start}
 .footer-brand-lockup{position:relative;display:flex;width:292px;max-width:100%;min-height:112px;margin:0 0 15px;padding:10px 16px;align-items:center;border:1px solid rgba(255,255,255,.68);border-radius:22px;background:rgba(255,250,255,.94);box-shadow:0 14px 34px rgba(24,3,36,.2)}

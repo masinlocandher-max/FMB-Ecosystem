@@ -286,3 +286,72 @@ button{cursor:pointer}
 .footer p,.footer a,.footer span{color:rgba(255,255,255,.76)}
 .footer-logo{mix-blend-mode:normal;filter:brightness(0) invert(1)}
 .footer-bottom{border-top-color:rgba(255,255,255,.18)}
+
+/* Use the true transparent FMB signature in every footer and article closing. */
+body .footer .footer-logo{
+  display:block!important;
+  width:min(270px,78vw)!important;
+  height:auto!important;
+  aspect-ratio:auto!important;
+  margin:0!important;
+  padding:8px 12px!important;
+  border-radius:16px!important;
+  background:rgba(255,255,255,.96)!important;
+  object-fit:contain!important;
+  object-position:left center!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+}
+body .footer-brand-lockup{
+  display:flex!important;
+  width:298px!important;
+  max-width:100%!important;
+  min-height:112px!important;
+  margin:0 0 15px!important;
+  padding:10px 14px!important;
+  align-items:center!important;
+  border:1px solid rgba(255,255,255,.72)!important;
+  border-radius:22px!important;
+  background:rgba(255,255,255,.96)!important;
+  box-shadow:0 14px 34px rgba(24,3,36,.2)!important;
+}
+body .footer-brand-lockup .footer-icon{display:none!important}
+body .footer-brand-lockup .footer-logo{
+  width:270px!important;
+  max-width:100%!important;
+  padding:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+}
+body .article-signature{
+  display:flex!important;
+  width:min(100%,360px)!important;
+  min-height:132px!important;
+  align-items:center!important;
+  justify-content:center!important;
+  margin:34px 0 12px!important;
+  padding:18px 22px!important;
+  overflow:hidden!important;
+  border:1px solid rgba(81,11,119,.13)!important;
+  border-radius:22px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(248,239,251,.96))!important;
+  box-shadow:0 14px 38px rgba(48,13,60,.09)!important;
+}
+body .article-signature img{
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  aspect-ratio:auto!important;
+  margin:0!important;
+  object-fit:contain!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+}
+body .reader-signoff.article-signature{margin:28px auto 0!important}
+body .reader-signoff.article-signature p{display:none!important}
+
+@media(max-width:560px){
+  body .footer-brand-lockup{width:248px!important;min-height:94px!important;padding:9px 12px!important}
+  body .footer-brand-lockup .footer-logo{width:224px!important}
+  body .article-signature{width:min(100%,310px)!important;min-height:112px!important;padding:15px 18px!important;border-radius:19px!important}
+}

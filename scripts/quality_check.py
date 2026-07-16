@@ -204,13 +204,36 @@ def check_sharing_and_footer(errors: list[str]) -> None:
         "news-article[id]",
         "Masinloc, Zambales 2211",
         "Republic of the Philippines",
-        "/assets/images/signature-transparent.png?v=20260716-footer-contrast",
+        "/assets/images/signature-transparent.png?v=20260716-signature-v5",
+        "setupArticleSignatures",
+        ".news-article .news-body",
     ):
         if marker not in site_js:
             errors.append(f"assets/js/site.js: missing sharing or footer marker: {marker}")
     for marker in (".content-action-panel", ".content-action-music", "body .footer:after", "opacity:.5", ".footer-brand-lockup:before", "background:transparent"):
         if marker not in content_css:
             errors.append(f"assets/css/fmb-content.css: missing responsive sharing or footer style: {marker}")
+    for marker in ("animation:fmb-content-partner-marquee", "@keyframes fmb-content-partner-marquee"):
+        if marker not in content_css:
+            errors.append(f"assets/css/fmb-content.css: moving partner banner is missing: {marker}")
+
+    signature = ROOT / "assets/images/signature-transparent.png"
+    if not signature.exists():
+        errors.append("assets/images/signature-transparent.png: transparent FMB signature is missing")
+    else:
+        png = signature.read_bytes()
+        if len(png) < 26 or png[:8] != b"\x89PNG\r\n\x1a\n" or png[25] not in {4, 6}:
+            errors.append("assets/images/signature-transparent.png: signature must remain a PNG with transparency")
+
+    for name in MEMBER_READING_PAGES:
+        article = (ROOT / name).read_text(encoding="utf-8")
+        if "reader-signoff article-signature" not in article or "signature-transparent.png?v=20260716-signature-v5" not in article:
+            errors.append(f"{name}: transparent closing signature is missing")
+
+    site_css = (ROOT / "assets/css/site.css").read_text(encoding="utf-8")
+    for marker in ("body .footer-brand-lockup .footer-logo", "body .article-signature", "filter:none!important"):
+        if marker not in site_css:
+            errors.append(f"assets/css/site.css: missing transparent signature presentation: {marker}")
 
 
 def check_mobile_and_editorial_media(errors: list[str]) -> None:
@@ -232,7 +255,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
             errors.append(f"assets/css/fmb-mobile-clean.css: missing mobile UX marker: {marker}")
 
     site_js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
-    for marker in ("setupMobileChrome", "document.createElement('nav')", "fmb-mobile-clean.css", "createActions", "navigator.share"):
+    for marker in ("setupMobileChrome", "document.createElement('nav')", "fmb-mobile-clean.css", "createActions", "navigator.share", "coreMenuBound", "mobile-menu-fab", "aria-modal", "focusableItems", "visualViewport", "fmb-mobile-menu-anchor", "document.body.appendChild(menu)", "repeatedLogos", "register('/service-worker.js'"):
         if marker not in site_js:
             errors.append(f"assets/js/site.js: missing mobile or item-action marker: {marker}")
 
@@ -250,6 +273,8 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
             "--fmb-mobile-safe-bottom",
             "animation:fmb-mobile-partner-marquee",
             "background:linear-gradient(108deg,#2a063b",
+            "z-index:2147483646!important",
+            "animation:fmb-mobile-partner-marquee 38s linear infinite!important",
         ):
             if marker not in luxury_css:
                 errors.append(f"assets/css/fmb-mobile-luxury.css: missing luxury mobile marker: {marker}")
@@ -260,8 +285,8 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         "aria-modal",
         "focusableItems",
         "visualViewport",
-        "senz-logo.png?v=20260716-clean-alpha",
-        "cognita-logo.png?v=20260716-clean-alpha",
+        "senz-logo.png?v=20260716-banner-v5",
+        "cognita-logo.png?v=20260716-banner-v5",
     ):
         if marker not in hotfix_js:
             errors.append(f"assets/js/live-hotfix.js: missing accessible mobile menu marker: {marker}")
@@ -284,9 +309,11 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
     )
     for name in public_mobile_routes:
         page = (ROOT / name).read_text(encoding="utf-8")
-        if "fmb-mobile-luxury.css?v=20260716-mobile-luxury-4" not in page:
+        if "fmb-mobile-luxury.css?v=20260716-mobile-menu-v5" not in page:
             errors.append(f"{name}: deterministic mobile luxury stylesheet is missing")
-        if "live-hotfix.js?v=20260716-mobile-luxury-4" not in page:
+        if "site.js?v=20260716-mobile-menu-v5" not in page:
+            errors.append(f"{name}: core persistent mobile menu script is missing")
+        if "live-hotfix.js?v=20260716-mobile-menu-v5" not in page:
             errors.append(f"{name}: accessible floating mobile menu is missing")
 
     news = (ROOT / "news/index.html").read_text(encoding="utf-8")

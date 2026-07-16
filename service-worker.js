@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260716-mobile-luxury-4';
+const CACHE_NAME='fmb-app-shell-20260716-mobile-menu-v5';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -60,6 +60,7 @@ const APP_SHELL=[
   '/assets/data/music-library.json',
   '/assets/images/music/fmb-calm-official-album-cover.jpg',
   '/assets/images/icon-transparent.png',
+  '/assets/images/signature-transparent.png',
   '/assets/images/projects/senz-logo.png',
   '/assets/images/projects/cognita-logo.png',
   '/assets/images/projects/senz-transparent.png',
