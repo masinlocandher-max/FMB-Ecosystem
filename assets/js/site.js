@@ -51,6 +51,7 @@
   ensureStylesheet('assets/css/repair.css');
   ensureStylesheet('assets/css/fmb-polish.css?v=20260716-polish');
   ensureStylesheet('assets/css/fmb-content.css?v=20260716-content');
+  ensureStylesheet('/assets/css/desktop-premium.css?v=20260716-desktop-premium-v1');
   const mobileStyles='assets/css/fmb-mobile-clean.css?v=20260716-mobile-plan';
   ensureStylesheet(mobileStyles);
   requestAnimationFrame(()=>{
@@ -58,6 +59,8 @@
     if(link)document.head.appendChild(link);
   });
   ensureAppMetadata();
+  loadScript('/assets/js/desktop-premium.js?v=20260716-desktop-premium-v1').catch(()=>{});
+  loadScript('/assets/js/global-music.js?v=20260716-global-music-v1').catch(()=>{});
 
   if(!document.querySelector('.skip-link')){
     const main=document.querySelector('main');if(main&&!main.id)main.id='main-content';
@@ -269,7 +272,7 @@
   if(topPromo){
     topPromo.setAttribute('aria-label','With love, FMB partner brands and advertising announcement');
     const advertisingHref='/aboutfmb/?category=advertise-with-us#work-with-fmb';
-    const promoGroup=({duplicate=false}={})=>`<div class="promo-group"${duplicate?' aria-hidden="true"':''}><span class="brand-marquee-label">With love, FMB is brought to you by:</span><a class="brand-chip-logo" href="https://www.senzpr.com" target="_blank" rel="noopener noreferrer" aria-label="Visit SENZ"${duplicate?' tabindex="-1"':''}><img src="/assets/images/projects/senz-mobile.webp?v=20260716-mobile-first-v6" alt="${duplicate?'':'SENZ'}" width="480" height="185" decoding="async"></a><a class="brand-chip-logo cognita-chip" href="https://thecognitainstitute.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Cognita Institute of AI"${duplicate?' tabindex="-1"':''}><img src="/assets/images/projects/cognita-mobile.webp?v=20260716-mobile-first-v6" alt="${duplicate?'':'Cognita Institute of AI'}" width="520" height="188" decoding="async"></a><span class="banner-divider" aria-hidden="true"></span><span class="advertise-marquee-label">Advertise your brand or business across the website</span><a class="banner-advertise-button" href="${advertisingHref}"${duplicate?' tabindex="-1"':''}>Advertise with us</a></div>`;
+    const promoGroup=({duplicate=false}={})=>`<div class="promo-group"${duplicate?' aria-hidden="true"':''}><span class="brand-marquee-label">With love, FMB is brought to you by:</span><a class="brand-chip-logo" href="https://www.senzpr.com" target="_blank" rel="noopener noreferrer" aria-label="Visit SENZ"${duplicate?' tabindex="-1"':''}><img src="/assets/images/projects/senz-logo.png?v=20260716-desktop-premium-v1" alt="${duplicate?'':'SENZ'}" width="480" height="185" decoding="async"></a><a class="brand-chip-logo cognita-chip" href="https://thecognitainstitute.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Cognita Institute of AI"${duplicate?' tabindex="-1"':''}><img src="/assets/images/projects/cognita-logo.png?v=20260716-desktop-premium-v1" alt="${duplicate?'':'Cognita Institute of AI'}" width="520" height="188" decoding="async"></a><span class="banner-divider" aria-hidden="true"></span><span class="advertise-marquee-label">Advertise your brand or business across the website</span><a class="banner-advertise-button" href="${advertisingHref}"${duplicate?' tabindex="-1"':''}>Advertise with us</a></div>`;
     topPromo.innerHTML=`<div class="promo-marquee">${promoGroup()}${promoGroup({duplicate:true})}</div>`;
   }
 

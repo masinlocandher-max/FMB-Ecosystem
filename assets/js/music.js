@@ -22,6 +22,25 @@
   const miniCover=document.getElementById('miniCover');
   let tracks=[];
   let currentIndex=-1;
+  let pendingRestoreTime=0;
+  let lastPublishedSecond=-1;
+  const musicStateKey='fmb_music_state_v2';
+  const readMusicState=()=>{try{const value=JSON.parse(sessionStorage.getItem(musicStateKey)||'{}');return value&&typeof value==='object'?value:{}}catch{return{}}};
+  const publishState=()=>{
+    const track=tracks[currentIndex]||{};
+    const detail={
+      index:currentIndex,
+      src:audio.currentSrc||audio.src||track.src||'',
+      title:track.title||title.textContent||'',
+      artist:track.artist||artist.textContent||'With love, FMB',
+      cover_url:track.cover_url||'',
+      currentTime:Number.isFinite(audio.currentTime)?audio.currentTime:0,
+      duration:Number.isFinite(audio.duration)?audio.duration:0,
+      playing:!audio.paused&&!audio.ended
+    };
+    try{sessionStorage.setItem(musicStateKey,JSON.stringify({...detail,updatedAt:Date.now()}))}catch{}
+    window.dispatchEvent(new CustomEvent('fmb:music-state',{detail}));
+  };
 
   const escape=value=>window.FMB?.escapeHtml(value)||String(value||'').replace(/[&<>"']/g,character=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[character]));
   const formatTime=seconds=>{if(!Number.isFinite(seconds))return'0:00';const minutes=Math.floor(seconds/60);const remainder=Math.floor(seconds%60).toString().padStart(2,'0');return `${minutes}:${remainder}`};
@@ -50,6 +69,7 @@
     setArtwork(track.cover_url||'');
     note.textContent=track.description||'';
     updateActiveRows();
+    publishState();
     if(shouldPlay)audio.play().then(()=>setPlayIcons(true)).catch(()=>{setPlayIcons(false);note.textContent='Tap play to begin. Your browser paused automatic audio.'});
   }
   function togglePlay(){
@@ -76,8 +96,14 @@
       });
       grid.appendChild(block);
     });
-    if(tracks.length){loadTrack(0,false);note.textContent='Choose a song and press play.'}
-    else{grid.innerHTML='<div class="music-empty">The music player is ready, but no tracks have been published yet.</div>';note.textContent='No published music is available yet.'}
+    if(tracks.length){
+      const saved=readMusicState();
+      const savedIndex=Math.max(0,Math.min(Number(saved.index)||0,tracks.length-1));
+      pendingRestoreTime=Number(saved.currentTime)||0;
+      loadTrack(savedIndex,false);
+      note.textContent=saved.playing?'Restoring your listening session.':'Choose a song and press play.';
+      if(saved.playing)audio.play().catch(()=>{note.textContent='Tap play to continue listening on this page.'});
+    }else{grid.innerHTML='<div class="music-empty">The music player is ready, but no tracks have been published yet.</div>';note.textContent='No published music is available yet.'}
   }
 
   async function loadLibrary(){
@@ -97,14 +123,25 @@
   [prev,miniPrev].forEach(button=>button.addEventListener('click',()=>loadTrack(currentIndex-1,true)));
   [next,miniNext].forEach(button=>button.addEventListener('click',()=>loadTrack(currentIndex+1,true)));
   volume.addEventListener('input',()=>{audio.volume=Number(volume.value)});audio.volume=Number(volume.value);
-  audio.addEventListener('play',()=>setPlayIcons(true));audio.addEventListener('pause',()=>setPlayIcons(false));audio.addEventListener('ended',()=>loadTrack(currentIndex+1,true));
-  audio.addEventListener('loadedmetadata',()=>{duration.textContent=formatTime(audio.duration)});
+  audio.addEventListener('play',()=>{setPlayIcons(true);publishState()});audio.addEventListener('pause',()=>{setPlayIcons(false);publishState()});audio.addEventListener('ended',()=>loadTrack(currentIndex+1,true));
+  audio.addEventListener('loadedmetadata',()=>{duration.textContent=formatTime(audio.duration);if(pendingRestoreTime>0){audio.currentTime=Math.min(pendingRestoreTime,Math.max(0,audio.duration-.25));pendingRestoreTime=0}publishState()});
   audio.addEventListener('error',()=>{setPlayIcons(false);note.textContent='This audio file could not be played. The public link or file format may need attention.'});
   audio.addEventListener('timeupdate',()=>{
-    currentTime.textContent=formatTime(audio.currentTime);const percent=audio.duration?audio.currentTime/audio.duration*100:0;progressFill.style.width=`${percent}%`;progressTrack.setAttribute('aria-valuenow',String(Math.round(percent)));
+    currentTime.textContent=formatTime(audio.currentTime);const percent=audio.duration?audio.currentTime/audio.duration*100:0;progressFill.style.width=`${percent}%`;progressTrack.setAttribute('aria-valuenow',String(Math.round(percent)));const second=Math.floor(audio.currentTime||0);if(second!==lastPublishedSecond){lastPublishedSecond=second;publishState()}
   });
   function seek(ratio){if(!audio.duration)return;audio.currentTime=Math.max(0,Math.min(1,ratio))*audio.duration}
   progressTrack.addEventListener('click',event=>{const rect=progressTrack.getBoundingClientRect();seek((event.clientX-rect.left)/rect.width)});
   progressTrack.addEventListener('keydown',event=>{if(!audio.duration||!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;event.preventDefault();if(event.key==='Home')seek(0);else if(event.key==='End')seek(1);else audio.currentTime=Math.max(0,Math.min(audio.duration,audio.currentTime+(event.key==='ArrowRight'?5:-5)))});
+  window.addEventListener('fmb:global-music-command',event=>{
+    const command=event.detail||{};
+    if(command.type==='toggle')togglePlay();
+    else if(command.type==='previous')loadTrack(currentIndex-1,true);
+    else if(command.type==='next')loadTrack(currentIndex+1,true);
+    else if(command.type==='track'){
+      pendingRestoreTime=Number(command.startTime)||0;
+      loadTrack(Number(command.index)||0,command.shouldPlay!==false);
+    }
+  });
+  window.addEventListener('pagehide',publishState);
   loadLibrary();
 })();
