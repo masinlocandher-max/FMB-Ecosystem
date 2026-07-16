@@ -97,6 +97,12 @@ jobs:
           grep -q 'With love, FMB' _site/skin-care-makeup.html
           grep -q 'With love, FMB' _site/coming-out-respect.html
           grep -q 'With love, FMB' _site/men-can-cry.html
+          grep -q 'fmb_saved_content_v1' _site/assets/js/site.js
+          grep -q 'facebook.com/sharer/sharer.php' _site/assets/js/site.js
+          grep -q 'data-share="messenger"' _site/assets/js/site.js
+          grep -q 'Masinloc, Zambales 2211' _site/assets/js/site.js
+          grep -q 'Republic of the Philippines' _site/assets/js/site.js
+          grep -q 'body .footer:after' _site/assets/css/fmb-content.css
 
       - name: Publish directly to gh-pages
         shell: bash
