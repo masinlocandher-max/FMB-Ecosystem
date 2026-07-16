@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260716-content-expansion';
+const CACHE_NAME='fmb-app-shell-20260716-content-expansion-logo-fix';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',

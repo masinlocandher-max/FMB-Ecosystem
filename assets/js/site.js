@@ -110,7 +110,7 @@
   if(!topPromo&&topShell){topPromo=document.createElement('div');topPromo.className='support-glass';topShell.prepend(topPromo)}
   if(topPromo){
     topPromo.setAttribute('aria-label','Website maintenance notice and With Love, FMB partner brands');
-    const logos=`<a class="partner-logo" href="https://www.senzpr.com" target="_blank" rel="noopener noreferrer" aria-label="Visit SENZ"><img src="assets/images/projects/senz-logo.png?v=20260716" alt="SENZ"></a><a class="partner-logo cognita" href="https://thecognitainstitute.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Cognita Institute of AI"><img src="assets/images/projects/cognita-logo.png?v=20260716" alt="Cognita Institute of AI"></a>`;
+    const logos=`<a class="partner-logo" href="https://www.senzpr.com" target="_blank" rel="noopener noreferrer" aria-label="Visit SENZ"><img src="assets/images/projects/senz-logo.png?v=20260716-full" alt="SENZ"></a><a class="partner-logo cognita" href="https://thecognitainstitute.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Cognita Institute of AI"><img src="assets/images/projects/cognita-logo.png?v=20260716-full" alt="Cognita Institute of AI"></a>`;
     topPromo.innerHTML=`<div class="care-banner"><div class="care-message"><span>Open access</span><strong>Reading, all 12 music tracks, news, the Freedom Wall, and verified help contacts are open.</strong></div><div class="partner-rail"><span class="partner-label">Brought to you by</span><div class="partner-window"><div class="partner-track">${logos}</div></div></div></div>`;
   }
 
