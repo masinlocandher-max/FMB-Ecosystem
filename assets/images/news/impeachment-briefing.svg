@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Impeachment and due process editorial graphic</title>
+  <desc id="desc">A restrained purple editorial graphic with constitutional columns, balanced scales, and Philippine colors.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#190522"/><stop offset=".58" stop-color="#4d0b68"/><stop offset="1" stop-color="#8b329e"/></linearGradient>
+    <radialGradient id="glow" cx=".8" cy=".18" r=".72"><stop stop-color="#d7a943" stop-opacity=".42"/><stop offset="1" stop-color="#d7a943" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1200" height="630" rx="34" fill="url(#bg)"/>
+  <rect width="1200" height="630" rx="34" fill="url(#glow)"/>
+  <path d="M760 184h310l-155-92zM782 202h266v28H782zm24 46h34v220h-34zm61 0h34v220h-34zm61 0h34v220h-34zm61 0h34v220h-34zm-207 238h266v31H782z" fill="#fff" opacity=".11"/>
+  <path d="M915 245v151m-105-98h210M810 298l-55 92h110zm210 0-55 92h110z" fill="none" stroke="#f3d77c" stroke-width="10" stroke-linejoin="round" opacity=".92"/>
+  <circle cx="915" cy="245" r="13" fill="#f3d77c"/>
+  <text x="78" y="96" fill="#f3d77c" font-family="Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="5">FMB NEWS · PHILIPPINES</text>
+  <text x="78" y="216" fill="#fff" font-family="Georgia, serif" font-size="70" font-weight="700">Impeachment,</text>
+  <text x="78" y="293" fill="#fff" font-family="Georgia, serif" font-size="70" font-weight="700">evidence, and</text>
+  <text x="78" y="370" fill="#fff" font-family="Georgia, serif" font-size="70" font-weight="700">due process.</text>
+  <text x="80" y="435" fill="#eadff0" font-family="Arial, sans-serif" font-size="24">A calm guide to a constitutional process.</text>
+  <line x1="80" y1="504" x2="600" y2="504" stroke="#fff" stroke-opacity=".25"/>
+  <text x="80" y="548" fill="#fff" font-family="Arial, sans-serif" font-size="22" font-weight="700">WITH LOVE, FMB</text>
+</svg>

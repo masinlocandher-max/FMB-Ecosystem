@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260716-transparent-footer-signature';
+const CACHE_NAME='fmb-app-shell-20260716-mobile-clean-actions';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -12,6 +12,9 @@ const PUBLIC_PAGES=new Set([
   '/fmbandco/',
   '/gethelp/',
   '/news/',
+  '/news/impeachment/',
+  '/news/pax-silica/',
+  '/news/good-news/',
   '/reading.html',
   '/dress-with-intention.html',
   '/music.html',
@@ -30,6 +33,9 @@ const APP_SHELL=[
   '/index.html',
   '/freedom-wall.html',
   '/auth.html',
+  '/news/impeachment/',
+  '/news/pax-silica/',
+  '/news/good-news/',
   '/manifest.webmanifest',
   '/assets/css/site.css',
   '/assets/css/icon-fix.css',
@@ -41,6 +47,7 @@ const APP_SHELL=[
   '/assets/css/organized-pages.css',
   '/assets/css/fmb-polish.css',
   '/assets/css/fmb-content.css',
+  '/assets/css/fmb-mobile-clean.css',
   '/assets/css/volunteer.css',
   '/assets/css/music-ui.css',
   '/assets/js/site.js',
@@ -52,6 +59,9 @@ const APP_SHELL=[
   '/assets/images/icon-transparent.png',
   '/assets/images/projects/senz-logo.png',
   '/assets/images/projects/cognita-logo.png',
+  '/assets/images/news/impeachment-briefing.png',
+  '/assets/images/news/pax-silica-briefing.png',
+  '/assets/images/news/good-news-briefing.png',
   '/assets/images/app-icon-192.png',
   '/assets/images/app-icon-512.png',
   '/assets/images/volunteer/francine-leading-with-love-fmb.webp',

@@ -199,7 +199,9 @@ def check_sharing_and_footer(errors: list[str]) -> None:
         "twitter.com/intent/tweet",
         'data-share="messenger"',
         "sms:?body=",
-        "FMB News is public and will remain open without an account",
+        "item-action-row",
+        "ebook-card-shell",
+        "news-article[id]",
         "Masinloc, Zambales 2211",
         "Republic of the Philippines",
         "/assets/images/signature-transparent.png?v=20260716-footer-signature",
@@ -209,6 +211,41 @@ def check_sharing_and_footer(errors: list[str]) -> None:
     for marker in (".content-action-panel", ".content-action-music", "body .footer:after", "opacity:.5", ".footer-brand-lockup:before", "background:transparent"):
         if marker not in content_css:
             errors.append(f"assets/css/fmb-content.css: missing responsive sharing or footer style: {marker}")
+
+
+def check_mobile_and_editorial_media(errors: list[str]) -> None:
+    mobile_path = ROOT / "assets/css/fmb-mobile-clean.css"
+    if not mobile_path.exists():
+        errors.append("assets/css/fmb-mobile-clean.css: mobile-only design layer is missing")
+        return
+    mobile_css = mobile_path.read_text(encoding="utf-8")
+    for marker in (
+        "@media(max-width:800px)",
+        ".mobile-chrome-compact",
+        ".mobile-menu-open",
+        ".ebook-grid{display:flex!important",
+        'background-size:contain!important',
+        ".authority-copy{order:1}",
+        ".footer-grid>div:nth-child(2)",
+    ):
+        if marker not in mobile_css:
+            errors.append(f"assets/css/fmb-mobile-clean.css: missing mobile UX marker: {marker}")
+
+    site_js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
+    for marker in ("setupMobileChrome", "document.createElement('nav')", "fmb-mobile-clean.css", "createActions", "navigator.share"):
+        if marker not in site_js:
+            errors.append(f"assets/js/site.js: missing mobile or item-action marker: {marker}")
+
+    news = (ROOT / "news/index.html").read_text(encoding="utf-8")
+    for name in ("impeachment-briefing.png", "pax-silica-briefing.png", "good-news-briefing.png"):
+        if name not in news:
+            errors.append(f"news/index.html: missing sourced editorial visual: {name}")
+        if not (ROOT / "assets/images/news" / name).exists():
+            errors.append(f"assets/images/news/{name}: news sharing image is missing")
+    if news.count('class="news-visual"') != 3:
+        errors.append("news/index.html: every main story must have one sourced lead visual")
+    if news.count("FMB editorial illustration. Source context:") != 3:
+        errors.append("news/index.html: every editorial visual must show source context below it")
 
 
 def main() -> int:
@@ -221,6 +258,9 @@ def main() -> int:
         ROOT / "fmbandco/index.html",
         ROOT / "gethelp/index.html",
         ROOT / "news/index.html",
+        ROOT / "news/impeachment/index.html",
+        ROOT / "news/pax-silica/index.html",
+        ROOT / "news/good-news/index.html",
         ROOT / "profile/index.html",
     ]
     html_files = sorted(ROOT.glob("*.html")) + route_pages
@@ -235,6 +275,7 @@ def main() -> int:
     check_membership_features(errors)
     check_navigation_experience(errors)
     check_sharing_and_footer(errors)
+    check_mobile_and_editorial_media(errors)
 
     if errors:
         print("Quality check failed:\n")
