@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260716-design-polish';
+const CACHE_NAME='fmb-app-shell-20260716-content-expansion';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -10,7 +10,10 @@ const PUBLIC_PAGES=new Set([
   '/communityengagements/',
   '/aboutfmb/',
   '/fmbandco/',
+  '/gethelp/',
+  '/news/',
   '/reading.html',
+  '/dress-with-intention.html',
   '/music.html',
   '/womens-health.html',
   '/coming-out-respect.html',
@@ -37,6 +40,7 @@ const APP_SHELL=[
   '/assets/css/experience-refresh.css',
   '/assets/css/organized-pages.css',
   '/assets/css/fmb-polish.css',
+  '/assets/css/fmb-content.css',
   '/assets/css/volunteer.css',
   '/assets/css/music-ui.css',
   '/assets/js/site.js',
@@ -46,6 +50,8 @@ const APP_SHELL=[
   '/assets/data/music-library.json',
   '/assets/images/music/fmb-calm-official-album-cover.jpg',
   '/assets/images/icon-transparent.png',
+  '/assets/images/projects/senz-logo.png',
+  '/assets/images/projects/cognita-logo.png',
   '/assets/images/app-icon-192.png',
   '/assets/images/app-icon-512.png',
   '/assets/images/volunteer/francine-leading-with-love-fmb.webp',

@@ -24,6 +24,7 @@ MEMBER_READING_PAGES = (
     "men-can-cry.html",
     "coming-out-respect.html",
     "skin-care-makeup.html",
+    "dress-with-intention.html",
 )
 
 
@@ -181,7 +182,7 @@ def check_navigation_experience(errors: list[str]) -> None:
     ):
         if marker not in index:
             errors.append(f"index.html: missing first-visit benefit: {marker}")
-    for marker in ("setupFriendlyNavigation", "nav-mobile-actions", "Get help", "Freedom Wall", "Community Engagements", "FMB & Co."):
+    for marker in ("setupFriendlyNavigation", "nav-mobile-actions", "Get help", "News", "Freedom Wall", "Community Engagements", "FMB & Co."):
         if marker not in site_js:
             errors.append(f"assets/js/site.js: missing navigation UX marker: {marker}")
     if ".entry-benefits" not in site_css:
@@ -196,6 +197,8 @@ def main() -> int:
         ROOT / "communityengagements/index.html",
         ROOT / "aboutfmb/index.html",
         ROOT / "fmbandco/index.html",
+        ROOT / "gethelp/index.html",
+        ROOT / "news/index.html",
         ROOT / "profile/index.html",
     ]
     html_files = sorted(ROOT.glob("*.html")) + route_pages

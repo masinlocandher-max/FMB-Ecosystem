@@ -50,6 +50,7 @@
   ensureStylesheet('assets/css/icon-fix.css');
   ensureStylesheet('assets/css/repair.css');
   ensureStylesheet('assets/css/fmb-polish.css?v=20260716-polish');
+  ensureStylesheet('assets/css/fmb-content.css?v=20260716-content');
   ensureAppMetadata();
 
   if(!document.querySelector('.skip-link')){
@@ -71,23 +72,26 @@
     const onHome=route==='home';
     const items=[
       {label:'Home',description:'Understand the project and find the right starting point',href:onHome?'#top':'/',current:onHome&&!location.hash},
-      {label:'Ebooks',description:'Read thoughtful guides for real-life questions',href:'/ebooks/',current:route==='ebooks'||['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html'].includes(page)},
+      {label:'Ebooks',description:'Open the complete FMB reading library',href:'/ebooks/',current:route==='ebooks'||['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html','dress-with-intention.html'].includes(page)},
       {label:'Music',description:'Open our app-like original music library',href:'/music/',current:route==='music'||page==='music.html'},
+      {label:'News',description:'Read the latest verified FMB briefing and reflection',href:'/news/',current:route==='news'},
       {label:'Freedom Wall',description:'Read positive reflections selected with care',href:'/freedom-wall.html',current:page==='freedom-wall.html'},
-      {label:'Community Engagements',description:'Discover AMDG service and ways to take part',href:'/communityengagements/',current:route==='communityengagements'||page==='volunteer.html'},
+      {label:'Community',description:'Discover Community Engagements - AMDG and ways to take part',href:'/communityengagements/',current:route==='communityengagements'||page==='volunteer.html'},
       {label:'FMB & Co.',description:'Explore the three founder-led brands',href:'/fmbandco/',current:route==='fmbandco'},
       {label:'About FMB',description:'Meet Francine and understand her authority',href:'/aboutfmb/',current:route==='aboutfmb'||page==='about.html'},
-      {label:'Get help',description:'Open public crisis and support contacts',href:'/#support',current:false,help:true}
+      {label:'Get help',description:'Open verified crisis, health, safety, and assistance contacts',href:'/gethelp/',current:route==='gethelp',help:true}
     ];
     links.innerHTML=`<div class="nav-menu-intro"><strong>Where would you like to go?</strong><span>Reading, music, the Freedom Wall, and important help numbers are public. Personal tools stay inside the signed-in profile.</span></div>${items.map(item=>`<a class="nav-menu-link${item.help?' nav-help-link':''}" href="${item.href}"${item.current?' aria-current="page"':''}><span class="nav-link-label">${item.label}</span><small>${item.description}</small></a>`).join('')}<div class="nav-mobile-actions"><a class="pill secondary" href="/auth.html#signin">Sign in</a><a class="pill" href="/ebooks/">Start exploring</a></div>`;
-    actions.querySelectorAll('a[href^="daily.html"]').forEach(link=>link.remove());
+    actions.innerHTML='<a class="nav-btn" href="/auth.html#signin">Sign in</a><button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-label="Open menu" aria-controls="navLinks"><span></span><span></span></button>';
     const menuToggle=actions.querySelector('#navToggle');
     if(menuToggle)menuToggle.setAttribute('aria-controls','navLinks');
     const mobileBar=$('.mobile-bar:not(.member-mobile-bar):not(.admin-mobile-bar)');
     if(mobileBar){
-      const readingCurrent=route==='ebooks'||['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html'].includes(page);
+      const readingCurrent=route==='ebooks'||['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html','dress-with-intention.html'].includes(page);
       const musicCurrent=route==='music'||page==='music.html';
-      mobileBar.innerHTML=`<a class="${onHome?'active':''}" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 11 8-7 8 7v9H4Z"/><path d="M9 20v-6h6v6"/></svg><span>Home</span></a><a class="${readingCurrent?'active':''}" href="/ebooks/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2Z"/><path d="M7 4v14a2 2 0 0 0 2 2"/></svg><span>Read</span></a><a class="${musicCurrent?'active':''}" href="/music/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg><span>Music</span></a><a href="/auth.html#signin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"/></svg><span>Profile</span></a>`;
+      const newsCurrent=route==='news';
+      const helpCurrent=route==='gethelp';
+      mobileBar.innerHTML=`<a class="${onHome?'active':''}" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 11 8-7 8 7v9H4Z"/><path d="M9 20v-6h6v6"/></svg><span>Home</span></a><a class="${readingCurrent?'active':''}" href="/ebooks/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2Z"/><path d="M7 4v14a2 2 0 0 0 2 2"/></svg><span>Read</span></a><a class="${musicCurrent?'active':''}" href="/music/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg><span>Music</span></a><a class="${newsCurrent?'active':''}" href="/news/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h14v16H5Z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>News</span></a><a class="${helpCurrent?'active':''}" href="/gethelp/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-3.7 7-10V5l-7-2-7 2v6c0 6.3 7 10 7 10Z"/><path d="M9 12h6M12 9v6"/></svg><span>Help</span></a>`;
     }
   }
   setupFriendlyNavigation();
@@ -106,9 +110,8 @@
   if(!topPromo&&topShell){topPromo=document.createElement('div');topPromo.className='support-glass';topShell.prepend(topPromo)}
   if(topPromo){
     topPromo.setAttribute('aria-label','Website maintenance notice and With Love, FMB partner brands');
-    const logos=`<a class="partner-logo" href="https://www.senzpr.com" target="_blank" rel="noopener noreferrer" aria-label="Visit SENZ"><img src="assets/images/projects/senz-transparent.png" alt="SENZ"></a><a class="partner-logo cognita" href="https://thecognitainstitute.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Cognita Institute of AI"><img src="assets/images/projects/cognita-transparent.png?v=20260714-approved" alt="Cognita Institute of AI"></a>`;
-    const logoClones=logos.replaceAll('<a class="partner-logo','<a tabindex="-1" aria-hidden="true" class="partner-logo');
-    topPromo.innerHTML=`<div class="care-banner"><div class="care-message"><span>Website update</span><strong>Reading, all 12 music tracks, the Freedom Wall, and support contacts remain open.</strong></div><div class="partner-rail"><span class="partner-label">Brought to you by</span><div class="partner-window"><div class="partner-track">${logos}${logoClones}</div></div></div></div>`;
+    const logos=`<a class="partner-logo" href="https://www.senzpr.com" target="_blank" rel="noopener noreferrer" aria-label="Visit SENZ"><img src="assets/images/projects/senz-logo.png?v=20260716" alt="SENZ"></a><a class="partner-logo cognita" href="https://thecognitainstitute.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Cognita Institute of AI"><img src="assets/images/projects/cognita-logo.png?v=20260716" alt="Cognita Institute of AI"></a>`;
+    topPromo.innerHTML=`<div class="care-banner"><div class="care-message"><span>Open access</span><strong>Reading, all 12 music tracks, news, the Freedom Wall, and verified help contacts are open.</strong></div><div class="partner-rail"><span class="partner-label">Brought to you by</span><div class="partner-window"><div class="partner-track">${logos}</div></div></div></div>`;
   }
 
   function setupFooterBrand(){
@@ -123,6 +126,17 @@
     });
   }
   setupFooterBrand();
+
+  function setupFooterNavigation(){
+    $$('.footer').forEach(footer=>{
+      const columns=footer.querySelectorAll('.footer-grid>div');
+      const explore=columns[1]?.querySelector('.footer-links');
+      const contact=columns[2]?.querySelector('.footer-links');
+      if(explore&&!explore.querySelector('a[href="/news/"]'))explore.insertAdjacentHTML('beforeend','<a href="/news/">News</a>');
+      if(contact&&!contact.querySelector('a[href="/gethelp/"]'))contact.insertAdjacentHTML('afterbegin','<a href="/gethelp/">Get help</a>');
+    });
+  }
+  setupFooterNavigation();
 
   const landingHero=$('.hero');
   if(landingHero){
