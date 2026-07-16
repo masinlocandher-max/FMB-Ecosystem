@@ -134,9 +134,85 @@
       const contact=columns[2]?.querySelector('.footer-links');
       if(explore&&!explore.querySelector('a[href="/news/"]'))explore.insertAdjacentHTML('beforeend','<a href="/news/">News</a>');
       if(contact&&!contact.querySelector('a[href="/gethelp/"]'))contact.insertAdjacentHTML('afterbegin','<a href="/gethelp/">Get help</a>');
+      if(contact){
+        contact.querySelectorAll('span').forEach(item=>{if(item.textContent.toLowerCase().includes('masinloc'))item.remove()});
+        if(!contact.querySelector('a[href="mailto:withlovefmb@gmail.com"]'))contact.insertAdjacentHTML('beforeend','<a href="mailto:withlovefmb@gmail.com">withlovefmb@gmail.com</a>');
+        if(!contact.querySelector('.footer-contact-address'))contact.insertAdjacentHTML('beforeend','<span class="footer-contact-address">Masinloc, Zambales 2211<br>Republic of the Philippines</span>');
+      }
     });
   }
   setupFooterNavigation();
+
+  function setupContentActions(){
+    const path=location.pathname.replace(/\/index\.html$/,'/');
+    const page=path.split('/').pop()||'index.html';
+    const readingPages=new Set(['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html','dress-with-intention.html']);
+    let kind='';
+    let anchor=null;
+    if(path.startsWith('/news/')){kind='news';anchor=$('.news-masthead')}
+    else if(path.startsWith('/ebooks/')){kind='ebook';anchor=$('.route-hero')}
+    else if(path.startsWith('/music/')||page==='music.html'){kind='music';anchor=$('.music-intro, .music-hero')}
+    else if(readingPages.has(page)){kind='reading';anchor=$('.reading-hero, .reader-cover')}
+    if(!kind||!anchor||document.querySelector('.content-action-panel'))return;
+
+    const heading=anchor.querySelector('h1')||$('main h1');
+    const title=heading?.textContent.trim()||document.title.split('|')[0].trim();
+    const canonical=document.querySelector('link[rel="canonical"]')?.href||`${location.origin}${location.pathname}`;
+    const isPublicNews=kind==='news';
+    const panel=document.createElement('section');
+    panel.className=`content-action-panel content-action-${kind}`;
+    panel.dataset.futureAccess=isPublicNews?'public':'member';
+    panel.setAttribute('aria-label','Save or share this content');
+    panel.innerHTML=`<div class="content-action-copy"><span class="content-action-kicker">Save or share</span><strong>Keep this page or send it to someone.</strong><p>${isPublicNews?'FMB News is public and will remain open without an account.':'This content is temporarily open to everyone while member services are under maintenance. Shared links may require an account after member access launches.'}</p></div><div class="content-action-tools"><button class="content-action-button content-save-button" type="button" aria-pressed="false"><span>Save</span><small>On this device</small></button><a class="content-action-button" data-share="facebook" target="_blank" rel="noopener noreferrer"><span>Facebook</span><small>Share post</small></a><a class="content-action-button" data-share="twitter" target="_blank" rel="noopener noreferrer"><span>X / Twitter</span><small>Share post</small></a><button class="content-action-button" data-share="messenger" type="button"><span>Messenger</span><small>Open share menu</small></button><a class="content-action-button" data-share="text"><span>Text</span><small>Send by SMS</small></a><button class="content-action-button" data-share="copy" type="button"><span>Copy link</span><small>Paste anywhere</small></button></div><p class="content-action-status" role="status" aria-live="polite"></p>`;
+    anchor.insertAdjacentElement('afterend',panel);
+
+    const shareText=`${title} | With love, FMB`;
+    const facebook=panel.querySelector('[data-share="facebook"]');
+    const twitter=panel.querySelector('[data-share="twitter"]');
+    const textLink=panel.querySelector('[data-share="text"]');
+    facebook.href=`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(canonical)}`;
+    twitter.href=`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(canonical)}`;
+    textLink.href=`sms:?body=${encodeURIComponent(`${shareText} ${canonical}`)}`;
+
+    const status=panel.querySelector('.content-action-status');
+    const say=message=>{status.textContent=message;window.clearTimeout(status._timer);status._timer=window.setTimeout(()=>{status.textContent=''},6000)};
+    const copyLink=async()=>{
+      try{
+        if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(canonical);
+        else{
+          const input=document.createElement('textarea');input.value=canonical;input.setAttribute('readonly','');input.style.position='fixed';input.style.opacity='0';document.body.appendChild(input);input.select();document.execCommand('copy');input.remove();
+        }
+        return true;
+      }catch{return false}
+    };
+
+    panel.querySelector('[data-share="copy"]').addEventListener('click',async()=>say(await copyLink()?'Link copied. You can paste it anywhere.':'Copy was blocked by this browser. Select the address from the browser bar instead.'));
+    panel.querySelector('[data-share="messenger"]').addEventListener('click',async()=>{
+      if(navigator.share){
+        try{await navigator.share({title, text:shareText, url:canonical});say('Share menu opened. Choose Messenger or another app.')}catch(error){if(error?.name!=='AbortError')say('The share menu could not open. Try Copy link instead.')}
+        return;
+      }
+      say(await copyLink()?'Link copied. Open Messenger and paste it into your conversation.':'Use Copy link, then paste the address into Messenger.');
+    });
+
+    const storageKey='fmb_saved_content_v1';
+    const saveButton=panel.querySelector('.content-save-button');
+    const saveLabel=saveButton.querySelector('span');
+    const readSaved=()=>{try{const data=JSON.parse(localStorage.getItem(storageKey)||'[]');return Array.isArray(data)?data:[]}catch{return[]}};
+    const renderSaved=()=>{const saved=readSaved().some(item=>item.url===canonical);saveButton.setAttribute('aria-pressed',String(saved));saveButton.classList.toggle('is-saved',saved);saveLabel.textContent=saved?'Saved':'Save';return saved};
+    renderSaved();
+    saveButton.addEventListener('click',()=>{
+      try{
+        const items=readSaved();
+        const index=items.findIndex(item=>item.url===canonical);
+        if(index>=0){items.splice(index,1);localStorage.setItem(storageKey,JSON.stringify(items));renderSaved();say('Removed from saved pages on this device.');return}
+        items.unshift({url:canonical,title,kind,savedAt:new Date().toISOString()});
+        localStorage.setItem(storageKey,JSON.stringify(items.slice(0,100)));
+        renderSaved();say('Saved on this device. Account syncing will return when member services are ready.');
+      }catch{say('This browser did not allow a device save. You can still copy the link.')}
+    });
+  }
+  setupContentActions();
 
   const landingHero=$('.hero');
   if(landingHero){

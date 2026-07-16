@@ -189,6 +189,27 @@ def check_navigation_experience(errors: list[str]) -> None:
         errors.append("assets/css/site.css: first-visit benefit styles are missing")
 
 
+def check_sharing_and_footer(errors: list[str]) -> None:
+    site_js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
+    content_css = (ROOT / "assets/css/fmb-content.css").read_text(encoding="utf-8")
+    for marker in (
+        "setupContentActions",
+        "fmb_saved_content_v1",
+        "facebook.com/sharer/sharer.php",
+        "twitter.com/intent/tweet",
+        'data-share="messenger"',
+        "sms:?body=",
+        "FMB News is public and will remain open without an account",
+        "Masinloc, Zambales 2211",
+        "Republic of the Philippines",
+    ):
+        if marker not in site_js:
+            errors.append(f"assets/js/site.js: missing sharing or footer marker: {marker}")
+    for marker in (".content-action-panel", ".content-action-music", "body .footer:after", "opacity:.5"):
+        if marker not in content_css:
+            errors.append(f"assets/css/fmb-content.css: missing responsive sharing or footer style: {marker}")
+
+
 def main() -> int:
     errors: list[str] = []
     route_pages = [
@@ -212,6 +233,7 @@ def main() -> int:
     check_config(errors)
     check_membership_features(errors)
     check_navigation_experience(errors)
+    check_sharing_and_footer(errors)
 
     if errors:
         print("Quality check failed:\n")
