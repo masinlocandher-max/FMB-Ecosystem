@@ -1,7 +1,7 @@
 (function(){
   'use strict';
   const $=selector=>document.querySelector(selector);
-  const $=selector=>document.querySelectorAll(selector);
+  const $$=selector=>document.querySelectorAll(selector);
   const MOBILE_EXPERIENCE_HOST='mobile.francinemariebautista.com';
   const isDedicatedMobileHost=location.hostname.toLowerCase()===MOBILE_EXPERIENCE_HOST;
 

@@ -346,6 +346,9 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
             "background:linear-gradient(108deg,#2a063b",
             "z-index:2147483646!important",
             "animation:fmb-mobile-partner-marquee 38s linear infinite!important",
+            "html:not(.fmb-mobile-host)",
+            "@media(min-width:801px) and (max-width:1024px)",
+            "min-height:44px!important",
         ):
             if marker not in luxury_css:
                 errors.append(f"assets/css/fmb-mobile-luxury.css: missing luxury mobile marker: {marker}")
