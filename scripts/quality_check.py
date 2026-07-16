@@ -158,8 +158,26 @@ def check_membership_features(errors: list[str]) -> None:
     for marker in ('id="checkinForm"', 'id="noteForm"', 'id="communityForm"', "Freedom Wall"):
         if marker not in profile_html:
             errors.append(f"profile/index.html: missing signed-in member tool: {marker}")
-    if "/profile/" not in (ROOT / "assets/js/auth.js").read_text(encoding="utf-8"):
+    auth_js = (ROOT / "assets/js/auth.js").read_text(encoding="utf-8")
+    if "/profile/" not in auth_js:
         errors.append("assets/js/auth.js: successful sign-in must open /profile/")
+    for marker in (
+        "showExistingAccount",
+        "data.user.identities.length===0",
+        "Normal sign-in does not send an email",
+        "Already verified profiles will not receive another signup email",
+    ):
+        if marker not in auth_js:
+            errors.append(f"assets/js/auth.js: missing existing-account guidance: {marker}")
+    auth_html = (ROOT / "auth.html").read_text(encoding="utf-8")
+    for marker in (
+        "Normal sign-in does not send an email",
+        'id="verificationLead"',
+        "Already verified profiles will not receive another verification email",
+        "auth.js?v=20260716-existing-account-fix",
+    ):
+        if marker not in auth_html:
+            errors.append(f"auth.html: missing member access guidance: {marker}")
 
     music = json.loads((ROOT / "assets/data/music-library.json").read_text(encoding="utf-8"))
     tracks = [track for playlist in music.get("playlists", []) for track in playlist.get("tracks", [])]

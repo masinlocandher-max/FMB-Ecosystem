@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260716-mobile-first-v6';
+const CACHE_NAME='fmb-app-shell-20260716-mobile-first-auth-fix-v7';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
