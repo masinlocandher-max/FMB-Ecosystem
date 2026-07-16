@@ -275,7 +275,7 @@
     const {data:profile,error:profileError}=await client.from('profiles').select('full_name,role,status').eq('id',user.id).maybeSingle();
     if(profileError||!profile||profile.role!=='admin'||profile.status!=='active'){
       setStatus('Administrator access is required.','error');
-      setTimeout(()=>location.replace('member.html'),900);
+      setTimeout(()=>location.replace('/profile/'),900);
       return;
     }
     $('#adminIdentity').textContent=`Signed in as ${profile.full_name} · administrator`;

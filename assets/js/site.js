@@ -62,28 +62,31 @@
   function setupFriendlyNavigation(){
     const nav=$('.nav-glass'),links=$('#navLinks'),actions=nav?.querySelector('.nav-actions');
     if(!nav||!links||!actions)return;
+    const normalizedPath=location.pathname.replace(/\/index\.html$/,'/').replace(/\/+$/,'')||'/';
+    const route=normalizedPath==='/'?'home':normalizedPath.split('/').pop();
     const page=location.pathname.split('/').pop()||'index.html';
-    const protectedPages=new Set(['member.html','admin.html','admin-login.html','admin-activate.html','auth.html','reset-password.html']);
-    if(protectedPages.has(page))return;
-    const onHome=page==='index.html';
-    const href=section=>onHome?`#${section}`:`index.html#${section}`;
+    const protectedRoutes=new Set(['profile','member.html','admin.html','admin-login.html','admin-activate.html','auth.html','reset-password.html']);
+    if(protectedRoutes.has(route)||protectedRoutes.has(page))return;
+    const onHome=route==='home';
     const items=[
-      {label:'Home',description:'Start here and see what is open',href:onHome?'#top':'index.html#top',current:onHome&&!location.hash},
-      {label:'Read',description:'Open every guide without an account',href:onHome?'#bookshelf':'index.html#bookshelf',current:['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html'].includes(page)},
-      {label:'Music',description:'Play our original calming soundscape',href:'music.html',current:page==='music.html'},
-      {label:'Freedom Wall',description:'Read positive words for courage and hope',href:'freedom-wall.html',current:page==='freedom-wall.html'},
-      {label:'Volunteer',description:'Serve through our founder-led initiative',href:'volunteer.html',current:page==='volunteer.html'},
-      {label:'Our projects',description:'Discover SENZ and Cognita',href:href('work'),current:false},
-      {label:'About',description:'Meet FMB and explore our work',href:'about.html',current:page==='about.html'},
-      {label:'Get help',description:'Open public crisis and support contacts',href:href('support'),current:false,help:true}
+      {label:'Home',description:'Understand the project and find the right starting point',href:onHome?'#top':'/',current:onHome&&!location.hash},
+      {label:'Ebooks',description:'Read thoughtful guides for real-life questions',href:'/ebooks/',current:route==='ebooks'||['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html'].includes(page)},
+      {label:'Music',description:'Open our app-like original music library',href:'/music/',current:route==='music'||page==='music.html'},
+      {label:'Freedom Wall',description:'Read positive reflections selected with care',href:'/freedom-wall.html',current:page==='freedom-wall.html'},
+      {label:'Community Engagements',description:'Discover AMDG service and ways to take part',href:'/communityengagements/',current:route==='communityengagements'||page==='volunteer.html'},
+      {label:'FMB & Co.',description:'Explore the three founder-led brands',href:'/fmbandco/',current:route==='fmbandco'},
+      {label:'About FMB',description:'Meet Francine and understand her authority',href:'/aboutfmb/',current:route==='aboutfmb'||page==='about.html'},
+      {label:'Get help',description:'Open public crisis and support contacts',href:'/#support',current:false,help:true}
     ];
-    links.innerHTML=`<div class="nav-menu-intro"><strong>Where would you like to go?</strong><span>Reading, listening, and the Freedom Wall are open without an account.</span></div>${items.map(item=>`<a class="nav-menu-link${item.help?' nav-help-link':''}" href="${item.href}"${item.current?' aria-current="page"':''}><span class="nav-link-label">${item.label}</span><small>${item.description}</small></a>`).join('')}<div class="nav-mobile-actions"><a class="pill secondary" href="freedom-wall.html">Freedom Wall</a><a class="pill" href="music.html">Listen now</a></div>`;
-    actions.querySelectorAll('a[href^="daily.html"],a[href*="auth.html#signin"],a[href*="auth.html#signup"]').forEach(link=>link.remove());
+    links.innerHTML=`<div class="nav-menu-intro"><strong>Where would you like to go?</strong><span>Reading, music, the Freedom Wall, and important help numbers are public. Personal tools stay inside the signed-in profile.</span></div>${items.map(item=>`<a class="nav-menu-link${item.help?' nav-help-link':''}" href="${item.href}"${item.current?' aria-current="page"':''}><span class="nav-link-label">${item.label}</span><small>${item.description}</small></a>`).join('')}<div class="nav-mobile-actions"><a class="pill secondary" href="/auth.html#signin">Sign in</a><a class="pill" href="/ebooks/">Start exploring</a></div>`;
+    actions.querySelectorAll('a[href^="daily.html"]').forEach(link=>link.remove());
     const menuToggle=actions.querySelector('#navToggle');
     if(menuToggle)menuToggle.setAttribute('aria-controls','navLinks');
     const mobileBar=$('.mobile-bar:not(.member-mobile-bar):not(.admin-mobile-bar)');
     if(mobileBar){
-      mobileBar.innerHTML=`<a class="${onHome?'active':''}" href="${onHome?'#top':'index.html#top'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 11 8-7 8 7v9H4Z"/><path d="M9 20v-6h6v6"/></svg><span>Home</span></a><a class="${['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html'].includes(page)?'active':''}" href="${onHome?'#bookshelf':'index.html#bookshelf'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2Z"/><path d="M7 4v14a2 2 0 0 0 2 2"/></svg><span>Read</span></a><a class="${page==='music.html'?'active':''}" href="music.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg><span>Listen</span></a><a class="${page==='freedom-wall.html'?'active':''}" href="freedom-wall.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5h14v11H9l-4 3Z"/><path d="M9 9h6M9 12h4"/></svg><span>Wall</span></a>`;
+      const readingCurrent=route==='ebooks'||['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html'].includes(page);
+      const musicCurrent=route==='music'||page==='music.html';
+      mobileBar.innerHTML=`<a class="${onHome?'active':''}" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 11 8-7 8 7v9H4Z"/><path d="M9 20v-6h6v6"/></svg><span>Home</span></a><a class="${readingCurrent?'active':''}" href="/ebooks/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2Z"/><path d="M7 4v14a2 2 0 0 0 2 2"/></svg><span>Read</span></a><a class="${musicCurrent?'active':''}" href="/music/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg><span>Music</span></a><a href="/auth.html#signin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"/></svg><span>Profile</span></a>`;
     }
   }
   setupFriendlyNavigation();
@@ -136,7 +139,7 @@
       event.preventDefault();
       promptEvent=event;
       button.textContent='Install app';
-      help.textContent='Install our daily space for faster access from your home screen.';
+      help.textContent='Install our reading and music space for faster access from your home screen.';
       show();
     });
     button.addEventListener('click',async()=>{
@@ -202,12 +205,12 @@
     const button=document.createElement('button');button.type='button';button.className='pill secondary';button.textContent='Preparing save option…';button.disabled=true;
     wrapper.appendChild(button);hero.appendChild(wrapper);
     const ready=await ensureMemberServices();
-    if(!ready||!window.FMB?.configured){button.disabled=false;button.textContent='Sign in to save';button.addEventListener('click',()=>location.href='auth.html#signin');return}
+    if(!ready||!window.FMB?.configured){button.disabled=false;button.textContent='Sign in to save';button.addEventListener('click',()=>location.href='/auth.html#signin');return}
     const client=await activeClient();
-    if(!client){button.disabled=false;button.textContent='Sign in to save';button.addEventListener('click',()=>location.href='auth.html#signin');return}
+    if(!client){button.disabled=false;button.textContent='Sign in to save';button.addEventListener('click',()=>location.href='/auth.html#signin');return}
     const {data:{session}}=await client.auth.getSession();
     const user=session?.user;
-    if(!user){button.disabled=false;button.textContent='Sign in to save';button.addEventListener('click',()=>location.href='auth.html#signin');return}
+    if(!user){button.disabled=false;button.textContent='Sign in to save';button.addEventListener('click',()=>location.href='/auth.html#signin');return}
     const {data:saved}=await client.from('saved_content').select('id').eq('user_id',user.id).eq('item_key',itemKey).maybeSingle();
     button.disabled=false;
     if(saved){button.textContent='Saved';button.dataset.savedId=saved.id}else button.textContent='Save to profile';

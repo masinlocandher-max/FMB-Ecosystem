@@ -1,10 +1,15 @@
-const CACHE_NAME='fmb-app-shell-20260716-1';
+const CACHE_NAME='fmb-app-shell-20260716-routes-2';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
   '/about.html',
   '/auth.html',
   '/freedom-wall.html',
+  '/ebooks/',
+  '/music/',
+  '/communityengagements/',
+  '/aboutfmb/',
+  '/fmbandco/',
   '/reading.html',
   '/music.html',
   '/womens-health.html',
@@ -30,6 +35,7 @@ const APP_SHELL=[
   '/assets/css/landing.css',
   '/assets/css/apple-mobile.css',
   '/assets/css/experience-refresh.css',
+  '/assets/css/organized-pages.css',
   '/assets/css/volunteer.css',
   '/assets/css/music-ui.css',
   '/assets/js/site.js',

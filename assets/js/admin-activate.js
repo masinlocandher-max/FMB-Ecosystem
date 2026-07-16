@@ -49,7 +49,7 @@
     heading.textContent='Administrator access is ready.';
     detail.textContent=`Welcome, ${data?.full_name||'Francine Marie Bautista'}. Opening your security settings so you can choose your password.`;
     show('Administrator verified successfully.','success');
-    setTimeout(()=>location.replace('member.html#settingsPanel'),1100);
+    setTimeout(()=>location.replace('/profile/#settingsPanel'),1100);
   }
 
   if(!window.FMB?.configured){

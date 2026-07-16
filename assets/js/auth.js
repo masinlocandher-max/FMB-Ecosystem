@@ -81,7 +81,7 @@
     for(const client of [localClient,sessionClient]){
       if(!client)continue;
       const {data}=await client.auth.getSession();
-      if(data.session?.user?.email_confirmed_at){location.replace('member.html');return}
+      if(data.session?.user?.email_confirmed_at){location.replace('/profile/');return}
     }
   }
   redirectExistingSession();
@@ -117,7 +117,7 @@
       setStatus('#signinStatus','This profile is suspended. Contact withlovefmb@gmail.com if you believe this is a mistake.','error');
       return;
     }
-    location.replace('member.html');
+    location.replace('/profile/');
   });
 
   $('#signupForm').addEventListener('submit',async event=>{
@@ -137,7 +137,7 @@
     setLoading(button,true,'Creating profile…');
     const client=window.FMB.createClient('local');
     const base=authBase();
-    const redirectTo=window.FMB.config.AUTH_REDIRECT_URL||new URL('member.html',base).href;
+    const redirectTo=window.FMB.config.AUTH_REDIRECT_URL||new URL('profile/',base).href;
     const {data,error}=await client.auth.signUp({
       email,
       password,
@@ -165,7 +165,7 @@
       setStatus('#signupStatus',message,'error');
       return;
     }
-    if(data.session){location.replace('member.html');return}
+    if(data.session){location.replace('/profile/');return}
     $('#signupForm').reset();
     document.querySelectorAll('#passwordRules span').forEach(rule=>rule.classList.remove('valid'));
     setStatus('#signupStatus','Check your email and open the verification link. Then return to sign in.','success');
@@ -198,7 +198,7 @@
     if(!window.FMB?.configured){serviceUnavailable('#signupStatus');return}
     setLoading(resendConfirmation,true,'Sending again…');
     const client=window.FMB.createClient('local');
-    const redirectTo=window.FMB.config.AUTH_REDIRECT_URL||new URL('member.html',authBase()).href;
+    const redirectTo=window.FMB.config.AUTH_REDIRECT_URL||new URL('profile/',authBase()).href;
     const {error}=await client.auth.resend({type:'signup',email,options:{emailRedirectTo:redirectTo}});
     setLoading(resendConfirmation,false);
     if(error){

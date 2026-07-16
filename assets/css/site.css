@@ -279,3 +279,10 @@ button{cursor:pointer}
 @media(max-width:800px){.nav-links{position:fixed;top:112px;left:14px;right:14px;display:flex;flex-direction:column;align-items:stretch;gap:0;padding:12px 18px;border-radius:22px;background:rgba(255,255,255,.76);backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.76);box-shadow:var(--shadow);opacity:0;transform:translateY(-10px);pointer-events:none;transition:opacity .3s,transform .3s}.nav-links.open{opacity:1;transform:none;pointer-events:auto}.nav-links a{padding:13px 2px;border-bottom:1px solid var(--line)}.nav-toggle{display:flex}.nav-actions .nav-btn{display:none}.hero{padding-top:145px}.hero-card{margin:16px auto 0}.section{padding:80px 0}.glass-card,.book-feature,.music-copy,.contact-card{padding:30px 24px}}
 @media(max-width:520px){.wrap{width:min(var(--wrap),calc(100% - 24px))}.top-shell{padding:8px}.nav-glass{padding-left:12px}.nav-word{font-size:18px}.nav-icon{width:30px;height:30px}.support-glass{border-radius:16px 16px 9px 9px}.hero{padding-left:10px;padding-right:10px}.hero-banner{border-radius:22px}.hero-card{padding:30px 19px;border-radius:24px}.hero-title{font-size:clamp(46px,14vw,62px)}.book-feature{min-height:500px}.auth-card,.auth-story{padding:30px 22px}.member-header{padding:24px}.now-playing,.player-card,.playlist-card{padding:28px 22px}.booking-calendar,.work-form{padding:24px 18px}.calendar-days,.calendar-weekdays{gap:4px}.calendar-day{border-radius:10px;font-size:12px}.portfolio-piece{padding:24px;min-height:310px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}.loader-icon,.music-disc{animation:none}}
+
+/* Solid premium footer treatment shared across the full FMB website. */
+.footer{background:linear-gradient(135deg,#240032 0%,#510b77 52%,#7e2ca2 100%)!important;border-top:0!important;color:#fff}
+.footer h4{color:#fff}
+.footer p,.footer a,.footer span{color:rgba(255,255,255,.76)}
+.footer-logo{mix-blend-mode:normal;filter:brightness(0) invert(1)}
+.footer-bottom{border-top-color:rgba(255,255,255,.18)}

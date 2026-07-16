@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<base href="/">
+<title>Calm Music Collection and Original Soundtrack | With love, FMB</title>
+<meta name="description" content="Listen to ten Calm pieces and two versions of the With Love, FMB original soundtrack. All twelve tracks are open without an account.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://www.francinemariebautista.com/music/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="With love, FMB">
+<meta property="og:title" content="Calm and the With Love, FMB OST">
+<meta property="og:description" content="The complete Calm listening collection and our original soundtrack, open without an account.">
+<meta property="og:url" content="https://www.francinemariebautista.com/music/">
+<meta property="og:image" content="https://www.francinemariebautista.com/assets/images/music/fmb-calm-official-album-cover.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/images/icon-transparent.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css?v=20260715-member-launch">
+<link rel="stylesheet" href="assets/css/icon-fix.css">
+<link rel="stylesheet" href="assets/css/repair.css">
+<link rel="stylesheet" href="assets/css/music-ui.css?v=20260716-twelve-tracks">
+<link rel="stylesheet" href="assets/css/live-hotfix.css?v=20260716-public-care">
+<link rel="stylesheet" href="assets/css/experience-refresh.css?v=20260716-public-care">
+<link rel="stylesheet" href="assets/css/organized-pages.css?v=20260716">
+</head>
+<body class="music-app organized-route spotify-inspired">
+<div class="top-shell">
+  <div class="support-glass" aria-label="With Love, FMB partner brands"></div>
+  <header class="nav-glass">
+    <a class="nav-brand" href="/" aria-label="With love, FMB home"><img class="nav-icon" src="assets/images/icon-transparent.png" alt=""><span class="nav-word">with love, <em>fmb</em></span></a>
+    <nav class="nav-links" id="navLinks" aria-label="Music page navigation"><a href="/">Home</a><a href="/ebooks/">Read</a><a href="freedom-wall.html">Freedom Wall</a><a href="/communityengagements/">Volunteer</a></nav>
+    <div class="nav-actions"><a class="nav-btn" href="freedom-wall.html">Freedom Wall</a><a class="nav-btn primary" href="#player">Listen now</a><button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-label="Open menu" aria-controls="navLinks"><span></span><span></span></button></div>
+  </header>
+</div>
+<main class="music-stage" id="main-content">
+  <div class="music-shell">
+    <section class="music-intro" aria-labelledby="music-title">
+      <div class="reveal">
+        <p class="music-kicker">With love, FMB Music</p>
+        <h1 id="music-title">Our music, made to <em>stay with you.</em></h1>
+      </div>
+      <div class="reveal d1">
+        <p>Calm is our quiet listening collection for moments that need less noise. The library also includes two versions of the With Love, FMB original soundtrack. All twelve tracks are open without an account and begin only when you press play.</p>
+        <p class="music-care-note">Use comfortable volume. Music can support a quiet moment, but it is not medical care or emergency support.</p>
+      </div>
+    </section>
+
+    <section class="featured-player" id="player" aria-labelledby="nowTitle">
+      <div class="featured-art" id="featuredArt" aria-hidden="true"></div>
+      <div class="player-meta">
+        <p class="music-kicker">Now ready</p>
+        <h2 id="nowTitle">01. Quiet Enough to Breathe</h2>
+        <p id="nowArtist">With love, FMB</p>
+        <p id="playerNote">Choose a track from Calm or our original soundtrack and press play.</p>
+      </div>
+      <div class="player-controls" aria-label="Music controls">
+        <button class="round-control" id="prevButton" type="button" aria-label="Previous track">Previous</button>
+        <button class="round-control primary" id="mainPlayButton" type="button" aria-label="Play">Play</button>
+        <button class="round-control" id="nextButton" type="button" aria-label="Next track">Next</button>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-track" id="progressTrack" role="slider" tabindex="0" aria-label="Track position" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="time-row"><span id="currentTime">0:00</span><span id="duration">0:00</span></div>
+      </div>
+      <label class="volume-row" for="volumeControl"><span>Volume</span><input id="volumeControl" type="range" min="0" max="1" step="0.05" value="0.65"></label>
+      <audio id="audioPlayer" preload="metadata"></audio>
+    </section>
+
+    <section class="music-library" aria-labelledby="library-title">
+      <div class="library-head"><div><p class="eyebrow">Listening library</p><h2 id="library-title">Calm and our original soundtracks.</h2></div><p>Ten connected Calm pieces and two With Love, FMB OST versions, preserved from our approved music library.</p></div>
+      <div class="playlist-list" id="playlistGrid" aria-live="polite"><div class="music-empty">Preparing the listening space.</div></div>
+    </section>
+
+    <section class="music-credits" aria-labelledby="music-credits-title">
+      <div><p class="eyebrow">Creative credits</p><h2 id="music-credits-title">Directed with intention.</h2></div>
+      <div class="music-credit-list"><p><strong>Calm collection</strong><br>Collaborated and directed by Francine Marie Bautista (FMB), with our creative partners.</p><p><strong>With Love, FMB original soundtrack</strong><br>Written by Francine Marie Bautista (FMB). Musical direction by Francine Marie Bautista (FMB).</p></div>
+    </section>
+  </div>
+</main>
+<footer class="footer"><div class="wrap"><div class="footer-grid"><div><img class="footer-logo" src="assets/images/signature-transparent.png" alt="With love, FMB"><p>Quiet listening, open reading, and thoughtful space for everyone.</p></div><div><h4>Explore</h4><div class="footer-links"><a href="/">Home</a><a href="/ebooks/">Reading room</a><a href="freedom-wall.html">Freedom Wall</a><a href="/communityengagements/">Volunteer</a></div></div><div><h4>Care and contact</h4><div class="footer-links"><a href="/#support">Support contacts</a><a href="mailto:withlovefmb@gmail.com">withlovefmb@gmail.com</a><a href="privacy-policy.html">Privacy Policy</a></div></div></div><div class="footer-bottom"><span>© 2026 Francine Marie Bautista. All rights reserved.</span><span>With love, FMB</span></div></div></footer>
+<div class="mini-player" aria-label="Music player">
+  <div class="mini-cover" id="miniCover" aria-hidden="true"></div>
+  <div><div class="mini-title" id="miniTitle">01. Quiet Enough to Breathe</div><div class="mini-artist" id="miniArtist">With love, FMB</div></div>
+  <div class="mini-actions"><button id="miniPrev" type="button" aria-label="Previous track">Back</button><button id="miniPlay" type="button" aria-label="Play">Play</button><button id="miniNext" type="button" aria-label="Next track">Next</button></div>
+</div>
+<nav class="mobile-bar" aria-label="Mobile navigation"><a href="/"><span>Home</span></a><a href="/ebooks/"><span>Read</span></a><a class="active" href="#player"><span>Listen</span></a><a href="freedom-wall.html"><span>Wall</span></a></nav>
+<script src="assets/js/site.js?v=20260716-public-care"></script>
+<script src="assets/js/music.js?v=20260716-twelve-tracks"></script>
+<script src="assets/js/live-hotfix.js?v=20260716-public-care"></script>
+</body>
+</html>

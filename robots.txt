@@ -3,6 +3,7 @@ Allow: /
 Disallow: /admin.html
 Disallow: /member.html
 Disallow: /daily.html
+Disallow: /profile/
 Disallow: /auth.html
 Disallow: /reset-password.html
 Disallow: /admin-login.html

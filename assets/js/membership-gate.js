@@ -16,7 +16,7 @@
     if(!cover||document.querySelector('.membership-access-note'))return;
     const note=document.createElement('div');
     note.className='membership-access-note public-access-note';
-    note.innerHTML='<span><strong>The complete reading is open to everyone.</strong> No account is required while our membership email system is being completed.</span><a class="text-link" href="daily.html">Open our daily space</a>';
+    note.innerHTML='<span><strong>The complete reading is open to everyone.</strong> No account is required while our membership email system is being completed.</span><a class="text-link" href="/auth.html#signin">Sign in for private tools</a>';
     cover.insertAdjacentElement('afterend',note);
   }
 

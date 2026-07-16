@@ -114,7 +114,7 @@
     };
     if(profile.status==='suspended'){
       await client.auth.signOut();
-      location.replace('auth.html#signin');
+      location.replace('/auth.html#signin');
       return;
     }
     const name=profile.full_name||'Member';
@@ -304,7 +304,7 @@
 
   async function signOut(){
     if(client)await client.auth.signOut();
-    location.replace('auth.html#signin');
+    location.replace('/auth.html#signin');
   }
   $('#signOut').addEventListener('click',signOut);
   $('#settingsSignOut').addEventListener('click',signOut);
@@ -314,11 +314,11 @@
     if(!window.FMB?.configured){lockPage();return}
     client=await resolveClient();
     const {data,error}=await client.auth.getSession();
-    if(error||!data.session){location.replace('auth.html#signin');return}
+    if(error||!data.session){location.replace('/auth.html#signin');return}
     const {data:{user:verifiedUser},error:userError}=await client.auth.getUser();
-    if(userError||!verifiedUser){location.replace('auth.html#signin');return}
+    if(userError||!verifiedUser){location.replace('/auth.html#signin');return}
     user=verifiedUser;
-    if(!user.email_confirmed_at){await client.auth.signOut();location.replace('auth.html#signin');return}
+    if(!user.email_confirmed_at){await client.auth.signOut();location.replace('/auth.html#signin');return}
     await loadProfile();
     await Promise.all([loadCheckins(),loadNotes(),loadPosts(),loadSaved()]);
     const initial=location.hash.slice(1);
