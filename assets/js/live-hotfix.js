@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const release='20260716-mobile-luxury-2';
+  const release='20260716-mobile-luxury-3';
   function loadAsset(tag,attrs){
     const key=attrs.href||attrs.src;
     if(document.querySelector(`${tag}[href="${key}"],${tag}[src="${key}"]`))return;
