@@ -4,10 +4,10 @@
  */
 .mobile-menu-fab,.mobile-menu-icon{display:none}
 .care-message strong,.partner-label{color:rgba(255,255,255,.92)!important}
-.partner-track{animation:fmb-mobile-partner-marquee 22s linear infinite!important;will-change:transform}
+.partner-track{animation:fmb-mobile-partner-marquee 22s linear infinite!important;will-change:auto!important}
 
 @keyframes fmb-mobile-partner-marquee{
-  to{transform:translate3d(calc(-50% - 7px),0,0)}
+  to{transform:translateX(calc(-50% - 7px))}
 }
 
 @media(max-width:800px){
@@ -120,9 +120,9 @@
     min-width:max-content!important;
     height:36px!important;
     padding:2px 10px!important;
-    transform:translate3d(0,0,0);
+    transform:translateX(0);
     animation:fmb-mobile-partner-marquee 17s linear infinite!important;
-    will-change:transform;
+    will-change:auto!important;
   }
   body.fmb-mobile-menu-ready .partner-logo,
   body.fmb-mobile-menu-ready .partner-logo.cognita{
