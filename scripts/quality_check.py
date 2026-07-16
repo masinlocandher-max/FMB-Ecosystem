@@ -235,6 +235,28 @@ def check_sharing_and_footer(errors: list[str]) -> None:
         if marker not in site_css:
             errors.append(f"assets/css/site.css: missing transparent signature presentation: {marker}")
 
+    footer_css_path = ROOT / "assets/css/fmb-footer-v2.css"
+    if not footer_css_path.exists():
+        errors.append("assets/css/fmb-footer-v2.css: refined responsive footer is missing")
+    else:
+        footer_css = footer_css_path.read_text(encoding="utf-8")
+        for marker in (
+            "body .footer::after{display:none!important}",
+            "grid-template-columns:minmax(300px,1.2fr)",
+            "grid-template-columns:repeat(2,minmax(0,1fr))",
+            "body .footer .footer-brand-lockup",
+            "background:transparent!important",
+            "@media(max-width:360px)",
+        ):
+            if marker not in footer_css:
+                errors.append(f"assets/css/fmb-footer-v2.css: missing refined footer marker: {marker}")
+
+    footer_release = "/assets/css/fmb-footer-v2.css?v=20260716-footer-v2"
+    for page in ROOT.rglob("*.html"):
+        page_text = page.read_text(encoding="utf-8")
+        if '<footer class="footer"' in page_text and footer_release not in page_text:
+            errors.append(f"{page.relative_to(ROOT)}: refined responsive footer stylesheet is missing")
+
 
 def check_mobile_and_editorial_media(errors: list[str]) -> None:
     mobile_path = ROOT / "assets/css/fmb-mobile-clean.css"
