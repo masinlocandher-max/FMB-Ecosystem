@@ -31,9 +31,10 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,s
 .partner-label{color:#5c4d62;font-size:9px;font-weight:850;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
 .partner-window{min-width:0;overflow:hidden}
 .partner-track{display:flex;width:max-content;align-items:center;gap:24px;padding:4px 20px;animation:fmb-logo-rail 22s linear infinite;will-change:transform}
-.partner-logo{display:grid;place-items:center;width:112px;height:30px;flex:0 0 auto}
-.partner-logo img{display:block;max-width:100%;max-height:26px;object-fit:contain}
-.partner-logo.cognita img{max-height:30px}
+.partner-logo{display:grid;place-items:center;width:132px;height:32px;flex:0 0 auto;overflow:hidden;border-radius:10px;background:rgba(255,255,255,.58)}
+.partner-logo img{display:block;width:126px;height:74px;max-width:none;max-height:none;object-fit:contain}
+.partner-logo.cognita{width:150px}
+.partner-logo.cognita img{width:144px;height:78px}
 .partner-window:hover .partner-track,.partner-window:focus-within .partner-track{animation-play-state:paused}
 @keyframes fmb-logo-rail{to{transform:translateX(calc(-50% - 12px))}}
 
@@ -193,6 +194,11 @@ body.brand-suite{background:#fbfaf8;color:var(--fmb-ink)}
 .brand-card.senz{border-top-color:#315bb4;background:#fff}
 .brand-card.cognita{border-top-color:#1985a7;background:#fff}
 .brand-suite .route-card .route-card-number{color:#825890}
+@media(min-width:961px){
+  .brand-suite .nav-actions .nav-btn:not(.primary){display:none}
+  .brand-suite .nav-links{gap:15px}
+  .brand-suite .nav-btn.primary{padding-right:13px;padding-left:13px;white-space:nowrap}
+}
 
 /* Music: full square art on every screen, with no cover crop. */
 body.spotify-inspired:before,body.spotify-inspired:after{display:none!important}
@@ -258,8 +264,9 @@ body.spotify-inspired .music-stage{background:radial-gradient(circle at 82% 6%,r
   .partner-label{font-size:8px}
   .partner-track{gap:17px;padding:2px 16px;animation-duration:18s}
   .partner-logo{width:88px;height:25px}
-  .partner-logo img{max-height:21px}
-  .partner-logo.cognita img{max-height:24px}
+  .partner-logo img{width:84px;height:50px}
+  .partner-logo.cognita{width:102px}
+  .partner-logo.cognita img{width:98px;height:54px}
   .home-polished .wrap{width:min(100% - 24px,1160px)}
   .home-welcome,.authority-hero{padding-top:176px;padding-bottom:52px}
   .home-welcome h1{font-size:clamp(49px,15vw,68px)}
