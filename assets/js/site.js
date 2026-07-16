@@ -178,7 +178,7 @@
       const existing=footer.querySelector('.footer-brand-lockup');
       const logo=footer.querySelector('.footer-logo');
       if(!logo)return;
-      logo.src='/assets/images/signature-transparent.png?v=20260716-footer-signature';
+      logo.src='/assets/images/signature-transparent.png?v=20260716-footer-contrast';
       logo.alt='With love, FMB';
       existing?.querySelector('.footer-icon')?.remove();
       if(existing)return;

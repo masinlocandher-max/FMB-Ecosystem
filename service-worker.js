@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260716-mobile-clean-actions';
+const CACHE_NAME='fmb-app-shell-20260716-news-photo-footer';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -59,7 +59,7 @@ const APP_SHELL=[
   '/assets/images/icon-transparent.png',
   '/assets/images/projects/senz-logo.png',
   '/assets/images/projects/cognita-logo.png',
-  '/assets/images/news/impeachment-briefing.png',
+  '/assets/images/news/sara-duterte-impeachment.webp',
   '/assets/images/news/pax-silica-briefing.png',
   '/assets/images/news/good-news-briefing.png',
   '/assets/images/app-icon-192.png',

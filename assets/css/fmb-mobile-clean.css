@@ -291,8 +291,8 @@
   body .footer{padding:46px 0 calc(88px + env(safe-area-inset-bottom,0px))!important}
   .footer-grid{grid-template-columns:1fr!important;gap:23px!important}
   .footer-grid>div:nth-child(2){display:none!important}
-  .footer-brand-lockup{width:210px!important;min-height:68px!important;margin-bottom:9px!important}
-  .footer-brand-lockup .footer-logo{width:202px!important;height:68px!important;max-height:68px!important}
+  .footer-brand-lockup{width:230px!important;min-height:92px!important;margin-bottom:9px!important;padding:8px 12px!important;border-radius:18px!important}
+  .footer-brand-lockup .footer-logo{width:204px!important;height:auto!important;max-height:none!important}
   .footer h4{font-size:22px!important}
   .footer-links{gap:8px!important}
   .footer p,.footer a,.footer span{font-size:12px!important}
