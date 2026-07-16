@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260716-routes-2';
+const CACHE_NAME='fmb-app-shell-20260716-design-polish';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -36,6 +36,7 @@ const APP_SHELL=[
   '/assets/css/apple-mobile.css',
   '/assets/css/experience-refresh.css',
   '/assets/css/organized-pages.css',
+  '/assets/css/fmb-polish.css',
   '/assets/css/volunteer.css',
   '/assets/css/music-ui.css',
   '/assets/js/site.js',

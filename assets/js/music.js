@@ -32,8 +32,9 @@
     [featuredArt,miniCover].forEach(element=>{
       if(!element)return;
       element.style.backgroundImage=url?`url("${String(url).replace(/["\\]/g,'')}")`:'';
-      element.style.backgroundSize='cover';
+      element.style.backgroundSize='contain';
       element.style.backgroundPosition='center';
+      element.style.backgroundRepeat='no-repeat';
     });
   }
   function loadTrack(index,shouldPlay=true){
@@ -69,7 +70,7 @@
       else playlist.tracks.forEach(track=>{
         const index=tracks.length;tracks.push({...track,playlist:playlist.title});
         const row=document.createElement('div');row.className='song-row';row.dataset.index=String(index);
-        const cover=track.cover_url?`style="background-image:url('${escape(track.cover_url)}');background-size:cover;background-position:center"`:'';
+        const cover=track.cover_url?`style="background-image:url('${escape(track.cover_url)}');background-size:contain;background-position:center;background-repeat:no-repeat"`:'';
         row.innerHTML=`<div class="song-cover" ${cover}>${track.cover_url?'':escape((track.title||'F')[0])}</div><div><div class="song-title">${escape(track.title||'Untitled track')}</div><div class="song-artist">${escape(track.artist||'FMB')}</div></div><button class="song-play" type="button" aria-label="Play ${escape(track.title||'track')}">Play</button>`;
         row.querySelector('button').addEventListener('click',()=>loadTrack(index,true));list.appendChild(row);
       });

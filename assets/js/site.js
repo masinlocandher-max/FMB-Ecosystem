@@ -49,6 +49,7 @@
 
   ensureStylesheet('assets/css/icon-fix.css');
   ensureStylesheet('assets/css/repair.css');
+  ensureStylesheet('assets/css/fmb-polish.css?v=20260716-polish');
   ensureAppMetadata();
 
   if(!document.querySelector('.skip-link')){
@@ -105,9 +106,23 @@
   if(!topPromo&&topShell){topPromo=document.createElement('div');topPromo.className='support-glass';topShell.prepend(topPromo)}
   if(topPromo){
     topPromo.setAttribute('aria-label','Website maintenance notice and With Love, FMB partner brands');
-    const items=`<span class="banner-status">Website care notice</span><span class="brand-marquee-label">Maintenance and improvements are ongoing. Reading, listening, and the Freedom Wall remain open.</span><span class="banner-divider" aria-hidden="true"></span><span class="banner-partner-label">Brought to you by</span><a class="support-chip light brand-chip brand-chip-logo" href="https://www.senzpr.com" target="_blank" rel="noopener noreferrer" aria-label="Visit SENZ Strategic Communications"><img src="assets/images/projects/senz-transparent.png" alt="SENZ"><span class="sr-only">SENZ Strategic Communications</span></a><a class="support-chip light brand-chip brand-chip-logo cognita-chip" href="https://thecognitainstitute.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Cognita Institute of AI"><img src="assets/images/projects/cognita-transparent.png?v=20260714-approved" alt="Cognita Institute of AI"><span class="sr-only">Cognita Institute of AI</span></a>`;
-    topPromo.innerHTML=`<div class="promo-marquee"><div class="promo-group">${items}</div><div class="promo-group" aria-hidden="true">${items}</div></div>`;
+    const logos=`<a class="partner-logo" href="https://www.senzpr.com" target="_blank" rel="noopener noreferrer" aria-label="Visit SENZ"><img src="assets/images/projects/senz-transparent.png" alt="SENZ"></a><a class="partner-logo cognita" href="https://thecognitainstitute.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Cognita Institute of AI"><img src="assets/images/projects/cognita-transparent.png?v=20260714-approved" alt="Cognita Institute of AI"></a>`;
+    const logoClones=logos.replaceAll('<a class="partner-logo','<a tabindex="-1" aria-hidden="true" class="partner-logo');
+    topPromo.innerHTML=`<div class="care-banner"><div class="care-message"><span>Website update</span><strong>Reading, all 12 music tracks, the Freedom Wall, and support contacts remain open.</strong></div><div class="partner-rail"><span class="partner-label">Brought to you by</span><div class="partner-window"><div class="partner-track">${logos}${logoClones}</div></div></div></div>`;
   }
+
+  function setupFooterBrand(){
+    $$('.footer').forEach(footer=>{
+      const existing=footer.querySelector('.footer-brand-lockup');
+      if(existing)return;
+      const logo=footer.querySelector('.footer-logo');
+      if(!logo)return;
+      const lockup=document.createElement('div');lockup.className='footer-brand-lockup';
+      const icon=document.createElement('img');icon.className='footer-icon';icon.src='assets/images/icon-transparent.png';icon.alt='';icon.setAttribute('aria-hidden','true');
+      logo.parentElement.insertBefore(lockup,logo);lockup.append(icon,logo);
+    });
+  }
+  setupFooterBrand();
 
   const landingHero=$('.hero');
   if(landingHero){
