@@ -55,6 +55,34 @@ body .footer>.wrap{position:relative;z-index:1}
 .content-action-music .content-action-button small{color:rgba(255,255,255,.62)}
 .content-action-music .content-action-status{color:#e8d58e}
 
+/* Compact item actions: each control belongs to the article, ebook, or listening page. */
+.news-visual{overflow:hidden;margin:24px 0 12px;border:1px solid rgba(45,7,60,.13);border-radius:20px;background:#2d093b}
+.news-visual img{display:block;width:100%;height:auto;aspect-ratio:1200/630;object-fit:cover}
+.news-visual figcaption{padding:9px 12px;background:#fff;color:#6b606c;font-size:10px;line-height:1.5}
+.news-visual figcaption a{color:#59186d;font-weight:800;text-decoration:underline;text-underline-offset:2px}
+.item-action-row{position:relative;z-index:5;display:flex;align-items:center;gap:5px;width:fit-content;max-width:100%;margin:10px 0 24px;padding:4px;border:1px solid rgba(81,11,119,.13);border-radius:999px;background:rgba(255,255,255,.94);box-shadow:0 8px 24px rgba(43,14,54,.07)}
+.item-action-button{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:0;height:34px;padding:0 10px;border:0;border-radius:999px;background:transparent;color:#4d155f;font-family:inherit;font-size:10px;font-weight:800;line-height:1;cursor:pointer}
+.item-action-button:hover{background:#f1e6f5}
+.item-action-button svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.item-action-button.is-saved{background:#510b77;color:#fff}
+.item-action-button.is-saved svg{fill:currentColor}
+.item-share-wrap{position:relative}
+.item-share-menu{position:absolute;z-index:30;top:calc(100% + 8px);right:0;display:grid;width:154px;overflow:hidden;padding:5px;border:1px solid rgba(81,11,119,.15);border-radius:14px;background:#fff;box-shadow:0 18px 42px rgba(36,10,45,.18)}
+.item-share-menu[hidden]{display:none}
+.item-share-menu a,.item-share-menu button{display:flex;align-items:center;min-height:36px;padding:8px 10px;border:0;border-radius:9px;background:transparent;color:#3e104d;font-family:inherit;font-size:10px;font-weight:750;line-height:1.2;text-align:left;text-decoration:none;cursor:pointer}
+.item-share-menu a:hover,.item-share-menu button:hover{background:#f3eaf6}
+.item-action-status{position:absolute;top:calc(100% + 5px);left:5px;min-width:180px;color:#5c176e;font-size:9px;font-weight:800;pointer-events:none}
+.item-action-music{margin:0 0 16px;border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.09);box-shadow:none}
+.item-action-music .item-action-button{color:#fff}
+.item-action-music .item-action-button:hover{background:rgba(255,255,255,.12)}
+.item-action-music .item-action-status{color:#efd98e}
+.ebook-card-shell{position:relative;min-width:0;height:100%}
+.ebook-card-shell>.ebook-card{height:100%}
+.ebook-card-shell>.item-action-row{position:absolute;top:24px;right:24px;margin:0;border-color:rgba(255,255,255,.68);background:rgba(255,255,255,.86);box-shadow:0 9px 26px rgba(31,6,40,.18);backdrop-filter:blur(14px)}
+.ebook-card-shell>.item-action-row .item-action-button{width:32px;height:32px;padding:0}
+.ebook-card-shell>.item-action-row .item-action-button span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.ebook-card-shell>.item-action-row .item-action-status{top:calc(100% + 8px);right:0;left:auto;min-width:120px;padding:5px 7px;border-radius:8px;background:#fff;text-align:center}
+
 .home-polished .destination-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
 .home-support-more{display:flex;align-items:center;justify-content:space-between;gap:22px;margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,255,255,.18)}
 .home-support-more p{max-width:680px;color:rgba(255,255,255,.8);font-size:12px}

@@ -9,6 +9,9 @@
     loadAsset('link',{rel:'stylesheet',href:'assets/css/reading-library.css?v=20260716-public-care'});
     loadAsset('link',{rel:'stylesheet',href:'assets/css/apple-mobile.css?v=20260716-public-care'});
     loadAsset('link',{rel:'stylesheet',href:'assets/css/experience-refresh.css?v=20260716-public-care'});
+    const mobileClean=document.querySelector('link[href="assets/css/fmb-mobile-clean.css?v=20260716-mobile-plan"]');
+    if(mobileClean)document.head.appendChild(mobileClean);
+    else loadAsset('link',{rel:'stylesheet',href:'assets/css/fmb-mobile-clean.css?v=20260716-mobile-plan'});
     loadAsset('script',{src:'assets/js/reading-library.js?v=20260716-public-care',defer:'defer'});
 
     const toggle=document.getElementById('navToggle');
