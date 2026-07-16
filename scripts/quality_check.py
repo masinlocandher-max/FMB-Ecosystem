@@ -129,8 +129,9 @@ def check_membership_features(errors: list[str]) -> None:
             errors.append(f"{name}: membership gate styles are missing")
 
     public_gate = (ROOT / "assets/js/membership-gate.js").read_text(encoding="utf-8")
-    if "The complete reading is open to everyone" not in public_gate:
-        errors.append("assets/js/membership-gate.js: temporary public reading access is missing")
+    for marker in ("publicBooks", "reading.html", "coming-out-respect.html", "men-can-cry.html", "This complete reading is open to everyone", "This guide is part of our member library"):
+        if marker not in public_gate:
+            errors.append(f"assets/js/membership-gate.js: member access marker is missing: {marker}")
 
     member_js = (ROOT / "assets/js/member.js").read_text(encoding="utf-8")
     if "daily_checkins" not in member_js:
@@ -326,7 +327,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
             errors.append(f"assets/css/fmb-mobile-clean.css: missing mobile UX marker: {marker}")
 
     site_js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
-    for marker in ("setupMobileChrome", "document.createElement('nav')", "fmb-mobile-clean.css", "createActions", "navigator.share", "coreMenuBound", "mobile-menu-fab", "aria-modal", "focusableItems", "visualViewport", "fmb-mobile-menu-anchor", "document.body.appendChild(menu)", "promoGroup", "register('/service-worker.js'"):
+    for marker in ("setupMobileChrome", "MOBILE_EXPERIENCE_HOST", "mobile.francinemariebautista.com", "isDedicatedMobileHost", "fmb-mobile-host", "setupMemberExperience", "fmb:auth-ready", "scope:'local'", "document.createElement('nav')", "fmb-mobile-clean.css", "createActions", "navigator.share", "coreMenuBound", "mobile-menu-fab", "aria-modal", "focusableItems", "visualViewport", "fmb-mobile-menu-anchor", "document.body.appendChild(menu)", "promoGroup", "register('/service-worker.js'"):
         if marker not in site_js:
             errors.append(f"assets/js/site.js: missing mobile or item-action marker: {marker}")
 
@@ -381,6 +382,19 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         ):
             if marker not in premium_css:
                 errors.append(f"assets/css/desktop-premium.css: missing desktop or player marker: {marker}")
+
+    for name, markers in {
+        "assets/css/member-experience.css": ("fmb-member-banner-loop", ".nav-account-icon", ".member-access-card", ".music-member-locked"),
+        "assets/css/mobile-app.css": ("html.fmb-mobile-host", ".mobile-app-welcome", "mobile.francinemariebautista.com"),
+    }.items():
+        path = ROOT / name
+        if not path.exists():
+            errors.append(f"{name}: member mobile layer is missing")
+            continue
+        content = path.read_text(encoding="utf-8")
+        for marker in markers:
+            if marker not in content:
+                errors.append(f"{name}: missing marker: {marker}")
 
     desktop_js_path = ROOT / "assets/js/desktop-premium.js"
     global_music_path = ROOT / "assets/js/global-music.js"

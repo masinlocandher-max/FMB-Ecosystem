@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260716-desktop-premium-music-v1';
+const CACHE_NAME='fmb-app-shell-20260716-member-mobile-v1';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -52,6 +52,8 @@ const APP_SHELL=[
   '/assets/css/fmb-mobile-clean.css',
   '/assets/css/fmb-mobile-luxury.css',
   '/assets/css/desktop-premium.css',
+  '/assets/css/member-experience.css',
+  '/assets/css/mobile-app.css',
   '/assets/css/volunteer.css',
   '/assets/css/music-ui.css',
   '/assets/js/site.js',

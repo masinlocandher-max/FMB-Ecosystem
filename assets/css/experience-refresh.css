@@ -173,7 +173,7 @@
 }
 
 @media(prefers-reduced-motion:reduce){
-  .promo-marquee{animation:none!important;transform:none!important}
+  .promo-marquee{animation:fmb-public-care-marquee 48s linear infinite!important;animation-play-state:running!important}
   .promo-group[aria-hidden="true"]{display:none!important}
   .freedom-grid{scroll-behavior:auto}
 }

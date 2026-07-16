@@ -1,4 +1,4 @@
-(function(){
+(async function(){
   'use strict';
   const grid=document.getElementById('playlistGrid');
   const audio=document.getElementById('audioPlayer');
@@ -25,6 +25,29 @@
   let pendingRestoreTime=0;
   let lastPublishedSecond=-1;
   const musicStateKey='fmb_music_state_v2';
+  const waitForMember=()=>{
+    if(window.FMB_MEMBER)return Promise.resolve(Boolean(window.FMB_MEMBER.isMember));
+    return new Promise(resolve=>{
+      let finished=false;
+      const done=value=>{if(finished)return;finished=true;window.clearTimeout(timer);resolve(Boolean(value))};
+      const timer=window.setTimeout(()=>done(false),7000);
+      window.addEventListener('fmb:auth-ready',event=>done(event.detail?.isMember),{once:true});
+    });
+  };
+  const memberAllowed=await waitForMember();
+  document.body.classList.remove('music-access-checking');
+  if(!memberAllowed){
+    document.body.classList.add('music-member-locked');
+    audio.pause();
+    audio.removeAttribute('src');
+    const intro=document.querySelector('.music-intro');
+    const gate=document.createElement('section');
+    gate.className='member-access-card music-access-card';
+    gate.innerHTML='<p class="eyebrow">Member listening</p><h2>Our complete music library is reserved for members.</h2><p>We would love to keep this listening space personal and cared for. Sign in to continue, or create a free account to become part of With love, FMB.</p><div class="member-access-actions"><a href="/auth.html#signin">Sign in</a><a class="secondary" href="/auth.html#signup">Create an account</a></div><small>News and selected ebooks remain open to everyone.</small>';
+    intro?.insertAdjacentElement('afterend',gate);
+    return;
+  }
+  document.body.classList.add('music-member-ready');
   const readMusicState=()=>{try{const value=JSON.parse(sessionStorage.getItem(musicStateKey)||'{}');return value&&typeof value==='object'?value:{}}catch{return{}}};
   const publishState=()=>{
     const track=tracks[currentIndex]||{};
