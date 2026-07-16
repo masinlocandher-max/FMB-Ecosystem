@@ -388,3 +388,228 @@
 @media(prefers-reduced-motion:reduce){
   .partner-track{animation:fmb-mobile-partner-marquee 44s linear infinite!important}
 }
+
+/*
+ * Mobile-first v6 authority layer.
+ * These rules intentionally live at the end of the cascade and never apply
+ * above the phone breakpoint, preserving the approved desktop interface.
+ */
+@media(max-width:800px){
+  :root{
+    --fmb-phone-edge:clamp(14px,4vw,18px);
+    --fmb-phone-tap:48px;
+    --fmb-phone-radius:24px;
+  }
+
+  html{
+    -webkit-text-size-adjust:100%;
+    text-size-adjust:100%;
+    scroll-behavior:smooth;
+  }
+
+  body{
+    width:100%;
+    min-width:0;
+    overflow-x:clip!important;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  body.fmb-mobile-menu-ready{
+    padding-bottom:calc(94px + var(--fmb-mobile-safe-bottom))!important;
+  }
+
+  body.fmb-mobile-menu-ready .wrap{
+    width:calc(100% - (var(--fmb-phone-edge) * 2))!important;
+  }
+
+  body.fmb-mobile-menu-ready main,
+  body.fmb-mobile-menu-ready main>*{
+    min-width:0;
+  }
+
+  body.fmb-mobile-menu-ready img,
+  body.fmb-mobile-menu-ready svg,
+  body.fmb-mobile-menu-ready video{
+    max-width:100%;
+  }
+
+  /* Consistent iPhone-scale touch targets without changing their desktop size. */
+  body.fmb-mobile-menu-ready :is(a,button,input,select,textarea,summary){
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+  }
+
+  body.fmb-mobile-menu-ready :is(.pill,.nav-btn,.button,.btn,.song-play,.round-control,.calendar-nav button,.item-action-button),
+  body.fmb-mobile-menu-ready .footer a,
+  body.fmb-mobile-menu-ready .socials a{
+    min-height:var(--fmb-phone-tap)!important;
+  }
+
+  body.fmb-mobile-menu-ready :is(input,select,textarea){
+    min-height:var(--fmb-phone-tap)!important;
+    font-size:16px!important;
+  }
+
+  body.fmb-mobile-menu-ready :is(h1,h2,h3,p,li,a,span,small,strong){
+    overflow-wrap:break-word;
+  }
+
+  body.fmb-mobile-menu-ready :is(.section,.ebook-shelf,.news-article,.help-section,.authority-quotes,.home-support,.route-cta){
+    content-visibility:auto;
+    contain-intrinsic-size:auto 760px;
+  }
+
+  /* Sticky solid-purple partner banner with a continuous, readable rail. */
+  body.fmb-mobile-menu-ready .top-shell{
+    padding:max(6px,var(--fmb-mobile-safe-top)) 8px 6px!important;
+  }
+
+  body.fmb-mobile-menu-ready .support-glass,
+  body.fmb-mobile-menu-ready.mobile-chrome-compact .support-glass{
+    height:44px!important;
+    min-height:44px!important;
+    border-radius:17px!important;
+    background:#510b77!important;
+    box-shadow:0 10px 28px rgba(52,6,73,.25)!important;
+  }
+
+  body.fmb-mobile-menu-ready .care-banner{
+    grid-template-columns:minmax(116px,34%) minmax(0,1fr)!important;
+    height:44px!important;
+    min-height:44px!important;
+  }
+
+  body.fmb-mobile-menu-ready .care-message{
+    height:44px!important;
+    padding:0 10px!important;
+  }
+
+  body.fmb-mobile-menu-ready .care-message strong{
+    color:#fff!important;
+    font-size:clamp(8.5px,2.45vw,10px)!important;
+    line-height:1.2!important;
+  }
+
+  body.fmb-mobile-menu-ready .partner-window,
+  body.fmb-mobile-menu-ready .partner-track{
+    height:44px!important;
+  }
+
+  body.fmb-mobile-menu-ready .partner-track{
+    gap:10px!important;
+    padding:4px 8px!important;
+    animation:fmb-mobile-partner-marquee 16s linear infinite!important;
+    backface-visibility:hidden;
+  }
+
+  body.fmb-mobile-menu-ready .partner-logo,
+  body.fmb-mobile-menu-ready .partner-logo.cognita{
+    flex:0 0 108px!important;
+    width:108px!important;
+    min-width:108px!important;
+    height:34px!important;
+    padding:2px 7px!important;
+  }
+
+  body.fmb-mobile-menu-ready .partner-logo.cognita{
+    flex-basis:122px!important;
+    width:122px!important;
+    min-width:122px!important;
+  }
+
+  /* App-like navigation case. It is detached from page layout on phones only. */
+  body.fmb-mobile-menu-ready .nav-glass,
+  body.fmb-mobile-menu-ready.mobile-chrome-compact .nav-glass{
+    height:58px!important;
+    min-height:58px!important;
+    padding:7px 12px!important;
+    border-radius:20px!important;
+  }
+
+  body.fmb-mobile-menu-ready .nav-brand{
+    min-width:0!important;
+  }
+
+  body.fmb-mobile-menu-ready .nav-word{
+    overflow:hidden;
+    font-size:18px!important;
+    text-overflow:ellipsis;
+  }
+
+  .mobile-menu-fab{
+    right:max(14px,var(--fmb-phone-edge))!important;
+    bottom:calc(18px + var(--fmb-mobile-safe-bottom))!important;
+    min-width:104px!important;
+    height:58px!important;
+    padding:0 17px!important;
+    outline:none;
+  }
+
+  .mobile-menu-fab:focus-visible{
+    box-shadow:0 0 0 4px rgba(255,255,255,.92),0 0 0 7px rgba(93,20,126,.34),0 18px 48px rgba(40,9,54,.22)!important;
+  }
+
+  body.fmb-mobile-menu-ready .nav-links{
+    right:var(--fmb-phone-edge)!important;
+    bottom:calc(88px + var(--fmb-mobile-safe-bottom))!important;
+    left:var(--fmb-phone-edge)!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:10px!important;
+    max-height:min(calc(var(--fmb-visible-height,100dvh) - 112px),660px)!important;
+    padding:16px!important;
+    padding-bottom:max(18px,var(--fmb-mobile-safe-bottom))!important;
+    border-radius:30px!important;
+    background:linear-gradient(150deg,rgba(255,255,255,.94),rgba(244,232,249,.88))!important;
+    box-shadow:0 30px 90px rgba(34,8,47,.3),inset 0 1px 0 #fff!important;
+  }
+
+  body.fmb-mobile-menu-ready .nav-links .nav-menu-link,
+  body.fmb-mobile-menu-ready .nav-links .nav-menu-link[href="/"],
+  body.fmb-mobile-menu-ready .nav-links .nav-menu-link[href="#top"],
+  body.fmb-mobile-menu-ready .nav-links .nav-menu-link[href="/ebooks/"],
+  body.fmb-mobile-menu-ready .nav-links .nav-menu-link[href="/music/"],
+  body.fmb-mobile-menu-ready .nav-links .nav-menu-link[href="/news/"],
+  body.fmb-mobile-menu-ready .nav-links .nav-menu-link[href="/gethelp/"]{
+    min-height:92px!important;
+    padding:12px!important;
+    border-radius:20px!important;
+  }
+
+  body.fmb-mobile-menu-ready .nav-link-label{
+    font-size:12.5px!important;
+  }
+
+  body.fmb-mobile-menu-ready .nav-links .nav-menu-link small{
+    font-size:9px!important;
+  }
+
+  body.fmb-mobile-menu-ready .nav-mobile-actions .pill{
+    min-height:48px!important;
+    font-size:11px!important;
+  }
+
+  body.fmb-mobile-menu-ready .nav-backdrop{
+    background:rgba(31,5,43,.32)!important;
+    backdrop-filter:blur(10px) saturate(120%)!important;
+    -webkit-backdrop-filter:blur(10px) saturate(120%)!important;
+  }
+
+  /* Clean rhythm for the narrowest iPhones. */
+  body.fmb-mobile-menu-ready .section{
+    padding:clamp(50px,14vw,64px) 0!important;
+  }
+
+  body.fmb-mobile-menu-ready :is(.card,.glass-card,.home-support-card,.route-cta,.policy-card,.auth-card){
+    max-width:100%;
+  }
+}
+
+@media(max-width:380px){
+  :root{--fmb-phone-edge:12px}
+  body.fmb-mobile-menu-ready .care-banner{grid-template-columns:112px minmax(0,1fr)!important}
+  body.fmb-mobile-menu-ready .care-message{padding:0 8px!important}
+  body.fmb-mobile-menu-ready .nav-links{gap:8px!important;padding:12px!important}
+  body.fmb-mobile-menu-ready .nav-links .nav-menu-link{min-height:86px!important;padding:10px!important}
+  body.fmb-mobile-menu-ready .mobile-menu-icon{width:34px;height:34px}
+}

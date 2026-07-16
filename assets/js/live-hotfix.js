@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const release='20260716-advertising-banner';
+  const release='20260716-mobile-first-v6';
   function loadAsset(tag,attrs){
     const key=attrs.href||attrs.src;
     if(document.querySelector(`${tag}[href="${key}"],${tag}[src="${key}"]`))return;
@@ -37,9 +37,9 @@
     else loadAsset('link',{rel:'stylesheet',href:luxuryHref});
     loadAsset('script',{src:`/assets/js/reading-library.js?v=${release}`,defer:'defer'});
 
-    const transparentLogos={senz:'/assets/images/projects/senz-logo.png?v=20260716-banner-v5',cognita:'/assets/images/projects/cognita-logo.png?v=20260716-banner-v5'};
+    const transparentLogos={senz:'/assets/images/projects/senz-mobile.webp?v=20260716-mobile-first-v6',cognita:'/assets/images/projects/cognita-mobile.webp?v=20260716-mobile-first-v6'};
     const replacePartnerImages=()=>{
-      document.querySelectorAll('img').forEach(img=>{
+      document.querySelectorAll('.partner-track img').forEach(img=>{
         const source=(img.getAttribute('src')||'').toLowerCase();
         const alt=(img.getAttribute('alt')||'').toLowerCase();
         if(source.includes('senz-logo')||alt==='senz')img.src=transparentLogos.senz;
@@ -48,8 +48,27 @@
     };
     replacePartnerImages();
 
-    const promoMarquee=document.querySelector('.promo-marquee');
-    if(promoMarquee)promoMarquee.style.animationPlayState='running';
+    const careMessage=document.querySelector('.care-message strong');
+    if(careMessage)careMessage.textContent='With Love, FMB is brought to you by:';
+    const partnerTrack=document.querySelector('.partner-track');
+    if(partnerTrack){
+      const originals=[...partnerTrack.querySelectorAll('.partner-logo')].slice(0,2);
+      originals.forEach((logo,index)=>{
+        const img=logo.querySelector('img');
+        if(img)img.src=index===0?transparentLogos.senz:transparentLogos.cognita;
+      });
+      if(originals.length===2&&partnerTrack.querySelectorAll('.partner-logo').length<4){
+        originals.forEach(logo=>{
+          const clone=logo.cloneNode(true);
+          clone.setAttribute('aria-hidden','true');
+          clone.setAttribute('tabindex','-1');
+          clone.querySelector('img')?.setAttribute('alt','');
+          partnerTrack.appendChild(clone);
+        });
+      }
+      partnerTrack.style.animationPlayState='running';
+      requestAnimationFrame(()=>partnerTrack.getAnimations?.().forEach(animation=>animation.play()));
+    }
 
     const media=window.matchMedia('(max-width: 800px)');
     const toggle=document.getElementById('navToggle');
