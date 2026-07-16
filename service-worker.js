@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260716-mobile-luxury-3';
+const CACHE_NAME='fmb-app-shell-20260716-cleopatra-single-image';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -64,9 +64,7 @@ const APP_SHELL=[
   '/assets/images/projects/cognita-logo.png',
   '/assets/images/projects/senz-transparent.png',
   '/assets/images/projects/cognita-transparent.png',
-  '/assets/images/news/cleopatra-barrera-reina-filipinas-zambales.jpeg',
-  '/assets/images/news/cleopatra-barrera-maritime-editorial.jpeg',
-  '/assets/images/news/cleopatra-barrera-blue-gown-editorial.jpeg',
+  '/assets/images/news/cleopatra-barrera-zambales-ocean-feature.jpeg',
   '/assets/images/news/sara-duterte-impeachment.webp',
   '/assets/images/news/pax-silica-briefing.png',
   '/assets/images/news/good-news-briefing.png',
