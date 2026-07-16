@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260716-mobile-first-auth-fix-v7';
+const CACHE_NAME='fmb-app-shell-20260716-desktop-premium-music-v1';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -51,12 +51,15 @@ const APP_SHELL=[
   '/assets/css/fmb-content.css',
   '/assets/css/fmb-mobile-clean.css',
   '/assets/css/fmb-mobile-luxury.css',
+  '/assets/css/desktop-premium.css',
   '/assets/css/volunteer.css',
   '/assets/css/music-ui.css',
   '/assets/js/site.js',
   '/assets/js/live-hotfix.js',
   '/assets/js/volunteer.js',
   '/assets/js/music.js',
+  '/assets/js/desktop-premium.js',
+  '/assets/js/global-music.js',
   '/assets/data/music-library.json',
   '/assets/images/music/fmb-calm-official-album-cover.jpg',
   '/assets/images/icon-transparent.png',

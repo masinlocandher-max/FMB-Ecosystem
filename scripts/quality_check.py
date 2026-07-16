@@ -356,8 +356,8 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         "aria-modal",
         "focusableItems",
         "visualViewport",
-        "senz-mobile.webp?v=20260716-mobile-first-v6",
-        "cognita-mobile.webp?v=20260716-mobile-first-v6",
+        "senz-logo.png?v=20260716-desktop-premium-v1",
+        "cognita-logo.png?v=20260716-desktop-premium-v1",
     ):
         if marker not in hotfix_js:
             errors.append(f"assets/js/live-hotfix.js: missing accessible mobile menu marker: {marker}")
@@ -365,6 +365,47 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
     for logo in ("senz-logo.png", "cognita-logo.png"):
         if not (ROOT / "assets/images/projects" / logo).exists():
             errors.append(f"assets/images/projects/{logo}: clean transparent partner logo is missing")
+
+    premium_css_path = ROOT / "assets/css/desktop-premium.css"
+    if not premium_css_path.exists():
+        errors.append("assets/css/desktop-premium.css: premium desktop and persistent player layer is missing")
+    else:
+        premium_css = premium_css_path.read_text(encoding="utf-8")
+        for marker in (
+            "width:100vw!important",
+            "body.desktop-nav-hidden .nav-glass",
+            ".fmb-music-dock",
+            "body.landing-home .home-welcome",
+            "body.music-app .featured-player",
+            "@media(min-width:1025px)",
+        ):
+            if marker not in premium_css:
+                errors.append(f"assets/css/desktop-premium.css: missing desktop or player marker: {marker}")
+
+    desktop_js_path = ROOT / "assets/js/desktop-premium.js"
+    global_music_path = ROOT / "assets/js/global-music.js"
+    music_js_path = ROOT / "assets/js/music.js"
+    for path in (desktop_js_path, global_music_path):
+        if not path.exists():
+            errors.append(f"{path.relative_to(ROOT)}: global experience script is missing")
+    if desktop_js_path.exists():
+        desktop_js = desktop_js_path.read_text(encoding="utf-8")
+        for marker in ("desktop-nav-hidden", "IntersectionObserver", "data-page-ending"):
+            if marker not in desktop_js:
+                errors.append(f"assets/js/desktop-premium.js: missing marker: {marker}")
+    if global_music_path.exists():
+        global_music_js = global_music_path.read_text(encoding="utf-8")
+        for marker in ("fmb_music_state_v2", "fmb:global-music-command", "fmb-music-dock", "pagehide", "MediaMetadata"):
+            if marker not in global_music_js:
+                errors.append(f"assets/js/global-music.js: missing persistent player marker: {marker}")
+    if music_js_path.exists():
+        music_js = music_js_path.read_text(encoding="utf-8")
+        for marker in ("fmb:music-state", "fmb:global-music-command", "Restoring your listening session"):
+            if marker not in music_js:
+                errors.append(f"assets/js/music.js: missing cross-page playback marker: {marker}")
+    for marker in ("desktop-premium.css", "desktop-premium.js", "global-music.js", "senz-logo.png", "cognita-logo.png"):
+        if marker not in site_js:
+            errors.append(f"assets/js/site.js: missing global premium asset marker: {marker}")
 
     public_mobile_routes = (
         "index.html",

@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const release='20260716-mobile-first-v6';
+  const release='20260716-desktop-premium-v1';
   function loadAsset(tag,attrs){
     const key=attrs.href||attrs.src;
     if(document.querySelector(`${tag}[href="${key}"],${tag}[src="${key}"]`))return;
@@ -37,7 +37,7 @@
     else loadAsset('link',{rel:'stylesheet',href:luxuryHref});
     loadAsset('script',{src:`/assets/js/reading-library.js?v=${release}`,defer:'defer'});
 
-    const transparentLogos={senz:'/assets/images/projects/senz-mobile.webp?v=20260716-mobile-first-v6',cognita:'/assets/images/projects/cognita-mobile.webp?v=20260716-mobile-first-v6'};
+    const transparentLogos={senz:'/assets/images/projects/senz-logo.png?v=20260716-desktop-premium-v1',cognita:'/assets/images/projects/cognita-logo.png?v=20260716-desktop-premium-v1'};
     const replacePartnerImages=()=>{
       document.querySelectorAll('.promo-marquee img').forEach(img=>{
         const source=(img.getAttribute('src')||'').toLowerCase();
