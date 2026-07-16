@@ -70,23 +70,20 @@
     const items=[
       {label:'Home',description:'Start here and see what is open',href:onHome?'#top':'index.html#top',current:onHome&&!location.hash},
       {label:'Read',description:'Open every guide without an account',href:onHome?'#bookshelf':'index.html#bookshelf',current:['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html'].includes(page)},
-      {label:'Daily space',description:'Affirmation, check-in, journal, and sharing',href:'daily.html',current:page==='daily.html'},
       {label:'Music',description:'Play our original calming soundscape',href:'music.html',current:page==='music.html'},
+      {label:'Freedom Wall',description:'Read positive words for courage and hope',href:'freedom-wall.html',current:page==='freedom-wall.html'},
       {label:'Volunteer',description:'Serve through our founder-led initiative',href:'volunteer.html',current:page==='volunteer.html'},
       {label:'Our projects',description:'Discover SENZ and Cognita',href:href('work'),current:false},
       {label:'About',description:'Meet FMB and explore our work',href:'about.html',current:page==='about.html'},
       {label:'Get help',description:'Open public crisis and support contacts',href:href('support'),current:false,help:true}
     ];
-    links.innerHTML=`<div class="nav-menu-intro"><strong>Where would you like to go?</strong><span>Reading, daily tools, and music are open without an account.</span></div>${items.map(item=>`<a class="nav-menu-link${item.help?' nav-help-link':''}" href="${item.href}"${item.current?' aria-current="page"':''}><span class="nav-link-label">${item.label}</span><small>${item.description}</small></a>`).join('')}<div class="nav-mobile-actions"><a class="pill secondary" href="auth.html#signin">Account, optional</a><a class="pill" href="daily.html">Open daily space</a></div>`;
-    const signIn=actions.querySelector('a[href*="auth.html#signin"]');
-    const join=actions.querySelector('a[href*="auth.html#signup"]');
+    links.innerHTML=`<div class="nav-menu-intro"><strong>Where would you like to go?</strong><span>Reading, listening, and the Freedom Wall are open without an account.</span></div>${items.map(item=>`<a class="nav-menu-link${item.help?' nav-help-link':''}" href="${item.href}"${item.current?' aria-current="page"':''}><span class="nav-link-label">${item.label}</span><small>${item.description}</small></a>`).join('')}<div class="nav-mobile-actions"><a class="pill secondary" href="freedom-wall.html">Freedom Wall</a><a class="pill" href="music.html">Listen now</a></div>`;
+    actions.querySelectorAll('a[href^="daily.html"],a[href*="auth.html#signin"],a[href*="auth.html#signup"]').forEach(link=>link.remove());
     const menuToggle=actions.querySelector('#navToggle');
-    if(signIn)signIn.textContent='Optional account';
-    if(join)join.textContent='Create optional profile';
     if(menuToggle)menuToggle.setAttribute('aria-controls','navLinks');
     const mobileBar=$('.mobile-bar:not(.member-mobile-bar):not(.admin-mobile-bar)');
     if(mobileBar){
-      mobileBar.innerHTML=`<a class="${onHome?'active':''}" href="${onHome?'#top':'index.html#top'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 11 8-7 8 7v9H4Z"/><path d="M9 20v-6h6v6"/></svg><span>Home</span></a><a class="${['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html'].includes(page)?'active':''}" href="${onHome?'#bookshelf':'index.html#bookshelf'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2Z"/><path d="M7 4v14a2 2 0 0 0 2 2"/></svg><span>Read</span></a><a class="${page==='daily.html'?'active':''}" href="daily.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v14H4Z"/><path d="M8 3v4M16 3v4M7 11h4M7 15h7"/></svg><span>Daily</span></a><a class="${page==='music.html'?'active':''}" href="music.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg><span>Music</span></a>`;
+      mobileBar.innerHTML=`<a class="${onHome?'active':''}" href="${onHome?'#top':'index.html#top'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 11 8-7 8 7v9H4Z"/><path d="M9 20v-6h6v6"/></svg><span>Home</span></a><a class="${['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html'].includes(page)?'active':''}" href="${onHome?'#bookshelf':'index.html#bookshelf'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2Z"/><path d="M7 4v14a2 2 0 0 0 2 2"/></svg><span>Read</span></a><a class="${page==='music.html'?'active':''}" href="music.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg><span>Listen</span></a><a class="${page==='freedom-wall.html'?'active':''}" href="freedom-wall.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5h14v11H9l-4 3Z"/><path d="M9 9h6M9 12h4"/></svg><span>Wall</span></a>`;
     }
   }
   setupFriendlyNavigation();
@@ -100,10 +97,12 @@
     document.addEventListener('click',event=>{if(!event.target.closest('.nav-glass'))close()});
   }
 
-  const topPromo=$('.support-glass');
+  let topPromo=$('.support-glass');
+  const topShell=$('.top-shell');
+  if(!topPromo&&topShell){topPromo=document.createElement('div');topPromo.className='support-glass';topShell.prepend(topPromo)}
   if(topPromo){
-    topPromo.setAttribute('aria-label','With Love, FMB partner brands');
-    const items=`<span class="brand-marquee-label">With Love, FMB is brought to you by:</span><a class="support-chip light brand-chip brand-chip-logo" href="https://www.senzpr.com" target="_blank" rel="noopener noreferrer" aria-label="Visit SENZ Strategic Communications"><img src="assets/images/projects/senz-transparent.png" alt="SENZ"><span class="sr-only">SENZ Strategic Communications</span></a><a class="support-chip light brand-chip brand-chip-logo cognita-chip" href="https://thecognitainstitute.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Cognita Institute of AI"><img src="assets/images/projects/cognita-transparent.png?v=20260714-approved" alt="Cognita Institute of AI"><span class="sr-only">Cognita Institute of AI</span></a>`;
+    topPromo.setAttribute('aria-label','Website maintenance notice and With Love, FMB partner brands');
+    const items=`<span class="banner-status">Website care notice</span><span class="brand-marquee-label">Maintenance and improvements are ongoing. Reading, listening, and the Freedom Wall remain open.</span><span class="banner-divider" aria-hidden="true"></span><span class="banner-partner-label">Brought to you by</span><a class="support-chip light brand-chip brand-chip-logo" href="https://www.senzpr.com" target="_blank" rel="noopener noreferrer" aria-label="Visit SENZ Strategic Communications"><img src="assets/images/projects/senz-transparent.png" alt="SENZ"><span class="sr-only">SENZ Strategic Communications</span></a><a class="support-chip light brand-chip brand-chip-logo cognita-chip" href="https://thecognitainstitute.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Cognita Institute of AI"><img src="assets/images/projects/cognita-transparent.png?v=20260714-approved" alt="Cognita Institute of AI"><span class="sr-only">Cognita Institute of AI</span></a>`;
     topPromo.innerHTML=`<div class="promo-marquee"><div class="promo-group">${items}</div><div class="promo-group" aria-hidden="true">${items}</div></div>`;
   }
 
@@ -226,16 +225,21 @@
       button.dataset.savedId=data.id;button.textContent='Saved';window.FMB.showToast('Saved to your profile.');
     });
   }
-  setupReadingSave();
+  // Saved-content controls stay hidden while the member space is under maintenance.
 
   async function loadCommunityFeed(){
     const feed=$('#communityFeed');if(!feed)return;
     const status=$('#communityFeedStatus');
-    if(!window.FMB?.configured){feed.innerHTML='<div class="empty">The public community feed will open after the secure member service is connected.</div>';if(status)status.textContent='No private information is shown while the service is offline.';return}
+    const editorial=[
+      'Rest is not a reward. It is part of staying whole.',
+      'Changing direction does not erase how far you have already come.',
+      'There is courage in asking for help before everything becomes too heavy.'
+    ];
+    const showEditorial=()=>{feed.innerHTML=editorial.map(message=>`<article class="community-post editorial"><p>${message}</p><footer><strong>With love, FMB reflection</strong></footer></article>`).join('');if(status)status.textContent='Positive reflections from our space. Visitor submissions are still under maintenance.'};
+    if(!window.FMB?.configured){showEditorial();return}
     const client=window.FMB.createClient('local');
     const {data,error}=await client.from('freedom_wall_posts').select('id,alias,content,published_at').eq('status','published').order('published_at',{ascending:false}).limit(9);
-    if(error){feed.innerHTML='<div class="empty">The community feed could not be loaded right now.</div>';if(status)status.textContent='Please try again later.';return}
-    if(!data?.length){feed.innerHTML='<div class="empty">No approved community posts have been published yet.</div>';if(status)status.textContent='Posts appear only after review.';return}
+    if(error||!data?.length){showEditorial();return}
     feed.innerHTML=data.map(post=>`<article class="community-post"><p>${window.FMB.escapeHtml(post.content)}</p><footer><strong>${window.FMB.escapeHtml(post.alias)}</strong><time datetime="${window.FMB.escapeHtml(post.published_at||'')}">${post.published_at?new Date(post.published_at).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}):''}</time></footer></article>`).join('');
     if(status)status.textContent='Only approved posts are shown publicly.';
   }

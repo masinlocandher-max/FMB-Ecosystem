@@ -91,14 +91,26 @@
     {
       "id": "original-soundtracks",
       "title": "Original Soundtracks",
-      "description": "Original songs written and directed for With love, FMB.",
+      "description": "Two versions of the With Love, FMB original soundtrack, written and musically directed by Francine Marie Bautista (FMB).",
       "tracks": [
         {
-          "id": "with-love-fmb-ost",
-          "title": "With Love, FMB",
+          "id": "with-love-fmb-ost-01",
+          "title": "With Love, FMB · Version 01",
           "artist": "Francine Marie Bautista (FMB)",
-          "description": "Original soundtrack. Written by and under the musical direction of Francine Marie Bautista (FMB).",
+          "description": "Original soundtrack, Version 01. Written by and under the musical direction of Francine Marie Bautista (FMB).",
+          "src": "assets/audio/ost/with-love-fmb-version-01.mp3",
+          "duration": "2:35",
+          "version": "Version 01",
+          "cover_url": "assets/images/music/fmb-ost-with-love-fmb-cover.png"
+        },
+        {
+          "id": "with-love-fmb-ost-02",
+          "title": "With Love, FMB · Version 02",
+          "artist": "Francine Marie Bautista (FMB)",
+          "description": "Original soundtrack, Version 02. Written by and under the musical direction of Francine Marie Bautista (FMB).",
           "src": "assets/audio/ost/with-love-fmb-remastered.mp3",
+          "duration": "3:19",
+          "version": "Version 02",
           "cover_url": "assets/images/music/fmb-ost-with-love-fmb-cover.png"
         }
       ]
