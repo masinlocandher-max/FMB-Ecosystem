@@ -16,6 +16,9 @@
 .partner-logo{position:relative;z-index:1;width:154px;height:44px;padding:5px 8px;overflow:hidden;border:1px solid rgba(81,11,119,.06);background:rgba(255,255,255,.82)}
 .partner-logo.cognita{width:174px;height:44px}
 .partner-logo img,.partner-logo.cognita img{position:absolute;inset:5px 8px;display:block;width:calc(100% - 16px)!important;height:calc(100% - 10px)!important;max-width:none;max-height:none;object-fit:contain}
+.support-glass .care-message{border-right-color:rgba(255,255,255,.18)}
+.support-glass .care-message strong,.support-glass .partner-label{color:#fff!important;text-shadow:0 1px 10px rgba(20,0,28,.28)}
+.support-glass .care-message span{border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.14);color:#fff}
 @keyframes fmb-partner-shine{0%,70%{left:-35%}100%{left:120%}}
 @keyframes fmb-content-partner-marquee{to{transform:translateX(calc(-50% - 7px))}}
 
