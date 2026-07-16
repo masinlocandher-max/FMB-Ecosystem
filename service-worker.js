@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260716-cleopatra-single-image';
+const CACHE_NAME='fmb-app-shell-20260716-mobile-luxury-4';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
