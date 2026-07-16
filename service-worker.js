@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260716-cleopatra-feature';
+const CACHE_NAME='fmb-app-shell-20260716-mobile-luxury-1';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -50,6 +50,7 @@ const APP_SHELL=[
   '/assets/css/fmb-polish.css',
   '/assets/css/fmb-content.css',
   '/assets/css/fmb-mobile-clean.css',
+  '/assets/css/fmb-mobile-luxury.css',
   '/assets/css/volunteer.css',
   '/assets/css/music-ui.css',
   '/assets/js/site.js',
@@ -61,6 +62,8 @@ const APP_SHELL=[
   '/assets/images/icon-transparent.png',
   '/assets/images/projects/senz-logo.png',
   '/assets/images/projects/cognita-logo.png',
+  '/assets/images/projects/senz-transparent.png',
+  '/assets/images/projects/cognita-transparent.png',
   '/assets/images/news/cleopatra-barrera-reina-filipinas-zambales.jpeg',
   '/assets/images/news/cleopatra-barrera-maritime-editorial.jpeg',
   '/assets/images/news/cleopatra-barrera-blue-gown-editorial.jpeg',
