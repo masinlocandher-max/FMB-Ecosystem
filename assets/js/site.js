@@ -176,14 +176,12 @@
 
     const status=panel.querySelector('.content-action-status');
     const say=message=>{status.textContent=message;window.clearTimeout(status._timer);status._timer=window.setTimeout(()=>{status.textContent=''},6000)};
+    const legacyCopy=()=>{
+      try{const input=document.createElement('textarea');input.value=canonical;input.setAttribute('readonly','');input.style.position='fixed';input.style.opacity='0';document.body.appendChild(input);input.select();const copied=document.execCommand('copy');input.remove();return copied}catch{return false}
+    };
     const copyLink=async()=>{
-      try{
-        if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(canonical);
-        else{
-          const input=document.createElement('textarea');input.value=canonical;input.setAttribute('readonly','');input.style.position='fixed';input.style.opacity='0';document.body.appendChild(input);input.select();document.execCommand('copy');input.remove();
-        }
-        return true;
-      }catch{return false}
+      if(navigator.clipboard&&window.isSecureContext){try{await navigator.clipboard.writeText(canonical);return true}catch{return legacyCopy()}}
+      return legacyCopy();
     };
 
     panel.querySelector('[data-share="copy"]').addEventListener('click',async()=>say(await copyLink()?'Link copied. You can paste it anywhere.':'Copy was blocked by this browser. Select the address from the browser bar instead.'));
