@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const release='20260716-mobile-first-v6';
+  const release='20260716-mobile-subdomain-v8';
   function loadAsset(tag,attrs){
     const key=attrs.href||attrs.src;
     if(document.querySelector(`${tag}[href="${key}"],${tag}[src="${key}"]`))return;
@@ -25,6 +25,7 @@
     return `<span class="mobile-menu-icon" aria-hidden="true"><svg viewBox="0 0 24 24">${icons[key]}</svg></span>`;
   }
   function boot(){
+    const isDedicatedMobileHost=location.hostname.toLowerCase()==='mobile.francinemariebautista.com';
     loadAsset('link',{rel:'stylesheet',href:`/assets/css/reading-library.css?v=${release}`});
     loadAsset('link',{rel:'stylesheet',href:`/assets/css/apple-mobile.css?v=${release}`});
     loadAsset('link',{rel:'stylesheet',href:`/assets/css/experience-refresh.css?v=${release}`});
@@ -56,9 +57,9 @@
     const links=document.getElementById('navLinks');
     const publicMobileBar=document.querySelector('.mobile-bar:not(.member-mobile-bar):not(.admin-mobile-bar)');
     const coreFab=document.querySelector('.mobile-menu-fab[data-core-menu-bound="true"]');
-    if(coreFab){
+    if(isDedicatedMobileHost&&coreFab){
       document.body.classList.add('fmb-mobile-menu-ready');
-    }else if(toggle&&links&&links.querySelector('.nav-menu-link')){
+    }else if(isDedicatedMobileHost&&toggle&&links&&links.querySelector('.nav-menu-link')){
       document.body.classList.add('fmb-mobile-menu-ready');
       links.dataset.mobileMenu='dialog';
       const introTitle=links.querySelector('.nav-menu-intro strong');

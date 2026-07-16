@@ -326,7 +326,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
             errors.append(f"assets/css/fmb-mobile-clean.css: missing mobile UX marker: {marker}")
 
     site_js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
-    for marker in ("setupMobileChrome", "document.createElement('nav')", "fmb-mobile-clean.css", "createActions", "navigator.share", "coreMenuBound", "mobile-menu-fab", "aria-modal", "focusableItems", "visualViewport", "fmb-mobile-menu-anchor", "document.body.appendChild(menu)", "promoGroup", "register('/service-worker.js'"):
+    for marker in ("setupMobileChrome", "MOBILE_EXPERIENCE_HOST", "mobile.francinemariebautista.com", "isDedicatedMobileHost", "fmb-mobile-host", "document.createElement('nav')", "fmb-mobile-clean.css", "createActions", "navigator.share", "coreMenuBound", "mobile-menu-fab", "aria-modal", "focusableItems", "visualViewport", "fmb-mobile-menu-anchor", "document.body.appendChild(menu)", "promoGroup", "register('/service-worker.js'"):
         if marker not in site_js:
             errors.append(f"assets/js/site.js: missing mobile or item-action marker: {marker}")
 
@@ -356,6 +356,8 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         "aria-modal",
         "focusableItems",
         "visualViewport",
+        "isDedicatedMobileHost",
+        "mobile.francinemariebautista.com",
         "senz-mobile.webp?v=20260716-mobile-first-v6",
         "cognita-mobile.webp?v=20260716-mobile-first-v6",
     ):

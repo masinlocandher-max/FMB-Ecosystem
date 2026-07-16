@@ -1,7 +1,22 @@
 (function(){
   'use strict';
   const $=selector=>document.querySelector(selector);
-  const $$=selector=>document.querySelectorAll(selector);
+  const $=selector=>document.querySelectorAll(selector);
+  const MOBILE_EXPERIENCE_HOST='mobile.francinemariebautista.com';
+  const isDedicatedMobileHost=location.hostname.toLowerCase()===MOBILE_EXPERIENCE_HOST;
+
+  function setupExperienceHost(){
+    document.documentElement.classList.toggle('fmb-mobile-host',isDedicatedMobileHost);
+    document.documentElement.dataset.experience=isDedicatedMobileHost?'mobile':'website';
+    document.body?.classList.toggle('fmb-mobile-host',isDedicatedMobileHost);
+    if(!isDedicatedMobileHost)return;
+    let canonical=document.querySelector('link[rel="canonical"]');
+    if(!canonical){canonical=document.createElement('link');canonical.rel='canonical';document.head.appendChild(canonical)}
+    canonical.href='https://www.francinemariebautista.com'+location.pathname;
+    const appleTitle=document.querySelector('meta[name="apple-mobile-web-app-title"]');
+    if(appleTitle)appleTitle.content='With love, FMB Mobile';
+  }
+  setupExperienceHost();
 
   function ensureStylesheet(href){
     if(document.querySelector(`link[href="${href}"]`))return;
@@ -118,6 +133,7 @@
   }
 
   function setupMobileChrome(){
+    if(!isDedicatedMobileHost)return;
     const media=window.matchMedia('(max-width: 800px)');
     const menu=$('#navLinks');
     const menuToggle=$('#navToggle');
