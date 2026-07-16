@@ -214,8 +214,8 @@ def check_advertising_flow(errors: list[str]) -> None:
     edge_path = ROOT / "supabase/functions/advertising-inquiry/index.ts"
     for marker in (
         "With love, FMB is brought to you by:",
-        "/assets/images/projects/senz-mobile.webp",
-        "/assets/images/projects/cognita-mobile.webp",
+        "/assets/images/projects/senz-logo.png",
+        "/assets/images/projects/cognita-logo.png",
         "Advertise your brand or business across the website",
         "/aboutfmb/?category=advertise-with-us#work-with-fmb",
         "client.functions.invoke('advertising-inquiry'",
