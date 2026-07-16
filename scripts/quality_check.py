@@ -189,6 +189,37 @@ def check_navigation_experience(errors: list[str]) -> None:
         errors.append("assets/css/site.css: first-visit benefit styles are missing")
 
 
+def check_advertising_flow(errors: list[str]) -> None:
+    site_js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
+    banner_css = (ROOT / "assets/css/experience-refresh.css").read_text(encoding="utf-8")
+    about = (ROOT / "aboutfmb/index.html").read_text(encoding="utf-8")
+    edge_path = ROOT / "supabase/functions/advertising-inquiry/index.ts"
+    for marker in (
+        "With love, FMB is brought to you by:",
+        "/assets/images/projects/senz-mobile.webp",
+        "/assets/images/projects/cognita-mobile.webp",
+        "Advertise your brand or business across the website",
+        "/aboutfmb/?category=advertise-with-us#work-with-fmb",
+        "client.functions.invoke('advertising-inquiry'",
+        "button.disabled=!(name&&business&&isValidEmail(email))",
+    ):
+        if marker not in site_js:
+            errors.append(f"assets/js/site.js: missing advertising marker: {marker}")
+    for marker in (".top-shell", "position:fixed!important", ".promo-marquee", "animation:fmb-public-care-marquee", ".banner-divider", ".banner-advertise-button"):
+        if marker not in banner_css:
+            errors.append(f"assets/css/experience-refresh.css: missing moving banner marker: {marker}")
+    for marker in ('id="workBusiness"', 'id="advertisePrefill"', "Request the advertising tier packages"):
+        if marker not in about:
+            errors.append(f"aboutfmb/index.html: missing advertising form marker: {marker}")
+    if not edge_path.exists():
+        errors.append("supabase/functions/advertising-inquiry/index.ts: advertising email function is missing")
+    else:
+        edge = edge_path.read_text(encoding="utf-8")
+        for marker in ("withlovefmb@gmail.com", "RESEND_API_KEY", "emails/batch", "submit_contact_message", "noreply@francinemariebautista.com"):
+            if marker not in edge:
+                errors.append(f"supabase/functions/advertising-inquiry/index.ts: missing delivery marker: {marker}")
+
+
 def check_sharing_and_footer(errors: list[str]) -> None:
     site_js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
     content_css = (ROOT / "assets/css/fmb-content.css").read_text(encoding="utf-8")
@@ -277,7 +308,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
             errors.append(f"assets/css/fmb-mobile-clean.css: missing mobile UX marker: {marker}")
 
     site_js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
-    for marker in ("setupMobileChrome", "document.createElement('nav')", "fmb-mobile-clean.css", "createActions", "navigator.share", "coreMenuBound", "mobile-menu-fab", "aria-modal", "focusableItems", "visualViewport", "fmb-mobile-menu-anchor", "document.body.appendChild(menu)", "repeatedLogos", "register('/service-worker.js'"):
+    for marker in ("setupMobileChrome", "document.createElement('nav')", "fmb-mobile-clean.css", "createActions", "navigator.share", "coreMenuBound", "mobile-menu-fab", "aria-modal", "focusableItems", "visualViewport", "fmb-mobile-menu-anchor", "document.body.appendChild(menu)", "promoGroup", "register('/service-worker.js'"):
         if marker not in site_js:
             errors.append(f"assets/js/site.js: missing mobile or item-action marker: {marker}")
 
@@ -391,6 +422,7 @@ def main() -> int:
     check_config(errors)
     check_membership_features(errors)
     check_navigation_experience(errors)
+    check_advertising_flow(errors)
     check_sharing_and_footer(errors)
     check_mobile_and_editorial_media(errors)
 

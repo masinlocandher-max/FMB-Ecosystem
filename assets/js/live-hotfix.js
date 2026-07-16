@@ -39,7 +39,7 @@
 
     const transparentLogos={senz:'/assets/images/projects/senz-mobile.webp?v=20260716-mobile-first-v6',cognita:'/assets/images/projects/cognita-mobile.webp?v=20260716-mobile-first-v6'};
     const replacePartnerImages=()=>{
-      document.querySelectorAll('.partner-track img').forEach(img=>{
+      document.querySelectorAll('.promo-marquee img').forEach(img=>{
         const source=(img.getAttribute('src')||'').toLowerCase();
         const alt=(img.getAttribute('alt')||'').toLowerCase();
         if(source.includes('senz-logo')||alt==='senz')img.src=transparentLogos.senz;
@@ -48,27 +48,8 @@
     };
     replacePartnerImages();
 
-    const careMessage=document.querySelector('.care-message strong');
-    if(careMessage)careMessage.textContent='With Love, FMB is brought to you by:';
-    const partnerTrack=document.querySelector('.partner-track');
-    if(partnerTrack){
-      const originals=[...partnerTrack.querySelectorAll('.partner-logo')].slice(0,2);
-      originals.forEach((logo,index)=>{
-        const img=logo.querySelector('img');
-        if(img)img.src=index===0?transparentLogos.senz:transparentLogos.cognita;
-      });
-      if(originals.length===2&&partnerTrack.querySelectorAll('.partner-logo').length<4){
-        originals.forEach(logo=>{
-          const clone=logo.cloneNode(true);
-          clone.setAttribute('aria-hidden','true');
-          clone.setAttribute('tabindex','-1');
-          clone.querySelector('img')?.setAttribute('alt','');
-          partnerTrack.appendChild(clone);
-        });
-      }
-      partnerTrack.style.animationPlayState='running';
-      requestAnimationFrame(()=>partnerTrack.getAnimations?.().forEach(animation=>animation.play()));
-    }
+    const promoMarquee=document.querySelector('.promo-marquee');
+    if(promoMarquee)promoMarquee.style.animationPlayState='running';
 
     const media=window.matchMedia('(max-width: 800px)');
     const toggle=document.getElementById('navToggle');
