@@ -31,7 +31,7 @@
   <article class="auth-card">
     <div class="auth-tabs" role="tablist" aria-label="Account access"><button class="auth-tab active" id="signinTab" type="button" role="tab" aria-controls="signinPanel" aria-selected="true">Sign in</button><button class="auth-tab" id="signupTab" type="button" role="tab" aria-controls="signupPanel" aria-selected="false">Create profile</button></div>
     <section class="auth-panel" id="signinPanel" role="tabpanel" aria-labelledby="signinTab">
-      <h2>Welcome back.</h2><p>Use the verified email and password connected to your profile.</p>
+      <h2>Welcome back.</h2><p>Use the verified email and password connected to your profile. Normal sign-in does not send an email. If you do not remember the password, choose <strong>Forgot password?</strong></p>
       <form class="form-grid" id="signinForm" novalidate>
         <div class="field"><label for="signinEmail">Email</label><input id="signinEmail" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" required></div>
         <div class="field"><label for="signinPassword">Password</label><div class="password-wrap"><input id="signinPassword" name="password" type="password" autocomplete="current-password" required><button class="password-toggle" type="button" data-toggle-password="signinPassword" aria-label="Show password">Show</button></div></div>
@@ -53,9 +53,9 @@
         <div class="status" id="signupStatus" role="status" aria-live="polite"></div>
       </form>
       <div class="verification-actions" id="verificationActions" hidden>
-        <p>Verification sent to <strong id="verificationEmail"></strong>.</p>
+        <p id="verificationSummary"><span id="verificationLead">Verification requested for</span> <strong id="verificationEmail"></strong>.</p>
         <div class="form-actions"><button class="pill secondary" id="resendConfirmation" type="button">Resend verification</button><button class="text-link" id="openSignIn" type="button">Open sign in</button></div>
-        <p class="form-note" id="resendHelp">Check Inbox, Spam, Promotions, and All Mail before requesting another message.</p>
+        <p class="form-note" id="resendHelp">New profiles should check Inbox, Spam, Promotions, and All Mail. Already verified profiles will not receive another verification email and should use Sign in or Forgot password.</p>
       </div>
     </section>
     <p class="form-note" style="margin-top:22px">Creating a profile is free. Passwords are handled by the authentication provider and are never visible to administrators.</p>
@@ -66,7 +66,7 @@
 <script src="assets/js/config.js?v=20260715-member-launch"></script>
 <script src="assets/js/supabase-client.js"></script>
 <script src="/assets/js/site.js?v=20260716-mobile-first-v6"></script>
-<script src="assets/js/auth.js?v=20260715-member-launch"></script>
+<script src="assets/js/auth.js?v=20260716-existing-account-fix"></script>
 <script src="assets/js/registration-readiness.js"></script>
 <script src="/assets/js/live-hotfix.js?v=20260716-mobile-first-v6"></script>
 </body>

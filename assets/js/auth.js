@@ -6,6 +6,7 @@
   const signinPanel=$('#signinPanel');
   const signupPanel=$('#signupPanel');
   const verificationActions=$('#verificationActions');
+  const verificationLead=$('#verificationLead');
   const verificationEmail=$('#verificationEmail');
   const resendConfirmation=$('#resendConfirmation');
   const resendHelp=$('#resendHelp');
@@ -62,9 +63,20 @@
   }
   function showVerification(email){
     if(!verificationActions||!verificationEmail)return;
+    if(verificationLead)verificationLead.textContent='Verification requested for';
     verificationEmail.textContent=email;
+    if(resendConfirmation)resendConfirmation.hidden=false;
     verificationActions.hidden=false;
     sessionStorage.setItem(pendingEmailKey,email);
+  }
+  function showExistingAccount(email){
+    if($('#signinEmail'))$('#signinEmail').value=email;
+    sessionStorage.removeItem(pendingEmailKey);
+    if(verificationActions)verificationActions.hidden=false;
+    if(verificationLead)verificationLead.textContent='A profile already uses';
+    if(verificationEmail)verificationEmail.textContent=email;
+    if(resendConfirmation)resendConfirmation.hidden=true;
+    if(resendHelp)resendHelp.textContent='This profile does not need another signup verification email. Open Sign in and enter the password, or choose Forgot password to receive a recovery link.';
   }
 
   const signupPassword=$('#signupPassword');
@@ -165,10 +177,16 @@
       setStatus('#signupStatus',message,'error');
       return;
     }
+    const existingAccount=Boolean(data.user&&Array.isArray(data.user.identities)&&data.user.identities.length===0);
+    if(existingAccount){
+      setStatus('#signupStatus','A profile already uses this email. No new verification email will be sent. Open Sign in, or use Forgot password if you do not remember the password.','error');
+      showExistingAccount(email);
+      return;
+    }
     if(data.session){location.replace('/profile/');return}
     $('#signupForm').reset();
     document.querySelectorAll('#passwordRules span').forEach(rule=>rule.classList.remove('valid'));
-    setStatus('#signupStatus','Check your email and open the verification link. Then return to sign in.','success');
+    setStatus('#signupStatus','If this is a new profile, check your email and open the verification link. Existing profiles should use Sign in or Forgot password.','success');
     showVerification(email);
   });
 
@@ -191,7 +209,12 @@
     setStatus('#signinStatus','If a profile uses that email, a password reset link is on the way.','success');
   });
 
-  openSignIn?.addEventListener('click',()=>showPanel('signin'));
+  openSignIn?.addEventListener('click',()=>{
+    const email=(verificationEmail?.textContent||sessionStorage.getItem(pendingEmailKey)||'').trim().toLowerCase();
+    if(validEmail(email)&&$('#signinEmail'))$('#signinEmail').value=email;
+    showPanel('signin');
+    setStatus('#signinStatus','Enter your password to sign in. Normal sign-in does not send an email. If you do not remember it, choose Forgot password.','');
+  });
   resendConfirmation?.addEventListener('click',async()=>{
     const email=(verificationEmail?.textContent||sessionStorage.getItem(pendingEmailKey)||'').trim().toLowerCase();
     if(!validEmail(email)){setStatus('#signupStatus','Enter the email used for the profile first.','error');return}
@@ -214,7 +237,7 @@
       if(seconds<=0){clearInterval(timer);resendConfirmation.disabled=false;resendHelp.textContent='Check Inbox, Spam, Promotions, and All Mail before requesting another message.';return}
       resendHelp.textContent=`Verification sent. You can request another message in ${seconds} seconds.`;
     },1000);
-    setStatus('#signupStatus','A fresh verification message was requested.','success');
+    setStatus('#signupStatus','If this profile is still awaiting verification, a fresh message was requested. Already verified profiles will not receive another signup email.','success');
   });
 
   const pendingEmail=sessionStorage.getItem(pendingEmailKey);
