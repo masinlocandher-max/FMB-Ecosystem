@@ -194,8 +194,8 @@ def check_navigation_experience(errors: list[str]) -> None:
     site_css = (ROOT / "assets/css/site.css").read_text(encoding="utf-8")
     for marker in (
         'id="what-you-get"',
-        "Read every guide",
-        "Listen without signing in",
+        "Begin with a public guide",
+        "Listen inside our member space",
         "Visit the Freedom Wall",
         "Access public support",
     ):
