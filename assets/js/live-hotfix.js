@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const release='20260716-mobile-luxury-3';
+  const release='20260716-mobile-luxury-4';
   function loadAsset(tag,attrs){
     const key=attrs.href||attrs.src;
     if(document.querySelector(`${tag}[href="${key}"],${tag}[src="${key}"]`))return;
@@ -31,10 +31,13 @@
     const mobileClean=document.querySelector('link[href*="assets/css/fmb-mobile-clean.css"]');
     if(mobileClean)document.head.appendChild(mobileClean);
     else loadAsset('link',{rel:'stylesheet',href:`/assets/css/fmb-mobile-clean.css?v=${release}`});
-    loadAsset('link',{rel:'stylesheet',href:`/assets/css/fmb-mobile-luxury.css?v=${release}`});
+    const luxuryHref=`/assets/css/fmb-mobile-luxury.css?v=${release}`;
+    const luxuryStyles=document.querySelector(`link[href="${luxuryHref}"]`);
+    if(luxuryStyles)document.head.appendChild(luxuryStyles);
+    else loadAsset('link',{rel:'stylesheet',href:luxuryHref});
     loadAsset('script',{src:`/assets/js/reading-library.js?v=${release}`,defer:'defer'});
 
-    const transparentLogos={senz:'/assets/images/projects/senz-transparent.png?v=20260716-alpha',cognita:'/assets/images/projects/cognita-transparent.png?v=20260716-alpha'};
+    const transparentLogos={senz:'/assets/images/projects/senz-logo.png?v=20260716-clean-alpha',cognita:'/assets/images/projects/cognita-logo.png?v=20260716-clean-alpha'};
     const replacePartnerImages=()=>{
       document.querySelectorAll('img').forEach(img=>{
         const source=(img.getAttribute('src')||'').toLowerCase();
@@ -72,11 +75,14 @@
     const publicMobileBar=document.querySelector('.mobile-bar:not(.member-mobile-bar):not(.admin-mobile-bar)');
     if(toggle&&links&&publicMobileBar&&links.querySelector('.nav-menu-link')){
       document.body.classList.add('fmb-mobile-menu-ready');
+      links.dataset.mobileMenu='dialog';
+      const introTitle=links.querySelector('.nav-menu-intro strong');
+      if(introTitle){introTitle.id='mobileMenuTitle';links.setAttribute('aria-labelledby',introTitle.id)}
       links.querySelectorAll('.nav-menu-link').forEach(link=>{
         if(!link.querySelector('.mobile-menu-icon'))link.insertAdjacentHTML('afterbegin',menuIconFor(link.getAttribute('href')));
       });
       let backdrop=document.querySelector('.nav-backdrop');
-      if(!backdrop){backdrop=document.createElement('div');backdrop.className='nav-backdrop';document.body.appendChild(backdrop)}
+      if(!backdrop){backdrop=document.createElement('div');backdrop.className='nav-backdrop';backdrop.setAttribute('aria-hidden','true');document.body.appendChild(backdrop)}
       let fab=document.querySelector('.mobile-menu-fab');
       if(!fab){
         fab=document.createElement('button');
@@ -85,12 +91,27 @@
         fab.setAttribute('aria-controls','navLinks');
         fab.setAttribute('aria-expanded','false');
         fab.setAttribute('aria-label','Open website menu');
+        fab.dataset.mobileMenuTrigger='true';
         fab.innerHTML='<span class="mobile-menu-fab-grid" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="mobile-menu-fab-label">Menu</span>';
         document.body.appendChild(fab);
       }
       let restoreToFab=false;
+      const updateVisibleHeight=()=>{
+        const height=window.visualViewport?.height||window.innerHeight;
+        document.documentElement.style.setProperty('--fmb-visible-height',`${Math.round(height)}px`);
+      };
+      const focusableItems=()=>[...links.querySelectorAll('a[href],button:not([disabled])')].filter(item=>getComputedStyle(item).display!=='none'&&getComputedStyle(item).visibility!=='hidden');
       const sync=()=>{
         const open=media.matches&&links.classList.contains('open');
+        if(media.matches){
+          links.setAttribute('role','dialog');
+          links.setAttribute('aria-modal','true');
+          links.setAttribute('aria-hidden',String(!open));
+        }else{
+          links.removeAttribute('role');
+          links.removeAttribute('aria-modal');
+          links.removeAttribute('aria-hidden');
+        }
         toggle.setAttribute('aria-expanded',String(open));
         toggle.setAttribute('aria-label',open?'Close menu':'Open menu');
         fab.setAttribute('aria-expanded',String(open));
@@ -103,13 +124,15 @@
         publicMobileBar.classList.toggle('is-hidden',open);
       };
       const setMenu=(open,{returnFocus=true}={})=>{
+        if(open&&!media.matches)return;
         const wasOpen=links.classList.contains('open');
         links.classList.toggle('open',Boolean(open));
         restoreToFab=returnFocus&&wasOpen&&!open;
         sync();
         if(open){
+          updateVisibleHeight();
           requestAnimationFrame(()=>{
-            const first=[...links.querySelectorAll('a')].find(link=>getComputedStyle(link).display!=='none');
+            const first=focusableItems()[0];
             first?.focus({preventScroll:true});
           });
         }else if(restoreToFab){fab.focus({preventScroll:true});restoreToFab=false}
@@ -118,9 +141,21 @@
       toggle.addEventListener('click',()=>setTimeout(sync,0));
       backdrop.addEventListener('click',()=>setMenu(false));
       links.addEventListener('click',event=>{if(event.target.closest('a'))setMenu(false,{returnFocus:false})});
-      document.addEventListener('keydown',event=>{if(event.key==='Escape'&&links.classList.contains('open')){event.preventDefault();setMenu(false)}});
+      document.addEventListener('keydown',event=>{
+        if(!media.matches||!links.classList.contains('open'))return;
+        if(event.key==='Escape'){event.preventDefault();setMenu(false);return}
+        if(event.key!=='Tab')return;
+        const items=focusableItems();
+        if(!items.length)return;
+        const first=items[0],last=items[items.length-1];
+        if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}
+        else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
+      });
       new MutationObserver(sync).observe(links,{attributes:true,attributeFilter:['class']});
-      media.addEventListener?.('change',event=>{if(!event.matches)setMenu(false,{returnFocus:false});sync()});
+      media.addEventListener?.('change',event=>{if(!event.matches)setMenu(false,{returnFocus:false});updateVisibleHeight();sync()});
+      window.visualViewport?.addEventListener('resize',updateVisibleHeight,{passive:true});
+      window.addEventListener('orientationchange',updateVisibleHeight,{passive:true});
+      updateVisibleHeight();
       sync();
     }
 

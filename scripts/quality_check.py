@@ -236,6 +236,59 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         if marker not in site_js:
             errors.append(f"assets/js/site.js: missing mobile or item-action marker: {marker}")
 
+    luxury_path = ROOT / "assets/css/fmb-mobile-luxury.css"
+    if not luxury_path.exists():
+        errors.append("assets/css/fmb-mobile-luxury.css: iPhone-style mobile layer is missing")
+    else:
+        luxury_css = luxury_path.read_text(encoding="utf-8")
+        for marker in (
+            "@media(max-width:800px)",
+            ".mobile-menu-fab",
+            "position:fixed!important",
+            "grid-template-columns:repeat(2,minmax(0,1fr))",
+            "backdrop-filter:blur(38px)",
+            "--fmb-mobile-safe-bottom",
+            "animation:fmb-mobile-partner-marquee",
+            "background:linear-gradient(108deg,#2a063b",
+        ):
+            if marker not in luxury_css:
+                errors.append(f"assets/css/fmb-mobile-luxury.css: missing luxury mobile marker: {marker}")
+
+    hotfix_js = (ROOT / "assets/js/live-hotfix.js").read_text(encoding="utf-8")
+    for marker in (
+        "mobile-menu-fab",
+        "aria-modal",
+        "focusableItems",
+        "visualViewport",
+        "senz-logo.png?v=20260716-clean-alpha",
+        "cognita-logo.png?v=20260716-clean-alpha",
+    ):
+        if marker not in hotfix_js:
+            errors.append(f"assets/js/live-hotfix.js: missing accessible mobile menu marker: {marker}")
+
+    for logo in ("senz-logo.png", "cognita-logo.png"):
+        if not (ROOT / "assets/images/projects" / logo).exists():
+            errors.append(f"assets/images/projects/{logo}: clean transparent partner logo is missing")
+
+    public_mobile_routes = (
+        "index.html",
+        "aboutfmb/index.html",
+        "communityengagements/index.html",
+        "dress-with-intention.html",
+        "ebooks/index.html",
+        "fmbandco/index.html",
+        "freedom-wall.html",
+        "gethelp/index.html",
+        "music/index.html",
+        "news/index.html",
+    )
+    for name in public_mobile_routes:
+        page = (ROOT / name).read_text(encoding="utf-8")
+        if "fmb-mobile-luxury.css?v=20260716-mobile-luxury-4" not in page:
+            errors.append(f"{name}: deterministic mobile luxury stylesheet is missing")
+        if "live-hotfix.js?v=20260716-mobile-luxury-4" not in page:
+            errors.append(f"{name}: accessible floating mobile menu is missing")
+
     news = (ROOT / "news/index.html").read_text(encoding="utf-8")
     for name in (
         "cleopatra-barrera-zambales-ocean-feature.jpeg",
