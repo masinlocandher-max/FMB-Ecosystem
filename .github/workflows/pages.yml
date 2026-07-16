@@ -27,9 +27,10 @@ jobs:
           mkdir -p _site
 
           cp -- *.html _site/
-          cp CNAME manifest.webmanifest service-worker.js robots.txt sitemap.xml _site/
+          cp CNAME manifest.webmanifest service-worker.js robots.txt sitemap.xml _redirects _site/
           cp -R assets _site/assets
           cp -R mabayani _site/mabayani
+          cp -R ebooks music communityengagements aboutfmb fmbandco profile _site/
           touch _site/.nojekyll
 
           test "$(cat _site/CNAME)" = "www.francinemariebautista.com"
@@ -51,22 +52,34 @@ jobs:
           test -f _site/reset-password.html
           test -f _site/community-guidelines.html
           test -f _site/volunteer.html
+          test -f _site/ebooks/index.html
+          test -f _site/music/index.html
+          test -f _site/communityengagements/index.html
+          test -f _site/aboutfmb/index.html
+          test -f _site/fmbandco/index.html
+          test -f _site/profile/index.html
+          test -f _site/assets/css/organized-pages.css
           test -f _site/assets/images/volunteer/francine-leading-with-love-fmb.webp
           test -f _site/assets/images/volunteer/francine-serving-with-volunteers.webp
           test -f _site/assets/images/volunteer/francine-and-volunteer-team.webp
           test -f _site/assets/images/volunteer/with-love-fmb-community-service.webp
           test -f _site/assets/images/app-icon-192.png
           test -f _site/assets/images/app-icon-512.png
-          grep -q 'Sign in' _site/index.html
+          grep -q 'A community project created to help you' _site/index.html
+          grep -q 'Every page has a clear purpose' _site/index.html
+          grep -q 'Read every guide' _site/index.html
           grep -q 'Create profile' _site/auth.html
-          grep -q 'For Anxious Moments' _site/music.html
-          grep -q 'Cultural Historian' _site/about.html
+          grep -q 'All twelve tracks are open' _site/music/index.html
+          grep -q 'Founder, strategist, creative director, advocate' _site/aboutfmb/index.html
+          grep -q 'Community Engagements - AMDG' _site/communityengagements/index.html
+          grep -q 'Three brands. One founder' _site/fmbandco/index.html
+          grep -q 'id="checkinForm"' _site/profile/index.html
           grep -q 'Privacy Policy' _site/privacy-policy.html
           grep -q 'Your Body Is Worth Listening To' _site/womens-health.html
           grep -q 'Skin Care and Makeup Without the Pressure' _site/skin-care-makeup.html
           grep -q 'Coming Out, Being Known, and Learning to Respect' _site/coming-out-respect.html
           grep -q 'Men Can Cry' _site/men-can-cry.html
-          grep -q 'Volunteerism led by Francine Marie Bautista' _site/volunteer.html
+          grep -q 'Community Engagements - AMDG' _site/communityengagements/index.html
           grep -q 'Good work should return as good' _site/index.html
           grep -q 'With love, FMB' _site/womens-health.html
           grep -q 'With love, FMB' _site/skin-care-makeup.html
