@@ -238,9 +238,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
 
     news = (ROOT / "news/index.html").read_text(encoding="utf-8")
     for name in (
-        "cleopatra-barrera-reina-filipinas-zambales.jpeg",
-        "cleopatra-barrera-maritime-editorial.jpeg",
-        "cleopatra-barrera-blue-gown-editorial.jpeg",
+        "cleopatra-barrera-zambales-ocean-feature.jpeg",
         "sara-duterte-impeachment.webp",
         "pax-silica-briefing.png",
         "good-news-briefing.png",
@@ -251,8 +249,17 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
             errors.append(f"assets/images/news/{name}: news sharing image is missing")
     if news.count('class="news-visual"') != 4:
         errors.append("news/index.html: every main story must have one sourced lead visual")
-    if news.count("<figcaption>") != 6 or "Photo: AP Photo/Basilio Sepe" not in news or "Digitally created pageant editorial supplied by FMB" not in news:
+    if news.count("<figcaption>") != 4 or "Photo: AP Photo/Basilio Sepe" not in news or "Digitally created pageant editorial supplied by FMB" not in news:
         errors.append("news/index.html: every editorial visual must show its source or credit below it")
+    for retired_name in (
+        "cleopatra-barrera-reina-filipinas-zambales.jpeg",
+        "cleopatra-barrera-maritime-editorial.jpeg",
+        "cleopatra-barrera-blue-gown-editorial.jpeg",
+    ):
+        if retired_name in news:
+            errors.append(f"news/index.html: retired Cleopatra visual is still referenced: {retired_name}")
+    if "news-portrait-pair" in news or "news-supporting-visual" in news:
+        errors.append("news/index.html: Cleopatra feature must use one editorial photo only")
 
 
 def main() -> int:
