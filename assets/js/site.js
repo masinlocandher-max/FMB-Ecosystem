@@ -149,9 +149,20 @@
       const key=value.includes('ebooks')?'read':value.includes('music')?'music':value.includes('news')?'news':value.includes('freedom-wall')?'heart':value.includes('community')||value.includes('volunteer')?'serve':value.includes('fmbandco')?'brands':value.includes('about')?'person':value.includes('gethelp')||value.includes('support')?'help':'home';
       return `<span class="mobile-menu-icon" aria-hidden="true"><svg viewBox="0 0 24 24">${icons[key]}</svg></span>`;
     };
-    menu.querySelectorAll('.nav-menu-link').forEach(link=>{
-      if(!link.querySelector('.mobile-menu-icon'))link.insertAdjacentHTML('afterbegin',menuIconFor(link.getAttribute('href')));
-    });
+    const prepareMobileMenuItems=()=>{
+      if(!media.matches)return;
+      menu.querySelectorAll(':scope>a').forEach(link=>{
+        link.classList.add('nav-menu-link');
+        if(!link.querySelector('.nav-link-label')){
+          const label=document.createElement('span');
+          label.className='nav-link-label';
+          while(link.firstChild)label.appendChild(link.firstChild);
+          link.appendChild(label);
+        }
+        if(!link.querySelector('.mobile-menu-icon'))link.insertAdjacentHTML('afterbegin',menuIconFor(link.getAttribute('href')));
+      });
+    };
+    prepareMobileMenuItems();
     menu.dataset.mobileMenu='dialog';
     const introTitle=menu.querySelector('.nav-menu-intro strong');
     if(introTitle){introTitle.id='mobileMenuTitle';menu.setAttribute('aria-labelledby',introTitle.id)}
@@ -180,11 +191,13 @@
         menu.setAttribute('role','dialog');
         menu.setAttribute('aria-modal','true');
         menu.setAttribute('aria-hidden',String(!open));
+        menu.toggleAttribute('inert',!open);
         floatingMenu.style.setProperty('display','flex','important');
       }else{
         menu.removeAttribute('role');
         menu.removeAttribute('aria-modal');
         menu.removeAttribute('aria-hidden');
+        menu.removeAttribute('inert');
         floatingMenu.style.setProperty('display','none','important');
       }
       menuToggle.setAttribute('aria-expanded',String(open));
@@ -240,7 +253,7 @@
     window.addEventListener('pageshow',()=>{lastY=window.scrollY;placeMenu();updateVisibleHeight();syncMenu();updateChrome()});
     mobileBar?.addEventListener('focusin',()=>mobileBar.classList.remove('is-hidden'));
     mobileBar?.addEventListener('pointerdown',()=>mobileBar.classList.remove('is-hidden'),{passive:true});
-    media.addEventListener?.('change',event=>{if(!event.matches)setMenu(false,{returnFocus:false});placeMenu();updateVisibleHeight();syncMenu();updateChrome()});
+    media.addEventListener?.('change',event=>{if(!event.matches)setMenu(false,{returnFocus:false});prepareMobileMenuItems();placeMenu();updateVisibleHeight();syncMenu();updateChrome()});
     window.visualViewport?.addEventListener('resize',updateVisibleHeight,{passive:true});
     window.addEventListener('orientationchange',updateVisibleHeight,{passive:true});
     placeMenu();
@@ -256,9 +269,24 @@
   if(topPromo){
     topPromo.setAttribute('aria-label','With love, FMB partner brands and advertising announcement');
     const advertisingHref='/aboutfmb/?category=advertise-with-us#work-with-fmb';
-    const promoGroup=({duplicate=false}={})=>`<div class="promo-group"${duplicate?' aria-hidden="true"':''}><span class="brand-marquee-label">With love, FMB is brought to you by:</span><a class="brand-chip-logo" href="https://www.senzpr.com" target="_blank" rel="noopener noreferrer" aria-label="Visit SENZ"${duplicate?' tabindex="-1"':''}><img src="/assets/images/projects/senz-logo.png?v=20260716-banner-v5" alt="${duplicate?'':'SENZ'}"></a><a class="brand-chip-logo cognita-chip" href="https://thecognitainstitute.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Cognita Institute of AI"${duplicate?' tabindex="-1"':''}><img src="/assets/images/projects/cognita-logo.png?v=20260716-banner-v5" alt="${duplicate?'':'Cognita Institute of AI'}"></a><span class="banner-divider" aria-hidden="true"></span><span class="advertise-marquee-label">Advertise your brand or business across the website</span><a class="banner-advertise-button" href="${advertisingHref}"${duplicate?' tabindex="-1"':''}>Advertise with us</a></div>`;
+    const promoGroup=({duplicate=false}={})=>`<div class="promo-group"${duplicate?' aria-hidden="true"':''}><span class="brand-marquee-label">With love, FMB is brought to you by:</span><a class="brand-chip-logo" href="https://www.senzpr.com" target="_blank" rel="noopener noreferrer" aria-label="Visit SENZ"${duplicate?' tabindex="-1"':''}><img src="/assets/images/projects/senz-mobile.webp?v=20260716-mobile-first-v6" alt="${duplicate?'':'SENZ'}" width="480" height="185" decoding="async"></a><a class="brand-chip-logo cognita-chip" href="https://thecognitainstitute.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Cognita Institute of AI"${duplicate?' tabindex="-1"':''}><img src="/assets/images/projects/cognita-mobile.webp?v=20260716-mobile-first-v6" alt="${duplicate?'':'Cognita Institute of AI'}" width="520" height="188" decoding="async"></a><span class="banner-divider" aria-hidden="true"></span><span class="advertise-marquee-label">Advertise your brand or business across the website</span><a class="banner-advertise-button" href="${advertisingHref}"${duplicate?' tabindex="-1"':''}>Advertise with us</a></div>`;
     topPromo.innerHTML=`<div class="promo-marquee">${promoGroup()}${promoGroup({duplicate:true})}</div>`;
   }
+
+  function setupImagePerformance(){
+    const images=[...document.images];
+    const priorityImage=document.querySelector('main :is(.hero-banner,.hero-image,.authority-portrait,.home-welcome) img, main>section img');
+    images.forEach(image=>{
+      image.decoding='async';
+      if(image===priorityImage){
+        image.loading='eager';
+        image.fetchPriority='high';
+      }else if(!image.closest('.top-shell')){
+        image.loading='lazy';
+      }
+    });
+  }
+  setupImagePerformance();
 
   function setupFooterBrand(){
     $$('.footer').forEach(footer=>{

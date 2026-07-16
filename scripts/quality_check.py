@@ -196,8 +196,8 @@ def check_advertising_flow(errors: list[str]) -> None:
     edge_path = ROOT / "supabase/functions/advertising-inquiry/index.ts"
     for marker in (
         "With love, FMB is brought to you by:",
-        "/assets/images/projects/senz-logo.png",
-        "/assets/images/projects/cognita-logo.png",
+        "/assets/images/projects/senz-mobile.webp",
+        "/assets/images/projects/cognita-mobile.webp",
         "Advertise your brand or business across the website",
         "/aboutfmb/?category=advertise-with-us#work-with-fmb",
         "client.functions.invoke('advertising-inquiry'",
@@ -338,8 +338,8 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         "aria-modal",
         "focusableItems",
         "visualViewport",
-        "senz-logo.png?v=20260716-banner-v5",
-        "cognita-logo.png?v=20260716-banner-v5",
+        "senz-mobile.webp?v=20260716-mobile-first-v6",
+        "cognita-mobile.webp?v=20260716-mobile-first-v6",
     ):
         if marker not in hotfix_js:
             errors.append(f"assets/js/live-hotfix.js: missing accessible mobile menu marker: {marker}")
@@ -362,11 +362,11 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
     )
     for name in public_mobile_routes:
         page = (ROOT / name).read_text(encoding="utf-8")
-        if "fmb-mobile-luxury.css?v=20260716-mobile-menu-v5" not in page:
+        if "fmb-mobile-luxury.css?v=20260716-mobile-first-v6" not in page:
             errors.append(f"{name}: deterministic mobile luxury stylesheet is missing")
-        if "site.js?v=20260716-mobile-menu-v5" not in page:
+        if "site.js?v=20260716-mobile-first-v6" not in page:
             errors.append(f"{name}: core persistent mobile menu script is missing")
-        if "live-hotfix.js?v=20260716-mobile-menu-v5" not in page:
+        if "live-hotfix.js?v=20260716-mobile-first-v6" not in page:
             errors.append(f"{name}: accessible floating mobile menu is missing")
 
     news = (ROOT / "news/index.html").read_text(encoding="utf-8")
