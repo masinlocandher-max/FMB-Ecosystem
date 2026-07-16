@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260716-news-photo-footer';
+const CACHE_NAME='fmb-app-shell-20260716-cleopatra-feature';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -12,6 +12,7 @@ const PUBLIC_PAGES=new Set([
   '/fmbandco/',
   '/gethelp/',
   '/news/',
+  '/news/cleopatra-barrera/',
   '/news/impeachment/',
   '/news/pax-silica/',
   '/news/good-news/',
@@ -33,6 +34,7 @@ const APP_SHELL=[
   '/index.html',
   '/freedom-wall.html',
   '/auth.html',
+  '/news/cleopatra-barrera/',
   '/news/impeachment/',
   '/news/pax-silica/',
   '/news/good-news/',
@@ -59,6 +61,9 @@ const APP_SHELL=[
   '/assets/images/icon-transparent.png',
   '/assets/images/projects/senz-logo.png',
   '/assets/images/projects/cognita-logo.png',
+  '/assets/images/news/cleopatra-barrera-reina-filipinas-zambales.jpeg',
+  '/assets/images/news/cleopatra-barrera-maritime-editorial.jpeg',
+  '/assets/images/news/cleopatra-barrera-blue-gown-editorial.jpeg',
   '/assets/images/news/sara-duterte-impeachment.webp',
   '/assets/images/news/pax-silica-briefing.png',
   '/assets/images/news/good-news-briefing.png',

@@ -60,6 +60,7 @@ jobs:
           test -f _site/profile/index.html
           test -f _site/gethelp/index.html
           test -f _site/news/index.html
+          test -f _site/news/cleopatra-barrera/index.html
           test -f _site/news/impeachment/index.html
           test -f _site/news/pax-silica/index.html
           test -f _site/news/good-news/index.html
@@ -70,6 +71,9 @@ jobs:
           test -f _site/assets/css/fmb-mobile-clean.css
           test -f _site/assets/images/projects/senz-logo.png
           test -f _site/assets/images/projects/cognita-logo.png
+          test -f _site/assets/images/news/cleopatra-barrera-reina-filipinas-zambales.jpeg
+          test -f _site/assets/images/news/cleopatra-barrera-maritime-editorial.jpeg
+          test -f _site/assets/images/news/cleopatra-barrera-blue-gown-editorial.jpeg
           test -f _site/assets/images/news/sara-duterte-impeachment.webp
           test -f _site/assets/images/news/pax-silica-briefing.png
           test -f _site/assets/images/news/good-news-briefing.png
@@ -116,6 +120,8 @@ jobs:
           grep -q 'ebook-card-shell' _site/assets/js/site.js
           grep -q '@media(max-width:800px)' _site/assets/css/fmb-mobile-clean.css
           grep -q 'mobile-chrome-compact' _site/assets/css/fmb-mobile-clean.css
+          grep -q 'The Golden Sash and the Bigger Dream' _site/news/index.html
+          grep -q 'cleopatra-barrera-reina-filipinas-zambales.jpeg' _site/news/cleopatra-barrera/index.html
           grep -q 'Photo: AP Photo/Basilio Sepe' _site/news/index.html
           grep -q 'sara-duterte-impeachment.webp' _site/news/impeachment/index.html
           grep -q 'pax-silica-briefing.png' _site/news/pax-silica/index.html

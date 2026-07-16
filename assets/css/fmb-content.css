@@ -60,6 +60,15 @@ body .footer>.wrap{position:relative;z-index:1}
 .news-visual img{display:block;width:100%;height:auto;aspect-ratio:auto;object-fit:contain}
 .news-visual figcaption{padding:9px 12px;background:#fff;color:#6b606c;font-size:10px;line-height:1.5}
 .news-visual figcaption a{color:#59186d;font-weight:800;text-decoration:underline;text-underline-offset:2px}
+.news-spotlight{background:linear-gradient(155deg,#fff 0%,#fbf7fc 54%,#f5edf7 100%)}
+.news-feature-deck{max-width:780px;margin:-8px 0 24px;color:#67576b!important;font:500 clamp(20px,2.3vw,27px)/1.45 "Cormorant Garamond",serif!important}
+.news-spotlight .news-visual{width:min(100%,720px);margin-right:auto;margin-left:auto}
+.news-portrait-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:30px 0}
+.news-supporting-visual{overflow:hidden;margin:0;border:1px solid rgba(45,7,60,.13);border-radius:18px;background:#f4f0f5}
+.news-supporting-visual img{display:block;width:100%;height:auto;object-fit:contain;object-position:center}
+.news-supporting-visual figcaption{padding:9px 12px;background:#fff;color:#6b606c;font-size:10px;line-height:1.5}
+.news-signoff{display:flex;width:min(100%,340px);min-height:140px;margin:34px 0 8px;align-items:center;padding:16px 20px;border:1px solid rgba(81,11,119,.13);border-radius:20px;background:#fff;box-shadow:0 12px 34px rgba(48,13,60,.08)}
+.news-signoff img{display:block;width:100%;height:auto;object-fit:contain}
 .item-action-row{position:relative;z-index:5;display:flex;align-items:center;gap:5px;width:fit-content;max-width:100%;margin:10px 0 24px;padding:4px;border:1px solid rgba(81,11,119,.13);border-radius:999px;background:rgba(255,255,255,.94);box-shadow:0 8px 24px rgba(43,14,54,.07)}
 .item-action-button{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:0;height:34px;padding:0 10px;border:0;border-radius:999px;background:transparent;color:#4d155f;font-family:inherit;font-size:10px;font-weight:800;line-height:1;cursor:pointer}
 .item-action-button:hover{background:#f1e6f5}
@@ -291,6 +300,9 @@ body .footer>.wrap{position:relative;z-index:1}
   .news-lead,.news-article{padding:47px 0}
   .news-standfirst{font-size:17px}
   .news-body p,.news-body li{font-size:16px;line-height:1.78}
+  .news-portrait-pair{grid-template-columns:1fr;gap:18px}
+  .news-spotlight .news-visual{width:100%}
+  .news-signoff{width:min(100%,300px);min-height:120px;margin-top:28px;padding:13px 17px}
   .news-editor-card{grid-template-columns:1fr}
   .news-editor-card img{width:100%;max-height:420px}
 }
