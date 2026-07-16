@@ -1,0 +1,23 @@
+.reading-page{padding:150px 0 90px;background:radial-gradient(circle at 50% 0,rgba(183,120,214,.16),transparent 34%),linear-gradient(180deg,#fffdfb,#f6eef9 62%,#efe1f5)}
+.reading-wrap{width:min(900px,calc(100% - 30px));margin:auto;position:relative}
+.reading-hero,.reading-chapter,.reader-signoff,.fmb-author-note,.fmb-legal-page{background:#fffdf9;border:1px solid rgba(83,21,112,.12);box-shadow:0 22px 70px rgba(48,15,62,.1)}
+.reading-hero{padding:62px 64px 48px;border-radius:34px 34px 18px 18px;text-align:center;position:relative;overflow:hidden}
+.reading-hero::before{content:'WITH LOVE, FMB READING COLLECTION';display:block;margin-bottom:22px;color:#a17724;font-size:11px;font-weight:800;letter-spacing:.19em}
+.reading-hero::after{content:'Written by Francine Marie Bautista';display:block;margin-top:24px;color:#5b176f;font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic}
+.reading-chapter{padding:52px 64px;margin:16px 0;border-radius:18px;position:relative}
+.reading-chapter::after{content:'with love, FMB';position:absolute;right:26px;bottom:18px;color:rgba(81,11,119,.23);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px}
+.reading-chapter h2{font-size:clamp(36px,5vw,52px);line-height:1.05}
+.reading-chapter p{font-family:Georgia,'Times New Roman',serif;font-size:17px;line-height:1.9;color:#3d3042}
+.fmb-author-note{margin:18px 0;padding:42px 48px;border-radius:18px;display:grid;grid-template-columns:72px 1fr;gap:24px;align-items:start;background:linear-gradient(145deg,#fffdf9,#f7edf9)}
+.fmb-author-note img{width:72px;height:72px;object-fit:contain}
+.fmb-author-note h2,.fmb-legal-page h2{margin:0 0 12px;color:#510b77;font-size:34px}
+.fmb-author-note p,.fmb-legal-page p{margin:0;color:#55495a;line-height:1.75}
+.fmb-author-byline{margin-top:14px!important;color:#7b2aa0!important;font-weight:800}
+.fmb-legal-page{margin:18px 0;padding:42px 48px;border-radius:18px;background:linear-gradient(145deg,#2d083e,#5b0f7e);color:#fff}
+.fmb-legal-page h2{color:#f3d98f}
+.fmb-legal-page p{color:rgba(255,255,255,.86)}
+.fmb-legal-page strong{color:#fff}
+.fmb-rights-line{margin-top:18px!important;padding-top:18px;border-top:1px solid rgba(255,255,255,.2);font-size:13px;letter-spacing:.03em}
+.fmb-book-meta{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:18px 0 0}
+.fmb-book-meta span{padding:7px 11px;border-radius:999px;background:#f1e4f6;color:#5b176f;font-size:12px;font-weight:800}
+@media(max-width:650px){.reading-page{padding-top:125px}.reading-hero,.reading-chapter{padding:34px 24px}.fmb-author-note{grid-template-columns:1fr;text-align:center;padding:32px 24px}.fmb-author-note img{margin:auto}.fmb-legal-page{padding:32px 24px}.reading-chapter p{font-size:16px}.reading-chapter::after{position:static;display:block;margin-top:24px;text-align:right}}

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Constructive good news editorial graphic</title>
+  <desc id="desc">A warm violet editorial graphic showing three paths of progress in care, food, and health.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#3b0a4d"/><stop offset=".55" stop-color="#7d2b85"/><stop offset="1" stop-color="#d08a8e"/></linearGradient>
+    <radialGradient id="sun"><stop stop-color="#f8dc83"/><stop offset="1" stop-color="#f8dc83" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1200" height="630" rx="34" fill="url(#bg)"/>
+  <circle cx="1010" cy="105" r="230" fill="url(#sun)" opacity=".72"/>
+  <g transform="translate(760 165)" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" opacity=".9">
+    <path d="M160 300V125m0 60c-62-3-96-37-105-98 62 2 96 36 105 98zm0 30c64-4 102-40 111-106-64 3-101 39-111 106z"/>
+    <path d="M47 340c55-32 104-46 148-41 49 6 91 23 133 49M77 367h247"/>
+    <path d="M283 61c24-36 81-18 81 25 0 39-81 87-81 87s-80-48-80-87c0-43 57-61 80-25z" fill="#f6d87b" stroke="none"/>
+  </g>
+  <text x="78" y="96" fill="#f6d87b" font-family="Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="5">FMB NEWS · CONSTRUCTIVE</text>
+  <text x="78" y="226" fill="#fff" font-family="Georgia, serif" font-size="75" font-weight="700">Good news</text>
+  <text x="78" y="309" fill="#fff" font-family="Georgia, serif" font-size="75" font-weight="700">with context.</text>
+  <text x="80" y="384" fill="#f7e9f3" font-family="Arial, sans-serif" font-size="25">Care, food access, and child health.</text>
+  <text x="80" y="426" fill="#f7e9f3" font-family="Arial, sans-serif" font-size="25">Progress without pretending the work is finished.</text>
+  <line x1="80" y1="504" x2="620" y2="504" stroke="#fff" stroke-opacity=".25"/>
+  <text x="80" y="548" fill="#fff" font-family="Arial, sans-serif" font-size="22" font-weight="700">WITH LOVE, FMB</text>
+</svg>

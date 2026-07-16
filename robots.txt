@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /member.html
+Disallow: /daily.html
+Disallow: /profile/
+Disallow: /auth.html
+Disallow: /reset-password.html
+Disallow: /admin-login.html
+Disallow: /admin-activate.html
+
+Sitemap: https://www.francinemariebautista.com/sitemap.xml
