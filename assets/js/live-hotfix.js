@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const release='20260716-desktop-premium-v1';
+  const release='20260716-member-mobile-v1';
   function loadAsset(tag,attrs){
     const key=attrs.href||attrs.src;
     if(document.querySelector(`${tag}[href="${key}"],${tag}[src="${key}"]`))return;
@@ -25,6 +25,7 @@
     return `<span class="mobile-menu-icon" aria-hidden="true"><svg viewBox="0 0 24 24">${icons[key]}</svg></span>`;
   }
   function boot(){
+    const isDedicatedMobileHost=location.hostname.toLowerCase()==='mobile.francinemariebautista.com'||((/\.vercel\.app$/i.test(location.hostname)||/^(localhost|127\.0\.0\.1)$/i.test(location.hostname))&&new URLSearchParams(location.search).get('experience')==='mobile');
     loadAsset('link',{rel:'stylesheet',href:`/assets/css/reading-library.css?v=${release}`});
     loadAsset('link',{rel:'stylesheet',href:`/assets/css/apple-mobile.css?v=${release}`});
     loadAsset('link',{rel:'stylesheet',href:`/assets/css/experience-refresh.css?v=${release}`});
@@ -49,16 +50,24 @@
     replacePartnerImages();
 
     const promoMarquee=document.querySelector('.promo-marquee');
-    if(promoMarquee)promoMarquee.style.animationPlayState='running';
+    const keepBannerMoving=()=>{
+      if(!promoMarquee)return;
+      promoMarquee.classList.add('is-running');
+      promoMarquee.style.animationPlayState='running';
+      promoMarquee.getAnimations?.().forEach(animation=>animation.play());
+    };
+    keepBannerMoving();
+    window.addEventListener('pageshow',keepBannerMoving);
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden)keepBannerMoving()});
 
     const media=window.matchMedia('(max-width: 800px)');
     const toggle=document.getElementById('navToggle');
     const links=document.getElementById('navLinks');
     const publicMobileBar=document.querySelector('.mobile-bar:not(.member-mobile-bar):not(.admin-mobile-bar)');
     const coreFab=document.querySelector('.mobile-menu-fab[data-core-menu-bound="true"]');
-    if(coreFab){
+    if(isDedicatedMobileHost&&coreFab){
       document.body.classList.add('fmb-mobile-menu-ready');
-    }else if(toggle&&links&&links.querySelector('.nav-menu-link')){
+    }else if(isDedicatedMobileHost&&toggle&&links&&links.querySelector('.nav-menu-link')){
       document.body.classList.add('fmb-mobile-menu-ready');
       links.dataset.mobileMenu='dialog';
       const introTitle=links.querySelector('.nav-menu-intro strong');

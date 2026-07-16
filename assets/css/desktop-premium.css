@@ -532,8 +532,8 @@ body.mobile-menu-open .fmb-music-dock{
 }
 @media(prefers-reduced-motion:reduce){
   .promo-marquee{
-    animation:none!important;
-    transform:none!important;
+    animation:fmb-member-banner-loop 48s linear infinite!important;
+    animation-play-state:running!important;
   }
   .nav-glass,
   .fmb-music-orb,

@@ -2,6 +2,21 @@
   'use strict';
   const $=selector=>document.querySelector(selector);
   const $$=selector=>document.querySelectorAll(selector);
+  const MOBILE_EXPERIENCE_HOST='mobile.francinemariebautista.com';
+  const isPreviewMobileExperience=(/\.vercel\.app$/i.test(location.hostname)||/^(localhost|127\.0\.0\.1)$/i.test(location.hostname))&&new URLSearchParams(location.search).get('experience')==='mobile';
+  const isDedicatedMobileHost=location.hostname.toLowerCase()===MOBILE_EXPERIENCE_HOST||isPreviewMobileExperience;
+
+  function setupExperienceHost(){
+    document.documentElement.classList.toggle('fmb-mobile-host',isDedicatedMobileHost);
+    document.documentElement.dataset.experience=isDedicatedMobileHost?'mobile-app':'website';
+    document.body?.classList.toggle('fmb-mobile-host',isDedicatedMobileHost);
+    if(!isDedicatedMobileHost)return;
+    let canonical=document.querySelector('link[rel="canonical"]');
+    if(!canonical){canonical=document.createElement('link');canonical.rel='canonical';document.head.appendChild(canonical)}
+    canonical.href='https://www.francinemariebautista.com'+location.pathname;
+    document.querySelector('meta[name="apple-mobile-web-app-title"]')?.setAttribute('content','With love, FMB Mobile');
+  }
+  setupExperienceHost();
 
   function ensureStylesheet(href){
     if(document.querySelector(`link[href="${href}"]`))return;
@@ -52,6 +67,8 @@
   ensureStylesheet('assets/css/fmb-polish.css?v=20260716-polish');
   ensureStylesheet('assets/css/fmb-content.css?v=20260716-content');
   ensureStylesheet('/assets/css/desktop-premium.css?v=20260716-desktop-premium-v1');
+  ensureStylesheet('/assets/css/member-experience.css?v=20260716-member-mobile-v1');
+  ensureStylesheet('/assets/css/mobile-app.css?v=20260716-member-mobile-v1');
   const mobileStyles='assets/css/fmb-mobile-clean.css?v=20260716-mobile-plan';
   ensureStylesheet(mobileStyles);
   requestAnimationFrame(()=>{
@@ -60,7 +77,6 @@
   });
   ensureAppMetadata();
   loadScript('/assets/js/desktop-premium.js?v=20260716-desktop-premium-v1').catch(()=>{});
-  loadScript('/assets/js/global-music.js?v=20260716-global-music-v1').catch(()=>{});
 
   if(!document.querySelector('.skip-link')){
     const main=document.querySelector('main');if(main&&!main.id)main.id='main-content';
@@ -111,6 +127,99 @@
   }
   setupFriendlyNavigation();
 
+  const profileIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-4 3.2-6 7-6s6.2 2 7 6"/></svg>';
+  async function findActiveSession(){
+    const ready=await ensureMemberServices();
+    if(!ready||!window.FMB?.configured)return {session:null,client:null,clients:[]};
+    const clients=['local','session'].map(mode=>window.FMB.createClient(mode)).filter(Boolean);
+    for(const client of clients){
+      try{
+        const {data,error}=await client.auth.getSession();
+        if(!error&&data.session)return {session:data.session,client,clients};
+      }catch{}
+    }
+    return {session:null,client:null,clients};
+  }
+  function replaceSignedInLinks(){
+    document.querySelectorAll('a[href*="auth.html"]').forEach(link=>{
+      if(link.closest('.mobile-app-welcome'))return;
+      link.href='/profile/';
+      const label=link.querySelector('span:last-child');
+      if(label&&/sign|join|profile/i.test(label.textContent||''))label.textContent='Profile';
+      else if(/sign|join|profile/i.test(link.textContent||''))link.textContent='Profile';
+    });
+  }
+  function renderMemberNavigation(session,clients=[]){
+    const signedIn=Boolean(session?.user);
+    document.documentElement.classList.toggle('fmb-member-signed-in',signedIn);
+    document.documentElement.classList.toggle('fmb-member-visitor',!signedIn);
+    document.body?.classList.toggle('fmb-member-signed-in',signedIn);
+    if(!signedIn)return;
+    replaceSignedInLinks();
+    document.querySelectorAll('.nav-actions').forEach(actions=>{
+      actions.querySelectorAll('a[href*="auth.html"],.nav-account-icon,.nav-logout').forEach(item=>item.remove());
+      const toggle=actions.querySelector('.nav-toggle');
+      const account=document.createElement('a');
+      account.className='nav-account-icon';
+      account.href='/profile/';
+      account.setAttribute('aria-label','Open your profile');
+      account.innerHTML=profileIcon;
+      const logout=document.createElement('button');
+      logout.className='nav-btn nav-logout';
+      logout.type='button';
+      logout.textContent='Log out';
+      actions.insertBefore(account,toggle||null);
+      actions.insertBefore(logout,toggle||null);
+    });
+    document.querySelectorAll('.nav-mobile-actions').forEach(actions=>{
+      actions.innerHTML='<a class="pill secondary" href="/profile/">Profile</a><button class="pill nav-logout" type="button">Log out</button>';
+    });
+    document.querySelectorAll('.mobile-bar a[href*="auth.html"]').forEach(link=>{
+      link.href='/profile/';
+      const label=link.querySelector('span:last-child');
+      if(label)label.textContent='Profile';
+    });
+    document.querySelectorAll('.nav-logout').forEach(button=>button.addEventListener('click',async()=>{
+      button.disabled=true;
+      button.textContent='Logging out';
+      await Promise.all(clients.map(client=>client.auth.signOut({scope:'local'}).catch(()=>{})));
+      try{sessionStorage.removeItem('fmb_music_state_v2')}catch{}
+      location.replace(isDedicatedMobileHost?'/':'https://www.francinemariebautista.com/');
+    },{once:true}));
+  }
+  function setupMobileWelcome(session){
+    if(!isDedicatedMobileHost||location.pathname.replace(/\/index\.html$/,'/')!=='/'||session?.user)return;
+    if(sessionStorage.getItem('fmb_mobile_continue')==='yes')return;
+    const welcome=document.createElement('div');
+    welcome.className='mobile-app-welcome';
+    welcome.setAttribute('role','dialog');
+    welcome.setAttribute('aria-modal','true');
+    welcome.setAttribute('aria-labelledby','mobileWelcomeTitle');
+    welcome.innerHTML='<div class="mobile-app-welcome-backdrop"></div><section class="mobile-app-welcome-card"><img src="/assets/images/icon-transparent.png" width="72" height="72" alt=""><p class="mobile-app-welcome-kicker">With love, FMB Mobile</p><h1 id="mobileWelcomeTitle">Welcome to our space.</h1><p>Sign in for member music and your private profile, create an account, or continue into our public reading, news, and support spaces.</p><div class="mobile-app-welcome-actions"><a class="mobile-app-primary" href="/auth.html#signin">Sign in</a><a class="mobile-app-secondary" href="/auth.html#signup">Create an account</a><button class="mobile-app-continue" type="button">Continue without an account</button></div><small>Member-only areas will always be clearly marked before you open them.</small></section>';
+    document.body.appendChild(welcome);
+    document.body.classList.add('mobile-welcome-open');
+    const continueButton=welcome.querySelector('.mobile-app-continue');
+    continueButton.addEventListener('click',()=>{
+      sessionStorage.setItem('fmb_mobile_continue','yes');
+      welcome.classList.add('is-leaving');
+      document.body.classList.remove('mobile-welcome-open');
+      window.setTimeout(()=>welcome.remove(),260);
+    });
+    requestAnimationFrame(()=>continueButton.focus({preventScroll:true}));
+  }
+  async function setupMemberExperience(){
+    const state=await findActiveSession();
+    window.FMB_MEMBER={...state,isMember:Boolean(state.session?.user)};
+    renderMemberNavigation(state.session,state.clients);
+    setupMobileWelcome(state.session);
+    window.dispatchEvent(new CustomEvent('fmb:auth-ready',{detail:{session:state.session,isMember:Boolean(state.session?.user)}}));
+    if(state.session?.user)loadScript('/assets/js/global-music.js?v=20260716-member-mobile-v1').catch(()=>{});
+    state.clients.forEach(client=>client.auth.onAuthStateChange((event,nextSession)=>{
+      if(event==='SIGNED_OUT'&&!nextSession)window.dispatchEvent(new CustomEvent('fmb:auth-ready',{detail:{session:null,isMember:false}}));
+    }));
+  }
+  setupMemberExperience();
+
   const toggle=$('#navToggle'),links=$('#navLinks');
   if(toggle&&links){
     const close=()=>{links.classList.remove('open');toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-label','Open menu')};
@@ -121,6 +230,7 @@
   }
 
   function setupMobileChrome(){
+    if(!isDedicatedMobileHost)return;
     const media=window.matchMedia('(max-width: 800px)');
     const menu=$('#navLinks');
     const menuToggle=$('#navToggle');
