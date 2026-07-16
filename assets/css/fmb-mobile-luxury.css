@@ -3,6 +3,8 @@
  * Every visual override is phone-only so the desktop website remains unchanged.
  */
 .mobile-menu-fab,.mobile-menu-icon{display:none}
+.care-message strong,.partner-label{color:rgba(255,255,255,.92)!important}
+.partner-track{animation:fmb-mobile-partner-marquee 22s linear infinite!important;will-change:transform}
 
 @keyframes fmb-mobile-partner-marquee{
   to{transform:translate3d(calc(-50% - 7px),0,0)}
@@ -365,4 +367,8 @@
   body.fmb-mobile-menu-ready .partner-track{animation:none!important;transform:none!important}
   body.fmb-mobile-menu-ready .partner-track .partner-logo:nth-child(n+3){display:none!important}
   body.fmb-mobile-menu-ready .nav-links,.mobile-menu-fab{transition:none!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .partner-track{animation:none!important;transform:none!important}
 }
