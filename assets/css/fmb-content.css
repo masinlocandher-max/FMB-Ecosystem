@@ -15,7 +15,7 @@
 .partner-window:after{content:"";position:absolute;z-index:2;top:0;bottom:0;left:-35%;width:24%;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,255,255,.82),transparent);transform:skewX(-18deg);animation:fmb-partner-shine 7s ease-in-out infinite}
 .partner-logo{position:relative;z-index:1;width:154px;height:44px;padding:5px 8px;overflow:hidden;border:1px solid rgba(81,11,119,.06);background:rgba(255,255,255,.82)}
 .partner-logo.cognita{width:174px;height:44px}
-.partner-logo img,.partner-logo.cognita img{display:block;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain}
+.partner-logo img,.partner-logo.cognita img{position:absolute;inset:5px 8px;display:block;width:calc(100% - 16px)!important;height:calc(100% - 10px)!important;max-width:none;max-height:none;object-fit:contain}
 @keyframes fmb-partner-shine{0%,70%{left:-35%}100%{left:120%}}
 
 .footer-grid>div:first-child{align-self:start}
@@ -204,6 +204,7 @@
   .partner-track{justify-content:space-evenly;gap:5px;padding:3px 4px}
   .partner-logo{width:96px;height:33px;padding:4px 5px}
   .partner-logo.cognita{width:110px;height:33px}
+  .partner-logo img,.partner-logo.cognita img{inset:4px 5px;width:calc(100% - 10px)!important;height:calc(100% - 8px)!important}
   .partner-window:after{animation-duration:8s}
   .ebook-library-route .route-art{min-height:410px}
   .library-preview-stack{height:310px}
