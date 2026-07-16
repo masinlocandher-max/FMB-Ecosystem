@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260716-mobile-menu-v5';
+const CACHE_NAME='fmb-app-shell-20260716-advertising-banner';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
