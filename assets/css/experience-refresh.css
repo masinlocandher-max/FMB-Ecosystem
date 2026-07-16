@@ -13,7 +13,7 @@
   width:max-content!important;
   min-width:max-content!important;
   align-items:center!important;
-  animation:fmb-public-care-marquee 30s linear infinite!important;
+  animation:fmb-public-care-marquee 32s linear infinite!important;
   transform:translate3d(0,0,0);
   will-change:transform;
 }
@@ -23,17 +23,20 @@
   width:auto!important;
   min-width:max-content!important;
   align-items:center!important;
-  gap:16px!important;
-  padding:6px 22px!important;
+  gap:14px!important;
+  min-height:48px;
+  padding:6px 24px!important;
   white-space:nowrap!important;
 }
-.promo-group .banner-status{display:inline-flex;align-items:center;min-height:28px;padding:5px 10px;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:rgba(255,255,255,.12);color:#fff;font-size:10px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}
-.promo-group .brand-marquee-label,.promo-group .banner-partner-label{color:#fff!important;font-size:12px!important;font-weight:720;letter-spacing:.01em}
-.promo-group .banner-divider{width:1px;height:24px;background:rgba(255,255,255,.32)}
-.promo-group .brand-chip-logo{display:flex!important;flex:0 0 128px!important;width:128px!important;min-width:128px!important;height:32px!important;padding:0 8px!important;border:1px solid rgba(255,255,255,.82)!important;border-radius:999px!important;background:#fff!important;overflow:hidden!important;box-shadow:0 5px 16px rgba(12,0,19,.18)!important}
-.promo-group .brand-chip-logo img{width:116px!important;height:68px!important;object-fit:contain!important;transform:scale(1.08)!important;filter:none!important}
+.promo-group .brand-marquee-label{color:#fff!important;font-size:12px!important;font-weight:760;letter-spacing:.01em}
+.promo-group .banner-divider{width:1px;height:26px;flex:0 0 1px;background:rgba(255,255,255,.38)}
+.promo-group .advertise-marquee-label{color:#f6d98d!important;font-size:12px!important;font-weight:850;letter-spacing:.015em}
+.promo-group .brand-chip-logo{display:flex!important;flex:0 0 124px!important;width:124px!important;min-width:124px!important;height:34px!important;align-items:center!important;justify-content:center!important;padding:0 8px!important;border:1px solid rgba(255,255,255,.58)!important;border-radius:999px!important;background:rgba(255,255,255,.94)!important;overflow:hidden!important;box-shadow:0 5px 16px rgba(12,0,19,.18)!important}
+.promo-group .brand-chip-logo img{display:block!important;width:112px!important;height:64px!important;max-width:none!important;object-fit:contain!important;transform:none!important;filter:none!important}
 .promo-group .cognita-chip{flex-basis:146px!important;width:146px!important;min-width:146px!important}
 .promo-group .cognita-chip img{width:134px!important}
+.promo-group .banner-advertise-button{display:inline-flex!important;min-height:31px!important;align-items:center!important;justify-content:center!important;padding:6px 13px!important;border:1px solid rgba(255,239,190,.8)!important;border-radius:999px!important;background:linear-gradient(135deg,#fff6da,#eed081)!important;color:#43105b!important;font-size:10px!important;font-weight:900!important;letter-spacing:.05em!important;text-decoration:none!important;text-transform:uppercase!important;box-shadow:0 5px 15px rgba(15,0,21,.2)!important}
+.promo-group .banner-advertise-button:hover,.promo-group .banner-advertise-button:focus-visible{background:#fff!important;color:#510b77!important}
 @keyframes fmb-public-care-marquee{to{transform:translate3d(-50%,0,0)}}
 
 .auth-advisory{grid-column:1/-1;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:18px;width:min(1040px,100%);margin-bottom:14px;padding:16px 18px;border:1px solid rgba(81,11,119,.14);border-radius:22px;background:rgba(255,255,255,.88);box-shadow:0 18px 46px rgba(45,23,56,.1);color:var(--ink)}
@@ -97,16 +100,16 @@
   body{background:#f5f5f7}
   .top-shell{padding:max(7px,env(safe-area-inset-top,0px)) 8px 0!important}
   .support-glass{min-height:40px!important;border-radius:15px!important;box-shadow:0 8px 24px rgba(37,4,52,.24)!important}
-  .promo-marquee{animation-duration:23s!important}
-  .promo-group{gap:10px!important;padding:4px 12px!important}
-  .promo-group .banner-status{min-height:25px;padding:4px 8px;font-size:8.5px}
-  .promo-group .brand-marquee-label{max-width:none!important;font-size:10px!important;line-height:1.2!important;white-space:nowrap!important}
-  .promo-group .banner-partner-label{font-size:9.5px!important}
+  .promo-marquee{animation-duration:24s!important}
+  .promo-group{gap:9px!important;min-height:42px!important;padding:4px 11px!important}
+  .promo-group .brand-marquee-label{max-width:none!important;font-size:9.5px!important;line-height:1.2!important;white-space:nowrap!important}
   .promo-group .banner-divider{height:20px}
-  .promo-group .brand-chip-logo{flex-basis:92px!important;width:92px!important;min-width:92px!important;height:27px!important;padding:0 5px!important}
-  .promo-group .brand-chip-logo img{width:82px!important;height:52px!important}
-  .promo-group .cognita-chip{flex-basis:108px!important;width:108px!important;min-width:108px!important}
-  .promo-group .cognita-chip img{width:98px!important}
+  .promo-group .advertise-marquee-label{font-size:9.5px!important}
+  .promo-group .brand-chip-logo{flex-basis:88px!important;width:88px!important;min-width:88px!important;height:28px!important;padding:0 5px!important}
+  .promo-group .brand-chip-logo img{width:78px!important;height:50px!important}
+  .promo-group .cognita-chip{flex-basis:104px!important;width:104px!important;min-width:104px!important}
+  .promo-group .cognita-chip img{width:94px!important}
+  .promo-group .banner-advertise-button{min-height:28px!important;padding:5px 10px!important;font-size:8.5px!important}
   .nav-glass{min-height:58px!important;margin-top:5px!important;border-radius:20px!important;background:rgba(255,255,255,.9)!important;box-shadow:0 12px 34px rgba(42,15,52,.14)!important}
   .nav-links{top:108px!important;max-height:calc(100dvh - 122px)!important;border-radius:24px!important;background:rgba(250,250,252,.94)!important}
   .mobile-bar{bottom:max(8px,env(safe-area-inset-bottom,0px))!important;width:calc(100% - 18px)!important;max-width:430px!important;padding:5px!important;border-radius:23px!important;background:rgba(250,250,252,.9)!important;box-shadow:0 14px 42px rgba(34,20,39,.17)!important}
