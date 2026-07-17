@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260717-desktop-parity-app-v1';
+const CACHE_NAME='fmb-app-shell-20260717-music-marquee-v2';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -60,6 +60,7 @@ const APP_SHELL=[
   '/assets/css/fmb-mobile-clean.css',
   '/assets/css/fmb-mobile-luxury.css',
   '/assets/css/website-responsive-parity.css',
+  '/assets/css/centered-partner-marquee.css',
   '/assets/css/desktop-premium.css',
   '/assets/css/member-experience.css',
   '/assets/css/mobile-app.css',
