@@ -22,6 +22,97 @@ const ALLOWED_FILE_IDS = new Set([
   '17DLinCFHRMdRMTQOQtaigHh2CV3jB-Aw'
 ]);
 
+const decodeHtml = value => String(value || '')
+  .replace(/&amp;/gi, '&')
+  .replace(/&#39;|&apos;/gi, "'")
+  .replace(/&quot;/gi, '"')
+  .replace(/&lt;/gi, '<')
+  .replace(/&gt;/gi, '>');
+
+const getAttribute = (tag, name) => {
+  const quoted = tag.match(new RegExp(`\\b${name}\\s*=\\s*(["'])(.*?)\\1`, 'i'));
+  if (quoted) return decodeHtml(quoted[2]);
+  const bare = tag.match(new RegExp(`\\b${name}\\s*=\\s*([^\\s>]+)`, 'i'));
+  return bare ? decodeHtml(bare[1]) : '';
+};
+
+function extractConfirmationUrl(html, currentUrl) {
+  const forms = String(html || '').match(/<form\b[^>]*>/gi) || [];
+  const formTag = forms.find(tag => {
+    const id = getAttribute(tag, 'id');
+    const action = getAttribute(tag, 'action');
+    return id === 'download-form' || /drive\.usercontent\.google\.com\/download/i.test(action);
+  });
+
+  if (formTag) {
+    const action = getAttribute(formTag, 'action') || currentUrl;
+    const nextUrl = new URL(action, currentUrl);
+    const inputs = String(html || '').match(/<input\b[^>]*>/gi) || [];
+    for (const input of inputs) {
+      const name = getAttribute(input, 'name');
+      if (!name) continue;
+      nextUrl.searchParams.set(name, getAttribute(input, 'value'));
+    }
+    return nextUrl;
+  }
+
+  const directMatch = String(html || '').match(/https:\/\/drive\.usercontent\.google\.com\/download\?[^"'<>\s]+/i);
+  return directMatch ? new URL(decodeHtml(directMatch[0])) : null;
+}
+
+function cookieHeader(headers) {
+  const values = typeof headers.getSetCookie === 'function'
+    ? headers.getSetCookie()
+    : [headers.get('set-cookie')].filter(Boolean);
+  return values.map(value => String(value).split(';', 1)[0]).filter(Boolean).join('; ');
+}
+
+async function fetchDriveAudio(fileId, requestHeaders, method) {
+  const startUrl = new URL('https://drive.google.com/uc');
+  startUrl.searchParams.set('export', 'download');
+  startUrl.searchParams.set('id', fileId);
+
+  let url = startUrl;
+  let cookie = '';
+
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const headers = { ...requestHeaders };
+    if (cookie) headers.Cookie = cookie;
+
+    const response = await fetch(url, {
+      method,
+      headers,
+      redirect: 'follow'
+    });
+
+    const responseCookie = cookieHeader(response.headers);
+    if (responseCookie) cookie = cookie ? `${cookie}; ${responseCookie}` : responseCookie;
+
+    const contentType = response.headers.get('content-type') || '';
+    if (!contentType.includes('text/html')) return response;
+
+    if (method === 'HEAD') {
+      const getResponse = await fetch(url, { method: 'GET', headers, redirect: 'follow' });
+      const getCookie = cookieHeader(getResponse.headers);
+      if (getCookie) cookie = cookie ? `${cookie}; ${getCookie}` : getCookie;
+      const getContentType = getResponse.headers.get('content-type') || '';
+      if (!getContentType.includes('text/html')) return getResponse;
+      const html = await getResponse.text();
+      const confirmationUrl = extractConfirmationUrl(html, getResponse.url || url.href);
+      if (!confirmationUrl) return getResponse;
+      url = confirmationUrl;
+      continue;
+    }
+
+    const html = await response.text();
+    const confirmationUrl = extractConfirmationUrl(html, response.url || url.href);
+    if (!confirmationUrl) return response;
+    url = confirmationUrl;
+  }
+
+  return null;
+}
+
 module.exports = async function handler(req, res) {
   if (!['GET', 'HEAD'].includes(req.method || 'GET')) {
     res.setHeader('Allow', 'GET, HEAD');
@@ -37,11 +128,6 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  const upstreamUrl = new URL('https://drive.usercontent.google.com/download');
-  upstreamUrl.searchParams.set('id', fileId);
-  upstreamUrl.searchParams.set('export', 'download');
-  upstreamUrl.searchParams.set('confirm', 't');
-
   const headers = {
     'User-Agent': 'Mozilla/5.0 With-love-FMB-audio/1.0',
     Accept: 'audio/mpeg,audio/*;q=0.9,*/*;q=0.5'
@@ -49,11 +135,12 @@ module.exports = async function handler(req, res) {
   if (req.headers.range) headers.Range = req.headers.range;
 
   try {
-    const upstream = await fetch(upstreamUrl, {
-      method: req.method === 'HEAD' ? 'HEAD' : 'GET',
-      headers,
-      redirect: 'follow'
-    });
+    const upstream = await fetchDriveAudio(fileId, headers, req.method === 'HEAD' ? 'HEAD' : 'GET');
+    if (!upstream) {
+      res.statusCode = 502;
+      res.end('Audio source unavailable');
+      return;
+    }
 
     if (!upstream.ok && upstream.status !== 206) {
       res.statusCode = upstream.status === 404 ? 404 : 502;
@@ -68,7 +155,7 @@ module.exports = async function handler(req, res) {
       return;
     }
 
-    for (const name of ['content-length', 'content-range', 'accept-ranges', 'etag', 'last-modified']) {
+    for (const name of ['content-length', 'content-range', 'accept-ranges', 'content-disposition', 'etag', 'last-modified']) {
       const value = upstream.headers.get(name);
       if (value) res.setHeader(name, value);
     }
