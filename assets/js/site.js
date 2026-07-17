@@ -102,7 +102,7 @@
       {label:'News',description:'Read the latest verified FMB briefing and reflection',href:'/news/',current:route==='news'},
       {label:'Freedom Wall',description:'Read positive reflections selected with care',href:'/freedom-wall.html',current:page==='freedom-wall.html'},
       {label:'Community',description:'Discover Community Engagements - AMDG and ways to take part',href:'/communityengagements/',current:route==='communityengagements'||page==='volunteer.html'},
-      {label:'FMB & Co.',description:'Explore the three founder-led brands',href:'/fmbandco/',current:route==='fmbandco'},
+      {label:'FMB & Co.',description:'Explore the three founder-led brands',href:'/fmb&co/',current:route==='fmb&co'},
       {label:'About FMB',description:'Meet Francine and understand her authority',href:'/aboutfmb/',current:route==='aboutfmb'||page==='about.html'},
       {label:'Get help',description:'Open verified crisis, health, safety, and assistance contacts',href:'/gethelp/',current:route==='gethelp',help:true}
     ];
@@ -259,7 +259,7 @@
         help:'<circle cx="12" cy="12" r="9"/><path d="M9.7 9a2.5 2.5 0 1 1 3.8 2.1c-1 .6-1.5 1.2-1.5 2.4M12 17h.01"/>'
       };
       const value=String(href||'');
-      const key=value.includes('ebooks')?'read':value.includes('music')?'music':value.includes('news')?'news':value.includes('freedom-wall')?'heart':value.includes('community')||value.includes('volunteer')?'serve':value.includes('fmbandco')?'brands':value.includes('about')?'person':value.includes('gethelp')||value.includes('support')?'help':'home';
+      const key=value.includes('ebooks')?'read':value.includes('music')?'music':value.includes('news')?'news':value.includes('freedom-wall')?'heart':value.includes('community')||value.includes('volunteer')?'serve':value.includes('fmb&co')?'brands':value.includes('about')?'person':value.includes('gethelp')||value.includes('support')?'help':'home';
       return `<span class="mobile-menu-icon" aria-hidden="true"><svg viewBox="0 0 24 24">${icons[key]}</svg></span>`;
     };
     const prepareMobileMenuItems=()=>{
@@ -382,7 +382,7 @@
   if(topPromo){
     topPromo.setAttribute('aria-label','With love, FMB partner brands and advertising announcement');
     const advertisingHref='/aboutfmb/?category=advertise-with-us#work-with-fmb';
-    const promoGroup=({duplicate=false}={})=>`<div class="promo-group"${duplicate?' aria-hidden="true"':''}><span class="brand-marquee-label">With love, FMB is brought to you by:</span><a class="brand-chip-logo" href="https://www.senzpr.com" target="_blank" rel="noopener noreferrer" aria-label="Visit SENZ"${duplicate?' tabindex="-1"':''}><img src="/assets/images/projects/senz-logo.png?v=20260716-desktop-premium-v1" alt="${duplicate?'':'SENZ'}" width="480" height="185" decoding="async"></a><a class="brand-chip-logo cognita-chip" href="https://thecognitainstitute.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Cognita Institute of AI"${duplicate?' tabindex="-1"':''}><img src="/assets/images/projects/cognita-logo.png?v=20260716-desktop-premium-v1" alt="${duplicate?'':'Cognita Institute of AI'}" width="520" height="188" decoding="async"></a><span class="banner-divider" aria-hidden="true"></span><span class="advertise-marquee-label">Advertise your brand or business across the website</span><a class="banner-advertise-button" href="${advertisingHref}"${duplicate?' tabindex="-1"':''}>Advertise with us</a></div>`;
+    const promoGroup=({duplicate=false}={})=>`<div class="promo-group"${duplicate?' aria-hidden="true"':''}><span class="brand-marquee-label">With love, FMB is brought to you by:</span><a class="brand-chip-logo" href="/fmb&co/senz/" aria-label="View SENZ announcements"${duplicate?' tabindex="-1"':''}><img src="/assets/images/projects/senz-logo.png?v=20260716-desktop-premium-v1" alt="${duplicate?'':'SENZ'}" width="480" height="185" decoding="async"></a><a class="brand-chip-logo cognita-chip" href="/fmb&co/cognita/" aria-label="View Cognita announcements"${duplicate?' tabindex="-1"':''}><img src="/assets/images/projects/cognita-logo.png?v=20260716-desktop-premium-v1" alt="${duplicate?'':'Cognita Institute of AI'}" width="520" height="188" decoding="async"></a><span class="banner-divider" aria-hidden="true"></span><span class="advertise-marquee-label">Advertise your brand or business across the website</span><a class="banner-advertise-button" href="${advertisingHref}"${duplicate?' tabindex="-1"':''}>Advertise with us</a></div>`;
     topPromo.innerHTML=`<div class="promo-marquee">${promoGroup()}${promoGroup({duplicate:true})}</div>`;
   }
 
