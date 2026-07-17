@@ -69,6 +69,7 @@
   ensureStylesheet('/assets/css/desktop-premium.css?v=20260716-desktop-premium-v1');
   ensureStylesheet('/assets/css/member-experience.css?v=20260716-member-mobile-v1');
   ensureStylesheet('/assets/css/mobile-app.css?v=20260716-member-mobile-v1');
+  ensureStylesheet('/assets/css/az-assistant.css?v=20260717-az-v1');
   const mobileStyles='assets/css/fmb-mobile-clean.css?v=20260716-mobile-plan';
   ensureStylesheet(mobileStyles);
   requestAnimationFrame(()=>{
@@ -77,6 +78,7 @@
   });
   ensureAppMetadata();
   loadScript('/assets/js/desktop-premium.js?v=20260716-desktop-premium-v1').catch(()=>{});
+  loadScript('/assets/js/az-assistant.js?v=20260717-az-v1').catch(()=>{});
 
   if(!document.querySelector('.skip-link')){
     const main=document.querySelector('main');if(main&&!main.id)main.id='main-content';

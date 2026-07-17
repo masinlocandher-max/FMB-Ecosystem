@@ -208,6 +208,51 @@ def check_navigation_experience(errors: list[str]) -> None:
         errors.append("assets/css/site.css: first-visit benefit styles are missing")
 
 
+def check_az_assistant(errors: list[str]) -> None:
+    site_js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
+    worker = (ROOT / "service-worker.js").read_text(encoding="utf-8")
+    assistant_path = ROOT / "assets/js/az-assistant.js"
+    styles_path = ROOT / "assets/css/az-assistant.css"
+    if not assistant_path.exists():
+        errors.append("assets/js/az-assistant.js: AZ help flow is missing")
+        return
+    if not styles_path.exists():
+        errors.append("assets/css/az-assistant.css: AZ help interface styles are missing")
+        return
+    assistant = assistant_path.read_text(encoding="utf-8")
+    styles = styles_path.read_text(encoding="utf-8")
+    for marker in (
+        "Hi, I am AZ, your assistant for today",
+        "Find Something",
+        "Account and Membership",
+        "App and Device Help",
+        "Music and Reading",
+        "Journal and Daily Check-In",
+        "Community and Freedom Wall",
+        "Support and Wellbeing",
+        "Privacy and Safety",
+        "Work with FMB",
+        "Volunteer and Collaborate",
+        "Payments, Donations, and Partnerships",
+        "Report a Problem",
+        "Frequently Asked Questions",
+        "submit_contact_message",
+        "fmb:auth-ready",
+        "guestOnly",
+        "memberOnly",
+    ):
+        if marker not in assistant:
+            errors.append(f"assets/js/az-assistant.js: missing guided-help marker: {marker}")
+    for marker in (".az-help-trigger", ".az-help-panel", ".az-quick-reply", "min-height:44px", "fmb-mobile-host"):
+        if marker not in styles:
+            errors.append(f"assets/css/az-assistant.css: missing responsive help style: {marker}")
+    for marker in ("az-assistant.css", "az-assistant.js"):
+        if marker not in site_js:
+            errors.append(f"assets/js/site.js: AZ assistant is not loaded globally: {marker}")
+        if marker not in worker:
+            errors.append(f"service-worker.js: AZ assistant is not available to the app shell: {marker}")
+
+
 def check_advertising_flow(errors: list[str]) -> None:
     site_js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
     banner_css = (ROOT / "assets/css/experience-refresh.css").read_text(encoding="utf-8")
@@ -495,6 +540,7 @@ def main() -> int:
     check_config(errors)
     check_membership_features(errors)
     check_navigation_experience(errors)
+    check_az_assistant(errors)
     check_advertising_flow(errors)
     check_sharing_and_footer(errors)
     check_mobile_and_editorial_media(errors)
