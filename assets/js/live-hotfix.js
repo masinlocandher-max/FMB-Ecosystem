@@ -2,7 +2,7 @@
   'use strict';
 
   /* Compatibility markers kept for the repository's accessibility checks: focusableItems, visualViewport. */
-  const release='20260717-desktop-parity-app-v1';
+  const release='20260717-music-marquee-v2';
   const host=location.hostname.toLowerCase();
   const previewMode=new URLSearchParams(location.search).get('experience');
   const isPreviewHost=/\.vercel\.app$/i.test(host)||/^(localhost|127\.0\.0\.1)$/i.test(host);
@@ -50,6 +50,7 @@
     publicBar?.remove();
     removeAppOnlyWebsiteAssets();
     loadAsset('link',{rel:'stylesheet',href:`/assets/css/website-responsive-parity.css?v=${release}`});
+    loadAsset('link',{rel:'stylesheet',href:`/assets/css/centered-partner-marquee.css?v=${release}`});
   }
 
   function replacePartnerImages(){
