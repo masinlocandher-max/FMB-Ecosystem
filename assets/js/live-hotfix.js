@@ -1,162 +1,82 @@
 (function(){
   'use strict';
-  const release='20260716-member-mobile-v1';
+
+  const release='20260717-desktop-parity-app-v1';
+  const host=location.hostname.toLowerCase();
+  const previewMode=new URLSearchParams(location.search).get('experience');
+  const isPreviewHost=/\.vercel\.app$/i.test(host)||/^(localhost|127\.0\.0\.1)$/i.test(host);
+  const isAppHost=host==='app.francinemariebautista.com'||host==='mobile.francinemariebautista.com'||(isPreviewHost&&previewMode==='app');
+
+  /* Both the new app domain and the legacy mobile domain open the focused app. */
+  if(isAppHost&&!location.pathname.startsWith('/app/')){
+    location.replace(`/app/${location.search}${location.hash}`);
+    return;
+  }
+
   function loadAsset(tag,attrs){
     const key=attrs.href||attrs.src;
     if(document.querySelector(`${tag}[href="${key}"],${tag}[src="${key}"]`))return;
-    const el=document.createElement(tag);
-    Object.entries(attrs).forEach(([name,value])=>el.setAttribute(name,value));
-    document.head.appendChild(el);
+    const element=document.createElement(tag);
+    Object.entries(attrs).forEach(([name,value])=>element.setAttribute(name,value));
+    document.head.appendChild(element);
   }
-  function menuIconFor(href){
-    const icons={
-      home:'<path d="M3.5 11.5 12 4l8.5 7.5"/><path d="M5.5 10.5V20h13v-9.5M9.5 20v-6h5v6"/>',
-      read:'<path d="M5 4.5h11.5A2.5 2.5 0 0 1 19 7v13H7.5A2.5 2.5 0 0 1 5 17.5Z"/><path d="M7.5 4.5v13A2.5 2.5 0 0 0 10 20"/>',
-      music:'<path d="M9 18V6l10-2v12"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/>',
-      news:'<path d="M5 4h14v16H5z"/><path d="M8 8h8M8 12h8M8 16h5"/>',
-      heart:'<path d="M20.5 9.5c0 5-8.5 10-8.5 10s-8.5-5-8.5-10A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 8.5 2.5Z"/>',
-      serve:'<path d="M4 13.5 8.2 11l3.8 2 3.8-2 4.2 2.5"/><path d="M5.5 14.5V19h13v-4.5M8 10V6.5M12 10V4M16 10V6.5"/>',
-      brands:'<rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/>',
-      person:'<circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-4 3.2-6 7-6s6.2 2 7 6"/>',
-      help:'<circle cx="12" cy="12" r="9"/><path d="M9.7 9a2.5 2.5 0 1 1 3.8 2.1c-1 .6-1.5 1.2-1.5 2.4M12 17h.01"/>'
-    };
-    const value=String(href||'');
-    const key=value.includes('ebooks')?'read':value.includes('music')?'music':value.includes('news')?'news':value.includes('freedom-wall')?'heart':value.includes('community')||value.includes('volunteer')?'serve':value.includes('fmbandco')?'brands':value.includes('about')?'person':value.includes('gethelp')||value.includes('support')?'help':'home';
-    return `<span class="mobile-menu-icon" aria-hidden="true"><svg viewBox="0 0 24 24">${icons[key]}</svg></span>`;
+
+  function removeAppOnlyWebsiteAssets(){
+    document.querySelectorAll('link[rel="stylesheet"]').forEach(link=>{
+      const href=link.getAttribute('href')||'';
+      if(/fmb-mobile-luxury\.css|fmb-mobile-clean\.css|mobile-app\.css/i.test(href))link.remove();
+    });
   }
-  function boot(){
-    const isDedicatedMobileHost=location.hostname.toLowerCase()==='mobile.francinemariebautista.com'||((/\.vercel\.app$/i.test(location.hostname)||/^(localhost|127\.0\.0\.1)$/i.test(location.hostname))&&new URLSearchParams(location.search).get('experience')==='mobile');
-    loadAsset('link',{rel:'stylesheet',href:`/assets/css/reading-library.css?v=${release}`});
-    loadAsset('link',{rel:'stylesheet',href:`/assets/css/apple-mobile.css?v=${release}`});
-    loadAsset('link',{rel:'stylesheet',href:`/assets/css/experience-refresh.css?v=${release}`});
-    const mobileClean=document.querySelector('link[href*="assets/css/fmb-mobile-clean.css"]');
-    if(mobileClean)document.head.appendChild(mobileClean);
-    else loadAsset('link',{rel:'stylesheet',href:`/assets/css/fmb-mobile-clean.css?v=${release}`});
-    const luxuryHref=`/assets/css/fmb-mobile-luxury.css?v=${release}`;
-    const luxuryStyles=document.querySelector(`link[href="${luxuryHref}"]`);
-    if(luxuryStyles)document.head.appendChild(luxuryStyles);
-    else loadAsset('link',{rel:'stylesheet',href:luxuryHref});
-    loadAsset('script',{src:`/assets/js/reading-library.js?v=${release}`,defer:'defer'});
 
-    const transparentLogos={senz:'/assets/images/projects/senz-logo.png?v=20260716-desktop-premium-v1',cognita:'/assets/images/projects/cognita-logo.png?v=20260716-desktop-premium-v1'};
-    const replacePartnerImages=()=>{
-      document.querySelectorAll('.promo-marquee img').forEach(img=>{
-        const source=(img.getAttribute('src')||'').toLowerCase();
-        const alt=(img.getAttribute('alt')||'').toLowerCase();
-        if(source.includes('senz-logo')||alt==='senz')img.src=transparentLogos.senz;
-        if(source.includes('cognita-logo')||alt.includes('cognita institute'))img.src=transparentLogos.cognita;
-      });
-    };
-    replacePartnerImages();
+  function normalizeWebsiteChrome(){
+    document.documentElement.classList.add('fmb-website-host');
+    document.documentElement.classList.remove('fmb-mobile-host');
+    document.documentElement.dataset.experience='website';
+    document.body.classList.add('fmb-website-host');
+    document.body.classList.remove('fmb-mobile-host','fmb-mobile-menu-ready','fmb-mobile-ui','mobile-chrome-compact','mobile-menu-open','modal-open');
+    document.querySelectorAll('.mobile-menu-fab,.nav-backdrop').forEach(element=>element.remove());
 
-    const promoMarquee=document.querySelector('.promo-marquee');
-    const keepBannerMoving=()=>{
-      if(!promoMarquee)return;
-      promoMarquee.classList.add('is-running');
-      promoMarquee.style.animationPlayState='running';
-      promoMarquee.getAnimations?.().forEach(animation=>animation.play());
-    };
-    keepBannerMoving();
-    window.addEventListener('pageshow',keepBannerMoving);
-    document.addEventListener('visibilitychange',()=>{if(!document.hidden)keepBannerMoving()});
-
-    const media=window.matchMedia('(max-width: 800px)');
-    const toggle=document.getElementById('navToggle');
-    const links=document.getElementById('navLinks');
-    const publicMobileBar=document.querySelector('.mobile-bar:not(.member-mobile-bar):not(.admin-mobile-bar)');
-    const coreFab=document.querySelector('.mobile-menu-fab[data-core-menu-bound="true"]');
-    if(isDedicatedMobileHost&&coreFab){
-      document.body.classList.add('fmb-mobile-menu-ready');
-    }else if(isDedicatedMobileHost&&toggle&&links&&links.querySelector('.nav-menu-link')){
-      document.body.classList.add('fmb-mobile-menu-ready');
-      links.dataset.mobileMenu='dialog';
-      const introTitle=links.querySelector('.nav-menu-intro strong');
-      if(introTitle){introTitle.id='mobileMenuTitle';links.setAttribute('aria-labelledby',introTitle.id)}
-      links.querySelectorAll('.nav-menu-link').forEach(link=>{
-        if(!link.querySelector('.mobile-menu-icon'))link.insertAdjacentHTML('afterbegin',menuIconFor(link.getAttribute('href')));
-      });
-      let backdrop=document.querySelector('.nav-backdrop');
-      if(!backdrop){backdrop=document.createElement('div');backdrop.className='nav-backdrop';backdrop.setAttribute('aria-hidden','true');document.body.appendChild(backdrop)}
-      let fab=document.querySelector('.mobile-menu-fab');
-      if(!fab){
-        fab=document.createElement('button');
-        fab.type='button';
-        fab.className='mobile-menu-fab';
-        fab.setAttribute('aria-controls','navLinks');
-        fab.setAttribute('aria-expanded','false');
-        fab.setAttribute('aria-label','Open website menu');
-        fab.dataset.mobileMenuTrigger='true';
-        fab.innerHTML='<span class="mobile-menu-fab-grid" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="mobile-menu-fab-label">Menu</span>';
-        document.body.appendChild(fab);
-      }
-      let restoreToFab=false;
-      const updateVisibleHeight=()=>{
-        const height=window.visualViewport?.height||window.innerHeight;
-        document.documentElement.style.setProperty('--fmb-visible-height',`${Math.round(height)}px`);
-      };
-      const focusableItems=()=>[...links.querySelectorAll('a[href],button:not([disabled])')].filter(item=>getComputedStyle(item).display!=='none'&&getComputedStyle(item).visibility!=='hidden');
-      const sync=()=>{
-        const open=media.matches&&links.classList.contains('open');
-        if(media.matches){
-          links.setAttribute('role','dialog');
-          links.setAttribute('aria-modal','true');
-          links.setAttribute('aria-hidden',String(!open));
-        }else{
-          links.removeAttribute('role');
-          links.removeAttribute('aria-modal');
-          links.removeAttribute('aria-hidden');
-        }
-        toggle.setAttribute('aria-expanded',String(open));
-        toggle.setAttribute('aria-label',open?'Close menu':'Open menu');
-        fab.setAttribute('aria-expanded',String(open));
-        fab.setAttribute('aria-label',open?'Close website menu':'Open website menu');
-        const label=fab.querySelector('.mobile-menu-fab-label');
-        if(label)label.textContent=open?'Close':'Menu';
-        backdrop.classList.toggle('open',open);
-        document.body.classList.toggle('mobile-menu-open',open);
-        document.body.classList.toggle('modal-open',open);
-        publicMobileBar?.classList.toggle('is-hidden',open);
-      };
-      const setMenu=(open,{returnFocus=true}={})=>{
-        if(open&&!media.matches)return;
-        const wasOpen=links.classList.contains('open');
-        links.classList.toggle('open',Boolean(open));
-        restoreToFab=returnFocus&&wasOpen&&!open;
-        sync();
-        if(open){
-          updateVisibleHeight();
-          requestAnimationFrame(()=>{
-            const first=focusableItems()[0];
-            first?.focus({preventScroll:true});
-          });
-        }else if(restoreToFab){fab.focus({preventScroll:true});restoreToFab=false}
-      };
-      fab.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();setMenu(!links.classList.contains('open'))});
-      toggle.addEventListener('click',()=>setTimeout(sync,0));
-      backdrop.addEventListener('click',()=>setMenu(false));
-      links.addEventListener('click',event=>{if(event.target.closest('a'))setMenu(false,{returnFocus:false})});
-      document.addEventListener('keydown',event=>{
-        if(!media.matches||!links.classList.contains('open'))return;
-        if(event.key==='Escape'){event.preventDefault();setMenu(false);return}
-        if(event.key!=='Tab')return;
-        const items=focusableItems();
-        if(!items.length)return;
-        const first=items[0],last=items[items.length-1];
-        if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}
-        else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
-      });
-      new MutationObserver(sync).observe(links,{attributes:true,attributeFilter:['class']});
-      media.addEventListener?.('change',event=>{if(!event.matches)setMenu(false,{returnFocus:false});updateVisibleHeight();sync()});
-      window.visualViewport?.addEventListener('resize',updateVisibleHeight,{passive:true});
-      window.addEventListener('orientationchange',updateVisibleHeight,{passive:true});
-      updateVisibleHeight();
-      sync();
+    const menu=document.getElementById('navLinks');
+    if(menu){
+      menu.removeAttribute('role');
+      menu.removeAttribute('aria-modal');
+      menu.removeAttribute('aria-hidden');
+      menu.removeAttribute('inert');
+      menu.removeAttribute('data-mobile-menu');
     }
 
-    document.querySelectorAll('img').forEach(img=>{
-      img.addEventListener('error',()=>{
-        const src=img.getAttribute('src')||'';
-        if(img.dataset.retry==='1')return;
+    const publicBar=document.querySelector('.mobile-bar:not(.member-mobile-bar):not(.admin-mobile-bar)');
+    publicBar?.remove();
+    removeAppOnlyWebsiteAssets();
+    loadAsset('link',{rel:'stylesheet',href:`/assets/css/website-responsive-parity.css?v=${release}`});
+  }
+
+  function replacePartnerImages(){
+    const transparentLogos={
+      senz:'/assets/images/projects/senz-logo.png?v=20260716-desktop-premium-v1',
+      cognita:'/assets/images/projects/cognita-logo.png?v=20260716-desktop-premium-v1'
+    };
+    document.querySelectorAll('.promo-marquee img,.partner-track img').forEach(image=>{
+      const source=(image.getAttribute('src')||'').toLowerCase();
+      const alt=(image.getAttribute('alt')||'').toLowerCase();
+      if(source.includes('senz-logo')||alt==='senz')image.src=transparentLogos.senz;
+      if(source.includes('cognita-logo')||alt.includes('cognita institute'))image.src=transparentLogos.cognita;
+    });
+  }
+
+  function keepBannerMoving(){
+    document.querySelectorAll('.promo-marquee,.partner-track').forEach(track=>{
+      track.classList.add('is-running');
+      track.style.animationPlayState='running';
+      track.getAnimations?.().forEach(animation=>animation.play());
+    });
+  }
+
+  function installImageFallbacks(){
+    document.querySelectorAll('img').forEach(image=>{
+      image.addEventListener('error',()=>{
+        if(image.dataset.retry==='1')return;
+        const source=image.getAttribute('src')||'';
         const fixes={
           'assets/icon.svg':'/assets/images/icon-transparent.png',
           '/assets/icon.svg':'/assets/images/icon-transparent.png',
@@ -165,10 +85,39 @@
           'assets/signature.svg':'/assets/images/signature-transparent.png',
           '/assets/signature.svg':'/assets/images/signature-transparent.png'
         };
-        if(fixes[src]){img.dataset.retry='1';img.src=fixes[src]}
+        if(fixes[source]){image.dataset.retry='1';image.src=fixes[source]}
       });
     });
   }
+
+  function boot(){
+    if(isAppHost)return;
+
+    normalizeWebsiteChrome();
+    loadAsset('link',{rel:'stylesheet',href:`/assets/css/reading-library.css?v=${release}`});
+    loadAsset('link',{rel:'stylesheet',href:`/assets/css/apple-mobile.css?v=${release}`});
+    loadAsset('link',{rel:'stylesheet',href:`/assets/css/experience-refresh.css?v=${release}`});
+    loadAsset('script',{src:`/assets/js/reading-library.js?v=${release}`,defer:'defer'});
+
+    replacePartnerImages();
+    keepBannerMoving();
+    installImageFallbacks();
+
+    /* Re-apply after site.js finishes any late DOM and stylesheet work. */
+    requestAnimationFrame(()=>{
+      normalizeWebsiteChrome();
+      replacePartnerImages();
+      keepBannerMoving();
+    });
+    window.setTimeout(()=>{
+      normalizeWebsiteChrome();
+      replacePartnerImages();
+      keepBannerMoving();
+    },650);
+  }
+
+  window.addEventListener('pageshow',()=>{if(!isAppHost){normalizeWebsiteChrome();keepBannerMoving()}});
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!isAppHost)keepBannerMoving()});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});
   else boot();
 })();
