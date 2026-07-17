@@ -10,6 +10,8 @@
   const ownsAudio=!existingAudio;
   let tracks=[];
   let currentIndex=0;
+  let currentSourceIndex=0;
+  let playRequested=false;
   let lastSavedSecond=-1;
   let resumeRequested=false;
 
@@ -33,13 +35,27 @@
     return next;
   };
   const cleanUrl=value=>String(value||'').replace(/["\\]/g,'');
-  const flattenLibrary=data=>(data.playlists||[]).flatMap(playlist=>
-    (playlist.tracks||[]).map(track=>({
-      ...track,
-      src:track.src||track.audio_url||'',
-      playlist:playlist.title||''
-    }))
-  );
+
+  const sourceCandidates=track=>{
+    const values=[];
+    const fileId=String(track?.drive_file_id||'').trim();
+    if(fileId){
+      values.push(`/api/music?file=${encodeURIComponent(fileId)}`);
+      values.push(`https://drive.usercontent.google.com/download?id=${encodeURIComponent(fileId)}&export=download&confirm=t`);
+    }
+    if(track?.src||track?.audio_url)values.push(track.src||track.audio_url);
+    return [...new Set(values.filter(Boolean))];
+  };
+
+  const flattenLibrary=data=>(data.playlists||[]).flatMap(playlist=>(playlist.tracks||[]).map(track=>{
+    const sources=sourceCandidates(track);
+    return {...track,sources,src:sources[0]||'',playlist:playlist.title||''};
+  }));
+
+  const markEngaged=()=>{
+    document.body.classList.add('fmb-music-engaged');
+    writeState({hasPlayed:true});
+  };
 
   const dock=document.createElement('aside');
   dock.className='fmb-music-dock';
@@ -83,13 +99,14 @@
     const track=tracks[currentIndex]||{};
     return{
       index:currentIndex,
-      src:audio.currentSrc||audio.src||track.src||'',
+      src:track.src||audio.currentSrc||audio.src||'',
       title:title.textContent||track.title||'',
       artist:artist.textContent||track.artist||'With love, FMB',
       cover_url:track.cover_url||'',
       currentTime:Number.isFinite(audio.currentTime)?audio.currentTime:0,
       duration:Number.isFinite(audio.duration)?audio.duration:0,
-      playing:!audio.paused&&!audio.ended
+      playing:!audio.paused&&!audio.ended,
+      hasPlayed:Boolean(readState().hasPlayed||!audio.paused)
     };
   };
   const saveCurrent=()=>writeState(stateForCurrent());
@@ -98,16 +115,38 @@
     window.dispatchEvent(new CustomEvent('fmb:global-music-command',{detail:{type,...detail}}));
   };
 
+  const applyOwnedSource=(track,sourceIndex=0)=>{
+    currentSourceIndex=Math.max(0,Math.min(sourceIndex,Math.max(0,(track.sources||[]).length-1)));
+    const source=track.sources?.[currentSourceIndex]||track.src||'';
+    if(!source)return false;
+    const requestedSrc=new URL(source,location.href).href;
+    if(audio.src!==requestedSrc)audio.src=source;
+    return true;
+  };
+
+  const beginOwnedPlayback=()=>{
+    playRequested=true;
+    return audio.play().then(()=>{
+      markEngaged();
+      setPlaying(true);
+      status.textContent='Playing across the website.';
+    }).catch(()=>{
+      resumeRequested=true;
+      setPlaying(false);
+      status.textContent='Tap Play to continue listening on this page.';
+    });
+  };
+
   const selectOwnedTrack=(index,shouldPlay=true,startTime=0)=>{
     if(!tracks.length)return;
     currentIndex=(Number(index)+tracks.length)%tracks.length;
     const track=tracks[currentIndex];
-    if(!track?.src){
+    if(!track?.sources?.length){
       status.textContent='This track is not available right now.';
       return;
     }
-    const requestedSrc=new URL(track.src,location.href).href;
-    if(audio.src!==requestedSrc)audio.src=track.src;
+    playRequested=Boolean(shouldPlay);
+    applyOwnedSource(track,0);
     setTrackDisplay(track);
     writeState({index:currentIndex,src:track.src,title:track.title,artist:track.artist,cover_url:track.cover_url,currentTime:startTime,playing:shouldPlay});
     const restoreTime=()=>{
@@ -115,16 +154,7 @@
       audio.removeEventListener('loadedmetadata',restoreTime);
     };
     if(startTime>0)audio.addEventListener('loadedmetadata',restoreTime);
-    if(shouldPlay){
-      audio.play().then(()=>{
-        setPlaying(true);
-        status.textContent='Playing across the website.';
-      }).catch(()=>{
-        resumeRequested=true;
-        setPlaying(false);
-        status.textContent='Tap Play to continue listening on this page.';
-      });
-    }
+    if(shouldPlay)beginOwnedPlayback();
   };
 
   const selectTrack=(index,shouldPlay=true,startTime=0)=>{
@@ -140,13 +170,8 @@
     }
     if(ownsAudio){
       if(!audio.src){selectOwnedTrack(currentIndex,true);return}
-      if(audio.paused){
-        audio.play().then(()=>{
-          resumeRequested=false;
-          setPlaying(true);
-          status.textContent='Playing across the website.';
-        }).catch(()=>{status.textContent='The track could not begin. Please try again.'});
-      }else audio.pause();
+      if(audio.paused)beginOwnedPlayback();
+      else{playRequested=false;audio.pause()}
     }else dispatchCommand('toggle');
   };
   const move=direction=>{
@@ -162,6 +187,8 @@
   document.addEventListener('keydown',event=>{if(event.key==='Escape'&&dock.classList.contains('is-open'))setOpen(false)});
 
   audio.addEventListener('play',()=>{
+    playRequested=true;
+    markEngaged();
     setPlaying(true);
     resumeRequested=false;
     status.textContent='Playing across the website.';
@@ -169,6 +196,7 @@
   });
   audio.addEventListener('pause',()=>{setPlaying(false);saveCurrent()});
   audio.addEventListener('ended',()=>{
+    playRequested=false;
     if(ownsAudio)selectOwnedTrack(currentIndex+1,true);
   });
   audio.addEventListener('timeupdate',()=>{
@@ -181,6 +209,23 @@
     }
   });
   audio.addEventListener('error',()=>{
+    if(ownsAudio){
+      const track=tracks[currentIndex];
+      if(track&&currentSourceIndex+1<track.sources.length){
+        const resumeAt=Number.isFinite(audio.currentTime)?audio.currentTime:0;
+        currentSourceIndex+=1;
+        status.textContent='Switching to a backup audio source.';
+        audio.src=track.sources[currentSourceIndex];
+        const restore=()=>{
+          if(resumeAt>0&&Number.isFinite(audio.duration))audio.currentTime=Math.min(resumeAt,Math.max(0,audio.duration-.25));
+          audio.removeEventListener('loadedmetadata',restore);
+        };
+        audio.addEventListener('loadedmetadata',restore);
+        if(playRequested)audio.play().catch(()=>{setPlaying(false);status.textContent='Tap Play to continue with the backup audio source.'});
+        return;
+      }
+    }
+    playRequested=false;
     setPlaying(false);
     status.textContent='This audio file could not be played right now.';
   });
@@ -192,6 +237,7 @@
     if(Number.isFinite(Number(detail.currentTime))&&Number.isFinite(Number(detail.duration))&&Number(detail.duration)>0){
       progress.style.width=Math.min(100,Number(detail.currentTime)/Number(detail.duration)*100)+'%';
     }
+    if(detail.hasPlayed||detail.playing)markEngaged();
     setPlaying(Boolean(detail.playing));
     writeState(detail);
   });
@@ -218,11 +264,13 @@
       if(!response.ok)throw new Error('Music library unavailable');
       tracks=flattenLibrary(await response.json());
       const saved=readState();
-      const matchedIndex=tracks.findIndex(track=>saved.src&&new URL(track.src,location.href).href===new URL(saved.src,location.href).href);
+      const savedUrl=saved.src?new URL(saved.src,location.href).href:'';
+      const matchedIndex=tracks.findIndex(track=>savedUrl&&track.sources.some(source=>new URL(source,location.href).href===savedUrl));
       currentIndex=matchedIndex>=0?matchedIndex:Math.max(0,Math.min(Number(saved.index)||0,Math.max(0,tracks.length-1)));
       const track=tracks[currentIndex];
       setTrackDisplay(saved.title?{...track,...saved}:track);
       configureMediaSession(track);
+      if(saved.hasPlayed)document.body.classList.add('fmb-music-engaged');
       if(ownsAudio&&track){
         const shouldResume=Boolean(saved.playing);
         selectOwnedTrack(currentIndex,shouldResume,Number(saved.currentTime)||0);
@@ -244,6 +292,7 @@
   window.addEventListener('pagehide',saveCurrent);
   window.addEventListener('pageshow',()=>{
     const state=readState();
+    if(state.hasPlayed)document.body.classList.add('fmb-music-engaged');
     if(resumeRequested||state.playing)status.textContent=audio.paused?'Tap Play to continue listening on this page.':'Playing across the website.';
   });
 
