@@ -8,6 +8,10 @@
 <meta name="description" content="The private signed-in profile for daily check-ins, journal entries, saved reading, and the moderated Freedom Wall.">
 <meta name="robots" content="noindex,nofollow">
 <link rel="icon" href="assets/images/icon-transparent.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#510b77">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="With love, FMB">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
@@ -18,7 +22,7 @@
 <link rel="stylesheet" href="assets/css/experience-refresh.css?v=20260716-public-care">
 <link rel="stylesheet" href="assets/css/organized-pages.css?v=20260716">
 <link rel="stylesheet" href="assets/css/fmb-polish.css?v=20260716-polish">
-<link rel="stylesheet" href="assets/css/dashboard.css?v=20260714a">
+<link rel="stylesheet" href="assets/css/dashboard.css?v=20260717-member-install-v1">
 <link rel="stylesheet" href="/assets/css/fmb-mobile-luxury.css?v=20260716-mobile-first-v6">
 </head>
 <body class="dashboard-page member-dashboard-page profile-route">
@@ -54,12 +58,31 @@
 
 <section class="member-panel" id="settingsPanel" hidden><div class="split"><form class="glass-card form-grid" id="passwordForm"><p class="eyebrow">Security</p><h3>Change password</h3><div class="field"><label for="accountPassword">New password</label><div class="password-wrap"><input id="accountPassword" type="password" autocomplete="new-password" minlength="10" required><button class="password-toggle" type="button" data-toggle-password="accountPassword">Show</button></div></div><div class="field"><label for="accountPasswordConfirm">Confirm new password</label><div class="password-wrap"><input id="accountPasswordConfirm" type="password" autocomplete="new-password" minlength="10" required><button class="password-toggle" type="button" data-toggle-password="accountPasswordConfirm">Show</button></div></div><button class="pill" id="passwordButton" type="submit">Update password</button></form><article class="glass-card"><p class="eyebrow">Account and privacy</p><h3>Your choices stay clear.</h3><p>Review how profiles, notes, saved content, and community posts are handled. Account access, correction, export, and deletion requests are explained on the Data Rights page.</p><div class="actions" style="justify-content:flex-start"><a class="pill secondary" href="privacy-policy.html">Privacy Policy</a><a class="pill secondary" href="data-rights.html">Data Rights</a><button class="pill" id="settingsSignOut" type="button">Sign out</button></div></article></div></section>
 </div></main>
+<div class="member-install-onboarding" id="memberInstallOnboarding" hidden aria-hidden="true">
+  <button class="member-install-backdrop" id="memberInstallBackdrop" type="button" aria-label="Continue in browser"></button>
+  <section class="member-install-dialog" role="dialog" aria-modal="true" aria-labelledby="memberInstallTitle" aria-describedby="memberInstallDescription" tabindex="-1">
+    <button class="member-install-close" id="memberInstallClose" type="button" aria-label="Continue in browser">Close</button>
+    <div class="member-install-brand"><img src="/assets/images/icon-transparent.png" width="72" height="72" alt=""><div><p class="eyebrow">Verified member access</p><strong>With love, FMB</strong></div></div>
+    <h2 id="memberInstallTitle">Email confirmed. Make your member space easier to return to.</h2>
+    <p id="memberInstallDescription">You may now install With love, FMB on this device for an enhanced member experience. Installation adds a home-screen or desktop icon and opens the website in a focused app-like window, making your journal, daily check-ins, saved reading, music, and Freedom Wall easier to reach.</p>
+    <ul class="member-install-benefits">
+      <li><strong>Faster return</strong><span>Open our member space directly from your device.</span></li>
+      <li><strong>Focused experience</strong><span>Use the website in a clean, app-like window when supported.</span></li>
+      <li><strong>One verified account</strong><span>Installation does not create a second account or change your privacy choices.</span></li>
+    </ul>
+    <div class="member-install-actions">
+      <button class="pill" id="memberInstallButton" type="button">Install for an enhanced experience</button>
+      <button class="pill secondary" id="memberInstallLater" type="button">Continue in browser</button>
+    </div>
+    <p class="member-install-help" id="memberInstallHelp" role="status" aria-live="polite">Installation is optional. You can keep using every available member feature in your browser.</p>
+  </section>
+</div>
 <nav class="mobile-bar member-mobile-bar" aria-label="Member mobile navigation"><a class="active" href="#dashboardPanel" data-open-panel="dashboardPanel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 11 8-7 8 7v9H4Z"/></svg><span>Today</span></a><a href="#writePanel" data-open-panel="writePanel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2Z"/><path d="M9 9h6M9 13h6"/></svg><span>Journal</span></a><a href="#sharePanel" data-open-panel="sharePanel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16v11H9l-5 4Z"/></svg><span>Wall</span></a><a href="reading.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2Z"/></svg><span>Read</span></a><a href="#profilePanel" data-open-panel="profilePanel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"/></svg><span>Profile</span></a></nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/config.js?v=20260715-member-launch"></script>
 <script src="assets/js/supabase-client.js"></script>
 <script src="/assets/js/site.js?v=20260716-mobile-first-v6"></script>
-<script src="assets/js/member.js?v=20260714a"></script>
+<script src="assets/js/member.js?v=20260717-member-install-v1"></script>
 <script src="/assets/js/live-hotfix.js?v=20260716-mobile-first-v6"></script>
 </body>
 </html>
