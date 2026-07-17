@@ -12,6 +12,13 @@
   const resendHelp=$('#resendHelp');
   const openSignIn=$('#openSignIn');
   const pendingEmailKey='fmb-pending-verification-email';
+  const installOfferKey='fmb-member-install-after-verification';
+
+  function rememberInstallOffer(email){
+    try{
+      localStorage.setItem(installOfferKey,JSON.stringify({email:String(email||'').trim().toLowerCase(),requestedAt:Date.now()}));
+    }catch{}
+  }
 
   function showPanel(name){
     const signup=name==='signup';
@@ -183,6 +190,7 @@
       showExistingAccount(email);
       return;
     }
+    rememberInstallOffer(email);
     if(data.session){location.replace('/profile/');return}
     $('#signupForm').reset();
     document.querySelectorAll('#passwordRules span').forEach(rule=>rule.classList.remove('valid'));
@@ -229,6 +237,7 @@
       setStatus('#signupStatus',rateLimited?'Please wait before requesting another verification email. Check Spam, Promotions, and All Mail first.':'The verification message could not be resent right now.','error');
       return;
     }
+    rememberInstallOffer(email);
     resendConfirmation.disabled=true;
     let seconds=60;
     resendHelp.textContent=`Verification sent. You can request another message in ${seconds} seconds.`;
