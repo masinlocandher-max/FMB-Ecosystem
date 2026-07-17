@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260717-music-marquee-v2';
+const CACHE_NAME='fmb-app-shell-20260717-az-v1';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -64,6 +64,7 @@ const APP_SHELL=[
   '/assets/css/desktop-premium.css',
   '/assets/css/member-experience.css',
   '/assets/css/mobile-app.css',
+  '/assets/css/az-assistant.css',
   '/assets/css/volunteer.css',
   '/assets/css/music-ui.css',
   '/assets/js/site.js',
@@ -72,6 +73,7 @@ const APP_SHELL=[
   '/assets/js/music.js',
   '/assets/js/desktop-premium.js',
   '/assets/js/global-music.js',
+  '/assets/js/az-assistant.js',
   '/assets/data/music-library.json',
   '/assets/images/music/fmb-calm-official-album-cover.jpg',
   '/assets/images/icon-transparent.png',
