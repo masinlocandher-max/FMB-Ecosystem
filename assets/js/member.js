@@ -32,13 +32,137 @@
     if(loading){button.dataset.original=button.textContent;button.textContent=label}
     else if(button.dataset.original){button.textContent=button.dataset.original;delete button.dataset.original}
   }
+  const installPendingKey='fmb-member-install-after-verification';
+  const installSeenPrefix='fmb-member-install-seen:';
+  const excludedInstallHost='app.francinemariebautista.com';
+  let installPromptEvent=null;
+
+  function safeStorageGet(key){
+    try{return localStorage.getItem(key)}catch{return null}
+  }
+  function safeStorageSet(key,value){
+    try{localStorage.setItem(key,value)}catch{}
+  }
+  function safeStorageRemove(key){
+    try{localStorage.removeItem(key)}catch{}
+  }
+  function installSeenKey(){
+    return user?.id?`${installSeenPrefix}${user.id}`:'';
+  }
+  function markInstallOfferSeen(){
+    const key=installSeenKey();
+    if(key)safeStorageSet(key,String(Date.now()));
+    safeStorageRemove(installPendingKey);
+  }
+  function installedStandalone(){
+    return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+  }
+  function pendingInstallRequest(){
+    try{return JSON.parse(safeStorageGet(installPendingKey)||'null')}catch{return null}
+  }
+  function shouldOfferMemberInstall(){
+    if(location.hostname.toLowerCase()===excludedInstallHost||!user?.email_confirmed_at)return false;
+    if(installedStandalone()){markInstallOfferSeen();return false}
+    const seenKey=installSeenKey();
+    if(seenKey&&safeStorageGet(seenKey))return false;
+    const now=Date.now();
+    const pending=pendingInstallRequest();
+    const requestedAt=Number(pending?.requestedAt||0);
+    const pendingMatches=String(pending?.email||'').toLowerCase()===String(user.email||'').toLowerCase()&&requestedAt>0&&now-requestedAt<30*24*60*60*1000;
+    const confirmedAt=Date.parse(user.email_confirmed_at||'');
+    const createdAt=Date.parse(user.created_at||'');
+    const recentlyConfirmed=Number.isFinite(confirmedAt)&&now-confirmedAt>=0&&now-confirmedAt<7*24*60*60*1000;
+    const recentlyCreated=Number.isFinite(createdAt)&&now-createdAt>=0&&now-createdAt<30*24*60*60*1000;
+    return pendingMatches||(recentlyConfirmed&&recentlyCreated);
+  }
+  function syncMemberInstallAction(){
+    const button=$('#memberInstallButton');
+    const help=$('#memberInstallHelp');
+    if(!button||!help)return;
+    if(installPromptEvent){
+      button.textContent='Install for an enhanced experience';
+      help.textContent='Installation is optional. You can keep using every available member feature in your browser.';
+      return;
+    }
+    if(/iphone|ipad|ipod/i.test(navigator.userAgent)){
+      button.textContent='Show iPhone or iPad steps';
+      help.textContent='Safari will show the steps for adding With love, FMB to your Home Screen.';
+      return;
+    }
+    button.textContent='Show installation steps';
+    help.textContent='If your browser supports installation, use its Install app or Add to Home screen option.';
+  }
+  function closeMemberInstallOffer(){
+    const modal=$('#memberInstallOnboarding');
+    if(!modal)return;
+    modal.hidden=true;
+    modal.setAttribute('aria-hidden','true');
+    document.body.classList.remove('modal-open');
+    markInstallOfferSeen();
+  }
+  function openMemberInstallOffer(){
+    const modal=$('#memberInstallOnboarding');
+    if(!modal||!shouldOfferMemberInstall())return;
+    modal.hidden=false;
+    modal.setAttribute('aria-hidden','false');
+    document.body.classList.add('modal-open');
+    syncMemberInstallAction();
+    requestAnimationFrame(()=>$('#memberInstallButton')?.focus({preventScroll:true}));
+  }
+  async function handleMemberInstall(){
+    const button=$('#memberInstallButton');
+    const help=$('#memberInstallHelp');
+    if(!button||!help)return;
+    if(installPromptEvent){
+      const prompt=installPromptEvent;
+      installPromptEvent=null;
+      button.disabled=true;
+      await prompt.prompt();
+      const choice=await prompt.userChoice;
+      button.disabled=false;
+      if(choice.outcome==='accepted'){
+        markInstallOfferSeen();
+        closeMemberInstallOffer();
+        return;
+      }
+      help.textContent='Installation was not completed. You can continue in the browser and install later from your browser menu.';
+      button.textContent='Installation not completed';
+      markInstallOfferSeen();
+      return;
+    }
+    if(/iphone|ipad|ipod/i.test(navigator.userAgent)){
+      help.textContent='In Safari, tap Share, choose Add to Home Screen, then tap Add. Your verified account remains the same.';
+      button.textContent='Steps shown below';
+      return;
+    }
+    help.textContent='Open your browser menu and choose Install app or Add to Home screen. The exact wording depends on your browser and device.';
+    button.textContent='Steps shown below';
+  }
+
+  window.addEventListener('beforeinstallprompt',event=>{
+    if(location.hostname.toLowerCase()===excludedInstallHost)return;
+    event.preventDefault();
+    installPromptEvent=event;
+    syncMemberInstallAction();
+  });
+  window.addEventListener('appinstalled',()=>{
+    markInstallOfferSeen();
+    const modal=$('#memberInstallOnboarding');
+    if(modal&&!modal.hidden)closeMemberInstallOffer();
+  });
+
   function showPanel(id){
     $$('.member-tab').forEach(button=>button.classList.toggle('active',button.dataset.panel===id));
     $$('.member-panel').forEach(panel=>panel.hidden=panel.id!==id);
     $$('[data-open-panel]').forEach(link=>link.classList.toggle('active',link.dataset.openPanel===id));
     history.replaceState(null,'',`#${id}`);
   }
-  $$('.member-tab').forEach(button=>button.addEventListener('click',()=>showPanel(button.dataset.panel)));
+  $('.member-tab').forEach(button=>button.addEventListener('click',()=>showPanel(button.dataset.panel)));
+  $('#memberInstallButton')?.addEventListener('click',handleMemberInstall);
+  $('#memberInstallLater')?.addEventListener('click',closeMemberInstallOffer);
+  $('#memberInstallClose')?.addEventListener('click',closeMemberInstallOffer);
+  $('#memberInstallBackdrop')?.addEventListener('click',closeMemberInstallOffer);
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!$('#memberInstallOnboarding')?.hidden)closeMemberInstallOffer()});
   $$('[data-open-panel]').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();showPanel(link.dataset.openPanel);scrollTo({top:0,behavior:'smooth'})}));
 
   document.querySelectorAll('[data-toggle-password]').forEach(button=>button.addEventListener('click',()=>{
@@ -320,6 +444,7 @@
     user=verifiedUser;
     if(!user.email_confirmed_at){await client.auth.signOut();location.replace('/auth.html#signin');return}
     await loadProfile();
+    openMemberInstallOffer();
     await Promise.all([loadCheckins(),loadNotes(),loadPosts(),loadSaved()]);
     const initial=location.hash.slice(1);
     if(document.getElementById(initial)?.classList.contains('member-panel'))showPanel(initial);

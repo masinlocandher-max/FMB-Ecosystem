@@ -41,7 +41,7 @@
       </form>
     </section>
     <section class="auth-panel" id="signupPanel" role="tabpanel" aria-labelledby="signupTab" hidden>
-      <h2>Join our community.</h2><p>Use an email you can open. A verification message will be sent before the profile becomes active.</p>
+      <h2>Join our community.</h2><p>Use an email you can open. A verification message will be sent before the profile becomes active. After confirmation, you will be offered an optional installation for an enhanced member experience. You may continue in the browser at any time.</p>
       <p class="form-note" id="membershipReadiness" role="status" aria-live="polite">Checking whether membership is open…</p>
       <form class="form-grid" id="signupForm" novalidate>
         <div class="field"><label for="fullName">Full name</label><input id="fullName" name="fullName" maxlength="80" autocomplete="name" required></div>
@@ -55,7 +55,7 @@
       <div class="verification-actions" id="verificationActions" hidden>
         <p id="verificationSummary"><span id="verificationLead">Verification requested for</span> <strong id="verificationEmail"></strong>.</p>
         <div class="form-actions"><button class="pill secondary" id="resendConfirmation" type="button">Resend verification</button><button class="text-link" id="openSignIn" type="button">Open sign in</button></div>
-        <p class="form-note" id="resendHelp">New profiles should check Inbox, Spam, Promotions, and All Mail. Already verified profiles will not receive another verification email and should use Sign in or Forgot password.</p>
+        <p class="form-note" id="resendHelp">New profiles should check Inbox, Spam, Promotions, and All Mail. Already verified profiles will not receive another verification email and should use Sign in or Forgot password. After a new email is confirmed, the member space will offer an optional installation for easier home-screen access.</p>
       </div>
     </section>
     <p class="form-note" style="margin-top:22px">Creating a profile is free. Passwords are handled by the authentication provider and are never visible to administrators.</p>
@@ -66,7 +66,7 @@
 <script src="assets/js/config.js?v=20260715-member-launch"></script>
 <script src="assets/js/supabase-client.js"></script>
 <script src="/assets/js/site.js?v=20260716-mobile-first-v6"></script>
-<script src="assets/js/auth.js?v=20260716-existing-account-fix"></script>
+<script src="assets/js/auth.js?v=20260717-member-install-v1"></script>
 <script src="assets/js/registration-readiness.js"></script>
 <script src="/assets/js/live-hotfix.js?v=20260716-mobile-first-v6"></script>
 </body>
