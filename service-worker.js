@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260716-member-mobile-v1';
+const CACHE_NAME='fmb-app-shell-20260717-member-install-v1';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -9,6 +9,9 @@ const PUBLIC_PAGES=new Set([
   '/music/',
   '/communityengagements/',
   '/aboutfmb/',
+  '/fmb&co/',
+  '/fmb&co/senz/',
+  '/fmb&co/cognita/',
   '/fmbandco/',
   '/gethelp/',
   '/news/',
