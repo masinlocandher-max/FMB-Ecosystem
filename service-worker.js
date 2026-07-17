@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260717-az-v1';
+const CACHE_NAME='fmb-app-shell-20260718-music-az-v2';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -118,6 +118,9 @@ self.addEventListener('fetch',event=>{
   if(request.method!=='GET')return;
   const url=new URL(request.url);
   if(url.origin!==self.location.origin)return;
+
+  // Audio is streamed with byte ranges. Never cache or rewrite these requests.
+  if(url.pathname==='/api/music'||request.headers.has('range'))return;
 
   if(request.mode==='navigate'){
     event.respondWith((async()=>{

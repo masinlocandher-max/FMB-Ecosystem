@@ -24,7 +24,9 @@
 
   let tracks=[];
   let currentIndex=-1;
+  let currentSourceIndex=0;
   let pendingRestoreTime=0;
+  let playRequested=false;
   let lastPublishedSecond=-1;
   const musicStateKey='fmb_music_state_v2';
   const previewStateKey='fmb_music_preview_v1';
@@ -44,11 +46,27 @@
   document.body.classList.remove('music-access-checking');
   document.body.classList.add(memberAllowed?'music-member-ready':'music-preview-ready');
 
-  const readJson=(key)=>{try{const value=JSON.parse(sessionStorage.getItem(key)||'{}');return value&&typeof value==='object'?value:{}}catch{return{}}};
+  const readJson=key=>{try{const value=JSON.parse(sessionStorage.getItem(key)||'{}');return value&&typeof value==='object'?value:{}}catch{return{}}};
   const writeJson=(key,value)=>{try{sessionStorage.setItem(key,JSON.stringify(value))}catch{}};
   let previewState=readJson(previewStateKey);
   const previewUsed=()=>Boolean(previewState.used);
   const previewTrackIndex=()=>Number.isInteger(previewState.index)?previewState.index:-1;
+
+  function sourceCandidates(track){
+    const values=[];
+    const fileId=String(track?.drive_file_id||'').trim();
+    if(fileId){
+      values.push(`/api/music?file=${encodeURIComponent(fileId)}`);
+      values.push(`https://drive.usercontent.google.com/download?id=${encodeURIComponent(fileId)}&export=download&confirm=t`);
+    }
+    if(track?.src||track?.audio_url)values.push(track.src||track.audio_url);
+    return [...new Set(values.filter(Boolean))];
+  }
+
+  function normalizeTrack(track){
+    const sources=sourceCandidates(track);
+    return {...track,sources,src:sources[0]||''};
+  }
 
   function injectPreviewUi(){
     if(memberAllowed||document.getElementById('musicAccessPrompt'))return;
@@ -83,8 +101,7 @@
   function showAccessPrompt(message){
     if(memberAllowed)return;
     if(message)note.textContent=message;
-    const prompt=document.getElementById('musicAccessPrompt');
-    prompt?.classList.add('open');
+    document.getElementById('musicAccessPrompt')?.classList.add('open');
   }
 
   injectPreviewUi();
@@ -94,21 +111,27 @@
     const track=tracks[currentIndex]||{};
     const detail={
       index:currentIndex,
-      src:audio.currentSrc||audio.src||track.src||'',
+      src:track.src||audio.currentSrc||audio.src||'',
       title:track.title||title.textContent||'',
       artist:track.artist||artist.textContent||'With love, FMB',
       cover_url:track.cover_url||'',
       currentTime:Number.isFinite(audio.currentTime)?audio.currentTime:0,
       duration:Number.isFinite(audio.duration)?audio.duration:0,
-      playing:!audio.paused&&!audio.ended
+      playing:!audio.paused&&!audio.ended,
+      hasPlayed:Boolean(readMusicState().hasPlayed||!audio.paused)
     };
-    if(memberAllowed)writeJson(musicStateKey,{...detail,updatedAt:Date.now()});
+    if(memberAllowed)writeJson(musicStateKey,{...readMusicState(),...detail,updatedAt:Date.now()});
     window.dispatchEvent(new CustomEvent('fmb:music-state',{detail}));
   };
 
   const escape=value=>window.FMB?.escapeHtml(value)||String(value||'').replace(/[&<>"']/g,character=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[character]));
   const formatTime=seconds=>{if(!Number.isFinite(seconds))return'0:00';const minutes=Math.floor(seconds/60);const remainder=Math.floor(seconds%60).toString().padStart(2,'0');return `${minutes}:${remainder}`};
-  const setPlayIcons=playing=>{mainPlay.textContent=playing?'Pause':'Play';miniPlay.textContent=playing?'Pause':'Play';mainPlay.setAttribute('aria-label',playing?'Pause':'Play');miniPlay.setAttribute('aria-label',playing?'Pause':'Play')};
+  const setPlayIcons=playing=>{
+    [mainPlay,miniPlay].filter(Boolean).forEach(button=>{
+      button.textContent=playing?'Pause':'Play';
+      button.setAttribute('aria-label',playing?'Pause':'Play');
+    });
+  };
   const updateActiveRows=()=>document.querySelectorAll('.song-row').forEach(row=>row.classList.toggle('active',Number(row.dataset.index)===currentIndex));
 
   function setArtwork(url){
@@ -121,21 +144,38 @@
     });
   }
 
+  function applySource(track,sourceIndex=0){
+    currentSourceIndex=Math.max(0,Math.min(sourceIndex,Math.max(0,(track.sources||[]).length-1)));
+    const source=track.sources?.[currentSourceIndex]||track.src||'';
+    if(!source)return false;
+    audio.src=source;
+    return true;
+  }
+
+  function beginPlayback(){
+    playRequested=true;
+    return audio.play().then(()=>setPlayIcons(true)).catch(()=>{
+      setPlayIcons(false);
+      note.textContent='Tap play to begin. Your browser paused automatic audio.';
+    });
+  }
+
   function loadTrack(index,shouldPlay=true){
     if(!tracks.length)return;
     currentIndex=(index+tracks.length)%tracks.length;
     const track=tracks[currentIndex];
-    if(!track.src){note.textContent='This track does not have a playable audio file.';return}
-    audio.src=track.src;
+    if(!track.sources?.length){note.textContent='This track does not have a playable audio file.';return}
+    playRequested=Boolean(shouldPlay);
+    applySource(track,0);
     title.textContent=track.title||'Untitled track';
     artist.textContent=track.artist||'FMB';
-    miniTitle.textContent=track.title||'Untitled track';
-    miniArtist.textContent=track.artist||'FMB';
+    if(miniTitle)miniTitle.textContent=track.title||'Untitled track';
+    if(miniArtist)miniArtist.textContent=track.artist||'FMB';
     setArtwork(track.cover_url||'');
     note.textContent=track.description||'';
     updateActiveRows();
     publishState();
-    if(shouldPlay)audio.play().then(()=>setPlayIcons(true)).catch(()=>{setPlayIcons(false);note.textContent='Tap play to begin. Your browser paused automatic audio.'});
+    if(shouldPlay)beginPlayback();
   }
 
   function requestTrack(index){
@@ -148,7 +188,7 @@
       return;
     }
     if(index===previewTrackIndex()&&currentIndex===index&&audio.currentTime<previewLimit){
-      audio.play().then(()=>setPlayIcons(true)).catch(()=>{note.textContent='Tap play again to continue the preview.'});
+      beginPlayback();
       return;
     }
     showAccessPrompt('Create an account or sign in to continue listening.');
@@ -158,34 +198,41 @@
     if(!tracks.length){note.textContent='No published music is available yet.';return}
     if(memberAllowed){
       if(currentIndex<0){loadTrack(0,true);return}
-      if(audio.paused)audio.play().then(()=>setPlayIcons(true)).catch(()=>{note.textContent='The track could not begin. Please try again.'});
-      else{audio.pause();setPlayIcons(false)}
+      if(audio.paused)beginPlayback();
+      else{playRequested=false;audio.pause();setPlayIcons(false)}
       return;
     }
     if(currentIndex<0){requestTrack(0);return}
     if(!previewUsed()){requestTrack(currentIndex);return}
     if(currentIndex!==previewTrackIndex()||audio.currentTime>=previewLimit){showAccessPrompt('Create an account or sign in to continue listening.');return}
-    if(audio.paused)audio.play().then(()=>setPlayIcons(true)).catch(()=>{note.textContent='Tap play again to continue the preview.'});
-    else{audio.pause();setPlayIcons(false)}
+    if(audio.paused)beginPlayback();
+    else{playRequested=false;audio.pause();setPlayIcons(false)}
   }
 
   function renderPlaylists(playlists){
-    tracks=[];grid.innerHTML='';
+    tracks=[];
+    grid.innerHTML='';
     playlists.forEach(playlist=>{
       const block=document.createElement('section');
       block.className='playlist-block';
       block.innerHTML=`<h3>${escape(playlist.title)}</h3><p class="playlist-description">${escape(playlist.description||'')}</p><div class="track-list"></div>`;
       const list=block.querySelector('.track-list');
       if(!playlist.tracks?.length)list.innerHTML='<div class="music-empty">No published tracks are available in this category yet.</div>';
-      else playlist.tracks.forEach(track=>{
-        const index=tracks.length;tracks.push({...track,playlist:playlist.title});
-        const row=document.createElement('div');row.className='song-row';row.dataset.index=String(index);
+      else playlist.tracks.forEach(rawTrack=>{
+        const track=normalizeTrack(rawTrack);
+        const index=tracks.length;
+        tracks.push({...track,playlist:playlist.title});
+        const row=document.createElement('div');
+        row.className='song-row';
+        row.dataset.index=String(index);
         const cover=track.cover_url?`style="background-image:url('${escape(track.cover_url)}');background-size:contain;background-position:center;background-repeat:no-repeat"`:'';
         row.innerHTML=`<div class="song-cover" ${cover}>${track.cover_url?'':escape((track.title||'F')[0])}</div><div><div class="song-title">${escape(track.title||'Untitled track')}</div><div class="song-artist">${escape(track.artist||'FMB')}</div></div><button class="song-play" type="button" aria-label="Play ${escape(track.title||'track')}">Play</button>`;
-        row.querySelector('button').addEventListener('click',()=>requestTrack(index));list.appendChild(row);
+        row.querySelector('button').addEventListener('click',()=>requestTrack(index));
+        list.appendChild(row);
       });
       grid.appendChild(block);
     });
+
     if(tracks.length){
       if(memberAllowed){
         const saved=readMusicState();
@@ -193,52 +240,86 @@
         pendingRestoreTime=Number(saved.currentTime)||0;
         loadTrack(savedIndex,false);
         note.textContent=saved.playing?'Restoring your listening session.':'Choose a song and press play.';
-        if(saved.playing)audio.play().catch(()=>{note.textContent='Tap play to continue listening on this page.'});
+        if(saved.playing)beginPlayback();
       }else{
         const initialIndex=previewTrackIndex()>=0&&previewTrackIndex()<tracks.length?previewTrackIndex():0;
         loadTrack(initialIndex,false);
         note.textContent=previewUsed()?'Choose a track. Sign in when you are ready to continue listening.':'Choose any track to begin a short preview.';
       }
-    }else{grid.innerHTML='<div class="music-empty">The music player is ready, but no tracks have been published yet.</div>';note.textContent='No published music is available yet.'}
+    }else{
+      grid.innerHTML='<div class="music-empty">The music player is ready, but no tracks have been published yet.</div>';
+      note.textContent='No published music is available yet.';
+    }
   }
 
   async function loadLibrary(){
     try{
-      const response=await fetch('assets/data/music-library.json',{cache:'no-store'});
+      const response=await fetch('/assets/data/music-library.json',{cache:'no-store'});
       if(!response.ok)throw new Error('Unavailable');
       const data=await response.json();
-      const approved=(data.playlists||[]).map(playlist=>({...playlist,tracks:(playlist.tracks||[]).map(track=>({...track,src:track.src||track.audio_url}))}));
-      renderPlaylists(approved);
+      renderPlaylists(data.playlists||[]);
     }catch{
       grid.innerHTML='<div class="music-empty">The music library could not be opened right now.</div>';
       note.textContent='The music library could not be opened right now.';
     }
   }
 
-  [mainPlay,miniPlay].forEach(button=>button.addEventListener('click',togglePlay));
-  [prev,miniPrev].forEach(button=>button.addEventListener('click',()=>requestTrack(currentIndex-1)));
-  [next,miniNext].forEach(button=>button.addEventListener('click',()=>requestTrack(currentIndex+1)));
-  volume.addEventListener('input',()=>{audio.volume=Number(volume.value)});audio.volume=Number(volume.value);
-  audio.addEventListener('play',()=>{setPlayIcons(true);publishState()});
+  [mainPlay,miniPlay].filter(Boolean).forEach(button=>button.addEventListener('click',togglePlay));
+  [prev,miniPrev].filter(Boolean).forEach(button=>button.addEventListener('click',()=>requestTrack(currentIndex-1)));
+  [next,miniNext].filter(Boolean).forEach(button=>button.addEventListener('click',()=>requestTrack(currentIndex+1)));
+  if(volume){volume.addEventListener('input',()=>{audio.volume=Number(volume.value)});audio.volume=Number(volume.value)}
+
+  audio.addEventListener('play',()=>{
+    playRequested=true;
+    document.body.classList.add('fmb-music-engaged');
+    if(memberAllowed)writeJson(musicStateKey,{...readMusicState(),hasPlayed:true,updatedAt:Date.now()});
+    setPlayIcons(true);
+    publishState();
+  });
   audio.addEventListener('pause',()=>{setPlayIcons(false);publishState()});
-  audio.addEventListener('ended',()=>{if(memberAllowed)loadTrack(currentIndex+1,true);else showAccessPrompt('Create an account or sign in to continue listening.')});
+  audio.addEventListener('ended',()=>{playRequested=false;if(memberAllowed)loadTrack(currentIndex+1,true);else showAccessPrompt('Create an account or sign in to continue listening.')});
   audio.addEventListener('loadedmetadata',()=>{
     const visibleDuration=memberAllowed?audio.duration:Math.min(audio.duration||previewLimit,previewLimit);
     duration.textContent=formatTime(visibleDuration);
     if(memberAllowed&&pendingRestoreTime>0){audio.currentTime=Math.min(pendingRestoreTime,Math.max(0,audio.duration-.25));pendingRestoreTime=0}
     publishState();
   });
-  audio.addEventListener('error',()=>{setPlayIcons(false);note.textContent='This audio file could not be played. Please try another track.'});
+  audio.addEventListener('error',()=>{
+    const track=tracks[currentIndex];
+    if(track&&currentSourceIndex+1<track.sources.length){
+      const resumeAt=Number.isFinite(audio.currentTime)?audio.currentTime:0;
+      currentSourceIndex+=1;
+      note.textContent='Switching to a backup audio source.';
+      audio.src=track.sources[currentSourceIndex];
+      const restore=()=>{
+        if(resumeAt>0&&Number.isFinite(audio.duration))audio.currentTime=Math.min(resumeAt,Math.max(0,audio.duration-.25));
+        audio.removeEventListener('loadedmetadata',restore);
+      };
+      audio.addEventListener('loadedmetadata',restore);
+      if(playRequested)audio.play().catch(()=>{setPlayIcons(false);note.textContent='Tap play to continue with the backup audio source.'});
+      return;
+    }
+    playRequested=false;
+    setPlayIcons(false);
+    note.textContent='This audio file could not be played. Please try another track.';
+  });
   audio.addEventListener('timeupdate',()=>{
     if(!memberAllowed&&previewUsed()&&currentIndex===previewTrackIndex()&&audio.currentTime>=previewLimit){
-      audio.pause();audio.currentTime=previewLimit;setPlayIcons(false);showAccessPrompt('Your preview has ended. Sign in or create an account to hear the full track.');
+      playRequested=false;
+      audio.pause();
+      audio.currentTime=previewLimit;
+      setPlayIcons(false);
+      showAccessPrompt('Your preview has ended. Sign in or create an account to hear the full track.');
     }
     currentTime.textContent=formatTime(audio.currentTime);
     const effectiveDuration=memberAllowed?audio.duration:Math.min(audio.duration||previewLimit,previewLimit);
     const percent=effectiveDuration?Math.min(audio.currentTime,effectiveDuration)/effectiveDuration*100:0;
-    progressFill.style.width=`${percent}%`;progressTrack.setAttribute('aria-valuenow',String(Math.round(percent)));
-    const second=Math.floor(audio.currentTime||0);if(second!==lastPublishedSecond){lastPublishedSecond=second;publishState()}
+    progressFill.style.width=`${percent}%`;
+    progressTrack.setAttribute('aria-valuenow',String(Math.round(percent)));
+    const second=Math.floor(audio.currentTime||0);
+    if(second!==lastPublishedSecond){lastPublishedSecond=second;publishState()}
   });
+
   function seek(ratio){
     if(!audio.duration)return;
     if(!memberAllowed){
@@ -248,8 +329,16 @@
     }
     audio.currentTime=Math.max(0,Math.min(1,ratio))*audio.duration;
   }
+
   progressTrack.addEventListener('click',event=>{const rect=progressTrack.getBoundingClientRect();seek((event.clientX-rect.left)/rect.width)});
-  progressTrack.addEventListener('keydown',event=>{if(!audio.duration||!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;event.preventDefault();if(event.key==='Home')seek(0);else if(event.key==='End')seek(1);else audio.currentTime=Math.max(0,Math.min(memberAllowed?audio.duration:previewLimit,audio.currentTime+(event.key==='ArrowRight'?5:-5)))});
+  progressTrack.addEventListener('keydown',event=>{
+    if(!audio.duration||!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+    event.preventDefault();
+    if(event.key==='Home')seek(0);
+    else if(event.key==='End')seek(1);
+    else audio.currentTime=Math.max(0,Math.min(memberAllowed?audio.duration:previewLimit,audio.currentTime+(event.key==='ArrowRight'?5:-5)));
+  });
+
   window.addEventListener('fmb:global-music-command',event=>{
     const command=event.detail||{};
     if(command.type==='toggle')togglePlay();

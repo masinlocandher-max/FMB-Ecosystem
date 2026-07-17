@@ -7,6 +7,9 @@
   --az-muted:#776b7c;
   --az-line:rgba(75,10,104,.13);
   --az-safe-bottom:env(safe-area-inset-bottom,0px);
+  --az-trigger-bottom:20px;
+  --az-trigger-height:54px;
+  --az-stack-gap:12px;
 }
 
 .az-help-trigger{
@@ -132,6 +135,7 @@
 .az-contact-status.is-error{background:#fff0ed;color:#7e3025}
 
 @media(max-width:800px){
+  :root{--az-trigger-bottom:82px;--az-trigger-height:56px;--az-stack-gap:10px}
   .az-help-trigger{left:12px;bottom:calc(82px + var(--az-safe-bottom));min-width:56px;min-height:56px;padding:8px;border-radius:19px}
   .az-help-trigger-icon{width:40px;height:40px}
   .az-help-trigger-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -143,9 +147,37 @@
   .az-quick-reply{min-height:46px;padding:9px;font-size:10px}
 }
 
+html.fmb-mobile-host{--az-trigger-bottom:84px}
+html.fmb-member-signed-in{--az-trigger-bottom:88px}
 html.fmb-mobile-host .az-help-trigger{bottom:calc(84px + var(--az-safe-bottom))}
 html.fmb-mobile-host .az-help-panel{bottom:calc(78px + var(--az-safe-bottom))}
 html.fmb-member-signed-in .az-help-trigger{bottom:calc(88px + var(--az-safe-bottom))}
+
+/* Keep the player and AZ as one floating control stack. AZ stays below. */
+.fmb-music-dock{
+  right:auto!important;
+  left:max(20px,env(safe-area-inset-left,0px))!important;
+  bottom:calc(var(--az-trigger-bottom) + var(--az-trigger-height) + var(--az-stack-gap) + env(safe-area-inset-bottom,0px))!important;
+  align-items:flex-start!important;
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(8px);
+  pointer-events:none!important;
+  transition:opacity .2s ease,visibility .2s ease,transform .2s ease;
+}
+.fmb-music-dock>*{pointer-events:none!important}
+body.fmb-music-engaged .fmb-music-dock{
+  opacity:1;
+  visibility:visible;
+  transform:none;
+  pointer-events:none!important;
+}
+body.fmb-music-engaged .fmb-music-dock>*{pointer-events:auto!important}
+.fmb-music-panel{transform-origin:bottom left!important}
+
+@media(max-width:800px){
+  .fmb-music-dock{left:max(12px,env(safe-area-inset-left,0px))!important}
+}
 
 @media(max-width:370px){
   .az-help-panel{right:5px;left:5px}
@@ -153,8 +185,8 @@ html.fmb-member-signed-in .az-help-trigger{bottom:calc(88px + var(--az-safe-bott
 }
 
 @media(prefers-reduced-motion:reduce){
-  .az-help-trigger,.az-help-panel,.az-help-backdrop,.az-message,.az-quick-replies{transition:none!important;animation:none!important}
+  .az-help-trigger,.az-help-panel,.az-help-backdrop,.az-message,.az-quick-replies,.fmb-music-dock{transition:none!important;animation:none!important}
   .az-typing i{animation:none!important}
 }
 
-@media print{.az-help-trigger,.az-help-layer{display:none!important}}
+@media print{.az-help-trigger,.az-help-layer,.fmb-music-dock{display:none!important}}
