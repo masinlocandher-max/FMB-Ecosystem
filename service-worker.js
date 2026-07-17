@@ -1,7 +1,9 @@
-const CACHE_NAME='fmb-app-shell-20260717-member-install-v1';
+const CACHE_NAME='fmb-app-shell-20260717-desktop-parity-app-v1';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
+  '/app/',
+  '/app/index.html',
   '/about.html',
   '/auth.html',
   '/freedom-wall.html',
@@ -35,6 +37,9 @@ const PUBLIC_PAGES=new Set([
 const APP_SHELL=[
   '/',
   '/index.html',
+  '/app/',
+  '/app/index.html',
+  '/app/manifest.webmanifest',
   '/freedom-wall.html',
   '/auth.html',
   '/news/cleopatra-barrera/',
@@ -54,6 +59,7 @@ const APP_SHELL=[
   '/assets/css/fmb-content.css',
   '/assets/css/fmb-mobile-clean.css',
   '/assets/css/fmb-mobile-luxury.css',
+  '/assets/css/website-responsive-parity.css',
   '/assets/css/desktop-premium.css',
   '/assets/css/member-experience.css',
   '/assets/css/mobile-app.css',
@@ -79,6 +85,7 @@ const APP_SHELL=[
   '/assets/images/news/good-news-briefing.png',
   '/assets/images/app-icon-192.png',
   '/assets/images/app-icon-512.png',
+  '/assets/images/apple-touch-icon.png',
   '/assets/images/volunteer/francine-leading-with-love-fmb.webp',
   '/assets/images/volunteer/community-and-volunteer-team.webp'
 ];
@@ -120,15 +127,15 @@ self.addEventListener('fetch',event=>{
         return response;
       }catch{
         const cached=await caches.match(request,{ignoreSearch:true});
-        return cached||await caches.match('/index.html')||Response.error();
+        return cached||await caches.match(url.pathname.startsWith('/app/')?'/app/index.html':'/index.html')||Response.error();
       }
     })());
     return;
   }
 
-  if(!['style','script','image','font','audio'].includes(request.destination))return;
+  if(!['style','script','image','font','audio','manifest'].includes(request.destination))return;
 
-  if(['style','script'].includes(request.destination)){
+  if(['style','script','manifest'].includes(request.destination)){
     event.respondWith((async()=>{
       try{
         const response=await fetch(new Request(request,{cache:'no-store'}));
