@@ -91,6 +91,8 @@ jobs:
           test -f _site/assets/images/fmbandco/fmbandco-ampersand-gold.png
           test -f _site/assets/images/fmbandco/francine-founder-hero-640.webp
           test -f _site/assets/images/fmbandco/francine-founder-hero-923.webp
+          test -f _site/assets/fonts/great-vibes-latin-400-normal.woff2
+          test -f _site/assets/fonts/Great-Vibes-OFL.txt
           test -f _site/assets/js/fmbandco-motion.js
           test -f _site/assets/images/news/cleopatra-barrera-zambales-ocean-feature.jpeg
           test -f _site/assets/images/news/sara-duterte-impeachment.webp
@@ -125,6 +127,8 @@ jobs:
           grep -q 'francine-founder-hero-923.webp' '_site/fmb&co/index.html'
           grep -q 'fco-founder-signature' '_site/fmb&co/index.html'
           grep -q 'Francine Marie Bautista' '_site/fmb&co/index.html'
+          grep -q 'great-vibes-latin-400-normal.woff2' '_site/fmb&co/index.html'
+          grep -q '@font-face{font-family:"Great Vibes"' _site/assets/css/fmbandco-brand.css
           grep -q 'fmbandco-motion.js?v=20260718-motion-v1' '_site/fmb&co/index.html'
           grep -q 'fco-mobile-dock' '_site/fmb&co/index.html'
           grep -q 'id="checkinForm"' _site/profile/index.html
