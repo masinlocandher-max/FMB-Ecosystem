@@ -77,8 +77,9 @@ body.fco-page{margin:0;color:var(--fco-ink);background:var(--fco-pearl);font-fam
 .fco-hero-note{position:absolute;left:-24px;bottom:18px;z-index:3;width:min(380px,78%);min-height:0;padding:22px 24px;display:flex;flex-direction:column;border:1px solid rgba(255,255,255,.18);border-radius:27px;background:linear-gradient(145deg,rgba(27,16,43,.84),rgba(62,36,84,.68));color:#fff;box-shadow:0 24px 62px rgba(0,0,0,.28);-webkit-backdrop-filter:saturate(145%) blur(26px);backdrop-filter:saturate(145%) blur(26px)}
 .fco-note-mark{width:52px;height:52px;margin-bottom:15px;display:grid;place-items:center;border:1px solid rgba(226,200,142,.38);border-radius:17px;background:rgba(200,169,107,.07)}
 .fco-note-mark img{width:31px;height:35px;object-fit:contain;filter:drop-shadow(0 6px 14px rgba(200,169,107,.18))}
-.fco-hero-note strong{font-size:clamp(1.12rem,1.7vw,1.48rem);font-weight:590;letter-spacing:-.03em;line-height:1.08}
-.fco-hero-note p{margin:10px 0 0;color:rgba(255,255,255,.62);font-size:.74rem;line-height:1.58}
+.fco-founder-nameplate-copy{display:flex;flex-direction:column;align-items:flex-start}
+.fco-founder-initials{color:var(--fco-gold-bright);font-size:.76rem;font-weight:780;letter-spacing:.28em;line-height:1;text-transform:uppercase}
+.fco-founder-signature{margin:9px 0 0;color:#fff8e9;font-family:"Snell Roundhand","Apple Chancery","URW Chancery L","Z003","Segoe Script","Brush Script MT",cursive;font-size:clamp(1.65rem,2.5vw,2.08rem);font-weight:400;letter-spacing:.005em;line-height:1.08;text-shadow:0 7px 22px rgba(0,0,0,.28);white-space:nowrap}
 
 .fco-section{position:relative;padding:clamp(76px,8.5vw,116px) 0;background:var(--fco-pearl)}
 .fco-section.white{background:#fff}
@@ -265,8 +266,9 @@ body.fco-page{margin:0;color:var(--fco-ink);background:var(--fco-pearl);font-fam
   .fco-hero-note{right:8px;bottom:6px;left:8px;width:auto;padding:18px;display:grid;grid-template-columns:46px 1fr;align-items:center;gap:0 13px;border-radius:23px}
   .fco-note-mark{grid-row:1/3;width:46px;height:46px;margin:0;border-radius:15px}
   .fco-note-mark img{width:28px;height:31px}
-  .fco-hero-note strong{grid-column:2;font-size:1.12rem}
-  .fco-hero-note p{grid-column:2;margin-top:6px;font-size:.68rem;line-height:1.48}
+  .fco-founder-nameplate-copy{grid-column:2;min-width:0}
+  .fco-founder-initials{font-size:.66rem;letter-spacing:.25em}
+  .fco-founder-signature{margin-top:5px;font-size:clamp(1.45rem,7vw,1.82rem)}
   .fco-actions{gap:10px}
   .fco-btn{width:100%;min-height:52px}
   .fco-section{padding:72px 0}

@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260718-app-install-promotion-v7';
+const CACHE_NAME='fmb-app-shell-20260718-app-install-promotion-v8-fmbandco-signature';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',

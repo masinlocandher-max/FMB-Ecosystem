@@ -631,7 +631,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
     for name in fmbandco_pages:
         page = (ROOT / name).read_text(encoding="utf-8")
         for marker in (
-            "fmbandco-brand.css?v=20260718-founder-hero-v4",
+            "fmbandco-brand.css?v=20260718-founder-signature-v5",
             "fmbandco-primary-reversed.png",
             "fmbandco-ampersand-gold.png",
             'class="fco-nav-links"',
@@ -645,7 +645,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
                 errors.append(f"{name}: generic decorative ampersand remains: {marker}")
 
     fmbandco_home = (ROOT / "fmb&co/index.html").read_text(encoding="utf-8")
-    for marker in ("francine-founder-hero-640.webp", "francine-founder-hero-923.webp", 'class="fco-hero-visual"', 'fetchpriority="high"'):
+    for marker in ("francine-founder-hero-640.webp", "francine-founder-hero-923.webp", 'class="fco-hero-visual"', 'fetchpriority="high"', "fco-founder-nameplate", "fco-founder-signature", "Francine Marie Bautista"):
         if marker not in fmbandco_home:
             errors.append(f"fmb&co/index.html: responsive founder hero marker is missing: {marker}")
     if "fmbandco-motion.js?v=20260718-motion-v1" not in fmbandco_home:
