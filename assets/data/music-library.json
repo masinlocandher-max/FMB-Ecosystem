@@ -6,6 +6,7 @@
       "id": "calm",
       "title": "Calm",
       "description": "Soft instrumental music, gentle transitions, and unhurried melodies for resting, reading, reflecting, or whenever the day feels a little too heavy.",
+      "cover_url": "assets/images/music/fmb-calm-official-album-cover.jpg",
       "tracks": [
         {
           "id": "calm-01",
@@ -51,7 +52,7 @@
           "id": "calm-03a",
           "title": "03A. Quietly Hopeful",
           "artist": "With love, FMB",
-          "description": "The companion version to Quietly Hopeful.",
+          "description": "The companion version to Quiet Enough to Breathe.",
           "src": "assets/audio/calm/03a-quietly-hopeful.mp3",
           "cover_url": "assets/images/music/fmb-calm-official-album-cover.jpg"
         },
@@ -93,83 +94,95 @@
       "id": "seventies-feel-good",
       "title": "70s Feel Good",
       "description": "Warm, upbeat instrumental grooves with bright rhythm sections and easygoing 1970s energy for daytime listening, creative work, light movement, and lifting the mood.",
+      "cover_url": "assets/images/music/fmb-70s-feel-good-cover.svg",
       "tracks": [
         {
           "id": "seventies-feel-good-01",
           "title": "01. 70s Feel Good",
           "artist": "With love, FMB",
           "description": "A joyful instrumental from our 70s Feel Good collection.",
-          "src": "assets/audio/70s/01-70s-feel-good.mp3"
+          "src": "assets/audio/70s/01-70s-feel-good.mp3",
+          "cover_url": "assets/images/music/fmb-70s-feel-good-cover.svg"
         },
         {
           "id": "seventies-feel-good-02",
           "title": "02. 70s Feel Good",
           "artist": "With love, FMB",
           "description": "A joyful instrumental from our 70s Feel Good collection.",
-          "src": "assets/audio/70s/02-70s-feel-good.mp3"
+          "src": "assets/audio/70s/02-70s-feel-good.mp3",
+          "cover_url": "assets/images/music/fmb-70s-feel-good-cover.svg"
         },
         {
           "id": "seventies-feel-good-03",
           "title": "03. 70s Feel Good",
           "artist": "With love, FMB",
           "description": "A joyful instrumental from our 70s Feel Good collection.",
-          "src": "assets/audio/70s/03-70s-feel-good.mp3"
+          "src": "assets/audio/70s/03-70s-feel-good.mp3",
+          "cover_url": "assets/images/music/fmb-70s-feel-good-cover.svg"
         },
         {
           "id": "seventies-feel-good-04",
           "title": "04. 70s Feel Good",
           "artist": "With love, FMB",
           "description": "A joyful instrumental from our 70s Feel Good collection.",
-          "src": "assets/audio/70s/04-70s-feel-good.mp3"
+          "src": "assets/audio/70s/04-70s-feel-good.mp3",
+          "cover_url": "assets/images/music/fmb-70s-feel-good-cover.svg"
         },
         {
           "id": "seventies-feel-good-05",
           "title": "05. 70s Feel Good",
           "artist": "With love, FMB",
           "description": "A joyful instrumental from our 70s Feel Good collection.",
-          "src": "assets/audio/70s/05-70s-feel-good.mp3"
+          "src": "assets/audio/70s/05-70s-feel-good.mp3",
+          "cover_url": "assets/images/music/fmb-70s-feel-good-cover.svg"
         },
         {
           "id": "seventies-feel-good-06",
           "title": "06. 70s Feel Good",
           "artist": "With love, FMB",
           "description": "A joyful instrumental from our 70s Feel Good collection.",
-          "src": "assets/audio/70s/06-70s-feel-good.mp3"
+          "src": "assets/audio/70s/06-70s-feel-good.mp3",
+          "cover_url": "assets/images/music/fmb-70s-feel-good-cover.svg"
         },
         {
           "id": "seventies-feel-good-07",
           "title": "07. 70s Feel Good",
           "artist": "With love, FMB",
           "description": "A joyful instrumental from our 70s Feel Good collection.",
-          "src": "assets/audio/70s/07-70s-feel-good.mp3"
+          "src": "assets/audio/70s/07-70s-feel-good.mp3",
+          "cover_url": "assets/images/music/fmb-70s-feel-good-cover.svg"
         },
         {
           "id": "seventies-feel-good-08",
           "title": "08. 70s Feel Good",
           "artist": "With love, FMB",
           "description": "A joyful instrumental from our 70s Feel Good collection.",
-          "src": "assets/audio/70s/08-70s-feel-good.mp3"
+          "src": "assets/audio/70s/08-70s-feel-good.mp3",
+          "cover_url": "assets/images/music/fmb-70s-feel-good-cover.svg"
         },
         {
           "id": "seventies-feel-good-09",
           "title": "09. 70s Feel Good",
           "artist": "With love, FMB",
           "description": "A joyful instrumental from our 70s Feel Good collection.",
-          "src": "assets/audio/70s/09-70s-feel-good.mp3"
+          "src": "assets/audio/70s/09-70s-feel-good.mp3",
+          "cover_url": "assets/images/music/fmb-70s-feel-good-cover.svg"
         },
         {
           "id": "seventies-feel-good-10",
           "title": "10. 70s Feel Good",
           "artist": "With love, FMB",
           "description": "A joyful instrumental from our 70s Feel Good collection.",
-          "src": "assets/audio/70s/10-70s-feel-good.mp3"
+          "src": "assets/audio/70s/10-70s-feel-good.mp3",
+          "cover_url": "assets/images/music/fmb-70s-feel-good-cover.svg"
         },
         {
           "id": "seventies-feel-good-11",
           "title": "11. 70s Feel Good",
           "artist": "With love, FMB",
           "description": "A joyful instrumental from our 70s Feel Good collection.",
-          "src": "assets/audio/70s/11-70s-feel-good.mp3"
+          "src": "assets/audio/70s/11-70s-feel-good.mp3",
+          "cover_url": "assets/images/music/fmb-70s-feel-good-cover.svg"
         }
       ]
     },
@@ -177,62 +190,71 @@
       "id": "eighties-feel-good",
       "title": "80s Feel Good",
       "description": "Bright, energetic instrumentals with polished synths, punchy drums, and an optimistic 1980s pop-dance atmosphere for movement, workouts, and lifting the mood.",
+      "cover_url": "assets/images/music/fmb-80s-feel-good-cover.svg",
       "tracks": [
         {
           "id": "eighties-feel-good-01",
           "title": "01. 80s Feel Good",
           "artist": "With love, FMB",
           "description": "An energetic instrumental from our 80s Feel Good collection.",
-          "src": "assets/audio/80s/01-80s-feel-good.mp3"
+          "src": "assets/audio/80s/01-80s-feel-good.mp3",
+          "cover_url": "assets/images/music/fmb-80s-feel-good-cover.svg"
         },
         {
           "id": "eighties-feel-good-02",
           "title": "02. 80s Feel Good",
           "artist": "With love, FMB",
           "description": "An energetic instrumental from our 80s Feel Good collection.",
-          "src": "assets/audio/80s/02-80s-feel-good.mp3"
+          "src": "assets/audio/80s/02-80s-feel-good.mp3",
+          "cover_url": "assets/images/music/fmb-80s-feel-good-cover.svg"
         },
         {
           "id": "eighties-feel-good-03",
           "title": "03. 80s Feel Good",
           "artist": "With love, FMB",
           "description": "An energetic instrumental from our 80s Feel Good collection.",
-          "src": "assets/audio/80s/03-80s-feel-good.mp3"
+          "src": "assets/audio/80s/03-80s-feel-good.mp3",
+          "cover_url": "assets/images/music/fmb-80s-feel-good-cover.svg"
         },
         {
           "id": "eighties-feel-good-04",
           "title": "04. 80s Feel Good",
           "artist": "With love, FMB",
           "description": "An energetic instrumental from our 80s Feel Good collection.",
-          "src": "assets/audio/80s/04-80s-feel-good.mp3"
+          "src": "assets/audio/80s/04-80s-feel-good.mp3",
+          "cover_url": "assets/images/music/fmb-80s-feel-good-cover.svg"
         },
         {
           "id": "eighties-feel-good-05",
           "title": "05. 80s Feel Good",
           "artist": "With love, FMB",
           "description": "An energetic instrumental from our 80s Feel Good collection.",
-          "src": "assets/audio/80s/05-80s-feel-good.mp3"
+          "src": "assets/audio/80s/05-80s-feel-good.mp3",
+          "cover_url": "assets/images/music/fmb-80s-feel-good-cover.svg"
         },
         {
           "id": "eighties-feel-good-06",
           "title": "06. 80s Feel Good",
           "artist": "With love, FMB",
           "description": "An energetic instrumental from our 80s Feel Good collection.",
-          "src": "assets/audio/80s/06-80s-feel-good.mp3"
+          "src": "assets/audio/80s/06-80s-feel-good.mp3",
+          "cover_url": "assets/images/music/fmb-80s-feel-good-cover.svg"
         },
         {
           "id": "eighties-feel-good-07",
           "title": "07. 80s Feel Good",
           "artist": "With love, FMB",
           "description": "An energetic instrumental from our 80s Feel Good collection.",
-          "src": "assets/audio/80s/07-80s-feel-good.mp3"
+          "src": "assets/audio/80s/07-80s-feel-good.mp3",
+          "cover_url": "assets/images/music/fmb-80s-feel-good-cover.svg"
         },
         {
           "id": "eighties-feel-good-08",
           "title": "08. 80s Feel Good",
           "artist": "With love, FMB",
           "description": "An energetic instrumental from our 80s Feel Good collection.",
-          "src": "assets/audio/80s/08-80s-feel-good.mp3"
+          "src": "assets/audio/80s/08-80s-feel-good.mp3",
+          "cover_url": "assets/images/music/fmb-80s-feel-good-cover.svg"
         }
       ]
     },
@@ -240,6 +262,7 @@
       "id": "original-soundtracks",
       "title": "Original Soundtracks",
       "description": "Two versions of the With Love, FMB original soundtrack, written and musically directed by Francine Marie Bautista (FMB).",
+      "cover_url": "assets/images/music/fmb-ost-with-love-fmb-cover.png",
       "tracks": [
         {
           "id": "with-love-fmb-ost-01",
