@@ -32,3 +32,11 @@ Interface typography follows the Apple system font stack for clear, native-feeli
 - Cognita web-cleaned logo: `../projects/cognita-logo-clean.png`
 
 SENZ keeps its deep navy and master blue identity. Cognita keeps the deep blue and light blue identity encoded in its approved logo. Neither operating-company logo is recolored to FMB&CO. purple or gold.
+
+## Founder hero portrait
+
+- Responsive alpha-WebP exports: `francine-founder-hero-640.webp` and `francine-founder-hero-923.webp`
+- Source portrait supplied by FMB for the corporate homepage
+- The portrait remains separate from the CSS-built purple and champagne-gold geometry so it can scale independently across screen sizes
+
+The responsive picture element prioritizes the smaller alpha-WebP export on phones. Both exports retain real transparency, and the hero image is not baked into a rectangular background.

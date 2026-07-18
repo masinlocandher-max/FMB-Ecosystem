@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260718-premium-member-app-v4';
+const CACHE_NAME='fmb-app-shell-20260718-premium-member-app-v5-fmbandco-hero';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -89,6 +89,8 @@ const APP_SHELL=[
   '/assets/images/fmbandco/fmbandco-primary-clean.png',
   '/assets/images/fmbandco/fmbandco-primary-reversed.png',
   '/assets/images/fmbandco/fmbandco-ampersand-gold.png',
+  '/assets/images/fmbandco/francine-founder-hero-640.webp',
+  '/assets/images/fmbandco/francine-founder-hero-923.webp',
   '/assets/images/projects/senz-logo.png',
   '/assets/images/projects/cognita-logo.png',
   '/assets/images/projects/senz-logo-clean.png',

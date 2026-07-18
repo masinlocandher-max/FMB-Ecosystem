@@ -17,7 +17,8 @@
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Organization","name":"FMB&CO.","url":"https://www.francinemariebautista.com/fmb&co/","slogan":"Shaping What Comes Next.","founder":{"@type":"Person","name":"Francine Marie Bautista","url":"https://www.francinemariebautista.com/aboutfmb/"},"parentOrganization":{"@type":"Organization","name":"With Love, FMB","url":"https://www.francinemariebautista.com/"},"subOrganization":[{"@type":"Organization","name":"SENZ Strategic Communications","url":"https://www.senzpr.com/"},{"@type":"EducationalOrganization","name":"Cognita Institute of AI","url":"https://thecognitainstitute.com/"}]}
   </script>
-  <link rel="stylesheet" href="/assets/css/fmbandco-brand.css?v=20260718-transparent-motion-v3">
+  <link rel="preload" as="image" href="/assets/images/fmbandco/francine-founder-hero-923.webp" type="image/webp" imagesrcset="/assets/images/fmbandco/francine-founder-hero-640.webp 640w, /assets/images/fmbandco/francine-founder-hero-923.webp 923w" imagesizes="(max-width:860px) calc(100vw - 28px), (max-width:1000px) 620px, 520px">
+  <link rel="stylesheet" href="/assets/css/fmbandco-brand.css?v=20260718-founder-hero-v4">
   <script src="/assets/js/fmbandco-motion.js?v=20260718-motion-v1" defer></script>
 </head>
 <body class="fco-page fco-home">
@@ -43,7 +44,7 @@
   <main id="main-content">
     <section class="fco-hero" id="home">
       <div class="fco-wrap fco-hero-grid">
-        <div>
+        <div class="fco-hero-copy">
           <p class="fco-eyebrow">Strategy &middot; Creativity &middot; Impact</p>
           <div class="fco-hero-logo">
             <img src="/assets/images/fmbandco/fmbandco-primary-reversed.png" width="1414" height="405" alt="FMB&amp;CO. - Shaping What Comes Next.">
@@ -55,11 +56,18 @@
             <a class="fco-btn secondary" href="/aboutfmb/#work-with-fmb">Start a consultation</a>
           </div>
         </div>
-        <aside class="fco-hero-note">
-          <div class="fco-note-mark" aria-hidden="true"><img src="/assets/images/fmbandco/fmbandco-ampersand-gold.png" width="257" height="282" alt=""></div>
-          <strong>One direction.<br>Distinct expertise.</strong>
-          <p>SENZ and Cognita operate with their own purpose, identity, and specialization under the strategic direction of FMB&amp;CO.</p>
-        </aside>
+        <div class="fco-hero-visual">
+          <div class="fco-portrait-shape" aria-hidden="true"></div>
+          <picture class="fco-founder-portrait">
+            <source type="image/webp" srcset="/assets/images/fmbandco/francine-founder-hero-640.webp 640w, /assets/images/fmbandco/francine-founder-hero-923.webp 923w" sizes="(max-width:860px) calc(100vw - 28px), (max-width:1000px) 620px, 520px">
+            <img src="/assets/images/fmbandco/francine-founder-hero-923.webp" width="923" height="1353" alt="Francine Marie Bautista, Founder of FMB&amp;CO." fetchpriority="high" decoding="async">
+          </picture>
+          <aside class="fco-hero-note">
+            <div class="fco-note-mark" aria-hidden="true"><img src="/assets/images/fmbandco/fmbandco-ampersand-gold.png" width="257" height="282" alt=""></div>
+            <strong>One direction.<br>Distinct expertise.</strong>
+            <p>SENZ and Cognita operate with their own purpose, identity, and specialization under the strategic direction of FMB&amp;CO.</p>
+          </aside>
+        </div>
       </div>
     </section>
 
