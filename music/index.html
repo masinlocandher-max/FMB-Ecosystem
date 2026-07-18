@@ -16,6 +16,8 @@
 <meta property="og:image" content="https://www.francinemariebautista.com/assets/images/music/fmb-calm-official-album-cover.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="assets/images/icon-transparent.png">
+<link rel="preload" as="image" href="assets/images/music/fmb-70s-feel-good-cover.svg">
+<link rel="preload" as="image" href="assets/images/music/fmb-80s-feel-good-cover.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
@@ -23,6 +25,7 @@
 <link rel="stylesheet" href="assets/css/icon-fix.css">
 <link rel="stylesheet" href="assets/css/repair.css">
 <link rel="stylesheet" href="assets/css/music-ui.css?v=20260717-thirty-one-tracks">
+<link rel="stylesheet" href="assets/css/music-cover-gallery.css?v=20260718-feel-good-covers">
 <link rel="stylesheet" href="assets/css/live-hotfix.css?v=20260716-public-care">
 <link rel="stylesheet" href="assets/css/experience-refresh.css?v=20260717-centered-marquee">
 <link rel="stylesheet" href="assets/css/organized-pages.css?v=20260716">
@@ -76,6 +79,16 @@
 
     <section class="music-library" aria-labelledby="library-title">
       <div class="library-head"><div><p class="eyebrow">Listening library</p><h2 id="library-title">Four collections. Thirty-one tracks.</h2></div><p>Ten connected Calm pieces, eleven 70s Feel Good instrumentals, eight 80s Feel Good tracks, and two With Love, FMB OST versions.</p></div>
+      <div class="collection-cover-gallery" id="feel-good-covers" aria-label="Feel Good collection covers">
+        <article class="collection-cover-card seventies">
+          <img src="assets/images/music/fmb-70s-feel-good-cover.svg" alt="70s Feel Good collection cover by With love, FMB" width="1400" height="1400">
+          <div class="collection-cover-copy"><p class="eyebrow">11-track collection</p><h3>70s Feel Good</h3><p>Warm, easygoing instrumentals for daytime listening, creative work, light movement, and lifting the mood.</p><a href="#playlistGrid">Explore the 70s tracks</a></div>
+        </article>
+        <article class="collection-cover-card eighties">
+          <img src="assets/images/music/fmb-80s-feel-good-cover.svg" alt="80s Feel Good collection cover by With love, FMB" width="1400" height="1400">
+          <div class="collection-cover-copy"><p class="eyebrow">8-track collection</p><h3>80s Feel Good</h3><p>Bright synths, punchy rhythms, and optimistic energy for movement, workouts, and brighter moments.</p><a href="#playlistGrid">Explore the 80s tracks</a></div>
+        </article>
+      </div>
       <div class="playlist-list" id="playlistGrid" aria-live="polite"><div class="music-empty">Preparing the listening space.</div></div>
     </section>
 
@@ -93,7 +106,7 @@
 </div>
 <nav class="mobile-bar" aria-label="Mobile navigation"><a href="/"><span>Home</span></a><a href="/ebooks/"><span>Read</span></a><a class="active" href="#player"><span>Listen</span></a><a href="freedom-wall.html"><span>Wall</span></a></nav>
 <script src="/assets/js/site.js?v=20260716-mobile-first-v6"></script>
-<script src="assets/js/music.js?v=20260717-thirty-one-tracks"></script>
+<script src="assets/js/music.js?v=20260718-feel-good-covers"></script>
 <script src="/assets/js/live-hotfix.js?v=20260716-mobile-first-v6"></script>
 </body>
 </html>
