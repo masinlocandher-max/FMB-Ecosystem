@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260718-fmbandco-newsroom-v12';
+const CACHE_NAME='fmb-app-shell-20260719-founder-brand-gallery-newsroom-v13';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -94,7 +94,6 @@ const APP_SHELL=[
   '/assets/js/fmbandco-motion.js',
   '/assets/js/aboutfmb-corporate.js',
   '/assets/js/news-channel.js',
-  '/assets/fonts/great-vibes-latin-400-normal.woff2',
   '/assets/data/music-library.json',
   '/assets/images/music/fmb-calm-official-album-cover.jpg',
   '/assets/images/icon-transparent.png',
@@ -105,6 +104,11 @@ const APP_SHELL=[
   '/assets/images/fmbandco/fmbandco-ampersand-gold.png',
   '/assets/images/fmbandco/francine-founder-hero-640.webp',
   '/assets/images/fmbandco/francine-founder-hero-923.webp',
+  '/assets/images/fmb/francine-marie-bautista-wordmark-white-v2.png',
+  '/assets/images/fmb/francine-founder-front-cutout-640-v1.webp',
+  '/assets/images/fmb/francine-founder-front-cutout-900-v1.webp',
+  '/assets/images/fmb/francine-founder-side-cutout-640-v1.webp',
+  '/assets/images/fmb/francine-founder-side-cutout-900-v1.webp',
   '/assets/images/projects/senz-logo.png',
   '/assets/images/projects/cognita-logo.png',
   '/assets/images/projects/senz-logo-clean.png',

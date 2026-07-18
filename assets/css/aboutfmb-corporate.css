@@ -5,7 +5,8 @@
 /* Founder wordmark and navigation */
 .fmb-about-header-brand{min-width:235px;display:flex;align-items:center;gap:14px;color:#fff!important;text-decoration:none}
 .fmb-about-header-brand strong{padding-right:14px;border-right:1px solid rgba(226,200,142,.35);color:var(--fco-gold-bright);font-size:.72rem;font-weight:800;letter-spacing:.29em;line-height:1;text-indent:.29em}
-.fmb-about-header-brand span{color:#fff8e9;font-family:"Great Vibes","Snell Roundhand","Apple Chancery",cursive;font-size:1.8rem;line-height:1;white-space:nowrap}
+.fmb-about-header-wordmark{width:190px;display:block;line-height:0}
+.fmb-about-header-wordmark img{width:100%;height:auto;filter:drop-shadow(0 6px 14px rgba(0,0,0,.22))}
 
 /* Hero */
 .fmb-about-hero{padding-block:clamp(68px,7.4vw,106px)}
@@ -38,18 +39,24 @@
 
 /* Profile */
 .fmb-about-profile-grid{display:grid;grid-template-columns:minmax(310px,.82fr) minmax(0,1.18fr);gap:20px}
-.fmb-about-pattern{position:relative;overflow:hidden;min-height:560px;display:grid;place-items:center;border:1px solid rgba(226,200,142,.21);border-radius:36px;background:radial-gradient(circle at 23% 17%,rgba(226,200,142,.23),transparent 25%),radial-gradient(circle at 76% 77%,rgba(97,57,132,.52),transparent 34%),linear-gradient(145deg,var(--fco-night),var(--fco-purple));box-shadow:var(--fco-shadow)}
+.fmb-about-pattern{position:relative;isolation:isolate;overflow:hidden;min-height:560px;margin:0;border:1px solid rgba(226,200,142,.21);border-radius:36px;background:radial-gradient(circle at 23% 17%,rgba(226,200,142,.23),transparent 25%),radial-gradient(circle at 76% 77%,rgba(97,57,132,.52),transparent 34%),linear-gradient(145deg,var(--fco-night),var(--fco-purple));box-shadow:var(--fco-shadow);transition:transform .55s cubic-bezier(.22,1,.36,1),box-shadow .55s cubic-bezier(.22,1,.36,1)}
+.fmb-about-pattern:hover{transform:translateY(-4px);box-shadow:0 34px 92px rgba(20,10,35,.2)}
 .fmb-about-pattern::before,.fmb-about-pattern::after{position:absolute;border:1px solid rgba(255,255,255,.09);border-radius:50%;content:""}
 .fmb-about-pattern::before{top:-130px;right:-110px;width:340px;aspect-ratio:1;box-shadow:0 0 0 56px rgba(255,255,255,.018)}
 .fmb-about-pattern::after{bottom:-78px;left:-78px;width:220px;aspect-ratio:1;box-shadow:0 0 0 38px rgba(200,169,107,.025)}
-.fmb-about-pattern img{width:min(42%,220px);filter:drop-shadow(0 24px 48px rgba(200,169,107,.2))}
-.fmb-about-pattern span{position:absolute;right:28px;bottom:27px;left:28px;padding-top:17px;border-top:1px solid rgba(255,255,255,.13);color:rgba(255,255,255,.5);font-size:.58rem;font-weight:700;letter-spacing:.17em;text-align:center;text-transform:uppercase}
+.fmb-about-portrait-shape{position:absolute;inset:7% 6% 11% 10%;z-index:0;overflow:hidden;border:1px solid rgba(226,200,142,.3);border-radius:48% 44% 29% 42%/35% 38% 20% 27%;background:radial-gradient(circle at 26% 17%,rgba(226,200,142,.26),transparent 25%),linear-gradient(150deg,rgba(255,255,255,.09),rgba(75,40,106,.34));box-shadow:inset 0 1px 0 rgba(255,255,255,.13),0 24px 65px rgba(0,0,0,.2);transform:rotate(2deg)}
+.fmb-about-portrait-shape::before{position:absolute;inset:9%;border:1px solid rgba(255,255,255,.1);border-radius:inherit;content:""}
+.fmb-about-portrait-shape::after{position:absolute;right:-42px;bottom:-35px;width:170px;aspect-ratio:1;border:1px solid rgba(226,200,142,.28);border-radius:50%;box-shadow:0 0 0 34px rgba(200,169,107,.035);content:""}
+.fmb-about-portrait{position:absolute;inset:8px 0 39px;z-index:2;display:grid;align-items:end;justify-items:center;pointer-events:none}
+.fmb-about-portrait img{width:min(112%,500px);height:100%;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 25px 44px rgba(0,0,0,.34))}
+.fmb-about-pattern figcaption{position:absolute;right:28px;bottom:27px;left:28px;z-index:3;padding-top:17px;border-top:1px solid rgba(255,255,255,.13);color:rgba(255,255,255,.56);font-size:.58rem;font-weight:700;letter-spacing:.17em;text-align:center;text-transform:uppercase}
 .fmb-about-story{min-height:560px;padding:clamp(38px,5vw,70px);display:flex;flex-direction:column;justify-content:center;border:1px solid rgba(255,255,255,.86);border-radius:36px;background:rgba(255,255,255,.73);box-shadow:var(--fco-shadow);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)}
 .fmb-about-story h3{max-width:720px;margin:0 0 24px;color:var(--fco-purple);font-size:clamp(2rem,3.55vw,3.55rem);font-weight:590;letter-spacing:-.052em;line-height:1.04}
 .fmb-about-story>p:not(.fco-eyebrow){max-width:72ch;color:var(--fco-slate);font-size:.9rem;line-height:1.78}
 .fmb-about-signoff{margin-top:18px;padding-top:22px;display:flex;align-items:center;gap:15px;border-top:1px solid var(--fco-line)}
 .fmb-about-signoff strong{color:var(--fco-gold);font-size:.62rem;letter-spacing:.27em}
-.fmb-about-signoff span{color:var(--fco-purple);font-family:"Great Vibes","Snell Roundhand","Apple Chancery",cursive;font-size:2.05rem;line-height:1}
+.fmb-about-signoff-wordmark{width:min(330px,100%);padding:9px 14px;display:block;border:1px solid rgba(226,200,142,.22);border-radius:16px;background:linear-gradient(145deg,var(--fco-night),var(--fco-purple));line-height:0;box-shadow:0 12px 28px rgba(20,10,35,.13)}
+.fmb-about-signoff-wordmark img{width:100%;height:auto;filter:drop-shadow(0 5px 12px rgba(0,0,0,.2))}
 
 /* Expertise */
 .fmb-about-expertise-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
@@ -155,7 +162,8 @@
 
 /* Footer wordmark */
 .fmb-about-footer-brand>strong{display:block;color:var(--fco-gold-bright);font-size:.7rem;font-weight:800;letter-spacing:.3em}
-.fmb-about-footer-brand>span{display:block;margin-top:8px;color:#fff8e9;font-family:"Great Vibes","Snell Roundhand","Apple Chancery",cursive;font-size:clamp(2.6rem,4vw,3.65rem);line-height:1}
+.fmb-about-footer-wordmark{width:min(490px,100%);margin-top:12px;display:block;line-height:0}
+.fmb-about-footer-wordmark img{width:100%;height:auto;filter:drop-shadow(0 8px 18px rgba(0,0,0,.22))}
 .fmb-about-footer-brand>p{margin-top:17px}
 
 /* Native-feeling motion */
@@ -164,7 +172,9 @@
 .fmb-about-corporate .fmb-about-hero::after{animation:fco-orbit-drift 13s ease-in-out infinite alternate}
 .fmb-about-corporate .fco-portrait-shape{animation:fco-portrait-shape-drift 11s ease-in-out 1s infinite alternate}
 .fmb-about-corporate .fco-founder-portrait img{animation:fco-portrait-float 8s ease-in-out 1.1s infinite}
-.fmb-about-corporate .fco-note-mark img,.fmb-about-corporate .fmb-about-pattern img{animation:fco-amp-float 7s ease-in-out infinite}
+.fmb-about-corporate .fco-note-mark img{animation:fco-amp-float 7s ease-in-out infinite}
+.fmb-about-corporate .fmb-about-portrait-shape{animation:fco-founder-card-shape-drift 11s ease-in-out 1s infinite alternate}
+.fmb-about-corporate .fmb-about-portrait img{animation:fco-portrait-float 8s ease-in-out 1.1s infinite}
 .about-motion-ready .fmb-about-corporate .about-reveal{opacity:0;transform:translateY(25px);transition:opacity .72s cubic-bezier(.22,1,.36,1) var(--about-reveal-delay,0ms),transform .72s cubic-bezier(.22,1,.36,1) var(--about-reveal-delay,0ms)}
 .about-motion-ready .fmb-about-corporate .about-reveal.is-visible{opacity:1;transform:translateY(0)}
 
@@ -182,7 +192,7 @@
 @media(max-width:860px){
   .fmb-about-header-brand{min-width:0;justify-content:center}
   .fmb-about-header-brand strong{font-size:.64rem}
-  .fmb-about-header-brand span{font-size:1.58rem}
+  .fmb-about-header-wordmark{width:175px}
   .fmb-about-hero{padding:48px 0 60px}
   .fmb-about-hero h1{font-size:clamp(3rem,14vw,4.65rem)}
   .fmb-about-hero-deck{font-size:1.04rem}
@@ -196,6 +206,8 @@
   .fmb-about-section-head{margin-bottom:32px}
   .fmb-about-section-head h2{font-size:clamp(2.35rem,10.5vw,3.6rem)}
   .fmb-about-pattern{min-height:350px;border-radius:30px}
+  .fmb-about-portrait{inset:6px 0 36px}
+  .fmb-about-portrait img{width:min(105%,430px)}
   .fmb-about-story{min-height:0;padding:34px 27px;border-radius:30px}
   .fmb-about-story h3{font-size:clamp(2rem,9.5vw,3.05rem)}
   .fmb-about-expertise-grid,.fmb-about-portfolio-grid,.fmb-about-quote-grid{grid-template-columns:1fr}
@@ -214,16 +226,16 @@
   .calendar-day{border-radius:13px}
   .calendar-status{font-size:.38rem}
   .advertise-route-note{margin:0 0 18px}
-  .fmb-about-footer-brand>span{font-size:2.65rem}
+  .fmb-about-footer-wordmark{width:min(430px,100%)}
 }
 
 @media(max-width:430px){
   .fmb-about-header-brand{gap:9px}
   .fmb-about-header-brand strong{padding-right:9px;letter-spacing:.21em;text-indent:.21em}
-  .fmb-about-header-brand span{font-size:1.39rem}
+  .fmb-about-header-wordmark{width:min(155px,48vw)}
   .fmb-about-hero h1{letter-spacing:-.065em}
   .fmb-about-signoff{align-items:flex-start;flex-direction:column;gap:9px}
-  .fmb-about-signoff span{font-size:1.82rem}
+  .fmb-about-signoff-wordmark{width:100%}
   .fmb-about-timeline-item{grid-template-columns:1fr}
   .fmb-about-timeline::before{display:none}
   .fmb-about-logo-stage{height:145px}
