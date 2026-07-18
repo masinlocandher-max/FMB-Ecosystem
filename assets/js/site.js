@@ -113,8 +113,8 @@
       {label:'About FMB',description:'Meet Francine and understand her authority',href:'/aboutfmb/',current:route==='aboutfmb'||page==='about.html'},
       {label:'Get help',description:'Open verified crisis, health, safety, and assistance contacts',href:'/gethelp/',current:route==='gethelp',help:true}
     ];
-    links.innerHTML=`<div class="nav-menu-intro"><strong>More from FMB</strong><span>Reading, music, news, and help stay in the quick menu below. Open the menu for our other spaces.</span></div>${items.map(item=>`<a class="nav-menu-link${item.help?' nav-help-link':''}" href="${item.href}"${item.current?' aria-current="page"':''}><span class="nav-link-label">${item.label}</span><small>${item.description}</small></a>`).join('')}<div class="nav-mobile-actions"><a class="pill secondary" href="/auth.html#signin">Sign in</a><a class="pill" href="/ebooks/">Start exploring</a></div>`;
-    actions.innerHTML='<a class="nav-btn" href="/auth.html#signin">Sign in</a><button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-label="Open menu" aria-controls="navLinks"><span></span><span></span></button>';
+    links.innerHTML=`<div class="nav-menu-intro"><strong>More from FMB</strong><span>Reading, music, news, and help stay in the quick menu below. Open the menu for our other spaces.</span></div>${items.map(item=>`<a class="nav-menu-link${item.help?' nav-help-link':''}" href="${item.href}"${item.current?' aria-current="page"':''}><span class="nav-link-label">${item.label}</span><small>${item.description}</small></a>`).join('')}<div class="nav-mobile-actions"><a class="pill secondary nav-signin-link" href="https://app.francinemariebautista.com/app/?auth=signin">Sign in</a><a class="pill nav-install-link" href="https://app.francinemariebautista.com/app/install/">Get the app</a></div>`;
+    actions.innerHTML='<a class="nav-btn nav-signin-link" href="https://app.francinemariebautista.com/app/?auth=signin">Sign in</a><a class="nav-btn primary nav-install-link" href="https://app.francinemariebautista.com/app/install/">Get the app</a><button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-label="Open menu" aria-controls="navLinks"><span></span><span></span></button>';
     const menuToggle=actions.querySelector('#navToggle');
     if(menuToggle)menuToggle.setAttribute('aria-controls','navLinks');
     let mobileBar=$('.mobile-bar:not(.member-mobile-bar):not(.admin-mobile-bar)');
@@ -127,9 +127,8 @@
     if(mobileBar){
       const readingCurrent=route==='ebooks'||['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html','dress-with-intention.html'].includes(page);
       const musicCurrent=route==='music'||page==='music.html';
-      const newsCurrent=route==='news';
       const helpCurrent=route==='gethelp';
-      mobileBar.innerHTML=`<a class="${onHome?'active':''}" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 11 8-7 8 7v9H4Z"/><path d="M9 20v-6h6v6"/></svg><span>Home</span></a><a class="${readingCurrent?'active':''}" href="/ebooks/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2Z"/><path d="M7 4v14a2 2 0 0 0 2 2"/></svg><span>Read</span></a><a class="${musicCurrent?'active':''}" href="/music/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg><span>Music</span></a><a class="${newsCurrent?'active':''}" href="/news/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h14v16H5Z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>News</span></a><a class="${helpCurrent?'active':''}" href="/gethelp/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-3.7 7-10V5l-7-2-7 2v6c0 6.3 7 10 7 10Z"/><path d="M9 12h6M12 9v6"/></svg><span>Help</span></a>`;
+      mobileBar.innerHTML=`<a class="${onHome?'active':''}" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 11 8-7 8 7v9H4Z"/><path d="M9 20v-6h6v6"/></svg><span>Home</span></a><a class="${readingCurrent?'active':''}" href="/ebooks/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2Z"/><path d="M7 4v14a2 2 0 0 0 2 2"/></svg><span>Read</span></a><a class="${musicCurrent?'active':''}" href="/music/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg><span>Music</span></a><a class="${helpCurrent?'active':''}" href="/gethelp/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-3.7 7-10V5l-7-2-7 2v6c0 6.3 7 10 7 10Z"/><path d="M9 12h6M12 9v6"/></svg><span>Help</span></a><a href="https://app.francinemariebautista.com/app/install/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12M7.5 10.5 12 15l4.5-4.5"/><path d="M5 19h14"/></svg><span>Get app</span></a>`;
     }
   }
   setupFriendlyNavigation();
@@ -164,7 +163,7 @@
     if(!signedIn)return;
     replaceSignedInLinks();
     document.querySelectorAll('.nav-actions').forEach(actions=>{
-      actions.querySelectorAll('a[href*="auth.html"],.nav-account-icon,.nav-logout').forEach(item=>item.remove());
+      actions.querySelectorAll('a[href*="auth.html"],.nav-signin-link,.nav-install-link,.nav-account-icon,.nav-logout').forEach(item=>item.remove());
       const toggle=actions.querySelector('.nav-toggle');
       const account=document.createElement('a');
       account.className='nav-account-icon';

@@ -278,7 +278,7 @@ def check_navigation_experience(errors: list[str]) -> None:
     ):
         if marker not in index:
             errors.append(f"index.html: missing first-visit benefit: {marker}")
-    for marker in ("setupFriendlyNavigation", "nav-mobile-actions", "Get help", "News", "Freedom Wall", "Community Engagements", "FMB & Co."):
+    for marker in ("setupFriendlyNavigation", "nav-mobile-actions", "nav-install-link", "https://app.francinemariebautista.com/app/install/", "Get help", "News", "Freedom Wall", "Community Engagements", "FMB & Co."):
         if marker not in site_js:
             errors.append(f"assets/js/site.js: missing navigation UX marker: {marker}")
     if ".entry-benefits" not in site_css:
