@@ -25,8 +25,22 @@ const index=fs.readFileSync(path.join(root,'index.html'),'utf8');
 if(!/rel="manifest"[^>]+manifest\.webmanifest/.test(index))fail('Home page is missing its manifest link.');
 if(!/rel="apple-touch-icon"/.test(index))fail('Home page is missing its Apple touch icon.');
 
+const appManifest=JSON.parse(fs.readFileSync(path.join(root,'app/manifest.webmanifest'),'utf8'));
+if(appManifest.display!=='standalone')fail('Member app manifest must use standalone display mode.');
+if(appManifest.scope!=='/app/')fail('Member app manifest scope must stay within /app/.');
+if(appManifest.start_url!=='/app/')fail('Installed member app must open the registration-first /app/ route.');
+
+const installPage=fs.readFileSync(path.join(root,'app/install/index.html'),'utf8');
+const installScript=fs.readFileSync(path.join(root,'app/install/install.js'),'utf8');
+if(!/rel="manifest"[^>]+\/app\/manifest\.webmanifest/.test(installPage))fail('Install campaign is not connected to the member app manifest.');
+if(!installPage.includes('id="installNow"'))fail('Install campaign is missing its primary installation action.');
+if(!installScript.includes('beforeinstallprompt')||!installScript.includes('appinstalled'))fail('Install campaign is missing native installation event handling.');
+
 const worker=fs.readFileSync(path.join(root,'service-worker.js'),'utf8');
 if(!worker.includes("addEventListener('fetch'"))fail('Service worker has no fetch handler.');
 if(worker.includes('registration.unregister'))fail('Service worker unregisters itself and cannot support installation.');
+for(const asset of ('/app/install/ /app/install/index.html /app/install/install.css /app/install/install.js').split(' ')){
+  if(!worker.includes(`'${asset}'`))fail(`Service worker is missing install campaign asset: ${asset}`);
+}
 
 console.log('PWA manifest, icons, install metadata, and service worker passed.');

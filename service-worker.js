@@ -1,9 +1,11 @@
-const CACHE_NAME='fmb-app-shell-20260718-premium-member-app-v5-fmbandco-hero';
+const CACHE_NAME='fmb-app-shell-20260718-app-install-promotion-v7';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
   '/app/',
   '/app/index.html',
+  '/app/install/',
+  '/app/install/index.html',
   '/about.html',
   '/auth.html',
   '/freedom-wall.html',
@@ -43,6 +45,10 @@ const APP_SHELL=[
   '/app/app.js',
   '/app/access.js',
   '/app/manifest.webmanifest',
+  '/app/install/',
+  '/app/install/index.html',
+  '/app/install/install.css',
+  '/app/install/install.js',
   '/freedom-wall.html',
   '/auth.html',
   '/news/cleopatra-barrera/',

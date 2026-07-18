@@ -196,6 +196,28 @@ def check_membership_features(errors: list[str]) -> None:
     ):
         if marker not in app_html:
             errors.append(f"app/index.html: missing verified app-entry marker: {marker}")
+
+    install_html = (ROOT / "app/install/index.html").read_text(encoding="utf-8")
+    for marker in (
+        'id="installNow"',
+        'id="sharePromotion"',
+        'id="installGuide"',
+        "Your calmer space, one tap away.",
+        "Continue to profile creation or sign in",
+        'rel="manifest" href="/app/manifest.webmanifest"',
+    ):
+        if marker not in install_html:
+            errors.append(f"app/install/index.html: missing app-promotion marker: {marker}")
+    install_js = (ROOT / "app/install/install.js").read_text(encoding="utf-8")
+    for marker in (
+        "beforeinstallprompt",
+        "appinstalled",
+        "navigator.share",
+        "Add to Home Screen",
+        "serviceWorker.register('/service-worker.js')",
+    ):
+        if marker not in install_js:
+            errors.append(f"app/install/install.js: missing device-aware installation marker: {marker}")
     app_access = (ROOT / "app/access.js").read_text(encoding="utf-8")
     for marker in (
         "get_membership_status",
@@ -246,14 +268,17 @@ def check_navigation_experience(errors: list[str]) -> None:
     site_css = (ROOT / "assets/css/site.css").read_text(encoding="utf-8")
     for marker in (
         'id="what-you-get"',
+        'id="get-the-app"',
         "Begin with a public guide",
         "Listen inside our member space",
         "Visit the Freedom Wall",
         "Access public support",
+        "Your calmer space, one tap away.",
+        "https://app.francinemariebautista.com/app/install/",
     ):
         if marker not in index:
             errors.append(f"index.html: missing first-visit benefit: {marker}")
-    for marker in ("setupFriendlyNavigation", "nav-mobile-actions", "Get help", "News", "Freedom Wall", "Community Engagements", "FMB & Co."):
+    for marker in ("setupFriendlyNavigation", "nav-mobile-actions", "nav-install-link", "https://app.francinemariebautista.com/app/install/", "Get help", "News", "Freedom Wall", "Community Engagements", "FMB & Co."):
         if marker not in site_js:
             errors.append(f"assets/js/site.js: missing navigation UX marker: {marker}")
     if ".entry-benefits" not in site_css:
@@ -679,6 +704,7 @@ def main() -> int:
         ROOT / "news/good-news/index.html",
         ROOT / "profile/index.html",
         ROOT / "app/index.html",
+        ROOT / "app/install/index.html",
     ]
     html_files = sorted(ROOT.glob("*.html")) + route_pages
     if not html_files:
