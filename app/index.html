@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#510b77">
+<meta name="theme-color" content="#f6f4f7">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -14,23 +14,113 @@
 <link rel="manifest" href="/app/manifest.webmanifest">
 <link rel="icon" href="/assets/images/icon-transparent.png">
 <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
-<link rel="stylesheet" href="/app/app.css?v=20260718-mental-health-rules">
+<link rel="stylesheet" href="/app/app.css?v=20260718-premium-access-v1">
 </head>
-<body>
-<div class="app-shell">
+<body class="auth-pending">
+<section class="access-gate" id="accessGate" aria-labelledby="accessTitle" aria-busy="true">
+  <div class="access-stage">
+    <header class="access-brandbar">
+      <a class="access-brand" href="https://www.francinemariebautista.com/" aria-label="Visit the main With love, FMB website">
+        <img src="/assets/images/icon-transparent.png" alt="">
+        <span><strong>with love, fmb</strong><small>Mental health and wellbeing</small></span>
+      </a>
+      <a class="access-site-link" href="https://www.francinemariebautista.com/">Main website</a>
+    </header>
+
+    <div class="access-intro">
+      <div class="access-app-mark" aria-hidden="true"><img src="/assets/images/icon-transparent.png" alt=""></div>
+      <p class="access-kicker">Your private wellbeing space</p>
+      <h1 id="accessTitle">A calmer place to come back to yourself.</h1>
+      <p class="access-lede">Create a verified profile before entering our mental-health space. Your check-ins and journal remain private on this device unless we clearly tell you otherwise.</p>
+      <div class="access-benefits" aria-label="What is inside">
+        <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z"/><path d="M8.5 12.4 11 15l4.8-6"/></svg>Daily emotional check-ins</span>
+        <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h10.5A1.5 1.5 0 0 1 18 5v15.5H7.5A1.5 1.5 0 0 1 6 19Z"/><path d="M9.5 8h5M9.5 12h5"/></svg>A private, dated journal</span>
+        <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5a7 7 0 0 0-7 7c0 5.4 7 10 7 10s7-4.6 7-10a7 7 0 0 0-7-7Z"/><path d="M9.5 10.5h5M12 8v5"/></svg>Grounding and support tools</span>
+      </div>
+    </div>
+
+    <article class="access-card" id="accessCard">
+      <div class="access-loading" id="accessLoading" role="status" aria-live="polite">
+        <span class="access-spinner" aria-hidden="true"></span>
+        <strong>Opening your space</strong>
+        <p>Checking for a secure profile on this device.</p>
+      </div>
+
+      <div class="access-content" id="accessContent" hidden>
+        <div class="access-segment" role="tablist" aria-label="Profile access">
+          <button class="active" id="appSignupTab" type="button" role="tab" aria-controls="appSignupPanel" aria-selected="true">Create profile</button>
+          <button id="appSigninTab" type="button" role="tab" aria-controls="appSigninPanel" aria-selected="false">Sign in</button>
+        </div>
+
+        <section class="access-panel" id="appSignupPanel" role="tabpanel" aria-labelledby="appSignupTab">
+          <div class="access-panel-heading">
+            <p class="access-step">New here</p>
+            <h2>Create your profile</h2>
+            <p>One verified profile gives you access to our focused wellbeing space in your browser or from your Home Screen.</p>
+          </div>
+          <p class="access-readiness" id="appMembershipReadiness" role="status" aria-live="polite">Checking profile availability.</p>
+          <form class="access-form" id="appSignupForm" novalidate>
+            <label class="access-field" for="appFullName"><span>Full name</span><input id="appFullName" name="fullName" maxlength="80" autocomplete="name" placeholder="How we should welcome you" required></label>
+            <label class="access-field" for="appSignupEmail"><span>Email</span><input id="appSignupEmail" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" placeholder="name@example.com" required></label>
+            <label class="access-field" for="appSignupPassword"><span>Password</span><span class="access-password"><input id="appSignupPassword" name="password" type="password" autocomplete="new-password" minlength="10" placeholder="At least 10 characters" required><button type="button" data-access-toggle="appSignupPassword" aria-label="Show password">Show</button></span></label>
+            <div class="access-rules" id="appPasswordRules" aria-live="polite">
+              <span data-access-rule="length">10+ characters</span><span data-access-rule="lower">Lowercase</span><span data-access-rule="upper">Uppercase</span><span data-access-rule="number">Number</span>
+            </div>
+            <label class="access-field" for="appConfirmPassword"><span>Confirm password</span><span class="access-password"><input id="appConfirmPassword" type="password" autocomplete="new-password" minlength="10" placeholder="Enter it again" required><button type="button" data-access-toggle="appConfirmPassword" aria-label="Show password">Show</button></span></label>
+            <label class="access-consent"><input id="appLegalConsent" type="checkbox" required><span>I agree to our <a href="/membership-agreement.html" target="_blank" rel="noopener">Membership Agreement</a>, <a href="/privacy-policy.html" target="_blank" rel="noopener">Privacy Policy</a>, and <a href="/community-guidelines.html" target="_blank" rel="noopener">Community Guidelines</a>.</span></label>
+            <button class="access-primary" id="appSignupButton" type="submit" disabled>Checking availability</button>
+            <div class="access-status" id="appSignupStatus" role="status" aria-live="polite"></div>
+          </form>
+          <section class="access-verification" id="appVerification" hidden aria-labelledby="appVerificationTitle">
+            <span class="access-success-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m6.5 12.5 3.5 3.4 7.5-8"/></svg></span>
+            <p class="access-step">One more step</p>
+            <h2 id="appVerificationTitle">Check your email</h2>
+            <p>Open the verification link sent to <strong id="appVerificationEmail"></strong>. After confirmation, your profile is ready to use here.</p>
+            <div class="access-verification-actions"><button class="access-primary" id="appOpenSignin" type="button">Go to sign in</button><button class="access-secondary" id="appResendConfirmation" type="button">Resend verification</button></div>
+            <p class="access-footnote" id="appResendHelp">Check Inbox, Spam, Promotions, and All Mail before requesting another message.</p>
+          </section>
+        </section>
+
+        <section class="access-panel" id="appSigninPanel" role="tabpanel" aria-labelledby="appSigninTab" hidden>
+          <div class="access-panel-heading">
+            <p class="access-step">Welcome back</p>
+            <h2>Sign in to continue</h2>
+            <p>Use the verified email and password connected to your profile.</p>
+          </div>
+          <form class="access-form" id="appSigninForm" novalidate>
+            <label class="access-field" for="appSigninEmail"><span>Email</span><input id="appSigninEmail" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" placeholder="name@example.com" required></label>
+            <label class="access-field" for="appSigninPassword"><span>Password</span><span class="access-password"><input id="appSigninPassword" name="password" type="password" autocomplete="current-password" placeholder="Your password" required><button type="button" data-access-toggle="appSigninPassword" aria-label="Show password">Show</button></span></label>
+            <div class="access-form-row"><label class="access-remember"><input id="appRememberSession" type="checkbox" checked><span>Keep me signed in</span></label><button class="access-text-button" id="appResetPassword" type="button">Forgot password?</button></div>
+            <button class="access-primary" id="appSigninButton" type="submit">Sign in</button>
+            <div class="access-status" id="appSigninStatus" role="status" aria-live="polite"></div>
+          </form>
+        </section>
+
+        <p class="access-security"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="3"/><path d="M8.5 10V7.5a3.5 3.5 0 0 1 7 0V10"/></svg>Your password is handled by our secure account provider and is never visible to FMB administrators.</p>
+      </div>
+    </article>
+
+    <footer class="access-footer"><a href="https://www.francinemariebautista.com/gethelp/">Need immediate support? Open public support contacts</a><span>A mental-health initiative of With Love, FMB.</span></footer>
+  </div>
+</section>
+
+<div class="app-shell" id="appShell" hidden>
   <header class="app-header">
     <a class="brand" href="#home" data-go="home" aria-label="With Love, FMB mental-health app home">
       <img src="/assets/images/icon-transparent.png" alt="">
       <span class="brand-copy"><strong>with love, fmb</strong><span>Mental health and wellbeing</span></span>
     </a>
-    <button class="help-button" type="button" data-go="help">Get support</button>
+    <div class="app-header-actions">
+      <button class="help-button" type="button" data-go="help">Support</button>
+      <a class="account-button" id="appAccountButton" href="#profile" data-go="profile" aria-label="Open your profile"><span id="appAccountAvatar">F</span></a>
+    </div>
   </header>
 
   <main>
     <section class="screen active" id="screen-home" data-screen="home">
       <article class="hero-card card">
         <p class="kicker">A private pause</p>
-        <h1>How are you, really?</h1>
+        <h1 id="homeTitle">How are you, really?</h1>
         <p>Check in without judgment, write privately, and use a gentle grounding tool when the day feels too loud.</p>
         <div class="hero-actions">
           <button class="button primary" type="button" data-go="checkin">Start today’s check-in</button>
@@ -47,6 +137,8 @@
       <div class="quick-grid">
         <button class="quick-card" type="button" data-go="checkin"><small>Daily</small><h3>Emotional check-in</h3><p>Name what you feel and leave a private note.</p></button>
         <button class="quick-card" type="button" data-go="journal"><small>Private</small><h3>Journal</h3><p>Dated reflections stored on this device.</p></button>
+        <button class="quick-card" type="button" data-go="community"><small>Freedom Wall</small><h3>Positive stories</h3><p>Share something kind for moderator review.</p></button>
+        <button class="quick-card" type="button" data-go="profile"><small>Make it yours</small><h3>Profile and theme</h3><p>Choose a photo, fruit avatar, username, and color.</p></button>
         <button class="quick-card" type="button" data-go="tools"><small>Reset</small><h3>Grounding tools</h3><p>Breathing, 5-4-3-2-1, and a gentle word.</p></button>
         <button class="quick-card" type="button" data-go="help"><small>Public</small><h3>Support contacts</h3><p>Emergency and mental-health crisis information.</p></button>
         <button class="quick-card wide" type="button" data-go="history"><small>Your patterns</small><h3>Check-in and journal calendar</h3><p>See your private daily history and open a preview for any saved date.</p></button>
@@ -120,6 +212,84 @@
       </article>
       <div class="section-heading"><h2>Previous entries</h2><button class="button soft" type="button" data-go="history">Open calendar</button></div>
       <div class="journal-list" id="journal-list"></div>
+    </section>
+
+    <section class="screen" id="screen-community" data-screen="community">
+      <p class="kicker">The Freedom Wall</p>
+      <h1 class="page-title">Pass something good forward.</h1>
+      <p class="page-lede">Share a positive story, a small win, gratitude, or a kind thought that may help someone feel less alone. Your real name stays private. The wall shows only your username.</p>
+
+      <article class="community-compose card">
+        <div class="community-identity"><span class="profile-avatar compact" id="communityAvatar">F</span><div><small>Posting as</small><strong id="communityUsername">@member</strong></div><span class="moderation-pill">Moderator reviewed</span></div>
+        <form id="appWallForm" novalidate>
+          <label class="field" for="appWallContent"><span>What positive thought or story would you like to share?</span><textarea id="appWallContent" maxlength="2000" placeholder="A small win, a kind reminder, gratitude, or a hopeful moment..."></textarea></label>
+          <div class="community-compose-meta"><span id="appWallCount">0 / 2000</span><span>Public only after approval</span></div>
+          <label class="community-consent"><input id="appWallConsent" type="checkbox"><span>I am sharing something constructive and understand that a moderator will review it before publication.</span></label>
+          <button class="button violet community-submit" id="appWallSubmit" type="submit">Send for moderator review</button>
+          <div class="inline-status" id="appWallStatus" role="status" aria-live="polite"></div>
+        </form>
+      </article>
+
+      <div class="section-heading"><h2>Approved stories</h2><span>Positive thoughts from our community</span></div>
+      <div class="community-feed" id="appWallFeed"><div class="empty card">Loading approved stories.</div></div>
+
+      <div class="section-heading"><h2>Your submissions</h2><span>Private review status</span></div>
+      <div class="community-queue" id="appWallQueue"><div class="empty card">Your posts awaiting review will appear here.</div></div>
+      <p class="notice">The Freedom Wall is supportive community content, not professional advice or emergency help. Harmful, unsafe, discriminatory, identifying, or promotional posts will not be published.</p>
+    </section>
+
+    <section class="screen" id="screen-profile" data-screen="profile">
+      <p class="kicker">Your profile</p>
+      <h1 class="page-title">Make this space feel like you.</h1>
+      <p class="page-lede">Your real name is part of your private account identity. It cannot be edited and never appears on the public Freedom Wall. Your username is what the community sees.</p>
+
+      <article class="profile-hero card">
+        <span class="profile-avatar" id="profileAvatarPreview">F</span>
+        <div><small>Private member profile</small><h2 id="profileDisplayName">Member</h2><p id="profileDisplayUsername">@member</p></div>
+      </article>
+
+      <article class="profile-settings card">
+        <div class="profile-setting-heading"><div><p class="kicker">Avatar</p><h2>Choose how you show up</h2></div><button class="profile-text-action" id="removeProfileAvatar" type="button">Use initials</button></div>
+        <label class="photo-upload" for="appProfilePhoto"><span><strong>Add a profile photo</strong><small>JPG, PNG, or WebP up to 3 MB</small></span><span>Choose photo</span><input id="appProfilePhoto" type="file" accept="image/jpeg,image/png,image/webp"></label>
+        <div class="fruit-picker" aria-label="Fruit avatar set">
+          <button type="button" data-fruit-avatar="orange" aria-label="Use orange avatar"><span>🍊</span><small>Orange</small></button>
+          <button type="button" data-fruit-avatar="apple" aria-label="Use green apple avatar"><span>🍏</span><small>Apple</small></button>
+          <button type="button" data-fruit-avatar="grapes" aria-label="Use grapes avatar"><span>🍇</span><small>Grapes</small></button>
+          <button type="button" data-fruit-avatar="cherry" aria-label="Use cherry avatar"><span>🍒</span><small>Cherry</small></button>
+          <button type="button" data-fruit-avatar="peach" aria-label="Use peach avatar"><span>🍑</span><small>Peach</small></button>
+          <button type="button" data-fruit-avatar="lemon" aria-label="Use lemon avatar"><span>🍋</span><small>Lemon</small></button>
+          <button type="button" data-fruit-avatar="blueberry" aria-label="Use blueberry avatar"><span>🫐</span><small>Berry</small></button>
+          <button type="button" data-fruit-avatar="watermelon" aria-label="Use watermelon avatar"><span>🍉</span><small>Melon</small></button>
+        </div>
+      </article>
+
+      <form class="profile-settings card" id="appProfileForm" novalidate>
+        <div class="profile-setting-heading"><div><p class="kicker">Identity</p><h2>Your profile details</h2></div></div>
+        <label class="field" for="appProfileRealName"><span>Real name</span><input id="appProfileRealName" autocomplete="name" readonly aria-describedby="realNamePrivacy"></label>
+        <p class="profile-help" id="realNamePrivacy">Locked for account integrity and visible only inside your private profile.</p>
+        <label class="field" for="appProfileUsername"><span>Public username</span><div class="username-field"><span>@</span><input id="appProfileUsername" maxlength="24" pattern="[a-z0-9_]{3,24}" autocapitalize="none" autocomplete="username"></div></label>
+        <p class="profile-help" id="usernameCooldown">You can change your username now. After saving a new one, the next change is available in 60 days.</p>
+        <label class="field" for="appProfileBio"><span>Private profile note</span><textarea id="appProfileBio" maxlength="500" placeholder="A short note for your own profile"></textarea></label>
+        <button class="button violet profile-save" id="appProfileSave" type="submit">Save profile details</button>
+        <div class="inline-status" id="appProfileStatus" role="status" aria-live="polite"></div>
+      </form>
+
+      <article class="profile-settings card">
+        <div class="profile-setting-heading"><div><p class="kicker">Theme</p><h2>Choose your color</h2></div></div>
+        <p class="profile-help theme-intro">Pick the palette that feels most like you. Every theme keeps the same calm, accessible layout.</p>
+        <div class="theme-picker" role="radiogroup" aria-label="App color theme">
+          <button type="button" data-app-theme="violet" role="radio" aria-checked="true"><span class="theme-swatch violet"></span><span><strong>Royal violet</strong><small>Signature FMB</small></span></button>
+          <button type="button" data-app-theme="navy" role="radio" aria-checked="false"><span class="theme-swatch navy"></span><span><strong>Midnight navy</strong><small>Cool and focused</small></span></button>
+          <button type="button" data-app-theme="forest" role="radio" aria-checked="false"><span class="theme-swatch forest"></span><span><strong>Deep forest</strong><small>Grounded and calm</small></span></button>
+          <button type="button" data-app-theme="slate" role="radio" aria-checked="false"><span class="theme-swatch slate"></span><span><strong>Modern slate</strong><small>Clean and neutral</small></span></button>
+        </div>
+      </article>
+
+      <article class="profile-settings card">
+        <div class="profile-setting-heading"><div><p class="kicker">Account</p><h2>Security and control</h2></div></div>
+        <div class="profile-account-actions"><button class="button soft" id="appSendPasswordReset" type="button">Send password reset link</button><button class="button soft" type="button" data-go="privacy">Privacy and local data</button><button class="button danger" id="appSignOut" type="button">Sign out on this device</button></div>
+        <div class="inline-status" id="profileAccountStatus" role="status" aria-live="polite"></div>
+      </article>
     </section>
 
     <section class="screen" id="screen-history" data-screen="history">
@@ -210,8 +380,8 @@
 
       <article class="privacy-card card">
         <h2>Member account controls</h2>
-        <p>Account deletion, password, profile, and sign-in controls are handled through the protected member profile. Opening it leaves this focused app briefly.</p>
-        <a class="button soft" href="https://www.francinemariebautista.com/profile/">Open account controls</a>
+        <p>Change your avatar, username, profile note, and app theme without leaving this focused space.</p>
+        <button class="button soft" type="button" data-go="profile">Open profile settings</button>
       </article>
     </section>
 
@@ -237,15 +407,19 @@
   </footer>
 </div>
 
-<nav class="tabbar" aria-label="Mental-health app navigation">
-  <button class="active" type="button" data-tab="home" data-go="home"><span>⌂</span><span>Home</span></button>
-  <button type="button" data-tab="checkin" data-go="checkin"><span>✓</span><span>Check-in</span></button>
-  <button type="button" data-tab="journal" data-go="journal"><span>✎</span><span>Journal</span></button>
-  <button type="button" data-tab="history" data-go="history"><span>▦</span><span>History</span></button>
-  <button type="button" data-tab="tools" data-go="tools"><span>◌</span><span>Reset</span></button>
+<nav class="tabbar" id="appTabbar" aria-label="Mental-health app navigation" hidden>
+  <button class="active" type="button" data-tab="home" data-go="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 10.5 8-7 8 7V20h-5.5v-6h-5v6H4Z"/></svg><span>Home</span></button>
+  <button type="button" data-tab="checkin" data-go="checkin"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8.2 12.2 2.5 2.5 5.2-5.4"/></svg><span>Check-in</span></button>
+  <button type="button" data-tab="journal" data-go="journal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h10.5A1.5 1.5 0 0 1 18 5v15.5H7.5A1.5 1.5 0 0 1 6 19Z"/><path d="M9.5 8h5M9.5 12h5"/></svg><span>Journal</span></button>
+  <button type="button" data-tab="community" data-go="community"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4Z"/><path d="M8 9h8M8 12.5h5"/></svg><span>Wall</span></button>
+  <button type="button" data-tab="profile" data-go="profile"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"/></svg><span>Profile</span></button>
 </nav>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="/app/app.js?v=20260718-mental-health-rules" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="/assets/js/config.js?v=20260718-app-access-v1" defer></script>
+<script src="/assets/js/supabase-client.js?v=20260718-app-access-v1" defer></script>
+<script src="/app/access.js?v=20260718-app-access-v1" defer></script>
+<script src="/app/app.js?v=20260718-premium-access-v1" defer></script>
 </body>
 </html>

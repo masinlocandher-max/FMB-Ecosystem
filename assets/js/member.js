@@ -198,6 +198,12 @@
     if(!value)return 'Joined recently';
     return `Joined ${new Date(value).toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'})}`;
   }
+  function usernameAvailability(){
+    const changedAt=Date.parse(profile?.username_changed_at||'');
+    if(!Number.isFinite(changedAt))return {available:true,next:null};
+    const next=new Date(changedAt+60*24*60*60*1000);
+    return {available:next.getTime()<=Date.now(),next};
+  }
   function localDateKey(date=new Date()){
     const year=date.getFullYear();
     const month=String(date.getMonth()+1).padStart(2,'0');
@@ -250,13 +256,18 @@
     setAvatar($('#profilePreview'),profile.avatar_url,name);
     $('#profileName').value=name;
     $('#profileUsername').value=profile.username||window.FMB.usernameFrom(name);
+    const usernameWindow=usernameAvailability();
+    $('#profileUsername').readOnly=!usernameWindow.available;
+    $('#memberUsernameCooldown').textContent=usernameWindow.available
+      ?'You can change your public username now. After saving a new one, the next change is available in 60 days.'
+      :`Your public username can be changed again on ${usernameWindow.next.toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'})}.`;
     $('#profileEmail').value=user.email||'';
     $('#profileBio').value=profile.bio||'';
     $('#previewName').textContent=name;
     $('#previewUsername').textContent=`@${profile.username||'member'}`;
     $('#previewBio').textContent=profile.bio||'Your biography will appear here.';
     $('#joinedDate').textContent=formatDate(profile.joined_at||profile.created_at||user.created_at);
-    $('#communityAlias').value=name.slice(0,40);
+    $('#communityAlias').value=`@${profile.username||'member'}`;
     const selected=new Set(Array.isArray(profile.interests)?profile.interests:[]);
     $$('input[name="interests"]').forEach(input=>input.checked=selected.has(input.value));
     if(profile.role==='admin')$('#adminLink').hidden=false;
@@ -370,26 +381,26 @@
 
   $('#communityForm').addEventListener('submit',async event=>{
     event.preventDefault();
-    const alias=window.FMB.cleanText($('#communityAlias').value,40);
+    const alias=`@${profile?.username||'member'}`;
     const content=window.FMB.cleanText($('#communityBody').value,2000);
-    if(!alias||!content||!$('#communityConsent').checked){status('Complete the post and confirm that it will be reviewed.','error');return}
+    if(content.length<10||!$('#communityConsent').checked){status('Share a short positive story or thought and confirm that it is ready for moderator review.','error');return}
     const button=$('#communityButton');setLoading(button,true,'Sending…');
     const {error}=await client.from('freedom_wall_posts').insert({user_id:user.id,alias,content,status:'pending'});
     setLoading(button,false);
     if(error){status('The post could not be sent for review.','error');return}
     $('#communityBody').value='';$('#communityConsent').checked=false;
-    status('Your post was sent for review. It is not public yet.','success');loadPosts();
+    status('Your positive story was sent for moderator review. It is not public yet.','success');loadPosts();
   });
 
   $('#profileForm').addEventListener('submit',async event=>{
     event.preventDefault();
-    const fullName=window.FMB.cleanText($('#profileName').value,80);
     const username=String($('#profileUsername').value||'').trim().toLowerCase().replace(/[^a-z0-9_]/g,'').slice(0,24);
     const bio=window.FMB.cleanText($('#profileBio').value,500);
     const interests=$$('input[name="interests"]:checked');
     const interestValues=[...interests].map(input=>input.value).slice(0,12);
-    if(fullName.length<2){status('Enter your full name.','error');return}
     if(username.length<3){status('Use a username with at least three letters, numbers, or underscores.','error');return}
+    const usernameChanged=username!==profile?.username;
+    if(usernameChanged&&!usernameAvailability().available){status('Your username is still inside its 60-day change window.','error');return}
     const button=$('#saveProfileButton');setLoading(button,true,'Saving…');
     let avatarUrl=profile?.avatar_url||null;
     const file=$('#profileAvatar').files[0];
@@ -402,13 +413,14 @@
       if(uploadError){setLoading(button,false);status('The profile photo could not be uploaded.','error');return}
       avatarUrl=client.storage.from('avatars').getPublicUrl(path).data.publicUrl+`?v=${Date.now()}`;
     }
-    const {data,error}=await client.from('profiles').update({full_name:fullName,username,bio:bio||null,interests:interestValues,avatar_url:avatarUrl,updated_at:new Date().toISOString()}).eq('id',user.id).select('*').single();
+    const {data,error}=await client.from('profiles').update({username,bio:bio||null,interests:interestValues,avatar_url:avatarUrl,updated_at:new Date().toISOString()}).eq('id',user.id).select('*').single();
     setLoading(button,false);
     if(error){
-      status(error.code==='23505'?'That username is already in use. Choose another one.':'Your profile could not be updated.','error');return;
+      const message=error.code==='23505'?'That username is already in use. Choose another one.':/60 days|username change/i.test(error.message||'')?error.message:'Your profile could not be updated.';
+      status(message,'error');return;
     }
     profile=data;
-    await client.auth.updateUser({data:{full_name:fullName,display_name:fullName,username}});
+    if(usernameChanged)await client.auth.updateUser({data:{username}});
     $('#profileAvatar').value='';
     status('Your profile was updated.','success');loadProfile();
   });

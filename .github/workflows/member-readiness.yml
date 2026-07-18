@@ -33,6 +33,8 @@ jobs:
           node --check assets/js/admin-login.js
           node --check assets/js/admin-activate.js
           node --check assets/js/live-hotfix.js
+          node --check app/access.js
+          node --check app/app.js
           node --check scripts/check-member-readiness.mjs
           node --check scripts/check-pwa.mjs
       - name: Verify membership launch files
@@ -45,12 +47,14 @@ jobs:
           test -f supabase/schema.sql
           test -f supabase/migrations/20260712_membership_readiness.sql
           test -f supabase/migrations/20260714_initial_admin_owner_claim.sql
+          test -f supabase/migrations/20260718142219_complete_member_app_profile.sql
           grep -q "get_membership_status" assets/js/registration-readiness.js
           grep -q "admin_set_membership_open" assets/js/membership-admin.js
           grep -q "claim_initial_admin" assets/js/admin-activate.js
           grep -Eq "signInWithOtp|/auth/v1/otp" assets/js/admin-login.js
           grep -q "registration_open boolean not null default false" supabase/migrations/20260712_membership_readiness.sql
           grep -q "Owner email required" supabase/migrations/20260714_initial_admin_owner_claim.sql
+          grep -q "interval '60 days'" supabase/migrations/20260718142219_complete_member_app_profile.sql
           node scripts/check-pwa.mjs
           python3 scripts/quality_check.py
 

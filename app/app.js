@@ -46,14 +46,6 @@
       <p class="notice">Keep what helps and leave what does not. For immediate danger or crisis, use the Support section instead of relying on a reading guide.</p>
     </section>`);
 
-    const nav=document.querySelector('.tabbar');
-    if(nav){
-      const historyTab=nav.querySelector('[data-tab="history"]');
-      const toolsTab=nav.querySelector('[data-tab="tools"]');
-      if(historyTab)historyTab.remove();
-      if(toolsTab)toolsTab.remove();
-      nav.insertAdjacentHTML('beforeend','<button type="button" data-tab="listen" data-go="listen"><span>♪</span><span>Listen</span></button><button type="button" data-tab="read" data-go="read"><span>▤</span><span>Read</span></button>');
-    }
   }
 
   installListenReadUI();
@@ -102,6 +94,10 @@
   let currentPlaylistIndex=0;
   let currentTrackIndex=0;
   let musicReady=false;
+  let memberSession=window.FMB_APP_SESSION||null;
+  let memberProfile=memberSession?.profile||null;
+  let communityLoaded=false;
+  const FRUIT_AVATARS={orange:'🍊',apple:'🍏',grapes:'🍇',cherry:'🍒',peach:'🍑',lemon:'🍋',blueberry:'🫐',watermelon:'🍉'};
 
   function read(key){
     try{return JSON.parse(localStorage.getItem(key)||'[]')}
@@ -161,6 +157,179 @@
     toast.timer=setTimeout(()=>el.classList.remove('visible'),2600);
   }
 
+  function memberStatus(selector,message,type=''){
+    const element=$(selector);
+    if(!element)return;
+    element.textContent=message;
+    element.dataset.type=type;
+    element.classList.toggle('visible',Boolean(message));
+  }
+
+  function setMemberLoading(button,loading,label){
+    if(!button)return;
+    button.disabled=loading;
+    button.classList.toggle('is-loading',loading);
+    if(loading){
+      button.dataset.original=button.textContent;
+      button.textContent=label;
+    }else if(button.dataset.original){
+      button.textContent=button.dataset.original;
+      delete button.dataset.original;
+    }
+  }
+
+  function profileName(){
+    return memberProfile?.full_name||memberProfile?.display_name||memberSession?.user?.user_metadata?.full_name||memberSession?.user?.email?.split('@')[0]||'Member';
+  }
+
+  function profileUsername(){
+    return String(memberProfile?.username||'member').replace(/^@/,'');
+  }
+
+  function initials(value){
+    return String(value||'F').trim().split(/\s+/).slice(0,2).map(part=>part[0]?.toUpperCase()).join('')||'F';
+  }
+
+  function setVisualAvatar(element,profile=memberProfile,name=profileName()){
+    if(!element)return;
+    const fruit=FRUIT_AVATARS[profile?.avatar_preset]||'';
+    const photo=fruit?'':profile?.avatar_url;
+    element.textContent=fruit||(!photo?initials(name):'');
+    element.style.backgroundImage=photo?`url("${String(photo).replace(/["\\]/g,'')}")`:'none';
+    element.classList.toggle('has-photo',Boolean(photo));
+    element.classList.toggle('has-fruit',Boolean(fruit));
+  }
+
+  function usernameAvailability(){
+    const changedAt=Date.parse(memberProfile?.username_changed_at||'');
+    if(!Number.isFinite(changedAt))return {available:true,next:null};
+    const next=new Date(changedAt+60*24*60*60*1000);
+    return {available:next.getTime()<=Date.now(),next};
+  }
+
+  function formatProfileDate(value){
+    return new Intl.DateTimeFormat('en-PH',{month:'long',day:'numeric',year:'numeric'}).format(value);
+  }
+
+  function renderMemberProfile(){
+    if(!memberSession)return;
+    const name=profileName();
+    const username=profileUsername();
+    setVisualAvatar($('#profileAvatarPreview'));
+    setVisualAvatar($('#communityAvatar'));
+    $('#profileDisplayName').textContent=name;
+    $('#profileDisplayUsername').textContent=`@${username}`;
+    $('#communityUsername').textContent=`@${username}`;
+    $('#appProfileRealName').value=name;
+    $('#appProfileUsername').value=username;
+    $('#appProfileBio').value=memberProfile?.bio||'';
+
+    const availability=usernameAvailability();
+    const usernameInput=$('#appProfileUsername');
+    usernameInput.readOnly=!availability.available;
+    usernameInput.setAttribute('aria-readonly',String(!availability.available));
+    $('#usernameCooldown').textContent=availability.available
+      ?'You can change your username now. After saving a new one, the next change is available in 60 days.'
+      :`Your username is locked until ${formatProfileDate(availability.next)}. Your bio, avatar, and theme can still be changed anytime.`;
+
+    $$('[data-fruit-avatar]').forEach(button=>{
+      const selected=button.dataset.fruitAvatar===memberProfile?.avatar_preset;
+      button.classList.toggle('selected',selected);
+      button.setAttribute('aria-pressed',String(selected));
+    });
+    const theme=memberProfile?.app_theme||document.body.dataset.theme||'violet';
+    $$('[data-app-theme]').forEach(button=>{
+      const selected=button.dataset.appTheme===theme;
+      button.classList.toggle('selected',selected);
+      button.setAttribute('aria-checked',String(selected));
+    });
+  }
+
+  function applyMemberProfile(nextProfile){
+    memberProfile=window.FMB_APP_ACCESS?.applyProfile(nextProfile)||{...(memberProfile||{}),...(nextProfile||{})};
+    if(memberSession)memberSession.profile=memberProfile;
+    renderMemberProfile();
+    return memberProfile;
+  }
+
+  function communityDate(value){
+    return new Intl.DateTimeFormat('en-PH',{month:'short',day:'numeric',year:'numeric'}).format(new Date(value));
+  }
+
+  function communityStateLabel(value){
+    return ({pending:'Awaiting moderator review',changes_requested:'Changes requested',rejected:'Not approved',published:'Published'})[value]||'In review';
+  }
+
+  function renderCommunity(rows){
+    const feed=$('#appWallFeed');
+    const queue=$('#appWallQueue');
+    const userId=memberSession?.user?.id;
+    const published=rows.filter(row=>row.status==='published');
+    const own=rows.filter(row=>row.user_id===userId&&row.status!=='published');
+
+    feed.innerHTML=published.length?published.map(row=>{
+      const reportSubject=encodeURIComponent(`Freedom Wall report: ${row.id}`);
+      return `<article class="wall-post card"><header><span class="wall-author">${escapeHtml(String(row.alias||'@member').replace(/^([^@])/,'@$1'))}</span><time datetime="${escapeHtml(row.published_at||row.created_at)}">${escapeHtml(communityDate(row.published_at||row.created_at))}</time></header><p>${escapeHtml(row.content)}</p><footer><span>Moderator approved</span><a href="mailto:withlovefmb@gmail.com?subject=${reportSubject}">Report concern</a></footer></article>`;
+    }).join(''):'<div class="empty card"><strong>The wall is ready for its first approved story.</strong><p>Share a small win or kind thought above. It will appear here after moderator review.</p></div>';
+
+    queue.innerHTML=own.length?own.map(row=>`<article class="wall-queue-item card" data-wall-id="${escapeHtml(row.id)}"><div><span class="review-state ${escapeHtml(row.status)}">${escapeHtml(communityStateLabel(row.status))}</span><time datetime="${escapeHtml(row.created_at)}">${escapeHtml(communityDate(row.created_at))}</time></div><p>${escapeHtml(row.content)}</p>${row.moderation_note?`<small>Moderator note: ${escapeHtml(row.moderation_note)}</small>`:''}<button type="button" data-delete-wall="${escapeHtml(row.id)}">Delete submission</button></article>`).join(''):'<div class="empty card">You have no posts waiting for review.</div>';
+
+    $$('[data-delete-wall]').forEach(button=>button.addEventListener('click',async()=>{
+      if(!memberSession?.client||!window.confirm('Delete this unpublished Freedom Wall submission?'))return;
+      button.disabled=true;
+      const {error}=await memberSession.client.from('freedom_wall_posts').delete().eq('id',button.dataset.deleteWall).eq('user_id',userId);
+      if(error){button.disabled=false;memberStatus('#appWallStatus','The submission could not be deleted.','error');return}
+      memberStatus('#appWallStatus','The unpublished submission was deleted.','success');
+      communityLoaded=false;
+      loadCommunity();
+    }));
+  }
+
+  async function loadCommunity({force=false}={}){
+    if(!memberSession?.client){
+      $('#appWallFeed').innerHTML='<div class="empty card">Sign in to open the Freedom Wall.</div>';
+      return;
+    }
+    if(communityLoaded&&!force)return;
+    communityLoaded=true;
+    const {data,error}=await memberSession.client.from('freedom_wall_posts').select('id,user_id,alias,content,status,moderation_note,created_at,published_at').order('created_at',{ascending:false}).limit(80);
+    if(error){
+      communityLoaded=false;
+      $('#appWallFeed').innerHTML='<div class="empty card">The Freedom Wall could not be loaded right now. Pull down or return to this tab to try again.</div>';
+      return;
+    }
+    renderCommunity(data||[]);
+  }
+
+  async function updateMemberProfile(fields,successMessage){
+    if(!memberSession?.client||!memberSession?.user)return null;
+    const {data,error}=await memberSession.client.from('profiles').update({...fields,updated_at:new Date().toISOString()}).eq('id',memberSession.user.id).select('*').single();
+    if(error){
+      const message=error.code==='23505'
+        ?'That username is already in use. Try another one.'
+        :/60 days|username change/i.test(error.message||'')
+          ?error.message
+          :'Your profile could not be updated. Please try again.';
+      memberStatus('#appProfileStatus',message,'error');
+      return null;
+    }
+    applyMemberProfile(data);
+    memberStatus('#appProfileStatus',successMessage,'success');
+    return data;
+  }
+
+  function initializeMemberExperience(detail){
+    if(!detail?.client||!detail?.user)return;
+    memberSession=detail;
+    memberProfile=detail.profile||{};
+    communityLoaded=false;
+    renderMemberProfile();
+    loadCommunity({force:true});
+  }
+
+  window.addEventListener('fmb:app-auth-ready',event=>initializeMemberExperience(event.detail));
+  if(memberSession)queueMicrotask(()=>initializeMemberExperience(memberSession));
+
   function updatePrivacySummary(){
     $('#privacy-checkin-count').textContent=String(read(CHECKIN_KEY).length);
     $('#privacy-journal-count').textContent=String(read(JOURNAL_KEY).length);
@@ -172,15 +341,19 @@
 
     screens.forEach(screen=>screen.classList.toggle('active',screen===target));
     tabs.forEach(tab=>tab.classList.toggle('active',tab.dataset.tab===name));
+    target.classList.remove('screen-entering');
+    requestAnimationFrame(()=>target.classList.add('screen-entering'));
 
     if(updateHash)history.replaceState(null,'',`#${name}`);
-    window.scrollTo({top:0,behavior:'smooth'});
+    window.scrollTo({top:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
 
     if(name==='home')renderToday();
     if(name==='journal')renderJournal();
     if(name==='history')renderCalendar();
     if(name==='listen')initListen();
     if(name==='privacy')updatePrivacySummary();
+    if(name==='community')loadCommunity({force:true});
+    if(name==='profile')renderMemberProfile();
   }
 
   $$('[data-go]').forEach(control=>control.addEventListener('click',event=>{
@@ -189,6 +362,116 @@
   }));
 
   window.addEventListener('hashchange',()=>go(location.hash.slice(1)||'home',{updateHash:false}));
+
+  $('#appWallContent').addEventListener('input',event=>{
+    $('#appWallCount').textContent=`${event.currentTarget.value.length} / 2000`;
+  });
+
+  $('#appWallForm').addEventListener('submit',async event=>{
+    event.preventDefault();
+    if(!memberSession?.client||!memberSession?.user){memberStatus('#appWallStatus','Sign in before sending a story.','error');return}
+    const content=window.FMB?.cleanText($('#appWallContent').value,2000)||'';
+    if(content.length<10){memberStatus('#appWallStatus','Write at least a short positive thought or story before sending.','error');$('#appWallContent').focus();return}
+    if(!$('#appWallConsent').checked){memberStatus('#appWallStatus','Confirm that the story is constructive and ready for moderator review.','error');return}
+    const button=$('#appWallSubmit');
+    setMemberLoading(button,true,'Sending for review');
+    const {error}=await memberSession.client.from('freedom_wall_posts').insert({
+      user_id:memberSession.user.id,
+      alias:`@${profileUsername()}`,
+      content,
+      status:'pending'
+    });
+    setMemberLoading(button,false);
+    if(error){memberStatus('#appWallStatus','The story could not be sent right now. Please try again.','error');return}
+    $('#appWallContent').value='';
+    $('#appWallConsent').checked=false;
+    $('#appWallCount').textContent='0 / 2000';
+    memberStatus('#appWallStatus','Sent with care. A moderator will review it before anything becomes public.','success');
+    communityLoaded=false;
+    loadCommunity({force:true});
+  });
+
+  $('#appProfileForm').addEventListener('submit',async event=>{
+    event.preventDefault();
+    if(!memberSession?.client||!memberSession?.user)return;
+    const username=String($('#appProfileUsername').value||'').trim().toLowerCase().replace(/[^a-z0-9_]/g,'').slice(0,24);
+    const bio=window.FMB?.cleanText($('#appProfileBio').value,500)||'';
+    if(!/^[a-z0-9_]{3,24}$/.test(username)){memberStatus('#appProfileStatus','Use 3 to 24 lowercase letters, numbers, or underscores for your username.','error');$('#appProfileUsername').focus();return}
+    const changed=username!==profileUsername();
+    if(changed&&!usernameAvailability().available){memberStatus('#appProfileStatus','Your username is still inside its 60-day change window. Your other profile choices can still be updated.','error');return}
+    const button=$('#appProfileSave');
+    setMemberLoading(button,true,'Saving profile');
+    const next=await updateMemberProfile({bio:bio||null,...(changed?{username}:{})},changed?'Profile saved. Your new username is now locked for 60 days.':'Your profile details were saved.');
+    setMemberLoading(button,false);
+    if(next&&changed){
+      await memberSession.client.auth.updateUser({data:{username}}).catch(()=>{});
+      communityLoaded=false;
+      loadCommunity({force:true});
+    }
+  });
+
+  $('#appProfilePhoto').addEventListener('change',async event=>{
+    const file=event.currentTarget.files?.[0];
+    if(!file||!memberSession?.client||!memberSession?.user)return;
+    const allowed=['image/jpeg','image/png','image/webp'];
+    if(!allowed.includes(file.type)||file.size>3*1024*1024){
+      event.currentTarget.value='';
+      memberStatus('#appProfileStatus','Choose a JPG, PNG, or WebP image no larger than 3 MB.','error');
+      return;
+    }
+    memberStatus('#appProfileStatus','Uploading your profile photo.','');
+    const extension={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'}[file.type];
+    const path=`${memberSession.user.id}/avatar.${extension}`;
+    const {error:uploadError}=await memberSession.client.storage.from('avatars').upload(path,file,{upsert:true,contentType:file.type,cacheControl:'3600'});
+    if(uploadError){event.currentTarget.value='';memberStatus('#appProfileStatus','The profile photo could not be uploaded.','error');return}
+    const avatarUrl=memberSession.client.storage.from('avatars').getPublicUrl(path).data.publicUrl+`?v=${Date.now()}`;
+    await updateMemberProfile({avatar_url:avatarUrl,avatar_preset:null},'Your profile photo is ready.');
+    event.currentTarget.value='';
+  });
+
+  $$('[data-fruit-avatar]').forEach(button=>button.addEventListener('click',async()=>{
+    if(!memberSession?.client)return;
+    const selected=button.dataset.fruitAvatar;
+    if(!FRUIT_AVATARS[selected])return;
+    $$('[data-fruit-avatar]').forEach(item=>item.disabled=true);
+    await updateMemberProfile({avatar_preset:selected},`${button.querySelector('small')?.textContent||'Fruit'} avatar selected.`);
+    $$('[data-fruit-avatar]').forEach(item=>item.disabled=false);
+  }));
+
+  $('#removeProfileAvatar').addEventListener('click',async event=>{
+    if(!memberSession?.client)return;
+    setMemberLoading(event.currentTarget,true,'Updating');
+    await updateMemberProfile({avatar_url:null,avatar_preset:null},'Your initials are now your avatar.');
+    setMemberLoading(event.currentTarget,false);
+  });
+
+  $$('[data-app-theme]').forEach(button=>button.addEventListener('click',async()=>{
+    if(!memberSession?.client)return;
+    const previous=memberProfile?.app_theme||'violet';
+    const selected=button.dataset.appTheme;
+    window.FMB_APP_ACCESS?.applyTheme(selected);
+    $$('[data-app-theme]').forEach(item=>{
+      const active=item===button;
+      item.classList.toggle('selected',active);
+      item.setAttribute('aria-checked',String(active));
+      item.disabled=true;
+    });
+    const next=await updateMemberProfile({app_theme:selected},`${button.querySelector('strong')?.textContent||'New'} theme applied.`);
+    $$('[data-app-theme]').forEach(item=>item.disabled=false);
+    if(!next)window.FMB_APP_ACCESS?.applyTheme(previous);
+  }));
+
+  $('#appSignOut').addEventListener('click',()=>window.FMB_APP_ACCESS?.signOut());
+
+  $('#appSendPasswordReset').addEventListener('click',async event=>{
+    if(!memberSession?.client||!memberSession?.user?.email)return;
+    const button=event.currentTarget;
+    setMemberLoading(button,true,'Requesting link');
+    const base=window.FMB?.config?.SITE_URL||'https://www.francinemariebautista.com/';
+    const {error}=await memberSession.client.auth.resetPasswordForEmail(memberSession.user.email,{redirectTo:new URL('reset-password.html',base).href});
+    setMemberLoading(button,false);
+    memberStatus('#profileAccountStatus',error?'The reset link could not be requested right now. Please try again later.':'A secure password-reset link is on the way to your private account email.',error?'error':'success');
+  });
 
   const moodButtons=$$('.mood-option');
   moodButtons.forEach(button=>button.addEventListener('click',()=>{
@@ -654,7 +937,7 @@
     breathing=false;
   });
 
-  const initial=['home','checkin','journal','listen','read','history','tools','privacy','help'].includes(location.hash.slice(1))
+  const initial=['home','checkin','journal','listen','read','community','profile','history','tools','privacy','help'].includes(location.hash.slice(1))
     ?location.hash.slice(1)
     :'home';
 

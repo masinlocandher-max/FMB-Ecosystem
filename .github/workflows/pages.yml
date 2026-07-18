@@ -57,6 +57,7 @@ jobs:
           test -f _site/app/index.html
           test -f _site/app/app.css
           test -f _site/app/app.js
+          test -f _site/app/access.js
           test -f _site/app/manifest.webmanifest
           test -f _site/communityengagements/index.html
           test -f _site/aboutfmb/index.html
@@ -102,6 +103,8 @@ jobs:
           grep -q 'Create profile' _site/auth.html
           grep -q 'Four collections. Thirty-one tracks.' _site/music/index.html
           grep -q 'How are you, really?' _site/app/index.html
+          grep -q 'id="appSignupForm"' _site/app/index.html
+          grep -q 'signInWithPassword' _site/app/access.js
           grep -q "backgroundSize='contain'" _site/assets/js/music.js
           grep -q 'Founder, strategist, creative director, advocate' _site/aboutfmb/index.html
           grep -q 'Community Engagements - AMDG' _site/communityengagements/index.html
