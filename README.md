@@ -19,6 +19,12 @@ The website does not provide emergency, medical, psychological, or legal service
 
 The project remains an enhanced version of the existing static GitHub Pages codebase. It has not been replaced with a new framework or template.
 
+### Dedicated mental-health app
+
+`app.francinemariebautista.com` is a separate mental-health and emotional-wellbeing environment under With Love, FMB. It is not the mobile version of the public website and must not reproduce the public bulletin, full website navigation, portfolio, FMB&CO. ecosystem, SENZ or Cognita company content, business packages, or unrelated announcements.
+
+Every app feature must directly support mental health, emotional wellbeing, safe reflection, or access to support. The authoritative scope, privacy, safety, crisis-handling, membership, installation, navigation, and experience rules are documented in `docs/app-development-instructions.md`.
+
 ### Public website
 
 - branded landing page and approved founder portrait
@@ -31,7 +37,7 @@ The project remains an enhanced version of the existing static GitHub Pages code
 - volunteer application form
 - contact form
 - legal and privacy pages
-- responsive app-like mobile navigation
+- responsive website navigation
 - web manifest and service worker foundation
 
 ### Verified member tools
@@ -119,6 +125,8 @@ See `SUPABASE_SETUP.md` for the detailed process.
 ## Main files
 
 - `index.html` – public landing page and website directory
+- `app/index.html` – dedicated mental-health app interface
+- `docs/app-development-instructions.md` – authoritative app scope, safety, privacy, and experience rules
 - `ebooks/index.html` – dedicated reading-library landing page
 - `music/index.html` – app-like music landing page and player
 - `communityengagements/index.html` – Community Engagements - AMDG
