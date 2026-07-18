@@ -82,6 +82,7 @@ body.fco-page{margin:0;color:var(--fco-ink);background:var(--fco-pearl);font-fam
 .fco-founder-nameplate-copy{display:flex;flex-direction:column;align-items:flex-start}
 .fco-founder-initials{color:var(--fco-gold-bright);font-size:.76rem;font-weight:780;letter-spacing:.28em;line-height:1;text-transform:uppercase}
 .fco-founder-signature{margin:8px 0 0;color:#fff8e9;font-family:"Great Vibes","Snell Roundhand","Apple Chancery",cursive;font-size:clamp(2rem,3vw,2.45rem);font-weight:400;letter-spacing:.005em;line-height:1.08;text-shadow:0 7px 22px rgba(0,0,0,.28);white-space:nowrap}
+.fco-founder-title{margin-top:7px;color:rgba(255,255,255,.62);font-size:.56rem;font-weight:720;letter-spacing:.18em;line-height:1;text-transform:uppercase}
 
 .fco-section{position:relative;padding:clamp(76px,8.5vw,116px) 0;background:var(--fco-pearl)}
 .fco-section.white{background:#fff}
@@ -271,6 +272,7 @@ body.fco-page{margin:0;color:var(--fco-ink);background:var(--fco-pearl);font-fam
   .fco-founder-nameplate-copy{grid-column:2;min-width:0}
   .fco-founder-initials{font-size:.66rem;letter-spacing:.25em}
   .fco-founder-signature{margin-top:4px;font-size:clamp(1.75rem,8vw,2.08rem)}
+  .fco-founder-title{margin-top:5px;font-size:.5rem}
   .fco-actions{gap:10px}
   .fco-btn{width:100%;min-height:52px}
   .fco-section{padding:72px 0}

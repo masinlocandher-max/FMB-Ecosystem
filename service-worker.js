@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260718-newsroom-editorial-v10';
+const CACHE_NAME='fmb-app-shell-20260718-about-corporate-newsroom-v11';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -66,6 +66,7 @@ const APP_SHELL=[
   '/assets/css/organized-pages.css',
   '/assets/css/fmb-polish.css',
   '/assets/css/fmbandco-brand.css',
+  '/assets/css/aboutfmb-corporate.css',
   '/assets/css/fmb-content.css',
   '/assets/css/fmb-mobile-clean.css',
   '/assets/css/fmb-mobile-luxury.css',
@@ -88,6 +89,7 @@ const APP_SHELL=[
   '/assets/js/global-music.js',
   '/assets/js/az-assistant.js',
   '/assets/js/fmbandco-motion.js',
+  '/assets/js/aboutfmb-corporate.js',
   '/assets/js/news-channel.js',
   '/assets/fonts/great-vibes-latin-400-normal.woff2',
   '/assets/data/music-library.json',

@@ -79,6 +79,7 @@ jobs:
           test -f _site/assets/css/organized-pages.css
           test -f _site/assets/css/fmb-polish.css
           test -f _site/assets/css/fmbandco-brand.css
+          test -f _site/assets/css/aboutfmb-corporate.css
           test -f _site/assets/css/fmb-content.css
           test -f _site/assets/css/fmb-mobile-clean.css
           test -f _site/assets/css/news-channel.css
@@ -96,6 +97,7 @@ jobs:
           test -f _site/assets/fonts/great-vibes-latin-400-normal.woff2
           test -f _site/assets/fonts/Great-Vibes-OFL.txt
           test -f _site/assets/js/fmbandco-motion.js
+          test -f _site/assets/js/aboutfmb-corporate.js
           test -f _site/assets/images/news/cleopatra-barrera-zambales-ocean-feature.jpeg
           test -f _site/assets/images/news/sara-duterte-impeachment.webp
           test -f _site/assets/images/news/pax-silica-briefing.png
@@ -118,7 +120,11 @@ jobs:
           grep -q 'beforeinstallprompt' _site/app/install/install.js
           grep -q 'signInWithPassword' _site/app/access.js
           grep -q "backgroundSize='contain'" _site/assets/js/music.js
-          grep -q 'Founder, strategist, creative director, advocate' _site/aboutfmb/index.html
+          grep -q 'Founder &amp; CEO' _site/aboutfmb/index.html
+          grep -q 'aboutfmb-corporate.css?v=20260718-about-corporate-v1' _site/aboutfmb/index.html
+          grep -q 'aboutfmb-corporate.js?v=20260718-about-corporate-v1' _site/aboutfmb/index.html
+          grep -q 'francine-founder-hero-923.webp' _site/aboutfmb/index.html
+          grep -q 'id="workCalendarCard"' _site/aboutfmb/index.html
           grep -q 'Community Engagements - AMDG' _site/communityengagements/index.html
           grep -q 'Built to shape ideas into meaningful progress' '_site/fmb&co/index.html'
           grep -q 'SENZ Strategic Communications' '_site/fmb&co/senz/index.html'
@@ -128,6 +134,8 @@ jobs:
           grep -q '@keyframes fco-portrait-float' _site/assets/css/fmbandco-brand.css
           grep -q 'francine-founder-hero-923.webp' '_site/fmb&co/index.html'
           grep -q 'fco-founder-signature' '_site/fmb&co/index.html'
+          grep -q 'fco-founder-title' '_site/fmb&co/index.html'
+          grep -q 'Founder &amp; CEO' '_site/fmb&co/index.html'
           grep -q 'Francine Marie Bautista' '_site/fmb&co/index.html'
           grep -q 'great-vibes-latin-400-normal.woff2' '_site/fmb&co/index.html'
           grep -q '@font-face{font-family:"Great Vibes"' _site/assets/css/fmbandco-brand.css
