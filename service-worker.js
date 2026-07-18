@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260718-app-install-promotion-v9-fmbandco-signature-font';
+const CACHE_NAME='fmb-app-shell-20260718-newsroom-editorial-v10';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -77,6 +77,7 @@ const APP_SHELL=[
   '/assets/css/az-assistant.css',
   '/assets/css/volunteer.css',
   '/assets/css/music-ui.css',
+  '/assets/css/news-channel.css',
   '/assets/js/site.js',
   '/assets/js/config.js',
   '/assets/js/supabase-client.js',
@@ -87,6 +88,7 @@ const APP_SHELL=[
   '/assets/js/global-music.js',
   '/assets/js/az-assistant.js',
   '/assets/js/fmbandco-motion.js',
+  '/assets/js/news-channel.js',
   '/assets/fonts/great-vibes-latin-400-normal.woff2',
   '/assets/data/music-library.json',
   '/assets/images/music/fmb-calm-official-album-cover.jpg',
