@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260718-fmbandco-brand-v1';
+const CACHE_NAME='fmb-app-shell-20260718-loader-fix-v1';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
