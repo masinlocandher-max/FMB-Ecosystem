@@ -6,11 +6,13 @@ This directory contains the locked transparent FMB&CO. primary mark and its web-
 
 - Source: `fmbandco-primary-transparent.png`
 - Web export: `fmbandco-primary-clean.png`
+- Reversed transparent export: `fmbandco-primary-reversed.png`
+- Approved gold ampersand: `fmbandco-ampersand-gold.png`
 - Single custom ampersand only
 - Tagline: `SHAPING WHAT COMES NEXT.`
 - Preserve the mark's silhouette, proportions, spacing, wording, and gold detail
 
-The clean web export removes only low-alpha background residue and excess transparent canvas. It does not redraw, recolor, reshape, or replace the approved typography or ampersand.
+The clean web export removes only low-alpha background residue and excess transparent canvas. The reversed export changes only the dark letterforms to pearl for use on corporate purple surfaces, while preserving the gold ampersand and tagline. The standalone ampersand is cropped from the approved master mark. None of these assets redraw, reshape, or replace the approved typography or ampersand.
 
 ## FMB&CO. palette
 

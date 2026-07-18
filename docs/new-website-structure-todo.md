@@ -75,6 +75,8 @@ Implementation checkpoint:
 - [x] Establish `/fmb&co/` as the canonical standalone corporate route.
 - [x] Apply the Royal Navy Purple, champagne gold, pearl, and Apple-style system-interface treatment.
 - [x] Add cleaned transparent FMB&CO., SENZ, and Cognita web exports without redrawing or recoloring the approved marks.
+- [x] Use the exact approved FMB&CO. ampersand for decorative marks and a transparent reversed logo on dark corporate surfaces.
+- [x] Add restrained homepage motion with reduced-motion support and an iPhone-style safe-area mobile dock.
 - [x] Keep SENZ at `/fmb&co/senz/` and Cognita at `/fmb&co/cognita/`.
 - [x] Route consultation and founder calls to the existing About FMB and booking-calendar destinations.
 
