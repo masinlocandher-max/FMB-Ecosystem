@@ -19,7 +19,7 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body.fco-page{margin:0;color:var(--fco-ink);background:var(--fco-ivory);font-family:Montserrat,"Segoe UI",Arial,sans-serif;-webkit-font-smoothing:antialiased}
-.fco-page img{display:block;max-width:100%}
+.fco-page img{display:block;max-width:100%;height:auto}
 .fco-page a{color:inherit}
 .fco-page h1,.fco-page h2,.fco-page h3,.fco-page p{margin-top:0}
 .fco-page h1,.fco-page h2,.fco-page h3{font-family:Cinzel,Georgia,"Times New Roman",serif}
