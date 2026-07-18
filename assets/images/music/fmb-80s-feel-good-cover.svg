@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1400" role="img" aria-labelledby="title desc">
+  <title id="title">80s Feel Good by With love, FMB</title>
+  <desc id="desc">A polished neon album cover with violet, electric blue, magenta and cyan geometry over a dark night background.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#100720"/>
+      <stop offset="0.52" stop-color="#24104c"/>
+      <stop offset="1" stop-color="#111b48"/>
+    </linearGradient>
+    <linearGradient id="sun" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff75df"/>
+      <stop offset="0.5" stop-color="#db4ef0"/>
+      <stop offset="1" stop-color="#7a52ff"/>
+    </linearGradient>
+    <linearGradient id="type" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#74f9ff"/>
+      <stop offset="0.5" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#ff82e8"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="13" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="sunClip"><circle cx="700" cy="635" r="300"/></clipPath>
+  </defs>
+  <rect width="1400" height="1400" rx="72" fill="url(#bg)"/>
+  <g opacity="0.55" stroke="#55e8ff" stroke-width="2">
+    <path d="M0 1080H1400"/>
+    <path d="M0 1140H1400"/>
+    <path d="M0 1200H1400"/>
+    <path d="M0 1260H1400"/>
+    <path d="M0 1320H1400"/>
+    <path d="M700 1040L420 1400"/>
+    <path d="M700 1040L180 1400"/>
+    <path d="M700 1040L-60 1400"/>
+    <path d="M700 1040L980 1400"/>
+    <path d="M700 1040L1220 1400"/>
+    <path d="M700 1040L1460 1400"/>
+  </g>
+  <circle cx="700" cy="635" r="300" fill="url(#sun)" filter="url(#glow)" opacity="0.95"/>
+  <g clip-path="url(#sunClip)" fill="#18103c" opacity="0.72">
+    <rect x="360" y="510" width="680" height="22"/>
+    <rect x="360" y="570" width="680" height="26"/>
+    <rect x="360" y="640" width="680" height="32"/>
+    <rect x="360" y="720" width="680" height="40"/>
+    <rect x="360" y="810" width="680" height="54"/>
+  </g>
+  <g fill="none" stroke-linejoin="round" filter="url(#glow)">
+    <path d="M185 350L355 175L520 350Z" stroke="#61f3ff" stroke-width="10"/>
+    <path d="M880 280L1055 120L1215 300L1040 455Z" stroke="#ff70df" stroke-width="10"/>
+    <circle cx="1165" cy="650" r="98" stroke="#61f3ff" stroke-width="10"/>
+    <path d="M185 800L335 650L485 800L335 950Z" stroke="#ff70df" stroke-width="10"/>
+  </g>
+  <text x="700" y="150" text-anchor="middle" fill="#d7fbff" font-family="Arial, Helvetica, sans-serif" font-size="31" font-weight="700" letter-spacing="11">WITH LOVE, FMB MUSIC</text>
+  <text x="700" y="575" text-anchor="middle" fill="url(#type)" font-family="Arial Black, Arial, Helvetica, sans-serif" font-size="300" font-style="italic" font-weight="900" letter-spacing="-28" filter="url(#glow)">80s</text>
+  <text x="700" y="990" text-anchor="middle" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="120" font-weight="800" letter-spacing="18">FEEL GOOD</text>
+  <text x="700" y="1060" text-anchor="middle" fill="#9befff" font-family="Georgia, 'Times New Roman', serif" font-size="38" font-style="italic" letter-spacing="2">bright synths • bold movement • optimistic energy</text>
+  <rect x="34" y="34" width="1332" height="1332" rx="48" fill="none" stroke="#6df5ff" stroke-opacity="0.58" stroke-width="3"/>
+</svg>
