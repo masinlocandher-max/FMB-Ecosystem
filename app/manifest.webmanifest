@@ -1,12 +1,12 @@
 {
   "name": "With love, FMB Mental Health",
   "short_name": "With love, FMB",
-  "description": "A focused mental health and emotional wellbeing app with private check-ins, journaling, grounding tools, affirmations, and support contacts.",
+  "description": "A calm mental-health and emotional-wellbeing app with private check-ins, journaling, music, reading, an app-only moderated Freedom Wall, and support contacts.",
   "start_url": "/app/",
   "scope": "/app/",
   "display": "standalone",
-  "background_color": "#fffdf9",
-  "theme_color": "#510b77",
+  "background_color": "#f2f2f7",
+  "theme_color": "#f2f2f7",
   "icons": [
     {
       "src": "/assets/images/app-icon-192.png",
