@@ -10,20 +10,20 @@
 <meta name="apple-mobile-web-app-title" content="With love, FMB">
 <meta name="robots" content="noindex,nofollow">
 <title>With love, FMB | Mental Health App</title>
-<meta name="description" content="A focused mental health and emotional wellbeing app from With love, FMB, with private check-ins, journaling, history, grounding tools, affirmations, and verified support contacts.">
+<meta name="description" content="A focused mental-health and emotional-wellbeing space from With Love, FMB, with private check-ins, journaling, history, grounding tools, affirmations, privacy controls, and support contacts.">
 <link rel="manifest" href="/app/manifest.webmanifest">
 <link rel="icon" href="/assets/images/icon-transparent.png">
 <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
-<link rel="stylesheet" href="/app/app.css?v=20260718-history-emoji">
+<link rel="stylesheet" href="/app/app.css?v=20260718-mental-health-rules">
 </head>
 <body>
 <div class="app-shell">
   <header class="app-header">
-    <a class="brand" href="#home" data-go="home" aria-label="With love, FMB mental health app home">
+    <a class="brand" href="#home" data-go="home" aria-label="With Love, FMB mental-health app home">
       <img src="/assets/images/icon-transparent.png" alt="">
       <span class="brand-copy"><strong>with love, fmb</strong><span>Mental health and wellbeing</span></span>
     </a>
-    <button class="help-button" type="button" data-go="help">Get help</button>
+    <button class="help-button" type="button" data-go="help">Get support</button>
   </header>
 
   <main>
@@ -31,11 +31,16 @@
       <article class="hero-card card">
         <p class="kicker">A private pause</p>
         <h1>How are you, really?</h1>
-        <p>Check in without judgment, write what you need to release, and use a grounding tool when the day feels too loud.</p>
+        <p>Check in without judgment, write privately, and use a gentle grounding tool when the day feels too loud.</p>
         <div class="hero-actions">
           <button class="button primary" type="button" data-go="checkin">Start today’s check-in</button>
           <button class="button secondary" type="button" data-go="help">I need support now</button>
         </div>
+      </article>
+
+      <article class="purpose-note card">
+        <strong>A focused mental-health space</strong>
+        <p>This app is for support, reflection, and education. It is separate from the public FMB bulletin and corporate ecosystem, and it is not an emergency response or professional care service.</p>
       </article>
 
       <div class="section-heading"><h2>Your space</h2><span>Mental health only</span></div>
@@ -43,8 +48,9 @@
         <button class="quick-card" type="button" data-go="checkin"><small>Daily</small><h3>Emotional check-in</h3><p>Name what you feel and leave a private note.</p></button>
         <button class="quick-card" type="button" data-go="journal"><small>Private</small><h3>Journal</h3><p>Dated reflections stored on this device.</p></button>
         <button class="quick-card" type="button" data-go="tools"><small>Reset</small><h3>Grounding tools</h3><p>Breathing, 5-4-3-2-1, and a gentle word.</p></button>
-        <button class="quick-card" type="button" data-go="help"><small>Public</small><h3>Support contacts</h3><p>Emergency and mental health crisis lines.</p></button>
+        <button class="quick-card" type="button" data-go="help"><small>Public</small><h3>Support contacts</h3><p>Emergency and mental-health crisis information.</p></button>
         <button class="quick-card wide" type="button" data-go="history"><small>Your patterns</small><h3>Check-in and journal calendar</h3><p>See your private daily history and open a preview for any saved date.</p></button>
+        <button class="quick-card wide quiet" type="button" data-go="privacy"><small>Your control</small><h3>Privacy and personal records</h3><p>Export or delete local records, review storage, and manage reminder preferences.</p></button>
       </div>
 
       <div class="section-heading"><h2>Today</h2><span id="today-label"></span></div>
@@ -52,13 +58,14 @@
         <h3>No check-in yet.</h3>
         <p>There is no right mood to choose. Start with the one closest to what you feel.</p>
       </article>
-      <p class="notice">Your check-ins and journal entries are stored in this browser on this device. Clearing browser data may remove them.</p>
+      <p class="notice">Your check-ins and journal entries are private by default and stored in this browser on this device. Clearing browser data may remove them.</p>
     </section>
 
     <section class="screen" id="screen-checkin" data-screen="checkin">
       <p class="kicker">Daily emotional check-in</p>
       <h1 class="page-title">What is closest to how you feel?</h1>
-      <p class="page-lede">Choose honestly. The app will not diagnose you. It simply gives the feeling a place to land.</p>
+      <p class="page-lede">Choose honestly. The app will not diagnose you or assume what you are experiencing. It simply gives the feeling a place to land.</p>
+
       <div class="mood-list" id="mood-list">
         <button class="mood-option" type="button" data-mood="5" data-emoji="🙂" data-label="Light and steady"><span class="mood-emoji" aria-hidden="true">🙂</span><span><strong>Light and steady</strong><span>I feel present, hopeful, or okay.</span></span></button>
         <button class="mood-option" type="button" data-mood="4" data-emoji="😌" data-label="Mostly okay"><span class="mood-emoji" aria-hidden="true">😌</span><span><strong>Mostly okay</strong><span>Some tension is here, but I can manage.</span></span></button>
@@ -66,26 +73,43 @@
         <button class="mood-option" type="button" data-mood="2" data-emoji="😢" data-label="Struggling today"><span class="mood-emoji" aria-hidden="true">😢</span><span><strong>Struggling today</strong><span>It is difficult to function or carry this alone.</span></span></button>
         <button class="mood-option" type="button" data-mood="1" data-emoji="😰" data-label="I may not feel safe"><span class="mood-emoji" aria-hidden="true">😰</span><span><strong>I may not feel safe</strong><span>I need immediate human support.</span></span></button>
       </div>
-      <div class="field">
-        <label for="checkin-note">Anything you want to put down? Optional</label>
-        <textarea id="checkin-note" placeholder="Write only what feels safe to write."></textarea>
-      </div>
-      <article class="support-inline card" id="support-inline">
-        <h3>You do not have to carry this alone.</h3>
-        <p>When safety or self-harm is a concern, contact emergency services or a crisis line now. Stay near a trusted person when possible.</p>
-        <button class="button danger" type="button" data-go="help">Open support contacts</button>
+
+      <article class="feeling-ack card" id="feeling-ack" aria-live="polite" hidden>
+        <div class="ack-head"><span id="ack-emoji" aria-hidden="true"></span><div><p class="kicker">We hear you</p><h2 id="ack-title"></h2></div></div>
+        <p id="ack-message"></p>
       </article>
-      <div class="form-actions">
-        <button class="button violet" id="save-checkin" type="button" disabled>Save my check-in</button>
-        <button class="button soft" type="button" data-go="home">Back to home</button>
+
+      <div id="checkin-followup" hidden>
+        <article class="support-inline card" id="support-inline">
+          <h3>Your safety comes first.</h3>
+          <p>If you may be in immediate danger, might hurt yourself, are experiencing abuse, or have a medical emergency, contact 911, an available crisis line, or a trusted person nearby now. This app cannot send an emergency response.</p>
+          <button class="button danger" type="button" data-go="help">Open support contacts</button>
+        </article>
+
+        <div class="field">
+          <label for="checkin-note">Anything you want to put down? Optional</label>
+          <textarea id="checkin-note" placeholder="Write only what feels safe to write."></textarea>
+        </div>
+
+        <div class="gentle-options" id="gentle-options">
+          <button class="gentle-option" type="button" data-go="journal">Write privately</button>
+          <button class="gentle-option" type="button" data-go="tools">Try slow breathing</button>
+          <button class="gentle-option" type="button" data-go="help">View support</button>
+        </div>
+
+        <div class="form-actions">
+          <button class="button violet" id="save-checkin" type="button" disabled>Save my check-in</button>
+          <button class="button soft" type="button" data-go="home">Back to home</button>
+        </div>
       </div>
+
       <article class="confirmation card" id="checkin-confirmation"><h3>Noted, with care.</h3><p>Your feelings deserve space. Thank you for checking in today.</p></article>
     </section>
 
     <section class="screen" id="screen-journal" data-screen="journal">
       <p class="kicker">Private journal</p>
       <h1 class="page-title">Put the weight somewhere.</h1>
-      <p class="page-lede">Entries remain in this browser on this device. This is not a medical record or a substitute for professional care.</p>
+      <p class="page-lede">Entries remain private in this browser on this device. They are never used as community content and are not a medical record or substitute for professional care.</p>
       <article class="journal-form card">
         <div class="field" style="margin-top:0">
           <label for="journal-text">Today’s reflection</label>
@@ -113,7 +137,10 @@
         <div class="calendar-legend"><span><span class="legend-emoji">🙂</span> Check-in</span><span><span class="legend-dot"></span> Journal</span></div>
       </article>
       <article class="history-detail card" id="history-detail"></article>
-      <p class="notice">This history stays only in this browser on this device. It is not automatically synced or shared.</p>
+      <div class="history-actions">
+        <button class="button soft" type="button" data-go="privacy">Manage or export records</button>
+      </div>
+      <p class="notice">This history stays only in this browser on this device. It is not automatically synced, shared, or visible to other members.</p>
     </section>
 
     <section class="screen" id="screen-tools" data-screen="tools">
@@ -141,24 +168,76 @@
       </div>
     </section>
 
+    <section class="screen" id="screen-privacy" data-screen="privacy">
+      <p class="kicker">Privacy and personal control</p>
+      <h1 class="page-title">Your private records belong to you.</h1>
+      <p class="page-lede">The current app stores check-ins, journal entries, and preferences locally in this browser. It does not publish them or turn them into community posts.</p>
+
+      <article class="privacy-summary card">
+        <div><span>Saved check-ins</span><strong id="privacy-checkin-count">0</strong></div>
+        <div><span>Journal entries</span><strong id="privacy-journal-count">0</strong></div>
+        <div><span>Storage</span><strong>This device</strong></div>
+      </article>
+
+      <article class="privacy-card card">
+        <h2>Export your records</h2>
+        <p>Download an available copy of your check-ins, journal entries, and reminder preference as a JSON file.</p>
+        <button class="button violet" id="export-records" type="button">Export personal records</button>
+      </article>
+
+      <article class="privacy-card card">
+        <h2>Gentle reminder preference</h2>
+        <p>Your preference is saved locally. Scheduled notifications are not active yet, and the app will never pretend a reminder was sent.</p>
+        <label class="preference-field" for="reminder-preference">
+          <span>Reminder setting</span>
+          <select id="reminder-preference">
+            <option value="off">Off</option>
+            <option value="morning">Gentle morning reminder</option>
+            <option value="evening">Gentle evening reminder</option>
+          </select>
+        </label>
+      </article>
+
+      <article class="privacy-card card">
+        <h2>Delete local records</h2>
+        <p>Deletion affects only this browser on this device and cannot be undone.</p>
+        <div class="privacy-actions">
+          <button class="button soft" id="delete-checkins" type="button">Delete check-in history</button>
+          <button class="button soft" id="delete-journals" type="button">Delete all journal entries</button>
+          <button class="button danger" id="delete-all-private-data" type="button">Delete all local app data</button>
+        </div>
+      </article>
+
+      <article class="privacy-card card">
+        <h2>Member account controls</h2>
+        <p>Account deletion, password, profile, and sign-in controls are handled through the protected member profile. Opening it leaves this focused app briefly.</p>
+        <a class="button soft" href="https://www.francinemariebautista.com/profile/">Open account controls</a>
+      </article>
+    </section>
+
     <section class="screen" id="screen-help" data-screen="help">
       <p class="kicker">Verified support contacts</p>
       <h1 class="page-title">Reach a real person.</h1>
-      <p class="page-lede">With love, FMB is not an emergency, medical, psychological, or legal service. These contacts remain open without an account.</p>
+      <p class="page-lede">With Love, FMB is a support and education platform. It is not an emergency, medical, psychological, legal, or crisis-response service, and FMB, volunteers, and administrators are not promised to be available at all times.</p>
       <div class="hotline-list">
         <a class="hotline urgent" href="tel:911"><small>Immediate danger or emergency</small><h2>911</h2><p>For police, fire, ambulance, violence, or an immediate threat to safety.</p></a>
         <a class="hotline" href="tel:1553"><small>National Center for Mental Health</small><h2>1553</h2><p>Nationwide crisis hotline. The Department of Health identifies 1553 as the NCMH crisis line.</p></a>
         <a class="hotline" href="tel:09178998727"><small>NCMH mobile line</small><h2>0917 899 8727</h2><p>Tap to call from a mobile phone.</p></a>
         <a class="hotline" href="tel:09190571553"><small>NCMH mobile line</small><h2>0919 057 1553</h2><p>Tap to call from a mobile phone.</p></a>
         <a class="hotline" href="tel:09663514518"><small>NCMH mobile line</small><h2>0966 351 4518</h2><p>Tap to call from a mobile phone.</p></a>
-        <a class="hotline" href="https://loveyourself.ph/mental-health/" target="_blank" rel="noopener"><small>Inclusive community support</small><h2>LoveYourself</h2><p>Mental health and affirming community support, including LGBTQIA+ focused services.</p></a>
+        <a class="hotline" href="https://loveyourself.ph/mental-health/" target="_blank" rel="noopener"><small>Inclusive community support</small><h2>LoveYourself</h2><p>Mental-health and affirming community support, including LGBTQIA+ focused services.</p></a>
       </div>
-      <p class="disclaimer">Hotline availability and phone routing can change. When a number does not connect and there is immediate danger, call 911 or go to the nearest emergency department.</p>
+      <p class="disclaimer">Hotline availability and phone routing can change. When a number does not connect and there is immediate danger, call 911, contact a trusted person nearby, or go to the nearest emergency department.</p>
     </section>
   </main>
+
+  <footer class="app-footer">
+    <p>A mental-health initiative of With Love, FMB.</p>
+    <a href="https://www.francinemariebautista.com/">Visit the main With Love, FMB platform</a>
+  </footer>
 </div>
 
-<nav class="tabbar" aria-label="Mental health app navigation">
+<nav class="tabbar" aria-label="Mental-health app navigation">
   <button class="active" type="button" data-tab="home" data-go="home"><span>⌂</span><span>Home</span></button>
   <button type="button" data-tab="checkin" data-go="checkin"><span>✓</span><span>Check-in</span></button>
   <button type="button" data-tab="journal" data-go="journal"><span>✎</span><span>Journal</span></button>
@@ -167,6 +246,6 @@
 </nav>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="/app/app.js?v=20260718-history-emoji" defer></script>
+<script src="/app/app.js?v=20260718-mental-health-rules" defer></script>
 </body>
 </html>

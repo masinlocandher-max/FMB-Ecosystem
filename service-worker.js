@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260718-music-az-v2';
+const CACHE_NAME='fmb-app-shell-20260718-mental-health-rules';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -39,6 +39,8 @@ const APP_SHELL=[
   '/index.html',
   '/app/',
   '/app/index.html',
+  '/app/app.css',
+  '/app/app.js',
   '/app/manifest.webmanifest',
   '/freedom-wall.html',
   '/auth.html',
