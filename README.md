@@ -2,8 +2,9 @@
 
 Official personal website, creative home, and inclusive digital safe space of **Francine Marie Bautista**.
 
-- Planned domain: `www.francinemariebautista.com`
-- Temporary host: GitHub Pages
+- Production domain: `www.francinemariebautista.com`
+- Production deployment: Vercel
+- Backup publication: GitHub Pages through the repository workflow
 - Contact: `withlovefmb@gmail.com`
 - Founder: Francine Marie Bautista
 - Main company: SENZ Strategic Communications
@@ -92,33 +93,23 @@ Never place the Supabase service-role key, database password, SMTP password, or 
 - avatars are restricted to the owner’s storage folder
 - site media is restricted to administrators
 
-## Important launch status
+## Current service status
 
-The frontend, schema, validation, and role protections are implemented in the repository. **Real registration and database-backed features remain intentionally inactive until a Supabase project is connected.**
+The frontend is connected to Supabase through the public project URL and public anonymous key in `assets/js/config.js`. Private credentials such as the service-role key, database password, and SMTP password must remain outside this repository.
 
-`assets/js/config.js` currently contains blank Supabase values. While those values are blank:
+The public account page currently communicates the member-service availability shown to visitors. Before changing registration availability, verify authentication redirects, email delivery, Row Level Security, moderation, and administrator access in the connected Supabase project.
 
-- no account is created
-- no password is changed
-- no journal or community post is saved
-- no contact or volunteer message is submitted through the database
-- no administrator data is shown
-
-The interface reports this state instead of pretending a request succeeded.
+When a service is unavailable, the interface reports that state instead of pretending a request succeeded.
 
 ## Go-live sequence
 
-1. Create a dedicated Supabase project.
-2. Run `supabase/schema.sql`.
-3. Enable email confirmation and configure trusted authentication redirect URLs.
-4. Configure a transactional email provider for production authentication.
-5. Add the public Supabase URL and anon key to `assets/js/config.js`.
-6. Register the first account and change its profile role to `admin` directly in Supabase.
-7. Test visitor, member, suspended-member, moderator, and administrator access.
-8. Test two-account data isolation.
-9. Review the Privacy Policy, Membership Agreement, Community Guidelines, and Data Rights process with a qualified Philippine professional.
-10. Confirm the custom domain, HTTPS, email delivery, and deployment.
-11. Open public registration only after the full checklist passes.
+1. Confirm trusted authentication redirect URLs for the production website and app subdomain.
+2. Confirm email confirmation, recovery, and transactional-email delivery.
+3. Test visitor, member, suspended-member, moderator, and administrator access.
+4. Test two-account data isolation.
+5. Review the Privacy Policy, Membership Agreement, Community Guidelines, and Data Rights process with a qualified Philippine professional.
+6. Confirm the custom domains, HTTPS, app redirect, and deployment.
+7. Change public registration availability only after the full checklist passes.
 
 See `SUPABASE_SETUP.md` for the detailed process.
 
@@ -131,7 +122,8 @@ See `SUPABASE_SETUP.md` for the detailed process.
 - `music/index.html` – app-like music landing page and player
 - `communityengagements/index.html` – Community Engagements - AMDG
 - `aboutfmb/index.html` – founder authority profile
-- `fmbandco/index.html` – three-brand portfolio
+- `fmb&co/index.html` – canonical three-brand portfolio
+- `fmbandco/index.html` – compatibility redirect to the canonical FMB & Co. route
 - `auth.html` – sign in and registration
 - `reset-password.html` – password recovery completion
 - `profile/index.html` – private signed-in member dashboard
@@ -151,6 +143,7 @@ See `SUPABASE_SETUP.md` for the detailed process.
 - `supabase/schema.sql` – tables, functions, storage, permissions, and RLS
 - `scripts/quality_check.py` – static link and asset checks
 - `.github/workflows/quality.yml` – automated quality workflow
+- `docs/new-website-structure-todo.md` – approved structure and phased implementation checklist
 
 ## Deliberately excluded
 
