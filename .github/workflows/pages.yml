@@ -123,9 +123,11 @@ jobs:
           grep -q 'signInWithPassword' _site/app/access.js
           grep -q "backgroundSize='contain'" _site/assets/js/music.js
           grep -q 'Founder &amp; CEO' _site/aboutfmb/index.html
-          grep -q 'aboutfmb-corporate.css?v=20260718-about-corporate-v1' _site/aboutfmb/index.html
+          grep -q 'aboutfmb-corporate.css?v=20260719-founder-gallery-v2' _site/aboutfmb/index.html
           grep -q 'aboutfmb-corporate.js?v=20260718-about-corporate-v1' _site/aboutfmb/index.html
           grep -q 'francine-founder-hero-923.webp' _site/aboutfmb/index.html
+          grep -q 'francine-founder-front-cutout-900-v1.webp' _site/aboutfmb/index.html
+          grep -q 'francine-marie-bautista-wordmark-white-v2.png' _site/aboutfmb/index.html
           grep -q 'id="workCalendarCard"' _site/aboutfmb/index.html
           grep -q 'Community Engagements - AMDG' _site/communityengagements/index.html
           grep -q 'Built to shape ideas into meaningful progress' '_site/fmb&co/index.html'
@@ -135,12 +137,19 @@ jobs:
           grep -q '@keyframes fco-hero-rise' _site/assets/css/fmbandco-brand.css
           grep -q '@keyframes fco-portrait-float' _site/assets/css/fmbandco-brand.css
           grep -q 'francine-founder-hero-923.webp' '_site/fmb&co/index.html'
+          grep -q 'francine-founder-front-cutout-900-v1.webp' '_site/fmb&co/index.html'
+          grep -q 'francine-founder-side-cutout-900-v1.webp' '_site/fmb&co/index.html'
+          grep -q 'francine-marie-bautista-wordmark-white-v2.png' '_site/fmb&co/index.html'
           grep -q 'fco-founder-signature' '_site/fmb&co/index.html'
           grep -q 'fco-founder-title' '_site/fmb&co/index.html'
           grep -q 'Founder &amp; CEO' '_site/fmb&co/index.html'
           grep -q 'Francine Marie Bautista' '_site/fmb&co/index.html'
-          grep -q 'great-vibes-latin-400-normal.woff2' '_site/fmb&co/index.html'
-          grep -q '@font-face{font-family:"Great Vibes"' _site/assets/css/fmbandco-brand.css
+          test -f _site/assets/images/fmb/francine-founder-front-cutout-640-v1.webp
+          test -f _site/assets/images/fmb/francine-founder-front-cutout-900-v1.webp
+          test -f _site/assets/images/fmb/francine-founder-side-cutout-640-v1.webp
+          test -f _site/assets/images/fmb/francine-founder-side-cutout-900-v1.webp
+          test -f _site/assets/images/fmb/francine-marie-bautista-wordmark-white-v2.png
+          if grep -q 'Great Vibes' _site/assets/css/fmbandco-brand.css; then exit 1; fi
           grep -q 'fmbandco-motion.js?v=20260718-motion-v1' '_site/fmb&co/index.html'
           grep -q 'fco-mobile-dock' '_site/fmb&co/index.html'
           grep -q 'id="checkinForm"' _site/profile/index.html

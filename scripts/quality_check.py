@@ -503,6 +503,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         "assets/images/fmbandco/fmbandco-ampersand-gold.png",
         "assets/images/projects/senz-logo-clean.png",
         "assets/images/projects/cognita-logo-clean.png",
+        "assets/images/fmb/francine-marie-bautista-wordmark-white-v2.png",
     )
     for name in clean_brand_logos:
         logo_path = ROOT / name
@@ -522,12 +523,19 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         if len(webp) < 16 or webp[:4] != b"RIFF" or webp[8:12] != b"WEBP":
             errors.append(f"assets/images/fmbandco/{name}: responsive founder portrait must remain WebP")
 
-    signature_font_path = ROOT / "assets/fonts/great-vibes-latin-400-normal.woff2"
-    signature_license_path = ROOT / "assets/fonts/Great-Vibes-OFL.txt"
-    if not signature_font_path.exists() or signature_font_path.read_bytes()[:4] != b"wOF2":
-        errors.append("assets/fonts/great-vibes-latin-400-normal.woff2: embedded founder signature font is missing or invalid")
-    if not signature_license_path.exists() or "SIL OPEN FONT LICENSE" not in signature_license_path.read_text(encoding="utf-8"):
-        errors.append("assets/fonts/Great-Vibes-OFL.txt: signature font license is missing")
+    for name in (
+        "francine-founder-front-cutout-640-v1.webp",
+        "francine-founder-front-cutout-900-v1.webp",
+        "francine-founder-side-cutout-640-v1.webp",
+        "francine-founder-side-cutout-900-v1.webp",
+    ):
+        webp_path = ROOT / "assets/images/fmb" / name
+        if not webp_path.exists():
+            errors.append(f"assets/images/fmb/{name}: transparent responsive founder portrait is missing")
+            continue
+        webp = webp_path.read_bytes()
+        if len(webp) < 16 or webp[:4] != b"RIFF" or webp[8:12] != b"WEBP" or b"ALPH" not in webp:
+            errors.append(f"assets/images/fmb/{name}: founder portrait must remain an alpha-channel WebP")
 
     fmbandco_css_path = ROOT / "assets/css/fmbandco-brand.css"
     if not fmbandco_css_path.exists():
@@ -543,18 +551,18 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
             ".fco-mobile-dock",
             "env(safe-area-inset-bottom)",
             "@media(max-width:860px)",
-            "fmbandco-ampersand-gold.png",
             "@keyframes fco-hero-rise",
             "@keyframes fco-portrait-float",
+            "@keyframes fco-founder-card-shape-drift",
             ".fco-portrait-shape",
+            ".fco-founder-card-shape",
+            ".fco-founder-card-portrait",
             "mask-image:linear-gradient",
-            '@font-face{font-family:"Great Vibes"',
-            "great-vibes-latin-400-normal.woff2",
             ".fco-reveal-target",
         ):
             if marker not in fmbandco_css:
                 errors.append(f"assets/css/fmbandco-brand.css: missing brand or responsive marker: {marker}")
-        for marker in ('content:"&"', "background:rgba(255,255,255,.94);text-decoration:none", "background:rgba(255,255,255,.92);box-shadow"):
+        for marker in ('content:"&"', "background:rgba(255,255,255,.94);text-decoration:none", "background:rgba(255,255,255,.92);box-shadow", 'font-family:"Great Vibes"', "great-vibes-latin-400-normal.woff2"):
             if marker in fmbandco_css:
                 errors.append(f"assets/css/fmbandco-brand.css: retired white-panel or generic-ampersand treatment remains: {marker}")
 
@@ -638,7 +646,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
     for name in fmbandco_pages:
         page = (ROOT / name).read_text(encoding="utf-8")
         for marker in (
-            "fmbandco-brand.css?v=20260718-founder-ceo-v7",
+            "fmbandco-brand.css?v=20260719-founder-brand-v8",
             "fmbandco-primary-reversed.png",
             "fmbandco-ampersand-gold.png",
             'class="fco-nav-links"',
@@ -652,7 +660,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
                 errors.append(f"{name}: generic decorative ampersand remains: {marker}")
 
     fmbandco_home = (ROOT / "fmb&co/index.html").read_text(encoding="utf-8")
-    for marker in ("francine-founder-hero-640.webp", "francine-founder-hero-923.webp", "great-vibes-latin-400-normal.woff2", 'class="fco-hero-visual"', 'fetchpriority="high"', "fco-founder-nameplate", "fco-founder-signature", "fco-founder-title", "Founder &amp; CEO", "Francine Marie Bautista"):
+    for marker in ("francine-founder-hero-640.webp", "francine-founder-hero-923.webp", "francine-founder-front-cutout-640-v1.webp", "francine-founder-front-cutout-900-v1.webp", "francine-founder-side-cutout-640-v1.webp", "francine-founder-side-cutout-900-v1.webp", "francine-marie-bautista-wordmark-white-v2.png", 'class="fco-hero-visual"', 'fetchpriority="high"', "fco-founder-nameplate", "fco-founder-signature", "fco-founder-title", "fco-founder-portrait-card", "Founder &amp; CEO", "Francine Marie Bautista"):
         if marker not in fmbandco_home:
             errors.append(f"fmb&co/index.html: responsive founder hero marker is missing: {marker}")
     if "fmbandco-motion.js?v=20260718-motion-v1" not in fmbandco_home:
@@ -668,11 +676,14 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
 
     about = (ROOT / "aboutfmb/index.html").read_text(encoding="utf-8")
     for marker in (
-        "fmbandco-brand.css?v=20260718-founder-ceo-v7",
-        "aboutfmb-corporate.css?v=20260718-about-corporate-v1",
+        "fmbandco-brand.css?v=20260719-founder-brand-v8",
+        "aboutfmb-corporate.css?v=20260719-founder-gallery-v2",
         "aboutfmb-corporate.js?v=20260718-about-corporate-v1",
         "francine-founder-hero-640.webp",
         "francine-founder-hero-923.webp",
+        "francine-founder-front-cutout-640-v1.webp",
+        "francine-founder-front-cutout-900-v1.webp",
+        "francine-marie-bautista-wordmark-white-v2.png",
         "fco-founder-nameplate",
         "fco-founder-signature",
         "fco-founder-title",
@@ -697,11 +708,14 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         errors.append("assets/css/aboutfmb-corporate.css: dedicated corporate About system is missing")
     else:
         about_css = about_css_path.read_text(encoding="utf-8")
-        for marker in (".fmb-about-corporate", ".fmb-about-booking-grid", ".fmb-about-portfolio-grid", ".fmb-about-hero-deck", "fmbandco-ampersand-gold.png", "@media(max-width:860px)"):
+        for marker in (".fmb-about-corporate", ".fmb-about-booking-grid", ".fmb-about-portfolio-grid", ".fmb-about-hero-deck", ".fmb-about-portrait-shape", ".fmb-about-portrait", ".fmb-about-signoff-wordmark", "fmbandco-ampersand-gold.png", "@media(max-width:860px)"):
             if marker not in about_css:
                 errors.append(f"assets/css/aboutfmb-corporate.css: missing brand, booking, or responsive marker: {marker}")
         if 'content:"&"' in about_css:
             errors.append("assets/css/aboutfmb-corporate.css: generic decorative ampersand remains")
+        for retired_marker in ('font-family:"Great Vibes"', "great-vibes-latin-400-normal.woff2"):
+            if retired_marker in about_css:
+                errors.append(f"assets/css/aboutfmb-corporate.css: generic script treatment remains: {retired_marker}")
     if not about_motion_path.exists():
         errors.append("assets/js/aboutfmb-corporate.js: About motion system is missing")
     else:
