@@ -2,6 +2,31 @@
   const body=document.body;
   const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
+  const menuButton=document.querySelector('[data-news-menu]');
+  const menu=document.querySelector('#newsNav');
+  if(menuButton&&menu){
+    const closeMenu=()=>{
+      body.classList.remove('nc-menu-open');
+      menuButton.setAttribute('aria-expanded','false');
+      menuButton.setAttribute('aria-label','Open newsroom menu');
+    };
+    menuButton.addEventListener('click',()=>{
+      const open=!body.classList.contains('nc-menu-open');
+      body.classList.toggle('nc-menu-open',open);
+      menuButton.setAttribute('aria-expanded',String(open));
+      menuButton.setAttribute('aria-label',open?'Close newsroom menu':'Open newsroom menu');
+    });
+    menu.addEventListener('click',event=>{
+      if(event.target.closest('a'))closeMenu();
+    });
+    document.addEventListener('keydown',event=>{
+      if(event.key==='Escape')closeMenu();
+    });
+    window.addEventListener('resize',()=>{
+      if(window.innerWidth>800)closeMenu();
+    },{passive:true});
+  }
+
   const revealItems=[...document.querySelectorAll('.nc-reveal')];
   if(revealItems.length){
     if(reduced||!('IntersectionObserver' in window)){

@@ -620,7 +620,6 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         "freedom-wall.html",
         "gethelp/index.html",
         "music/index.html",
-        "news/index.html",
     )
     for name in public_mobile_routes:
         page = (ROOT / name).read_text(encoding="utf-8")
@@ -720,18 +719,21 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         errors.append("assets/js/news-channel.js: newsroom interaction layer is missing")
     for marker in (
         "Independent editorial channel",
+        "FMB&amp;CO. Newsroom",
         "The magazine index.",
         'id="editorial-standard"',
+        'class="nc-site-header"',
+        "/news/china-ai-monkey-video/",
         "/news/cleopatra-barrera/",
         "/news/impeachment/",
         "/news/pax-silica/",
         "/news/good-news/",
-        "news-channel.css?v=20260718-editorial-v1",
-        "news-channel.js?v=20260718-editorial-v1",
+        "news-channel.css?v=20260718-fmbandco-v2",
+        "news-channel.js?v=20260718-fmbandco-v2",
     ):
         if marker not in news:
             errors.append(f"news/index.html: missing editorial channel marker: {marker}")
-    for route in ("cleopatra-barrera", "impeachment", "pax-silica", "good-news"):
+    for route in ("china-ai-monkey-video", "cleopatra-barrera", "impeachment", "pax-silica", "good-news"):
         story = (ROOT / "news" / route / "index.html").read_text(encoding="utf-8")
         for marker in ('nc-article-layout', 'data-news-share', 'class="nc-sources"', 'rel="canonical"'):
             if marker not in story:
@@ -739,6 +741,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         if "location.replace" in story or 'content="noindex' in story:
             errors.append(f"news/{route}/index.html: story route must be a complete indexable article")
     for name in (
+        "china-ai-propaganda-editorial.webp",
         "cleopatra-barrera-zambales-ocean-feature.jpeg",
         "sara-duterte-impeachment.webp",
         "pax-silica-briefing.png",
@@ -748,10 +751,14 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
             errors.append(f"news/index.html: missing sourced editorial visual: {name}")
         if not (ROOT / "assets/images/news" / name).exists():
             errors.append(f"assets/images/news/{name}: news sharing image is missing")
-    if news.count('class="news-visual"') != 4:
+    if news.count('class="news-visual"') != 5:
         errors.append("news/index.html: every main story must have one sourced lead visual")
-    if news.count("<figcaption>") != 4 or "Photo: AP Photo/Basilio Sepe" not in news or "Digitally created pageant editorial supplied by FMB" not in news:
+    if news.count("<figcaption>") != 5 or "Photo: AP Photo/Basilio Sepe" not in news or "Digitally created pageant editorial supplied by FMB" not in news or "does not reproduce the racist video" not in news:
         errors.append("news/index.html: every editorial visual must show its source or credit below it")
+    china_ai_story = (ROOT / "news/china-ai-monkey-video/index.html").read_text(encoding="utf-8")
+    for marker in ("Reuters", "Associated Press", "Permanent Court of Arbitration", "FMB&amp;CO. perspective · Opinion", "did not represent China’s official position"):
+        if marker not in china_ai_story:
+            errors.append(f"news/china-ai-monkey-video/index.html: missing sourced analysis marker: {marker}")
     for retired_name in (
         "cleopatra-barrera-reina-filipinas-zambales.jpeg",
         "cleopatra-barrera-maritime-editorial.jpeg",
@@ -776,6 +783,7 @@ def main() -> int:
         ROOT / "fmbandco/index.html",
         ROOT / "gethelp/index.html",
         ROOT / "news/index.html",
+        ROOT / "news/china-ai-monkey-video/index.html",
         ROOT / "news/cleopatra-barrera/index.html",
         ROOT / "news/impeachment/index.html",
         ROOT / "news/pax-silica/index.html",
