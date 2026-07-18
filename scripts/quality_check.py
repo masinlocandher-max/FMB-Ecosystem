@@ -669,6 +669,32 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
                 errors.append(f"assets/js/fmbandco-motion.js: missing motion or accessibility marker: {marker}")
 
     news = (ROOT / "news/index.html").read_text(encoding="utf-8")
+    news_css_path = ROOT / "assets/css/news-channel.css"
+    news_js_path = ROOT / "assets/js/news-channel.js"
+    if not news_css_path.exists():
+        errors.append("assets/css/news-channel.css: editorial channel styles are missing")
+    if not news_js_path.exists():
+        errors.append("assets/js/news-channel.js: newsroom interaction layer is missing")
+    for marker in (
+        "Independent editorial channel",
+        "The magazine index.",
+        'id="editorial-standard"',
+        "/news/cleopatra-barrera/",
+        "/news/impeachment/",
+        "/news/pax-silica/",
+        "/news/good-news/",
+        "news-channel.css?v=20260718-editorial-v1",
+        "news-channel.js?v=20260718-editorial-v1",
+    ):
+        if marker not in news:
+            errors.append(f"news/index.html: missing editorial channel marker: {marker}")
+    for route in ("cleopatra-barrera", "impeachment", "pax-silica", "good-news"):
+        story = (ROOT / "news" / route / "index.html").read_text(encoding="utf-8")
+        for marker in ('nc-article-layout', 'data-news-share', 'class="nc-sources"', 'rel="canonical"'):
+            if marker not in story:
+                errors.append(f"news/{route}/index.html: incomplete magazine story marker: {marker}")
+        if "location.replace" in story or 'content="noindex' in story:
+            errors.append(f"news/{route}/index.html: story route must be a complete indexable article")
     for name in (
         "cleopatra-barrera-zambales-ocean-feature.jpeg",
         "sara-duterte-impeachment.webp",
