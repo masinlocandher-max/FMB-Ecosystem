@@ -86,7 +86,12 @@
   }
 
   const loader=$('#loader');
-  if(loader){const hide=()=>loader.classList.add('hide');window.addEventListener('load',()=>setTimeout(hide,350),{once:true});setTimeout(hide,2200)}
+  if(loader){
+    const hide=()=>{loader.classList.add('hide');loader.setAttribute('aria-hidden','true');loader.style.pointerEvents='none'};
+    if(document.readyState==='complete')setTimeout(hide,100);
+    else window.addEventListener('load',()=>setTimeout(hide,100),{once:true});
+    setTimeout(hide,1200);
+  }
 
   function setupFriendlyNavigation(){
     const nav=$('.nav-glass'),links=$('#navLinks'),actions=nav?.querySelector('.nav-actions');
