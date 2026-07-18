@@ -614,7 +614,6 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
 
     public_mobile_routes = (
         "index.html",
-        "aboutfmb/index.html",
         "communityengagements/index.html",
         "dress-with-intention.html",
         "ebooks/index.html",
@@ -640,7 +639,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
     for name in fmbandco_pages:
         page = (ROOT / name).read_text(encoding="utf-8")
         for marker in (
-            "fmbandco-brand.css?v=20260718-founder-signature-v6",
+            "fmbandco-brand.css?v=20260718-founder-ceo-v7",
             "fmbandco-primary-reversed.png",
             "fmbandco-ampersand-gold.png",
             'class="fco-nav-links"',
@@ -654,7 +653,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
                 errors.append(f"{name}: generic decorative ampersand remains: {marker}")
 
     fmbandco_home = (ROOT / "fmb&co/index.html").read_text(encoding="utf-8")
-    for marker in ("francine-founder-hero-640.webp", "francine-founder-hero-923.webp", "great-vibes-latin-400-normal.woff2", 'class="fco-hero-visual"', 'fetchpriority="high"', "fco-founder-nameplate", "fco-founder-signature", "Francine Marie Bautista"):
+    for marker in ("francine-founder-hero-640.webp", "francine-founder-hero-923.webp", "great-vibes-latin-400-normal.woff2", 'class="fco-hero-visual"', 'fetchpriority="high"', "fco-founder-nameplate", "fco-founder-signature", "fco-founder-title", "Founder &amp; CEO", "Francine Marie Bautista"):
         if marker not in fmbandco_home:
             errors.append(f"fmb&co/index.html: responsive founder hero marker is missing: {marker}")
     if "fmbandco-motion.js?v=20260718-motion-v1" not in fmbandco_home:
@@ -667,6 +666,50 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         for marker in ("IntersectionObserver", "prefers-reduced-motion", "fco-motion-ready"):
             if marker not in fmbandco_motion:
                 errors.append(f"assets/js/fmbandco-motion.js: missing motion or accessibility marker: {marker}")
+
+    about = (ROOT / "aboutfmb/index.html").read_text(encoding="utf-8")
+    for marker in (
+        "fmbandco-brand.css?v=20260718-founder-ceo-v7",
+        "aboutfmb-corporate.css?v=20260718-about-corporate-v1",
+        "aboutfmb-corporate.js?v=20260718-about-corporate-v1",
+        "francine-founder-hero-640.webp",
+        "francine-founder-hero-923.webp",
+        "fco-founder-nameplate",
+        "fco-founder-signature",
+        "fco-founder-title",
+        "Founder &amp; CEO",
+        'id="expertise"',
+        'id="journey"',
+        'id="portfolio"',
+        'id="work-with-fmb"',
+        'id="workCalendarCard"',
+        'id="workWithFmbForm"',
+        "site.js?v=20260716-mobile-first-v6",
+    ):
+        if marker not in about:
+            errors.append(f"aboutfmb/index.html: corporate founder redesign marker is missing: {marker}")
+    for retired_marker in ("site.css?v=20260716-mobile-first-v6", "organized-pages.css", "authority-hero", "assets/images/founder.webp\" alt="):
+        if retired_marker in about:
+            errors.append(f"aboutfmb/index.html: retired mixed-style About marker remains: {retired_marker}")
+
+    about_css_path = ROOT / "assets/css/aboutfmb-corporate.css"
+    about_motion_path = ROOT / "assets/js/aboutfmb-corporate.js"
+    if not about_css_path.exists():
+        errors.append("assets/css/aboutfmb-corporate.css: dedicated corporate About system is missing")
+    else:
+        about_css = about_css_path.read_text(encoding="utf-8")
+        for marker in (".fmb-about-corporate", ".fmb-about-booking-grid", ".fmb-about-portfolio-grid", ".fmb-about-hero-deck", "fmbandco-ampersand-gold.png", "@media(max-width:860px)"):
+            if marker not in about_css:
+                errors.append(f"assets/css/aboutfmb-corporate.css: missing brand, booking, or responsive marker: {marker}")
+        if 'content:"&"' in about_css:
+            errors.append("assets/css/aboutfmb-corporate.css: generic decorative ampersand remains")
+    if not about_motion_path.exists():
+        errors.append("assets/js/aboutfmb-corporate.js: About motion system is missing")
+    else:
+        about_motion = about_motion_path.read_text(encoding="utf-8")
+        for marker in ("IntersectionObserver", "prefers-reduced-motion", "about-motion-ready"):
+            if marker not in about_motion:
+                errors.append(f"assets/js/aboutfmb-corporate.js: missing motion or accessibility marker: {marker}")
 
     news = (ROOT / "news/index.html").read_text(encoding="utf-8")
     news_css_path = ROOT / "assets/css/news-channel.css"
