@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260718-mental-health-rules';
+const CACHE_NAME='fmb-app-shell-20260718-fmbandco-brand-v1';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -58,6 +58,7 @@ const APP_SHELL=[
   '/assets/css/experience-refresh.css',
   '/assets/css/organized-pages.css',
   '/assets/css/fmb-polish.css',
+  '/assets/css/fmbandco-brand.css',
   '/assets/css/fmb-content.css',
   '/assets/css/fmb-mobile-clean.css',
   '/assets/css/fmb-mobile-luxury.css',
@@ -80,6 +81,7 @@ const APP_SHELL=[
   '/assets/images/music/fmb-calm-official-album-cover.jpg',
   '/assets/images/icon-transparent.png',
   '/assets/images/signature-transparent.png',
+  '/assets/images/fmbandco/fmbandco-primary-transparent.png',
   '/assets/images/projects/senz-logo.png',
   '/assets/images/projects/cognita-logo.png',
   '/assets/images/projects/senz-transparent.png',

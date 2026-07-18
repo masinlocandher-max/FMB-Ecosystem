@@ -175,7 +175,7 @@ def check_membership_features(errors: list[str]) -> None:
         "Normal sign-in does not send an email",
         'id="verificationLead"',
         "Already verified profiles will not receive another verification email",
-        "auth.js?v=20260716-existing-account-fix",
+        "assets/js/auth.js?v=",
     ):
         if marker not in auth_html:
             errors.append(f"auth.html: missing member access guidance: {marker}")
@@ -347,10 +347,17 @@ def check_sharing_and_footer(errors: list[str]) -> None:
                 errors.append(f"assets/css/fmb-footer-v2.css: missing refined footer marker: {marker}")
 
     footer_release = "/assets/css/fmb-footer-v2.css?v=20260716-footer-v2"
+    standalone_footer_pages = {
+        Path("fmb&co/senz/index.html"),
+        Path("fmb&co/cognita/index.html"),
+    }
     for page in ROOT.rglob("*.html"):
+        relative_page = page.relative_to(ROOT)
+        if relative_page in standalone_footer_pages:
+            continue
         page_text = page.read_text(encoding="utf-8")
         if '<footer class="footer"' in page_text and footer_release not in page_text:
-            errors.append(f"{page.relative_to(ROOT)}: refined responsive footer stylesheet is missing")
+            errors.append(f"{relative_page}: refined responsive footer stylesheet is missing")
 
 
 def check_mobile_and_editorial_media(errors: list[str]) -> None:
@@ -412,6 +419,29 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         if not (ROOT / "assets/images/projects" / logo).exists():
             errors.append(f"assets/images/projects/{logo}: clean transparent partner logo is missing")
 
+    fmbandco_logo = ROOT / "assets/images/fmbandco/fmbandco-primary-transparent.png"
+    if not fmbandco_logo.exists():
+        errors.append("assets/images/fmbandco/fmbandco-primary-transparent.png: FMB&CO. transparent master mark is missing")
+    else:
+        png = fmbandco_logo.read_bytes()
+        if len(png) < 26 or png[:8] != b"\x89PNG\r\n\x1a\n" or png[25] not in {4, 6}:
+            errors.append("assets/images/fmbandco/fmbandco-primary-transparent.png: FMB&CO. mark must remain a PNG with transparency")
+
+    fmbandco_css_path = ROOT / "assets/css/fmbandco-brand.css"
+    if not fmbandco_css_path.exists():
+        errors.append("assets/css/fmbandco-brand.css: standalone FMB&CO. brand system is missing")
+    else:
+        fmbandco_css = fmbandco_css_path.read_text(encoding="utf-8")
+        for marker in (
+            "--fco-purple:#4b1f7a",
+            "--fco-gold:#d4af37",
+            "--fco-ivory:#f6f4ef",
+            "--senz-blue:#0057ff",
+            "@media(max-width:720px)",
+        ):
+            if marker not in fmbandco_css:
+                errors.append(f"assets/css/fmbandco-brand.css: missing brand or responsive marker: {marker}")
+
     premium_css_path = ROOT / "assets/css/desktop-premium.css"
     if not premium_css_path.exists():
         errors.append("assets/css/desktop-premium.css: premium desktop and persistent player layer is missing")
@@ -472,7 +502,6 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         "communityengagements/index.html",
         "dress-with-intention.html",
         "ebooks/index.html",
-        "fmbandco/index.html",
         "freedom-wall.html",
         "gethelp/index.html",
         "music/index.html",
@@ -486,6 +515,22 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
             errors.append(f"{name}: core persistent mobile menu script is missing")
         if "live-hotfix.js?v=20260716-mobile-first-v6" not in page:
             errors.append(f"{name}: accessible floating mobile menu is missing")
+
+    fmbandco_pages = (
+        "fmb&co/index.html",
+        "fmb&co/senz/index.html",
+        "fmb&co/cognita/index.html",
+    )
+    for name in fmbandco_pages:
+        page = (ROOT / name).read_text(encoding="utf-8")
+        for marker in (
+            "fmbandco-brand.css?v=20260718-brand-v1",
+            "fmbandco-primary-transparent.png",
+            'class="fco-nav-links"',
+            "/aboutfmb/#work-with-fmb",
+        ):
+            if marker not in page:
+                errors.append(f"{name}: missing standalone FMB&CO. brand marker: {marker}")
 
     news = (ROOT / "news/index.html").read_text(encoding="utf-8")
     for name in (
