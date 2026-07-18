@@ -180,6 +180,58 @@ def check_membership_features(errors: list[str]) -> None:
         if marker not in auth_html:
             errors.append(f"auth.html: missing member access guidance: {marker}")
 
+    app_html = (ROOT / "app/index.html").read_text(encoding="utf-8")
+    for marker in (
+        'id="accessGate"',
+        'id="appSignupForm"',
+        'id="appSigninForm"',
+        'id="appVerification"',
+        'id="screen-community"',
+        'id="appWallForm"',
+        'id="screen-profile"',
+        'data-fruit-avatar="orange"',
+        'data-app-theme="navy"',
+        "/app/access.js?v=",
+        "Need immediate support? Open public support contacts",
+    ):
+        if marker not in app_html:
+            errors.append(f"app/index.html: missing verified app-entry marker: {marker}")
+    app_access = (ROOT / "app/access.js").read_text(encoding="utf-8")
+    for marker in (
+        "get_membership_status",
+        "signInWithPassword",
+        "signUp",
+        "emailRedirectTo:authRedirect()",
+        "data.user.identities.length===0",
+        "getUser",
+        "const greetings=[",
+        "window.FMB_APP_SESSION",
+    ):
+        if marker not in app_access:
+            errors.append(f"app/access.js: missing secure profile-access marker: {marker}")
+    app_js = (ROOT / "app/app.js").read_text(encoding="utf-8")
+    for marker in (
+        "freedom_wall_posts",
+        "Moderator approved",
+        "username_changed_at",
+        "avatar_preset",
+        "app_theme",
+        "fmb:app-auth-ready",
+    ):
+        if marker not in app_js:
+            errors.append(f"app/app.js: missing complete member-experience marker: {marker}")
+    identity_migration = (ROOT / "supabase/migrations/20260718142219_complete_member_app_profile.sql").read_text(encoding="utf-8")
+    for marker in (
+        "interval '60 days'",
+        "Real name cannot be changed",
+        "private.prepare_freedom_wall_post",
+        "new.status := 'pending'",
+        "app_theme",
+        "avatar_preset",
+    ):
+        if marker not in identity_migration:
+            errors.append(f"complete member app migration: missing identity or moderation marker: {marker}")
+
     music = json.loads((ROOT / "assets/data/music-library.json").read_text(encoding="utf-8"))
     tracks = [track for playlist in music.get("playlists", []) for track in playlist.get("tracks", [])]
     expected_music = {"calm-01", "calm-01a", "calm-02", "calm-02a", "calm-03", "calm-03a", "calm-04", "calm-04a", "calm-05", "calm-05a", "with-love-fmb-ost-01", "with-love-fmb-ost-02"}
@@ -611,6 +663,7 @@ def main() -> int:
         ROOT / "news/pax-silica/index.html",
         ROOT / "news/good-news/index.html",
         ROOT / "profile/index.html",
+        ROOT / "app/index.html",
     ]
     html_files = sorted(ROOT.glob("*.html")) + route_pages
     if not html_files:

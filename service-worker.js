@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260718-fmbandco-transparent-motion-v3';
+const CACHE_NAME='fmb-app-shell-20260718-premium-member-app-v4';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -41,6 +41,7 @@ const APP_SHELL=[
   '/app/index.html',
   '/app/app.css',
   '/app/app.js',
+  '/app/access.js',
   '/app/manifest.webmanifest',
   '/freedom-wall.html',
   '/auth.html',
@@ -71,6 +72,8 @@ const APP_SHELL=[
   '/assets/css/volunteer.css',
   '/assets/css/music-ui.css',
   '/assets/js/site.js',
+  '/assets/js/config.js',
+  '/assets/js/supabase-client.js',
   '/assets/js/live-hotfix.js',
   '/assets/js/volunteer.js',
   '/assets/js/music.js',
