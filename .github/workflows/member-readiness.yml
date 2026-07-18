@@ -33,6 +33,7 @@ jobs:
           node --check assets/js/admin-login.js
           node --check assets/js/admin-activate.js
           node --check assets/js/live-hotfix.js
+          node --check assets/js/news-channel.js
           node --check app/access.js
           node --check app/app.js
           node --check app/install/install.js
