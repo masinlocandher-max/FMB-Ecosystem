@@ -1,12 +1,71 @@
 (function(){
   'use strict';
 
+  function installListenReadUI(){
+    if(document.getElementById('screen-listen'))return;
+    const style=document.createElement('style');
+    style.id='listen-read-styles';
+    style.textContent=`/* Listen and Read sections */
+.playlist-tabs{display:flex;gap:8px;margin-top:20px;padding-bottom:4px;overflow-x:auto;scrollbar-width:none}.playlist-tabs::-webkit-scrollbar{display:none}.playlist-tabs button{flex:0 0 auto;min-height:42px;padding:9px 15px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.76);color:var(--muted);font-size:11px;font-weight:850}.playlist-tabs button.active{border-color:rgba(111,22,165,.38);background:var(--violet-900);color:#fff}.listen-player{margin-top:14px;padding:20px}.listen-now{display:grid;grid-template-columns:92px minmax(0,1fr);gap:16px;align-items:center}.listen-now img{width:92px;height:92px;border-radius:21px;object-fit:cover;box-shadow:0 12px 30px rgba(45,23,56,.13)}.listen-now h2{margin-top:5px;font-size:27px}.listen-now p:last-child{margin-top:7px;color:var(--muted);font-size:11.5px}.listen-player audio{width:100%;margin-top:18px}.listen-controls{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.track-list{display:grid;gap:9px;margin-top:14px}.track-card{display:grid;grid-template-columns:38px minmax(0,1fr) 30px;gap:11px;align-items:center;width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:19px;background:rgba(255,255,255,.76);text-align:left;color:var(--ink)}.track-card.active{border-color:rgba(111,22,165,.38);background:linear-gradient(145deg,var(--violet-100),#fff);box-shadow:0 10px 25px rgba(81,11,119,.08)}.track-number{display:grid;width:34px;height:34px;place-items:center;border-radius:12px;background:var(--violet-100);color:var(--violet-900);font-size:10px;font-weight:900}.track-card strong{display:block;color:var(--violet-900);font-size:12.5px}.track-card small{display:block;margin-top:3px;color:var(--muted);font-size:10px;line-height:1.4}.track-play{color:var(--violet-700);font-size:13px;text-align:center}.reading-grid{display:grid;gap:12px;margin-top:20px}.reading-card{display:grid;grid-template-columns:48px minmax(0,1fr);gap:15px;align-items:start;width:100%;padding:19px;text-align:left;color:var(--ink)}.reading-mark{display:grid;width:44px;height:54px;place-items:center;border-radius:12px 12px 8px 8px;background:linear-gradient(160deg,var(--violet-900),var(--violet-600));color:#fff;font-family:Georgia,"Times New Roman",serif;font-size:15px;box-shadow:0 9px 20px rgba(81,11,119,.18)}.reading-card small{color:#9a7118;font-size:9px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}.reading-card h2{margin-top:6px;font-size:25px}.reading-card p{margin-top:7px;color:var(--muted);font-size:11.5px}.reader-panel{margin-top:18px;padding:20px;scroll-margin-top:78px}.reader-head{position:sticky;top:67px;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:14px;margin:-4px -4px 0;padding:10px 4px 14px;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}.reader-head h2{margin-top:5px;font-size:27px}.reader-close{min-height:40px;padding:8px 13px;border:1px solid var(--line);border-radius:999px;background:var(--violet-100);color:var(--violet-900);font-size:10px;font-weight:850}.reader-content{margin-top:10px}.reader-content h2{margin:8px 0 18px;font-size:34px}.reader-content h3{margin:27px 0 12px;font-size:29px}.reader-content h4{margin:22px 0 8px;color:var(--violet-900);font-family:Georgia,"Times New Roman",serif;font-size:21px}.reader-content p{margin-bottom:15px;color:#403247;font-size:14px;line-height:1.75}.reader-content blockquote{margin:20px 0;padding:17px 18px;border-left:4px solid var(--gold);border-radius:0 15px 15px 0;background:linear-gradient(90deg,rgba(214,170,66,.12),rgba(170,88,211,.08));color:var(--violet-900);font-family:Georgia,"Times New Roman",serif;font-size:21px;font-style:italic;line-height:1.45}.reader-list-item{padding-left:8px}.reader-loading{padding:24px;text-align:center;color:var(--muted);font-size:12px}.quick-card.quiet{background:rgba(248,242,251,.82)}
+@media(max-width:430px){.listen-now{grid-template-columns:76px minmax(0,1fr)}.listen-now img{width:76px;height:76px}.listen-now h2{font-size:23px}.track-card{grid-template-columns:34px minmax(0,1fr) 24px;padding:12px}.reading-card{grid-template-columns:42px minmax(0,1fr);padding:17px}.reading-mark{width:40px;height:50px}.reader-head{top:62px}}`;
+    document.head.appendChild(style);
+
+    const grid=document.querySelector('#screen-home .quick-grid');
+    if(grid){
+      const journal=grid.querySelector('[data-go="journal"]');
+      if(journal)journal.insertAdjacentHTML('afterend','<button class="quick-card" type="button" data-go="listen"><small>Listen</small><h3>Music for the moment</h3><p>Calm instrumentals and gentle feel-good collections.</p></button><button class="quick-card" type="button" data-go="read"><small>Read</small><h3>Supportive ebooks</h3><p>Open wellbeing guides without leaving the focused app.</p></button>');
+    }
+
+    const history=document.getElementById('screen-history');
+    if(history)history.insertAdjacentHTML('beforebegin',`    <section class="screen" id="screen-listen" data-screen="listen">
+      <p class="kicker">Music for wellbeing</p>
+      <h1 class="page-title">Choose what the moment needs.</h1>
+      <p class="page-lede">Listen to Calm when you want less noise, or choose a Feel Good collection for gentle energy and movement. Music may support a pause, but it is not treatment or emergency help.</p>
+      <div class="playlist-tabs" id="playlist-tabs" aria-label="Wellbeing music collections"></div>
+      <article class="listen-player card">
+        <div class="listen-now">
+          <img id="listen-cover" src="/assets/images/music/fmb-calm-official-album-cover.jpg" alt="Calm music collection cover">
+          <div><p class="kicker" id="listen-collection">Calm</p><h2 id="listen-title">Choose a track</h2><p id="listen-description">Your approved wellbeing music will appear here.</p></div>
+        </div>
+        <audio id="wellbeing-audio" controls preload="metadata"></audio>
+        <div class="listen-controls"><button class="button soft" id="listen-prev" type="button">Previous</button><button class="button soft" id="listen-next" type="button">Next</button></div>
+      </article>
+      <div class="track-list" id="track-list"><div class="empty card">Loading the approved music library.</div></div>
+      <p class="notice">Choose a comfortable volume. Stop listening when sound feels overstimulating or unpleasant.</p>
+    </section>
+    <section class="screen" id="screen-read" data-screen="read">
+      <p class="kicker">Supportive reading</p>
+      <h1 class="page-title">Read only what feels useful today.</h1>
+      <p class="page-lede">These public guides offer reflection and general education. They do not diagnose, replace professional care, or require you to finish everything in one sitting.</p>
+      <div class="reading-grid" id="reading-grid">
+        <button class="reading-card card" type="button" data-read-source="/reading.html" data-read-title="Finding Your Way Back to Yourself"><span class="reading-mark">01</span><div><small>Mental health and identity</small><h2>Finding Your Way Back to Yourself</h2><p>For feeling lost, left behind, unsure, unseen, or afraid to begin again.</p></div></button>
+        <button class="reading-card card" type="button" data-read-source="/coming-out-respect.html" data-read-title="Pride. Identity. Love."><span class="reading-mark">02</span><div><small>Identity and belonging</small><h2>Pride. Identity. Love.</h2><p>Safety, privacy, identity, allyship, and choosing when or whether to come out.</p></div></button>
+        <button class="reading-card card" type="button" data-read-source="/men-can-cry.html" data-read-title="Men Can Cry"><span class="reading-mark">03</span><div><small>Emotional honesty</small><h2>Men Can Cry</h2><p>A compassionate guide to feelings, respect, asking for help, and healthier masculinity.</p></div></button>
+      </div>
+      <article class="reader-panel card" id="reader-panel" hidden><div class="reader-head"><div><p class="kicker">In-app reader</p><h2 id="reader-title"></h2></div><button class="reader-close" id="reader-close" type="button" aria-label="Close reading">Close</button></div><div class="reader-content" id="reader-content"></div></article>
+      <p class="notice">Keep what helps and leave what does not. For immediate danger or crisis, use the Support section instead of relying on a reading guide.</p>
+    </section>`);
+
+    const nav=document.querySelector('.tabbar');
+    if(nav){
+      const historyTab=nav.querySelector('[data-tab="history"]');
+      const toolsTab=nav.querySelector('[data-tab="tools"]');
+      if(historyTab)historyTab.remove();
+      if(toolsTab)toolsTab.remove();
+      nav.insertAdjacentHTML('beforeend','<button type="button" data-tab="listen" data-go="listen"><span>♪</span><span>Listen</span></button><button type="button" data-tab="read" data-go="read"><span>▤</span><span>Read</span></button>');
+    }
+  }
+
+  installListenReadUI();
+
   const $=selector=>document.querySelector(selector);
   const $$=selector=>[...document.querySelectorAll(selector)];
 
   const CHECKIN_KEY='fmb-mental-checkins-v1';
   const JOURNAL_KEY='fmb-mental-journal-v1';
   const REMINDER_KEY='fmb-mental-reminder-preference-v1';
+  const MUSIC_DATA_URL='/assets/data/music-library.json';
+  const WELLBEING_PLAYLIST_IDS=['calm','seventies-feel-good','eighties-feel-good'];
 
   const screens=$$('[data-screen]');
   const tabs=$$('[data-tab]');
@@ -39,6 +98,10 @@
   let breathing=false;
   let calendarCursor=new Date(new Date().getFullYear(),new Date().getMonth(),1);
   let selectedHistoryDate=localDateKey();
+  let wellbeingPlaylists=[];
+  let currentPlaylistIndex=0;
+  let currentTrackIndex=0;
+  let musicReady=false;
 
   function read(key){
     try{return JSON.parse(localStorage.getItem(key)||'[]')}
@@ -116,6 +179,7 @@
     if(name==='home')renderToday();
     if(name==='journal')renderJournal();
     if(name==='history')renderCalendar();
+    if(name==='listen')initListen();
     if(name==='privacy')updatePrivacySummary();
   }
 
@@ -244,6 +308,128 @@
       toast('Entry deleted from this device.');
     }));
   }
+
+
+  function absoluteAssetPath(value){
+    if(!value)return '';
+    if(/^https?:\/\//i.test(value))return value;
+    return `/${String(value).replace(/^\/+/, '')}`;
+  }
+
+  async function initListen(){
+    if(musicReady)return;
+    const list=$('#track-list');
+
+    try{
+      const response=await fetch(MUSIC_DATA_URL,{cache:'no-store'});
+      if(!response.ok)throw new Error('Music library unavailable');
+      const library=await response.json();
+      wellbeingPlaylists=(library.playlists||[]).filter(playlist=>WELLBEING_PLAYLIST_IDS.includes(playlist.id));
+      if(!wellbeingPlaylists.length)throw new Error('No wellbeing collections found');
+      musicReady=true;
+      renderPlaylistTabs();
+      selectPlaylist(0,false);
+    }catch(error){
+      list.innerHTML='<div class="empty card">The music library could not be loaded right now. Please check your connection and try again.</div>';
+      toast('The music library could not be loaded.');
+    }
+  }
+
+  function renderPlaylistTabs(){
+    const tabsContainer=$('#playlist-tabs');
+    tabsContainer.innerHTML=wellbeingPlaylists.map((playlist,index)=>`<button type="button" data-playlist-index="${index}">${escapeHtml(playlist.title)}</button>`).join('');
+    $$('[data-playlist-index]').forEach(button=>button.addEventListener('click',()=>selectPlaylist(Number(button.dataset.playlistIndex),false)));
+  }
+
+  function selectPlaylist(index,autoplay=false){
+    currentPlaylistIndex=Math.max(0,Math.min(index,wellbeingPlaylists.length-1));
+    currentTrackIndex=0;
+    $$('[data-playlist-index]').forEach((button,buttonIndex)=>button.classList.toggle('active',buttonIndex===currentPlaylistIndex));
+    renderTrackList();
+    selectTrack(0,autoplay);
+  }
+
+  function renderTrackList(){
+    const playlist=wellbeingPlaylists[currentPlaylistIndex];
+    const list=$('#track-list');
+    list.innerHTML=(playlist.tracks||[]).map((track,index)=>`<button class="track-card" type="button" data-track-index="${index}"><span class="track-number">${String(index+1).padStart(2,'0')}</span><span><strong>${escapeHtml(track.title.replace(/^\d+[A-Z]?\.\s*/,''))}</strong><small>${escapeHtml(track.description||playlist.description||'Wellbeing music')}</small></span><span class="track-play" aria-hidden="true">▶</span></button>`).join('');
+    $$('[data-track-index]').forEach(button=>button.addEventListener('click',()=>selectTrack(Number(button.dataset.trackIndex),true)));
+  }
+
+  function selectTrack(index,autoplay=false){
+    const playlist=wellbeingPlaylists[currentPlaylistIndex];
+    const tracks=playlist?.tracks||[];
+    if(!tracks.length)return;
+
+    currentTrackIndex=(index+tracks.length)%tracks.length;
+    const track=tracks[currentTrackIndex];
+    const audio=$('#wellbeing-audio');
+
+    $('#listen-cover').src=absoluteAssetPath(track.cover_url||playlist.cover_url);
+    $('#listen-cover').alt=`${playlist.title} music collection cover`;
+    $('#listen-collection').textContent=playlist.title;
+    $('#listen-title').textContent=track.title.replace(/^\d+[A-Z]?\.\s*/,'');
+    $('#listen-description').textContent=track.description||playlist.description||'';
+
+    audio.src=absoluteAssetPath(track.src);
+    $$('[data-track-index]').forEach((button,buttonIndex)=>button.classList.toggle('active',buttonIndex===currentTrackIndex));
+
+    if(autoplay){
+      audio.play().catch(()=>toast('Tap play in the audio control to begin.'));
+    }
+  }
+
+  $('#listen-prev').addEventListener('click',()=>selectTrack(currentTrackIndex-1,true));
+  $('#listen-next').addEventListener('click',()=>selectTrack(currentTrackIndex+1,true));
+  $('#wellbeing-audio').addEventListener('ended',()=>selectTrack(currentTrackIndex+1,true));
+  $('#wellbeing-audio').addEventListener('error',()=>toast('This track could not be played. Try another track.'));
+
+  function readableElements(documentRoot){
+    const main=documentRoot.querySelector('main');
+    if(!main)return [];
+    const chapters=[...main.querySelectorAll('.reader-cover,.chapter')];
+    const roots=chapters.length?chapters:[main];
+    return roots.flatMap(root=>[...root.querySelectorAll('h1,h2,h3,p,li,blockquote')]);
+  }
+
+  async function openReading(source,title){
+    const panel=$('#reader-panel');
+    const content=$('#reader-content');
+    $('#reader-title').textContent=title;
+    panel.hidden=false;
+    content.innerHTML='<div class="reader-loading">Opening the guide gently.</div>';
+    panel.scrollIntoView({behavior:'smooth',block:'start'});
+
+    try{
+      const response=await fetch(source,{cache:'no-store'});
+      if(!response.ok)throw new Error('Reading unavailable');
+      const html=await response.text();
+      const documentRoot=new DOMParser().parseFromString(html,'text/html');
+      const elements=readableElements(documentRoot);
+      if(!elements.length)throw new Error('Reading content unavailable');
+
+      content.innerHTML=elements.map(element=>{
+        const text=escapeHtml(element.textContent.trim());
+        if(!text)return '';
+        if(element.tagName==='H1')return `<h2>${text}</h2>`;
+        if(element.tagName==='H2')return `<h3>${text}</h3>`;
+        if(element.tagName==='H3')return `<h4>${text}</h4>`;
+        if(element.tagName==='LI')return `<p class="reader-list-item">• ${text}</p>`;
+        if(element.tagName==='BLOCKQUOTE')return `<blockquote>${text}</blockquote>`;
+        return `<p>${text}</p>`;
+      }).join('');
+    }catch(error){
+      content.innerHTML='<div class="empty">This guide could not be opened inside the app right now.</div>';
+      toast('The reading guide could not be loaded.');
+    }
+  }
+
+  $$('[data-read-source]').forEach(button=>button.addEventListener('click',()=>openReading(button.dataset.readSource,button.dataset.readTitle)));
+  $('#reader-close').addEventListener('click',()=>{
+    $('#reader-panel').hidden=true;
+    $('#reader-content').innerHTML='';
+    $('#reading-grid').scrollIntoView({behavior:'smooth',block:'start'});
+  });
 
   function renderCalendar(){
     const year=calendarCursor.getFullYear();
@@ -468,7 +654,7 @@
     breathing=false;
   });
 
-  const initial=['home','checkin','journal','history','tools','privacy','help'].includes(location.hash.slice(1))
+  const initial=['home','checkin','journal','listen','read','history','tools','privacy','help'].includes(location.hash.slice(1))
     ?location.hash.slice(1)
     :'home';
 
