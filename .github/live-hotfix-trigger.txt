@@ -1,1 +1,1 @@
-Import the original 70s and 80s MP3 collections into local website assets on 2026-07-18.
+Inject the production image, mobile menu, and marquee hotfix references into all HTML pages.
