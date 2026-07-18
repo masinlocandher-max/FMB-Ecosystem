@@ -73,8 +73,8 @@ Do not place Explore or Member Access in the public primary navigation. Member t
 Implementation checkpoint:
 
 - [x] Establish `/fmb&co/` as the canonical standalone corporate route.
-- [x] Apply the approved Royal Purple, Signature Gold, Pearl Ivory, Cinzel, and Montserrat brand system.
-- [x] Add the locked transparent FMB&CO., SENZ, and Cognita marks without recoloring the operating-company logos.
+- [x] Apply the Royal Navy Purple, champagne gold, pearl, and Apple-style system-interface treatment.
+- [x] Add cleaned transparent FMB&CO., SENZ, and Cognita web exports without redrawing or recoloring the approved marks.
 - [x] Keep SENZ at `/fmb&co/senz/` and Cognita at `/fmb&co/cognita/`.
 - [x] Route consultation and founder calls to the existing About FMB and booking-calendar destinations.
 

@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260718-loader-fix-v1';
+const CACHE_NAME='fmb-app-shell-20260718-fmbandco-apple-luxury-v2';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -82,8 +82,11 @@ const APP_SHELL=[
   '/assets/images/icon-transparent.png',
   '/assets/images/signature-transparent.png',
   '/assets/images/fmbandco/fmbandco-primary-transparent.png',
+  '/assets/images/fmbandco/fmbandco-primary-clean.png',
   '/assets/images/projects/senz-logo.png',
   '/assets/images/projects/cognita-logo.png',
+  '/assets/images/projects/senz-logo-clean.png',
+  '/assets/images/projects/cognita-logo-clean.png',
   '/assets/images/projects/senz-transparent.png',
   '/assets/images/projects/cognita-transparent.png',
   '/assets/images/news/cleopatra-barrera-zambales-ocean-feature.jpeg',
