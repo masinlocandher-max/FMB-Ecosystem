@@ -7,8 +7,6 @@ on:
 permissions:
   contents: read
 
-tasks: {}
-
 jobs:
   capture-quality-output:
     runs-on: ubuntu-latest
