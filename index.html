@@ -56,9 +56,18 @@
 <link rel="stylesheet" href="/assets/css/fmb-content.css?v=20260716-banner-v5">
 <link rel="stylesheet" href="/assets/css/fmb-mobile-luxury.css?v=20260716-mobile-first-v6">
 <link rel="stylesheet" href="/assets/css/fmb-footer-v2.css?v=20260716-footer-v2">
+<style>
+#loader{animation:fmb-loader-failsafe .01s linear 1.6s forwards}
+#loader.hide{pointer-events:none}
+@keyframes fmb-loader-failsafe{to{opacity:0;visibility:hidden;pointer-events:none}}
+@media (prefers-reduced-motion:reduce){#loader{animation-delay:.35s}}
+</style>
 </head>
 <body class="landing-home organized-route home-polished">
 <div class="loader" id="loader" aria-hidden="true"><div class="loader-inner"><img class="loader-icon" src="assets/images/icon-transparent.png" alt=""><p>Take your time. You are welcome here.</p></div></div>
+<script>
+(()=>{const loader=document.getElementById('loader');if(!loader)return;const hide=()=>{loader.classList.add('hide');loader.setAttribute('aria-hidden','true');loader.style.pointerEvents='none'};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(hide,120),{once:true});else setTimeout(hide,120);setTimeout(hide,1600)})();
+</script>
 <div class="top-shell">
   <div class="support-glass" role="region" aria-label="Website care notice and FMB partner brands"></div>
   <header class="nav-glass">
@@ -158,10 +167,10 @@
 
 <footer class="footer"><div class="wrap"><div class="footer-grid"><div><div class="footer-brand-lockup"><img class="footer-icon" src="assets/images/icon-transparent.png" alt=""><img class="footer-logo" src="/assets/images/signature-transparent.png?v=20260716-signature-v5" alt="With love, FMB"></div><p>Our inclusive digital home for care, creativity, community, and becoming.</p><div class="socials"><a class="social" href="https://www.instagram.com/bb.fmb/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a><a class="social" href="mailto:withlovefmb@gmail.com" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></a></div></div><div><h4>Explore</h4><div class="footer-links"><a href="/ebooks/">Ebooks</a><a href="/music/">Music</a><a href="freedom-wall.html">Freedom Wall</a><a href="/communityengagements/">Community Engagements</a><a href="/fmb&amp;co/">FMB &amp; Co.</a><a href="/aboutfmb/">About FMB</a></div></div><div><h4>Access and contact</h4><div class="footer-links"><a href="#support">Important numbers</a><a href="/auth.html#signin">Sign in or join</a><a href="/aboutfmb/?category=advertise-with-us#work-with-fmb">Advertise with us</a><a href="privacy-policy.html">Privacy Policy</a><a href="community-guidelines.html">Community Guidelines</a><a href="data-rights.html">Data Rights</a></div></div></div><div class="footer-bottom"><span>© 2026 Francine Marie Bautista. All rights reserved.</span><span>With love, FMB</span></div></div></footer>
 <nav class="mobile-bar" aria-label="Mobile navigation"><a class="active" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 11 8-7 8 7v9H4Z"/><path d="M9 20v-6h6v6"/></svg><span>Home</span></a><a href="/ebooks/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2Z"/><path d="M7 4v14a2 2 0 0 0 2 2"/></svg><span>Read</span></a><a href="/music/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg><span>Music</span></a><a href="/auth.html#signin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"/></svg><span>Profile</span></a></nav>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/config.js?v=20260715-member-launch"></script>
-<script src="assets/js/supabase-client.js"></script>
-<script src="/assets/js/site.js?v=20260716-mobile-first-v6"></script>
-<script src="/assets/js/live-hotfix.js?v=20260716-mobile-first-v6"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="assets/js/config.js?v=20260715-member-launch"></script>
+<script defer src="assets/js/supabase-client.js"></script>
+<script defer src="/assets/js/site.js?v=20260716-mobile-first-v6"></script>
+<script defer src="/assets/js/live-hotfix.js?v=20260716-mobile-first-v6"></script>
 </body>
 </html>
