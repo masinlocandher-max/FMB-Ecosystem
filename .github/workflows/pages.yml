@@ -123,6 +123,8 @@ jobs:
           grep -q '@keyframes fco-hero-rise' _site/assets/css/fmbandco-brand.css
           grep -q '@keyframes fco-portrait-float' _site/assets/css/fmbandco-brand.css
           grep -q 'francine-founder-hero-923.webp' '_site/fmb&co/index.html'
+          grep -q 'fco-founder-signature' '_site/fmb&co/index.html'
+          grep -q 'Francine Marie Bautista' '_site/fmb&co/index.html'
           grep -q 'fmbandco-motion.js?v=20260718-motion-v1' '_site/fmb&co/index.html'
           grep -q 'fco-mobile-dock' '_site/fmb&co/index.html'
           grep -q 'id="checkinForm"' _site/profile/index.html
