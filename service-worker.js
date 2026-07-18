@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260718-about-corporate-newsroom-v11';
+const CACHE_NAME='fmb-app-shell-20260718-fmbandco-newsroom-v12';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -19,6 +19,7 @@ const PUBLIC_PAGES=new Set([
   '/fmbandco/',
   '/gethelp/',
   '/news/',
+  '/news/china-ai-monkey-video/',
   '/news/cleopatra-barrera/',
   '/news/impeachment/',
   '/news/pax-silica/',
@@ -51,6 +52,8 @@ const APP_SHELL=[
   '/app/install/install.js',
   '/freedom-wall.html',
   '/auth.html',
+  '/news/',
+  '/news/china-ai-monkey-video/',
   '/news/cleopatra-barrera/',
   '/news/impeachment/',
   '/news/pax-silica/',
@@ -109,6 +112,7 @@ const APP_SHELL=[
   '/assets/images/projects/senz-transparent.png',
   '/assets/images/projects/cognita-transparent.png',
   '/assets/images/news/cleopatra-barrera-zambales-ocean-feature.jpeg',
+  '/assets/images/news/china-ai-propaganda-editorial.webp',
   '/assets/images/news/sara-duterte-impeachment.webp',
   '/assets/images/news/pax-silica-briefing.png',
   '/assets/images/news/good-news-briefing.png',
@@ -126,7 +130,6 @@ self.addEventListener('install',event=>{
     await self.skipWaiting();
   })());
 });
-
 self.addEventListener('activate',event=>{
   event.waitUntil((async()=>{
     const keys=await caches.keys();
