@@ -1,0 +1,102 @@
+name: Import FMB 70s and 80s audio
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/import-fmb-audio.yml
+
+permissions:
+  contents: write
+
+jobs:
+  import-audio:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Download original MP3 files
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/audio/70s assets/audio/80s
+
+          download_audio() {
+            local url="$1"
+            local output="$2"
+            curl --location --fail --retry 3 --retry-all-errors --silent --show-error "$url" --output "$output"
+            test "$(stat -c%s "$output")" -gt 1000000
+            file --brief --mime-type "$output" | grep -Eq '^audio/(mpeg|mp3)$'
+          }
+
+          download_audio 'https://at.adobe.com/FDYDioSuetoIE4fQ' 'assets/audio/70s/01-70s-feel-good.mp3'
+          download_audio 'https://at.adobe.com/tih7QG2cshz4owzb' 'assets/audio/70s/02-70s-feel-good.mp3'
+          download_audio 'https://at.adobe.com/Bpfuph4NhMOz5Sl6' 'assets/audio/70s/03-70s-feel-good.mp3'
+          download_audio 'https://at.adobe.com/zdqA7XkeoremfS6W' 'assets/audio/70s/04-70s-feel-good.mp3'
+          download_audio 'https://at.adobe.com/NdCj4ZsfqqJjNrsw' 'assets/audio/70s/05-70s-feel-good.mp3'
+          download_audio 'https://at.adobe.com/ZVJIfn8A1ZA9ccAq' 'assets/audio/70s/06-70s-feel-good.mp3'
+          download_audio 'https://at.adobe.com/8eGXS88uzIBWZxws' 'assets/audio/70s/07-70s-feel-good.mp3'
+          download_audio 'https://at.adobe.com/mMtldyEezpKbLOBF' 'assets/audio/70s/08-70s-feel-good.mp3'
+          download_audio 'https://at.adobe.com/itZue5F71L8USysM' 'assets/audio/70s/09-70s-feel-good.mp3'
+          download_audio 'https://at.adobe.com/nDbfOBcEXr8cusz1' 'assets/audio/70s/10-70s-feel-good.mp3'
+          download_audio 'https://at.adobe.com/QRVqSpWXMt4OB3in' 'assets/audio/70s/11-70s-feel-good.mp3'
+
+          download_audio 'https://at.adobe.com/p88llvdmQfVsSjAb' 'assets/audio/80s/01-80s-feel-good.mp3'
+          download_audio 'https://at.adobe.com/N3uQMV5XALU29lyM' 'assets/audio/80s/02-80s-feel-good.mp3'
+          download_audio 'https://at.adobe.com/BFerrPzF05eUdrnn' 'assets/audio/80s/03-80s-feel-good.mp3'
+          download_audio 'https://at.adobe.com/sJdV8AvYR5Vjs9jD' 'assets/audio/80s/04-80s-feel-good.mp3'
+          download_audio 'https://at.adobe.com/FSXm9FPgBrWmUrUD' 'assets/audio/80s/05-80s-feel-good.mp3'
+          download_audio 'https://at.adobe.com/CTAS1OK9o2cK7ncq' 'assets/audio/80s/06-80s-feel-good.mp3'
+          download_audio 'https://at.adobe.com/lzpbwXgffzaAy4xq' 'assets/audio/80s/07-80s-feel-good.mp3'
+          download_audio 'https://at.adobe.com/jbfIQYnOkuSgYHhO' 'assets/audio/80s/08-80s-feel-good.mp3'
+
+      - name: Switch playlists to local website assets
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('assets/data/music-library.json')
+          library = json.loads(path.read_text(encoding='utf-8'))
+          collections = {
+              'seventies-feel-good': ('70s', '70s-feel-good'),
+              'eighties-feel-good': ('80s', '80s-feel-good'),
+          }
+
+          for playlist in library.get('playlists', []):
+              config = collections.get(playlist.get('id'))
+              if not config:
+                  continue
+              folder, stem = config
+              for index, track in enumerate(playlist.get('tracks', []), start=1):
+                  track['src'] = f'assets/audio/{folder}/{index:02d}-{stem}.mp3'
+                  track.pop('drive_file_id', None)
+
+          library['updated'] = '2026-07-18'
+          path.write_text(json.dumps(library, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - name: Verify imported collection
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(find assets/audio/70s -type f -name '*.mp3' | wc -l)" -eq 11
+          test "$(find assets/audio/80s -type f -name '*.mp3' | wc -l)" -eq 8
+          ! grep -q 'drive_file_id' assets/data/music-library.json
+          ! grep -q 'drive.google.com' assets/data/music-library.json
+
+      - name: Commit local audio assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/audio/70s assets/audio/80s assets/data/music-library.json
+          git commit -m 'Add 70s and 80s music as local website assets'
+          git push origin HEAD:main
