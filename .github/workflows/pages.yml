@@ -81,6 +81,8 @@ jobs:
           test -f _site/assets/css/fmbandco-brand.css
           test -f _site/assets/css/fmb-content.css
           test -f _site/assets/css/fmb-mobile-clean.css
+          test -f _site/assets/css/news-channel.css
+          test -f _site/assets/js/news-channel.js
           test -f _site/assets/images/projects/senz-logo.png
           test -f _site/assets/images/projects/cognita-logo.png
           test -f _site/assets/images/fmbandco/fmbandco-primary-transparent.png
@@ -140,6 +142,8 @@ jobs:
           grep -q 'FMB lens and disclaimer' _site/dress-with-intention.html
           grep -q 'National Center for Mental Health' _site/gethelp/index.html
           grep -q 'Pax Silica' _site/news/index.html
+          grep -q 'Independent editorial channel' _site/news/index.html
+          grep -q 'The magazine index.' _site/news/index.html
           grep -q 'Francine does not simply create visibility' _site/aboutfmb/index.html
           grep -q 'Community Engagements - AMDG' _site/communityengagements/index.html
           grep -q 'Good work should return as good' _site/index.html
@@ -162,6 +166,10 @@ jobs:
           grep -q 'The Golden Sash and the Bigger Dream' _site/news/index.html
           grep -q 'cleopatra-barrera-zambales-ocean-feature.jpeg' _site/news/cleopatra-barrera/index.html
           grep -q 'Photo: AP Photo/Basilio Sepe' _site/news/index.html
+          grep -q 'nc-article-layout' _site/news/cleopatra-barrera/index.html
+          grep -q 'nc-article-layout' _site/news/impeachment/index.html
+          grep -q 'nc-article-layout' _site/news/pax-silica/index.html
+          grep -q 'nc-article-layout' _site/news/good-news/index.html
           grep -q 'sara-duterte-impeachment.webp' _site/news/impeachment/index.html
           grep -q 'pax-silica-briefing.png' _site/news/pax-silica/index.html
           grep -q 'good-news-briefing.png' _site/news/good-news/index.html
