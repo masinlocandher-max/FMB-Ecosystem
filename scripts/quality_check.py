@@ -419,13 +419,20 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         if not (ROOT / "assets/images/projects" / logo).exists():
             errors.append(f"assets/images/projects/{logo}: clean transparent partner logo is missing")
 
-    fmbandco_logo = ROOT / "assets/images/fmbandco/fmbandco-primary-transparent.png"
-    if not fmbandco_logo.exists():
-        errors.append("assets/images/fmbandco/fmbandco-primary-transparent.png: FMB&CO. transparent master mark is missing")
-    else:
-        png = fmbandco_logo.read_bytes()
+    clean_brand_logos = (
+        "assets/images/fmbandco/fmbandco-primary-transparent.png",
+        "assets/images/fmbandco/fmbandco-primary-clean.png",
+        "assets/images/projects/senz-logo-clean.png",
+        "assets/images/projects/cognita-logo-clean.png",
+    )
+    for name in clean_brand_logos:
+        logo_path = ROOT / name
+        if not logo_path.exists():
+            errors.append(f"{name}: transparent brand mark is missing")
+            continue
+        png = logo_path.read_bytes()
         if len(png) < 26 or png[:8] != b"\x89PNG\r\n\x1a\n" or png[25] not in {4, 6}:
-            errors.append("assets/images/fmbandco/fmbandco-primary-transparent.png: FMB&CO. mark must remain a PNG with transparency")
+            errors.append(f"{name}: brand mark must remain a PNG with transparency")
 
     fmbandco_css_path = ROOT / "assets/css/fmbandco-brand.css"
     if not fmbandco_css_path.exists():
@@ -433,11 +440,14 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
     else:
         fmbandco_css = fmbandco_css_path.read_text(encoding="utf-8")
         for marker in (
-            "--fco-purple:#4b1f7a",
-            "--fco-gold:#d4af37",
-            "--fco-ivory:#f6f4ef",
-            "--senz-blue:#0057ff",
-            "@media(max-width:720px)",
+            "--fco-purple:#291744",
+            "--fco-purple-deep:#160c27",
+            "--fco-gold:#c8a96b",
+            "--fco-pearl:#f6f3ed",
+            "--senz-blue:#145dff",
+            ".fco-mobile-dock",
+            "env(safe-area-inset-bottom)",
+            "@media(max-width:860px)",
         ):
             if marker not in fmbandco_css:
                 errors.append(f"assets/css/fmbandco-brand.css: missing brand or responsive marker: {marker}")
@@ -524,9 +534,10 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
     for name in fmbandco_pages:
         page = (ROOT / name).read_text(encoding="utf-8")
         for marker in (
-            "fmbandco-brand.css?v=20260718-brand-v1",
-            "fmbandco-primary-transparent.png",
+            "fmbandco-brand.css?v=20260718-apple-luxury-v2",
+            "fmbandco-primary-clean.png",
             'class="fco-nav-links"',
+            'class="fco-mobile-dock"',
             "/aboutfmb/#work-with-fmb",
         ):
             if marker not in page:
