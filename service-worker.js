@@ -1,9 +1,11 @@
-const CACHE_NAME='fmb-app-shell-20260718-premium-member-app-v5-fmbandco-hero';
+const CACHE_NAME='fmb-app-shell-20260718-app-install-promotion-v5';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
   '/app/',
   '/app/index.html',
+  '/app/install/',
+  '/app/install/index.html',
   '/about.html',
   '/auth.html',
   '/freedom-wall.html',
@@ -43,6 +45,10 @@ const APP_SHELL=[
   '/app/app.js',
   '/app/access.js',
   '/app/manifest.webmanifest',
+  '/app/install/',
+  '/app/install/index.html',
+  '/app/install/install.css',
+  '/app/install/install.js',
   '/freedom-wall.html',
   '/auth.html',
   '/news/cleopatra-barrera/',
@@ -89,8 +95,6 @@ const APP_SHELL=[
   '/assets/images/fmbandco/fmbandco-primary-clean.png',
   '/assets/images/fmbandco/fmbandco-primary-reversed.png',
   '/assets/images/fmbandco/fmbandco-ampersand-gold.png',
-  '/assets/images/fmbandco/francine-founder-hero-640.webp',
-  '/assets/images/fmbandco/francine-founder-hero-923.webp',
   '/assets/images/projects/senz-logo.png',
   '/assets/images/projects/cognita-logo.png',
   '/assets/images/projects/senz-logo-clean.png',

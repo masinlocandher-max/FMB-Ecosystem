@@ -59,6 +59,9 @@ jobs:
           test -f _site/app/app.js
           test -f _site/app/access.js
           test -f _site/app/manifest.webmanifest
+          test -f _site/app/install/index.html
+          test -f _site/app/install/install.css
+          test -f _site/app/install/install.js
           test -f _site/communityengagements/index.html
           test -f _site/aboutfmb/index.html
           test -f '_site/fmb&co/index.html'
@@ -86,8 +89,6 @@ jobs:
           test -f _site/assets/images/fmbandco/fmbandco-primary-clean.png
           test -f _site/assets/images/fmbandco/fmbandco-primary-reversed.png
           test -f _site/assets/images/fmbandco/fmbandco-ampersand-gold.png
-          test -f _site/assets/images/fmbandco/francine-founder-hero-640.webp
-          test -f _site/assets/images/fmbandco/francine-founder-hero-923.webp
           test -f _site/assets/js/fmbandco-motion.js
           test -f _site/assets/images/news/cleopatra-barrera-zambales-ocean-feature.jpeg
           test -f _site/assets/images/news/sara-duterte-impeachment.webp
@@ -106,6 +107,9 @@ jobs:
           grep -q 'Four collections. Thirty-one tracks.' _site/music/index.html
           grep -q 'How are you, really?' _site/app/index.html
           grep -q 'id="appSignupForm"' _site/app/index.html
+          grep -q 'Your calmer space, one tap away.' _site/index.html
+          grep -q 'id="installNow"' _site/app/install/index.html
+          grep -q 'beforeinstallprompt' _site/app/install/install.js
           grep -q 'signInWithPassword' _site/app/access.js
           grep -q "backgroundSize='contain'" _site/assets/js/music.js
           grep -q 'Founder, strategist, creative director, advocate' _site/aboutfmb/index.html
@@ -115,8 +119,6 @@ jobs:
           grep -q 'Cognita Institute of AI' '_site/fmb&co/cognita/index.html'
           grep -q -- '--fco-purple:#291744' _site/assets/css/fmbandco-brand.css
           grep -q '@keyframes fco-hero-rise' _site/assets/css/fmbandco-brand.css
-          grep -q '@keyframes fco-portrait-float' _site/assets/css/fmbandco-brand.css
-          grep -q 'francine-founder-hero-923.webp' '_site/fmb&co/index.html'
           grep -q 'fmbandco-motion.js?v=20260718-motion-v1' '_site/fmb&co/index.html'
           grep -q 'fco-mobile-dock' '_site/fmb&co/index.html'
           grep -q 'id="checkinForm"' _site/profile/index.html

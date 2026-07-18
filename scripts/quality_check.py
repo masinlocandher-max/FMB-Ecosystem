@@ -196,6 +196,28 @@ def check_membership_features(errors: list[str]) -> None:
     ):
         if marker not in app_html:
             errors.append(f"app/index.html: missing verified app-entry marker: {marker}")
+
+    install_html = (ROOT / "app/install/index.html").read_text(encoding="utf-8")
+    for marker in (
+        'id="installNow"',
+        'id="sharePromotion"',
+        'id="installGuide"',
+        "Your calmer space, one tap away.",
+        "Continue to profile creation or sign in",
+        'rel="manifest" href="/app/manifest.webmanifest"',
+    ):
+        if marker not in install_html:
+            errors.append(f"app/install/index.html: missing app-promotion marker: {marker}")
+    install_js = (ROOT / "app/install/install.js").read_text(encoding="utf-8")
+    for marker in (
+        "beforeinstallprompt",
+        "appinstalled",
+        "navigator.share",
+        "Add to Home Screen",
+        "serviceWorker.register('/service-worker.js')",
+    ):
+        if marker not in install_js:
+            errors.append(f"app/install/install.js: missing device-aware installation marker: {marker}")
     app_access = (ROOT / "app/access.js").read_text(encoding="utf-8")
     for marker in (
         "get_membership_status",
@@ -246,10 +268,13 @@ def check_navigation_experience(errors: list[str]) -> None:
     site_css = (ROOT / "assets/css/site.css").read_text(encoding="utf-8")
     for marker in (
         'id="what-you-get"',
+        'id="get-the-app"',
         "Begin with a public guide",
         "Listen inside our member space",
         "Visit the Freedom Wall",
         "Access public support",
+        "Your calmer space, one tap away.",
+        "https://app.francinemariebautista.com/app/install/",
     ):
         if marker not in index:
             errors.append(f"index.html: missing first-visit benefit: {marker}")
@@ -488,15 +513,6 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         if len(png) < 26 or png[:8] != b"\x89PNG\r\n\x1a\n" or png[25] not in {4, 6}:
             errors.append(f"{name}: brand mark must remain a PNG with transparency")
 
-    for name in ("francine-founder-hero-640.webp", "francine-founder-hero-923.webp"):
-        webp_path = ROOT / "assets/images/fmbandco" / name
-        if not webp_path.exists():
-            errors.append(f"assets/images/fmbandco/{name}: optimized responsive founder portrait is missing")
-            continue
-        webp = webp_path.read_bytes()
-        if len(webp) < 16 or webp[:4] != b"RIFF" or webp[8:12] != b"WEBP":
-            errors.append(f"assets/images/fmbandco/{name}: responsive founder portrait must remain WebP")
-
     fmbandco_css_path = ROOT / "assets/css/fmbandco-brand.css"
     if not fmbandco_css_path.exists():
         errors.append("assets/css/fmbandco-brand.css: standalone FMB&CO. brand system is missing")
@@ -513,9 +529,6 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
             "@media(max-width:860px)",
             "fmbandco-ampersand-gold.png",
             "@keyframes fco-hero-rise",
-            "@keyframes fco-portrait-float",
-            ".fco-portrait-shape",
-            "mask-image:linear-gradient",
             ".fco-reveal-target",
         ):
             if marker not in fmbandco_css:
@@ -606,7 +619,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
     for name in fmbandco_pages:
         page = (ROOT / name).read_text(encoding="utf-8")
         for marker in (
-            "fmbandco-brand.css?v=20260718-founder-hero-v4",
+            "fmbandco-brand.css?v=20260718-transparent-motion-v3",
             "fmbandco-primary-reversed.png",
             "fmbandco-ampersand-gold.png",
             'class="fco-nav-links"',
@@ -620,9 +633,6 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
                 errors.append(f"{name}: generic decorative ampersand remains: {marker}")
 
     fmbandco_home = (ROOT / "fmb&co/index.html").read_text(encoding="utf-8")
-    for marker in ("francine-founder-hero-640.webp", "francine-founder-hero-923.webp", 'class="fco-hero-visual"', 'fetchpriority="high"'):
-        if marker not in fmbandco_home:
-            errors.append(f"fmb&co/index.html: responsive founder hero marker is missing: {marker}")
     if "fmbandco-motion.js?v=20260718-motion-v1" not in fmbandco_home:
         errors.append("fmb&co/index.html: restrained homepage motion script is missing")
     fmbandco_motion_path = ROOT / "assets/js/fmbandco-motion.js"
@@ -679,6 +689,7 @@ def main() -> int:
         ROOT / "news/good-news/index.html",
         ROOT / "profile/index.html",
         ROOT / "app/index.html",
+        ROOT / "app/install/index.html",
     ]
     html_files = sorted(ROOT.glob("*.html")) + route_pages
     if not html_files:

@@ -574,46 +574,6 @@
     if(image){image.src='assets/images/hero.webp';image.alt='With love, FMB official banner featuring Francine Marie Bautista and the purple and gold brand emblem';image.width=1600;image.height=900;image.setAttribute('fetchpriority','high');image.decoding='async'}
   }
 
-  function setupInstallExperience(){
-    const card=$('#appInstallCard');
-    const button=$('#installAppButton');
-    const help=$('#installAppHelp');
-    if(!card||!button||!help)return;
-    const standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
-    const mobile=window.matchMedia('(max-width: 800px)').matches;
-    if(standalone||!mobile)return;
-    let promptEvent=null;
-    const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
-    const show=()=>{card.hidden=false};
-    if(isiOS){
-      help.textContent='In Safari, tap Share, then choose Add to Home Screen.';
-      button.textContent='Show install steps';
-      button.addEventListener('click',()=>{
-        help.textContent='Tap the Share button in Safari, scroll down, choose Add to Home Screen, then tap Add.';
-        help.focus?.();
-      });
-      show();
-    }
-    window.addEventListener('beforeinstallprompt',event=>{
-      event.preventDefault();
-      promptEvent=event;
-      button.textContent='Install app';
-      help.textContent='Install our reading and music space for faster access from your home screen.';
-      show();
-    });
-    button.addEventListener('click',async()=>{
-      if(!promptEvent)return;
-      button.disabled=true;
-      await promptEvent.prompt();
-      const choice=await promptEvent.userChoice;
-      button.disabled=false;
-      if(choice.outcome==='accepted')card.hidden=true;
-      promptEvent=null;
-    });
-    window.addEventListener('appinstalled',()=>{card.hidden=true;promptEvent=null});
-  }
-  setupInstallExperience();
-
   const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const revealItems=$$('.reveal');
   if(reduced||!('IntersectionObserver' in window))revealItems.forEach(item=>item.classList.add('in'));
