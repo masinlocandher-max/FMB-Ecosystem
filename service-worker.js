@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260718-app-install-promotion-v8-fmbandco-signature';
+const CACHE_NAME='fmb-app-shell-20260718-app-install-promotion-v9-fmbandco-signature-font';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -87,6 +87,7 @@ const APP_SHELL=[
   '/assets/js/global-music.js',
   '/assets/js/az-assistant.js',
   '/assets/js/fmbandco-motion.js',
+  '/assets/fonts/great-vibes-latin-400-normal.woff2',
   '/assets/data/music-library.json',
   '/assets/images/music/fmb-calm-official-album-cover.jpg',
   '/assets/images/icon-transparent.png',

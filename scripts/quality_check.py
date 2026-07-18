@@ -522,6 +522,13 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         if len(webp) < 16 or webp[:4] != b"RIFF" or webp[8:12] != b"WEBP":
             errors.append(f"assets/images/fmbandco/{name}: responsive founder portrait must remain WebP")
 
+    signature_font_path = ROOT / "assets/fonts/great-vibes-latin-400-normal.woff2"
+    signature_license_path = ROOT / "assets/fonts/Great-Vibes-OFL.txt"
+    if not signature_font_path.exists() or signature_font_path.read_bytes()[:4] != b"wOF2":
+        errors.append("assets/fonts/great-vibes-latin-400-normal.woff2: embedded founder signature font is missing or invalid")
+    if not signature_license_path.exists() or "SIL OPEN FONT LICENSE" not in signature_license_path.read_text(encoding="utf-8"):
+        errors.append("assets/fonts/Great-Vibes-OFL.txt: signature font license is missing")
+
     fmbandco_css_path = ROOT / "assets/css/fmbandco-brand.css"
     if not fmbandco_css_path.exists():
         errors.append("assets/css/fmbandco-brand.css: standalone FMB&CO. brand system is missing")
@@ -541,6 +548,8 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
             "@keyframes fco-portrait-float",
             ".fco-portrait-shape",
             "mask-image:linear-gradient",
+            '@font-face{font-family:"Great Vibes"',
+            "great-vibes-latin-400-normal.woff2",
             ".fco-reveal-target",
         ):
             if marker not in fmbandco_css:
@@ -631,7 +640,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
     for name in fmbandco_pages:
         page = (ROOT / name).read_text(encoding="utf-8")
         for marker in (
-            "fmbandco-brand.css?v=20260718-founder-signature-v5",
+            "fmbandco-brand.css?v=20260718-founder-signature-v6",
             "fmbandco-primary-reversed.png",
             "fmbandco-ampersand-gold.png",
             'class="fco-nav-links"',
@@ -645,7 +654,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
                 errors.append(f"{name}: generic decorative ampersand remains: {marker}")
 
     fmbandco_home = (ROOT / "fmb&co/index.html").read_text(encoding="utf-8")
-    for marker in ("francine-founder-hero-640.webp", "francine-founder-hero-923.webp", 'class="fco-hero-visual"', 'fetchpriority="high"', "fco-founder-nameplate", "fco-founder-signature", "Francine Marie Bautista"):
+    for marker in ("francine-founder-hero-640.webp", "francine-founder-hero-923.webp", "great-vibes-latin-400-normal.woff2", 'class="fco-hero-visual"', 'fetchpriority="high"', "fco-founder-nameplate", "fco-founder-signature", "Francine Marie Bautista"):
         if marker not in fmbandco_home:
             errors.append(f"fmb&co/index.html: responsive founder hero marker is missing: {marker}")
     if "fmbandco-motion.js?v=20260718-motion-v1" not in fmbandco_home:
