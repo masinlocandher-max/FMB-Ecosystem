@@ -36,8 +36,8 @@ body.fco-page{margin:0;color:var(--fco-ink);background:var(--fco-pearl);font-fam
 .fco-topline{min-height:31px;padding:8px 20px;display:grid;place-items:center;background:var(--fco-night);color:rgba(255,255,255,.62);font-size:.62rem;font-weight:650;letter-spacing:.16em;text-align:center;text-transform:uppercase}
 .fco-header{position:sticky;top:0;z-index:30;border-bottom:1px solid rgba(255,255,255,.1);background:rgba(15,9,25,.82);-webkit-backdrop-filter:saturate(150%) blur(24px);backdrop-filter:saturate(150%) blur(24px)}
 .fco-nav{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:28px}
-.fco-header-logo{width:186px;flex:0 0 186px;padding:7px 11px;border:1px solid rgba(255,255,255,.72);border-radius:15px;background:rgba(255,255,255,.94);text-decoration:none;box-shadow:0 8px 24px rgba(0,0,0,.18)}
-.fco-header-logo img{width:100%;height:38px;object-fit:contain}
+.fco-header-logo{width:202px;flex:0 0 202px;text-decoration:none}
+.fco-header-logo img{width:100%;height:48px;object-fit:contain;filter:drop-shadow(0 8px 18px rgba(0,0,0,.22))}
 .fco-nav-links{display:flex;align-items:center;justify-content:flex-end;gap:clamp(14px,2vw,28px);color:rgba(255,255,255,.76);font-size:.69rem;font-weight:650;letter-spacing:.04em}
 .fco-nav-links a{position:relative;padding:12px 0;text-decoration:none;white-space:nowrap;transition:color .2s ease}
 .fco-nav-links a:hover,.fco-nav-links a:focus-visible,.fco-nav-links a[aria-current="page"]{color:#fff}
@@ -54,19 +54,22 @@ body.fco-page{margin:0;color:var(--fco-ink);background:var(--fco-pearl);font-fam
 .fco-hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(340px,.92fr);align-items:center;gap:clamp(42px,7vw,88px)}
 .fco-eyebrow{margin-bottom:15px;color:var(--fco-gold);font-size:.67rem;font-weight:750;letter-spacing:.18em;text-transform:uppercase}
 .fco-eyebrow.gold{color:var(--fco-gold-bright)}
-.fco-hero-logo{width:min(510px,100%);margin:0 0 28px;padding:18px 21px;border:1px solid rgba(255,255,255,.55);border-radius:24px;background:rgba(255,255,255,.92);box-shadow:0 24px 70px rgba(0,0,0,.25);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+.fco-hero-logo{width:min(560px,100%);margin:0 0 30px}
+.fco-hero-logo img{width:100%;filter:drop-shadow(0 20px 38px rgba(0,0,0,.28))}
 .fco-hero h1{max-width:780px;margin-bottom:20px;color:#fff;font-size:clamp(2.65rem,5.2vw,4.75rem);font-weight:590;letter-spacing:-.055em;line-height:.98}
 .fco-lead{max-width:64ch;color:var(--fco-slate);font-size:clamp(.96rem,1.25vw,1.08rem);line-height:1.76}
 .fco-hero .fco-lead{color:rgba(255,255,255,.68)}
 .fco-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
 .fco-btn{min-height:50px;padding:0 23px;display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:#fff;color:var(--fco-purple-deep)!important;font-size:.75rem;font-weight:720;letter-spacing:.015em;text-decoration:none;box-shadow:0 12px 28px rgba(0,0,0,.15);transition:transform .2s ease,box-shadow .2s ease,background .2s ease}
 .fco-btn:hover,.fco-btn:focus-visible{transform:translateY(-2px);box-shadow:0 16px 36px rgba(0,0,0,.21)}
+.fco-btn:active{transform:scale(.98)}
 .fco-btn.secondary{border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.08);color:#fff!important;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
 .fco-btn.gold{border-color:var(--fco-gold-bright);background:linear-gradient(135deg,var(--fco-gold-bright),var(--fco-gold));color:var(--fco-night)!important}
 .fco-btn.cognita-primary{border-color:var(--cognita-navy);background:var(--cognita-navy);color:#fff!important}
 .fco-btn.cognita-outline{border-color:rgba(16,42,79,.28);background:rgba(255,255,255,.65);color:var(--cognita-navy)!important}
 .fco-hero-note{min-height:440px;padding:42px;display:flex;flex-direction:column;justify-content:flex-end;border:1px solid rgba(255,255,255,.16);border-radius:36px;background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.05));color:#fff;box-shadow:0 28px 80px rgba(0,0,0,.28);-webkit-backdrop-filter:blur(26px);backdrop-filter:blur(26px)}
-.fco-note-mark{width:62px;height:62px;margin-bottom:auto;display:grid;place-items:center;border:1px solid rgba(226,200,142,.48);border-radius:19px;background:rgba(200,169,107,.08);color:var(--fco-gold-bright);font:500 2rem Georgia,serif}
+.fco-note-mark{width:64px;height:64px;margin-bottom:auto;display:grid;place-items:center;border:1px solid rgba(226,200,142,.38);border-radius:19px;background:rgba(200,169,107,.07)}
+.fco-note-mark img{width:38px;height:42px;object-fit:contain;filter:drop-shadow(0 6px 14px rgba(200,169,107,.18))}
 .fco-hero-note strong{font-size:clamp(1.7rem,2.7vw,2.5rem);font-weight:580;letter-spacing:-.035em;line-height:1.08}
 .fco-hero-note p{margin:16px 0 0;color:rgba(255,255,255,.62);font-size:.9rem;line-height:1.72}
 
@@ -84,7 +87,7 @@ body.fco-page{margin:0;color:var(--fco-ink);background:var(--fco-pearl);font-fam
   radial-gradient(circle at 25% 20%,rgba(226,200,142,.2),transparent 24%),
   radial-gradient(circle at 75% 75%,rgba(101,63,136,.42),transparent 31%),
   linear-gradient(145deg,var(--fco-night),var(--fco-purple));box-shadow:var(--fco-shadow)}
-.fco-pattern-panel::before{content:"&";position:absolute;inset:0;display:grid;place-items:center;color:var(--fco-gold-bright);font:400 clamp(8rem,18vw,13rem)/1 Georgia,serif;text-shadow:0 20px 60px rgba(200,169,107,.16)}
+.fco-pattern-panel::before{content:"";position:absolute;inset:78px;background:url('/assets/images/fmbandco/fmbandco-ampersand-gold.png') center/contain no-repeat;filter:drop-shadow(0 20px 50px rgba(200,169,107,.16))}
 .fco-pattern-panel::after{content:"FMB&CO.  /  SHAPING WHAT COMES NEXT";position:absolute;right:30px;bottom:28px;left:30px;padding-top:17px;border-top:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.48);font-size:.6rem;font-weight:650;letter-spacing:.16em}
 .fco-purpose-card{padding:clamp(34px,5vw,66px);display:flex;flex-direction:column;justify-content:center;border:1px solid rgba(255,255,255,.78);border-radius:34px;background:rgba(255,255,255,.72);box-shadow:var(--fco-shadow);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
 .fco-purpose-card blockquote{margin:0 0 22px;color:var(--fco-purple);font-size:clamp(2rem,3.6vw,3.45rem);font-weight:580;letter-spacing:-.05em;line-height:1.08}
@@ -96,10 +99,8 @@ body.fco-page{margin:0;color:var(--fco-ink);background:var(--fco-pearl);font-fam
 .fco-company-card.senz::before{background:linear-gradient(90deg,var(--senz-navy),var(--senz-blue))}
 .fco-company-card.cognita::before{background:linear-gradient(90deg,var(--cognita-navy),var(--cognita-blue))}
 .fco-company-label{position:relative;z-index:1;color:var(--fco-slate);font-size:.62rem;font-weight:720;letter-spacing:.14em;text-transform:uppercase}
-.fco-company-logo{position:relative;z-index:1;height:180px;margin:30px 0 25px;padding:24px;display:flex;align-items:center;border:1px solid rgba(20,18,28,.06);border-radius:24px;background:#f7f8fb}
-.fco-company-card.senz .fco-company-logo{background:linear-gradient(145deg,#f7f9ff,#eef3ff)}
-.fco-company-card.cognita .fco-company-logo{background:linear-gradient(145deg,#f7fcff,#edf8ff)}
-.fco-company-logo img{width:min(100%,460px);max-height:130px;object-fit:contain;object-position:left center}
+.fco-company-logo{position:relative;z-index:1;height:155px;margin:30px 0 25px;display:flex;align-items:center}
+.fco-company-logo img{width:min(100%,460px);max-height:145px;object-fit:contain;object-position:left center;filter:drop-shadow(0 10px 24px rgba(15,32,74,.08))}
 .fco-company-card h3{position:relative;z-index:1;margin-bottom:10px;font-size:clamp(1.55rem,2.7vw,2.2rem);font-weight:650;letter-spacing:-.04em}
 .fco-company-card.senz h3{color:var(--senz-navy)}
 .fco-company-card.cognita h3{color:var(--cognita-navy)}
@@ -122,7 +123,8 @@ body.fco-page{margin:0;color:var(--fco-ink);background:var(--fco-pearl);font-fam
 .fco-founder-copy .fco-btn.secondary{border-color:var(--fco-line);background:#fff;color:var(--fco-purple)!important}
 .fco-founder-name{margin:14px 0 4px;color:var(--fco-purple);font-size:1.12rem;font-weight:700}
 .fco-founder-role{color:#8a7040;font-size:.65rem;font-weight:720;letter-spacing:.14em;text-transform:uppercase}
-.fco-founder-mark{position:relative;overflow:hidden;display:grid;place-items:center;border:1px solid rgba(226,200,142,.25);background:radial-gradient(circle at 30% 20%,rgba(226,200,142,.18),transparent 28%),linear-gradient(145deg,var(--fco-night),var(--fco-purple));color:var(--fco-gold-bright);font:400 clamp(8rem,20vw,13rem) Georgia,serif;box-shadow:var(--fco-shadow)}
+.fco-founder-mark{position:relative;overflow:hidden;display:grid;place-items:center;border:1px solid rgba(226,200,142,.25);background:radial-gradient(circle at 30% 20%,rgba(226,200,142,.18),transparent 28%),linear-gradient(145deg,var(--fco-night),var(--fco-purple));box-shadow:var(--fco-shadow)}
+.fco-founder-mark img{width:min(58%,260px);filter:drop-shadow(0 22px 45px rgba(200,169,107,.2))}
 .fco-founder-mark::after{content:"FOUNDER-LED DIRECTION";position:absolute;right:26px;bottom:24px;left:26px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.46);font:.58rem -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.15em;text-align:center}
 
 .fco-consultation{text-align:center}
@@ -133,7 +135,8 @@ body.fco-page{margin:0;color:var(--fco-ink);background:var(--fco-pearl);font-fam
 
 .fco-footer{padding:62px 0 32px;background:var(--fco-night);color:#fff}
 .fco-footer-grid{display:grid;grid-template-columns:minmax(280px,1fr) auto;align-items:start;gap:50px}
-.fco-footer-logo{width:270px;padding:13px 16px;border:1px solid rgba(255,255,255,.7);border-radius:20px;background:rgba(255,255,255,.94)}
+.fco-footer-logo{width:290px}
+.fco-footer-logo img{width:100%;filter:drop-shadow(0 12px 24px rgba(0,0,0,.24))}
 .fco-footer p{max-width:55ch;margin:19px 0 0;color:rgba(255,255,255,.5);font-size:.79rem;line-height:1.7}
 .fco-footer-links{display:grid;grid-template-columns:repeat(2,minmax(120px,1fr));gap:13px 30px;color:rgba(255,255,255,.72);font-size:.7rem;font-weight:620}
 .fco-footer-links a{text-decoration:none}
@@ -151,8 +154,10 @@ body.fco-page{margin:0;color:var(--fco-ink);background:var(--fco-pearl);font-fam
 .senz-page .fco-gateway-hero h1 em{color:#78a3ff;font-style:normal}
 .cognita-page .fco-gateway-hero h1 em{color:#76d5ff;font-style:normal}
 .fco-gateway-hero .fco-lead{color:rgba(255,255,255,.67)}
-.fco-gateway-logo-card{min-height:370px;padding:42px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.66);border-radius:36px;background:rgba(255,255,255,.94);box-shadow:0 28px 82px rgba(0,0,0,.3);-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px)}
-.fco-gateway-logo-card img{width:100%;max-height:250px;object-fit:contain}
+.fco-gateway-logo-card{min-height:370px;padding:24px;display:grid;place-items:center;background:radial-gradient(circle at center,rgba(255,255,255,.15),transparent 68%)}
+.senz-page .fco-gateway-logo-card{background:radial-gradient(circle at center,rgba(58,112,255,.15),transparent 68%)}
+.cognita-page .fco-gateway-logo-card{background:radial-gradient(circle at center,rgba(118,213,255,.16),transparent 68%)}
+.fco-gateway-logo-card img{width:100%;max-height:250px;object-fit:contain;filter:drop-shadow(0 18px 34px rgba(0,0,0,.2))}
 .fco-gateway-main{padding:clamp(74px,8.5vw,112px) 0;background:var(--fco-pearl)}
 .fco-gateway-note{margin-bottom:38px;padding:19px 22px;border:1px solid rgba(200,169,107,.28);border-radius:20px;background:rgba(255,255,255,.76);color:#756038;font-size:.79rem;line-height:1.64;box-shadow:var(--fco-shadow-soft);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 .fco-gateway-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
@@ -169,6 +174,43 @@ body.fco-page{margin:0;color:var(--fco-ink);background:var(--fco-pearl);font-fam
 .fco-gateway-cta{margin-top:58px;padding:clamp(34px,5vw,56px);display:flex;align-items:center;justify-content:space-between;gap:35px;border:1px solid rgba(226,200,142,.18);border-radius:32px;background:radial-gradient(circle at 90% 0,rgba(100,62,135,.4),transparent 32%),linear-gradient(145deg,var(--fco-night),var(--fco-purple-deep));color:#fff;box-shadow:var(--fco-shadow)}
 .fco-gateway-cta h2{margin-bottom:10px;color:#fff;font-size:clamp(1.85rem,3vw,2.8rem);font-weight:590;letter-spacing:-.04em}
 .fco-gateway-cta p{max-width:62ch;margin-bottom:0;color:rgba(255,255,255,.61);font-size:.84rem;line-height:1.7}
+
+/* Restrained, native-feeling motion for the FMB&CO. homepage */
+.fco-home .fco-hero .fco-eyebrow,
+.fco-home .fco-hero-logo,
+.fco-home .fco-hero h1,
+.fco-home .fco-hero .fco-lead,
+.fco-home .fco-hero .fco-actions,
+.fco-home .fco-hero-note{animation:fco-hero-rise .82s cubic-bezier(.22,1,.36,1) both}
+.fco-home .fco-hero .fco-eyebrow{animation-delay:.04s}
+.fco-home .fco-hero-logo{animation-delay:.1s}
+.fco-home .fco-hero h1{animation-delay:.17s}
+.fco-home .fco-hero .fco-lead{animation-delay:.24s}
+.fco-home .fco-hero .fco-actions{animation-delay:.31s}
+.fco-home .fco-hero-note{animation-delay:.17s}
+.fco-home .fco-hero::after{animation:fco-orbit-drift 13s ease-in-out infinite alternate}
+.fco-home .fco-note-mark img,
+.fco-home .fco-pattern-panel::before,
+.fco-home .fco-founder-mark img{animation:fco-amp-float 7s ease-in-out infinite}
+.fco-motion-ready .fco-reveal-target{opacity:0;transform:translateY(26px);transition:opacity .72s cubic-bezier(.22,1,.36,1) var(--fco-reveal-delay,0ms),transform .72s cubic-bezier(.22,1,.36,1) var(--fco-reveal-delay,0ms)}
+.fco-motion-ready .fco-reveal-target.is-visible{opacity:1;transform:translateY(0)}
+
+@keyframes fco-hero-rise{
+  from{opacity:0;transform:translateY(22px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes fco-orbit-drift{
+  from{transform:translate3d(0,0,0) scale(1)}
+  to{transform:translate3d(-24px,22px,0) scale(1.035)}
+}
+@keyframes fco-amp-float{
+  0%,100%{transform:translate3d(0,0,0)}
+  50%{transform:translate3d(0,-8px,0)}
+}
+@keyframes fco-dock-in{
+  from{opacity:0;transform:translateY(22px) scale(.97)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
 
 /* iPhone-style mobile tab bar */
 .fco-mobile-dock{display:none}
@@ -190,12 +232,12 @@ body.fco-page{margin:0;color:var(--fco-ink);background:var(--fco-pearl);font-fam
   .fco-wrap{width:min(100% - 28px,1180px)}
   .fco-topline{min-height:28px;padding:7px 14px;font-size:.54rem;letter-spacing:.11em}
   .fco-nav{min-height:68px;justify-content:center}
-  .fco-header-logo{width:170px;flex-basis:170px;padding:6px 10px;border-radius:14px}
-  .fco-header-logo img{height:36px}
+  .fco-header-logo{width:180px;flex-basis:180px}
+  .fco-header-logo img{height:42px}
   .fco-nav-links{display:none}
   .fco-hero{padding:48px 0 58px}
   .fco-hero-grid{gap:26px}
-  .fco-hero-logo{width:100%;margin-bottom:24px;padding:14px 16px;border-radius:22px}
+  .fco-hero-logo{width:100%;margin-bottom:25px}
   .fco-hero h1{font-size:clamp(2.55rem,12vw,4.2rem)}
   .fco-hero-note{min-height:300px;padding:29px;border-radius:30px}
   .fco-actions{gap:10px}
@@ -206,8 +248,8 @@ body.fco-page{margin:0;color:var(--fco-ink);background:var(--fco-pearl);font-fam
   .fco-purpose-card{padding:34px 27px;border-radius:30px}
   .fco-company-grid{grid-template-columns:1fr}
   .fco-company-card{min-height:470px;padding:26px;border-radius:30px}
-  .fco-company-logo{height:160px;margin:26px 0 23px;padding:18px;border-radius:21px}
-  .fco-company-logo img{max-height:118px}
+  .fco-company-logo{height:145px;margin:26px 0 23px}
+  .fco-company-logo img{max-height:128px}
   .fco-pillars{grid-template-columns:1fr}
   .fco-pillar{min-height:210px;border-radius:26px}
   .fco-founder-copy{padding:34px 27px}
@@ -215,20 +257,22 @@ body.fco-page{margin:0;color:var(--fco-ink);background:var(--fco-pearl);font-fam
   .fco-gateway-hero{padding:50px 0 60px}
   .fco-gateway-grid{gap:28px}
   .fco-gateway-hero h1{font-size:clamp(2.75rem,12vw,4.3rem)}
-  .fco-gateway-logo-card{min-height:250px;padding:24px;border-radius:30px}
+  .fco-gateway-logo-card{min-height:250px;padding:12px}
   .fco-gateway-main{padding:70px 0}
   .fco-gateway-card{padding:26px;border-radius:26px}
   .fco-gateway-cta{align-items:flex-start;flex-direction:column;border-radius:29px}
   .fco-footer{padding-bottom:36px}
   .fco-footer-grid{grid-template-columns:1fr}
-  .fco-footer-logo{width:250px}
+  .fco-footer-logo{width:270px}
   .fco-footer-links{grid-template-columns:1fr 1fr}
   .fco-footer-bottom{align-items:flex-start;flex-direction:column}
-  .fco-mobile-dock{position:fixed;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));left:10px;z-index:50;min-height:72px;padding:8px 7px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border:1px solid rgba(255,255,255,.62);border-radius:25px;background:rgba(249,247,244,.82);box-shadow:0 18px 52px rgba(13,7,22,.25);-webkit-backdrop-filter:saturate(170%) blur(28px);backdrop-filter:saturate(170%) blur(28px)}
+  .fco-mobile-dock{position:fixed;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));left:10px;z-index:50;min-height:72px;padding:8px 7px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border:1px solid rgba(255,255,255,.62);border-radius:25px;background:rgba(249,247,244,.82);box-shadow:0 18px 52px rgba(13,7,22,.25);-webkit-backdrop-filter:saturate(170%) blur(28px);backdrop-filter:saturate(170%) blur(28px);animation:fco-dock-in .68s cubic-bezier(.22,1,.36,1) .18s both}
   .fco-dock-link{min-width:0;padding:5px 2px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;border-radius:18px;color:#77717d!important;font-size:.52rem;font-weight:650;text-decoration:none;transition:background .2s ease,color .2s ease}
   .fco-dock-link[aria-current="page"],.fco-dock-link.active{background:rgba(41,23,68,.09);color:var(--fco-purple)!important}
+  .fco-dock-link:active{transform:scale(.94)}
   .fco-dock-link svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-  .fco-dock-link .fco-dock-amp{width:22px;height:22px;display:grid;place-items:center;border:1px solid currentColor;border-radius:8px;font:600 1rem Georgia,serif}
+  .fco-dock-link .fco-dock-amp{width:22px;height:22px;display:grid;place-items:center}
+  .fco-dock-link .fco-dock-amp img{width:21px;height:22px;object-fit:contain;filter:drop-shadow(0 3px 7px rgba(122,83,26,.2))}
 }
 
 @media(max-width:420px){

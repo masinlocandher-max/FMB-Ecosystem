@@ -422,6 +422,8 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
     clean_brand_logos = (
         "assets/images/fmbandco/fmbandco-primary-transparent.png",
         "assets/images/fmbandco/fmbandco-primary-clean.png",
+        "assets/images/fmbandco/fmbandco-primary-reversed.png",
+        "assets/images/fmbandco/fmbandco-ampersand-gold.png",
         "assets/images/projects/senz-logo-clean.png",
         "assets/images/projects/cognita-logo-clean.png",
     )
@@ -448,9 +450,15 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
             ".fco-mobile-dock",
             "env(safe-area-inset-bottom)",
             "@media(max-width:860px)",
+            "fmbandco-ampersand-gold.png",
+            "@keyframes fco-hero-rise",
+            ".fco-reveal-target",
         ):
             if marker not in fmbandco_css:
                 errors.append(f"assets/css/fmbandco-brand.css: missing brand or responsive marker: {marker}")
+        for marker in ('content:"&"', "background:rgba(255,255,255,.94);text-decoration:none", "background:rgba(255,255,255,.92);box-shadow"):
+            if marker in fmbandco_css:
+                errors.append(f"assets/css/fmbandco-brand.css: retired white-panel or generic-ampersand treatment remains: {marker}")
 
     premium_css_path = ROOT / "assets/css/desktop-premium.css"
     if not premium_css_path.exists():
@@ -534,14 +542,30 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
     for name in fmbandco_pages:
         page = (ROOT / name).read_text(encoding="utf-8")
         for marker in (
-            "fmbandco-brand.css?v=20260718-apple-luxury-v2",
-            "fmbandco-primary-clean.png",
+            "fmbandco-brand.css?v=20260718-transparent-motion-v3",
+            "fmbandco-primary-reversed.png",
+            "fmbandco-ampersand-gold.png",
             'class="fco-nav-links"',
             'class="fco-mobile-dock"',
             "/aboutfmb/#work-with-fmb",
         ):
             if marker not in page:
                 errors.append(f"{name}: missing standalone FMB&CO. brand marker: {marker}")
+        for marker in ('class="fco-note-mark" aria-hidden="true">&amp;', 'class="fco-founder-mark" aria-hidden="true">&amp;', 'class="fco-dock-amp" aria-hidden="true">&amp;'):
+            if marker in page:
+                errors.append(f"{name}: generic decorative ampersand remains: {marker}")
+
+    fmbandco_home = (ROOT / "fmb&co/index.html").read_text(encoding="utf-8")
+    if "fmbandco-motion.js?v=20260718-motion-v1" not in fmbandco_home:
+        errors.append("fmb&co/index.html: restrained homepage motion script is missing")
+    fmbandco_motion_path = ROOT / "assets/js/fmbandco-motion.js"
+    if not fmbandco_motion_path.exists():
+        errors.append("assets/js/fmbandco-motion.js: homepage motion script is missing")
+    else:
+        fmbandco_motion = fmbandco_motion_path.read_text(encoding="utf-8")
+        for marker in ("IntersectionObserver", "prefers-reduced-motion", "fco-motion-ready"):
+            if marker not in fmbandco_motion:
+                errors.append(f"assets/js/fmbandco-motion.js: missing motion or accessibility marker: {marker}")
 
     news = (ROOT / "news/index.html").read_text(encoding="utf-8")
     for name in (
@@ -576,6 +600,9 @@ def main() -> int:
         ROOT / "music/index.html",
         ROOT / "communityengagements/index.html",
         ROOT / "aboutfmb/index.html",
+        ROOT / "fmb&co/index.html",
+        ROOT / "fmb&co/senz/index.html",
+        ROOT / "fmb&co/cognita/index.html",
         ROOT / "fmbandco/index.html",
         ROOT / "gethelp/index.html",
         ROOT / "news/index.html",

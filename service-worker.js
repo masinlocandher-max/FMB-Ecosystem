@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260718-fmbandco-apple-luxury-v2';
+const CACHE_NAME='fmb-app-shell-20260718-fmbandco-transparent-motion-v3';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -77,12 +77,15 @@ const APP_SHELL=[
   '/assets/js/desktop-premium.js',
   '/assets/js/global-music.js',
   '/assets/js/az-assistant.js',
+  '/assets/js/fmbandco-motion.js',
   '/assets/data/music-library.json',
   '/assets/images/music/fmb-calm-official-album-cover.jpg',
   '/assets/images/icon-transparent.png',
   '/assets/images/signature-transparent.png',
   '/assets/images/fmbandco/fmbandco-primary-transparent.png',
   '/assets/images/fmbandco/fmbandco-primary-clean.png',
+  '/assets/images/fmbandco/fmbandco-primary-reversed.png',
+  '/assets/images/fmbandco/fmbandco-ampersand-gold.png',
   '/assets/images/projects/senz-logo.png',
   '/assets/images/projects/cognita-logo.png',
   '/assets/images/projects/senz-logo-clean.png',

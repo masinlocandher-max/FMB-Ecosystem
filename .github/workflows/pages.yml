@@ -83,6 +83,9 @@ jobs:
           test -f _site/assets/images/projects/senz-logo-clean.png
           test -f _site/assets/images/projects/cognita-logo-clean.png
           test -f _site/assets/images/fmbandco/fmbandco-primary-clean.png
+          test -f _site/assets/images/fmbandco/fmbandco-primary-reversed.png
+          test -f _site/assets/images/fmbandco/fmbandco-ampersand-gold.png
+          test -f _site/assets/js/fmbandco-motion.js
           test -f _site/assets/images/news/cleopatra-barrera-zambales-ocean-feature.jpeg
           test -f _site/assets/images/news/sara-duterte-impeachment.webp
           test -f _site/assets/images/news/pax-silica-briefing.png
@@ -106,6 +109,8 @@ jobs:
           grep -q 'SENZ Strategic Communications' '_site/fmb&co/senz/index.html'
           grep -q 'Cognita Institute of AI' '_site/fmb&co/cognita/index.html'
           grep -q -- '--fco-purple:#291744' _site/assets/css/fmbandco-brand.css
+          grep -q '@keyframes fco-hero-rise' _site/assets/css/fmbandco-brand.css
+          grep -q 'fmbandco-motion.js?v=20260718-motion-v1' '_site/fmb&co/index.html'
           grep -q 'fco-mobile-dock' '_site/fmb&co/index.html'
           grep -q 'id="checkinForm"' _site/profile/index.html
           grep -q 'Privacy Policy' _site/privacy-policy.html
