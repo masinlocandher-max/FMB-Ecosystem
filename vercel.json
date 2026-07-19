@@ -1,0 +1,92 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": false,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "app.francinemariebautista.com" }],
+      "destination": "https://yoni.francinemariebautista.com/",
+      "permanent": true
+    },
+    {
+      "source": "/app",
+      "has": [{ "type": "host", "value": "app.francinemariebautista.com" }],
+      "destination": "https://yoni.francinemariebautista.com/",
+      "permanent": true
+    },
+    {
+      "source": "/app/",
+      "has": [{ "type": "host", "value": "app.francinemariebautista.com" }],
+      "destination": "https://yoni.francinemariebautista.com/",
+      "permanent": true
+    },
+    {
+      "source": "/app/:path*",
+      "has": [{ "type": "host", "value": "app.francinemariebautista.com" }],
+      "destination": "https://yoni.francinemariebautista.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "app.francinemariebautista.com" }],
+      "destination": "https://yoni.francinemariebautista.com/:path*",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "destination": "/apps/withlovefmb/app/index.html"
+    },
+    {
+      "source": "/app",
+      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "destination": "/apps/withlovefmb/app/index.html"
+    },
+    {
+      "source": "/app/",
+      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "destination": "/apps/withlovefmb/app/index.html"
+    },
+    {
+      "source": "/app/:path*",
+      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "destination": "/apps/withlovefmb/app/:path*"
+    },
+    {
+      "source": "/assets/:path*",
+      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "destination": "/apps/withlovefmb/assets/:path*"
+    },
+    {
+      "source": "/privacy-policy.html",
+      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "destination": "/apps/withlovefmb/privacy-policy.html"
+    },
+    {
+      "source": "/community-guidelines.html",
+      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "destination": "/apps/withlovefmb/community-guidelines.html"
+    },
+    {
+      "source": "/membership-agreement.html",
+      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "destination": "/apps/withlovefmb/membership-agreement.html"
+    },
+    {
+      "source": "/data-rights.html",
+      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "destination": "/apps/withlovefmb/data-rights.html"
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "destination": "/apps/withlovefmb/app/index.html"
+    },
+    { "source": "/", "destination": "/apps/withlovefmb/index.html" },
+    { "source": "/assets/:path*", "destination": "/apps/withlovefmb/assets/:path*" },
+    { "source": "/:path*", "destination": "/apps/withlovefmb/:path*" }
+  ]
+}
