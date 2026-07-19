@@ -95,8 +95,16 @@ jobs:
       - name: Inventory backend references
         run: |
           set -euo pipefail
-          echo '## Supabase references' >> "$GITHUB_STEP_SUMMARY"
-          grep -RIn --exclude-dir=node_modules --exclude-dir=.git -E 'supabase|SUPABASE' apps >> "$GITHUB_STEP_SUMMARY" || echo 'No Supabase references found in repository files.' >> "$GITHUB_STEP_SUMMARY"
-          echo '' >> "$GITHUB_STEP_SUMMARY"
-          echo '## Base44 references' >> "$GITHUB_STEP_SUMMARY"
-          grep -RIn --exclude-dir=node_modules --exclude-dir=.git -E 'base44|BASE44' apps >> "$GITHUB_STEP_SUMMARY" || echo 'No Base44 references found in repository files.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'SUPABASE REFERENCES'
+          grep -RIn --exclude-dir=node_modules --exclude-dir=.git -E 'supabase|SUPABASE' apps || true
+          echo 'BASE44 REFERENCES'
+          grep -RIn --exclude-dir=node_modules --exclude-dir=.git -E 'base44|BASE44' apps || true
+
+      - name: Print existing workflow definitions
+        run: |
+          set -euo pipefail
+          for workflow in .github/workflows/*; do
+            [ -f "$workflow" ] || continue
+            echo "===== $workflow ====="
+            sed -n '1,260p' "$workflow"
+          done
