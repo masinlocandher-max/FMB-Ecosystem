@@ -303,41 +303,41 @@ def check_az_assistant(errors: list[str]) -> None:
         "FMB&CO. Receptionist",
         "Receptionist",
         "We do not accept donations.",
-        "Yoni, the Mental-Health Companion",
         "verified premade reply bank",
         "UNKNOWN_QUESTION_KEY",
         "fmb:az-unmatched",
+        "www.francinemariebautista.com",
+        "FMB&amp;CO. Website Reception",
+        "Outside AZ’s Website Role",
+        "outside AZ’s capabilities",
+        "does not provide mental-health guidance",
         "Website and Brands",
+        "News and Publications",
         "Find Something",
-        "Account and Membership",
-        "App and Yoni",
-        "Music and Reading",
-        "Journal and Daily Check-In",
-        "Community and Freedom Wall",
-        "Support and Wellbeing",
-        "Privacy and Safety",
+        "Community Pages",
+        "Website Privacy Information",
         "Work with FMB",
         "Volunteer and Collaborate",
-        "Membership, Services, and Partnerships",
-        "Report a Problem",
-        "Frequently Asked Questions",
+        "Services, Fees, and Partnerships",
+        "Report a Website Problem",
+        "Frequently Asked Website Questions",
         "submit_contact_message",
-        "fmb:auth-ready",
-        "guestOnly",
-        "memberOnly",
     ):
         if marker not in assistant:
             errors.append(f"assets/js/az-assistant.js: missing guided-help marker: {marker}")
     for marker in (".az-help-trigger", ".az-help-panel", ".az-help-role", ".az-quick-reply", "min-height:44px", "min-width:150px", "fmb-mobile-host"):
         if marker not in styles:
             errors.append(f"assets/css/az-assistant.css: missing responsive help style: {marker}")
-    for marker in ("az-assistant.css", "az-assistant.js"):
+    for marker in ("az-assistant.css", "az-assistant.js", "APP_HOST", "isPublicWebsiteHost"):
         if marker not in site_js:
-            errors.append(f"assets/js/site.js: AZ assistant is not loaded globally: {marker}")
-        if marker not in app_html:
-            errors.append(f"app/index.html: AZ Receptionist is not loaded in the app shell: {marker}")
-        if marker not in worker:
-            errors.append(f"service-worker.js: AZ assistant is not available to the app shell: {marker}")
+            errors.append(f"assets/js/site.js: AZ website-only loading guard is missing: {marker}")
+    for marker in ("az-assistant.css", "az-assistant.js"):
+        if marker in app_html:
+            errors.append(f"app/index.html: AZ must not load inside the companion app: {marker}")
+        if marker in worker:
+            errors.append(f"service-worker.js: AZ must not be part of the companion app shell: {marker}")
+    if "app.francinemariebautista.com')return" not in assistant:
+        errors.append("assets/js/az-assistant.js: AZ app-host safety guard is missing")
 
 
 def check_advertising_flow(errors: list[str]) -> None:
@@ -772,16 +772,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         for marker in ("Asia/Manila", "data-news-clock", "IntersectionObserver", "navigator.share"):
             if marker not in news_js:
                 errors.append(f"assets/js/news-channel.js: missing clock, motion, or sharing marker: {marker}")
-    for route in (
-        "subic-aeta-landfill",
-        "pax-silica-water",
-        "binibining-pilipinas-2026",
-        "china-ai-monkey-video",
-        "cleopatra-barrera",
-        "impeachment",
-        "pax-silica",
-        "good-news",
-    ):
+    for route in ("china-ai-monkey-video", "cleopatra-barrera", "impeachment", "pax-silica", "good-news"):
         story = (ROOT / "news" / route / "index.html").read_text(encoding="utf-8")
         for marker in ('nc-article-layout', 'data-news-share', 'class="nc-sources"', 'rel="canonical"', 'nc-broadcast-header', 'data-news-clock'):
             if marker not in story:
@@ -789,10 +780,10 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         if "location.replace" in story or 'content="noindex' in story:
             errors.append(f"news/{route}/index.html: story route must be a complete indexable article")
     for name in (
-        "subic-aeta-dumpsite-iwitness.jpg",
-        "new-clark-city-pax-silica-pia.jpg",
-        "binibining-pilipinas-2026-winners.jpg",
         "china-ai-propaganda-editorial.webp",
+        "cleopatra-barrera-zambales-ocean-feature.jpeg",
+        "sara-duterte-impeachment.webp",
+        "pax-silica-briefing.png",
         "good-news-briefing.png",
     ):
         if name not in news:
@@ -801,24 +792,12 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
             errors.append(f"assets/images/news/{name}: news sharing image is missing")
     if news.count('class="news-visual"') != 5:
         errors.append("news/index.html: every main story must have one sourced lead visual")
-    if news.count("<figcaption>") != 5 or "GMA Public Affairs / I-Witness" not in news or "Philippine Information Agency" not in news or "Earl D.C. Bracamonte / Philstar.com" not in news or "does not reproduce the racist video" not in news:
+    if news.count("<figcaption>") != 5 or "Photo: AP Photo/Basilio Sepe" not in news or "Digitally created pageant editorial supplied by FMB" not in news or "does not reproduce the racist video" not in news:
         errors.append("news/index.html: every editorial visual must show its source or credit below it")
     china_ai_story = (ROOT / "news/china-ai-monkey-video/index.html").read_text(encoding="utf-8")
     for marker in ("Reuters", "Associated Press", "Permanent Court of Arbitration", "FMB&amp;CO. perspective · Opinion", "did not represent China’s official position"):
         if marker not in china_ai_story:
             errors.append(f"news/china-ai-monkey-video/index.html: missing sourced analysis marker: {marker}")
-    subic_story = (ROOT / "news/subic-aeta-landfill/index.html").read_text(encoding="utf-8")
-    for marker in ("Francine’s perspective · Opinion", "Philippine News Agency", "Republic Act 9003", "water are safe", "GMA Public Affairs"):
-        if marker not in subic_story:
-            errors.append(f"news/subic-aeta-landfill/index.html: missing reporting or labeled-opinion marker: {marker}")
-    pax_water_story = (ROOT / "news/pax-silica-water/index.html").read_text(encoding="utf-8")
-    for marker in ("Verdict: Unsupported", "151 to 303 MLD", "255,000 MLD", "Philippine Statistics Authority", "hypothetical"):
-        if marker not in pax_water_story:
-            errors.append(f"news/pax-silica-water/index.html: missing fact-check or scale marker: {marker}")
-    binibini_story = (ROOT / "news/binibining-pilipinas-2026/index.html").read_text(encoding="utf-8")
-    for marker in ("Gwendoline Meliz Frias Soriano", "Sasha-Juli Belle Penuliar Lacuna", "first time in Binibining Pilipinas history", "Earl D.C. Bracamonte"):
-        if marker not in binibini_story:
-            errors.append(f"news/binibining-pilipinas-2026/index.html: missing coronation or credit marker: {marker}")
     for retired_name in (
         "cleopatra-barrera-reina-filipinas-zambales.jpeg",
         "cleopatra-barrera-maritime-editorial.jpeg",
@@ -843,9 +822,6 @@ def main() -> int:
         ROOT / "fmbandco/index.html",
         ROOT / "gethelp/index.html",
         ROOT / "news/index.html",
-        ROOT / "news/subic-aeta-landfill/index.html",
-        ROOT / "news/pax-silica-water/index.html",
-        ROOT / "news/binibining-pilipinas-2026/index.html",
         ROOT / "news/china-ai-monkey-video/index.html",
         ROOT / "news/cleopatra-barrera/index.html",
         ROOT / "news/impeachment/index.html",
