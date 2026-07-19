@@ -359,7 +359,7 @@
     {words:'bye goodbye good night see you later close exit',direct:'goodbye',priority:20}
   ];
 
-  let isMember=Boolean(window.FMB_MEMBER?.isMember);
+  let isMember=Boolean(window.FMB_MEMBER?.isMember||window.FMB_APP_SESSION?.user);
   let current='main';
   let history=[];
   let started=false;
@@ -596,4 +596,5 @@
     if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
   });
   window.addEventListener('fmb:auth-ready',event=>{isMember=Boolean(event.detail?.isMember)});
+  window.addEventListener('fmb:app-auth-ready',event=>{isMember=Boolean(event.detail?.user)});
 })();
