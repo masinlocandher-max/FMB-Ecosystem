@@ -57,7 +57,31 @@
     }
   };
 
+  const installFounderHeroTiles=()=>{
+    document.querySelectorAll('img[src$="fmbco-ai-water-founder-hero.svg"]').forEach(image=>{
+      const hero=document.createElement('div');
+      hero.className='fmb-ai-water-hero-tiles';
+      hero.setAttribute('role','img');
+      hero.setAttribute('aria-label','Francine Marie Bautista beside the headline AI Uses Water. That Is Not the Whole Story');
+      Object.assign(hero.style,{display:'grid',gridTemplateColumns:'repeat(4,minmax(0,1fr))',width:'100%',aspectRatio:'1000 / 563',overflow:'hidden',background:'#ddd'});
+      for(let index=1;index<=4;index+=1){
+        const tile=document.createElement('img');
+        tile.src=`/assets/images/news/fmbco-ai-water-tile-${index}.svg`;
+        tile.alt='';
+        tile.setAttribute('aria-hidden','true');
+        tile.width=250;
+        tile.height=563;
+        tile.loading=index===1?'eager':'lazy';
+        tile.fetchPriority=index===1?'high':'auto';
+        Object.assign(tile.style,{display:'block',width:'100%',height:'100%',objectFit:'fill',margin:'0',padding:'0',border:'0'});
+        hero.appendChild(tile);
+      }
+      image.replaceWith(hero);
+    });
+  };
+
   installFounderAiWaterLead();
+  installFounderHeroTiles();
 
   const clocks=[...document.querySelectorAll('[data-news-clock]')];
   if(clocks.length){
