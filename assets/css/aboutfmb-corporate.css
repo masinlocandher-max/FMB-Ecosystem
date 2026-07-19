@@ -47,8 +47,8 @@
 .fmb-about-portrait-shape{position:absolute;inset:7% 6% 11% 10%;z-index:0;overflow:hidden;border:1px solid rgba(226,200,142,.3);border-radius:48% 44% 29% 42%/35% 38% 20% 27%;background:radial-gradient(circle at 26% 17%,rgba(226,200,142,.26),transparent 25%),linear-gradient(150deg,rgba(255,255,255,.09),rgba(75,40,106,.34));box-shadow:inset 0 1px 0 rgba(255,255,255,.13),0 24px 65px rgba(0,0,0,.2);transform:rotate(2deg)}
 .fmb-about-portrait-shape::before{position:absolute;inset:9%;border:1px solid rgba(255,255,255,.1);border-radius:inherit;content:""}
 .fmb-about-portrait-shape::after{position:absolute;right:-42px;bottom:-35px;width:170px;aspect-ratio:1;border:1px solid rgba(226,200,142,.28);border-radius:50%;box-shadow:0 0 0 34px rgba(200,169,107,.035);content:""}
-.fmb-about-portrait{position:absolute;inset:8px 0 39px;z-index:2;display:grid;align-items:end;justify-items:center;pointer-events:none}
-.fmb-about-portrait img{width:min(112%,500px);height:100%;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 25px 44px rgba(0,0,0,.34))}
+.fmb-about-portrait{position:absolute;inset:12px 10px 54px;z-index:2;min-width:0;min-height:0;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;pointer-events:none}
+.fmb-about-portrait img{flex:0 0 auto;width:auto;height:min(118%,570px);max-width:none;object-fit:contain;object-position:center top;filter:drop-shadow(0 25px 44px rgba(0,0,0,.34))}
 .fmb-about-pattern figcaption{position:absolute;right:28px;bottom:27px;left:28px;z-index:3;padding-top:17px;border-top:1px solid rgba(255,255,255,.13);color:rgba(255,255,255,.56);font-size:.58rem;font-weight:700;letter-spacing:.17em;text-align:center;text-transform:uppercase}
 .fmb-about-story{min-height:560px;padding:clamp(38px,5vw,70px);display:flex;flex-direction:column;justify-content:center;border:1px solid rgba(255,255,255,.86);border-radius:36px;background:rgba(255,255,255,.73);box-shadow:var(--fco-shadow);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)}
 .fmb-about-story h3{max-width:720px;margin:0 0 24px;color:var(--fco-purple);font-size:clamp(2rem,3.55vw,3.55rem);font-weight:590;letter-spacing:-.052em;line-height:1.04}
@@ -205,9 +205,9 @@
   .fmb-about-section{padding:72px 0}
   .fmb-about-section-head{margin-bottom:32px}
   .fmb-about-section-head h2{font-size:clamp(2.35rem,10.5vw,3.6rem)}
-  .fmb-about-pattern{min-height:350px;border-radius:30px}
-  .fmb-about-portrait{inset:6px 0 36px}
-  .fmb-about-portrait img{width:min(105%,430px)}
+  .fmb-about-pattern{min-height:clamp(410px,112vw,480px);border-radius:30px}
+  .fmb-about-portrait{inset:10px 8px 54px}
+  .fmb-about-portrait img{width:auto;height:min(118%,500px)}
   .fmb-about-story{min-height:0;padding:34px 27px;border-radius:30px}
   .fmb-about-story h3{font-size:clamp(2rem,9.5vw,3.05rem)}
   .fmb-about-expertise-grid,.fmb-about-portfolio-grid,.fmb-about-quote-grid{grid-template-columns:1fr}
@@ -230,6 +230,9 @@
 }
 
 @media(max-width:430px){
+  .fmb-about-pattern{min-height:clamp(390px,118vw,465px)}
+  .fmb-about-portrait{inset:9px 6px 52px}
+  .fmb-about-portrait img{height:min(115%,470px)}
   .fmb-about-header-brand{gap:9px}
   .fmb-about-header-brand strong{padding-right:9px;letter-spacing:.21em;text-indent:.21em}
   .fmb-about-header-wordmark{width:min(155px,48vw)}
