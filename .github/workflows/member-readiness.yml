@@ -18,6 +18,9 @@ permissions:
 jobs:
   static-checks:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/withlovefmb
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -68,6 +71,9 @@ jobs:
   live-readiness:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/withlovefmb
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
