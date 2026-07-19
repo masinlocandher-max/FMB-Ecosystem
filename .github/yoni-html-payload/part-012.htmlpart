@@ -1,0 +1,158 @@
+function setModal(layer,open){if(!layer)return;if(open){layer.hidden=false;document.body.classList.add('modal-open');requestAnimationFrame(()=>layer.classList.add('visible'));const focusable=layer.querySelector('button,a[href]');setTimeout(()=>focusable?.focus({preventScroll:true}),180)}else{layer.classList.remove('visible');setTimeout(()=>{layer.hidden=true;if(!document.querySelector('.post-login-layer.visible'))document.body.classList.remove('modal-open')},motionReduced()?10:420)}}
+function openWorkWithFmb(){setModal($('#fmbWelcomeModal'),false);setTimeout(()=>setModal($('#workWithFmbModal'),true),250)}
+function closeWorkWithFmb(){setModal($('#workWithFmbModal'),false)}
+function openPostLoginSequence(force=false){if(!force&&safeSessionGet(loginPopupSessionKey))return;safeSessionSet(loginPopupSessionKey,'1');setTimeout(()=>setModal($('#fmbWelcomeModal'),true),360)}
+function enterApp(name,forcePopups=false){
+  if(name){profile.name=name;write(keys.profile,profile)}
+  setLaunch(true,{title:'Opening Yoni',text:'Preparing your calm, private space...'});
+  document.body.classList.add('screen-content-loading');
+  setTimeout(()=>{
+    $('#accessGate').hidden=true;$('#appShell').hidden=false;$('#tabbar').hidden=false;
+    applyProfile();const requested=location.hash.replace('#','');show($(`[data-screen="${requested}"]`)?requested:'home',{instant:true});window.scrollTo(0,0);
+    setTimeout(()=>{setLaunch(false);document.body.classList.remove('screen-content-loading');openPostLoginSequence(forcePopups)},motionReduced()?20:460);
+  },motionReduced()?20:620)
+}
+async function signOut(){
+  setLaunch(true,{title:'Closing your space',text:'Signing out securely...'});
+  try{await authClient?.auth.signOut({scope:'local'})}catch{}
+  authUser=null;accountProfile=null;
+  setTimeout(()=>{$('#appShell').hidden=true;$('#tabbar').hidden=true;$('#accessGate').hidden=false;window.scrollTo(0,0);setLaunch(false)},motionReduced()?20:420)
+}
+function authStatus(element,message,type=''){
+  element.textContent=message||'';
+  element.dataset.type=type;
+  element.classList.toggle('visible',Boolean(message));
+}
+async function openAuthenticatedUser(user,forcePopups=false){
+  authUser=user;
+  accountProfile=await loadMemberProfile(user);
+  profile=memberProfileToLocal(user,accountProfile);
+  write(keys.profile,profile);
+  const chosenTheme=themeFromDb(accountProfile?.app_theme)||read(keys.theme,'sunrise');
+  document.body.dataset.theme=chosenTheme;write(keys.theme,chosenTheme);
+  enterApp(profile.name,forcePopups);
+}
+async function initializeAuth(){
+  if(!window.FMB?.configured){
+    authStatus($('#signinStatus'),'Account service is temporarily unavailable. Please try again later.','error');
+    return;
+  }
+  authClient=window.FMB.createClient('local');
+  const hashError=new URLSearchParams(location.hash.replace(/^#/,'')).get('error_description');
+  if(hashError)authStatus($('#signinStatus'),decodeURIComponent(hashError),'error');
+  try{
+    const {data:{session}}=await authClient.auth.getSession();
+    if(session?.user?.email_confirmed_at){await openAuthenticatedUser(session.user);return}
+  }catch(error){console.warn('Session check failed',error)}
+  $('#accessGate').hidden=false;
+}
+$('#signupTab').onclick=()=>{$('#signupTab').classList.add('active');$('#signinTab').classList.remove('active');$('#signupPanel').hidden=false;$('#signinPanel').hidden=true};
+$('#signinTab').onclick=()=>{$('#signinTab').classList.add('active');$('#signupTab').classList.remove('active');$('#signinPanel').hidden=false;$('#signupPanel').hidden=true};
+$('#signupForm').onsubmit=async e=>{
+  e.preventDefault();
+  const name=$('#signupName').value.trim();
+  const email=$('#signupEmail').value.trim().toLowerCase();
+  const password=$('#signupPassword').value;
+  const confirmPassword=$('#signupConfirm').value;
+  const button=e.currentTarget.querySelector('[type="submit"]'),st=$('#signupStatus');
+  if(password!==confirmPassword){authStatus(st,'The passwords do not match.','error');return}
+  if(password.length<10){authStatus(st,'Use at least 10 characters for your password.','error');return}
+  if(!$('#legalConsent').checked){authStatus(st,'Please confirm the safety and privacy notice.','error');return}
+  if(!window.FMB?.configured){authStatus(st,'Account service is temporarily unavailable.','error');return}
+  authClient=authClient||window.FMB.createClient('local');
+  setButtonLoading(button,true,'Creating your Yoni profile');
+  authStatus(st,'Creating your secure member profile...');
+  const {data,error}=await authClient.auth.signUp({email,password,options:{data:{full_name:name},emailRedirectTo:YONI_URL}});
+  setButtonLoading(button,false);
+  if(error){authStatus(st,error.message,'error');return}
+  if(data?.session?.user){await openAuthenticatedUser(data.session.user,true);return}
+  authStatus(st,`Check ${email} for the verification link, then return here and sign in.`,'success');
+  $('#signinEmail').value=email;
+};
+$('#signinForm').onsubmit=async e=>{
+  e.preventDefault();
+  const email=$('#signinEmail').value.trim().toLowerCase(),password=$('#signinPassword').value;
+  const button=e.currentTarget.querySelector('[type="submit"]'),st=$('#signinStatus');
+  if(!window.FMB?.configured){authStatus(st,'Account service is temporarily unavailable.','error');return}
+  authClient=authClient||window.FMB.createClient('local');
+  setButtonLoading(button,true,'Signing in');
+  authStatus(st,'Opening your member account...');
+  const {data,error}=await authClient.auth.signInWithPassword({email,password});
+  setButtonLoading(button,false);
+  if(error){authStatus(st,error.message,'error');return}
+  if(!data?.user?.email_confirmed_at){authStatus(st,'Please verify your email before signing in.','error');return}
+  authStatus(st,'');
+  await openAuthenticatedUser(data.user,true);
+};
+async function requestPasswordReset(email){
+  const address=String(email||authUser?.email||'').trim().toLowerCase();
+  if(!address){toast('Enter your email first.');return}
+  authClient=authClient||window.FMB?.createClient('local');
+  if(!authClient){toast('Account service is temporarily unavailable.');return}
+  const {error}=await authClient.auth.resetPasswordForEmail(address,{redirectTo:'https://www.francinemariebautista.com/reset-password.html'});
+  toast(error?error.message:'Password reset link sent. Check your email.');
+}
+$('#resetPassword').onclick=()=>requestPasswordReset($('#signinEmail').value||$('#signupEmail').value);
+$('#profileResetPassword').onclick=()=>requestPasswordReset(authUser?.email);
+
+$('#fmbWelcomeContinue').onclick=openWorkWithFmb;
+$('#fmbWelcomeClose').onclick=openWorkWithFmb;
+$('#workWithFmbLater').onclick=closeWorkWithFmb;
+$('#workWithFmbClose').onclick=closeWorkWithFmb;
+[$('#fmbWelcomeModal'),$('#workWithFmbModal')].forEach(layer=>layer?.addEventListener('click',e=>{if(e.target===layer){if(layer.id==='fmbWelcomeModal')openWorkWithFmb();else closeWorkWithFmb()}}));
+document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if($('#workWithFmbModal')?.classList.contains('visible'))closeWorkWithFmb();else if($('#fmbWelcomeModal')?.classList.contains('visible'))openWorkWithFmb()});
+
+
+function show(name,{instant=false,back=false}={}){
+  const current=$('.screen.active');
+  if(current?.dataset.screen===name){prepareScreen(name);return}
+  const next=$(`[data-screen="${name}"]`);if(!next)return;
+  const currentName=current?.dataset.screen||'home';
+  const navTarget=({journal:'history',checkin:'home',tools:'home',listen:'home',read:'home',help:'home',privacy:'profile'})[name]||name;
+  const goingBack=back||(navRank[name]??0)<(navRank[currentName]??0);
+  prepareScreen(name);
+  $$('.screen').forEach(s=>s.classList.remove('enter-forward','exit-forward','enter-back','exit-back'));
+  if(current&&!instant&&!motionReduced()){
+    current.classList.add(goingBack?'exit-back':'exit-forward');
+    setTimeout(()=>{current.classList.remove('active','exit-back','exit-forward')},300)
+  }else current?.classList.remove('active');
+  next.classList.add('active');
+  if(!instant&&!motionReduced()){
+    next.classList.add(goingBack?'enter-back':'enter-forward');
+    setTimeout(()=>next.classList.remove('enter-back','enter-forward'),560)
+  }
+  $$('[data-tab]').forEach(t=>t.classList.toggle('active',t.dataset.tab===navTarget));
+  if(navHistory.at(-1)!==name){if(goingBack&&navHistory.length>1)navHistory.pop();else navHistory.push(name)}
+  history.replaceState({screen:name},'',`#${name}`);
+  window.scrollTo({top:0,behavior:'auto'});subtleHaptic();
+}
+$$('[data-go]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();show(b.dataset.go)}));
+const pressables='button,.card[role="button"],.journal-feature,.home-action-card,.mood-option,.fruit-choice,.theme-choice';
+document.addEventListener('pointerdown',e=>{const el=e.target.closest(pressables);if(el&&!el.disabled)el.classList.add('is-pressed')},{passive:true});
+['pointerup','pointercancel','pointerleave'].forEach(type=>document.addEventListener(type,e=>e.target.closest?.(pressables)?.classList.remove('is-pressed'),{passive:true}));
+let lastScroll=0;addEventListener('scroll',()=>{const y=scrollY;$('.app-header')?.classList.toggle('is-compact',y>18);const bar=$('#tabbar');if(bar&&!bar.hidden){bar.classList.toggle('is-hidden',y>lastScroll&&y>180);lastScroll=y}}, {passive:true});
+addEventListener('hashchange',()=>{const name=location.hash.replace('#','');if(name&&$(`[data-screen="${name}"]`)&&!$('.post-login-layer.visible'))show(name,{back:true})});
+$('#signOut').onclick=signOut;
+
+function applyProfile(){if(!fruit[profile.fruit])profile.fruit='orange';const av=fruitAvatarHtml(profile.fruit);['accountAvatar','communityAvatar','profileAvatar'].forEach(id=>{const el=$('#'+id);if(!el)return;el.innerHTML=av;el.style.backgroundImage='none'});$('#profileName').textContent=profile.name||'Friend';$('#profileUsername').textContent='@'+(profile.username||'friend');$('#communityUsername').textContent='@'+(profile.username||'friend');$('#realName').value=profile.name||'';$('#username').value=profile.username||'friend';$('#profileBio').value=profile.bio||'';updateHomeGreeting();$$('[data-fruit]').forEach(b=>{const active=b.dataset.fruit===profile.fruit;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))})}
+$('#profileForm').onsubmit=async e=>{
+  e.preventDefault();
+  const username=$('#username').value.trim().toLowerCase().replace(/[^a-z0-9_]/g,'');
+  const bio=$('#profileBio').value.trim();
+  if(username.length<3){toast('Username needs at least 3 characters.');return}
+  const button=e.currentTarget.querySelector('[type="submit"]');
+  setButtonLoading(button,true,'Saving profile');
+  const result=await saveMemberPatch({username,bio});
+  setButtonLoading(button,false);
+  if(result.error){toast(result.error.message||'Profile could not be saved.');return}
+  profile.username=username;profile.bio=bio;write(keys.profile,profile);applyProfile();
+  $('#profileStatus').textContent=result.localOnly?'Saved on this device.':'Profile details saved.';
+  $('#profileStatus').classList.add('visible');
+};
+$$('[data-fruit]').forEach(b=>b.onclick=async()=>{
+  const next=b.dataset.fruit;
+  const result=await saveMemberPatch({avatar_preset:next});
+  if(result.error){toast(result.error.message||'Avatar could not be saved.');return}
+  profile.fruit=next;write(keys.profile,profile);applyProfile();toast(`${b.querySelector('small').textContent} with shades selected.`);
+});
+$$('[data-theme-choice]').forEach(b=>b.onclick=async()=>{
