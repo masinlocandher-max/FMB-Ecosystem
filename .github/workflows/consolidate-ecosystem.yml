@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - agent/consolidate-senz-cognita
-    paths:
-      - .github/workflows/consolidate-ecosystem.yml
 
 permissions:
   contents: write
