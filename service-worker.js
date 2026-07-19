@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260720-az-website-only-v17';
+const CACHE_NAME='fmb-app-shell-20260720-news-desk-az-website-only-v18';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -19,6 +19,9 @@ const PUBLIC_PAGES=new Set([
   '/fmbandco/',
   '/gethelp/',
   '/news/',
+  '/news/subic-aeta-landfill/',
+  '/news/pax-silica-water/',
+  '/news/binibining-pilipinas-2026/',
   '/news/china-ai-monkey-video/',
   '/news/cleopatra-barrera/',
   '/news/impeachment/',
@@ -53,6 +56,9 @@ const APP_SHELL=[
   '/freedom-wall.html',
   '/auth.html',
   '/news/',
+  '/news/subic-aeta-landfill/',
+  '/news/pax-silica-water/',
+  '/news/binibining-pilipinas-2026/',
   '/news/china-ai-monkey-video/',
   '/news/cleopatra-barrera/',
   '/news/impeachment/',
@@ -114,6 +120,9 @@ const APP_SHELL=[
   '/assets/images/projects/senz-transparent.png',
   '/assets/images/projects/cognita-transparent.png',
   '/assets/images/news/cleopatra-barrera-zambales-ocean-feature.jpeg',
+  '/assets/images/news/subic-aeta-dumpsite-iwitness.jpg',
+  '/assets/images/news/new-clark-city-pax-silica-pia.jpg',
+  '/assets/images/news/binibining-pilipinas-2026-winners.jpg',
   '/assets/images/news/china-ai-propaganda-editorial.webp',
   '/assets/images/news/sara-duterte-impeachment.webp',
   '/assets/images/news/pax-silica-briefing.png',
