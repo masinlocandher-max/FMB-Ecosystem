@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260719-broadcast-news-v15';
+const CACHE_NAME='fmb-app-shell-20260719-az-receptionist-v16';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
