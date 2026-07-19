@@ -1,0 +1,50 @@
+name: Apply Yoni companion HTML
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/yoni-html-payload/**'
+      - '.github/workflows/apply-yoni-html.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Assemble and validate Yoni app
+        shell: bash
+        run: |
+          cat .github/yoni-html-payload/part-*.htmlpart > apps/withlovefmb/app/index.html
+          test "$(wc -c < apps/withlovefmb/app/index.html)" -gt 160000
+          grep -q '<title>Yoni | Mental Health Companion</title>' apps/withlovefmb/app/index.html
+          grep -q 'https://yoni.francinemariebautista.com/' apps/withlovefmb/app/index.html
+          grep -q 'You can vent here.' apps/withlovefmb/app/index.html
+          node - <<'NODE'
+          const fs = require('fs');
+          const html = fs.readFileSync('apps/withlovefmb/app/index.html', 'utf8');
+          const scripts = [...html.matchAll(/<script(?: [^>]*)?>([\s\S]*?)<\/script>/g)];
+          if (!scripts.length) throw new Error('No inline script found');
+          fs.writeFileSync('/tmp/yoni-main.js', scripts.at(-1)[1]);
+          NODE
+          node --check /tmp/yoni-main.js
+
+      - name: Commit assembled companion app
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/withlovefmb/app/index.html
+          if git diff --cached --quiet; then
+            echo "Yoni app is already current."
+            exit 0
+          fi
+          git commit -m "Launch Yoni mental health companion"
+          git push
