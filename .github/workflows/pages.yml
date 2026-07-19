@@ -202,15 +202,15 @@ jobs:
           grep -q 'mobile-chrome-compact' _site/assets/css/fmb-mobile-clean.css
           grep -q 'The Golden Sash and the Bigger Dream' _site/news/index.html
           grep -q 'The Dumping Stopped. Subic’s Duty to Restore Has Not.' _site/news/index.html
-          grep -q 'Pax Silica’s water question is real' _site/news/index.html
+          grep -q 'Pax Silica will need a lot of water' _site/news/index.html
           grep -q 'North Luzon takes both Binibining Pilipinas crowns' _site/news/index.html
           grep -q 'nc-article-layout' _site/news/subic-aeta-landfill/index.html
           grep -q 'Francine’s perspective · Opinion' _site/news/subic-aeta-landfill/index.html
           grep -q 'Republic Act 9003' _site/news/subic-aeta-landfill/index.html
           grep -q 'subic-aeta-dumpsite-iwitness.jpg' _site/news/subic-aeta-landfill/index.html
           grep -q 'nc-article-layout' _site/news/pax-silica-water/index.html
-          grep -q 'Verdict: Unsupported' _site/news/pax-silica-water/index.html
-          grep -q '255,000 MLD' _site/news/pax-silica-water/index.html
+          grep -q '151 to 303 MLD' _site/news/pax-silica-water/index.html
+          grep -q 'complete water plan' _site/news/pax-silica-water/index.html
           grep -q 'new-clark-city-pax-silica-pia.jpg' _site/news/pax-silica-water/index.html
           grep -q 'nc-article-layout' _site/news/binibining-pilipinas-2026/index.html
           grep -q 'Gwendoline Meliz Frias Soriano' _site/news/binibining-pilipinas-2026/index.html
