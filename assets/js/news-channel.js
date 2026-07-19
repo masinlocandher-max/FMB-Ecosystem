@@ -2,19 +2,36 @@
   const body=document.body;
   const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
+  const clocks=[...document.querySelectorAll('[data-news-clock]')];
+  if(clocks.length){
+    const dateFormat=new Intl.DateTimeFormat('en-PH',{timeZone:'Asia/Manila',weekday:'short',month:'short',day:'numeric'});
+    const timeFormat=new Intl.DateTimeFormat('en-PH',{timeZone:'Asia/Manila',hour:'numeric',minute:'2-digit',hour12:true});
+    const updateClocks=()=>{
+      const now=new Date();
+      const label=`${dateFormat.format(now)} · ${timeFormat.format(now)}`;
+      clocks.forEach(clock=>{
+        clock.dateTime=now.toISOString();
+        clock.textContent=label;
+        clock.title='Philippine Standard Time';
+      });
+    };
+    updateClocks();
+    window.setInterval(updateClocks,30000);
+  }
+
   const menuButton=document.querySelector('[data-news-menu]');
   const menu=document.querySelector('#newsNav');
   if(menuButton&&menu){
     const closeMenu=()=>{
       body.classList.remove('nc-menu-open');
       menuButton.setAttribute('aria-expanded','false');
-      menuButton.setAttribute('aria-label','Open newsroom menu');
+      menuButton.setAttribute('aria-label','Open news menu');
     };
     menuButton.addEventListener('click',()=>{
       const open=!body.classList.contains('nc-menu-open');
       body.classList.toggle('nc-menu-open',open);
       menuButton.setAttribute('aria-expanded',String(open));
-      menuButton.setAttribute('aria-label',open?'Close newsroom menu':'Open newsroom menu');
+      menuButton.setAttribute('aria-label',open?'Close news menu':'Open news menu');
     });
     menu.addEventListener('click',event=>{
       if(event.target.closest('a'))closeMenu();

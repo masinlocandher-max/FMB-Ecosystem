@@ -166,10 +166,15 @@ jobs:
           grep -q 'FMB lens and disclaimer' _site/dress-with-intention.html
           grep -q 'National Center for Mental Health' _site/gethelp/index.html
           grep -q 'Pax Silica' _site/news/index.html
-          grep -q 'Independent editorial channel' _site/news/index.html
-          grep -q 'FMB&amp;CO. Newsroom' _site/news/index.html
+          grep -q 'FMB&amp;CO. News Network' _site/news/index.html
+          grep -q 'The day, clearly told.' _site/news/index.html
+          grep -q 'Latest bulletin' _site/news/index.html
           grep -q 'When Propaganda Becomes Dehumanization' _site/news/index.html
-          grep -q 'The magazine index.' _site/news/index.html
+          grep -q 'News formats built for understanding.' _site/news/index.html
+          grep -q 'id="rundown"' _site/news/index.html
+          grep -q 'nc-broadcast-identity' _site/assets/css/news-channel.css
+          grep -q 'nc-rundown-panel' _site/assets/css/news-channel.css
+          grep -q 'Asia/Manila' _site/assets/js/news-channel.js
           grep -q 'Francine does not simply create visibility' _site/aboutfmb/index.html
           grep -q 'Community Engagements - AMDG' _site/communityengagements/index.html
           grep -q 'Good work should return as good' _site/index.html
