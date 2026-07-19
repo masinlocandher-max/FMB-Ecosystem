@@ -2,7 +2,6 @@
   const body=document.body;
   const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   const AI_ARTICLE='/news/ai-water-consumption-responsible-ai-philippines/';
-  const AI_SHARE='/share/ai-water/';
 
   const installFounderAiWaterLead=()=>{
     if(!body.classList.contains('news-channel-route'))return;
@@ -123,8 +122,9 @@
   document.querySelectorAll('[data-news-share]').forEach(button=>{
     const original=button.textContent;
     button.addEventListener('click',async()=>{
-      const articleIsAi=location.pathname===AI_ARTICLE;
-      const shareUrl=new URL(articleIsAi?AI_SHARE:location.pathname,location.origin).href;
+      const match=location.pathname.match(/^\/news\/([a-z0-9-]+)\/?$/i);
+      const sharePath=match?`/api/news-share?slug=${encodeURIComponent(match[1].toLowerCase())}`:location.pathname;
+      const shareUrl=new URL(sharePath,location.origin).href;
       const payload={title:document.title,text:document.querySelector('meta[name="description"]')?.content||document.title,url:shareUrl};
       try{
         if(navigator.share)await navigator.share(payload);
