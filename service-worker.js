@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260720-news-desk-az-v17';
+const CACHE_NAME='fmb-app-shell-20260720-news-desk-az-website-only-v18';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -84,7 +84,6 @@ const APP_SHELL=[
   '/assets/css/desktop-premium.css',
   '/assets/css/member-experience.css',
   '/assets/css/mobile-app.css',
-  '/assets/css/az-assistant.css',
   '/assets/css/volunteer.css',
   '/assets/css/music-ui.css',
   '/assets/css/news-channel.css',
@@ -96,7 +95,6 @@ const APP_SHELL=[
   '/assets/js/music.js',
   '/assets/js/desktop-premium.js',
   '/assets/js/global-music.js',
-  '/assets/js/az-assistant.js',
   '/assets/js/fmbandco-motion.js',
   '/assets/js/aboutfmb-corporate.js',
   '/assets/js/news-channel.js',

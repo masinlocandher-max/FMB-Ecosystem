@@ -303,41 +303,41 @@ def check_az_assistant(errors: list[str]) -> None:
         "FMB&CO. Receptionist",
         "Receptionist",
         "We do not accept donations.",
-        "Yoni, the Mental-Health Companion",
         "verified premade reply bank",
         "UNKNOWN_QUESTION_KEY",
         "fmb:az-unmatched",
+        "www.francinemariebautista.com",
+        "FMB&amp;CO. Website Reception",
+        "Outside AZ’s Website Role",
+        "outside AZ’s capabilities",
+        "does not provide mental-health guidance",
         "Website and Brands",
+        "News and Publications",
         "Find Something",
-        "Account and Membership",
-        "App and Yoni",
-        "Music and Reading",
-        "Journal and Daily Check-In",
-        "Community and Freedom Wall",
-        "Support and Wellbeing",
-        "Privacy and Safety",
+        "Community Pages",
+        "Website Privacy Information",
         "Work with FMB",
         "Volunteer and Collaborate",
-        "Membership, Services, and Partnerships",
-        "Report a Problem",
-        "Frequently Asked Questions",
+        "Services, Fees, and Partnerships",
+        "Report a Website Problem",
+        "Frequently Asked Website Questions",
         "submit_contact_message",
-        "fmb:auth-ready",
-        "guestOnly",
-        "memberOnly",
     ):
         if marker not in assistant:
             errors.append(f"assets/js/az-assistant.js: missing guided-help marker: {marker}")
     for marker in (".az-help-trigger", ".az-help-panel", ".az-help-role", ".az-quick-reply", "min-height:44px", "min-width:150px", "fmb-mobile-host"):
         if marker not in styles:
             errors.append(f"assets/css/az-assistant.css: missing responsive help style: {marker}")
-    for marker in ("az-assistant.css", "az-assistant.js"):
+    for marker in ("az-assistant.css", "az-assistant.js", "APP_HOST", "isPublicWebsiteHost"):
         if marker not in site_js:
-            errors.append(f"assets/js/site.js: AZ assistant is not loaded globally: {marker}")
-        if marker not in app_html:
-            errors.append(f"app/index.html: AZ Receptionist is not loaded in the app shell: {marker}")
-        if marker not in worker:
-            errors.append(f"service-worker.js: AZ assistant is not available to the app shell: {marker}")
+            errors.append(f"assets/js/site.js: AZ website-only loading guard is missing: {marker}")
+    for marker in ("az-assistant.css", "az-assistant.js"):
+        if marker in app_html:
+            errors.append(f"app/index.html: AZ must not load inside the companion app: {marker}")
+        if marker in worker:
+            errors.append(f"service-worker.js: AZ must not be part of the companion app shell: {marker}")
+    if "app.francinemariebautista.com')return" not in assistant:
+        errors.append("assets/js/az-assistant.js: AZ app-host safety guard is missing")
 
 
 def check_advertising_flow(errors: list[str]) -> None:
