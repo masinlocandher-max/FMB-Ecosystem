@@ -1,0 +1,93 @@
+name: Consolidate FMB ecosystem repositories
+
+on:
+  push:
+    branches:
+      - agent/consolidate-senz-cognita
+    paths:
+      - .github/workflows/consolidate-ecosystem.yml
+
+permissions:
+  contents: write
+
+jobs:
+  consolidate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out migration branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build unified repository structure
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s dotglob nullglob
+
+          mkdir -p apps/withlovefmb apps/senz apps/cognita
+
+          # Move the current With Love, FMB site into its own isolated app folder.
+          for item in *; do
+            case "$item" in
+              .git|.github|apps) continue ;;
+            esac
+            git mv "$item" apps/withlovefmb/
+          done
+
+          temp_dir="$(mktemp -d)"
+          trap 'rm -rf "$temp_dir"' EXIT
+
+          git clone --depth 1 https://github.com/masinlocandher-max/Senz.git "$temp_dir/senz"
+          git clone --depth 1 https://github.com/masinlocandher-max/cognita-institute.git "$temp_dir/cognita"
+
+          rsync -a --exclude='.git' "$temp_dir/senz/" apps/senz/
+          rsync -a --exclude='.git' "$temp_dir/cognita/" apps/cognita/
+
+          senz_commit="$(git -C "$temp_dir/senz" rev-parse HEAD)"
+          cognita_commit="$(git -C "$temp_dir/cognita" rev-parse HEAD)"
+          withlove_commit="$(git rev-parse HEAD^)"
+
+          cat > README.md <<'EOF'
+          # FMB Digital Ecosystem
+
+          This repository contains the independently branded websites and applications within the FMB ecosystem.
+
+          ## Applications
+
+          - `apps/withlovefmb` - Francine Marie Bautista's personal website and official bulletin
+          - `apps/senz` - SENZ corporate website
+          - `apps/cognita` - Cognita Institute website and application
+
+          Each application remains isolated so it can retain its own domain, visual identity, deployment settings, and environment variables while being managed from one GitHub repository.
+          EOF
+
+          cat > MIGRATION-SOURCES.md <<EOF
+          # Migration sources
+
+          This consolidation branch was generated from the following repositories and source commits:
+
+          - With Love, FMB: \`masinlocandher-max/Withlovefmb\` at \`$withlove_commit\`
+          - SENZ: \`masinlocandher-max/Senz\` at \`$senz_commit\`
+          - Cognita: \`masinlocandher-max/cognita-institute\` at \`$cognita_commit\`
+
+          The original repositories remain unchanged during validation.
+          EOF
+
+          git add apps README.md MIGRATION-SOURCES.md
+
+      - name: Commit consolidated repository
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --cached --quiet; then
+            echo "No migration changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Consolidate SENZ and Cognita into FMB ecosystem"
+          git push origin HEAD
