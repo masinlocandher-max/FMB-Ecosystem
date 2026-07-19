@@ -1,0 +1,20 @@
+{
+  "name": "ConsentRecord",
+  "type": "object",
+  "properties": {
+    "user_id": { "type": "string" },
+    "email": { "type": "string", "format": "email" },
+    "context": {
+      "type": "string",
+      "enum": ["Registration", "Application", "Enrollment Agreement", "Policy Update"]
+    },
+    "terms_version": { "type": "string" },
+    "privacy_version": { "type": "string" },
+    "agreement_version": { "type": "string" },
+    "accepted_at": { "type": "string", "format": "date-time" },
+    "user_agent": { "type": "string" },
+    "source_domain": { "type": "string" },
+    "acceptance_text": { "type": "string" }
+  },
+  "required": ["email", "context", "accepted_at"]
+}

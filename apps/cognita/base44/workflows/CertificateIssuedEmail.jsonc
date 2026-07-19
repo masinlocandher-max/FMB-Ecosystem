@@ -1,0 +1,41 @@
+{
+  "name": "Certificate Issued Email",
+  "description": "Notifies student when their certificate has been issued",
+  "trigger": {
+    "config": {
+      "trigger_type": "entity",
+      "entity_name": "Certificate",
+      "events": [
+        "update"
+      ]
+    },
+    "condition": "${ .trigger.changed_fields | index(\"status\") != null and .trigger.data.status == \"Issued\" }"
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "certificate_issued_email",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "send_email": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "sendLifecycleEmail",
+            "args": {
+              "email_type": "certificate_issued",
+              "entity_data": "${ .trigger.data }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Send certificate issued email",
+            "description": "Notify student"
+          }
+        }
+      }
+    ]
+  }
+}

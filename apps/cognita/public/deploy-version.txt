@@ -1,0 +1,3 @@
+Cognita production deployment marker
+2026-07-12
+Includes official Self-Paced Learning hero and four core operating team portraits.

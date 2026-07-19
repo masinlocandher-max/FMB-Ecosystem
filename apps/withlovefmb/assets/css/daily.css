@@ -1,0 +1,50 @@
+.daily-page{overflow-x:hidden}
+.daily-hero{padding:170px 0 78px}
+.daily-hero-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(340px,.92fr);align-items:center;gap:clamp(30px,6vw,82px)}
+.daily-hero-copy h1{max-width:760px;margin:13px 0 22px;color:var(--violet-900);font-family:'Cormorant Garamond',serif;font-size:clamp(60px,7.5vw,104px);font-weight:500;letter-spacing:-.045em;line-height:.9}
+.daily-hero-copy h1 em{color:var(--violet-700);font-weight:500}
+.daily-hero-copy>p:not(.eyebrow){max-width:720px;color:#4d3f52;font-size:clamp(18px,2vw,22px);line-height:1.68}
+.daily-privacy-card{padding:34px;border:1px solid rgba(255,255,255,.84);border-radius:32px;background:linear-gradient(145deg,rgba(255,255,255,.84),rgba(241,225,247,.82));box-shadow:0 24px 70px rgba(45,23,56,.12)}
+.daily-lock{display:inline-flex;padding:8px 12px;border-radius:999px;background:var(--violet-900);color:#fff;font-size:11px;font-weight:850;letter-spacing:.11em;text-transform:uppercase}
+.daily-privacy-card h2{margin:18px 0 12px;color:var(--violet-900);font-family:'Cormorant Garamond',serif;font-size:clamp(38px,5vw,54px);font-weight:600;line-height:1}
+.daily-privacy-card p{margin-top:12px;color:var(--muted);line-height:1.68}
+.daily-affirmation{padding:0 0 78px}
+.daily-affirmation-card{position:relative;overflow:hidden;padding:clamp(40px,7vw,72px);border-radius:36px;background:linear-gradient(135deg,#33064e,#65178d 65%,#8b3daa);color:#fff;box-shadow:0 26px 70px rgba(54,12,78,.2)}
+.daily-affirmation-card:before{position:absolute;right:-80px;top:-140px;width:430px;height:430px;border-radius:50%;background:radial-gradient(circle,rgba(238,197,94,.24),transparent 68%);content:""}
+.daily-affirmation-card>*{position:relative;z-index:1}
+.daily-affirmation-card .eyebrow{color:#f1d98f}
+.daily-affirmation-card blockquote{max-width:1000px;margin:13px 0 22px;font-family:'Cormorant Garamond',serif;font-size:clamp(45px,6.6vw,78px);font-weight:500;letter-spacing:-.035em;line-height:1}
+.daily-affirmation-card>p:last-child{color:rgba(255,255,255,.7);font-size:13px}
+.daily-section{padding:92px 0;scroll-margin-top:135px}
+.daily-two-column,.daily-share-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:20px}
+.daily-card{padding:clamp(28px,4vw,42px);border:1px solid var(--line);border-radius:30px;background:rgba(255,255,255,.78);box-shadow:0 20px 58px rgba(45,23,56,.08)}
+.daily-card h2,.daily-share-copy h2{margin:10px 0 17px;color:var(--violet-900);font-family:'Cormorant Garamond',serif;font-size:clamp(40px,5vw,58px);font-weight:600;letter-spacing:-.025em;line-height:1}
+.daily-moods{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.daily-moods label{cursor:pointer;text-align:center}
+.daily-moods input{position:absolute;opacity:0;pointer-events:none}
+.daily-moods span{display:grid;place-items:center;aspect-ratio:1;border:1px solid rgba(76,13,115,.12);border-radius:18px;background:#f4e9f8;color:var(--violet-900);font-weight:850;transition:.2s ease}
+.daily-moods small{display:block;margin-top:7px;color:var(--muted);font-size:11px}
+.daily-moods input:checked+span{background:var(--violet-900);color:#fff;box-shadow:0 9px 24px rgba(76,13,115,.22);transform:translateY(-2px)}
+.daily-moods input:focus-visible+span{outline:3px solid rgba(154,73,191,.35);outline-offset:2px}
+.daily-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:20px}
+.daily-card-head>span{flex:0 0 auto;padding:8px 11px;border-radius:999px;background:var(--violet-100);color:var(--violet-900);font-size:11px;font-weight:800}
+.daily-history,.daily-journal-list{display:grid;gap:11px;max-height:620px;overflow:auto}
+.daily-entry{padding:17px 18px;border:1px solid rgba(76,13,115,.1);border-radius:18px;background:linear-gradient(145deg,#fff,#f8f1fa)}
+.daily-entry-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.daily-entry strong{color:var(--violet-900)}
+.daily-entry time,.daily-entry small{color:var(--muted);font-size:11px}
+.daily-entry p{margin-top:8px;color:#4d3f52;line-height:1.58;white-space:pre-wrap}
+.daily-entry button{border:0;background:transparent;color:#8e2f62;font-size:11px;font-weight:800;text-decoration:underline;text-underline-offset:3px}
+.daily-empty{padding:22px;border:1px dashed rgba(76,13,115,.17);border-radius:18px;color:var(--muted);text-align:center}
+.daily-data-actions{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+.text-button{border:0;background:transparent;color:#8e2f62;font-size:12px;font-weight:800;text-decoration:underline;text-underline-offset:4px}
+.daily-share-grid{grid-template-columns:.82fr 1.18fr}
+.daily-share-copy{padding:34px 20px 34px 0}
+.daily-share-copy p:not(.eyebrow){max-width:590px;margin-bottom:18px;color:var(--muted);font-size:17px;line-height:1.72}
+.daily-next{padding:85px 0 115px}
+.daily-next-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.daily-next-grid>a{display:block;min-height:280px;padding:34px;border:1px solid rgba(255,255,255,.82);border-radius:30px;background:linear-gradient(145deg,rgba(255,255,255,.88),rgba(241,226,247,.84));box-shadow:0 20px 58px rgba(45,23,56,.08)}
+.daily-next-grid h2{max-width:470px;margin:13px 0 28px;color:var(--violet-900);font-family:'Cormorant Garamond',serif;font-size:clamp(38px,5vw,56px);font-weight:600;line-height:1}
+@media(max-width:900px){.daily-hero-grid,.daily-two-column,.daily-share-grid{grid-template-columns:1fr}.daily-hero-copy{text-align:center}.daily-hero-copy>p,.daily-hero-copy h1{margin-right:auto;margin-left:auto}.daily-hero-copy .actions{justify-content:center!important}.daily-share-copy{padding:0;text-align:center}.daily-share-copy p{margin-right:auto;margin-left:auto}}
+@media(max-width:700px){.daily-hero{padding:135px 0 58px}.daily-hero-copy h1{font-size:clamp(56px,16vw,76px)}.daily-hero-copy>p:not(.eyebrow){font-size:17px}.daily-privacy-card,.daily-card{padding:25px;border-radius:24px}.daily-affirmation{padding-bottom:55px}.daily-affirmation-card{border-radius:27px}.daily-section{padding:68px 0}.daily-moods{gap:5px}.daily-moods span{border-radius:14px}.daily-moods small{font-size:9px}.daily-card-head{display:block}.daily-card-head>span{display:inline-flex;margin-top:4px}.daily-data-actions{align-items:stretch;flex-direction:column}.daily-data-actions .pill{width:100%}.daily-next{padding:66px 0 130px}.daily-next-grid{grid-template-columns:1fr}.daily-next-grid>a{min-height:230px;padding:27px}}
+@media(prefers-reduced-motion:reduce){.daily-moods span{transition:none}}

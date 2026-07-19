@@ -1,0 +1,55 @@
+{
+  "name": "Refund",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string"
+    },
+    "student_name": {
+      "type": "string"
+    },
+    "batch_id": {
+      "type": "string"
+    },
+    "batch_name": {
+      "type": "string"
+    },
+    "track": {
+      "type": "string"
+    },
+    "amount_paid": {
+      "type": "number"
+    },
+    "refund_amount": {
+      "type": "number"
+    },
+    "refund_status": {
+      "type": "string",
+      "enum": [
+        "Not Requested",
+        "Requested",
+        "Approved",
+        "Rejected",
+        "Processed"
+      ],
+      "default": "Not Requested"
+    },
+    "refund_reason": {
+      "type": "string"
+    },
+    "admin_decision": {
+      "type": "string"
+    },
+    "refund_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "admin_notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "student_name",
+    "batch_name"
+  ]
+}

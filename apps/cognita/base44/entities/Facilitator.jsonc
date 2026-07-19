@@ -1,0 +1,40 @@
+{
+  "name": "Facilitator",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "full_name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "tracks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "batch_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Active",
+        "Inactive"
+      ],
+      "default": "Active"
+    }
+  },
+  "required": [
+    "full_name",
+    "email"
+  ]
+}

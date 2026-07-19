@@ -1,0 +1,81 @@
+{
+  "name": "PartnerInquiry",
+  "type": "object",
+  "properties": {
+    "organization_name": {
+      "type": "string"
+    },
+    "organization_type": {
+      "type": "string",
+      "enum": [
+        "School",
+        "College/University",
+        "LGU",
+        "Youth Organization",
+        "NGO",
+        "Company",
+        "Training Center",
+        "Creative Organization",
+        "Other"
+      ]
+    },
+    "contact_person": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "interested_program": {
+      "type": "string",
+      "enum": [
+        "AI Literacy Workshop",
+        "10-Week Cognita Academy Batch",
+        "Teacher AI Training",
+        "Student AI Training",
+        "Staff Productivity Training",
+        "Creative AI Training",
+        "Virtual Assistant AI Training",
+        "Custom Institutional Program"
+      ]
+    },
+    "estimated_participants": {
+      "type": "number"
+    },
+    "preferred_schedule": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    },
+    "proposal_url": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "New",
+        "Contacted",
+        "Meeting Scheduled",
+        "Proposal Sent",
+        "Approved",
+        "Rejected",
+        "Archived"
+      ],
+      "default": "New"
+    }
+  },
+  "required": [
+    "organization_name",
+    "organization_type",
+    "contact_person",
+    "email",
+    "interested_program"
+  ]
+}

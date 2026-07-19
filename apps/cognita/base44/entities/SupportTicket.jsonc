@@ -1,0 +1,41 @@
+{
+  "name": "SupportTicket",
+  "type": "object",
+  "properties": {
+    "ticket_reference": { "type": "string" },
+    "full_name": { "type": "string" },
+    "email": { "type": "string", "format": "email" },
+    "concern_type": {
+      "type": "string",
+      "enum": [
+        "Application",
+        "Enrollment",
+        "Payment",
+        "Learning Access",
+        "Submission Issue",
+        "Portfolio Audit",
+        "Certificate Verification",
+        "Privacy Request",
+        "Technical Support",
+        "Other"
+      ]
+    },
+    "message": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["New", "Acknowledged", "In Progress", "Waiting for Learner", "Resolved", "Closed"],
+      "default": "New"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["Normal", "High", "Urgent"],
+      "default": "Normal"
+    },
+    "submitted_at": { "type": "string", "format": "date-time" },
+    "assigned_to": { "type": "string" },
+    "internal_notes": { "type": "string" },
+    "resolved_at": { "type": "string", "format": "date-time" },
+    "source_domain": { "type": "string" }
+  },
+  "required": ["ticket_reference", "full_name", "email", "concern_type", "message", "submitted_at"]
+}

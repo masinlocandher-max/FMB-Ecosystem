@@ -1,0 +1,57 @@
+{
+  "name": "With love, FMB",
+  "short_name": "With love, FMB",
+  "id": "/",
+  "description": "An inclusive digital space for open reading, calm music, positive reflections, and public support resources.",
+  "start_url": "/?source=installed-app",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "background_color": "#fffdf9",
+  "theme_color": "#510b77",
+  "orientation": "portrait-primary",
+  "categories": ["lifestyle", "health", "education"],
+  "icons": [
+    {
+      "src": "/assets/images/app-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/images/app-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/images/app-icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Reading room",
+      "short_name": "Read",
+      "url": "/ebooks/"
+    },
+    {
+      "name": "Freedom Wall",
+      "short_name": "Wall",
+      "url": "/freedom-wall.html"
+    },
+    {
+      "name": "Calm music",
+      "short_name": "Music",
+      "url": "/music/"
+    },
+    {
+      "name": "Support contacts",
+      "short_name": "Help",
+      "url": "/#support"
+    }
+  ],
+  "launch_handler": {"client_mode": "navigate-existing"}
+}

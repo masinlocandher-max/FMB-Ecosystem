@@ -1,0 +1,114 @@
+{
+  "name": "Payment",
+  "type": "object",
+  "properties": {
+    "student_id": {
+      "type": "string"
+    },
+    "student_name": {
+      "type": "string"
+    },
+    "student_email": {
+      "type": "string"
+    },
+    "batch_id": {
+      "type": "string"
+    },
+    "batch_name": {
+      "type": "string"
+    },
+    "track": {
+      "type": "string"
+    },
+    "tuition_fee": {
+      "type": "number"
+    },
+    "discount_type": {
+      "type": "string",
+      "enum": [
+        "None",
+        "Future Educator 50% Discount",
+        "Early Applicant Discount",
+        "Partner Institution Discount",
+        "Scholarship",
+        "Manual Discount",
+        "Waived"
+      ],
+      "default": "None"
+    },
+    "discount_amount": {
+      "type": "number",
+      "default": 0
+    },
+    "amount_due": {
+      "type": "number"
+    },
+    "amount_paid": {
+      "type": "number",
+      "default": 0
+    },
+    "balance_due": {
+      "type": "number",
+      "default": 0
+    },
+    "payment_method": {
+      "type": "string"
+    },
+    "payment_reference": {
+      "type": "string"
+    },
+    "payment_proof_url": {
+      "type": "string"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "Not Required Yet",
+        "Payment Pending",
+        "Payment Submitted",
+        "Payment Confirmed",
+        "Payment Failed",
+        "Payment Waived",
+        "Refund Requested",
+        "Refunded",
+        "Balance Due"
+      ],
+      "default": "Payment Pending"
+    },
+    "admin_notes": {
+      "type": "string"
+    },
+    "date_submitted": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "date_confirmed": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "confirmed_by": {
+      "type": "string"
+    },
+    "invoice_id": {
+      "type": "string"
+    },
+    "service_commitment_required": {
+      "type": "boolean",
+      "default": false
+    },
+    "teaching_hours_required": {
+      "type": "number",
+      "default": 0
+    },
+    "teaching_hours_completed": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "student_name",
+    "student_email",
+    "batch_name",
+    "track"
+  ]
+}

@@ -1,0 +1,18 @@
+.membership-gate-card{position:relative;z-index:12;margin:24px 0;padding:clamp(28px,5vw,44px);border:1px solid rgba(255,255,255,.82);border-radius:28px;background:radial-gradient(circle at 92% 8%,rgba(255,255,255,.25),transparent 27%),linear-gradient(145deg,#351040,#681b89 62%,#9a49bf);box-shadow:0 24px 65px rgba(45,23,56,.22);color:#fff;text-align:center}
+html.membership-checking .reading-chapter,html.membership-checking .chapter{filter:blur(7px);opacity:.18;pointer-events:none}
+.membership-gate-card .eyebrow{color:#f2d482}
+.membership-gate-card h2{max-width:650px;margin:10px auto 14px;font-family:'Cormorant Garamond',serif;font-size:clamp(38px,6vw,57px);font-weight:540;line-height:1;color:#fff}
+.membership-gate-card p{max-width:660px;margin:0 auto 20px;color:rgba(255,255,255,.78)}
+.membership-gate-card .actions{justify-content:center}
+.membership-gate-card .pill{background:#fff;color:#4c0d73;box-shadow:none}
+.membership-gate-card .pill.secondary{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff}
+.membership-gate-card .gate-note{margin-top:15px;font-size:11px;color:rgba(255,255,255,.62)}
+.membership-gated .members-only-content{filter:blur(7px);opacity:.56;pointer-events:none;-webkit-user-select:none;user-select:none}
+.membership-gated .members-only-section{position:relative;max-height:210px;overflow:hidden;filter:blur(7px);opacity:.5;pointer-events:none;-webkit-user-select:none;user-select:none}
+.membership-gated .members-only-section:after{content:"";position:absolute;inset:auto 0 0;height:110px;background:linear-gradient(transparent,rgba(246,237,250,.96));filter:none}
+.membership-gated .reading-toc a,.membership-gated .toc a{pointer-events:none;opacity:.52}
+.membership-access-note{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:20px 0;padding:12px 16px;border:1px solid rgba(76,13,115,.12);border-radius:16px;background:rgba(255,255,255,.7);color:#6d5b74;font-size:12px}
+.membership-access-note strong{color:#4c0d73}
+.public-access-note{border-color:rgba(213,170,66,.28);background:linear-gradient(115deg,rgba(255,255,255,.88),rgba(244,232,248,.84))}
+@media(max-width:700px){.membership-gate-card{padding:32px 22px;border-radius:24px}.membership-gate-card .actions{display:grid}.membership-gate-card .pill{width:100%}.membership-gated .members-only-section{max-height:170px}.membership-access-note{align-items:flex-start;flex-direction:column}}
+@media(print){.membership-gated{display:none!important}}

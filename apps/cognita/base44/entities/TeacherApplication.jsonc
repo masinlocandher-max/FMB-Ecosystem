@@ -1,0 +1,98 @@
+{
+  "name": "TeacherApplication",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "current_occupation": {
+      "type": "string"
+    },
+    "years_of_experience": {
+      "type": "number"
+    },
+    "ai_skill_level": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 10
+    },
+    "teaching_experience": {
+      "type": "string",
+      "description": "Description of prior teaching, training, or mentoring experience"
+    },
+    "preferred_tracks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "AI for Creatives",
+          "AI for Professionals and Virtual Assistants",
+          "AI for Entrepreneurs",
+          "AI for Students"
+        ]
+      }
+    },
+    "why_teach": {
+      "type": "string"
+    },
+    "teaching_philosophy": {
+      "type": "string"
+    },
+    "portfolio_url": {
+      "type": "string"
+    },
+    "linkedin_url": {
+      "type": "string"
+    },
+    "agrees_to_review_weekly": {
+      "type": "boolean",
+      "default": false
+    },
+    "agrees_to_rubric_standards": {
+      "type": "boolean",
+      "default": false
+    },
+    "educator_agreement_signed": {
+      "type": "boolean",
+      "default": false
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Pending Review",
+        "Interview Scheduled",
+        "Accepted",
+        "Rejected",
+        "Onboarded"
+      ],
+      "default": "Pending Review"
+    },
+    "admin_notes": {
+      "type": "string"
+    },
+    "reviewed_by": {
+      "type": "string"
+    },
+    "reviewed_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "full_name",
+    "email",
+    "current_occupation",
+    "why_teach",
+    "preferred_tracks"
+  ]
+}

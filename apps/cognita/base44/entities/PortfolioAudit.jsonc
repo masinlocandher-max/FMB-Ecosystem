@@ -1,0 +1,59 @@
+{
+  "name": "PortfolioAudit",
+  "type": "object",
+  "properties": {
+    "audit_reference": { "type": "string" },
+    "student_id": { "type": "string" },
+    "student_name": { "type": "string" },
+    "student_email": { "type": "string", "format": "email" },
+    "track": { "type": "string" },
+    "portfolio_version": { "type": "number", "default": 1 },
+    "portfolio_item_ids": { "type": "array", "items": { "type": "string" } },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Submitted",
+        "Locked for Review",
+        "Assigned to Human Reviewer",
+        "Under Human Review",
+        "Revision Required",
+        "Resubmitted",
+        "Cognita Standard Met",
+        "Credential Approved",
+        "Closed"
+      ],
+      "default": "Draft"
+    },
+    "submitted_at": { "type": "string", "format": "date-time" },
+    "locked_at": { "type": "string", "format": "date-time" },
+    "assigned_reviewer_id": { "type": "string" },
+    "assigned_reviewer_name": { "type": "string" },
+    "review_started_at": { "type": "string", "format": "date-time" },
+    "review_completed_at": { "type": "string", "format": "date-time" },
+    "decision": {
+      "type": "string",
+      "enum": ["Pending", "Revision Required", "Cognita Standard Met", "Not Yet Competent"],
+      "default": "Pending"
+    },
+    "review_findings": { "type": "string" },
+    "revision_instructions": { "type": "string" },
+    "rubric_understanding": { "type": "number" },
+    "rubric_responsible_ai": { "type": "number" },
+    "rubric_output_quality": { "type": "number" },
+    "rubric_human_judgment": { "type": "number" },
+    "rubric_revision": { "type": "number" },
+    "rubric_documentation": { "type": "number" },
+    "rubric_presentation": { "type": "number" },
+    "conflict_of_interest_confirmed": { "type": "boolean", "default": false },
+    "human_review_confirmed": { "type": "boolean", "default": false },
+    "approved_by": { "type": "string" },
+    "approved_at": { "type": "string", "format": "date-time" },
+    "appeal_status": {
+      "type": "string",
+      "enum": ["Not Requested", "Requested", "Under Review", "Resolved"],
+      "default": "Not Requested"
+    }
+  },
+  "required": ["audit_reference", "student_id", "student_name", "track", "portfolio_version"]
+}

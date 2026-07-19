@@ -1,0 +1,15 @@
+{
+  "name": "senz-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SENZ Strategic Communications website with intake backend.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "check": "node --check server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

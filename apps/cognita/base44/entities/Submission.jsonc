@@ -1,0 +1,39 @@
+{
+  "name": "Submission",
+  "type": "object",
+  "properties": {
+    "student_id": { "type": "string" },
+    "week_number": { "type": "number" },
+    "title": { "type": "string" },
+    "track": { "type": "string" },
+    "content": { "type": "string" },
+    "process_note": { "type": "string" },
+    "reflection": { "type": "string" },
+    "file_urls": { "type": "array", "items": { "type": "string" } },
+    "status": {
+      "type": "string",
+      "enum": ["Not Started", "Submitted", "Needs Revision", "Passed", "Failed"],
+      "default": "Not Started"
+    },
+    "current_version": { "type": "number", "default": 1 },
+    "submitted_at": { "type": "string", "format": "date-time" },
+    "locked_for_review": { "type": "boolean", "default": false },
+    "feedback": { "type": "string" },
+    "revision_instructions": { "type": "string" },
+    "reviewed_by": { "type": "string" },
+    "reviewed_date": { "type": "string", "format": "date-time" },
+    "human_review_confirmed": { "type": "boolean", "default": false },
+    "reviewer_attestation": { "type": "string" },
+    "revision_count": { "type": "number", "default": 0 },
+    "is_portfolio_item": { "type": "boolean", "default": false },
+    "portfolio_category": { "type": "string" },
+    "rubric_completeness": { "type": "number" },
+    "rubric_relevance": { "type": "number" },
+    "rubric_usability": { "type": "number" },
+    "rubric_clarity": { "type": "number" },
+    "rubric_judgment": { "type": "number" },
+    "rubric_ethics": { "type": "number" },
+    "rubric_reflection": { "type": "number" }
+  },
+  "required": ["student_id", "week_number", "title"]
+}

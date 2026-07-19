@@ -1,0 +1,41 @@
+{
+  "name": "Submission Reviewed Email",
+  "description": "Sends feedback email to student when their submission is reviewed (Passed, Needs Revision, or Failed)",
+  "trigger": {
+    "config": {
+      "trigger_type": "entity",
+      "entity_name": "Submission",
+      "events": [
+        "update"
+      ]
+    },
+    "condition": "${ .trigger.changed_fields | index(\"status\") != null and (.trigger.data.status == \"Passed\" or .trigger.data.status == \"Needs Revision\" or .trigger.data.status == \"Failed\") }"
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "submission_reviewed_email",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "send_email": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "sendLifecycleEmail",
+            "args": {
+              "email_type": "submission_reviewed",
+              "entity_data": "${ .trigger.data }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Send submission review email",
+            "description": "Feedback to student"
+          }
+        }
+      }
+    ]
+  }
+}

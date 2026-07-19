@@ -1,0 +1,50 @@
+{
+  "name": "Application",
+  "type": "object",
+  "properties": {
+    "full_name": { "type": "string" },
+    "email": { "type": "string", "format": "email" },
+    "phone": { "type": "string" },
+    "location": { "type": "string" },
+    "preferred_track": {
+      "type": "string",
+      "enum": [
+        "AI for Creatives",
+        "AI for Professionals and Virtual Assistants",
+        "AI for Entrepreneurs",
+        "AI for Students"
+      ]
+    },
+    "occupation": { "type": "string" },
+    "ai_skill_level": { "type": "number", "minimum": 1, "maximum": 10 },
+    "tech_skill_level": { "type": "number", "minimum": 1, "maximum": 10 },
+    "available_hours": { "type": "number" },
+    "why_apply": { "type": "string" },
+    "production_goals": { "type": "string" },
+    "understands_no_auto_cert": { "type": "boolean" },
+    "agrees_to_submit_weekly": { "type": "boolean" },
+    "accepts_terms": { "type": "boolean", "default": false },
+    "accepts_privacy": { "type": "boolean", "default": false },
+    "terms_version": { "type": "string" },
+    "privacy_version": { "type": "string" },
+    "submitted_at": { "type": "string", "format": "date-time" },
+    "source_domain": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["Pending Review", "Accepted", "Waitlisted", "Rejected", "Enrolled"],
+      "default": "Pending Review"
+    },
+    "admin_notes": { "type": "string" },
+    "batch_id": { "type": "string" },
+    "reviewed_by": { "type": "string" },
+    "reviewed_date": { "type": "string", "format": "date-time" }
+  },
+  "required": [
+    "full_name",
+    "email",
+    "preferred_track",
+    "why_apply",
+    "accepts_terms",
+    "accepts_privacy"
+  ]
+}

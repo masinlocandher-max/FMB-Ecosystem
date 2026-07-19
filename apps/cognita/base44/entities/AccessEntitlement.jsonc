@@ -1,0 +1,31 @@
+{
+  "name": "AccessEntitlement",
+  "type": "object",
+  "properties": {
+    "student_id": { "type": "string" },
+    "student_email": { "type": "string", "format": "email" },
+    "product_type": {
+      "type": "string",
+      "enum": [
+        "10-Week Professional AI Program",
+        "Cognita Open Learning",
+        "Portfolio Audit",
+        "Institutional Training"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["Pending", "Active", "Suspended", "Expired", "Revoked"],
+      "default": "Pending"
+    },
+    "payment_id": { "type": "string" },
+    "activation_reason": { "type": "string" },
+    "activated_at": { "type": "string", "format": "date-time" },
+    "expires_at": { "type": "string", "format": "date-time" },
+    "created_by": { "type": "string" },
+    "revoked_by": { "type": "string" },
+    "revoked_at": { "type": "string", "format": "date-time" },
+    "revocation_reason": { "type": "string" }
+  },
+  "required": ["student_id", "student_email", "product_type", "status"]
+}

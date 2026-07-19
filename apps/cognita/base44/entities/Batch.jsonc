@@ -1,0 +1,42 @@
+{
+  "name": "Batch",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "batch_code": {
+      "type": "string"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Applications Open",
+        "Upcoming",
+        "Active",
+        "Completed",
+        "Archived"
+      ],
+      "default": "Applications Open"
+    },
+    "max_students": {
+      "type": "number",
+      "default": 30
+    },
+    "description": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "start_date"
+  ]
+}

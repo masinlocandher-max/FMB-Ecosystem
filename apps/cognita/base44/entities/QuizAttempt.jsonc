@@ -1,0 +1,57 @@
+{
+  "name": "QuizAttempt",
+  "type": "object",
+  "properties": {
+    "quiz_id": {
+      "type": "string"
+    },
+    "student_id": {
+      "type": "string"
+    },
+    "student_name": {
+      "type": "string"
+    },
+    "week_number": {
+      "type": "number"
+    },
+    "score_percent": {
+      "type": "number"
+    },
+    "passed": {
+      "type": "boolean",
+      "default": false
+    },
+    "answers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "question_text": {
+            "type": "string"
+          },
+          "selected_index": {
+            "type": "number"
+          },
+          "correct_index": {
+            "type": "number"
+          },
+          "is_correct": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "attempt_number": {
+      "type": "number",
+      "default": 1
+    }
+  },
+  "required": [
+    "quiz_id",
+    "student_id",
+    "student_name",
+    "week_number",
+    "score_percent",
+    "passed"
+  ]
+}

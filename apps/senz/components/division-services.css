@@ -1,0 +1,478 @@
+/* SENZ division architecture and service-detail modal */
+
+.division-section {
+  position: relative;
+  padding: clamp(78px, 9vw, 124px) 0;
+  overflow: hidden;
+  border-top: 1px solid var(--line-soft);
+  background:
+    radial-gradient(circle at 8% 8%, rgba(48, 123, 255, 0.11), transparent 24rem),
+    linear-gradient(180deg, #f8faff 0%, #ffffff 100%);
+}
+
+.division-master {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(34px, 6vw, 78px);
+  align-items: center;
+  margin-bottom: 34px;
+  padding: clamp(34px, 5vw, 64px);
+  border: 1px solid rgba(77, 119, 255, 0.22);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 14% 20%, rgba(39, 90, 255, 0.25), transparent 20rem),
+    linear-gradient(135deg, #03091b 0%, #07132f 58%, #020713 100%);
+  color: #fff;
+  box-shadow: 0 34px 90px rgba(4, 12, 35, 0.22);
+}
+
+.division-master-lockup {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+
+.division-master-lockup img {
+  width: clamp(78px, 9vw, 126px);
+  height: clamp(78px, 9vw, 126px);
+  object-fit: contain;
+  filter: drop-shadow(0 16px 34px rgba(42, 91, 255, 0.35));
+}
+
+.division-master-copy {
+  min-width: 0;
+}
+
+.division-master-copy .division-eyebrow,
+.division-card .division-eyebrow,
+.division-modal-eyebrow {
+  display: block;
+  color: #3f78ff;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.division-master-copy strong {
+  display: block;
+  margin: 12px 0 10px;
+  font-size: clamp(38px, 5vw, 72px);
+  font-weight: 600;
+  letter-spacing: 0.34em;
+  line-height: 0.95;
+}
+
+.division-master-copy small {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.division-master-message h2 {
+  margin-bottom: 18px;
+  color: #fff;
+  font-size: clamp(30px, 4vw, 52px);
+}
+
+.division-master-message p {
+  max-width: 620px;
+  margin-bottom: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 15px;
+  line-height: 1.85;
+}
+
+.division-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.division-card {
+  position: relative;
+  min-height: 268px;
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr) 62px;
+  gap: 20px;
+  align-items: center;
+  width: 100%;
+  padding: 30px;
+  overflow: hidden;
+  border: 1px solid rgba(10, 23, 48, 0.09);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(48, 123, 255, 0.09), transparent 13rem),
+    rgba(255, 255, 255, 0.92);
+  color: var(--deep-navy);
+  text-align: left;
+  box-shadow: 0 20px 52px rgba(10, 23, 48, 0.07);
+  cursor: pointer;
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+}
+
+.division-card::after {
+  content: "View service";
+  position: absolute;
+  left: 124px;
+  bottom: 26px;
+  color: var(--senz-blue);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.division-card:hover,
+.division-card:focus-visible {
+  transform: translateY(-5px);
+  border-color: rgba(36, 81, 217, 0.26);
+  box-shadow: 0 30px 68px rgba(36, 81, 217, 0.13);
+}
+
+.division-card-mark {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 20px rgba(36, 81, 217, 0.17));
+}
+
+.division-card-copy {
+  min-width: 0;
+  padding-bottom: 28px;
+}
+
+.division-card-copy strong {
+  display: block;
+  margin: 10px 0 8px;
+  color: #090f21;
+  font-size: 24px;
+  font-weight: 650;
+  letter-spacing: 0.22em;
+  line-height: 1;
+}
+
+.division-card-copy span:last-child {
+  display: block;
+  color: var(--senz-blue);
+  font-size: 17px;
+  font-weight: 750;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+}
+
+.division-card-icon {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(36, 81, 217, 0.15);
+  border-radius: 19px;
+  background: rgba(36, 81, 217, 0.045);
+  color: var(--senz-blue);
+}
+
+.division-card-icon svg {
+  width: 38px;
+  height: 38px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.division-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 160;
+  display: none;
+  place-items: center;
+  padding: 20px;
+  background: rgba(1, 5, 16, 0.68);
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+}
+
+.division-modal.is-open {
+  display: grid;
+}
+
+.division-modal-card {
+  width: min(930px, 100%);
+  max-height: min(86vh, 820px);
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, 0.68);
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 92% 5%, rgba(48, 123, 255, 0.12), transparent 20rem),
+    rgba(255, 255, 255, 0.96);
+  box-shadow: 0 42px 110px rgba(0, 0, 0, 0.36);
+}
+
+.division-modal-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-start;
+  padding: 30px 34px 24px;
+  border-bottom: 1px solid rgba(10, 23, 48, 0.08);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+}
+
+.division-modal-brand {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.division-modal-brand img {
+  width: 66px;
+  height: 66px;
+  object-fit: contain;
+}
+
+.division-modal-title {
+  margin: 8px 0 4px;
+  color: var(--deep-navy);
+  font-size: clamp(25px, 4vw, 38px);
+  font-weight: 650;
+  letter-spacing: 0.02em;
+}
+
+.division-modal-subtitle {
+  margin: 0;
+  color: var(--senz-blue);
+  font-size: 12px;
+  font-weight: 850;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.division-modal-close {
+  flex: 0 0 auto;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(10, 23, 48, 0.12);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--deep-navy);
+  cursor: pointer;
+  font-size: 26px;
+  line-height: 1;
+}
+
+.division-modal-body {
+  padding: clamp(28px, 5vw, 52px);
+}
+
+.division-modal-lead {
+  max-width: 760px;
+  margin-bottom: 34px;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.85;
+}
+
+.division-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.division-modal-panel {
+  min-height: 250px;
+  padding: 26px;
+  border: 1px solid rgba(10, 23, 48, 0.08);
+  border-radius: 22px;
+  background: rgba(248, 250, 255, 0.82);
+}
+
+.division-modal-panel h3 {
+  margin-bottom: 18px;
+  color: var(--deep-navy);
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.division-modal-panel ul {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.division-modal-panel li {
+  position: relative;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.division-modal-panel li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.7em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--senz-blue);
+}
+
+.division-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  margin-top: 34px;
+}
+
+.division-modal-note {
+  flex: 1 1 280px;
+  margin: 0;
+  color: var(--soft);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+@media (max-width: 980px) {
+  .division-master {
+    grid-template-columns: 1fr;
+  }
+
+  .division-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .division-modal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .division-modal-panel {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 680px) {
+  .division-section {
+    padding-top: 64px;
+  }
+
+  .division-master {
+    padding: 28px 22px;
+    border-radius: 26px;
+  }
+
+  .division-master-lockup {
+    gap: 16px;
+  }
+
+  .division-master-copy strong {
+    font-size: 35px;
+    letter-spacing: 0.25em;
+  }
+
+  .division-master-copy small {
+    font-size: 8px;
+    letter-spacing: 0.18em;
+  }
+
+  .division-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .division-card {
+    min-height: 220px;
+    grid-template-columns: 58px minmax(0, 1fr) 48px;
+    gap: 14px;
+    padding: 24px 20px;
+    border-radius: 22px;
+  }
+
+  .division-card::after {
+    left: 92px;
+    bottom: 22px;
+  }
+
+  .division-card-mark {
+    width: 56px;
+    height: 56px;
+  }
+
+  .division-card-copy strong {
+    font-size: 20px;
+    letter-spacing: 0.17em;
+  }
+
+  .division-card-copy span:last-child {
+    font-size: 14px;
+    letter-spacing: 0.14em;
+  }
+
+  .division-card-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 15px;
+  }
+
+  .division-card-icon svg {
+    width: 31px;
+    height: 31px;
+  }
+
+  .division-modal {
+    padding: 10px;
+  }
+
+  .division-modal-card {
+    max-height: 92vh;
+    border-radius: 24px;
+  }
+
+  .division-modal-head {
+    padding: 22px 20px 18px;
+  }
+
+  .division-modal-brand {
+    gap: 13px;
+  }
+
+  .division-modal-brand img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .division-modal-title {
+    font-size: 22px;
+  }
+
+  .division-modal-body {
+    padding: 24px 20px 30px;
+  }
+
+  .division-modal-lead {
+    font-size: 14px;
+  }
+
+  .division-modal-actions .button {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .division-card {
+    transition: none;
+  }
+}

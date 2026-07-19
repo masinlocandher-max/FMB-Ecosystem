@@ -1,0 +1,41 @@
+{
+  "name": "Application Status Email",
+  "description": "Sends an email when an application status changes (accepted, waitlisted, rejected, enrolled)",
+  "trigger": {
+    "config": {
+      "trigger_type": "entity",
+      "entity_name": "Application",
+      "events": [
+        "update"
+      ]
+    },
+    "condition": "${ .trigger.changed_fields | index(\"status\") != null and (.trigger.data.status == \"Accepted\" or .trigger.data.status == \"Waitlisted\" or .trigger.data.status == \"Rejected\" or .trigger.data.status == \"Enrolled\") }"
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "application_status_email",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "send_email": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "sendLifecycleEmail",
+            "args": {
+              "email_type": "application_status_changed",
+              "entity_data": "${ .trigger.data }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Send status update email",
+            "description": "Accepted/Waitlisted/Rejected/Enrolled"
+          }
+        }
+      }
+    ]
+  }
+}
