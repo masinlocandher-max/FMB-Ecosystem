@@ -1,0 +1,77 @@
+          <span class="home-action-icon mood" aria-hidden="true"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14"/><path d="M14.5 18h.01M25.5 18h.01M14.5 25c2.7 2.2 8.3 2.2 11 0"/></svg></span>
+          <span><strong>Check in</strong><em>Name the feeling.</em><b aria-hidden="true">→</b></span>
+        </button>
+        <button class="home-action-card card" type="button" data-go="tools">
+          <span class="home-action-icon breathe" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M20 7c4.2 4.5 7 8.1 7 12.4A7 7 0 0 1 13 19.4C13 15.1 15.8 11.5 20 7Z"/><path d="M11 29c3-2.2 6-3.3 9-3.3s6 1.1 9 3.3"/><path d="M14 33h12"/></svg></span>
+          <span><strong>Ground yourself</strong><em>Breathe and return.</em><b aria-hidden="true">→</b></span>
+        </button>
+        <button class="home-action-card card" type="button" data-go="listen">
+          <span class="home-action-icon sound" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M12 24V13l17-3v11"/><circle cx="9.5" cy="27" r="4.5"/><circle cx="26.5" cy="24" r="4.5"/></svg></span>
+          <span><strong>Play a soft sound</strong><em>Lower the noise.</em><b aria-hidden="true">→</b></span>
+        </button>
+        <button class="home-action-card card" type="button" data-go="read">
+          <span class="home-action-icon read" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M8 10.5h10a4 4 0 0 1 4 4V31H12a4 4 0 0 0-4 4Z"/><path d="M32 10.5H22a4 4 0 0 0-4 4V31h10a4 4 0 0 1 4 4Z"/></svg></span>
+          <span><strong>Open a gentle guide</strong><em>Read at your pace.</em><b aria-hidden="true">→</b></span>
+        </button>
+      </div>
+
+      <div class="section-heading home-today-heading"><h2>Today</h2><span id="todayLabel"></span></div>
+      <article class="today-card card" id="todayCard"><h3>No check-in yet.</h3><p>There is no right mood to choose. Start with the one closest to what you feel.</p></article>
+      <p class="notice home-privacy-note">Your check-ins, journal entries, and conversations stay in this browser on this device. Clearing browser data may remove them.</p>
+    </section>
+
+        <section class="screen" id="screen-companion" data-screen="companion">
+      <p class="kicker">A space to say it as it is</p><h1 class="page-title">You can vent here.</h1><p class="page-lede">You do not have to make your story neat, positive, or easy to understand. Yoni can listen, comfort you, help you sort one thought, or guide a grounding pause. He is a digital companion, not a therapist or emergency service.</p>
+      <article class="listener-card card">
+        <img src="" data-yoni-asset="mascot" alt="Yoni"><div><strong>No fixing without permission.</strong><span>Choose how you want Yoni to respond. You can change it anytime.</span></div>
+      </article>
+      <div class="response-mode" id="responseMode" role="radiogroup" aria-label="How Yoni should respond">
+        <button class="active" type="button" data-mode="listen" role="radio" aria-checked="true">Just listen</button>
+        <button type="button" data-mode="comfort" role="radio" aria-checked="false">Comfort me</button>
+        <button type="button" data-mode="think" role="radio" aria-checked="false">Help me think</button>
+        <button type="button" data-mode="ground" role="radio" aria-checked="false">Ground me</button>
+      </div>
+      <article class="chat-shell card">
+        <div class="chat-head"><img src="" data-yoni-asset="mascot" alt="Yoni"><div><strong>Yoni</strong><span><i class="online-dot"></i> ready to listen</span></div><small>digital companion</small></div>
+        <div class="chat-log" id="chatLog" aria-live="polite"></div>
+        <div class="chat-chips" id="chatChips"><button class="chat-chip" type="button">I just need to vent</button><button class="chat-chip" type="button">medyo mabigat</button><button class="chat-chip" type="button">kinakabahan ako</button><button class="chat-chip" type="button">samahan mo lang ako</button></div>
+        <form class="chat-compose" id="chatForm"><textarea id="chatInput" rows="1" maxlength="1200" placeholder="Say everything. You don’t need to make it neat..."></textarea><button class="chat-send" type="submit" aria-label="Send">↑</button></form>
+        <div class="chat-foot"><p class="chat-note">Yoni’s replies come from a reviewed response library. Unrecognized questions are saved only on this device for future review and are not automatically uploaded.</p><button id="clearChat" type="button">Clear conversation</button></div>
+      </article>
+    </section>
+
+        <section class="screen" id="screen-checkin" data-screen="checkin">
+      <p class="kicker">Daily emotional check-in</p><h1 class="page-title">What is closest to how you feel?</h1><p class="page-lede">Choose honestly. Yoni will not diagnose you or assume what you are experiencing. This simply gives the feeling a place to land.</p>
+      <div class="mood-list" id="moodList" aria-label="Choose the emoji closest to how you feel">
+        <button class="mood-option" type="button" data-mood="5" data-emoji="😄" data-label="Great" aria-label="Great" title="Great"><span class="mood-emoji" aria-hidden="true">😄</span></button>
+        <button class="mood-option" type="button" data-mood="5" data-emoji="🥹" data-label="Grateful" aria-label="Grateful" title="Grateful"><span class="mood-emoji" aria-hidden="true">🥹</span></button>
+        <button class="mood-option" type="button" data-mood="4" data-emoji="🙂" data-label="Good" aria-label="Good" title="Good"><span class="mood-emoji" aria-hidden="true">🙂</span></button>
+        <button class="mood-option" type="button" data-mood="4" data-emoji="😌" data-label="Calm" aria-label="Calm" title="Calm"><span class="mood-emoji" aria-hidden="true">😌</span></button>
+        <button class="mood-option" type="button" data-mood="3" data-emoji="😐" data-label="Okay" aria-label="Okay" title="Okay"><span class="mood-emoji" aria-hidden="true">😐</span></button>
+        <button class="mood-option" type="button" data-mood="3" data-emoji="😴" data-label="Tired" aria-label="Tired" title="Tired"><span class="mood-emoji" aria-hidden="true">😴</span></button>
+        <button class="mood-option" type="button" data-mood="2" data-emoji="😢" data-label="Sad" aria-label="Sad" title="Sad"><span class="mood-emoji" aria-hidden="true">😢</span></button>
+        <button class="mood-option" type="button" data-mood="2" data-emoji="😵‍💫" data-label="Overwhelmed" aria-label="Overwhelmed" title="Overwhelmed"><span class="mood-emoji" aria-hidden="true">😵‍💫</span></button>
+        <button class="mood-option" type="button" data-mood="2" data-emoji="😣" data-label="Frustrated" aria-label="Frustrated" title="Frustrated"><span class="mood-emoji" aria-hidden="true">😣</span></button>
+        <button class="mood-option" type="button" data-mood="2" data-emoji="😠" data-label="Angry" aria-label="Angry" title="Angry"><span class="mood-emoji" aria-hidden="true">😠</span></button>
+        <button class="mood-option" type="button" data-mood="2" data-emoji="🥺" data-label="Lonely" aria-label="Lonely" title="Lonely"><span class="mood-emoji" aria-hidden="true">🥺</span></button>
+        <button class="mood-option" type="button" data-mood="1" data-emoji="😰" data-label="Unsafe or afraid" aria-label="I may not feel safe" title="I may not feel safe"><span class="mood-emoji" aria-hidden="true">😰</span></button>
+      </div>
+      <article class="feeling-ack card" id="feelingAck" hidden><div class="ack-head"><span id="ackEmoji"></span><div><p class="kicker">Yoni hears you</p><h2 id="ackTitle"></h2></div></div><p id="ackMessage"></p></article>
+      <div id="checkinFollowup" hidden>
+        <article class="support-inline card" id="supportInline"><h3>Your safety comes first.</h3><p>If you may be in immediate danger, might hurt yourself, are experiencing abuse, or have a medical emergency, contact 911, an available crisis line, or a trusted person nearby now. Yoni cannot send emergency help.</p><button class="button danger" type="button" data-go="help">Open support contacts</button></article>
+        <div class="field"><label for="checkinNote">Anything you want to put down? Optional</label><textarea id="checkinNote" placeholder="Write only what feels safe to write."></textarea></div>
+        <div class="gentle-options"><button class="gentle-option" type="button" data-go="companion">Talk to Yoni</button><button class="gentle-option" type="button" data-go="journal">Write privately</button><button class="gentle-option" type="button" data-go="tools">Try slow breathing</button><button class="gentle-option" type="button" data-go="help">View support</button></div>
+        <div class="form-actions"><button class="button orange" id="saveCheckin" type="button">Save my check-in</button><button class="button soft" type="button" data-go="home">Back to home</button></div>
+      </div>
+      <article class="confirmation card" id="checkinConfirmation"><h3>Noted, with care.</h3><p>Your feelings deserve space. Thank you for checking in today.</p></article>
+    </section>
+
+    <section class="screen" id="screen-journal" data-screen="journal">
+      <p class="kicker">Private journal</p><h1 class="page-title">Put the weight somewhere.</h1><p class="page-lede">Entries remain private in this browser on this device. They are never used as community content and are not a medical record.</p>
+      <article class="journal-form card"><div class="field" style="margin-top:0"><label for="journalText">Today’s reflection</label><textarea id="journalText" placeholder="Write freely. You can delete it whenever you choose."></textarea></div><div class="journal-meta"><span id="journalDate"></span><span id="journalCount">0 characters</span></div><div class="form-actions"><button class="button orange" id="saveJournal" type="button">Save this entry</button></div></article>
+      <div class="section-heading"><h2>Previous entries</h2><button class="button soft" type="button" data-go="history">Open calendar</button></div><div class="journal-list" id="journalList"></div>
+    </section>
+
+    <section class="screen" id="screen-community" data-screen="community">
+      <p class="kicker">The Kind Wall</p><h1 class="page-title">Pass something good forward.</h1><p class="page-lede">Share a positive story, small win, gratitude, or kind thought. Your real name stays private. The wall shows only your username.</p>
+      <article class="community-compose card"><div class="community-identity"><span class="profile-avatar compact" id="communityAvatar">F</span><div><small>Posting as</small><strong id="communityUsername">@friend</strong></div><span class="moderation-pill">Moderator reviewed</span></div><form id="wallForm"><label class="field" for="wallContent"><span>What positive thought or story would you like to share?</span><textarea id="wallContent" maxlength="2000" placeholder="A small win, a kind reminder, gratitude, or a hopeful moment..."></textarea></label><div class="community-compose-meta"><span id="wallCount">0 / 2000</span><span>Public only after approval</span></div><label class="community-consent"><input id="wallConsent" type="checkbox"><span>I am sharing something constructive and understand that a moderator will review it before publication.</span></label><button class="button orange community-submit" type="submit">Send for moderator review</button><div class="inline-status" id="wallStatus"></div></form></article>
