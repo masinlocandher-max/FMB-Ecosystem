@@ -3,6 +3,9 @@
   if(document.querySelector('.az-help-trigger'))return;
 
   const HELP_EMAIL='withlovefmb@gmail.com';
+  const SITE_URL='https://www.francinemariebautista.com';
+  const APP_URL='https://app.francinemariebautista.com';
+  const UNKNOWN_QUESTION_KEY='fmb.az.unmatched.v1';
   const q=(label,next,extra={})=>({label,next,...extra});
   const link=(label,href,extra={})=>({label,href,...extra});
   const contact=(label,category,extra={})=>({label,action:'contact',category,...extra});
@@ -11,19 +14,138 @@
   const guest=extra=>({...extra,guestOnly:true});
   const member=extra=>({...extra,memberOnly:true});
 
+  // AZ uses an intentionally prewritten response bank. This keeps answers
+  // factual, on-brand, and predictable without presenting AZ as generative AI.
+  const replyBank={
+    welcome:[
+      'Welcome. I am AZ, the FMB&CO. Receptionist. Ask me a question about the website, the app, FMB&CO., SENZ, Cognita, or your account.',
+      'Good to meet you. I am AZ, the FMB&CO. Receptionist. Tell me what you are looking for and I will guide you to the clearest next step.',
+      'Welcome to FMB&CO. Digital Reception. I am AZ. You can type naturally, and I will match your question with a verified website or app answer.',
+      'Hello. I am AZ, your FMB&CO. Receptionist. I can help with the website, the app, Yoni, membership, company information, and official contact routes.',
+      'You have reached FMB&CO. Digital Reception. I am AZ, and I am ready to help you find the right website, app feature, company, or contact route.',
+      'Welcome. Tell me what you need in your own words. I am AZ, the FMB&CO. Receptionist, and my answers come from a verified premade reply bank.'
+    ],
+    greeting:[
+      'Hello. It is lovely to welcome you. What would you like to know about the website or the app?',
+      'Hi. I am here and ready to help. You can ask about FMB&CO., SENZ, Cognita, Yoni, membership, or any website feature.',
+      'Welcome. How may I help you today?',
+      'Hello. Tell me what you are trying to find, open, or understand, and I will guide you.',
+      'Good to see you. What can I help you with today?',
+      'Hello. You can write your question naturally. I will match it with the closest verified answer.'
+    ],
+    thanks:[
+      'You are very welcome. I am here whenever you need help with the website or app.',
+      'My pleasure. Please ask another question whenever you are ready.',
+      'You are welcome. I am glad I could make the next step clearer.',
+      'Gladly. I can help with another website or app question if you have one.',
+      'You are most welcome. AZ Reception is always available from this button.',
+      'Happy to help. You can continue typing if there is anything else you need.'
+    ],
+    goodbye:[
+      'Thank you for visiting FMB&CO. Digital Reception. You can open Receptionist again whenever you need me.',
+      'Thank you for stopping by. I will be here when you need more website or app guidance.',
+      'Goodbye for now. I hope your next step is clear.',
+      'It was a pleasure helping you. You can return to AZ Reception at any time.'
+    ],
+    identity:[
+      'I am AZ, the female digital Receptionist for FMB&CO. I answer website and app questions from a verified premade reply bank. Yoni is the separate mental-health companion inside the app.',
+      'My name is AZ. I am FMB&CO.\'s digital Receptionist, not the mental-health companion. Yoni is the orange bear companion in the app.',
+      'I am AZ, tagged as Receptionist. I help visitors navigate FMB&CO., the wider website, and the app using approved premade answers.',
+      'AZ is the FMB&CO. Digital Receptionist. I can explain the website, app, companies, account features, and official contact routes.'
+    ],
+    capabilities:[
+      'I can explain FMB&CO., SENZ, Cognita, Francine Marie Bautista, the website, the member account, the app, and Yoni. I can also guide technical reports and official inquiries.',
+      'Ask me where to find a page, how to use the app, what Yoni does, how membership works, or how to contact the correct FMB&CO. team.',
+      'I cover website navigation, app installation, accounts, FMB&CO. company information, SENZ, Cognita, content libraries, privacy, reports, and professional inquiries.',
+      'I am best at verified website and app guidance. If my reply bank does not contain an answer, I will say so clearly and save the question on this device for reply-bank review.'
+    ],
+    general:[
+      'Certainly. I will take you to the closest verified answer.',
+      'Of course. Let me guide you to the right information.',
+      'I understand. Here is the clearest next step.',
+      'Thank you. I found the relevant information for you.',
+      'Absolutely. Let us look at the correct website or app guidance.',
+      'Understood. I will keep this clear and practical.',
+      'I can help with that. Here is the verified guidance.',
+      'That makes sense. Let us go directly to the most useful answer.',
+      'Yes. I have a premade answer for that topic.',
+      'I found the closest official guidance in my reply bank.'
+    ],
+    care:[
+      'Thank you for telling me. I will guide you to the safest available next step.',
+      'I hear you. Your safety matters, so I will keep the next step clear.',
+      'You did the right thing by asking. Let us use the safest verified route.',
+      'I understand. I will direct you carefully and without judgment.',
+      'Thank you for reaching out. Here is the safest guidance available on the website.',
+      'I am glad you said something. Let us move to the right support information.'
+    ],
+    contact:[
+      'Certainly. I will prepare the correct official contact form.',
+      'Of course. I will route this to the most relevant inquiry category.',
+      'I can help you contact the team through the official form.',
+      'Understood. I will open the correct FMB&CO. contact route.',
+      'Yes. I will prepare a secure form with the right category selected.',
+      'I will help you send the relevant details to the correct team.'
+    ],
+    link:[
+      'Certainly. I will open the official page for you.',
+      'Of course. I will take you directly to the correct page.',
+      'I found it. I will open the verified destination now.',
+      'Yes. I will take you to that official page.',
+      'Understood. The correct page is ready to open.',
+      'I will guide you to the official destination.'
+    ],
+    matched:[
+      'I found the closest verified answer in my reply bank.',
+      'Thank you. I matched your question with the most relevant guidance.',
+      'I understand what you are looking for. Here is the closest official answer.',
+      'I found a reliable match for your question.',
+      'Your question matches one of my verified website and app topics.',
+      'I have a premade answer for this. Let us go to it.',
+      'I found the relevant topic and will keep the answer clear.',
+      'This is covered in my verified reply bank.'
+    ],
+    unknownSaved:[
+      'I do not have a verified premade answer for that yet, and I do not want to guess. I saved the question on this device for reply-bank review.',
+      'That question is not in my verified reply bank yet. I saved it on this device so it can be included when the bank is reviewed.',
+      'I could not match that with confidence. I saved the question on this device and will offer the safest next options.',
+      'I do not have an approved answer for that topic yet. Your question has been saved locally for future reply-bank improvement.'
+    ],
+    unknownUnsaved:[
+      'I do not have a verified premade answer for that yet, and I do not want to guess. This browser did not allow me to save the question.',
+      'I could not match that with confidence. I also could not store the question on this device, but you can send it to the team through the contact form.',
+      'That topic is not in my approved reply bank yet. Please use the official contact route if you need a confirmed answer.'
+    ]
+  };
+  const replyPositions=new Map();
+  function replyFrom(key){
+    const choices=replyBank[key]||replyBank.general;
+    const previous=replyPositions.get(key);
+    let index=Math.floor(Math.random()*choices.length);
+    if(choices.length>1&&index===previous)index=(index+1)%choices.length;
+    replyPositions.set(key,index);
+    return choices[index];
+  }
+
   const screens={
     main:{
-      title:'How can I help?',
-      body:'Hello. How may we help you today? Choose a topic below, or type a few words in the search box. I will guide you to the clearest next step.',
+      title:'How may I help?',
+      body:'Type a question naturally, or choose one of these starting points. My answers cover the website, app, companies, membership, and official contact routes.',
       options:[
-        q('Find Something','find'),q('Account and Membership','account'),q('App and Device Help','app'),q('Music and Reading','media'),q('Journal and Daily Check-In','journal'),q('Community and Freedom Wall','community'),q('Support and Wellbeing','support',{care:true}),q('Privacy and Safety','privacy'),q('Work with FMB','work'),q('Volunteer and Collaborate','volunteer'),q('Payments, Donations, and Partnerships','payments'),q('Report a Problem','report'),q('Frequently Asked Questions','faq')
+        q('Website and Brands','website'),q('App and Yoni','app'),q('Account and Membership','account'),q('Report a Problem','report')
       ]
     },
+    website:{title:'Website and Brands',body:'I can guide you through the main website, FMB&CO., the founder profile, SENZ, Cognita, news, resources, and professional inquiries.',options:[
+      q('About FMB&CO.','fmbandco'),q('About SENZ','senz'),q('About Cognita','cognita'),link('About Francine Marie Bautista',`${SITE_URL}/aboutfmb/`),link('Latest News',`${SITE_URL}/news/`),q('Find Another Page','find'),q('Work with FMB&CO.','work'),main
+    ]},
+    fmbandco:{title:'About FMB&CO.',body:'FMB&CO. is a strategy-led company that sets direction, builds clarity, and creates lasting value across a focused portfolio. Its companies are SENZ Strategic Communications and Cognita Institute of AI.',options:[link('Open FMB&CO.',`${SITE_URL}/fmb&co/`,{primary:true}),q('About SENZ','senz'),q('About Cognita','cognita'),link('Meet the Founder',`${SITE_URL}/aboutfmb/`),q('Professional Inquiry','work'),back]},
+    senz:{title:'About SENZ',body:'SENZ Strategic Communications is the PR, marketing, branding, creative, website, and digital solutions company of FMB&CO. It helps people and organizations communicate with greater clarity, positioning, and relevance.',options:[link('Open the FMB&CO. SENZ Gateway',`${SITE_URL}/fmb&co/senz/`,{primary:true}),link('Visit SENZ',`https://www.senzpr.com`),q('Start a Professional Inquiry','professional_inquiry'),q('About FMB&CO.','fmbandco'),back]},
+    cognita:{title:'About Cognita',body:'Cognita Institute of AI is the practical, responsible, and human-centered AI learning company of FMB&CO. It helps people and organizations understand AI tools and build future-ready skills with accountability.',options:[link('Open the FMB&CO. Cognita Gateway',`${SITE_URL}/fmb&co/cognita/`,{primary:true}),link('Visit Cognita',`https://thecognitainstitute.com`),q('Start a Professional Inquiry','professional_inquiry'),q('About FMB&CO.','fmbandco'),back]},
     find:{title:'Find Something',body:'Of course. I can help you find the right part of With Love, FMB. What would you like to explore?',options:[
-      link('About FMB','/aboutfmb/'),link('Latest News','/news/'),link('Reading Library','/ebooks/'),link('Music Library','/music/'),link('Support Resources','/gethelp/'),link('Volunteer Opportunities','/volunteer.html'),link('Our Projects','/fmbandco/'),link('Work with FMB','/aboutfmb/#work-with-fmb'),contact('Contact the Team','General Question'),q('Search the Website','search'),q('I Cannot Find a Page','missing'),main
+      link('About FMB',`${SITE_URL}/aboutfmb/`),link('Latest News',`${SITE_URL}/news/`),link('Reading Library',`${SITE_URL}/ebooks/`),link('Music Library',`${SITE_URL}/music/`),link('Support Resources',`${SITE_URL}/gethelp/`),link('Volunteer Opportunities',`${SITE_URL}/volunteer.html`),link('FMB&CO.',`${SITE_URL}/fmb&co/`),link('Work with FMB&CO.',`${SITE_URL}/aboutfmb/#work-with-fmb`),contact('Contact the Team','General Question'),q('Search the Website','search'),q('I Cannot Find a Page','missing'),main
     ]},
     search:{title:'Search the Website',body:'I understand. Enter a keyword below, or choose a category. I will match it with the closest available page.',focusSearch:true,options:[
-      link('Mental Health','/reading.html'),link('Women’s Health','/womens-health.html'),link('LGBTQIA+ Resources','/coming-out-respect.html'),link('Music','/music/'),link('Reading','/ebooks/'),link('News','/news/'),link('Community','/freedom-wall.html'),link('Volunteerism','/volunteer.html'),link('FMB Projects','/fmbandco/'),link('Professional Services','/aboutfmb/#work-with-fmb'),back,main
+      link('Mental Health',`${SITE_URL}/reading.html`),link('Women’s Health',`${SITE_URL}/womens-health.html`),link('LGBTQIA+ Resources',`${SITE_URL}/coming-out-respect.html`),link('Music',`${SITE_URL}/music/`),link('Reading',`${SITE_URL}/ebooks/`),link('News',`${SITE_URL}/news/`),link('Community',`${SITE_URL}/freedom-wall.html`),link('Volunteerism',`${SITE_URL}/volunteer.html`),link('FMB&CO.',`${SITE_URL}/fmb&co/`),link('Professional Services',`${SITE_URL}/aboutfmb/#work-with-fmb`),back,main
     ]},
     missing:{title:'I Cannot Find a Page',body:'That is understandable. Some pages may be available only to signed-in members, temporarily unavailable, or currently being updated. We can still help you find an alternative.',options:[
       link('Sign In','/auth.html#signin',guest({primary:true})),link('Open My Profile','/profile/',member({primary:true})),q('View Public Pages','find'),q('Search Again','search'),contact('Report a Missing Page','Technical Problem'),back
@@ -60,16 +182,17 @@
       contact('Request Account Deletion','Account Support',{care:true}),link('Download or Review My Information','/data-rights.html'),link('Keep My Account','/profile/',member({primary:true})),back
     ]},
 
-    app:{title:'App and Device Help',body:'Of course. Device issues can be inconvenient, but we can work through them. What would you like help with?',options:[
-      q('Install the App','install'),link('Open the App','/'),q('Update the App','update_app'),q('App Is Not Loading','app_loading'),q('App Looks Different','app_different'),q('Notifications','notifications'),q('Home Screen Icon','install'),q('Remove the App','remove_app'),q('Browser Compatibility','browser_help'),main
+    app:{title:'App and Yoni',body:'The FMB app brings member tools, reading, music, reflection, and support into a mobile-first experience. Yoni is the orange bear mental-health companion. I am AZ, the Receptionist for website and app questions.',options:[
+      q('What Is Yoni?','yoni'),link('Open the App',APP_URL,{primary:true}),q('Install the App','install'),q('Update the App','update_app'),q('App Is Not Loading','app_loading'),q('App Looks Different','app_different'),q('Notifications','notifications'),q('Remove the App','remove_app'),q('Browser Compatibility','browser_help'),main
     ]},
-    install:{title:'Install the App',body:'I can guide you. Choose your device. Installation adds a convenient home-screen icon and does not change your account.',options:[q('iPhone or iPad','install_ios'),q('Android','install_android'),q('Desktop or Laptop','install_desktop'),link('Continue in Browser','/'),back]},
-    install_ios:{title:'Install on iPhone or iPad',body:'Open the website in Safari, tap the Share button, then select Add to Home Screen. Confirm the name and tap Add.',options:[link('Continue in Browser','/'),q('The Option Is Missing','browser_help'),back]},
-    install_android:{title:'Install on Android',body:'Open the website in Chrome, tap the browser menu, then choose Install App or Add to Home Screen. Confirm when prompted.',options:[link('Continue in Browser','/'),q('The Option Is Missing','browser_help'),back]},
-    install_desktop:{title:'Install on Desktop or Laptop',body:'Depending on your browser, an install icon may appear near the address bar. If it does not, you can continue using the website normally.',options:[link('Continue on the Website','/'),q('View Browser Instructions','browser_help'),back]},
+    yoni:{title:'Yoni, the Mental-Health Companion',body:'Yoni is the orange bear mental-health companion inside the app. Yoni offers a warmer companion experience, while I handle website, app, account, and company questions as the FMB&CO. Receptionist. Yoni is not a replacement for emergency services or licensed professional care.',options:[link('Open Yoni in the App',APP_URL,{primary:true}),link('View Support Resources',`${SITE_URL}/gethelp/`,{care:true}),q('I May Be in Immediate Danger','danger',{care:true}),q('App and Device Help','app'),back]},
+    install:{title:'Install the App',body:'I can guide you. Choose your device. Installation adds a convenient home-screen icon and does not change your account.',options:[q('iPhone or iPad','install_ios'),q('Android','install_android'),q('Desktop or Laptop','install_desktop'),link('Continue in Browser',APP_URL),back]},
+    install_ios:{title:'Install on iPhone or iPad',body:'Open the app website in Safari, tap the Share button, then select Add to Home Screen. Confirm the name and tap Add.',options:[link('Continue in Browser',APP_URL),q('The Option Is Missing','browser_help'),back]},
+    install_android:{title:'Install on Android',body:'Open the app website in Chrome, tap the browser menu, then choose Install App or Add to Home Screen. Confirm when prompted.',options:[link('Continue in Browser',APP_URL),q('The Option Is Missing','browser_help'),back]},
+    install_desktop:{title:'Install on Desktop or Laptop',body:'Depending on your browser, an install icon may appear near the address bar. If it does not, you can continue using the app website normally.',options:[link('Continue on the App Website',APP_URL),q('View Browser Instructions','browser_help'),back]},
     update_app:{title:'Update the App',body:'You are not doing anything wrong. The app usually updates when it is reopened. Close it fully, reconnect to the internet, and open it again.',options:[{label:'Try Again',action:'reload',primary:true},q('App Is Not Loading','app_loading'),contact('Report the Problem','Technical Problem'),back]},
     app_loading:{title:'App Is Not Loading',body:'I understand. Please try these steps in order. Your account and saved information should remain unaffected by a normal refresh.',html:'<ol><li>Check your internet connection.</li><li>Close and reopen the app.</li><li>Refresh the page.</li><li>Restart your device.</li><li>Try another supported browser.</li></ol>',options:[{label:'Try Again',action:'reload',primary:true},q('Check Service Status','service_status'),q('Clear Browser Data','clear_data'),contact('Report the Problem','Technical Problem'),back]},
-    app_different:{title:'App Looks Different',body:'That makes sense. The app and desktop website may use different layouts depending on the device and screen size, while the content and account remain connected.',options:[link('View App Features','/'),link('Open Desktop Website','https://www.francinemariebautista.com/'),contact('Report a Display Issue','Technical Problem'),back]},
+    app_different:{title:'App Looks Different',body:'That makes sense. The app and desktop website may use different layouts depending on the device and screen size, while supported content and account features remain connected.',options:[link('View App Features',APP_URL),link('Open Main Website',SITE_URL),contact('Report a Display Issue','Technical Problem'),back]},
     notifications:{title:'Notifications',body:'I understand. Notification availability depends on your device, browser, and the permissions you have granted. You can review the site settings in your browser or device settings.',options:[q('Turn Notifications On','notification_steps'),q('Turn Notifications Off','notification_steps'),q('I Am Not Receiving Notifications','notification_steps'),q('Notification Preferences','notification_steps'),back]},
     notification_steps:{title:'Notification Settings',body:'Open your device or browser settings, find Notifications, then choose With Love, FMB or your browser. You can allow, limit, or turn off alerts there. Some notification features are still being expanded.',options:[q('App and Device Help','app'),contact('Report a Problem','Technical Problem'),back]},
     remove_app:{title:'Remove the App',body:'No worries. Removing the home-screen app icon will not automatically delete your member account or its saved information.',options:[q('Remove from iPhone or iPad','remove_ios'),q('Remove from Android','remove_android'),q('Delete My Account Instead','delete_account'),back]},
@@ -150,7 +273,7 @@
     media_inquiry:{title:'Media Inquiry',body:'Thank you for reaching out. Interviews, features, speaking invitations, press requests, and requests for public statements should include the outlet, topic, deadline, format, and contact details.',options:[contact('Open Media Inquiry Form','Media Inquiry',{primary:true}),link('View FMB Profile','/aboutfmb/'),contact('Request Official Information','Media Inquiry'),back]},
 
     volunteer:{title:'Volunteer and Collaborate',body:'Thank you for wanting to contribute. Every thoughtful offer matters. How would you like to participate?',options:[
-      link('Become a Volunteer','/volunteer.html'),q('View Volunteer Roles','volunteer_roles'),q('Submit a Resource','submit_resource'),contact('Community Partnership','Partnership'),contact('Professional Partnership','Partnership'),contact('Sponsor an Initiative','Partnership'),contact('Offer Services','Volunteer Application'),q('Check My Application','application_status'),main
+      link('Become a Volunteer','/volunteer.html'),q('View Volunteer Roles','volunteer_roles'),q('Submit a Resource','submit_resource'),contact('Community Partnership','Partnership'),contact('Professional Partnership','Partnership'),contact('Offer Services','Volunteer Application'),q('Check My Application','application_status'),main
     ]},
     volunteer_roles:{title:'Volunteer Roles',body:'Available roles depend on current projects and safeguarding needs. Opportunities may include the roles below.',html:'<ul><li>Peer support volunteer</li><li>Licensed counsellor or psychologist</li><li>Psychiatrist</li><li>Researcher or writer</li><li>Photographer or videographer</li><li>Designer</li><li>Community moderator</li><li>Outreach or administrative support</li></ul>',options:[link('View Open Opportunities','/volunteer.html'),contact('Submit Volunteer Application','Volunteer Application',{primary:true}),back]},
     application_status:{title:'Check My Application',body:'I understand that waiting for an update can feel uncertain. Choose the status shown in your account or email, or contact the team if no update has arrived.',options:[
@@ -158,13 +281,13 @@
     ]},
     submit_resource:{title:'Submit a Resource',body:'Thank you for helping strengthen the library. Resources should be accurate, properly credited, relevant, and safe for public use.',options:[contact('Submit a Resource','General Question',{primary:true}),link('Read Submission Guidelines','/community-guidelines.html'),contact('Report Incorrect Information','Correction Request'),back]},
 
-    payments:{title:'Payments, Donations, and Partnerships',body:'I am glad you checked first. Clear, official payment information helps protect everyone. What do you need help with?',options:[
-      q('Is Membership Free?','membership_free'),q('Donations','donations'),q('Sponsorships','partnerships'),q('Brand Partnerships','partnerships'),contact('Payment Verification','General Question'),contact('Request a Receipt','General Question'),contact('Refund or Cancellation','General Question'),q('Report a Suspicious Request','suspicious'),main
+    payments:{title:'Membership, Services, and Partnerships',body:'Standard membership is free. A specific professional service, product, event, or program may have a clearly published fee. FMB&CO. does not accept donations.',options:[
+      q('Is Membership Free?','membership_free'),q('Donation Policy','donations'),q('Professional Services','work'),q('Business Partnerships','partnerships'),contact('Verify a Published Fee','General Question'),contact('Request a Service Receipt','General Question'),contact('Service Refund or Cancellation','General Question'),q('Report a Suspicious Request','suspicious'),main
     ]},
     membership_free:{title:'Is Membership Free?',body:'Yes. Creating a standard member account is free unless a specific paid service, product, event, or program clearly states otherwise.',options:[link('Create an Account','/auth.html#signup',guest({primary:true})),q('View Member Benefits','benefits'),link('Open My Profile','/profile/',member({primary:true})),back]},
-    donations:{title:'Donations',body:'Thank you for wanting to support the work. Only use payment details published through official With Love, FMB channels. If no official option is displayed, please do not send money.',options:[contact('View Official Donation Options','General Question'),contact('Request a Receipt','General Question'),q('Report a Suspicious Request','suspicious'),back]},
-    partnerships:{title:'Sponsorships and Partnerships',body:'We appreciate your interest. A useful proposal includes the organization, intended audience, timeline, responsibilities, and the value offered to both sides.',options:[contact('Submit Partnership Proposal','Partnership',{primary:true}),link('View Partnership Guidelines','/aboutfmb/#work-with-fmb'),contact('Contact the Team','Partnership'),back]},
-    suspicious:{title:'Report a Suspicious Request',body:'You did the right thing by checking. Do not send money, passwords, codes, or personal information to unverified accounts claiming to represent FMB or With Love, FMB.',urgent:true,options:[contact('Submit a Report','Privacy Concern',{primary:true,care:true}),link('View Official Channels','/aboutfmb/'),contact('Contact the Team','Privacy Concern'),back]},
+    donations:{title:'Donation Policy',body:'We do not accept donations. FMB&CO., With Love, FMB, SENZ, and Cognita do not have an official donation channel. Do not send money to anyone requesting a donation in our name. A published fee for a specific professional service, product, event, or program is not a donation.',options:[q('Report a Donation Request','suspicious',{care:true}),q('Professional Services','work'),q('Business Partnerships','partnerships'),back]},
+    partnerships:{title:'Business Partnerships',body:'FMB&CO. considers professional and business partnership proposals. A useful proposal includes the organization, intended audience, timeline, responsibilities, and value offered to both sides. This is separate from donations, which are not accepted.',options:[contact('Submit Partnership Proposal','Partnership',{primary:true}),link('View Partnership Information',`${SITE_URL}/aboutfmb/#work-with-fmb`),contact('Contact the Team','Partnership'),back]},
+    suspicious:{title:'Report a Suspicious Request',body:'You did the right thing by checking. FMB&CO. does not accept donations, so any request for donation money in the name of FMB&CO., With Love, FMB, SENZ, or Cognita is not official. Do not send money, passwords, codes, or personal information.',urgent:true,options:[contact('Submit a Report','Privacy Concern',{primary:true,care:true}),link('View Official Channels',`${SITE_URL}/aboutfmb/`),contact('Contact the Team','Privacy Concern'),back]},
 
     report:{title:'Report a Problem',body:'I am sorry something is not working as expected. Choose the closest issue so the team receives the right details.',options:[
       q('Page Is Not Loading','technical_report'),contact('Button Is Not Working','Technical Problem'),contact('Broken Link','Technical Problem'),q('Sign-In Problem','signin_problem'),q('Verification Problem','verify_email'),contact('Music or Audio Problem','Technical Problem'),contact('Journal Problem','Technical Problem'),contact('Community Submission Problem','Community Concern'),q('Incorrect Information','incorrect'),contact('Display or Layout Problem','Technical Problem'),q('Privacy or Safety Concern','privacy_concern'),contact('Other Technical Issue','Technical Problem'),q('Try Basic Troubleshooting','troubleshoot'),main
@@ -179,7 +302,7 @@
       q('About With Love, FMB','faq_about'),q('About Francine Marie Bautista','faq_fmb'),q('Membership','faq_account'),q('App Experience','app'),q('Content Access','restricted'),q('Music','media'),q('Reading','media'),q('Journal and Check-In','journal'),q('Community','community'),q('Mental Health Support','support',{care:true}),q('Privacy','privacy'),q('Volunteerism','volunteer'),q('Professional Services','work'),q('Partnerships','partnerships'),q('Content Ownership','share_content'),q('Can Features Change?','faq_change'),q('Can I Submit an Article or Resource?','faq_submit'),q('Can I Interview FMB?','faq_interview'),q('Can Schools Use the Resources?','faq_schools'),q('Available Outside the Philippines?','faq_international'),q('Other Languages?','faq_languages'),main
     ]},
     faq_about:{title:'What Is With Love, FMB?',body:'With Love, FMB is a digital space for meaningful stories, wellbeing resources, personal reflection, music, reading, community connection, and conversations about identity, courage, and belonging.',options:[link('Explore the Website','/'),link('Become a Member','/auth.html#signup',guest({primary:true})),link('Open My Member Space','/profile/',member({primary:true})),link('Learn About FMB','/aboutfmb/'),back]},
-    faq_fmb:{title:'Who Is Francine Marie Bautista?',body:'Francine Marie Bautista is a Filipina transgender creative director, strategist, entrepreneur, photographer, storyteller, PR practitioner, branding consultant, educator, and advocate from Masinloc, Zambales.',options:[link('View Full Profile','/aboutfmb/'),q('Work with FMB','work'),link('View Projects','/fmbandco/'),back]},
+    faq_fmb:{title:'Who Is Francine Marie Bautista?',body:'Francine Marie Bautista is a Filipina transgender woman, Zambaleña, and Masinloqueña who connects strategy, creativity, education, communication, technology, and public purpose. She is the founder and chief executive of FMB&CO.',options:[link('View Full Profile',`${SITE_URL}/aboutfmb/`),q('Work with FMB&CO.','work'),link('View FMB&CO.',`${SITE_URL}/fmb&co/`),back]},
     faq_account:{title:'Do I Need an Account?',body:'No. Visitors may access selected public content. A free member account is required for personal tools, the complete music library, and selected exclusive materials.',options:[link('Continue as a Visitor','/'),link('Create an Account','/auth.html#signup',guest({primary:true})),link('Open My Profile','/profile/',member({primary:true})),q('View Member Benefits','benefits'),back]},
     faq_change:{title:'Can Features Change?',body:'Yes. Features, content access, design, and community tools may change as the platform develops. Maintenance notices will explain important updates when possible.',options:[link('View Latest Updates','/news/'),q('Report a Problem','report'),back]},
     faq_submit:{title:'Can I Submit an Article, Story, or Resource?',body:'Selected contributions may be considered based on relevance, quality, accuracy, permissions, safety, and editorial review.',options:[link('View Submission Guidelines','/community-guidelines.html'),contact('Submit a Contribution','General Question'),back]},
@@ -188,7 +311,7 @@
     faq_international:{title:'Is the Website Available Outside the Philippines?',body:'The website may be accessed internationally, although some support services, hotline listings, and programs may be specific to particular locations.',options:[link('View Support Resources','/gethelp/'),contact('Report a Location Issue','Correction Request'),back]},
     faq_languages:{title:'Is the Platform Available in Other Languages?',body:'Language availability may vary by page and feature. The team may expand language support as the platform develops.',options:[contact('Suggest a Translation','General Question'),back]},
 
-    typed_fallback:{title:'I Could Not Match That Yet',body:'Thank you for explaining. We could not match your message to an available topic, but that is okay. Choose one of the options below and I will keep helping.',options:[q('Search Help Topics','search'),q('Frequently Asked Questions','faq'),contact('Contact the Team','General Question'),q('Report a Problem','report'),main]},
+    typed_fallback:{title:'Not in My Reply Bank Yet',body:'I do not have a verified premade answer for that yet, and I do not want to guess. You can rephrase the question or use an official contact route.',options:[q('Try Another Question','search'),contact('Ask the Team','General Question'),q('View Main Topics','main')]},
     no_results:{title:'No Results Found',body:'I could not find an answer under that topic. You are not stuck. We can try another search or send the question to the team.',options:[q('Try Another Search','search'),q('Browse Frequently Asked Questions','faq'),contact('Contact the Team','General Question'),main]},
     contact_reasons:{title:'Contact the Team',body:'Of course. Choose the reason for contacting the team so your message can be reviewed properly.',options:[
       contact('Account Support','Account Support'),contact('Technical Problem','Technical Problem'),contact('Privacy Concern','Privacy Concern'),contact('Community Concern','Community Concern'),contact('Professional Inquiry','Professional Inquiry'),contact('Partnership','Partnership'),contact('Volunteer Application','Volunteer Application'),contact('Media Inquiry','Media Inquiry'),contact('Correction Request','Correction Request'),contact('General Question','General Question'),back
@@ -199,20 +322,41 @@
   };
 
   const searchIndex=[
-    {words:'about francine fmb profile strategist creative director filipina zambalena masinloc transgender advocate',screen:'faq_fmb'},
-    {words:'news latest update article',href:'/news/'},
-    {words:'book books ebook ebooks read reading mental health women lgbt men',screen:'media'},
-    {words:'music song audio calm relax upbeat ost soundtrack play',screen:'media'},
-    {words:'sign in login log in password account email verification member membership profile',screen:'account'},
-    {words:'journal diary daily check in mood entry reflection',screen:'journal'},
-    {words:'freedom wall community post submission moderation',screen:'community'},
-    {words:'help hotline danger crisis wellbeing counseling support self harm suicide',screen:'support'},
-    {words:'privacy security delete data cookies suspicious',screen:'privacy'},
-    {words:'work hire branding pr strategy photography training proposal calendar availability',screen:'work'},
-    {words:'volunteer collaborate partnership sponsor donate donation',screen:'volunteer'},
-    {words:'app install iphone ipad android browser notification loading device',screen:'app'},
-    {words:'broken error problem bug layout button page not loading',screen:'report'},
-    {words:'contact team message inquiry email',screen:'contact_reasons'}
+    {words:'donate donation donations charitable giving fundraiser fundraising contribute money gift cash gcash bank transfer',screen:'donations',priority:80},
+    {words:'yoni orange bear mental health companion friend inside app mascot',screen:'yoni',priority:70},
+    {words:'az receptionist digital receptionist assistant who are you your name female chatbot',direct:'identity',priority:60},
+    {words:'what can you do help topics capabilities questions answer replies reply bank',direct:'capabilities',priority:55},
+    {words:'fmb&co fmb and co fmbco company companies portfolio corporate parent organization shaping what comes next',screen:'fmbandco',priority:50},
+    {words:'senz strategic communications pr public relations marketing branding website digital solutions agency',screen:'senz',priority:48},
+    {words:'cognita institute artificial intelligence ai education learning course training responsible ai',screen:'cognita',priority:48},
+    {words:'about francine marie bautista fmb founder chief executive ceo profile strategist creative director filipina zambalena zambaleña masinloc masinloquena masinloqueña transgender advocate',screen:'faq_fmb',priority:45},
+    {words:'website home page homepage navigation find page brand brands',screen:'website',priority:30},
+    {words:'news latest update article story stories editorial announcement press',href:`${SITE_URL}/news/`,priority:26},
+    {words:'book books ebook ebooks read reading library guide guides material materials',screen:'media',priority:24},
+    {words:'music song songs audio calm relax relaxing upbeat ost soundtrack play player track tracks album',screen:'media',priority:24},
+    {words:'sign in signin login log in password account email verification verify member membership profile register registration signup sign up',screen:'account',priority:30},
+    {words:'forgot reset password incorrect password locked out cannot login cannot sign in',screen:'signin_problem',priority:34},
+    {words:'journal diary daily check in check-in mood entry entries reflection private writing',screen:'journal',priority:24},
+    {words:'freedom wall community post submission submit moderation anonymous harmful content',screen:'community',priority:24},
+    {words:'help hotline danger crisis wellbeing counseling counselling support self harm self-harm suicide emergency someone talk',screen:'support',priority:40},
+    {words:'privacy security delete data information cookies suspicious hacked personal details journal private',screen:'privacy',priority:30},
+    {words:'work hire branding public relations strategy creative direction photography training speaking proposal calendar availability consultation professional service services',screen:'work',priority:28},
+    {words:'volunteer volunteering collaborate contribution offer time offer skills resource community role application',screen:'volunteer',priority:25},
+    {words:'partnership partner business collaboration proposal organization brand partnership',screen:'partnerships',priority:30},
+    {words:'membership free cost price fee payment receipt refund cancellation charge paid',screen:'payments',priority:34},
+    {words:'app install iphone ipad ios android browser notification loading device pwa home screen icon mobile desktop update uninstall remove',screen:'app',priority:30},
+    {words:'install add home screen download app iphone ipad ios android desktop',screen:'install',priority:36},
+    {words:'app not loading app broken blank screen app error will not open cannot open',screen:'app_loading',priority:40},
+    {words:'broken error problem bug layout display button link page not loading not working issue report',screen:'report',priority:30},
+    {words:'contact team message inquiry email receptionist speak person human official form',screen:'contact_reasons',priority:28},
+    {words:'women health womens health woman resources',href:`${SITE_URL}/womens-health.html`,priority:25},
+    {words:'lgbt lgbtq lgbtqia coming out respect queer trans transgender resources',href:`${SITE_URL}/coming-out-respect.html`,priority:25},
+    {words:'men can cry mens health man emotional support',href:`${SITE_URL}/men-can-cry.html`,priority:25},
+    {words:'privacy policy terms data rights agreement community guidelines',screen:'privacy',priority:22},
+    {words:'interview media press feature statement journalist outlet',screen:'media_inquiry',priority:30},
+    {words:'hello hi hey greetings good morning good afternoon good evening',direct:'greeting',priority:20},
+    {words:'thanks thank you appreciate helpful solved perfect great',direct:'thanks',priority:20},
+    {words:'bye goodbye good night see you later close exit',direct:'goodbye',priority:20}
   ];
 
   let isMember=Boolean(window.FMB_MEMBER?.isMember);
@@ -222,7 +366,7 @@
   let lastTrigger=null;
   let contactCategory='General Question';
 
-  const chatIcon='<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M5.5 6.5h14a5 5 0 0 1 5 5v5.2a5 5 0 0 1-5 5h-6.7L8 25.6v-3.9H5.5a4 4 0 0 1-4-4v-7.2a4 4 0 0 1 4-4Z" fill="rgba(255,255,255,.14)" stroke="currentColor" stroke-width="1.6"/><path d="M18 4.2h6.8a5.2 5.2 0 0 1 5.2 5.2v4.1a4.2 4.2 0 0 1-4.2 4.2H24" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M11.3 12a3 3 0 1 1 4.4 2.7c-1.1.6-1.6 1.2-1.6 2.3M14.1 19.3h.01M23.1 7.8a1.7 1.7 0 1 1 2.3 1.6c-.7.4-1 .8-1 1.4M24.4 12.7h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+  const brandMark='<img src="/assets/images/fmbandco/fmbandco-ampersand-gold.png" width="256" height="256" alt="">';
   const closeIcon='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>';
   const homeIcon='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m4 11 8-7 8 7v9H4Z"/><path d="M9 20v-6h6v6"/></svg>';
   const sendIcon='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m4 4 17 8-17 8 3-8Z"/><path d="M7 12h14"/></svg>';
@@ -230,14 +374,14 @@
   const trigger=document.createElement('button');
   trigger.className='az-help-trigger';
   trigger.type='button';
-  trigger.setAttribute('aria-label','Open AZ help assistant');
+  trigger.setAttribute('aria-label','Open AZ Receptionist');
   trigger.setAttribute('aria-expanded','false');
   trigger.setAttribute('aria-controls','azHelpPanel');
-  trigger.innerHTML=`<span class="az-help-trigger-icon">${chatIcon}</span><span class="az-help-trigger-label"><strong>Ask AZ</strong><small>Help assistant</small></span>`;
+  trigger.innerHTML=`<span class="az-help-trigger-icon">${brandMark}</span><span class="az-help-trigger-label"><strong>Receptionist</strong><small>FMB&amp;CO.</small></span>`;
 
   const layer=document.createElement('div');
   layer.className='az-help-layer';
-  layer.innerHTML=`<div class="az-help-backdrop" data-az-close></div><section class="az-help-panel" id="azHelpPanel" role="dialog" aria-modal="true" aria-labelledby="azHelpTitle"><header class="az-help-header"><span class="az-help-avatar">${chatIcon}</span><div class="az-help-identity"><strong id="azHelpTitle">AZ, With Love FMB Help</strong><span>Here to guide you</span></div><div class="az-help-header-actions"><button class="az-help-icon-button" type="button" data-az-home aria-label="Return to main help menu">${homeIcon}</button><button class="az-help-icon-button" type="button" data-az-close aria-label="Close help">${closeIcon}</button></div></header><div class="az-help-transcript" role="log" aria-live="polite" aria-relevant="additions text"><div class="az-help-day-label">With Love, FMB Help</div></div><footer class="az-help-composer"><form class="az-help-search"><label class="sr-only" for="azHelpSearch">Type a help question</label><input id="azHelpSearch" type="search" maxlength="180" autocomplete="off" placeholder="Type a question or keyword"><button type="submit" aria-label="Search help">${sendIcon}</button></form><small class="az-help-composer-note">AZ provides guided website help. For urgent danger, contact emergency services.</small></footer></section>`;
+  layer.innerHTML=`<div class="az-help-backdrop" data-az-close></div><section class="az-help-panel" id="azHelpPanel" role="dialog" aria-modal="true" aria-labelledby="azHelpTitle"><header class="az-help-header"><span class="az-help-avatar">${brandMark}</span><div class="az-help-identity"><div class="az-help-title-row"><strong id="azHelpTitle">AZ</strong><span class="az-help-role">Receptionist</span></div><span class="az-help-brandline">FMB&amp;CO. Digital Reception</span></div><div class="az-help-header-actions"><button class="az-help-icon-button" type="button" data-az-home aria-label="Return to Receptionist home">${homeIcon}</button><button class="az-help-icon-button" type="button" data-az-close aria-label="Close Receptionist">${closeIcon}</button></div></header><div class="az-help-transcript" role="log" aria-live="polite" aria-relevant="additions text"><div class="az-help-day-label">FMB&amp;CO. Digital Reception</div></div><footer class="az-help-composer"><form class="az-help-search"><label class="sr-only" for="azHelpSearch">Type a question for AZ Receptionist</label><input id="azHelpSearch" type="search" maxlength="180" autocomplete="off" placeholder="Ask about the website or app"><button type="submit" aria-label="Send question to AZ">${sendIcon}</button></form><small class="az-help-composer-note">Verified premade replies. Do not enter private or payment information. AZ is not Yoni or an emergency service.</small></footer></section>`;
   document.body.append(trigger,layer);
 
   const panel=layer.querySelector('.az-help-panel');
@@ -264,17 +408,23 @@
   const visibleOption=option=>!(option.guestOnly&&isMember)&&!(option.memberOnly&&!isMember);
   function addOptions(options){
     const visible=(options||[]).filter(visibleOption);
+    const previewLimit=5;
     const wrap=document.createElement('div');wrap.className=`az-quick-replies${visible.length<3?' is-single':''}`;
-    visible.forEach(option=>{
+    const addButton=option=>{
       const button=document.createElement('button');button.type='button';button.className=`az-quick-reply${option.primary?' is-primary':''}${option.care?' is-care':''}`;button.textContent=option.label;
       button.addEventListener('click',()=>choose(option,wrap));wrap.appendChild(button);
-    });
+    };
+    visible.slice(0,previewLimit).forEach(addButton);
+    if(visible.length>previewLimit){
+      const more=document.createElement('button');more.type='button';more.className='az-quick-reply is-more';more.textContent=`More options (${visible.length-previewLimit})`;
+      more.addEventListener('click',()=>{more.remove();visible.slice(previewLimit).forEach(addButton);wrap.classList.remove('is-single');scrollEnd()});wrap.appendChild(more);
+    }
     transcript.appendChild(wrap);scrollEnd();
     return wrap;
   }
   function reassuranceFor(screen){
-    if(screen.urgent)return 'I hear you, and I am glad you reached out. Your safety matters.';
-    return screen.reassurance||'Of course. You are in the right place, and I will help you find the next step.';
+    if(screen.urgent)return replyFrom('care');
+    return screen.reassurance||'';
   }
   function showScreen(id,{push=true,delay=true}={}){
     if(id==='__back'){
@@ -284,7 +434,8 @@
     if(push&&current!==id)history.push(current);
     current=id;
     const reveal=()=>{
-      addMessage('bot',screen.title,`${reassuranceFor(screen)} ${screen.body}`,{html:screen.html||'',urgent:Boolean(screen.urgent)});
+      const text=[reassuranceFor(screen),Array.isArray(screen.body)?screen.body[Math.floor(Math.random()*screen.body.length)]:screen.body].filter(Boolean).join(' ');
+      addMessage('bot',screen.title,text,{html:screen.html||'',urgent:Boolean(screen.urgent)});
       addOptions(screen.options);
       if(screen.focusSearch)setTimeout(()=>searchInput.focus({preventScroll:true}),120);
     };
@@ -292,18 +443,18 @@
     const typing=addTyping();setTimeout(()=>{typing.remove();reveal()},260);
   }
   function resetConversation(){
-    transcript.innerHTML='<div class="az-help-day-label">With Love, FMB Help</div>';
+    transcript.innerHTML='<div class="az-help-day-label">FMB&amp;CO. Digital Reception</div>';
     current='main';history=[];
-    addMessage('bot','Welcome',"Hi, I am AZ, your assistant for today. I am here to help, and we can take this one step at a time. How can I help?");
-    showScreen('main',{push:false,delay:false});
+    addMessage('bot','Welcome to FMB&CO.',replyFrom('welcome'));
+    addOptions(screens.main.options);
   }
   function setOptionsInactive(wrap){wrap?.setAttribute('aria-hidden','true');wrap?.querySelectorAll('button').forEach(button=>button.disabled=true)}
   function acknowledgement(option){
     const lower=option.label.toLowerCase();
-    if(option.care||/(danger|harm|privacy|suspicious|bully|threat|self-harm)/.test(lower))return 'Thank you for telling me. I will help you reach the safest next step.';
-    if(option.action==='contact')return 'Absolutely. I will prepare the correct contact form so the team receives the context.';
-    if(option.href)return `Certainly. I will take you to ${option.label}.`;
-    return `I understand. Let us look at ${option.label}.`;
+    if(option.care||/(danger|harm|privacy|suspicious|bully|threat|self-harm)/.test(lower))return replyFrom('care');
+    if(option.action==='contact')return replyFrom('contact');
+    if(option.href)return replyFrom('link');
+    return replyFrom('general');
   }
   async function signOut(){
     addMessage('bot','Signing Out','I understand. I am securely signing this browser out now.');
@@ -350,13 +501,13 @@
     if(!name||!email||!category||!subject||!message||!page||!data.get('consent')){setStatus('Please complete every required field and confirm consent.',true);return}
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){setStatus('Please enter a valid email address.',true);return}
     if(attachment instanceof File&&attachment.size>5*1024*1024){setStatus('Please choose an attachment smaller than 5 MB. The file is not uploaded by this chat.',true);return}
-    button.disabled=true;button.textContent='Sending with care';setStatus('Please wait while AZ records your request.');
+    button.disabled=true;button.textContent='Sending';setStatus('Please wait while AZ records your request.');
     const ready=await waitForServices();
     if(!ready){button.disabled=false;button.textContent='Send to the Team';setStatus(`The secure form is temporarily unavailable. Please email ${HELP_EMAIL} directly.`,true);return}
     const detail=[`Category: ${category}`,`Relevant page or feature: ${page}`,attachment instanceof File&&attachment.name?`Attachment selected: ${attachment.name} (file not uploaded)`:'',`Message:\n${message}`].filter(Boolean).join('\n\n');
     try{
       const client=window.FMB.createClient('local');
-      const {data:reference,error}=await client.rpc('submit_contact_message',{p_name:name.slice(0,80),p_email:email.slice(0,254),p_subject:`[AZ Help] ${subject}`.slice(0,120),p_message:detail.slice(0,4000),p_kind:'contact'});
+      const {data:reference,error}=await client.rpc('submit_contact_message',{p_name:name.slice(0,80),p_email:email.slice(0,254),p_subject:`[AZ Receptionist] ${subject}`.slice(0,120),p_message:detail.slice(0,4000),p_kind:'contact'});
       if(error||!reference)throw error||new Error('No reference returned');
       const shortRef=`AZ-${String(reference).replace(/[^a-z0-9]/gi,'').slice(-8).toUpperCase()}`;
       form.remove();
@@ -367,14 +518,59 @@
     }
   }
 
+  function normalise(value){
+    return String(value||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/&/g,' and ').replace(/[^a-z0-9\s-]/g,' ').replace(/\s+/g,' ').trim();
+  }
+  function recordUnknownQuestion(value){
+    const question=String(value||'').trim().slice(0,180)
+      .replace(/[\w.+-]+@[\w.-]+\.[a-z]{2,}/gi,'[email removed]')
+      .replace(/\b\d{6,}\b/g,'[number removed]');
+    if(!question)return false;
+    const record={question,path:location.pathname,createdAt:new Date().toISOString(),source:'AZ Receptionist'};
+    try{
+      const stored=JSON.parse(localStorage.getItem(UNKNOWN_QUESTION_KEY)||'[]');
+      const queue=Array.isArray(stored)?stored:[];
+      queue.push(record);
+      localStorage.setItem(UNKNOWN_QUESTION_KEY,JSON.stringify(queue.slice(-40)));
+      window.dispatchEvent(new CustomEvent('fmb:az-unmatched',{detail:record}));
+      return true;
+    }catch{return false}
+  }
+  function directConversation(clean){
+    if(/^(hi|hello|hey|greetings|good morning|good afternoon|good evening|hello az|hi az)[\s.!?]*$/.test(clean))return 'greeting';
+    if(/^(thanks|thank you|thankyou|many thanks|appreciate it|that helped|helpful|problem solved|all good)[\s.!?]*$/.test(clean))return 'thanks';
+    if(/^(bye|goodbye|good night|see you|see you later|close|exit)[\s.!?]*$/.test(clean))return 'goodbye';
+    if(/\b(who are you|what are you|what is az|tell me about az|are you the receptionist|are you yoni|are you an ai|are you ai|are you a chatbot)\b/.test(clean))return 'identity';
+    if(/\b(what can you do|how can you help|what do you know|help topics|show capabilities)\b/.test(clean))return 'capabilities';
+    return '';
+  }
+  function showDirectReply(key){
+    const titles={greeting:'Hello',thanks:'You Are Welcome',goodbye:'Goodbye for Now',identity:'AZ, Receptionist',capabilities:'How I Can Help'};
+    addMessage('bot',titles[key]||'AZ Receptionist',replyFrom(key));
+    if(key==='capabilities')addOptions(screens.main.options);
+  }
   function handleSearch(value){
-    const clean=String(value||'').trim().toLowerCase();if(!clean)return;
+    const raw=String(value||'').trim();const clean=normalise(raw);if(!clean)return;
     addMessage('user','',value);searchInput.value='';
-    const words=clean.split(/\s+/).filter(word=>word.length>2);
+    const conversational=directConversation(clean);
+    if(conversational){showDirectReply(conversational);return}
+    const words=[...new Set(clean.split(/\s+/).filter(word=>word.length>1))];
     let best=null,bestScore=0;
-    searchIndex.forEach(item=>{const score=words.reduce((sum,word)=>sum+(item.words.includes(word)?1:0),0);if(score>bestScore){best=item;bestScore=score}});
-    if(!best||bestScore===0){showScreen('typed_fallback');return}
-    addMessage('bot','I Found a Match','Thank you for explaining. I found the closest help topic, and I will guide you from there.');
+    searchIndex.forEach(item=>{
+      const indexText=normalise(item.words);const indexWords=new Set(indexText.split(/\s+/));
+      const matches=words.reduce((sum,word)=>sum+(indexWords.has(word)?1:0),0);
+      const phraseBonus=clean.length>3&&indexText.includes(clean)?180:0;
+      const score=matches*100+phraseBonus+(item.priority||0);
+      if(matches>0&&score>bestScore){best=item;bestScore=score}
+    });
+    if(!best){
+      const saved=recordUnknownQuestion(raw);
+      addMessage('bot','Not in My Reply Bank Yet',replyFrom(saved?'unknownSaved':'unknownUnsaved'));
+      addOptions(screens.typed_fallback.options);
+      return;
+    }
+    if(best.direct){showDirectReply(best.direct);return}
+    addMessage('bot','Verified Match',replyFrom('matched'));
     if(best.href){setTimeout(()=>{location.href=best.href},420);return}
     showScreen(best.screen);
   }
