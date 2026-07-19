@@ -358,6 +358,7 @@
     {words:'thanks thank you appreciate helpful solved perfect great',direct:'thanks',priority:20},
     {words:'bye goodbye good night see you later close exit',direct:'goodbye',priority:20}
   ];
+  const searchStopWords=new Set(['a','an','and','are','about','can','could','did','do','does','for','from','how','i','in','is','it','me','my','of','on','or','our','please','that','the','this','to','we','what','when','where','which','who','why','will','with','would','you','your']);
 
   let isMember=Boolean(window.FMB_MEMBER?.isMember||window.FMB_APP_SESSION?.user);
   let current='main';
@@ -554,7 +555,7 @@
     addMessage('user','',value);searchInput.value='';
     const conversational=directConversation(clean);
     if(conversational){showDirectReply(conversational);return}
-    const words=[...new Set(clean.split(/\s+/).filter(word=>word.length>1))];
+    const words=[...new Set(clean.split(/\s+/).filter(word=>word.length>1&&!searchStopWords.has(word)))];
     let best=null,bestScore=0;
     searchIndex.forEach(item=>{
       const indexText=normalise(item.words);const indexWords=new Set(indexText.split(/\s+/));
