@@ -1,0 +1,62 @@
+{
+  "name": "Announcement",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "body": {
+      "type": "string"
+    },
+    "audience": {
+      "type": "string",
+      "enum": [
+        "All Students",
+        "Specific Batch",
+        "Specific Track",
+        "Facilitators"
+      ],
+      "default": "All Students"
+    },
+    "batch_id": {
+      "type": "string",
+      "description": "Required when audience is Specific Batch"
+    },
+    "track": {
+      "type": "string",
+      "description": "Required when audience is Specific Track",
+      "enum": [
+        "AI for Creatives",
+        "AI for Professionals and Virtual Assistants",
+        "AI for Entrepreneurs",
+        "AI for Students"
+      ]
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "Normal",
+        "Important",
+        "Urgent"
+      ],
+      "default": "Normal"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Published",
+        "Archived"
+      ],
+      "default": "Published"
+    },
+    "created_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "body",
+    "audience"
+  ]
+}

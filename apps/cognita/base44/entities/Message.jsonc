@@ -1,0 +1,57 @@
+{
+  "name": "Message",
+  "type": "object",
+  "properties": {
+    "sender_id": {
+      "type": "string"
+    },
+    "sender_name": {
+      "type": "string"
+    },
+    "sender_role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "facilitator",
+        "student"
+      ]
+    },
+    "recipient_id": {
+      "type": "string"
+    },
+    "recipient_name": {
+      "type": "string"
+    },
+    "recipient_role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "facilitator",
+        "student"
+      ]
+    },
+    "subject": {
+      "type": "string"
+    },
+    "body": {
+      "type": "string"
+    },
+    "read": {
+      "type": "boolean",
+      "default": false
+    },
+    "conversation_id": {
+      "type": "string",
+      "description": "Groups messages between the same two participants"
+    }
+  },
+  "required": [
+    "sender_id",
+    "sender_name",
+    "sender_role",
+    "recipient_id",
+    "recipient_name",
+    "recipient_role",
+    "body"
+  ]
+}

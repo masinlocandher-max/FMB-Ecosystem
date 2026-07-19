@@ -1,0 +1,52 @@
+{
+  "name": "Lesson",
+  "type": "object",
+  "properties": {
+    "week_number": { "type": "number" },
+    "module_number": { "type": "number" },
+    "product_ids": { "type": "array", "items": { "type": "string" } },
+    "delivery_modes": { "type": "array", "items": { "type": "string" } },
+    "track": {
+      "type": "string",
+      "description": "null or empty for foundation lessons shared across all tracks"
+    },
+    "title": { "type": "string" },
+    "phase": {
+      "type": "string",
+      "enum": ["AI Foundation", "Specialization Track", "Final Review", "Open Learning"]
+    },
+    "learning_objective": { "type": "string" },
+    "lesson_overview": { "type": "string" },
+    "core_concepts": { "type": "array", "items": { "type": "string" } },
+    "practical_activity": { "type": "string" },
+    "required_output": { "type": "string" },
+    "submission_instructions": { "type": "string" },
+    "rubric_pass": { "type": "string" },
+    "rubric_needs_revision": { "type": "string" },
+    "rubric_failed": { "type": "string" },
+    "portfolio_category": { "type": "string" },
+    "self_check_required": { "type": "boolean", "default": false },
+    "evidence_required_for_completion": { "type": "boolean", "default": false },
+    "automatic_unlock_rule": {
+      "type": "string",
+      "enum": ["Always Available", "Previous Module Completed", "Previous Self Check Passed", "Manual Release"],
+      "default": "Previous Module Completed"
+    },
+    "lesson_version": { "type": "string", "default": "1.0" },
+    "source_pack_version": { "type": "string" },
+    "source_ids": { "type": "array", "items": { "type": "string" } },
+    "author": { "type": "string" },
+    "academic_reviewer": { "type": "string" },
+    "published_at": { "type": "string", "format": "date-time" },
+    "reviewed_at": { "type": "string", "format": "date-time" },
+    "next_review_date": { "type": "string", "format": "date" },
+    "change_notes": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["Draft", "Under Review", "Published", "Archived"],
+      "default": "Draft"
+    },
+    "is_locked": { "type": "boolean", "default": false }
+  },
+  "required": ["title", "phase"]
+}

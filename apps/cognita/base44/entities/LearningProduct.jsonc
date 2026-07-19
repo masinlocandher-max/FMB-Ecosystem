@@ -1,0 +1,40 @@
+{
+  "name": "LearningProduct",
+  "type": "object",
+  "properties": {
+    "product_code": { "type": "string" },
+    "slug": { "type": "string" },
+    "title": { "type": "string" },
+    "short_description": { "type": "string" },
+    "full_description": { "type": "string" },
+    "delivery_mode": {
+      "type": "string",
+      "enum": ["Self-Paced", "Guided Cohort", "Blended", "Institutional"]
+    },
+    "product_type": {
+      "type": "string",
+      "enum": ["Open Learning", "Professional Program", "Portfolio Audit", "Institutional Training"]
+    },
+    "track": { "type": "string" },
+    "curriculum_version": { "type": "string" },
+    "lesson_ids": { "type": "array", "items": { "type": "string" } },
+    "estimated_hours": { "type": "number" },
+    "access_duration_days": { "type": "number" },
+    "price_amount": { "type": "number" },
+    "currency": { "type": "string", "default": "PHP" },
+    "payment_required": { "type": "boolean", "default": true },
+    "portfolio_required": { "type": "boolean", "default": false },
+    "portfolio_audit_available": { "type": "boolean", "default": false },
+    "portfolio_audit_included": { "type": "boolean", "default": false },
+    "credential_title": { "type": "string", "default": "Certificate of Completion" },
+    "credential_available": { "type": "boolean", "default": false },
+    "credential_requires_human_audit": { "type": "boolean", "default": true },
+    "published_at": { "type": "string", "format": "date-time" },
+    "status": {
+      "type": "string",
+      "enum": ["Draft", "Internal Review", "Pilot", "Published", "Paused", "Archived"],
+      "default": "Draft"
+    }
+  },
+  "required": ["product_code", "slug", "title", "delivery_mode", "product_type", "status"]
+}

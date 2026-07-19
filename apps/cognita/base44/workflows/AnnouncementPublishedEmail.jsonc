@@ -1,0 +1,41 @@
+{
+  "name": "Announcement Published Email",
+  "description": "Sends announcement email to relevant students/facilitators when a new announcement is published",
+  "trigger": {
+    "config": {
+      "trigger_type": "entity",
+      "entity_name": "Announcement",
+      "events": [
+        "create"
+      ]
+    },
+    "condition": "${ .trigger.data.status == \"Published\" }"
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "announcement_published_email",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "send_email": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "sendLifecycleEmail",
+            "args": {
+              "email_type": "announcement_published",
+              "entity_data": "${ .trigger.data }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Broadcast announcement email",
+            "description": "To targeted audience"
+          }
+        }
+      }
+    ]
+  }
+}

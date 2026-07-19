@@ -1,0 +1,76 @@
+{
+  "name": "Quiz",
+  "type": "object",
+  "properties": {
+    "week_number": {
+      "type": "number",
+      "description": "Which week this quiz belongs to (1-10)"
+    },
+    "track": {
+      "type": "string",
+      "description": "Track-specific quiz, or null for foundation quizzes shared across all tracks",
+      "enum": [
+        "AI for Creatives",
+        "AI for Professionals and Virtual Assistants",
+        "AI for Entrepreneurs",
+        "AI for Students"
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "question_text": {
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "correct_answer_index": {
+            "type": "number"
+          },
+          "explanation": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "question_text",
+          "options",
+          "correct_answer_index"
+        ]
+      }
+    },
+    "passing_score_percent": {
+      "type": "number",
+      "default": 70
+    },
+    "is_locked": {
+      "type": "boolean",
+      "default": false
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Published",
+        "Archived"
+      ],
+      "default": "Draft"
+    }
+  },
+  "required": [
+    "week_number",
+    "title",
+    "questions"
+  ]
+}

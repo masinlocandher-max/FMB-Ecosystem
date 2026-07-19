@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: senz-api
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SITE_ORIGIN
+        value: https://senzpr.com,https://www.senzpr.com
+      - key: CANONICAL_HOST
+        value: www.senzpr.com
+      - key: REDIRECT_HOSTS
+        value: senzpr.com
+      - key: ADMIN_TOKEN
+        generateValue: true
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false

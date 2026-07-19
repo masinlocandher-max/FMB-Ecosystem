@@ -1,0 +1,64 @@
+{
+  "name": "Student",
+  "type": "object",
+  "properties": {
+    "user_id": { "type": "string" },
+    "application_id": { "type": "string" },
+    "full_name": { "type": "string" },
+    "email": { "type": "string", "format": "email" },
+    "batch_id": { "type": "string" },
+    "track": {
+      "type": "string",
+      "enum": [
+        "AI for Creatives",
+        "AI for Professionals and Virtual Assistants",
+        "AI for Entrepreneurs",
+        "AI for Students"
+      ]
+    },
+    "current_week": { "type": "number", "default": 1 },
+    "progress_status": {
+      "type": "string",
+      "enum": ["On Track", "Needs Attention", "At Risk", "Completed", "Removed"],
+      "default": "On Track"
+    },
+    "facilitator_id": { "type": "string" },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "Not Required Yet",
+        "Payment Pending",
+        "Payment Submitted",
+        "Payment Confirmed",
+        "Payment Failed",
+        "Payment Waived",
+        "Refund Requested",
+        "Refunded",
+        "Balance Due"
+      ],
+      "default": "Payment Pending"
+    },
+    "payment_proof_url": { "type": "string" },
+    "enrollment_agreement_signed": { "type": "boolean", "default": false },
+    "enrollment_agreement_version": { "type": "string" },
+    "enrollment_agreement_signed_at": { "type": "string", "format": "date-time" },
+    "access_status": {
+      "type": "string",
+      "enum": ["Pending", "Active", "Suspended", "Expired", "Revoked"],
+      "default": "Pending"
+    },
+    "access_activated_at": { "type": "string", "format": "date-time" },
+    "access_expires_at": { "type": "string", "format": "date-time" },
+    "access_reason": { "type": "string" },
+    "invoice_id": { "type": "string" },
+    "certificate_status": {
+      "type": "string",
+      "enum": ["Not Eligible", "In Progress", "Ready for Review", "Approved", "Issued"],
+      "default": "Not Eligible"
+    },
+    "certificate_id": { "type": "string" },
+    "last_portfolio_audit_id": { "type": "string" },
+    "enrolled_date": { "type": "string", "format": "date" }
+  },
+  "required": ["full_name", "email", "batch_id", "track"]
+}

@@ -1,0 +1,115 @@
+/* Premium SENZ concept icon system */
+
+.icon-card .icon {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  margin: 0 auto 26px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(36, 81, 217, 0.16);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 28% 18%, rgba(255, 255, 255, 0.98), transparent 38%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(222, 234, 255, 0.66));
+  box-shadow:
+    0 18px 42px rgba(36, 81, 217, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.96),
+    inset 0 -1px 0 rgba(36, 81, 217, 0.08);
+  isolation: isolate;
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.icon-card .icon::before {
+  content: "";
+  position: absolute;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(48, 123, 255, 0.18), rgba(48, 123, 255, 0));
+  filter: blur(2px);
+  z-index: -1;
+}
+
+.icon-card .icon::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.76);
+  border-radius: 22px;
+  pointer-events: none;
+}
+
+.icon-card .icon svg {
+  width: 52px;
+  height: 52px;
+  overflow: visible;
+  fill: none;
+  color: #2451d9;
+  stroke: currentColor;
+  stroke-width: 1.85;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 5px 10px rgba(36, 81, 217, 0.15));
+}
+
+.icon-card .icon svg .icon-secondary {
+  color: #6d9cff;
+  opacity: 0.76;
+}
+
+.icon-card .icon svg .icon-accent {
+  fill: rgba(48, 123, 255, 0.15);
+  stroke: #307bff;
+}
+
+.icon-card .icon svg .icon-dot {
+  fill: #2451d9;
+  stroke: none;
+}
+
+.icon-card .icon[data-senz-icon="messaging"] svg {
+  color: #1d60e7;
+}
+
+.icon-card .icon[data-senz-icon="presence"] svg {
+  color: #3158ca;
+}
+
+.icon-card .icon[data-senz-icon="influence"] svg {
+  color: #153eaa;
+}
+
+.icon-card:hover .icon {
+  transform: translateY(-5px) scale(1.03);
+  border-color: rgba(36, 81, 217, 0.28);
+  box-shadow:
+    0 26px 54px rgba(36, 81, 217, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 0 rgba(36, 81, 217, 0.10);
+}
+
+.icon-card h3 {
+  color: var(--deep-navy);
+  font-size: 18px;
+  letter-spacing: -0.02em;
+}
+
+.icon-card p {
+  color: rgba(10, 23, 48, 0.68);
+}
+
+@media (max-width: 620px) {
+  .icon-card .icon {
+    width: 84px;
+    height: 84px;
+    margin-bottom: 22px;
+    border-radius: 25px;
+  }
+
+  .icon-card .icon svg {
+    width: 48px;
+    height: 48px;
+  }
+}

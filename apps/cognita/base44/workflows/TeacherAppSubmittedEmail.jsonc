@@ -1,0 +1,41 @@
+{
+  "description": "Sends confirmation email when a new teacher application is submitted",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "entity",
+      "events": [
+        "create"
+      ],
+      "entity_name": "TeacherApplication"
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "teacher_app_submitted_email",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "send_email": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "sendLifecycleEmail",
+            "args": {
+              "email_type": "teacher_app_submitted",
+              "entity_data": "${ .trigger.data }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Send teacher app confirmation",
+            "description": "To applicant"
+          }
+        }
+      }
+    ]
+  },
+  "name": "Teacher Application Submitted Email"
+}

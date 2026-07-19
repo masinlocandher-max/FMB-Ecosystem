@@ -1,0 +1,58 @@
+{
+  "name": "Lead",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "interest_type": {
+      "type": "string",
+      "enum": [
+        "Join Waitlist",
+        "Request Brochure",
+        "Book Orientation",
+        "Partner Inquiry",
+        "Ask a Question"
+      ]
+    },
+    "preferred_track": {
+      "type": "string",
+      "enum": [
+        "AI for Creatives",
+        "AI for Professionals and Virtual Assistants",
+        "AI for Entrepreneurs",
+        "AI for Students",
+        "Not Sure Yet"
+      ]
+    },
+    "message": {
+      "type": "string"
+    },
+    "source_page": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "New",
+        "Contacted",
+        "Converted",
+        "Not Qualified",
+        "Archived"
+      ],
+      "default": "New"
+    }
+  },
+  "required": [
+    "full_name",
+    "email",
+    "interest_type"
+  ]
+}

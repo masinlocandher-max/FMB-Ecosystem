@@ -1,0 +1,31 @@
+{
+  "name": "ModuleProgress",
+  "type": "object",
+  "properties": {
+    "learning_enrollment_id": { "type": "string" },
+    "learner_email": { "type": "string", "format": "email" },
+    "product_id": { "type": "string" },
+    "lesson_id": { "type": "string" },
+    "module_number": { "type": "number" },
+    "module_title": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["Locked", "Available", "In Progress", "Completed", "Needs Attention"],
+      "default": "Locked"
+    },
+    "started_at": { "type": "string", "format": "date-time" },
+    "last_accessed_at": { "type": "string", "format": "date-time" },
+    "completed_at": { "type": "string", "format": "date-time" },
+    "completion_percent": { "type": "number", "minimum": 0, "maximum": 100, "default": 0 },
+    "self_check_required": { "type": "boolean", "default": false },
+    "self_check_attempt_count": { "type": "number", "default": 0 },
+    "best_self_check_score": { "type": "number" },
+    "self_check_passed": { "type": "boolean", "default": false },
+    "practical_activity_completed": { "type": "boolean", "default": false },
+    "evidence_submission_id": { "type": "string" },
+    "evidence_required_for_completion": { "type": "boolean", "default": false },
+    "unlocked_by": { "type": "string" },
+    "unlock_reason": { "type": "string" }
+  },
+  "required": ["learning_enrollment_id", "learner_email", "product_id", "lesson_id", "module_number", "status"]
+}

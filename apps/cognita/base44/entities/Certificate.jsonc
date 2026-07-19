@@ -1,0 +1,33 @@
+{
+  "name": "Certificate",
+  "type": "object",
+  "properties": {
+    "student_id": { "type": "string" },
+    "student_name": { "type": "string" },
+    "serial_number": { "type": "string" },
+    "title": { "type": "string", "default": "Certificate of Completion" },
+    "track": { "type": "string" },
+    "track_code": { "type": "string" },
+    "batch_name": { "type": "string" },
+    "batch_number": { "type": "string" },
+    "portfolio_audit_id": { "type": "string" },
+    "reviewed_by": { "type": "string" },
+    "approved_by": { "type": "string" },
+    "approved_date": { "type": "string", "format": "date-time" },
+    "issued_date": { "type": "string", "format": "date" },
+    "issued_by": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["Under Review", "Approved", "Issued", "Revoked"],
+      "default": "Under Review"
+    },
+    "revoked_reason": { "type": "string" },
+    "revoked_by": { "type": "string" },
+    "revoked_date": { "type": "string", "format": "date-time" },
+    "verification_note": {
+      "type": "string",
+      "default": "This Certificate of Completion was issued after a human review of required work and portfolio evidence. It is not a degree, diploma, academic credit, or attendance-only certificate."
+    }
+  },
+  "required": ["student_id", "student_name", "serial_number", "track", "batch_name"]
+}

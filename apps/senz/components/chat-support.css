@@ -1,0 +1,274 @@
+.senz-chat {
+  position: fixed;
+  right: clamp(16px, 3vw, 28px);
+  bottom: clamp(16px, 3vw, 28px);
+  z-index: 95;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+}
+
+.senz-chat * {
+  box-sizing: border-box;
+}
+
+.senz-chat-button {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  border: 1px solid rgba(210, 222, 255, 0.46);
+  border-radius: 999px;
+  color: #fff;
+  background:
+    radial-gradient(circle at 34% 22%, rgba(255, 255, 255, 0.32), transparent 28%),
+    linear-gradient(135deg, #155cff, #05216f);
+  box-shadow: 0 18px 44px rgba(0, 87, 255, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.senz-chat-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 58px rgba(0, 87, 255, 0.36), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.senz-chat-button svg {
+  width: 27px;
+  height: 27px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.senz-chat-pulse {
+  position: absolute;
+  inset: -6px;
+  border: 1px solid rgba(80, 133, 255, 0.32);
+  border-radius: inherit;
+  animation: senzChatPulse 2.8s ease-out infinite;
+}
+
+.senz-chat-label {
+  position: absolute;
+  right: 74px;
+  min-width: max-content;
+  border: 1px solid rgba(170, 184, 214, 0.36);
+  border-radius: 999px;
+  padding: 10px 13px;
+  color: #071225;
+  font-size: 12px;
+  font-weight: 850;
+  letter-spacing: 0.02em;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 16px 42px rgba(31, 48, 82, 0.14);
+  backdrop-filter: blur(14px);
+}
+
+.senz-chat-panel {
+  position: absolute;
+  right: 0;
+  bottom: 78px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  width: min(380px, calc(100vw - 32px));
+  max-height: min(640px, calc(100vh - 118px));
+  overflow: hidden;
+  border: 1px solid rgba(170, 184, 214, 0.36);
+  border-radius: 18px;
+  color: #071225;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(21, 92, 255, 0.12), transparent 18rem),
+    rgba(255, 255, 255, 0.94);
+  box-shadow: 0 30px 90px rgba(3, 11, 29, 0.3);
+  backdrop-filter: blur(20px);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(14px) scale(0.98);
+  transform-origin: right bottom;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.senz-chat.is-open .senz-chat-panel {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.senz-chat.is-open .senz-chat-label {
+  display: none;
+}
+
+.senz-chat-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 18px 14px;
+  border-bottom: 1px solid rgba(170, 184, 214, 0.32);
+}
+
+.senz-chat-kicker {
+  display: block;
+  margin-bottom: 5px;
+  color: #155cff;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.senz-chat-title {
+  margin: 0;
+  color: #071225;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 25px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.senz-chat-close {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(7, 18, 37, 0.12);
+  border-radius: 999px;
+  color: #071225;
+  background: rgba(255, 255, 255, 0.76);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.senz-chat-log {
+  display: grid;
+  gap: 10px;
+  max-height: 350px;
+  overflow: auto;
+  padding: 16px 18px;
+  scroll-behavior: smooth;
+}
+
+.senz-chat-message {
+  max-width: 92%;
+  border-radius: 14px;
+  padding: 12px 13px;
+  font-size: 13px;
+  line-height: 1.52;
+}
+
+.senz-chat-message.bot {
+  justify-self: start;
+  color: rgba(7, 18, 37, 0.82);
+  background: rgba(238, 243, 251, 0.92);
+}
+
+.senz-chat-message.user {
+  justify-self: end;
+  color: #fff;
+  background: linear-gradient(135deg, #155cff, #0536a7);
+}
+
+.senz-chat-prompts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 18px 14px;
+}
+
+.senz-chat-chip {
+  border: 1px solid rgba(21, 92, 255, 0.18);
+  border-radius: 999px;
+  padding: 8px 10px;
+  color: #12306c;
+  background: rgba(255, 255, 255, 0.74);
+  font-size: 11px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.senz-chat-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  padding: 14px;
+  border-top: 1px solid rgba(170, 184, 214, 0.32);
+  background: rgba(246, 248, 253, 0.74);
+}
+
+.senz-chat-input {
+  min-width: 0;
+  border: 1px solid rgba(7, 18, 37, 0.14);
+  border-radius: 999px;
+  padding: 12px 13px;
+  color: #071225;
+  font: inherit;
+  font-size: 13px;
+  background: #fff;
+  outline: none;
+}
+
+.senz-chat-input:focus {
+  border-color: rgba(21, 92, 255, 0.45);
+  box-shadow: 0 0 0 3px rgba(21, 92, 255, 0.11);
+}
+
+.senz-chat-send,
+.senz-chat-cta {
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(135deg, #155cff, #052d95);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.senz-chat-send {
+  padding: 0 15px;
+}
+
+.senz-chat-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 14px 14px;
+  padding: 12px 14px;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.senz-chat-note {
+  margin: -4px 18px 12px;
+  color: rgba(32, 43, 66, 0.64);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+@keyframes senzChatPulse {
+  0% { opacity: 0.82; transform: scale(0.92); }
+  75%, 100% { opacity: 0; transform: scale(1.24); }
+}
+
+@media (max-width: 620px) {
+  .senz-chat {
+    right: 14px;
+    bottom: 14px;
+  }
+
+  .senz-chat-label {
+    display: none;
+  }
+
+  .senz-chat-button {
+    width: 58px;
+    height: 58px;
+  }
+
+  .senz-chat-panel {
+    bottom: 72px;
+    width: calc(100vw - 28px);
+  }
+}

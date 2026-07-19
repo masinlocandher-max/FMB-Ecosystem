@@ -1,0 +1,55 @@
+{
+  "name": "Receipt",
+  "type": "object",
+  "properties": {
+    "receipt_number": {
+      "type": "string"
+    },
+    "student_id": {
+      "type": "string"
+    },
+    "student_name": {
+      "type": "string"
+    },
+    "student_email": {
+      "type": "string"
+    },
+    "batch_id": {
+      "type": "string"
+    },
+    "batch_name": {
+      "type": "string"
+    },
+    "track": {
+      "type": "string"
+    },
+    "amount_paid": {
+      "type": "number"
+    },
+    "payment_method": {
+      "type": "string"
+    },
+    "payment_reference": {
+      "type": "string"
+    },
+    "date_paid": {
+      "type": "string",
+      "format": "date"
+    },
+    "confirmed_by": {
+      "type": "string"
+    },
+    "payment_id": {
+      "type": "string"
+    },
+    "invoice_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "receipt_number",
+    "student_name",
+    "student_email",
+    "batch_name"
+  ]
+}

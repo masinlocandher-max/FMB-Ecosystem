@@ -1,0 +1,48 @@
+{
+  "name": "Waitlist",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "preferred_track": {
+      "type": "string",
+      "enum": [
+        "AI for Creatives",
+        "AI for Professionals and Virtual Assistants",
+        "AI for Entrepreneurs",
+        "AI for Students",
+        "Not Sure Yet"
+      ]
+    },
+    "reason_for_interest": {
+      "type": "string"
+    },
+    "preferred_batch": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "New",
+        "Invited to Apply",
+        "Applied",
+        "Accepted",
+        "Not Interested",
+        "Archived"
+      ],
+      "default": "New"
+    }
+  },
+  "required": [
+    "full_name",
+    "email"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "SubmissionVersion",
+  "type": "object",
+  "properties": {
+    "submission_id": { "type": "string" },
+    "student_id": { "type": "string" },
+    "week_number": { "type": "number" },
+    "version_number": { "type": "number" },
+    "title": { "type": "string" },
+    "content": { "type": "string" },
+    "process_note": { "type": "string" },
+    "reflection": { "type": "string" },
+    "file_urls": { "type": "array", "items": { "type": "string" } },
+    "submitted_at": { "type": "string", "format": "date-time" },
+    "locked_at": { "type": "string", "format": "date-time" },
+    "status": {
+      "type": "string",
+      "enum": ["Submitted", "Needs Revision", "Passed", "Failed"],
+      "default": "Submitted"
+    },
+    "feedback": { "type": "string" },
+    "revision_instructions": { "type": "string" },
+    "reviewed_by": { "type": "string" },
+    "reviewed_date": { "type": "string", "format": "date-time" },
+    "rubric_completeness": { "type": "number" },
+    "rubric_relevance": { "type": "number" },
+    "rubric_usability": { "type": "number" },
+    "rubric_clarity": { "type": "number" },
+    "rubric_judgment": { "type": "number" },
+    "rubric_ethics": { "type": "number" },
+    "rubric_reflection": { "type": "number" }
+  },
+  "required": ["submission_id", "student_id", "week_number", "version_number", "submitted_at"]
+}

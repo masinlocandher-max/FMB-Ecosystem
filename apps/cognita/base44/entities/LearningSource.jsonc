@@ -1,0 +1,47 @@
+{
+  "name": "LearningSource",
+  "type": "object",
+  "properties": {
+    "source_id": { "type": "string" },
+    "title": { "type": "string" },
+    "author_or_organization": { "type": "string" },
+    "publication_date": { "type": "string", "format": "date" },
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "Official Documentation",
+        "Government Publication",
+        "Law or Regulation",
+        "Academic Paper",
+        "University Publication",
+        "Professional Standard",
+        "Industry Report",
+        "Open Educational Resource",
+        "Cognita Original Material",
+        "Other"
+      ]
+    },
+    "url": { "type": "string" },
+    "document_location": { "type": "string" },
+    "date_accessed": { "type": "string", "format": "date" },
+    "lesson_weeks": { "type": "array", "items": { "type": "number" } },
+    "tracks": { "type": "array", "items": { "type": "string" } },
+    "license_or_usage_status": { "type": "string" },
+    "attribution_text": { "type": "string" },
+    "review_frequency": {
+      "type": "string",
+      "enum": ["Monthly", "Quarterly", "Every Six Months", "Annually", "On Legal Update", "Before Each Cohort"]
+    },
+    "last_reviewed_at": { "type": "string", "format": "date-time" },
+    "next_review_date": { "type": "string", "format": "date" },
+    "reviewed_by": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["Draft", "Approved", "Needs Review", "Deprecated", "Archived"],
+      "default": "Draft"
+    },
+    "public_to_learners": { "type": "boolean", "default": false },
+    "notes": { "type": "string" }
+  },
+  "required": ["source_id", "title", "author_or_organization", "source_type", "status"]
+}

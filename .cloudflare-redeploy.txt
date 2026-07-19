@@ -1,4 +1,0 @@
-Production redeploy trigger for francinemariebautista.com
-Triggered: 2026-07-12
-Source branch: main
-Expected commit includes Supabase configuration and current auth flow.

@@ -1,0 +1,48 @@
+{
+  "name": "LearningEnrollment",
+  "type": "object",
+  "properties": {
+    "enrollment_reference": { "type": "string" },
+    "user_id": { "type": "string" },
+    "student_id": { "type": "string" },
+    "learner_name": { "type": "string" },
+    "learner_email": { "type": "string", "format": "email" },
+    "product_id": { "type": "string" },
+    "product_code": { "type": "string" },
+    "product_title": { "type": "string" },
+    "delivery_mode": { "type": "string" },
+    "curriculum_version": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["Pending", "Active", "Paused", "Completed", "Expired", "Suspended", "Withdrawn", "Revoked"],
+      "default": "Pending"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": ["Not Required", "Pending", "Submitted", "Confirmed", "Waived", "Failed", "Refunded"],
+      "default": "Pending"
+    },
+    "agreement_version": { "type": "string" },
+    "agreement_accepted_at": { "type": "string", "format": "date-time" },
+    "activated_at": { "type": "string", "format": "date-time" },
+    "expires_at": { "type": "string", "format": "date-time" },
+    "completed_at": { "type": "string", "format": "date-time" },
+    "progress_percent": { "type": "number", "minimum": 0, "maximum": 100, "default": 0 },
+    "completed_module_count": { "type": "number", "default": 0 },
+    "total_module_count": { "type": "number", "default": 0 },
+    "portfolio_status": {
+      "type": "string",
+      "enum": ["Not Required", "Not Started", "In Progress", "Ready for Audit", "Under Human Audit", "Revision Required", "Cognita Standard Met"],
+      "default": "Not Started"
+    },
+    "portfolio_audit_id": { "type": "string" },
+    "credential_status": {
+      "type": "string",
+      "enum": ["Not Available", "Not Eligible", "In Progress", "Ready for Review", "Approved", "Issued"],
+      "default": "Not Eligible"
+    },
+    "created_by": { "type": "string" },
+    "notes": { "type": "string" }
+  },
+  "required": ["enrollment_reference", "learner_email", "product_id", "product_code", "product_title", "status"]
+}

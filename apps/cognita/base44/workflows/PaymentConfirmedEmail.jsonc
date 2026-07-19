@@ -1,0 +1,41 @@
+{
+  "name": "Payment Confirmed Email",
+  "description": "Notifies student when their tuition payment has been confirmed",
+  "trigger": {
+    "config": {
+      "trigger_type": "entity",
+      "entity_name": "Payment",
+      "events": [
+        "update"
+      ]
+    },
+    "condition": "${ .trigger.changed_fields | index(\"payment_status\") != null and .trigger.data.payment_status == \"Payment Confirmed\" }"
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "payment_confirmed_email",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "send_email": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "sendLifecycleEmail",
+            "args": {
+              "email_type": "payment_confirmed",
+              "entity_data": "${ .trigger.data }"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Send payment confirmation email",
+            "description": "Notify student"
+          }
+        }
+      }
+    ]
+  }
+}
