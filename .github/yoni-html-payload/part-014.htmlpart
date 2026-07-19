@@ -1,0 +1,164 @@
+'Let us return to the room. Name five things you can see, four you can feel, and three you can hear.',
+'Put both feet on the floor if you can. Press down gently and notice that the ground is holding you.',
+'Look around and name where you are, what day it is, and one thing that is safe in this exact moment.',
+'Breathe in gently for four, hold for two, then breathe out for six. No need to force a deep breath.',
+'Unclench your jaw. Lower your shoulders. Let your hands rest somewhere supported.',
+'Choose one object near you. Describe its color, shape, texture, and temperature.',
+'Take one sip of water if available. Notice the temperature and the movement as you swallow.',
+'Your mind is sounding an alarm. We can acknowledge it without obeying every thought it produces.',
+'Place a hand over your chest or arm. Say: “I am here. This moment is happening, and I can take it slowly.”',
+'For the next sixty seconds, your only task is to stay with your breathing and the surface beneath you.'
+],
+sad:[
+'Ang sakit pakinggan. You do not have to turn the sadness into a lesson right now.',
+'Minsan ang lungkot ay hindi naghahanap ng solution. Gusto lang nitong mapansin. I’m noticing it with you.',
+'You can cry, go quiet, or keep talking. None of those responses make you weak.',
+'What part hurts most: what happened, what it means, or what you lost?',
+'Please do not use your hardest day as proof that nothing will change.',
+'You are allowed to grieve the version of things you hoped would happen.'
+],
+anxious:[
+'Okay, bagalan natin. Anxiety can make possibilities feel like facts. Ano ang alam nating totoo right now?',
+'You do not have to solve every future scenario. What needs attention in the next ten minutes only?',
+'Your body may be trying to protect you, even if the alarm feels too loud. Let us help it settle first.',
+'Name the thought that keeps repeating. We can look at it without treating it as an instruction.',
+'Would you prefer grounding, reassurance, or help making a simple plan?',
+'You can postpone non-urgent decisions until your body feels steadier.'
+],
+panic:[
+'You are here with me in this conversation. Look for one stable object and keep your eyes on it.',
+'Panic feels dangerous, but the feeling itself can rise and fall. Exhale longer than you inhale.',
+'If you have chest pain, fainting, severe trouble breathing, or a medical emergency, call 911 or seek urgent medical help.',
+'Do not force a huge breath. Try a small inhale and a slow, gentle exhale.',
+'Name your location and the current time. Remind yourself: “This is a wave. I can ride it minute by minute.”'
+],
+tired:[
+'Mukhang ubos ang energy mo. Baka pahinga ang kailangan, hindi another lecture.',
+'Okay lang na maliit lang ang kaya mo today. What can be postponed, shortened, or dropped?',
+'Rest is not a reward for finishing everything. It is part of staying functional.',
+'Before asking more from yourself, check the basics: water, food, medicine, sleep, and a quieter environment.',
+'You do not need to be productive to be worthy of care.',
+'What is the minimum version of today that would still be enough?'
+],
+burnout:[
+'Burnout is not fixed by squeezing more performance out of an exhausted person.',
+'Your capacity may be giving you information, not failing you. What has been demanding too much for too long?',
+'Let us identify one responsibility to renegotiate, one boundary to protect, and one form of rest that is actually available.',
+'You cannot sustainably recover while pretending the workload is normal.',
+'What would “good enough” look like for the next twenty-four hours?'
+],
+lonely:[
+'Loneliness can make the room feel much bigger. You do not have to make your story entertaining here.',
+'I can stay with you in this conversation, and I also want you to have human connection beyond the screen. Is there one safe person you could message?',
+'Being lonely does not mean you are unwanted. It means your need for connection is asking to be noticed.',
+'Would a simple message like “Can you keep me company for a bit?” feel possible?',
+'You deserve relationships where you do not have to disappear to be accepted.',
+'For tonight, can we identify one place, person, or community where you feel even ten percent more seen?'
+],
+rejection:[
+'Rejection can hurt both the heart and the ego. It does not automatically describe your value.',
+'What they chose may be information about fit, timing, or capacity, not a verdict on who you are.',
+'You can be disappointed without turning against yourself.',
+'Let yourself feel the loss before forcing a confident comeback.',
+'What would help you protect your dignity while still honoring what you wanted?'
+],
+relationship:[
+'You can care about someone and still need clarity, consistency, and respect.',
+'What happened is important, but so is the pattern. Is this an isolated moment or something that keeps repeating?',
+'Love should not require you to abandon your boundaries or your sense of self.',
+'Before replying, ask: am I responding from fear, anger, or the kind of self-respect I want to keep?',
+'What do you need from this relationship that you have been afraid to say clearly?'
+],
+family:[
+'Family situations can be painful because love, history, duty, and boundaries all overlap.',
+'You are allowed to care about your family without accepting every behavior from them.',
+'What boundary would reduce harm, even if it does not solve the whole relationship?',
+'You do not have to explain your pain perfectly for it to be real.',
+'Is there someone outside the conflict who can help you feel grounded and supported?'
+],
+work:[
+'Work stress can follow you home, but it does not get to define your whole identity.',
+'Let us separate what is urgent from what is merely loud.',
+'What expectation needs clarification, documentation, delegation, or a boundary?',
+'You are a person before you are a role, title, output, or deadline.',
+'What is one professional next step that protects both the work and your wellbeing?'
+],
+school:[
+'Your academic performance is information about a moment, not a complete measure of your intelligence or future.',
+'When everything feels urgent, choose the task with the clearest next action, not necessarily the biggest fear.',
+'Would a smaller study block, asking for clarification, or requesting support make the next step more possible?',
+'You are allowed to learn imperfectly. Struggling is not the same as being incapable.',
+'What deadline or requirement needs to be confirmed instead of assumed?'
+],
+shame:[
+'Shame says “I am bad,” while responsibility says “I did something I need to address.” Those are not the same.',
+'You can face what happened without destroying your sense of worth.',
+'What would repair look like: honesty, apology, changed behavior, or accepting a consequence?',
+'You are more than the moment you regret.',
+'Growth becomes possible when accountability is specific and self-punishment is not the plan.'
+],
+anger:[
+'Your anger may be pointing to hurt, unfairness, fear, or a crossed boundary.',
+'Pwede kang magalit nang hindi nananakit. What happened right before the anger rose?',
+'Let us slow the action, not deny the feeling. Avoid sending the message while your body is still on fire.',
+'What boundary or value feels violated?',
+'Move the energy safely: walk, stretch, write the uncensored version without sending it, or step away.'
+],
+overwhelmed:[
+'You do not need to carry every problem at the same time. Let us choose one thing for now.',
+'Overwhelm often means the brain has lost the edges between tasks. Can we list only the next three?',
+'What can wait until tomorrow without creating immediate harm?',
+'Reduce the size of the moment: one room, one task, one conversation, one breath.',
+'You are not failing. Your system may simply be receiving more than it can process at once.'
+],
+selfworth:[
+'Your worth is not a performance score, relationship status, body measurement, income, or public opinion.',
+'You may not feel confident right now, but you can still act with self-respect.',
+'The way someone treated you is not proof of what you deserved.',
+'You do not have to become extraordinary before you are allowed to take up space.',
+'What is one thing about you that remains true even on a bad day?'
+],
+grief:[
+'Grief does not follow a clean timeline. Missing someone or something can return in waves.',
+'You do not have to “move on” in order to keep living. You can carry love and continue forward.',
+'What do you miss most today?',
+'There is no perfect way to grieve. Numbness, anger, tears, and ordinary moments can all exist together.',
+'Would it feel right to write one memory, one message, or one thing you wish you could say?'
+],
+identity:[
+'You deserve space to understand yourself without being rushed, shamed, or forced into someone else’s timeline.',
+'Your identity is yours to name. You do not owe everyone immediate access to parts of you that still need safety.',
+'Being misunderstood can be painful, but it does not make your experience less real.',
+'What environment or person helps you feel most like yourself?',
+'You can choose disclosure based on safety, trust, and readiness. There is no moral requirement to come out before you are ready.'
+],
+okay:[
+'I’m glad there is some steadiness today. What helped, even a little?',
+'Not every check-in needs a problem. You can notice what feels okay and let that count.',
+'Would you like to save this moment, celebrate something small, or simply enjoy the calm?',
+'What do you want to carry forward from today?',
+'You are allowed to feel okay without waiting for something to go wrong.'
+],
+default:[
+'Naririnig kita. Tell me what kind of response you need: listening, comfort, help thinking, or grounding.',
+'You can say more. I will not judge the shape of the story.',
+'That matters because it is affecting you. What part feels most important to say first?',
+'I may not fully understand yet. Can you tell me what happened and what you need from me right now?',
+'You do not have to solve this in one message. We can take it one piece at a time.',
+'Thank you for trusting this space with that. What feels heaviest about it?'
+]
+};
+const crisis=/\b(suicidal|i (?:want|wanna) to die|i do not want to live|i don't want to live|better off dead|kill myself|end my life|hurt myself|self[- ]?harm|saktan (?:ko )?ang sarili|magpakamatay|ayoko na mabuhay|gusto ko nang mamatay|papatayin ko sarili ko|not safe from myself|cannot keep myself safe)\b/i;
+const immediateDanger=/\b(someone is attacking me|being attacked|may nananakit sa akin|papaluin ako|may baril|has a gun|immediate danger|kidnapped|held against my will)\b/i;
+const categoryPatterns={
+ panic:/panic|hyperventilat|di makahinga|hindi makahinga|heart racing|palpitations/i,
+ grief:/grief|namatay|death|died|funeral|bereav|miss (?:him|her|them)|wala na siya/i,
+ burnout:/burnout|burned out|overworked|trabaho nang trabaho|ubos na ubos/i,
+ sad:/lungkot|sad|iyak|crying|depress|mabigat|heartbroken|down ako/i,
+ anxious:/kabado|anx|worried|worry|takot|overthink|praning|nerbiyos/i,
+ tired:/pagod|puyat|hapo|exhaust|drained|antok|low energy/i,
+ lonely:/lonely|alone|mag-isa|walang kausap|nobody cares|isolated/i,
+ rejection:/reject|rejected|iniwan|ghosted|not chosen|di pinili|hindi pinili/i,
+ relationship:/boyfriend|girlfriend|partner|jowa|asawa|relationship|cheat|niloko|breakup|ex/i,
+ family:/family|nanay|tatay|mother|father|parents|kapatid|brother|sister|pamilya/i,
+ work:/work|boss|coworker|office|trabaho|client|deadline|career/i,
