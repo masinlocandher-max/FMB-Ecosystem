@@ -812,9 +812,12 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         if marker not in subic_story:
             errors.append(f"news/subic-aeta-landfill/index.html: missing reporting or labeled-opinion marker: {marker}")
     pax_water_story = (ROOT / "news/pax-silica-water/index.html").read_text(encoding="utf-8")
-    for marker in ("Verdict: Unsupported", "151 to 303 MLD", "255,000 MLD", "Philippine Statistics Authority", "hypothetical"):
+    for marker in ("Pax Silica will need a lot of water", "151 to 303 MLD", "150 to 200 MLD", "complete water plan", "U.S. Department of Energy", "Francine’s perspective · Opinion"):
         if marker not in pax_water_story:
-            errors.append(f"news/pax-silica-water/index.html: missing fact-check or scale marker: {marker}")
+            errors.append(f"news/pax-silica-water/index.html: missing water-demand analysis marker: {marker}")
+    for retired_marker in ("Verdict: Unsupported", "fails the scale test", "viral-sized claim"):
+        if retired_marker in pax_water_story:
+            errors.append(f"news/pax-silica-water/index.html: retired debunk framing remains: {retired_marker}")
     binibini_story = (ROOT / "news/binibining-pilipinas-2026/index.html").read_text(encoding="utf-8")
     for marker in ("Gwendoline Meliz Frias Soriano", "Sasha-Juli Belle Penuliar Lacuna", "first time in Binibining Pilipinas history", "Earl D.C. Bracamonte"):
         if marker not in binibini_story:
