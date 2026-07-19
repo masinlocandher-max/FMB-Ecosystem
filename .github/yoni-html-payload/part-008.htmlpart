@@ -1,0 +1,145 @@
+<link rel="canonical" href="https://yoni.francinemariebautista.com/">
+</head>
+<body data-theme="sunrise">
+
+<div class="app-launch" id="appLaunch" hidden aria-live="polite" aria-busy="true">
+  <div class="app-launch-card">
+    <div class="app-launch-icon"><img src="/app/yoni-icon.svg" alt=""></div>
+    <h2 id="appLaunchTitle">Opening Yoni</h2>
+    <p id="appLaunchText">Preparing your private space...</p>
+    <div class="app-launch-progress" aria-hidden="true"><span></span></div>
+    <div class="app-launch-pulse"><i></i><span>Private on this device</span></div>
+  </div>
+</div>
+
+
+<section class="access-gate" id="accessGate" aria-labelledby="accessTitle">
+  <div class="access-stage">
+    <header class="access-brandbar">
+      <a class="access-brand" href="#" aria-label="Yoni home">
+        <img src="/app/yoni-icon.svg" alt="Yoni app icon">
+        <span><strong>yoni</strong><small>your gentle digital companion</small></span>
+      </a>
+      <a class="access-site-link" href="tel:1553">Need support?</a>
+    </header>
+    <div class="access-layout">
+      <section class="access-intro">
+        <div class="access-copy">
+          <p class="access-kicker">A softer place to land</p>
+          <h1 id="accessTitle">Meet <em>Yoni.</em><br>Your space to be honest.</h1>
+          <p class="access-lede">A warm digital companion for check-ins, quiet conversations, private journaling, grounding, and small moments of care. No pressure to sound okay.</p>
+          <div class="access-benefits" aria-label="What is inside Yoni">
+            <span><svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z"/><path d="M8.5 12.4 11 15l4.8-6"/></svg>Honest daily emotional check-ins</span>
+            <span><svg viewBox="0 0 24 24"><path d="M6 3.5h10.5A1.5 1.5 0 0 1 18 5v15.5H7.5A1.5 1.5 0 0 1 6 19Z"/><path d="M9.5 8h5M9.5 12h5"/></svg>A private journal stored on your device</span>
+            <span><svg viewBox="0 0 24 24"><path d="M5 5h14v11H9l-4 3Z"/><path d="M9 9h6M9 12h4"/></svg>Warm conversation without pretending to be human</span>
+          </div>
+        </div>
+        <span class="access-float one" aria-hidden="true">♡</span><span class="access-float two" aria-hidden="true">✦</span>
+        <img class="access-mascot" src="" data-yoni-asset="motion" alt="Yoni, an orange bear wearing a green beanie">
+      </section>
+
+      <article class="access-card">
+        <div class="access-card-head"><h2>Your private space</h2><p>Create a profile or sign in securely. Existing members can use the same email and password.</p></div>
+        <div class="access-segment" role="tablist" aria-label="Profile access">
+          <button class="active" id="signupTab" type="button" role="tab" aria-selected="true">Create profile</button>
+          <button id="signinTab" type="button" role="tab" aria-selected="false">Sign in</button>
+        </div>
+        <section class="access-panel" id="signupPanel">
+          <div class="access-panel-heading"><h3>Hi, new friend.</h3><p>One private profile opens the complete Yoni experience.</p></div>
+          <form class="access-form" id="signupForm">
+            <label class="access-field"><span>Full name</span><input id="signupName" maxlength="80" autocomplete="name" placeholder="How Yoni should welcome you" required></label>
+            <label class="access-field"><span>Email</span><input id="signupEmail" type="email" autocomplete="email" inputmode="email" maxlength="254" placeholder="name@example.com" required></label>
+            <label class="access-field"><span>Password</span><input id="signupPassword" type="password" autocomplete="new-password" minlength="10" placeholder="At least 10 characters" required></label>
+            <label class="access-field"><span>Confirm password</span><input id="signupConfirm" type="password" autocomplete="new-password" minlength="10" placeholder="Enter it again" required></label>
+            <label class="access-consent"><input id="legalConsent" type="checkbox" required><span>I understand that Yoni is a digital companion, not a therapist, doctor, or emergency service, and I agree to the <a href="/privacy-policy.html" target="_blank" rel="noopener">Privacy Policy</a> and <a href="/community-guidelines.html" target="_blank" rel="noopener">Community Guidelines</a>.</span></label>
+            <button class="access-primary" type="submit">Create my Yoni profile</button>
+            <div class="access-status" id="signupStatus" role="status"></div>
+          </form>
+        </section>
+        <section class="access-panel" id="signinPanel" hidden>
+          <div class="access-panel-heading"><h3>Welcome back.</h3><p>Return to your private Yoni space.</p></div>
+          <form class="access-form" id="signinForm">
+            <label class="access-field"><span>Email</span><input id="signinEmail" type="email" autocomplete="email" placeholder="name@example.com" required></label>
+            <label class="access-field"><span>Password</span><input id="signinPassword" type="password" autocomplete="current-password" placeholder="Your password" required></label>
+            <button class="access-primary" type="submit">Sign in to Yoni</button><button class="access-preview" id="resetPassword" type="button">Forgot password?</button>
+            <div class="access-status" id="signinStatus" role="status"></div>
+          </form>
+        </section>
+        <p class="access-security"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="3"/><path d="M8.5 10V7.5a3.5 3.5 0 0 1 7 0V10"/></svg>Your account is secured through the existing member system. Private Yoni check-ins, journals, and conversations remain stored in this browser unless a feature clearly says otherwise.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<!-- Sequential post-login experience. These appear once per signed-in browser session. -->
+<div class="post-login-layer" id="fmbWelcomeModal" hidden role="dialog" aria-modal="true" aria-labelledby="fmbWelcomeTitle">
+  <article class="post-login-modal founder-modal">
+    <button class="modal-close" id="fmbWelcomeClose" type="button" aria-label="Continue to the next message">×</button>
+    <section class="founder-copy-modal">
+      <p class="modal-eyebrow">A note from the creator</p>
+      <h2 id="fmbWelcomeTitle">Welcome. You do not have to perform here.</h2>
+      <p class="founder-message">Hi, I’m Francine. I created Yoni because sometimes we do not need another lecture. We need a gentler place to breathe, write, and be honest. <strong>Take what helps, move at your own pace, and reach for a real person whenever you need human support.</strong> You deserve care that does not ask you to pretend.</p>
+      <div class="founder-signoff"><span class="founder-signoff-mark">FMB</span><span><strong>Francine Marie Bautista</strong><small>Founder and creator of Yoni</small></span></div>
+      <div class="modal-actions single"><button class="modal-primary" id="fmbWelcomeContinue" type="button">Continue</button></div>
+    </section>
+    <figure class="founder-portrait-stage">
+      <img class="founder-portrait" src="" data-yoni-asset="portrait" alt="Portrait of Francine Marie Bautista">
+      
+    </figure>
+  </article>
+</div>
+
+<div class="post-login-layer" id="workWithFmbModal" hidden role="dialog" aria-modal="true" aria-labelledby="workWithFmbTitle">
+  <article class="post-login-modal work-modal">
+    <button class="modal-close" id="workWithFmbClose" type="button" aria-label="Close advertisement">×</button>
+    <div class="work-content">
+      <span class="sponsored-label">Advertisement</span>
+      <h2 id="workWithFmbTitle">Work with FMB.</h2>
+      <p class="work-lede">For brands, founders, organizations, and teams that need clearer strategy, stronger communication, thoughtful digital systems, or practical learning experiences.</p>
+      <div class="work-brand-grid">
+        <article class="work-brand-card senz-card"><img class="work-brand-logo" src="" data-yoni-asset="senz" alt="SENZ Strategic Communications"><small>Marketing and digital solutions</small><p>Brand strategy, public relations, campaigns, content systems, websites, and digital products.</p></article>
+        <article class="work-brand-card cognita-card"><img class="work-brand-logo" src="" data-yoni-asset="cognita" alt="Cognita Institute of AI"><small>AI learning and capability</small><p>Practical AI education, responsible adoption, workshops, and capability-building for people and organizations.</p></article>
+      </div>
+      <p class="work-fmb-line"><strong>Led by Francine Marie Bautista.</strong> Separate from Yoni’s private wellbeing tools.</p>
+      <div class="modal-actions"><a class="modal-primary" href="https://www.francinemariebautista.com/work-with-fmb/" target="_blank" rel="noopener">Explore professional work</a><button class="modal-secondary" id="workWithFmbLater" type="button">Not now</button></div>
+    </div>
+  </article>
+</div>
+
+<div class="app-shell" id="appShell" hidden>
+  <header class="app-header">
+    <a class="brand" href="#home" data-go="home" aria-label="Yoni home"><img src="/app/yoni-icon.svg" alt=""><span class="brand-copy"><strong>yoni</strong><span>your gentle digital companion</span></span></a>
+    <div class="app-header-actions"><button class="help-button" type="button" data-go="help">Support</button><button class="account-button" id="accountButton" type="button" data-go="profile" aria-label="Open profile"><span id="accountAvatar">F</span></button></div>
+  </header>
+
+  <main>
+    <section class="screen active" id="screen-home" data-screen="home">
+      <section class="home-welcome" aria-labelledby="homeTitle">
+        <div class="home-welcome-copy">
+          <p class="home-date" id="homeDateLine">A gentle moment for you</p>
+          <h1 id="homeTitle">Good morning, friend <span aria-hidden="true">✦</span></h1>
+          <p>Take a soft breath. You’re safe to be honest here.</p>
+          <div class="home-welcome-actions">
+            <button class="home-talk-button" type="button" data-go="companion"><span>Talk or vent to Yoni</span><b aria-hidden="true">→</b></button>
+            <button class="home-check-button" type="button" data-go="checkin">Quick check-in</button>
+          </div>
+        </div>
+        <div class="home-yoni-stage" aria-hidden="true">
+          <span class="home-yoni-glow"></span>
+          <img src="" data-yoni-asset="motion" alt="">
+          <span class="home-leaf leaf-one"></span><span class="home-leaf leaf-two"></span>
+        </div>
+      </section>
+
+      <button class="journal-feature home-journal card" type="button" data-go="journal">
+        <span class="journal-feature-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48"><path d="M12 37 15 26 33 8a4 4 0 0 1 6 6L21 32Z"/><path d="m15 26 6 6M12 37l9-5"/></svg>
+        </span>
+        <span class="journal-feature-copy"><small>Private journal</small><strong>Write what is on your mind.</strong><span>Open a blank page for today. Your entry stays on this device.</span></span>
+        <span class="journal-feature-cta">Write now <b>→</b></span>
+      </button>
+
+      <div class="section-heading home-care-heading"><h2>More ways to care for yourself</h2><span>Choose only what helps.</span></div>
+      <div class="home-action-grid redesigned">
+        <button class="home-action-card card" type="button" data-go="checkin">
