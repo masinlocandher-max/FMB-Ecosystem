@@ -287,6 +287,7 @@ def check_navigation_experience(errors: list[str]) -> None:
 
 def check_az_assistant(errors: list[str]) -> None:
     site_js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
+    app_html = (ROOT / "app/index.html").read_text(encoding="utf-8")
     worker = (ROOT / "service-worker.js").read_text(encoding="utf-8")
     assistant_path = ROOT / "assets/js/az-assistant.js"
     styles_path = ROOT / "assets/css/az-assistant.css"
@@ -299,10 +300,17 @@ def check_az_assistant(errors: list[str]) -> None:
     assistant = assistant_path.read_text(encoding="utf-8")
     styles = styles_path.read_text(encoding="utf-8")
     for marker in (
-        "Hi, I am AZ, your assistant for today",
+        "FMB&CO. Receptionist",
+        "Receptionist",
+        "We do not accept donations.",
+        "Yoni, the Mental-Health Companion",
+        "verified premade reply bank",
+        "UNKNOWN_QUESTION_KEY",
+        "fmb:az-unmatched",
+        "Website and Brands",
         "Find Something",
         "Account and Membership",
-        "App and Device Help",
+        "App and Yoni",
         "Music and Reading",
         "Journal and Daily Check-In",
         "Community and Freedom Wall",
@@ -310,7 +318,7 @@ def check_az_assistant(errors: list[str]) -> None:
         "Privacy and Safety",
         "Work with FMB",
         "Volunteer and Collaborate",
-        "Payments, Donations, and Partnerships",
+        "Membership, Services, and Partnerships",
         "Report a Problem",
         "Frequently Asked Questions",
         "submit_contact_message",
@@ -320,12 +328,14 @@ def check_az_assistant(errors: list[str]) -> None:
     ):
         if marker not in assistant:
             errors.append(f"assets/js/az-assistant.js: missing guided-help marker: {marker}")
-    for marker in (".az-help-trigger", ".az-help-panel", ".az-quick-reply", "min-height:44px", "fmb-mobile-host"):
+    for marker in (".az-help-trigger", ".az-help-panel", ".az-help-role", ".az-quick-reply", "min-height:44px", "min-width:150px", "fmb-mobile-host"):
         if marker not in styles:
             errors.append(f"assets/css/az-assistant.css: missing responsive help style: {marker}")
     for marker in ("az-assistant.css", "az-assistant.js"):
         if marker not in site_js:
             errors.append(f"assets/js/site.js: AZ assistant is not loaded globally: {marker}")
+        if marker not in app_html:
+            errors.append(f"app/index.html: AZ Receptionist is not loaded in the app shell: {marker}")
         if marker not in worker:
             errors.append(f"service-worker.js: AZ assistant is not available to the app shell: {marker}")
 
