@@ -173,12 +173,15 @@
   document.querySelectorAll('[data-news-share]').forEach(button=>{
     const original=button.textContent;
     button.addEventListener('click',async()=>{
-      const payload={title:document.title,text:document.querySelector('meta[name="description"]')?.content||document.title,url:window.location.href};
+      const match=location.pathname.match(/^\/news\/([a-z0-9-]+)\/?$/i);
+      const sharePath=match?`/api/news-share?slug=${encodeURIComponent(match[1].toLowerCase())}`:location.pathname;
+      const shareUrl=new URL(sharePath,location.origin).href;
+      const payload={title:document.title,text:document.querySelector('meta[name="description"]')?.content||document.title,url:shareUrl};
       try{
         if(navigator.share)await navigator.share(payload);
         else if(navigator.clipboard)await navigator.clipboard.writeText(payload.url);
         else throw new Error('Sharing unavailable');
-        button.textContent=navigator.share?original:'Link copied';
+        button.textContent=navigator.share?original:'Photo-preview link copied';
       }catch(error){
         if(error?.name==='AbortError')return;
         button.textContent='Copy this page link';
