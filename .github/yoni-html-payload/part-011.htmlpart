@@ -1,0 +1,103 @@
+      <p class="kicker">Privacy and personal control</p><h1 class="page-title">Your private records belong to you.</h1><p class="page-lede">Yoni stores check-ins, journal entries, chat history, and preferences locally in this browser. It does not publish them or turn them into community posts.</p><article class="privacy-summary card"><div><span>Saved check-ins</span><strong id="privacyCheckins">0</strong></div><div><span>Journal entries</span><strong id="privacyJournals">0</strong></div><div><span>Storage</span><strong>This device</strong></div></article><article class="privacy-card card"><h2>Export your records</h2><p>Download a copy of your local check-ins, journal entries, chat, profile, and reminder preference as a JSON file.</p><button class="button orange" id="exportRecords" type="button">Export personal records</button></article><article class="privacy-card card"><h2>Gentle reminder preference</h2><p>Your choice is saved locally. Scheduled notifications are not active yet.</p><label class="preference-field"><span>Reminder setting</span><select id="reminderPreference"><option value="off">Off</option><option value="morning">Gentle morning reminder</option><option value="evening">Gentle evening reminder</option></select></label></article><article class="privacy-card card"><h2>Delete local records</h2><p>Deletion affects only this browser on this device and cannot be undone.</p><div class="privacy-actions"><button class="button soft" id="deleteCheckins" type="button">Delete check-in history</button><button class="button soft" id="deleteJournals" type="button">Delete all journal entries</button><button class="button danger" id="deleteAll" type="button">Delete all local Yoni data</button></div></article>
+    </section>
+
+    <section class="screen" id="screen-help" data-screen="help">
+      <span id="supportYoni"></span><p class="kicker">Reach a real person</p><h1 class="page-title">Human help comes first.</h1><p class="page-lede">Yoni is a digital companion for reflection and general support. He is not an emergency, medical, psychological, legal, or crisis-response service.</p><div class="hotline-list"><a class="hotline urgent" href="tel:911"><small>Immediate danger or emergency</small><h2>911</h2><p>For police, fire, ambulance, violence, or an immediate threat to safety.</p></a><a class="hotline" href="tel:1553"><small>National Center for Mental Health</small><h2>1553</h2><p>Nationwide NCMH crisis hotline.</p></a><a class="hotline" href="tel:09178998727"><small>NCMH mobile line</small><h2>0917 899 8727</h2><p>Tap to call from a mobile phone.</p></a><a class="hotline" href="tel:09663514518"><small>NCMH mobile line</small><h2>0966 351 4518</h2><p>Tap to call from a mobile phone.</p></a><a class="hotline" href="tel:09086392672"><small>NCMH mobile line</small><h2>0908 639 2672</h2><p>Smart, Sun, and TNT subscribers.</p></a><a class="hotline" href="https://loveyourself.ph/mental-health/" target="_blank" rel="noopener"><small>Inclusive community support</small><h2>LoveYourself</h2><p>Mental-health and affirming community support, including LGBTQIA+ focused services.</p></a></div><p class="disclaimer">Hotline availability and phone routing can change. When a number does not connect and there is immediate danger, call 911, contact a trusted person nearby, or go to the nearest emergency department.</p>
+    </section>
+  </main>
+  <footer class="app-footer"><p><strong>Yoni</strong> is a digital companion, not a therapist, doctor, or emergency service.</p></footer>
+</div>
+
+<nav class="tabbar" id="tabbar" hidden aria-label="Yoni app navigation">
+  <button class="active" type="button" data-tab="home" data-go="home"><svg viewBox="0 0 24 24"><path d="m4 10.5 8-7 8 7V20h-5.5v-6h-5v6H4Z"/></svg><span>Home</span></button>
+  <button type="button" data-tab="history" data-go="history"><svg viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="3"/><path d="M8 3v5M16 3v5M4 10h16"/><path d="M8 14h2M12 14h2M16 14h.01M8 17h2M12 17h2"/></svg><span>Calendar</span></button>
+  <button class="companion-tab" type="button" data-tab="companion" data-go="companion"><span class="yoni-nav-face"><img src="" data-yoni-asset="mascot" alt=""></span><span>Yoni</span></button>
+  <button type="button" data-tab="community" data-go="community"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4Z"/><path d="M8 9h8M8 12.5h5"/></svg><span>Kind Wall</span></button>
+  <button type="button" data-tab="profile" data-go="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"/></svg><span>Profile</span></button>
+</nav>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+window.YONI_ASSETS={"mascot":"/app/yoni-mascot.svg","motion":"/app/yoni-mascot.svg","portrait":"/assets/images/founder.webp","senz":"/app/senz-wordmark.svg","cognita":"/app/cognita-wordmark.svg"};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/supabase-client.js"></script>
+<script>
+(()=>{
+'use strict';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const assetSrc=name=>window.YONI_ASSETS?.[name]||'/app/yoni-icon.svg';
+function hydrateAssets(root=document){root.querySelectorAll?.('[data-yoni-asset]').forEach(image=>{const source=assetSrc(image.dataset.yoniAsset);if(source)image.src=source})}
+hydrateAssets();
+const keys={checkins:'yoni-checkins-v4',journals:'yoni-journals-v4',chat:'yoni-chat-v4',profile:'yoni-profile-v4',queue:'yoni-wall-queue-v4',theme:'yoni-theme-v4',reminder:'yoni-reminder-v4',unknown:'yoni-unknown-questions-v1',responseMode:'yoni-response-mode-v1'};
+const read=(k,fallback=[])=>{try{return JSON.parse(localStorage.getItem(k))??fallback}catch{return fallback}};
+const write=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch{return false}};
+const escapeHtml=v=>String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+const dateKey=(d=new Date())=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const formatDate=d=>new Intl.DateTimeFormat('en-PH',{weekday:'short',month:'short',day:'numeric',year:'numeric'}).format(d);
+const fruit={orange:'🍊',apple:'🍎',grapes:'🍇',cherry:'🍒',peach:'🍑',lemon:'🍋',blueberry:'🫐',watermelon:'🍉'};
+const fruitAvatarHtml=key=>{const safe=fruit[key]?key:'orange';return `<span class="fruit-avatar" aria-hidden="true"><span class="fruit-glyph">${fruit[safe]}</span><span class="fruit-shades">🕶️</span></span>`};
+let profile=read(keys.profile,{name:'Friend',username:'friend',fruit:'orange',bio:''});
+if(!fruit[profile.fruit])profile.fruit='orange';
+let selectedMood=null, selectedMoodButton=null, calendarCursor=new Date(new Date().getFullYear(),new Date().getMonth(),1), selectedHistory=dateKey();
+let audioCtx=null, audioNodes=[], activeSound='rain', soundPlaying=false;
+let authClient=null,authUser=null,accountProfile=null;
+const YONI_URL='https://yoni.francinemariebautista.com/';
+const themeFromDb=value=>({violet:'dusk',navy:'midnight',forest:'forest',slate:'sunrise',sunrise:'sunrise',dusk:'dusk',midnight:'midnight'})[value]||'sunrise';
+const themeToDb=value=>({sunrise:'slate',dusk:'violet',forest:'forest',midnight:'navy'})[value]||'slate';
+const memberName=(user,db)=>db?.full_name||db?.display_name||user?.user_metadata?.full_name||user?.email?.split('@')[0]?.replace(/[._-]+/g,' ')||'Friend';
+const memberProfileToLocal=(user,db)=>{
+  const existing=read(keys.profile,{});
+  return {
+    ...existing,
+    name:memberName(user,db),
+    username:db?.username||existing.username||window.FMB?.usernameFrom?.(user?.email?.split('@')[0])||'friend',
+    fruit:fruit[db?.avatar_preset]?db.avatar_preset:(fruit[existing.fruit]?existing.fruit:'orange'),
+    bio:db?.bio||existing.bio||''
+  };
+};
+async function loadMemberProfile(user){
+  if(!authClient||!user)return null;
+  try{
+    const {data,error}=await authClient.from('profiles').select('*').eq('id',user.id).maybeSingle();
+    if(error)throw error;
+    return data||null;
+  }catch(error){console.warn('Profile load failed',error);return null}
+}
+async function saveMemberPatch(patch){
+  if(!authClient||!authUser)return {error:null,localOnly:true};
+  try{
+    const {error}=await authClient.from('profiles').update(patch).eq('id',authUser.id);
+    return {error,localOnly:false};
+  }catch(error){return {error,localOnly:false}}
+}
+
+let navHistory=['home'];
+const motionReduced=()=>matchMedia('(prefers-reduced-motion:reduce)').matches;
+const safeSessionGet=k=>{try{return sessionStorage.getItem(k)}catch{return null}};
+const safeSessionSet=(k,v)=>{try{sessionStorage.setItem(k,v);return true}catch{return false}};
+const safeSessionRemove=k=>{try{sessionStorage.removeItem(k)}catch{}};
+const navRank={home:0,history:1,companion:2,community:3,profile:4,checkin:1,journal:1,tools:1,listen:1,read:1,privacy:4,help:4};
+function setButtonLoading(button,on,label='Loading'){
+  if(!button)return;
+  if(on){button.dataset.label=button.textContent;button.classList.add('is-loading');button.disabled=true;button.setAttribute('aria-label',label)}
+  else{button.classList.remove('is-loading');button.disabled=false;if(button.dataset.label){button.textContent=button.dataset.label;delete button.dataset.label}button.removeAttribute('aria-label')}
+}
+function setLaunch(open,{title='Opening Yoni',text='Preparing your private space...'}={}){
+  const layer=$('#appLaunch');if(!layer)return;
+  $('#appLaunchTitle').textContent=title;$('#appLaunchText').textContent=text;
+  if(open){layer.hidden=false;requestAnimationFrame(()=>layer.classList.add('visible'))}
+  else{layer.classList.remove('visible');setTimeout(()=>layer.hidden=true,motionReduced()?10:300)}
+}
+function subtleHaptic(){try{navigator.vibrate?.(8)}catch{}}
+function prepareScreen(name){
+  if(name==='home')renderToday();if(name==='journal')renderJournals();if(name==='history')renderCalendar();if(name==='privacy')renderPrivacy();if(name==='community')renderWall();if(name==='profile')applyProfile();
+}
+
+
+function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('visible');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('visible'),2500)}
+function firstName(){return String(profile.name||'friend').trim().split(/\s+/)[0]||'friend'}
+function initials(){return String(profile.name||'F').trim().split(/\s+/).slice(0,2).map(x=>x[0]?.toUpperCase()).join('')||'F'}
+function greeting(){const n=firstName();const hour=new Date().getHours();const morning=[`Good morning, ${n}. Dahan-dahan lang tayo today.`,`Before the day gets busy, how are you really?`,`New day. Hindi mo kailangang alam agad ang lahat.`];const afternoon=[`Quick pause, ${n}. How is your day landing so far?`,`Midday check: pahinga, space, or support?`,`You can reset the day anytime, ${n}.`];const evening=[`Good evening, ${n}. You made it through today.`,`Before you rest, what are you carrying?`,`Hindi mo kailangang ayusin lahat bago matulog.`];const anytime=[`Hey ${n}. Kamusta ka, for real?`,`Hi ${n}. No pressure. Anong kailangan mo today?`,`Welcome back. One honest feeling is enough.`,`Soft reset muna. What feels heavy today?`,`Come as you are. Walang judgment dito.`];const pool=hour<12?morning:hour<18?afternoon:evening;return [...pool,...anytime][Math.floor(Math.random()*(pool.length+anytime.length))]}
+const loginPopupSessionKey='yoni-login-popups-reviewed-v1';
