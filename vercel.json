@@ -1,0 +1,44 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "cleanUrls": false,
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "senzpr.com" }],
+      "destination": "/_sites/senz/:path*"
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.senzpr.com" }],
+      "destination": "/_sites/senz/:path*"
+    },
+    {
+      "source": "/:path((?:.*\\.[^/]+))",
+      "has": [{ "type": "host", "value": "thecognitainstitute.com" }],
+      "destination": "/_sites/cognita/:path"
+    },
+    {
+      "source": "/:path((?:.*\\.[^/]+))",
+      "has": [{ "type": "host", "value": "www.thecognitainstitute.com" }],
+      "destination": "/_sites/cognita/:path"
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "thecognitainstitute.com" }],
+      "destination": "/_sites/cognita/index.html"
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.thecognitainstitute.com" }],
+      "destination": "/_sites/cognita/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/_sites/:path*",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
+    }
+  ]
+}
