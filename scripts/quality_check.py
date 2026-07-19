@@ -287,6 +287,7 @@ def check_navigation_experience(errors: list[str]) -> None:
 
 def check_az_assistant(errors: list[str]) -> None:
     site_js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
+    app_html = (ROOT / "app/index.html").read_text(encoding="utf-8")
     worker = (ROOT / "service-worker.js").read_text(encoding="utf-8")
     assistant_path = ROOT / "assets/js/az-assistant.js"
     styles_path = ROOT / "assets/css/az-assistant.css"
@@ -333,6 +334,8 @@ def check_az_assistant(errors: list[str]) -> None:
     for marker in ("az-assistant.css", "az-assistant.js"):
         if marker not in site_js:
             errors.append(f"assets/js/site.js: AZ assistant is not loaded globally: {marker}")
+        if marker not in app_html:
+            errors.append(f"app/index.html: AZ Receptionist is not loaded in the app shell: {marker}")
         if marker not in worker:
             errors.append(f"service-worker.js: AZ assistant is not available to the app shell: {marker}")
 
