@@ -127,14 +127,22 @@ jobs:
           echo 'BASE44 REFERENCES'
           grep -RIn --exclude-dir=node_modules --exclude-dir=.git -E 'base44|BASE44' apps | head -80 || true
 
-      - name: Print workflows requiring path repair
+      - name: Collect workflows requiring path repair
         run: |
           set -euo pipefail
+          mkdir -p workflow-diagnostics
+          : > workflow-diagnostics/index.txt
           for workflow_name in 'Website quality' 'Member readiness'; do
             workflow=$(grep -rl --include='*.yml' --include='*.yaml' "^name: ${workflow_name}$" .github/workflows | head -1 || true)
-            echo "WORKFLOW NAME: ${workflow_name}"
-            echo "WORKFLOW FILE: ${workflow:-NOT FOUND}"
+            echo "${workflow_name}|${workflow:-NOT FOUND}" | tee -a workflow-diagnostics/index.txt
             if [ -n "$workflow" ]; then
-              sed -n '1,220p' "$workflow"
+              cp "$workflow" "workflow-diagnostics/$(basename "$workflow")"
             fi
           done
+
+      - name: Upload workflow diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: ecosystem-workflow-diagnostics
+          path: workflow-diagnostics
+          if-no-files-found: error
