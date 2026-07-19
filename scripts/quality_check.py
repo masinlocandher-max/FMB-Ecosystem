@@ -557,6 +557,8 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
             ".fco-portrait-shape",
             ".fco-founder-card-shape",
             ".fco-founder-card-portrait",
+            ".fco-founder-portrait-card.is-side",
+            "height:min(118%,570px)",
             "mask-image:linear-gradient",
             ".fco-reveal-target",
         ):
@@ -646,7 +648,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
     for name in fmbandco_pages:
         page = (ROOT / name).read_text(encoding="utf-8")
         for marker in (
-            "fmbandco-brand.css?v=20260719-founder-brand-v8",
+            "fmbandco-brand.css?v=20260719-portrait-placement-v9",
             "fmbandco-primary-reversed.png",
             "fmbandco-ampersand-gold.png",
             'class="fco-nav-links"',
@@ -660,7 +662,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
                 errors.append(f"{name}: generic decorative ampersand remains: {marker}")
 
     fmbandco_home = (ROOT / "fmb&co/index.html").read_text(encoding="utf-8")
-    for marker in ("francine-founder-hero-640.webp", "francine-founder-hero-923.webp", "francine-founder-front-cutout-640-v1.webp", "francine-founder-front-cutout-900-v1.webp", "francine-founder-side-cutout-640-v1.webp", "francine-founder-side-cutout-900-v1.webp", "francine-marie-bautista-wordmark-white-v2.png", 'class="fco-hero-visual"', 'fetchpriority="high"', "fco-founder-nameplate", "fco-founder-signature", "fco-founder-title", "fco-founder-portrait-card", "Founder &amp; CEO", "Francine Marie Bautista"):
+    for marker in ("francine-founder-hero-640.webp", "francine-founder-hero-923.webp", "francine-founder-front-cutout-640-v1.webp", "francine-founder-front-cutout-900-v1.webp", "francine-founder-side-cutout-640-v1.webp", "francine-founder-side-cutout-900-v1.webp", "francine-marie-bautista-wordmark-white-v2.png", 'class="fco-hero-visual"', 'fetchpriority="high"', "fco-founder-nameplate", "fco-founder-signature", "fco-founder-title", "fco-founder-portrait-card is-front", "fco-founder-portrait-card is-side", "Founder &amp; CEO", "Francine Marie Bautista"):
         if marker not in fmbandco_home:
             errors.append(f"fmb&co/index.html: responsive founder hero marker is missing: {marker}")
     if "fmbandco-motion.js?v=20260718-motion-v1" not in fmbandco_home:
@@ -676,8 +678,8 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
 
     about = (ROOT / "aboutfmb/index.html").read_text(encoding="utf-8")
     for marker in (
-        "fmbandco-brand.css?v=20260719-founder-brand-v8",
-        "aboutfmb-corporate.css?v=20260719-founder-gallery-v2",
+        "fmbandco-brand.css?v=20260719-portrait-placement-v9",
+        "aboutfmb-corporate.css?v=20260719-portrait-placement-v3",
         "aboutfmb-corporate.js?v=20260718-about-corporate-v1",
         "francine-founder-hero-640.webp",
         "francine-founder-hero-923.webp",
@@ -687,6 +689,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         "fco-founder-nameplate",
         "fco-founder-signature",
         "fco-founder-title",
+        "fmb-about-portrait-card is-front",
         "Founder &amp; CEO",
         'id="expertise"',
         'id="journey"',
@@ -708,7 +711,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         errors.append("assets/css/aboutfmb-corporate.css: dedicated corporate About system is missing")
     else:
         about_css = about_css_path.read_text(encoding="utf-8")
-        for marker in (".fmb-about-corporate", ".fmb-about-booking-grid", ".fmb-about-portfolio-grid", ".fmb-about-hero-deck", ".fmb-about-portrait-shape", ".fmb-about-portrait", ".fmb-about-signoff-wordmark", "fmbandco-ampersand-gold.png", "@media(max-width:860px)"):
+        for marker in (".fmb-about-corporate", ".fmb-about-booking-grid", ".fmb-about-portfolio-grid", ".fmb-about-hero-deck", ".fmb-about-portrait-shape", ".fmb-about-portrait", "height:min(118%,570px)", ".fmb-about-signoff-wordmark", "fmbandco-ampersand-gold.png", "@media(max-width:860px)"):
             if marker not in about_css:
                 errors.append(f"assets/css/aboutfmb-corporate.css: missing brand, booking, or responsive marker: {marker}")
         if 'content:"&"' in about_css:

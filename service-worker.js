@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260719-founder-brand-gallery-newsroom-v13';
+const CACHE_NAME='fmb-app-shell-20260719-portrait-placement-v14';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',

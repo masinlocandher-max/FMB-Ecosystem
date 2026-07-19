@@ -123,10 +123,12 @@ jobs:
           grep -q 'signInWithPassword' _site/app/access.js
           grep -q "backgroundSize='contain'" _site/assets/js/music.js
           grep -q 'Founder &amp; CEO' _site/aboutfmb/index.html
-          grep -q 'aboutfmb-corporate.css?v=20260719-founder-gallery-v2' _site/aboutfmb/index.html
+          grep -q 'aboutfmb-corporate.css?v=20260719-portrait-placement-v3' _site/aboutfmb/index.html
           grep -q 'aboutfmb-corporate.js?v=20260718-about-corporate-v1' _site/aboutfmb/index.html
           grep -q 'francine-founder-hero-923.webp' _site/aboutfmb/index.html
           grep -q 'francine-founder-front-cutout-900-v1.webp' _site/aboutfmb/index.html
+          grep -q 'fmb-about-portrait-card is-front' _site/aboutfmb/index.html
+          grep -q 'height:min(118%,570px)' _site/assets/css/aboutfmb-corporate.css
           grep -q 'francine-marie-bautista-wordmark-white-v2.png' _site/aboutfmb/index.html
           grep -q 'id="workCalendarCard"' _site/aboutfmb/index.html
           grep -q 'Community Engagements - AMDG' _site/communityengagements/index.html
@@ -139,6 +141,9 @@ jobs:
           grep -q 'francine-founder-hero-923.webp' '_site/fmb&co/index.html'
           grep -q 'francine-founder-front-cutout-900-v1.webp' '_site/fmb&co/index.html'
           grep -q 'francine-founder-side-cutout-900-v1.webp' '_site/fmb&co/index.html'
+          grep -q 'fco-founder-portrait-card is-front' '_site/fmb&co/index.html'
+          grep -q 'fco-founder-portrait-card is-side' '_site/fmb&co/index.html'
+          grep -q 'height:min(118%,570px)' _site/assets/css/fmbandco-brand.css
           grep -q 'francine-marie-bautista-wordmark-white-v2.png' '_site/fmb&co/index.html'
           grep -q 'fco-founder-signature' '_site/fmb&co/index.html'
           grep -q 'fco-founder-title' '_site/fmb&co/index.html'
