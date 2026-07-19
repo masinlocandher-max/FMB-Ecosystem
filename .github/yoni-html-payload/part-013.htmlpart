@@ -1,0 +1,67 @@
+  const t=b.dataset.themeChoice;
+  const result=await saveMemberPatch({app_theme:themeToDb(t)});
+  if(result.error){toast(result.error.message||'Theme could not be saved.');return}
+  document.body.dataset.theme=t;write(keys.theme,t);$$('[data-theme-choice]').forEach(x=>x.classList.toggle('active',x===b));toast('Theme updated.');
+});
+const savedTheme=read(keys.theme,'sunrise');document.body.dataset.theme=savedTheme;$$('[data-theme-choice]').forEach(b=>b.classList.toggle('active',b.dataset.themeChoice===savedTheme));
+
+const ACK={5:['It sounds like there is some steadiness today.','Thank you for noticing it. You can save this moment, write what is helping, or simply continue with your day.'],4:['Mostly okay still deserves a check-in.','There may be tension beside the okay parts. You do not need to force either feeling away.'],3:['Heavy or uncertain can be difficult to hold.','Thank you for naming it. You may write a little, try one slow breathing cycle, or talk to Yoni without explaining everything.'],2:['It sounds like today is taking a lot from you.','You do not have to solve the whole day here. Consider reaching out to someone you trust or opening Support.'],1:['Your safety matters more than completing this check-in.','Please contact emergency services, an available crisis line, or a trusted person nearby now. Yoni cannot send help.']};
+$$('.mood-option').forEach(b=>b.onclick=()=>{selectedMoodButton=b;selectedMood=Number(b.dataset.mood);$$('.mood-option').forEach(x=>{const active=x===b;x.classList.toggle('selected',active);x.setAttribute('aria-pressed',String(active))});$('#ackEmoji').textContent=b.dataset.emoji;$('#ackTitle').textContent=ACK[selectedMood][0];$('#ackMessage').textContent=ACK[selectedMood][1];$('#feelingAck').hidden=false;$('#checkinFollowup').hidden=false;$('#supportInline').classList.toggle('visible',selectedMood===1);$('#checkinConfirmation').classList.remove('visible')});
+$('#saveCheckin').onclick=()=>{if(!selectedMoodButton){toast('Choose the closest emoji first.');return}let items=read(keys.checkins,[]);const today=dateKey();items=items.filter(x=>x.date!==today);const b=selectedMoodButton;items.push({date:today,mood:selectedMood,emoji:b.dataset.emoji,label:b.dataset.label,note:$('#checkinNote').value.trim(),createdAt:new Date().toISOString()});write(keys.checkins,items);$('#checkinConfirmation').classList.add('visible');renderToday();toast('Check-in saved privately.')};
+function renderToday(){const item=read(keys.checkins,[]).find(x=>x.date===dateKey());$('#todayLabel').textContent=formatDate(new Date());if(!item){$('#todayCard').innerHTML='<h3>No check-in yet.</h3><p>There is no right mood to choose. Start with the one closest to what you feel.</p>';return}$('#todayCard').innerHTML=`<h3>Today has been noted.</h3><div class="today-row"><span class="mood-mark">${item.emoji}</span><div><strong>${escapeHtml(item.label)}</strong><span>${item.note?escapeHtml(item.note):'No private note added.'}</span></div></div>`}
+
+$('#journalDate').textContent=formatDate(new Date());$('#journalText').oninput=()=>$('#journalCount').textContent=`${$('#journalText').value.length} characters`;
+$('#saveJournal').onclick=()=>{const text=$('#journalText').value.trim();if(!text){toast('Write something before saving.');return}const items=read(keys.journals,[]);items.unshift({id:Date.now(),date:dateKey(),text,createdAt:new Date().toISOString()});write(keys.journals,items);$('#journalText').value='';$('#journalCount').textContent='0 characters';renderJournals();toast('Journal entry saved privately.')};
+function renderJournals(){const items=read(keys.journals,[]);$('#journalList').innerHTML=items.length?items.map(x=>`<article class="journal-entry card"><time>${formatDate(new Date(x.createdAt))}</time><p>${escapeHtml(x.text)}</p><div class="entry-bottom"><button type="button" data-delete-journal="${x.id}">Delete</button></div></article>`).join(''):'<div class="empty card">No saved entries yet.</div>';$$('[data-delete-journal]').forEach(b=>b.onclick=()=>{write(keys.journals,items.filter(x=>String(x.id)!==b.dataset.deleteJournal));renderJournals();toast('Entry deleted.')})}
+
+const approvedStories=[{avatar:'orange',user:'@littlewins',time:'Today',text:'I finally answered the message I had been avoiding. It was small, but I feel lighter.',tag:'Small win'},{avatar:'grapes',user:'@softreset',time:'Yesterday',text:'Reminder: resting before you completely burn out still counts as being responsible.',tag:'Kind reminder'},{avatar:'lemon',user:'@sunny_side',time:'2 days ago',text:'A stranger held the door for me today. Tiny kindness, surprisingly big effect.',tag:'Gratitude'}];
+function renderWall(){const queue=read(keys.queue,[]);$('#wallFeed').innerHTML=approvedStories.map(s=>`<article class="story-card card"><div class="story-head"><span class="story-avatar">${fruitAvatarHtml(s.avatar)}</span><div><strong>${s.user}</strong><span>${s.time}</span></div></div><p>${s.text}</p><span class="story-tag">${s.tag}</span></article>`).join('');$('#wallQueue').innerHTML=queue.length?queue.map(q=>`<article class="queue-card"><strong>Awaiting moderator review</strong><p>${escapeHtml(q.text)}</p></article>`).join(''):'<div class="empty card">Your submitted stories will appear here.</div>'}
+$('#wallContent').oninput=()=>$('#wallCount').textContent=`${$('#wallContent').value.length} / 2000`;
+$('#wallForm').onsubmit=e=>{e.preventDefault();const text=$('#wallContent').value.trim();if(!text||!$('#wallConsent').checked){toast('Add a constructive post and confirm the review notice.');return}const q=read(keys.queue,[]);q.unshift({id:Date.now(),text,date:new Date().toISOString()});write(keys.queue,q);$('#wallContent').value='';$('#wallConsent').checked=false;$('#wallCount').textContent='0 / 2000';$('#wallStatus').textContent='Sent for moderator review. It is not public yet.';$('#wallStatus').classList.add('visible');renderWall()};
+
+function renderCalendar(){const y=calendarCursor.getFullYear(),m=calendarCursor.getMonth();$('#calendarMonth').textContent=new Intl.DateTimeFormat('en-PH',{month:'long',year:'numeric'}).format(calendarCursor);const first=new Date(y,m,1),start=new Date(y,m,1-first.getDay());const checks=read(keys.checkins,[]), journals=read(keys.journals,[]);let html='';for(let i=0;i<42;i++){const d=new Date(start);d.setDate(start.getDate()+i);const k=dateKey(d),c=checks.find(x=>x.date===k),hasJ=journals.some(x=>x.date===k);html+=`<button class="calendar-day ${d.getMonth()!==m?'outside':''} ${(c||hasJ)?'has-data':''} ${k===selectedHistory?'selected':''} ${k===dateKey()?'today':''}" data-day="${k}" type="button"><span class="day-number">${d.getDate()}</span><span class="day-emoji">${c?c.emoji:''}</span>${hasJ?'<i class="day-journal"></i>':''}</button>`}$('#calendarGrid').innerHTML=html;$$('[data-day]').forEach(b=>b.onclick=()=>{selectedHistory=b.dataset.day;renderCalendar()});renderHistoryDetail()}
+function renderHistoryDetail(){const c=read(keys.checkins,[]).find(x=>x.date===selectedHistory),j=read(keys.journals,[]).filter(x=>x.date===selectedHistory);const d=new Date(selectedHistory+'T12:00:00');let html=`<h3>${formatDate(d)}</h3>`;if(!c&&!j.length)html+='<p>No private records saved for this date.</p>';if(c)html+=`<div class="history-record"><strong>${c.emoji} ${escapeHtml(c.label)}</strong><span>${c.note?escapeHtml(c.note):'No note added.'}</span></div>`;j.forEach(x=>html+=`<div class="history-record"><strong>Journal entry</strong><span>${escapeHtml(x.text)}</span></div>`);$('#historyDetail').innerHTML=html}
+$('#calendarPrev').onclick=()=>{calendarCursor=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()-1,1);renderCalendar()};$('#calendarNext').onclick=()=>{calendarCursor=new Date(calendarCursor.getFullYear(),calendarCursor.getMonth()+1,1);renderCalendar()};
+
+const affirmations=['You do not have to solve everything in this moment.','Rest is not a failure of discipline.','Your feelings can be real without becoming your whole identity.','One honest breath is enough for now.','You are allowed to ask for support before things become unbearable.','A small step still changes your direction.'];
+$('#newAffirmation').onclick=()=>{$('#affirmation').textContent=affirmations[Math.floor(Math.random()*affirmations.length)]};
+$('#startBreathing').onclick=()=>{const orb=$('#breatheOrb'),label=$('#breatheLabel');orb.classList.remove('active');void orb.offsetWidth;orb.classList.add('active');label.textContent='Breathe in';setTimeout(()=>label.textContent='Hold gently',4000);setTimeout(()=>label.textContent='Breathe out',6000);setTimeout(()=>{label.textContent='Done';orb.classList.remove('active')},12000)};
+
+const responseBanks={
+listen:[
+'Naririnig kita. Ilabas mo lang. Hindi ko muna aayusin o huhusgahan ang kwento mo.',
+'Nandito ako sa conversation na ito. You can keep going, kahit magulo, paulit-ulit, o mabigat.',
+'You do not need to make this sound reasonable. Sabihin mo lang kung paano talaga nangyari para sa’yo.',
+'Okay. No advice muna. I’m listening. Ano pa ang gusto mong mailabas?',
+'That sounds like a lot to carry quietly. You can put more of it here.',
+'Hindi kita mamadaliin. Take your time. Kahit fragments lang, mababasa ko.',
+'You have space here to be angry, tired, confused, or hurt. Go on when you’re ready.',
+'Walang kailangan patunayan. I’m following your story. What happened next?',
+'I hear that this has been sitting with you. You can say the part you have not been able to say out loud.',
+'You can pause, continue, or repeat yourself. There is no correct way to vent.'
+],
+comfort:[
+'Ang bigat nun. I’m sorry you are carrying this right now. Hindi mo kailangang maging okay agad.',
+'Your feelings make sense in the context of what happened. You deserve gentleness while you move through it.',
+'You are not weak for being affected. Nasaktan ka because something mattered.',
+'One hard moment does not erase your worth. You are still you, even while hurting.',
+'Please be softer with yourself tonight. You have already been doing a lot just to keep going.',
+'You do not have to earn comfort. Puwede kang huminga at magpahinga bago mo malaman ang next step.',
+'I’m glad you said it instead of carrying it alone in silence. Your experience deserves to be acknowledged.',
+'This feeling is real, but it is not a final verdict about your life or your future.',
+'You are allowed to need support. Reaching out is not pagiging pabigat.',
+'For this moment, let us make the world smaller: one breath, one glass of water, one safe next step.'
+],
+think:[
+'Let us separate what happened, what you are feeling, and what you need next. Which one feels easiest to name?',
+'What part is within your control today, and what part can wait without being solved tonight?',
+'Before making a big decision, what facts do you know for sure, and what are you afraid might be true?',
+'What would you advise someone you care about if they were in your exact situation?',
+'You do not need the whole answer. What is the smallest useful next move?',
+'Would it help to sort this into: urgent, important, and not yours to carry?',
+'What boundary, request, or pause might protect your energy here?',
+'Let us look for the choice that respects both your feelings and your future self.',
+'What outcome are you hoping for, and what would be an acceptable outcome if the ideal one is not possible?',
+'You can take time before responding. A delayed decision can still be a strong decision.'
+],
+ground:[
