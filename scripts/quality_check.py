@@ -731,30 +731,42 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
     news_css_path = ROOT / "assets/css/news-channel.css"
     news_js_path = ROOT / "assets/js/news-channel.js"
     if not news_css_path.exists():
-        errors.append("assets/css/news-channel.css: editorial channel styles are missing")
+        errors.append("assets/css/news-channel.css: broadcast channel styles are missing")
     if not news_js_path.exists():
-        errors.append("assets/js/news-channel.js: newsroom interaction layer is missing")
+        errors.append("assets/js/news-channel.js: news interaction layer is missing")
     for marker in (
-        "Independent editorial channel",
-        "FMB&amp;CO. Newsroom",
-        "The magazine index.",
+        "FMB&amp;CO. News Network",
+        "The day, clearly told.",
+        "Latest bulletin",
+        'id="rundown"',
+        "News formats built for understanding.",
         'id="editorial-standard"',
-        'class="nc-site-header"',
+        'class="nc-site-header nc-broadcast-header"',
         "/news/china-ai-monkey-video/",
         "/news/cleopatra-barrera/",
         "/news/impeachment/",
         "/news/pax-silica/",
         "/news/good-news/",
-        "news-channel.css?v=20260718-fmbandco-v2",
-        "news-channel.js?v=20260718-fmbandco-v2",
+        "news-channel.css?v=20260719-broadcast-v3",
+        "news-channel.js?v=20260719-broadcast-v3",
     ):
         if marker not in news:
-            errors.append(f"news/index.html: missing editorial channel marker: {marker}")
+            errors.append(f"news/index.html: missing broadcast channel marker: {marker}")
+    if news_css_path.exists():
+        news_css = news_css_path.read_text(encoding="utf-8")
+        for marker in (".nc-broadcast-identity", ".nc-broadcast-grid", ".nc-rundown-panel", ".nc-signal-tag", ".nc-network-clock", "prefers-reduced-motion"):
+            if marker not in news_css:
+                errors.append(f"assets/css/news-channel.css: missing broadcast or responsive marker: {marker}")
+    if news_js_path.exists():
+        news_js = news_js_path.read_text(encoding="utf-8")
+        for marker in ("Asia/Manila", "data-news-clock", "IntersectionObserver", "navigator.share"):
+            if marker not in news_js:
+                errors.append(f"assets/js/news-channel.js: missing clock, motion, or sharing marker: {marker}")
     for route in ("china-ai-monkey-video", "cleopatra-barrera", "impeachment", "pax-silica", "good-news"):
         story = (ROOT / "news" / route / "index.html").read_text(encoding="utf-8")
-        for marker in ('nc-article-layout', 'data-news-share', 'class="nc-sources"', 'rel="canonical"'):
+        for marker in ('nc-article-layout', 'data-news-share', 'class="nc-sources"', 'rel="canonical"', 'nc-broadcast-header', 'data-news-clock'):
             if marker not in story:
-                errors.append(f"news/{route}/index.html: incomplete magazine story marker: {marker}")
+                errors.append(f"news/{route}/index.html: incomplete broadcast story marker: {marker}")
         if "location.replace" in story or 'content="noindex' in story:
             errors.append(f"news/{route}/index.html: story route must be a complete indexable article")
     for name in (
