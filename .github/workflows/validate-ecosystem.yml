@@ -1,0 +1,101 @@
+name: Validate FMB ecosystem
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-static-sites:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify application entry files
+        run: |
+          set -euo pipefail
+          test -f apps/withlovefmb/index.html
+          test -f apps/withlovefmb/app/index.html
+          test -f apps/senz/index.html
+          test -f apps/cognita/index.html
+          test -f apps/cognita/package.json
+      - name: Smoke test personal website
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4171 --directory apps/withlovefmb >/tmp/fmb-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID' EXIT
+          for i in {1..20}; do
+            if curl --fail --silent --show-error http://127.0.0.1:4171/ >/tmp/fmb-home.html; then break; fi
+            sleep 1
+          done
+          grep -qi '<html' /tmp/fmb-home.html
+          grep -qi 'Francine Marie Bautista\|With love, FMB' /tmp/fmb-home.html
+      - name: Smoke test SENZ
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4172 --directory apps/senz >/tmp/senz-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID' EXIT
+          for i in {1..20}; do
+            if curl --fail --silent --show-error http://127.0.0.1:4172/ >/tmp/senz-home.html; then break; fi
+            sleep 1
+          done
+          grep -qi '<html' /tmp/senz-home.html
+          grep -qi 'SENZ' /tmp/senz-home.html
+
+  validate-cognita:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/cognita
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: apps/cognita/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Build Cognita
+        run: npm run build
+      - name: Smoke test Cognita build
+        run: |
+          set -euo pipefail
+          test -f dist/index.html
+          python3 -m http.server 4173 --directory dist >/tmp/cognita-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID' EXIT
+          for i in {1..20}; do
+            if curl --fail --silent --show-error http://127.0.0.1:4173/ >/tmp/cognita-home.html; then break; fi
+            sleep 1
+          done
+          grep -qi '<html' /tmp/cognita-home.html
+          grep -qi 'Cognita' /tmp/cognita-home.html
+
+  validate-unified-vercel-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate Vercel configuration
+        run: node -e "JSON.parse(require('node:fs').readFileSync('vercel.json', 'utf8'))"
+      - name: Build complete ecosystem
+        run: npm run build
+      - name: Verify combined output
+        run: |
+          set -euo pipefail
+          test -f dist/index.html
+          test -f dist/app/index.html
+          test -f dist/_sites/senz/index.html
+          test -f dist/_sites/cognita/index.html
+          grep -qi 'Francine Marie Bautista\|With love, FMB' dist/index.html
+          grep -qi 'SENZ' dist/_sites/senz/index.html
+          grep -qi 'Cognita' dist/_sites/cognita/index.html
