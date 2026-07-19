@@ -1,22 +1,19 @@
 {
-  "name": "With love, FMB Mental Health",
-  "short_name": "With love, FMB",
-  "description": "A verified, private mental health and emotional wellbeing space with check-ins, journaling, grounding tools, affirmations, and support contacts.",
-  "start_url": "/app/",
-  "scope": "/app/",
+  "name": "Yoni Mental Health Companion",
+  "short_name": "Yoni",
+  "description": "A gentle digital companion for private check-ins, journaling, venting, grounding, supportive reading, and finding human support.",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#f6f4f7",
-  "theme_color": "#f6f4f7",
+  "orientation": "portrait-primary",
+  "background_color": "#fbfaf8",
+  "theme_color": "#fbfaf8",
   "icons": [
     {
-      "src": "/assets/images/app-icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "/assets/images/app-icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
+      "src": "/app/yoni-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ]
 }
