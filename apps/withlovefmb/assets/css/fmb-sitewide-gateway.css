@@ -9,19 +9,22 @@
   --fmb-music-card-soft:#232323;
   --fmb-channel-gold:#d8b968;
   --fmb-channel-purple:#6f4388;
+  --fmb-channel-sticky-offset:156px;
 }
 
 /* One global website menu. The channel-specific menus remain page sections below. */
-.fmb-site-gateway{border-bottom:1px solid rgba(255,255,255,.08);background:rgba(8,5,13,.98);color:#fff}
+.fmb-site-gateway{position:relative;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(8,5,13,.98);color:#fff}
 .fmb-site-gateway .wrap{display:flex;min-height:49px;align-items:center;gap:18px}
 .fmb-site-home{display:inline-flex;min-height:34px;flex:0 0 auto;align-items:center;gap:9px;padding:0 14px;border:1px solid rgba(226,200,142,.38);border-radius:999px;background:rgba(200,169,107,.1);color:#f0dca9!important;font:800 10px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:.04em;text-decoration:none!important;white-space:nowrap}
 .fmb-site-home:before{content:"";width:8px;height:8px;border-radius:3px;background:#d8b968;box-shadow:0 0 0 4px rgba(216,185,104,.1)}
-.fmb-site-links{display:flex;min-width:0;flex:1;align-items:center;gap:22px;overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.fmb-site-links{display:flex;min-width:0;flex:1;align-items:center;gap:22px;overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
 .fmb-site-links::-webkit-scrollbar{display:none}
-.fmb-site-links a{position:relative;display:inline-flex;min-height:48px;flex:0 0 auto;align-items:center;color:rgba(255,255,255,.62)!important;font:700 10px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:.02em;text-decoration:none!important;white-space:nowrap}
+.fmb-site-links a{position:relative;display:inline-flex;min-height:48px;flex:0 0 auto;align-items:center;color:rgba(255,255,255,.62)!important;font:700 10px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:.02em;text-decoration:none!important;white-space:nowrap;scroll-snap-align:start}
 .fmb-site-links a:after{content:"";position:absolute;right:0;bottom:7px;left:0;height:2px;transform:scaleX(0);transform-origin:left;border-radius:999px;background:#d8b968;transition:transform .2s ease}
 .fmb-site-links a:hover,.fmb-site-links a:focus-visible,.fmb-site-links a[aria-current="page"]{color:#fff!important}
 .fmb-site-links a:hover:after,.fmb-site-links a:focus-visible:after,.fmb-site-links a[aria-current="page"]:after{transform:scaleX(1)}
+.fmb-site-swipe-cue{display:none;position:absolute;right:7px;bottom:3px;z-index:2;padding:3px 7px;border-radius:999px;background:rgba(8,5,13,.9);color:rgba(240,220,169,.82);font:700 7px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;pointer-events:none;transition:opacity .2s ease}
+.fmb-site-gateway.is-scrolled .fmb-site-swipe-cue{opacity:0}
 .nc-site-header .nc-site-links,.nc-site-header .nc-menu-toggle,.fmb-channel-actions{display:none!important}
 .nc-site-header .nc-nav-shell{justify-content:center}
 .fmb-footer-site-map{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:30px;padding:18px 0;border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1)}
@@ -32,7 +35,7 @@
 .nc-footer-grid{grid-template-columns:minmax(0,1fr)!important}
 .nc-footer-grid>nav{display:none!important}
 .nc-mobile-dock{display:none!important}
-body.has-fmb-site-gateway .nc-topic-rail{top:156px}
+body.has-fmb-site-gateway .nc-topic-rail{top:var(--fmb-channel-sticky-offset)}
 
 /* Moving message: readable and continuous at every width. */
 .nc-wire{grid-template-columns:max-content minmax(0,1fr);min-height:48px;overflow:hidden}
@@ -148,12 +151,20 @@ body.has-fmb-site-gateway .nc-topic-rail{top:156px}
   .ebooks-route .ebook-grid{gap:22px}
 }
 
+/* Dedicated tablet transition so 801–900px does not receive a cramped desktop layout. */
+@media(max-width:900px){
+  .ebooks-route .fco-product-lead-grid,.music-app .fco-product-lead-grid{grid-template-columns:1fr}
+  .ebooks-route .ebook-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .music-app .featured-player{grid-template-columns:minmax(220px,300px) minmax(0,1fr);column-gap:26px;padding:23px}
+  .music-app .player-meta h2{font-size:clamp(30px,5vw,45px)}
+}
+
 @media(max-width:800px){
   .fmb-site-gateway .wrap{width:min(100% - 20px,680px);min-height:50px;gap:12px}
   .fmb-site-home{min-height:36px;padding:0 12px;font-size:9px}
-  .fmb-site-links{gap:18px}
+  .fmb-site-links{gap:18px;padding-right:36px}
   .fmb-site-links a{min-height:50px;font-size:9px}
-  body.has-fmb-site-gateway .nc-topic-rail{top:143px}
+  .fmb-site-swipe-cue{display:block}
   .fmb-footer-site-map{align-items:flex-start;flex-direction:column}
   .fmb-footer-site-map nav{width:100%;justify-content:flex-start}
   .nc-wire-label{min-width:108px;padding:0 12px;font-size:8px}
@@ -215,8 +226,15 @@ body.has-fmb-site-gateway .nc-topic-rail{top:156px}
   .music-app .mini-player{grid-template-columns:42px minmax(0,1fr) auto;padding:8px 9px;border-radius:16px!important}
 }
 
+@media(max-width:900px) and (orientation:landscape){
+  .fco-product-channel-route .nc-broadcast-identity{padding-block:20px 14px}
+  .fco-product-channel-route .nc-channel-lockup h1{font-size:clamp(40px,9vw,64px)}
+  .music-app .featured-art{max-width:330px}
+  .ebooks-route .ebook-card{flex-basis:min(45vw,230px)}
+}
+
 @media(prefers-reduced-motion:reduce){
-  .fmb-site-links a:after,.ebooks-route .ebook-cover{transition:none}
+  .fmb-site-links a:after,.ebooks-route .ebook-cover,.fmb-site-swipe-cue{transition:none}
   .nc-wire-window{overflow-x:auto;mask-image:none;-webkit-mask-image:none;scrollbar-width:none}
   .nc-wire-window::-webkit-scrollbar{display:none}
   .nc-wire-track{animation:none}
