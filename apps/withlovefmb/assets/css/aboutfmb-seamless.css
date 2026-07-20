@@ -1,0 +1,100 @@
+/* About FMB: seamless portrait-led Apple-style profile presentation */
+.fmb-about-corporate{
+  --about-surface:#f5f5f7;
+  --about-card:rgba(255,255,255,.86);
+  --about-line:rgba(60,60,67,.14);
+  --about-shadow:0 24px 70px rgba(30,18,42,.10);
+  background:var(--about-surface);
+}
+
+/* Website navigation, not a page-only dead end */
+.fmb-about-corporate .fco-nav{min-height:70px}
+.fmb-about-corporate .fco-nav-links{gap:clamp(12px,1.7vw,23px)}
+.fmb-about-corporate .fco-nav-links a{font-size:.67rem}
+
+/* Hero: portrait is the visual, not a box behind a box */
+.fmb-about-corporate .fmb-about-hero{padding:clamp(56px,6.5vw,88px) 0 38px}
+.fmb-about-corporate .fmb-about-hero .fco-hero-grid{grid-template-columns:minmax(0,1.06fr) minmax(360px,.78fr);gap:clamp(28px,4.5vw,58px);align-items:end}
+.fmb-about-corporate .fmb-about-hero h1{max-width:720px;margin-bottom:18px;font-size:clamp(3.1rem,5.3vw,5.35rem);line-height:.93}
+.fmb-about-corporate .fmb-about-hero-deck{max-width:650px;margin-bottom:14px;font-size:clamp(1rem,1.4vw,1.23rem)}
+.fmb-about-corporate .fmb-about-roles{max-width:680px;margin-top:20px}
+.fmb-about-corporate .fmb-about-hero-visual{width:min(520px,100%);min-height:580px;margin-inline:auto;overflow:visible}
+.fmb-about-corporate .fco-portrait-shape{inset:8% 4% 3% 10%;border:0;border-radius:44% 44% 28% 38%/36% 38% 20% 25%;background:radial-gradient(circle at 28% 17%,rgba(226,200,142,.2),transparent 25%),radial-gradient(circle at 75% 72%,rgba(101,63,136,.42),transparent 35%),linear-gradient(155deg,rgba(255,255,255,.06),rgba(41,23,68,.35));box-shadow:none;transform:none}
+.fmb-about-corporate .fco-portrait-shape::before,.fmb-about-corporate .fco-portrait-shape::after{display:none}
+.fmb-about-corporate .fco-founder-portrait{inset:0;align-items:end}
+.fmb-about-corporate .fco-founder-portrait img{width:min(100%,500px);height:100%;max-height:620px;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 28px 48px rgba(0,0,0,.28));-webkit-mask-image:linear-gradient(to bottom,#000 0 96%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0 96%,transparent 100%)}
+
+/* Small nameplate that does not cover the portrait */
+.fmb-about-corporate .fco-founder-nameplate{left:10px;bottom:12px;width:min(255px,62%);padding:13px 15px;display:grid;grid-template-columns:38px minmax(0,1fr);align-items:center;gap:11px;border-radius:18px;background:rgba(22,12,34,.72);box-shadow:0 16px 38px rgba(0,0,0,.22);-webkit-backdrop-filter:blur(22px) saturate(145%);backdrop-filter:blur(22px) saturate(145%)}
+.fmb-about-corporate .fco-note-mark{width:38px;height:38px;margin:0;border-radius:12px}
+.fmb-about-corporate .fco-note-mark img{width:22px;height:25px}
+.fmb-about-corporate .fco-founder-nameplate-copy{min-width:0}
+.fmb-about-corporate .fco-founder-initials{font-size:.58rem;letter-spacing:.19em}
+.fmb-about-corporate .fco-founder-signature{width:100%;max-width:178px;margin-top:5px}
+.fmb-about-corporate .fco-founder-title{margin-top:4px;font-size:.47rem;letter-spacing:.13em}
+
+/* Mandate becomes a seamless information rail */
+.fmb-about-corporate .fmb-about-mandate{background:rgba(255,255,255,.72);box-shadow:none;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+.fmb-about-corporate .fmb-about-mandate article{min-height:118px;padding-block:24px}
+
+/* Profile portrait and story no longer look like two oversized boxes */
+.fmb-about-corporate .fmb-about-section{padding:clamp(72px,7vw,100px) 0}
+.fmb-about-corporate .fmb-about-profile-grid{grid-template-columns:minmax(300px,.72fr) minmax(0,1.28fr);gap:clamp(28px,5vw,66px);align-items:center}
+.fmb-about-corporate .fmb-about-pattern{min-height:540px;overflow:visible;border:0;border-radius:0;background:transparent;box-shadow:none}
+.fmb-about-corporate .fmb-about-pattern:hover{transform:none;box-shadow:none}
+.fmb-about-corporate .fmb-about-pattern::before,.fmb-about-corporate .fmb-about-pattern::after,.fmb-about-corporate .fmb-about-portrait-shape{display:none}
+.fmb-about-corporate .fmb-about-portrait{inset:0;align-items:end;overflow:visible}
+.fmb-about-corporate .fmb-about-portrait img{width:100%;height:100%;max-height:560px;max-width:100%;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 25px 44px rgba(28,14,39,.23))}
+.fmb-about-corporate .fmb-about-pattern figcaption{right:50%;bottom:8px;left:auto;min-width:max-content;padding:9px 13px;border:1px solid rgba(41,23,68,.1);border-radius:999px;background:rgba(255,255,255,.82);color:#6d6570;letter-spacing:.1em;transform:translateX(50%);box-shadow:0 12px 28px rgba(30,18,42,.08);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.fmb-about-corporate .fmb-about-story{min-height:0;padding:clamp(20px,3vw,38px);border:0;border-radius:0;background:transparent;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+.fmb-about-corporate .fmb-about-story h3{max-width:650px;margin-bottom:20px;font-size:clamp(2.25rem,3.6vw,3.65rem)}
+.fmb-about-corporate .fmb-about-story>p:not(.fco-eyebrow){max-width:68ch;font-size:.94rem;line-height:1.76}
+.fmb-about-corporate .fmb-about-signoff{margin-top:20px}
+.fmb-about-corporate .fmb-about-signoff-wordmark{width:min(280px,100%);border-radius:14px}
+
+/* Lighter, professional card system */
+.fmb-about-corporate .fmb-about-expertise-card,.fmb-about-corporate .fmb-about-timeline-item,.fmb-about-corporate .fmb-about-quote-grid blockquote,.fmb-about-corporate .fmb-about-portfolio-card,.fmb-about-corporate .about-booking-card{border-radius:24px}
+.fmb-about-corporate .fmb-about-timeline-item{background:rgba(255,255,255,.82);box-shadow:0 14px 42px rgba(30,18,42,.07)}
+.fmb-about-corporate .fmb-about-section-head{margin-bottom:36px}
+
+@media(max-width:1080px){
+  .fmb-about-corporate .fmb-about-hero .fco-hero-grid{grid-template-columns:minmax(0,1fr) minmax(330px,.72fr)}
+  .fmb-about-corporate .fmb-about-profile-grid{grid-template-columns:minmax(280px,.72fr) minmax(0,1.28fr)}
+}
+
+@media(max-width:860px){
+  .fmb-about-corporate .fco-nav{min-height:66px}
+  .fmb-about-corporate .fco-nav-links{position:absolute;top:100%;right:14px;left:14px;display:flex;gap:8px;padding:10px;overflow-x:auto;border:1px solid rgba(226,200,142,.18);border-radius:0 0 22px 22px;background:rgba(15,9,25,.96);scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .fmb-about-corporate .fco-nav-links::-webkit-scrollbar{display:none}
+  .fmb-about-corporate .fco-nav-links a{min-height:38px;flex:0 0 auto;display:inline-flex;align-items:center;padding:0 11px;border:1px solid rgba(255,255,255,.08);border-radius:999px;background:rgba(255,255,255,.04)}
+  .fmb-about-corporate .fco-nav-cta{min-height:38px!important;padding:0 13px!important}
+  .fmb-about-corporate .fmb-about-hero{padding-top:92px}
+  .fmb-about-corporate .fmb-about-hero .fco-hero-grid{grid-template-columns:1fr;gap:18px}
+  .fmb-about-corporate .fmb-about-hero-copy{order:1}
+  .fmb-about-corporate .fmb-about-hero-visual{order:2;min-height:520px}
+  .fmb-about-corporate .fmb-about-hero h1{font-size:clamp(3rem,13.5vw,4.4rem)}
+  .fmb-about-corporate .fco-founder-nameplate{left:50%;bottom:4px;width:min(260px,78%);transform:translateX(-50%)}
+  .fmb-about-corporate .fmb-about-profile-grid{grid-template-columns:1fr;gap:24px}
+  .fmb-about-corporate .fmb-about-pattern{min-height:500px}
+  .fmb-about-corporate .fmb-about-portrait img{max-height:510px}
+  .fmb-about-corporate .fmb-about-story{padding:18px 4px 0}
+}
+
+@media(max-width:520px){
+  .fmb-about-corporate .fmb-about-header-brand{justify-content:flex-start}
+  .fmb-about-corporate .fmb-about-header-wordmark{width:min(148px,44vw)}
+  .fmb-about-corporate .fco-nav-links{right:7px;left:7px}
+  .fmb-about-corporate .fmb-about-hero{padding-top:86px;padding-bottom:26px}
+  .fmb-about-corporate .fmb-about-hero-visual{min-height:455px}
+  .fmb-about-corporate .fco-founder-portrait img{max-height:485px}
+  .fmb-about-corporate .fco-founder-nameplate{bottom:0;width:min(245px,82%);padding:11px 13px;grid-template-columns:34px minmax(0,1fr)}
+  .fmb-about-corporate .fco-note-mark{width:34px;height:34px}
+  .fmb-about-corporate .fmb-about-pattern{min-height:435px}
+  .fmb-about-corporate .fmb-about-portrait img{max-height:450px}
+  .fmb-about-corporate .fmb-about-pattern figcaption{font-size:.48rem}
+  .fmb-about-corporate .fmb-about-story h3{font-size:clamp(2.1rem,10vw,3rem)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .fmb-about-corporate .fmb-about-pattern,.fmb-about-corporate .fco-founder-portrait img{animation:none!important;transition:none!important}
+}
