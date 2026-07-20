@@ -1,0 +1,398 @@
+/* Yoni homepage promotional section */
+.home-app-promo.yoni-home-promo{
+  position:relative;
+  padding:clamp(54px,8vw,108px) 0;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 7% 14%,rgba(235,225,249,.74),transparent 29%),
+    radial-gradient(circle at 96% 76%,rgba(220,235,214,.64),transparent 31%),
+    linear-gradient(180deg,#fffdfb 0%,#faf8fc 52%,#f8fbf6 100%);
+}
+.home-app-promo.yoni-home-promo::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background-image:linear-gradient(rgba(83,67,95,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(83,67,95,.035) 1px,transparent 1px);
+  background-size:42px 42px;
+  -webkit-mask-image:linear-gradient(to bottom,transparent,#000 20%,#000 80%,transparent);
+  mask-image:linear-gradient(to bottom,transparent,#000 20%,#000 80%,transparent);
+}
+.yoni-promo-shell{
+  position:relative;
+  z-index:1;
+  overflow:hidden;
+  border:1px solid rgba(69,57,77,.08);
+  border-radius:42px;
+  background:rgba(255,255,255,.82);
+  box-shadow:0 34px 100px rgba(56,45,64,.11),inset 0 1px 0 rgba(255,255,255,.92);
+  backdrop-filter:blur(28px) saturate(145%);
+  -webkit-backdrop-filter:blur(28px) saturate(145%);
+}
+.yoni-promo-top{
+  display:grid;
+  grid-template-columns:minmax(0,1.05fr) minmax(360px,.75fr);
+  gap:34px;
+  min-height:620px;
+  padding:clamp(34px,5vw,68px);
+  padding-bottom:34px;
+  align-items:center;
+}
+.yoni-promo-copy{position:relative;z-index:2;max-width:720px}
+.yoni-promo-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  padding:8px 12px;
+  border:1px solid rgba(224,112,56,.15);
+  border-radius:999px;
+  background:#fff7f0;
+  color:#b65a2c;
+  font-size:10px;
+  font-weight:850;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.yoni-promo-badge::before{
+  content:"";
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#70a867;
+  box-shadow:0 0 0 5px rgba(112,168,103,.13);
+}
+.yoni-promo-brand{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-top:24px;
+}
+.yoni-promo-brand img{
+  width:68px;
+  height:68px;
+  border-radius:22px;
+  box-shadow:0 16px 36px rgba(194,100,48,.16);
+}
+.yoni-promo-brand span{display:grid;line-height:1}
+.yoni-promo-brand strong{
+  color:#302a27;
+  font-size:28px;
+  font-weight:830;
+  letter-spacing:-.055em;
+}
+.yoni-promo-brand small{
+  margin-top:7px;
+  color:#8a817b;
+  font-size:10px;
+  font-weight:760;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+.yoni-promo-copy h2{
+  max-width:760px;
+  margin-top:25px;
+  color:#302a27;
+  font-family:"Cormorant Garamond",Georgia,serif;
+  font-size:clamp(52px,6.5vw,88px);
+  font-weight:500;
+  line-height:.92;
+  letter-spacing:-.055em;
+}
+.yoni-promo-copy h2 em{color:#d96d35;font-style:italic}
+.yoni-promo-lede{
+  max-width:680px;
+  margin-top:23px;
+  color:#746b66;
+  font-size:16px;
+  line-height:1.72;
+}
+.yoni-promo-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:28px;
+}
+.yoni-promo-actions .pill{
+  min-height:51px;
+  padding:13px 20px;
+  border-radius:999px;
+}
+.yoni-promo-actions .pill:first-child{
+  background:linear-gradient(135deg,#bd6132,#ee8950);
+  box-shadow:0 13px 31px rgba(189,97,50,.2);
+}
+.yoni-promo-actions .pill.secondary{
+  border-color:rgba(63,54,49,.12);
+  background:rgba(255,255,255,.76);
+  color:#665d58;
+}
+.yoni-promo-assurances{
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+  margin-top:22px;
+}
+.yoni-promo-assurances span{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:8px 10px;
+  border:1px solid rgba(75,65,60,.08);
+  border-radius:999px;
+  background:rgba(250,249,247,.76);
+  color:#817873;
+  font-size:10px;
+  font-weight:720;
+}
+.yoni-promo-assurances i{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#7da672;
+}
+.yoni-promo-visual{
+  position:relative;
+  min-height:510px;
+  display:grid;
+  place-items:center;
+}
+.yoni-promo-orbit{
+  position:absolute;
+  border:1px solid rgba(135,111,164,.13);
+  border-radius:50%;
+  animation:yoniPromoOrbit 18s linear infinite;
+}
+.yoni-promo-orbit.one{width:440px;height:440px}
+.yoni-promo-orbit.two{width:330px;height:330px;animation-direction:reverse;animation-duration:14s}
+.yoni-promo-orbit::before{
+  content:"";
+  position:absolute;
+  top:8%;
+  left:18%;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#bca9dc;
+  box-shadow:0 0 0 8px rgba(188,169,220,.12);
+}
+.yoni-promo-device{
+  position:relative;
+  width:min(340px,88%);
+  min-height:570px;
+  padding:15px;
+  border:1px solid rgba(48,43,41,.12);
+  border-radius:48px;
+  background:#262322;
+  box-shadow:0 36px 76px rgba(40,34,31,.25);
+  transform:rotate(3deg);
+  transition:transform .6s cubic-bezier(.22,1,.36,1);
+}
+.yoni-promo-shell:hover .yoni-promo-device{transform:rotate(0) translateY(-7px)}
+.yoni-promo-device-screen{
+  position:relative;
+  min-height:540px;
+  padding:22px 20px;
+  overflow:hidden;
+  border-radius:37px;
+  background:
+    radial-gradient(circle at 74% 7%,rgba(222,213,240,.8),transparent 28%),
+    radial-gradient(circle at 96% 86%,rgba(217,233,210,.8),transparent 31%),
+    linear-gradient(155deg,#fffefc,#faf7f4 62%,#f5f1f9);
+}
+.yoni-promo-device-island{
+  width:96px;
+  height:25px;
+  margin:0 auto 25px;
+  border-radius:999px;
+  background:#272423;
+}
+.yoni-promo-device-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.yoni-promo-device-head span{display:grid}
+.yoni-promo-device-head strong{color:#3c3531;font-size:16px;letter-spacing:-.035em}
+.yoni-promo-device-head small{margin-top:3px;color:#8f8680;font-size:8px;text-transform:uppercase;letter-spacing:.08em}
+.yoni-promo-device-head img{width:42px;height:42px;border-radius:14px}
+.yoni-promo-device-copy{margin-top:32px}
+.yoni-promo-device-copy small{color:#a26849;font-size:9px;font-weight:850;text-transform:uppercase;letter-spacing:.1em}
+.yoni-promo-device-copy h3{
+  margin-top:9px;
+  color:#39322f;
+  font-family:"Cormorant Garamond",Georgia,serif;
+  font-size:37px;
+  font-weight:500;
+  line-height:.98;
+}
+.yoni-promo-chat{
+  display:grid;
+  gap:8px;
+  margin-top:22px;
+}
+.yoni-promo-chat span{
+  max-width:83%;
+  padding:11px 13px;
+  border-radius:17px 17px 17px 6px;
+  background:#fff;
+  color:#6f6660;
+  box-shadow:0 7px 20px rgba(57,48,42,.06);
+  font-size:10px;
+  line-height:1.45;
+}
+.yoni-promo-chat span:last-child{
+  justify-self:end;
+  border-radius:17px 17px 6px 17px;
+  background:#d97843;
+  color:#fff;
+}
+.yoni-promo-mascot{
+  position:absolute;
+  z-index:3;
+  right:-58px;
+  bottom:-52px;
+  width:245px;
+  filter:drop-shadow(0 24px 26px rgba(64,48,38,.18));
+  animation:yoniPromoFloat 5.8s ease-in-out infinite;
+}
+.yoni-promo-mode{
+  position:absolute;
+  z-index:4;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:10px 12px;
+  border:1px solid rgba(255,255,255,.82);
+  border-radius:999px;
+  background:rgba(255,255,255,.8);
+  color:#645a55;
+  box-shadow:0 12px 28px rgba(52,45,41,.09);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  font-size:9px;
+  font-weight:800;
+}
+.yoni-promo-mode::before{content:"";width:7px;height:7px;border-radius:50%;background:#78a66f}
+.yoni-promo-mode.listen{top:14%;left:-7%}
+.yoni-promo-mode.comfort{right:-7%;top:31%}
+.yoni-promo-capability-area{
+  padding:0 clamp(28px,5vw,68px) clamp(35px,5vw,62px);
+}
+.yoni-promo-section-head{
+  display:grid;
+  grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr);
+  gap:28px;
+  align-items:end;
+  padding-top:34px;
+  border-top:1px solid rgba(67,57,73,.08);
+}
+.yoni-promo-section-head .home-overline{color:#b15c31}
+.yoni-promo-section-head h3{
+  margin-top:8px;
+  color:#342e2b;
+  font-family:"Cormorant Garamond",Georgia,serif;
+  font-size:clamp(36px,4vw,56px);
+  font-weight:500;
+  line-height:1;
+  letter-spacing:-.04em;
+}
+.yoni-promo-section-head>p{
+  color:#7b726d;
+  font-size:14px;
+  line-height:1.72;
+}
+.yoni-capability-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-top:24px;
+}
+.yoni-capability-card{
+  position:relative;
+  min-height:205px;
+  padding:21px;
+  overflow:hidden;
+  border:1px solid rgba(69,59,65,.08);
+  border-radius:26px;
+  background:rgba(255,255,255,.72);
+  box-shadow:0 12px 34px rgba(51,44,48,.045);
+  transition:transform .38s cubic-bezier(.22,1,.36,1),box-shadow .38s ease;
+}
+.yoni-capability-card:hover{transform:translateY(-6px);box-shadow:0 20px 46px rgba(51,44,48,.085)}
+.yoni-capability-card::after{
+  content:"";
+  position:absolute;
+  right:-34px;
+  bottom:-44px;
+  width:110px;
+  height:110px;
+  border-radius:50%;
+  background:var(--yoni-card-tint,#f4eee9);
+}
+.yoni-capability-card:nth-child(2){--yoni-card-tint:#eef5ea}
+.yoni-capability-card:nth-child(3){--yoni-card-tint:#f0ebf8}
+.yoni-capability-card:nth-child(4){--yoni-card-tint:#eaf3f6}
+.yoni-capability-card:nth-child(5){--yoni-card-tint:#fff1e7}
+.yoni-capability-card:nth-child(6){--yoni-card-tint:#edf4eb}
+.yoni-capability-icon{
+  position:relative;
+  z-index:1;
+  display:grid;
+  width:50px;
+  height:50px;
+  place-items:center;
+  border-radius:17px;
+  background:#f8f5f2;
+  color:#b46035;
+}
+.yoni-capability-icon svg{width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.yoni-capability-card h4{position:relative;z-index:1;margin-top:20px;color:#3e3733;font-size:15px;line-height:1.25}
+.yoni-capability-card p{position:relative;z-index:1;margin-top:8px;color:#827973;font-size:11px;line-height:1.55}
+.yoni-promo-safety{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  margin-top:22px;
+  padding:20px 22px;
+  border:1px solid rgba(72,63,68,.08);
+  border-radius:23px;
+  background:linear-gradient(135deg,rgba(247,245,242,.9),rgba(241,246,239,.84));
+}
+.yoni-promo-safety div{display:flex;align-items:flex-start;gap:12px}
+.yoni-promo-safety svg{width:24px;height:24px;flex:0 0 24px;fill:none;stroke:#74976d;stroke-width:1.7}
+.yoni-promo-safety strong{display:block;color:#46403c;font-size:12px}
+.yoni-promo-safety p{margin-top:4px;color:#857d77;font-size:10.5px;line-height:1.55}
+.yoni-promo-safety a{flex:0 0 auto;color:#a85a32;font-size:10.5px;font-weight:820;text-decoration:underline;text-underline-offset:4px}
+@keyframes yoniPromoOrbit{to{transform:rotate(1turn)}}
+@keyframes yoniPromoFloat{50%{transform:translateY(-10px) rotate(-1.5deg)}}
+@media(max-width:980px){
+  .yoni-promo-top{grid-template-columns:1fr;min-height:auto}
+  .yoni-promo-copy{max-width:none}
+  .yoni-promo-visual{min-height:620px}
+  .yoni-promo-device{width:min(360px,82%)}
+  .yoni-promo-section-head{grid-template-columns:1fr}
+  .yoni-capability-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:650px){
+  .home-app-promo.yoni-home-promo{padding:42px 0}
+  .yoni-promo-shell{border-radius:30px}
+  .yoni-promo-top{padding:28px 21px 20px;gap:14px}
+  .yoni-promo-brand img{width:58px;height:58px;border-radius:19px}
+  .yoni-promo-copy h2{font-size:51px}
+  .yoni-promo-lede{font-size:14px}
+  .yoni-promo-actions{display:grid}
+  .yoni-promo-actions .pill{width:100%}
+  .yoni-promo-assurances{display:grid;grid-template-columns:1fr}
+  .yoni-promo-visual{min-height:570px;margin-top:10px}
+  .yoni-promo-device{width:min(320px,88%);min-height:530px;border-radius:43px}
+  .yoni-promo-device-screen{min-height:500px}
+  .yoni-promo-mascot{right:-38px;width:205px}
+  .yoni-promo-mode.listen{left:-2%;top:11%}
+  .yoni-promo-mode.comfort{right:-2%;top:29%}
+  .yoni-promo-capability-area{padding:0 20px 29px}
+  .yoni-promo-section-head{padding-top:27px}
+  .yoni-capability-grid{grid-template-columns:1fr}
+  .yoni-capability-card{min-height:175px}
+  .yoni-promo-safety{align-items:flex-start;flex-direction:column}
+}
+@media(prefers-reduced-motion:reduce){
+  .yoni-promo-orbit,.yoni-promo-mascot{animation:none!important}
+  .yoni-promo-device,.yoni-capability-card{transition:none!important}
+}
