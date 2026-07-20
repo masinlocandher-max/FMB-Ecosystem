@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260721-yoni-live-fix-v20';
+const CACHE_NAME='fmb-app-shell-20260721-yoni-live-fix-v21';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -34,11 +34,13 @@ const APP_SHELL=[
   '/assets/css/site.css',
   '/assets/css/yoni-experience.css',
   '/assets/css/yoni-visual-final.css',
+  '/assets/css/yoni-human-taglish.css',
   '/assets/js/config.js',
   '/assets/js/supabase-client.js',
   '/assets/js/yoni-experience.js',
   '/assets/js/yoni-experience-loader.js',
   '/assets/js/yoni-reply-core.js',
+  '/assets/js/yoni-human-taglish.js',
   '/assets/js/yoni-visual-final.js',
   '/app/assets/yoni/manifest.json',
   '/app/assets/yoni/yoni-master-static.png',
