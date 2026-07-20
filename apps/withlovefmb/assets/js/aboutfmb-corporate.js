@@ -6,11 +6,22 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (!document.querySelector('link[href*="aboutfmb-seamless.css"]')) {
+    const preload = document.createElement('link');
+    preload.rel = 'preload';
+    preload.as = 'style';
+    preload.href = '/assets/css/aboutfmb-seamless.css?v=20260721-responsive-v2';
+    document.head.appendChild(preload);
+
     const stylesheet = document.createElement('link');
     stylesheet.rel = 'stylesheet';
-    stylesheet.href = '/assets/css/aboutfmb-seamless.css?v=20260721-seamless-v1';
+    stylesheet.href = preload.href;
+    stylesheet.fetchPriority = 'high';
     document.head.appendChild(stylesheet);
   }
+
+  page.querySelectorAll('a[href*="/fmb&co/"]').forEach(link => {
+    link.href = link.getAttribute('href').replace('/fmb&co/', '/fmbandco/');
+  });
 
   const navigation = page.querySelector('.fco-nav-links');
   if (navigation) {
@@ -26,6 +37,22 @@
       ['/fmbandco/', 'FMB&CO.'],
       ['#work-with-fmb', 'Work with FMB', 'fco-nav-cta']
     ].map(([href, label, className]) => `<a${className ? ` class="${className}"` : ''} href="${href}"${location.pathname.startsWith(href) && href !== '/' ? ' aria-current="page"' : ''}>${label}</a>`).join('');
+  }
+
+  const mobileDock = page.querySelector('.fco-mobile-dock');
+  if (mobileDock) {
+    const dockLinks = [
+      ['/', 'Home'],
+      ['/aboutfmb/', 'About'],
+      ['/news/', 'News'],
+      ['/ebooks/', 'eBooks'],
+      ['/music/', 'Music']
+    ];
+    mobileDock.setAttribute('aria-label', 'Complete website mobile navigation');
+    mobileDock.innerHTML = dockLinks.map(([href, label]) => {
+      const active = href === '/' ? location.pathname === '/' : location.pathname.startsWith(href);
+      return `<a class="fco-dock-link${active ? ' active' : ''}" href="${href}"${active ? ' aria-current="page"' : ''}><span class="fco-dock-site-dot" aria-hidden="true"></span><span>${label}</span></a>`;
+    }).join('');
   }
 
   const revealTargets = [...page.querySelectorAll('.about-reveal')];
