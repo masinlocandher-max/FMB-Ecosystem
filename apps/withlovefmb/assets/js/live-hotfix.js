@@ -2,13 +2,13 @@
   'use strict';
 
   /* Compatibility markers kept for the repository's accessibility checks: focusableItems, visualViewport. */
-  const release='20260717-music-marquee-v2';
+  const release='20260720-yoni-home-promo-v1';
   const host=location.hostname.toLowerCase();
   const previewMode=new URLSearchParams(location.search).get('experience');
   const isPreviewHost=/\.vercel\.app$/i.test(host)||/^(localhost|127\.0\.0\.1)$/i.test(host);
-  const isAppHost=host==='app.francinemariebautista.com'||host==='mobile.francinemariebautista.com'||(isPreviewHost&&previewMode==='app');
+  const isAppHost=host==='yoni.francinemariebautista.com'||host==='app.francinemariebautista.com'||host==='mobile.francinemariebautista.com'||(isPreviewHost&&previewMode==='app');
 
-  /* Both the new app domain and the legacy mobile domain open the focused app. */
+  /* The Yoni domain and legacy app domains open the focused app. */
   if(isAppHost&&!location.pathname.startsWith('/app/')){
     location.replace(`/app/${location.search}${location.hash}`);
     return;
@@ -51,6 +51,7 @@
     removeAppOnlyWebsiteAssets();
     loadAsset('link',{rel:'stylesheet',href:`/assets/css/website-responsive-parity.css?v=${release}`});
     loadAsset('link',{rel:'stylesheet',href:`/assets/css/centered-partner-marquee.css?v=${release}`});
+    loadAsset('link',{rel:'stylesheet',href:`/assets/css/yoni-home-promo.css?v=${release}`});
   }
 
   function replacePartnerImages(){
@@ -100,6 +101,7 @@
     loadAsset('link',{rel:'stylesheet',href:`/assets/css/apple-mobile.css?v=${release}`});
     loadAsset('link',{rel:'stylesheet',href:`/assets/css/experience-refresh.css?v=${release}`});
     loadAsset('script',{src:`/assets/js/reading-library.js?v=${release}`,defer:'defer'});
+    loadAsset('script',{src:`/assets/js/yoni-home-promo.js?v=${release}`,defer:'defer'});
 
     replacePartnerImages();
     keepBannerMoving();
