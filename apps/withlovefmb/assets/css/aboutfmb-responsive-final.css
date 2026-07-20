@@ -1,0 +1,44 @@
+/* Final responsive and navigation corrections for About FMB */
+.fmb-about-corporate{padding-bottom:0}
+.fmb-about-corporate .fco-nav{position:relative}
+.fmb-about-corporate .fco-nav-links{overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch}
+.about-nav-swipe-cue{display:none}
+.fmb-about-corporate .fco-mobile-dock{display:none}
+.fmb-about-corporate a[href^="/fmb&co/"]{pointer-events:none}
+
+@media(max-width:900px){
+  .fmb-about-corporate .fmb-about-hero .fco-hero-grid{grid-template-columns:1fr}
+  .fmb-about-corporate .fmb-about-hero-copy{order:1}
+  .fmb-about-corporate .fmb-about-hero-visual{order:2;width:min(520px,100%);min-height:500px}
+  .fmb-about-corporate .fmb-about-profile-grid{grid-template-columns:1fr;gap:24px}
+  .fmb-about-corporate .fmb-about-pattern{min-height:490px}
+  .fmb-about-corporate .fmb-about-story{padding-inline:4px}
+}
+
+@media(max-width:860px){
+  .fmb-about-corporate{padding-bottom:calc(74px + env(safe-area-inset-bottom))}
+  .fmb-about-corporate .fco-nav-links{padding-right:58px!important;overscroll-behavior-inline:contain}
+  .fmb-about-corporate .fco-nav-links.has-scroll-overflow:not(.is-scroll-end){mask-image:linear-gradient(90deg,#000 0%,#000 87%,transparent 100%);-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 87%,transparent 100%)}
+  .fmb-about-corporate .fco-nav-links.has-scroll-overflow:not(.is-scroll-end)+.about-nav-swipe-cue{position:absolute;right:14px;top:calc(100% + 10px);z-index:4;display:flex;align-items:center;height:38px;padding:0 7px;background:linear-gradient(90deg,transparent,rgba(15,9,25,.98) 42%);color:#e2c88e;font:750 7px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;pointer-events:none}
+  .fmb-about-corporate .fco-mobile-dock{position:fixed;right:max(8px,env(safe-area-inset-right));bottom:max(8px,env(safe-area-inset-bottom));left:max(8px,env(safe-area-inset-left));z-index:80;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));min-height:58px;padding:6px;border:1px solid rgba(255,255,255,.15);border-radius:20px;background:rgba(20,12,30,.9);box-shadow:0 18px 48px rgba(0,0,0,.28);-webkit-backdrop-filter:blur(28px) saturate(150%);backdrop-filter:blur(28px) saturate(150%)}
+  .fmb-about-corporate .fco-mobile-dock .fco-dock-link{display:flex;min-width:0;align-items:center;justify-content:center;padding:8px 4px;border-radius:14px;color:rgba(255,255,255,.64);font:700 9px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;text-decoration:none}
+  .fmb-about-corporate .fco-mobile-dock .fco-dock-link.active,.fmb-about-corporate .fco-mobile-dock .fco-dock-link[aria-current="page"]{background:rgba(226,200,142,.14);color:#f1d995}
+}
+
+@media(max-width:520px){
+  .fmb-about-corporate .fmb-about-hero{padding-top:calc(82px + env(safe-area-inset-top))}
+  .fmb-about-corporate .fmb-about-hero-visual{min-height:430px}
+  .fmb-about-corporate .fco-founder-portrait img{max-height:455px}
+  .fmb-about-corporate .fco-founder-nameplate{width:min(225px,75%);padding:10px 12px}
+  .fmb-about-corporate .fmb-about-pattern{min-height:420px}
+  .fmb-about-corporate .fmb-about-portrait img{max-height:435px}
+  .fmb-about-corporate .fco-mobile-dock .fco-dock-link{font-size:8px}
+}
+
+@media(max-width:900px) and (orientation:landscape){
+  .fmb-about-corporate .fmb-about-hero .fco-hero-grid{grid-template-columns:minmax(0,1fr) minmax(280px,.75fr)}
+  .fmb-about-corporate .fmb-about-hero-copy{order:1}
+  .fmb-about-corporate .fmb-about-hero-visual{order:2;min-height:430px}
+}
+
+@media(prefers-reduced-motion:reduce){.about-nav-swipe-cue{display:none!important}}
