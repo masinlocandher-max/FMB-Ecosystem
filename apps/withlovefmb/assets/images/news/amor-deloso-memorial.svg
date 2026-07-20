@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">In memoriam, Amor D. Deloso</title>
+  <desc id="desc">A restrained FMB and Company News memorial graphic honoring former Zambales governor Amor D. Deloso.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#120b20"/>
+      <stop offset="0.55" stop-color="#24113d"/>
+      <stop offset="1" stop-color="#08070c"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="70%" cy="28%" r="70%">
+      <stop offset="0" stop-color="#b8954f" stop-opacity="0.28"/>
+      <stop offset="0.5" stop-color="#7d5d2b" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="24"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#glow)"/>
+  <circle cx="1260" cy="210" r="160" fill="#c7a96b" opacity="0.08" filter="url(#soft)"/>
+  <path d="M120 118h1360M120 782h1360" stroke="#c7a96b" stroke-width="2" opacity="0.42"/>
+  <path d="M1190 220c92 0 166 74 166 166s-74 166-166 166-166-74-166-166 74-166 166-166Z" fill="none" stroke="#c7a96b" stroke-width="3" opacity="0.3"/>
+  <path d="M1190 280c58 0 106 48 106 106s-48 106-106 106-106-48-106-106 48-106 106-106Z" fill="none" stroke="#c7a96b" stroke-width="1.5" opacity="0.2"/>
+  <text x="120" y="220" fill="#d5bf8c" font-family="Arial, Helvetica, sans-serif" font-size="28" letter-spacing="9">IN MEMORIAM</text>
+  <text x="120" y="398" fill="#fffaf0" font-family="Georgia, 'Times New Roman', serif" font-size="112" font-weight="600">Amor D. Deloso</text>
+  <text x="124" y="470" fill="#d8cdbb" font-family="Arial, Helvetica, sans-serif" font-size="34" letter-spacing="2">FORMER GOVERNOR OF ZAMBALES</text>
+  <text x="124" y="608" fill="#eee5d8" font-family="Georgia, 'Times New Roman', serif" font-size="44" font-style="italic">A long public life in the memory of a province.</text>
+  <text x="124" y="716" fill="#bcae9b" font-family="Arial, Helvetica, sans-serif" font-size="23" letter-spacing="3">FMB&amp;CO. NEWS · ZAMBALES</text>
+  <text x="1190" y="410" fill="#d5bf8c" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="82">AD</text>
+</svg>
