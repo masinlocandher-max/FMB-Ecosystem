@@ -83,11 +83,13 @@
 
   const YONI_ROOT='/app/assets/yoni/';
   const officialMaster=YONI_ROOT+'yoni-master-static.png';
+  const officialAppIcon=YONI_ROOT+'yoni-app-icon-192.jpg';
   window.YONI_ASSETS={
     ...(window.YONI_ASSETS||{}),
     mascot:officialMaster,
     motion:officialMaster,
     master:officialMaster,
+    appIcon:officialAppIcon,
     dancing:YONI_ROOT+'yoni-dancing.png',
     happy:YONI_ROOT+'yoni-happy-wave.png',
     heart:YONI_ROOT+'yoni-heart-hug.png',
@@ -97,10 +99,11 @@
     meditation:YONI_ROOT+'yoni-meditation.png'
   };
 
-  // Replace document and iPhone install metadata with the approved Yoni file.
+  // Lock browser and iPhone install metadata to the approved square Yoni artwork.
   document.querySelectorAll('link[rel="icon"],link[rel="shortcut icon"],link[rel="apple-touch-icon"]').forEach(link=>{
-    link.href=officialMaster;
-    link.type='image/png';
+    link.href=officialAppIcon;
+    link.type='image/jpeg';
+    if(link.rel==='apple-touch-icon')link.sizes='192x192';
   });
 
   if(!document.querySelector('link[data-yoni-master-preload]')){
@@ -112,7 +115,7 @@
     document.head.appendChild(preload);
   }
 
-  const experienceVersion='20260721-entry-identity-v3';
+  const experienceVersion='20260721-icon-ad-v1';
   if(!document.querySelector('link[data-yoni-experience]')){
     const link=document.createElement('link');
     link.rel='stylesheet';

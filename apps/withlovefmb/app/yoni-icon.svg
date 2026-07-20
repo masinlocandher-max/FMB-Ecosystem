@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
-<title id="title">Yoni app icon</title>
-<desc id="desc">The official Yoni orange bear wearing a green beanie.</desc>
-<defs><clipPath id="yoniIconClip"><rect width="512" height="512" rx="112"/></clipPath></defs>
-<g clip-path="url(#yoniIconClip)">
-  <rect width="512" height="512" fill="#fff6ed"/>
-  <image href="/app/assets/yoni/yoni-master-static.png" x="102" y="-3" width="308" height="518" preserveAspectRatio="xMidYMid meet"/>
-</g>
+  <title id="title">Yoni app icon</title>
+  <desc id="desc">The official Yoni app icon with the orange bear waving beneath the YONI wordmark.</desc>
+  <defs><clipPath id="yoniIconClip"><rect width="512" height="512" rx="112"/></clipPath></defs>
+  <g clip-path="url(#yoniIconClip)">
+    <rect width="512" height="512" fill="#fff6ed"/>
+    <image href="/app/assets/yoni/yoni-app-icon-192.jpg" x="0" y="0" width="512" height="512" preserveAspectRatio="xMidYMid slice"/>
+  </g>
 </svg>

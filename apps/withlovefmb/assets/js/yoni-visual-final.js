@@ -14,7 +14,7 @@ function hydrate(root=document){
   [...(root.querySelectorAll?.('img')||[])].forEach(img=>{
     const current=img.getAttribute('src')||'',key=img.dataset.yoniAsset;
     if(key&&window.YONI_ASSETS[key])img.src=window.YONI_ASSETS[key];
-    else if(/\/app\/(yoni-mascot|yoni-icon)\.svg(?:\?|$)/i.test(current))img.src=A.master;
+    else if(/\/app\/yoni-mascot\.svg(?:\?|$)/i.test(current))img.src=A.master;
     if(img.src.includes('/app/assets/yoni/')){img.decoding='async';img.style.objectFit='contain';if(!img.closest('.app-launch-card,.yoni-final-loader'))img.loading='lazy'}
   });
 }

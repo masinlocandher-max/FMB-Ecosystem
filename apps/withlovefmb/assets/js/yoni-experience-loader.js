@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-const version='20260721-live-fix-2';
+const version='20260721-icon-ad-v1';
 const addStyle=(href,marker)=>{if(document.querySelector(`link[${marker}]`))return;const link=document.createElement('link');link.rel='stylesheet';link.href=`${href}?v=${version}`;link.setAttribute(marker,'true');document.head.appendChild(link)};
 addStyle('/assets/css/yoni-visual-final.css','data-yoni-visual-final');
 addStyle('/assets/css/yoni-human-taglish.css','data-yoni-human-taglish');

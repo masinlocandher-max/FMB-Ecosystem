@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260721-yoni-entry-identity-v22';
+const CACHE_NAME='fmb-app-shell-20260721-yoni-icon-ad-v23';
 const YONI_HOSTS=new Set(['yoni.francinemariebautista.com','app.francinemariebautista.com']);
 const PUBLIC_PAGES=new Set([
   '/',
@@ -46,6 +46,7 @@ const APP_SHELL=[
   '/assets/js/yoni-human-taglish.js',
   '/assets/js/yoni-visual-final.js',
   '/app/assets/yoni/manifest.json',
+  '/app/assets/yoni/yoni-app-icon-192.jpg',
   '/app/assets/yoni/yoni-master-static.png',
   '/app/assets/yoni/yoni-dancing.png',
   '/app/assets/yoni/yoni-happy-wave.png',
