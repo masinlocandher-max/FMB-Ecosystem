@@ -1,16 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 620" role="img" aria-labelledby="title desc">
-<title>Yoni</title><desc>An orange bear wearing a green beanie.</desc>
-<defs><linearGradient id="fur" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ff9c50"/><stop offset="1" stop-color="#f47721"/></linearGradient><filter id="s" x="-30%" y="-30%" width="160%" height="180%"><feDropShadow dx="0" dy="20" stdDeviation="16" flood-color="#8d3b12" flood-opacity=".18"/></filter></defs>
-<ellipse cx="260" cy="574" rx="165" ry="24" fill="#8d3b12" opacity=".1"/>
-<g filter="url(#s)">
-<circle cx="155" cy="165" r="73" fill="url(#fur)"/><circle cx="365" cy="165" r="73" fill="url(#fur)"/><circle cx="155" cy="165" r="34" fill="#fff0e3"/><circle cx="365" cy="165" r="34" fill="#fff0e3"/>
-<path d="M95 308c0-145 70-228 165-228s165 83 165 228v122c0 88-58 140-165 140S95 518 95 430z" fill="url(#fur)"/>
-<ellipse cx="260" cy="420" rx="112" ry="120" fill="#fff0e3"/>
-<ellipse cx="260" cy="250" rx="98" ry="80" fill="#873b17"/><ellipse cx="260" cy="278" rx="77" ry="54" fill="#fffaf5"/>
-<ellipse cx="260" cy="226" rx="37" ry="29" fill="#2f241f"/><circle cx="205" cy="192" r="13" fill="#2f241f"/><circle cx="315" cy="192" r="13" fill="#2f241f"/><circle cx="201" cy="188" r="4" fill="#fff"/><circle cx="311" cy="188" r="4" fill="#fff"/>
-<path d="M222 283c24 22 52 22 76 0" fill="none" stroke="#2f241f" stroke-width="11" stroke-linecap="round"/>
-<path d="M127 394c-28 39-33 82-11 101 20 17 54 3 75-27" fill="none" stroke="#e76618" stroke-width="56" stroke-linecap="round"/><path d="M393 394c28 39 33 82 11 101-20 17-54 3-75-27" fill="none" stroke="#e76618" stroke-width="56" stroke-linecap="round"/>
-<path d="M179 545c-14 18-8 42 14 46 22 4 43-9 47-29" fill="#e76618"/><path d="M341 545c14 18 8 42-14 46-22 4-43-9-47-29" fill="#e76618"/>
-</g>
-<g><path d="M185 108c11-68 36-105 75-105s64 37 75 105z" fill="#4e9e4a"/><rect x="177" y="91" width="166" height="45" rx="22" fill="#3d843b"/><circle cx="260" cy="8" r="28" fill="#72b66e"/><path d="M216 76c26 13 62 13 88 0" fill="none" stroke="#75b970" stroke-width="11" stroke-linecap="round" opacity=".65"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 482 600" role="img" aria-labelledby="title desc">
+<title id="title">Yoni</title>
+<desc id="desc">The official Yoni orange bear wearing a green beanie.</desc>
+<image href="/app/assets/yoni/yoni-master-static.png" x="0" y="0" width="482" height="600" preserveAspectRatio="xMidYMid meet"/>
 </svg>

@@ -1,5 +1,18 @@
 (function(){
   'use strict';
+  const YONI_HOST='yoni.francinemariebautista.com';
+  const LEGACY_APP_HOST='app.francinemariebautista.com';
+  const hostname=window.location.hostname;
+  const pathname=window.location.pathname;
+  const isDedicatedYoniHost=hostname===YONI_HOST||hostname===LEGACY_APP_HOST;
+
+  // Hard routing fallback. Vercel also redirects these hosts, but this prevents
+  // the main FMB website from remaining visible if a stale edge route is served.
+  if(isDedicatedYoniHost&&(pathname==='/'||pathname==='/index.html')){
+    window.location.replace('/app/');
+    return;
+  }
+
   const config=window.FMB_CONFIG||{};
   const configured=Boolean(config.SUPABASE_URL&&config.SUPABASE_ANON_KEY&&window.supabase);
   const clients=new Map();
@@ -65,17 +78,16 @@
     getActiveProfile
   };
 
-  const YONI_HOST='yoni.francinemariebautista.com';
-  const LEGACY_APP_HOST='app.francinemariebautista.com';
-  const isYoni=window.location.hostname===YONI_HOST||window.location.hostname===LEGACY_APP_HOST||/^\/app(?:\/|$)/.test(window.location.pathname);
+  const isYoni=isDedicatedYoniHost||/^\/app(?:\/|$)/.test(pathname);
   if(!isYoni)return;
 
   const YONI_ROOT='/app/assets/yoni/';
+  const officialMaster=YONI_ROOT+'yoni-master-static.png';
   window.YONI_ASSETS={
     ...(window.YONI_ASSETS||{}),
-    mascot:YONI_ROOT+'yoni-master-static.png',
-    motion:YONI_ROOT+'yoni-master-static.png',
-    master:YONI_ROOT+'yoni-master-static.png',
+    mascot:officialMaster,
+    motion:officialMaster,
+    master:officialMaster,
     dancing:YONI_ROOT+'yoni-dancing.png',
     happy:YONI_ROOT+'yoni-happy-wave.png',
     heart:YONI_ROOT+'yoni-heart-hug.png',
@@ -85,16 +97,22 @@
     meditation:YONI_ROOT+'yoni-meditation.png'
   };
 
+  // Replace document and iPhone install metadata with the approved Yoni file.
+  document.querySelectorAll('link[rel="icon"],link[rel="shortcut icon"],link[rel="apple-touch-icon"]').forEach(link=>{
+    link.href=officialMaster;
+    link.type='image/png';
+  });
+
   if(!document.querySelector('link[data-yoni-master-preload]')){
     const preload=document.createElement('link');
     preload.rel='preload';
     preload.as='image';
-    preload.href=window.YONI_ASSETS.master;
+    preload.href=officialMaster;
     preload.dataset.yoniMasterPreload='true';
     document.head.appendChild(preload);
   }
 
-  const experienceVersion='20260721-live-fix-1';
+  const experienceVersion='20260721-entry-identity-v3';
   if(!document.querySelector('link[data-yoni-experience]')){
     const link=document.createElement('link');
     link.rel='stylesheet';

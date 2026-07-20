@@ -1,4 +1,5 @@
-const CACHE_NAME='fmb-app-shell-20260721-yoni-live-fix-v21';
+const CACHE_NAME='fmb-app-shell-20260721-yoni-entry-identity-v22';
+const YONI_HOSTS=new Set(['yoni.francinemariebautista.com','app.francinemariebautista.com']);
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -26,6 +27,8 @@ const APP_SHELL=[
   '/app/app.js',
   '/app/access.js',
   '/app/manifest.webmanifest',
+  '/app/yoni-icon.svg',
+  '/app/yoni-mascot.svg',
   '/app/install/',
   '/app/install/index.html',
   '/app/install/install.css',
@@ -94,7 +97,8 @@ self.addEventListener('fetch',event=>{
         return response;
       }catch{
         const cached=await caches.match(request,{ignoreSearch:true});
-        return cached||await caches.match(url.pathname.startsWith('/app/')?'/app/index.html':'/index.html')||Response.error();
+        const yoniNavigation=YONI_HOSTS.has(url.hostname)||url.pathname.startsWith('/app/');
+        return cached||await caches.match(yoniNavigation?'/app/index.html':'/index.html')||Response.error();
       }
     })());
     return;

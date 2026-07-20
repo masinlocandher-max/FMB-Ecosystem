@@ -4,6 +4,32 @@
   "outputDirectory": "dist",
   "cleanUrls": false,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "destination": "/app/",
+      "permanent": false
+    },
+    {
+      "source": "/index.html",
+      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "destination": "/app/",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "app.francinemariebautista.com" }],
+      "destination": "/app/",
+      "permanent": false
+    },
+    {
+      "source": "/index.html",
+      "has": [{ "type": "host", "value": "app.francinemariebautista.com" }],
+      "destination": "/app/",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/",

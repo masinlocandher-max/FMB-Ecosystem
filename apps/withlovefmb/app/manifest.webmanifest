@@ -2,6 +2,7 @@
   "name": "Yoni Mental Health Companion",
   "short_name": "Yoni",
   "description": "A gentle digital companion for private check-ins, journaling, venting, grounding, supportive reading, and finding human support.",
+  "id": "/app/",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -9,6 +10,12 @@
   "background_color": "#fbfaf8",
   "theme_color": "#fbfaf8",
   "icons": [
+    {
+      "src": "/app/assets/yoni/yoni-master-static.png",
+      "sizes": "337x420",
+      "type": "image/png",
+      "purpose": "any"
+    },
     {
       "src": "/app/yoni-icon.svg",
       "sizes": "any",

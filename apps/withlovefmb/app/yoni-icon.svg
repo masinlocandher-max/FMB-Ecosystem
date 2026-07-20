@@ -1,20 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
-<title>Yoni app icon</title>
-<defs>
-  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fffaf5"/><stop offset="1" stop-color="#efe8ff"/></linearGradient>
-  <linearGradient id="fur" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9b4f"/><stop offset="1" stop-color="#f47721"/></linearGradient>
-  <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#7b2e08" flood-opacity=".18"/></filter>
-</defs>
-<rect width="512" height="512" rx="112" fill="url(#bg)"/>
-<circle cx="103" cy="92" r="18" fill="#ffc18f" opacity=".7"/><circle cx="423" cy="111" r="11" fill="#9c82d9" opacity=".45"/>
-<g filter="url(#shadow)">
-  <circle cx="171" cy="174" r="61" fill="url(#fur)"/><circle cx="341" cy="174" r="61" fill="url(#fur)"/>
-  <circle cx="171" cy="174" r="29" fill="#fff0e3"/><circle cx="341" cy="174" r="29" fill="#fff0e3"/>
-  <path d="M126 260c0-105 58-166 130-166s130 61 130 166v91c0 66-48 105-130 105s-130-39-130-105z" fill="url(#fur)"/>
-  <ellipse cx="256" cy="337" rx="88" ry="92" fill="#fff0e3"/><ellipse cx="256" cy="238" rx="77" ry="64" fill="#8a3d16"/><ellipse cx="256" cy="260" rx="61" ry="44" fill="#fffaf5"/>
-  <ellipse cx="256" cy="220" rx="31" ry="24" fill="#30231d"/><circle cx="213" cy="193" r="11" fill="#30231d"/><circle cx="299" cy="193" r="11" fill="#30231d"/>
-  <circle cx="209" cy="189" r="4" fill="#fff"/><circle cx="295" cy="189" r="4" fill="#fff"/><path d="M226 264c19 18 41 18 60 0" fill="none" stroke="#30231d" stroke-width="10" stroke-linecap="round"/>
-  <path d="M158 333c-18 25-23 54-10 69 13 16 38 10 54-9" fill="none" stroke="#e96518" stroke-width="43" stroke-linecap="round"/><path d="M354 333c18 25 23 54 10 69-13 16-38 10-54-9" fill="none" stroke="#e96518" stroke-width="43" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+<title id="title">Yoni app icon</title>
+<desc id="desc">The official Yoni orange bear wearing a green beanie.</desc>
+<defs><clipPath id="yoniIconClip"><rect width="512" height="512" rx="112"/></clipPath></defs>
+<g clip-path="url(#yoniIconClip)">
+  <rect width="512" height="512" fill="#fff6ed"/>
+  <image href="/app/assets/yoni/yoni-master-static.png" x="102" y="-3" width="308" height="518" preserveAspectRatio="xMidYMid meet"/>
 </g>
-<g><path d="M196 117c9-50 28-77 60-77s51 27 60 77z" fill="#4d9d4a"/><rect x="191" y="104" width="130" height="36" rx="18" fill="#3e873c"/><circle cx="256" cy="38" r="22" fill="#72b56e"/><path d="M222 91c20 9 48 9 68 0" fill="none" stroke="#72b56e" stroke-width="9" stroke-linecap="round" opacity=".7"/></g>
 </svg>
