@@ -69,21 +69,57 @@
   const LEGACY_APP_HOST='app.francinemariebautista.com';
   const isYoni=window.location.hostname===YONI_HOST||window.location.hostname===LEGACY_APP_HOST||/^\/app(?:\/|$)/.test(window.location.pathname);
   if(!isYoni)return;
-  const version='20260720-2';
+
+  const YONI_ROOT='/app/assets/yoni/';
+  window.YONI_ASSETS={
+    ...(window.YONI_ASSETS||{}),
+    mascot:YONI_ROOT+'yoni-master-static.png',
+    motion:YONI_ROOT+'yoni-master-static.png',
+    master:YONI_ROOT+'yoni-master-static.png',
+    dancing:YONI_ROOT+'yoni-dancing.png',
+    happy:YONI_ROOT+'yoni-happy-wave.png',
+    heart:YONI_ROOT+'yoni-heart-hug.png',
+    sleepy:YONI_ROOT+'yoni-sleepy-rest.png',
+    journal:YONI_ROOT+'yoni-journal.png',
+    music:YONI_ROOT+'yoni-music.png',
+    meditation:YONI_ROOT+'yoni-meditation.png'
+  };
+
+  if(!document.querySelector('link[data-yoni-master-preload]')){
+    const preload=document.createElement('link');
+    preload.rel='preload';
+    preload.as='image';
+    preload.href=window.YONI_ASSETS.master;
+    preload.dataset.yoniMasterPreload='true';
+    document.head.appendChild(preload);
+  }
+
+  const experienceVersion='20260721-live-fix-1';
   if(!document.querySelector('link[data-yoni-experience]')){
     const link=document.createElement('link');
     link.rel='stylesheet';
-    link.href=`/assets/css/yoni-experience.css?v=${version}`;
+    link.href=`/assets/css/yoni-experience.css?v=${experienceVersion}`;
     link.dataset.yoniExperience='true';
     document.head.appendChild(link);
   }
-  const loadExperience=()=>{
-    if(document.querySelector('script[data-yoni-experience]'))return;
-    const script=document.createElement('script');
-    script.src=`/assets/js/yoni-experience.js?v=${version}`;
-    script.dataset.yoniExperience='true';
-    document.body.appendChild(script);
+
+  function loadScript(src,marker){
+    return new Promise(resolve=>{
+      if(document.querySelector(`script[${marker}]`)){resolve();return}
+      const script=document.createElement('script');
+      script.src=src;
+      script.setAttribute(marker,'true');
+      script.onload=resolve;
+      script.onerror=resolve;
+      document.body.appendChild(script);
+    });
+  }
+
+  const loadExperience=async()=>{
+    await loadScript(`/assets/js/yoni-experience.js?v=${experienceVersion}`,'data-yoni-experience');
+    await loadScript(`/assets/js/yoni-experience-loader.js?v=${experienceVersion}`,'data-yoni-final-loader');
   };
+
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',loadExperience,{once:true});
   else loadExperience();
 })();
