@@ -64,4 +64,26 @@
     showToast,
     getActiveProfile
   };
+
+  const YONI_HOST='yoni.francinemariebautista.com';
+  const LEGACY_APP_HOST='app.francinemariebautista.com';
+  const isYoni=window.location.hostname===YONI_HOST||window.location.hostname===LEGACY_APP_HOST||/^\/app(?:\/|$)/.test(window.location.pathname);
+  if(!isYoni)return;
+  const version='20260720-1';
+  if(!document.querySelector('link[data-yoni-experience]')){
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href=`/assets/css/yoni-experience.css?v=${version}`;
+    link.dataset.yoniExperience='true';
+    document.head.appendChild(link);
+  }
+  const loadExperience=()=>{
+    if(document.querySelector('script[data-yoni-experience]'))return;
+    const script=document.createElement('script');
+    script.src=`/assets/js/yoni-experience.js?v=${version}`;
+    script.dataset.yoniExperience='true';
+    document.body.appendChild(script);
+  };
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',loadExperience,{once:true});
+  else loadExperience();
 })();

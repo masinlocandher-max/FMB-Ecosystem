@@ -22,8 +22,24 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Validate links, assets, HTML and JSON
-        run: python scripts/quality_check.py
+      - name: Generate links, assets, HTML and JSON report
+        continue-on-error: true
+        run: |
+          set +e
+          python scripts/quality_check_current.py > quality-report.txt 2>&1
+          echo $? > quality-status.txt
+          cat quality-report.txt
+      - name: Upload quality report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: yoni-quality-report
+          path: |
+            apps/withlovefmb/quality-report.txt
+            apps/withlovefmb/quality-status.txt
+      - name: Enforce quality result
+        run: |
+          test "$(cat quality-status.txt)" = "0"
       - name: Validate JavaScript syntax
         run: |
           find . -type f -name '*.js' -not -path './.git/*' -print0 | while IFS= read -r -d '' file; do
