@@ -1,4 +1,4 @@
-import { cp, mkdir, rm, stat } from 'node:fs/promises';
+import { cp, mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
@@ -19,6 +19,19 @@ async function requireFile(filePath) {
   if (!details.isFile()) {
     throw new Error(`Expected a file at ${filePath}`);
   }
+}
+
+async function injectStylesheet(relativePagePath, stylesheetHref) {
+  const pagePath = path.join(outputDirectory, relativePagePath);
+  const html = await readFile(pagePath, 'utf8');
+  if (html.includes(`href="${stylesheetHref}"`)) return;
+
+  const stylesheet = `<link rel="stylesheet" href="${stylesheetHref}">`;
+  if (!html.includes('</head>')) {
+    throw new Error(`Expected </head> in ${relativePagePath}`);
+  }
+
+  await writeFile(pagePath, html.replace('</head>', `${stylesheet}\n</head>`), 'utf8');
 }
 
 function run(command, args, cwd) {
@@ -45,6 +58,13 @@ await mkdir(privateSitesDirectory, { recursive: true });
 
 await cp(personalWebsite, outputDirectory, { recursive: true });
 await cp(senzWebsite, path.join(privateSitesDirectory, 'senz'), { recursive: true });
+
+await Promise.all([
+  injectStylesheet('news/index.html', '/assets/css/fmb-sitewide-gateway.css?v=20260721-responsive-v2'),
+  injectStylesheet('music/index.html', '/assets/css/fmb-sitewide-gateway.css?v=20260721-responsive-v2'),
+  injectStylesheet('ebooks/index.html', '/assets/css/fmb-sitewide-gateway.css?v=20260721-responsive-v2'),
+  injectStylesheet('aboutfmb/index.html', '/assets/css/aboutfmb-seamless.css?v=20260721-responsive-v2'),
+]);
 
 run('npm', ['ci'], cognitaWebsite);
 run('npm', ['run', 'build'], cognitaWebsite);
