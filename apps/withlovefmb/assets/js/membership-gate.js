@@ -3,9 +3,33 @@
 
   document.documentElement.classList.add('membership-checking');
 
-  const registerUrl='/auth.html#signup';
-  const signInUrl='/auth.html#signin';
   const libraryUrl='/ebooks/';
+  const emailAccessSrc='/assets/js/product-email-access.js?v=20260721-email-only-v1';
+  let emailAccessPromise=null;
+
+  function ensureEmailAccess(){
+    if(window.FMBProductEmailAccess)return Promise.resolve(window.FMBProductEmailAccess);
+    if(emailAccessPromise)return emailAccessPromise;
+    emailAccessPromise=new Promise((resolve,reject)=>{
+      const existing=document.querySelector(`script[src="${emailAccessSrc}"]`);
+      const done=()=>window.FMBProductEmailAccess?resolve(window.FMBProductEmailAccess):reject(new Error('Email access unavailable'));
+      if(existing){existing.addEventListener('load',done,{once:true});existing.addEventListener('error',reject,{once:true});return}
+      const script=document.createElement('script');
+      script.src=emailAccessSrc;
+      script.addEventListener('load',done,{once:true});
+      script.addEventListener('error',reject,{once:true});
+      document.body.appendChild(script);
+    });
+    return emailAccessPromise;
+  }
+
+  function openEmailAccess(){
+    ensureEmailAccess().then(access=>access.open({mode:'reading'})).catch(()=>{
+      const gate=document.querySelector('.fmbandco-continue-gate');
+      const status=gate?.querySelector('.email-access-fallback');
+      if(status)status.textContent='The secure email form could not open. Please refresh the page and try again.';
+    });
+  }
 
   function addProductBranding(){
     document.body.classList.add('fmbandco-ebook-product');
@@ -24,10 +48,10 @@
       .fmbandco-preview-note .text-link{font-weight:800;color:#5b2674}
       .fmbandco-continue-gate{text-align:left}
       .fmbandco-continue-gate .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
-      .fmbandco-continue-gate .pill{display:inline-flex;min-height:46px;align-items:center;justify-content:center;padding:11px 18px;border-radius:999px;text-decoration:none;font-weight:800;background:linear-gradient(135deg,#54206f,#7b4a98);color:#fff}
-      .fmbandco-continue-gate .pill.secondary{border:1px solid rgba(84,32,111,.2);background:#fff;color:#54206f}
+      .fmbandco-continue-gate .pill{display:inline-flex;min-height:46px;align-items:center;justify-content:center;padding:11px 18px;border:0;border-radius:999px;text-decoration:none;font:800 14px/1 system-ui;background:linear-gradient(135deg,#54206f,#7b4a98);color:#fff;cursor:pointer}
       .fmbandco-preview-hidden{display:none!important}
       .fmbandco-locked-toc{opacity:.56}
+      .email-access-fallback{min-height:20px;font-size:12px}
       @media(max-width:640px){.fmbandco-preview-note{align-items:flex-start}.fmbandco-continue-gate .pill{width:100%}}
     `;
     document.head.appendChild(style);
@@ -77,8 +101,8 @@
     const note=document.createElement('section');
     note.className='fmbandco-preview-note';
     note.innerHTML=member
-      ? '<div><strong>Complete reading unlocked.</strong><p>You are signed in and can continue through the full FMB&CO. eBook.</p></div><a class="text-link" href="/ebooks/">Return to the eBook Library →</a>'
-      : '<div><strong>Public preview open.</strong><p>Everyone can read the opening chapter. Register only when you are ready to continue.</p></div><a class="text-link" href="/ebooks/">Browse all FMB&CO. eBooks →</a>';
+      ? '<div><strong>Complete reading unlocked.</strong><p>Your email link is verified and you can continue through the full FMB&CO. eBook.</p></div><a class="text-link" href="/ebooks/">Return to the eBook Library →</a>'
+      : '<div><strong>Public preview open.</strong><p>Everyone can read the opening chapter. Enter your email only when you are ready to continue.</p></div><a class="text-link" href="/ebooks/">Browse all FMB&CO. eBooks →</a>';
     hero.insertAdjacentElement('afterend',note);
   }
 
@@ -110,20 +134,21 @@
       const gate=document.createElement('section');
       gate.className='fmbandco-continue-gate';
       gate.id='continue-reading';
-      gate.innerHTML='<p class="eyebrow">Continue this FMB&CO. eBook</p><h2>Register to keep reading.</h2><p>You have reached the end of the public preview. Create a free account or sign in to unlock the remaining chapters and return to your reading later.</p><div class="actions"><a class="pill" href="'+registerUrl+'">Register to continue</a><a class="pill secondary" href="'+signInUrl+'">Sign in</a></div>';
+      gate.innerHTML='<p class="eyebrow">Continue this FMB&CO. eBook</p><h2>Enter your email to continue reading.</h2><p>New here? Enter your email to register. Registered before? Enter the same email address you used to register. We will send a secure link that opens the remaining chapters without asking for a password.</p><div class="actions"><button class="pill" type="button" data-open-email-reading>Enter email to continue</button></div><p class="email-access-fallback" role="status" aria-live="polite"></p>';
+      gate.querySelector('[data-open-email-reading]').addEventListener('click',openEmailAccess);
       if(previewChapter)previewChapter.insertAdjacentElement('afterend',gate);
       else document.querySelector('.reading-hero,.reader-cover')?.insertAdjacentElement('afterend',gate);
     }
 
     const hiddenIds=new Set(allChapters.slice(1).map(chapter=>chapter.id).filter(Boolean));
-    document.querySelectorAll('.reading-toc a[href^="#"]').forEach(link=>{
+    document.querySelectorAll('.reading-toc a[href^="#"],.toc a[href^="#"]').forEach(link=>{
       const id=link.getAttribute('href').slice(1);
       if(!hiddenIds.has(id))return;
       link.classList.add('fmbandco-locked-toc');
-      link.setAttribute('aria-label',(link.textContent||'Chapter').trim()+' — registration required');
+      link.setAttribute('aria-label',(link.textContent||'Chapter').trim()+' — email registration required');
       link.addEventListener('click',event=>{
         event.preventDefault();
-        document.getElementById('continue-reading')?.scrollIntoView({behavior:'smooth',block:'center'});
+        openEmailAccess();
       });
     });
   }
@@ -135,6 +160,7 @@
 
   function boot(){
     addProductBranding();
+    ensureEmailAccess().catch(()=>{});
     if(window.FMB_MEMBER){resolveAccess(Boolean(window.FMB_MEMBER.isMember));return}
     let settled=false;
     const done=value=>{
