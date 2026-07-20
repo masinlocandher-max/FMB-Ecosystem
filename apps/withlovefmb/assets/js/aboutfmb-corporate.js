@@ -25,18 +25,28 @@
 
   const navigation = page.querySelector('.fco-nav-links');
   if (navigation) {
-    navigation.setAttribute('aria-label', 'Complete website navigation');
-    navigation.innerHTML = [
+    const menu = [
       ['/', 'Home'],
       ['/aboutfmb/', 'About FMB'],
-      ['/news/', 'News'],
-      ['/ebooks/', 'eBooks'],
+      ['/withlovefmb/', 'With love, FMB'],
       ['/music/', 'Music'],
-      ['/communityengagements/', 'Community'],
-      ['/gethelp/', 'Get Help'],
-      ['/fmbandco/', 'FMB&CO.'],
-      ['#work-with-fmb', 'Work with FMB', 'fco-nav-cta']
-    ].map(([href, label, className]) => `<a${className ? ` class="${className}"` : ''} href="${href}"${location.pathname.startsWith(href) && href !== '/' ? ' aria-current="page"' : ''}>${label}</a>`).join('');
+      ['/ebooks/', 'eBook'],
+      ['/news/', 'News'],
+      ['/fmb&co/', 'FMB&CO.'],
+      ['/aboutfmb/#work-with-fmb', 'Reception Desk', 'fco-nav-cta']
+    ];
+    navigation.setAttribute('aria-label', 'Main website navigation');
+    navigation.innerHTML = menu.map(([href, label, className]) => {
+      const onReceptionDesk = location.pathname.startsWith('/aboutfmb') && location.hash === '#work-with-fmb';
+      const current = label === 'Reception Desk'
+        ? onReceptionDesk
+        : label === 'About FMB'
+          ? location.pathname.startsWith('/aboutfmb') && !onReceptionDesk
+          : href === '/'
+            ? location.pathname === '/'
+            : location.pathname.startsWith(href.split('#')[0]);
+      return `<a${className ? ` class="${className}"` : ''} href="${href}"${current ? ' aria-current="page"' : ''}>${label}</a>`;
+    }).join('');
   }
 
   const mobileDock = page.querySelector('.fco-mobile-dock');

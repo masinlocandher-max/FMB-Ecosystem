@@ -2,11 +2,22 @@
   'use strict';
 
   /* Compatibility markers kept for the repository's accessibility checks: focusableItems, visualViewport. */
-  const release='20260720-yoni-home-promo-v1';
+  const release='20260721-community-hub-nav-v1';
   const host=location.hostname.toLowerCase();
   const previewMode=new URLSearchParams(location.search).get('experience');
   const isPreviewHost=/\.vercel\.app$/i.test(host)||/^(localhost|127\.0\.0\.1)$/i.test(host);
   const isAppHost=host==='yoni.francinemariebautista.com'||host==='app.francinemariebautista.com'||host==='mobile.francinemariebautista.com'||(isPreviewHost&&previewMode==='app');
+
+  const MAIN_MENU=[
+    {href:'/',label:'Home',description:'Return to the official FMB bulletin and latest announcements.'},
+    {href:'/aboutfmb/',label:'About FMB',description:'Meet Francine Marie Bautista and explore her work and public mission.'},
+    {href:'/withlovefmb/',label:'With love, FMB',description:'Community service, volunteering, public-help resources, Yoni, and future people-first apps.'},
+    {href:'/music/',label:'Music',description:'Listen to original FMB music and digital releases.'},
+    {href:'/ebooks/',label:'eBook',description:'Open the FMB reading library and public guides.'},
+    {href:'/news/',label:'News',description:'Read verified updates, context, reporting, and reflection.'},
+    {href:'/fmb&co/',label:'FMB&CO.',description:'Explore the company and its SENZ and Cognita portfolio.'},
+    {href:'/aboutfmb/#work-with-fmb',label:'Reception Desk',description:'Send work, partnership, advertising, booking, and coordination inquiries.'}
+  ];
 
   /* The Yoni domain and legacy app domains open the focused app. */
   if(isAppHost&&!location.pathname.startsWith('/app/')){
@@ -20,6 +31,32 @@
     const element=document.createElement(tag);
     Object.entries(attrs).forEach(([name,value])=>element.setAttribute(name,value));
     document.head.appendChild(element);
+  }
+
+  function menuItemIsCurrent(item){
+    const path=location.pathname.replace(/\/index\.html$/,'/').replace(/\/+$/,'')||'/';
+    if(item.href==='/')return path==='/';
+    if(item.label==='Reception Desk')return path==='/aboutfmb'&&location.hash==='#work-with-fmb';
+    const target=item.href.split('#')[0].replace(/\/+$/,'');
+    return target&&path.startsWith(target);
+  }
+
+  function installMainMenu(){
+    const nav=document.getElementById('navLinks');
+    if(nav){
+      nav.setAttribute('aria-label','Main website navigation');
+      nav.innerHTML=`<div class="nav-menu-intro"><strong>FMB Website</strong><span>Each main page has one clear purpose. Community work, volunteering, Yoni, and public-help resources are inside With love, FMB.</span></div>${MAIN_MENU.map(item=>`<a class="nav-menu-link" href="${item.href}"${menuItemIsCurrent(item)?' aria-current="page"':''}><span class="nav-link-label">${item.label}</span><small>${item.description}</small></a>`).join('')}<div class="nav-mobile-actions"><a class="pill secondary nav-signin-link" href="https://yoni.francinemariebautista.com/app/?auth=signin">Sign in to Yoni</a><a class="pill nav-install-link" href="https://yoni.francinemariebautista.com/app/install/">Install Yoni</a></div>`;
+    }
+
+    document.querySelectorAll('.fmb-site-links').forEach(gateway=>{
+      gateway.setAttribute('aria-label','Main website navigation');
+      gateway.innerHTML=MAIN_MENU.map(item=>`<a href="${item.href}"${menuItemIsCurrent(item)?' aria-current="page"':''}>${item.label}</a>`).join('');
+    });
+
+    document.querySelectorAll('.fmb-footer-site-map nav').forEach(footerNav=>{
+      footerNav.setAttribute('aria-label','Main website footer navigation');
+      footerNav.innerHTML=MAIN_MENU.map(item=>`<a href="${item.href}">${item.label}</a>`).join('');
+    });
   }
 
   function removeAppOnlyWebsiteAssets(){
@@ -97,6 +134,7 @@
     if(isAppHost)return;
 
     normalizeWebsiteChrome();
+    installMainMenu();
     loadAsset('link',{rel:'stylesheet',href:`/assets/css/reading-library.css?v=${release}`});
     loadAsset('link',{rel:'stylesheet',href:`/assets/css/apple-mobile.css?v=${release}`});
     loadAsset('link',{rel:'stylesheet',href:`/assets/css/experience-refresh.css?v=${release}`});
@@ -107,20 +145,22 @@
     keepBannerMoving();
     installImageFallbacks();
 
-    /* Re-apply after site.js finishes any late DOM and stylesheet work. */
+    /* Re-apply after site.js and channel scripts finish late DOM work. */
     requestAnimationFrame(()=>{
       normalizeWebsiteChrome();
+      installMainMenu();
       replacePartnerImages();
       keepBannerMoving();
     });
     window.setTimeout(()=>{
       normalizeWebsiteChrome();
+      installMainMenu();
       replacePartnerImages();
       keepBannerMoving();
     },650);
   }
 
-  window.addEventListener('pageshow',()=>{if(!isAppHost){normalizeWebsiteChrome();keepBannerMoving()}});
+  window.addEventListener('pageshow',()=>{if(!isAppHost){normalizeWebsiteChrome();installMainMenu();keepBannerMoving()}});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!isAppHost)keepBannerMoving()});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});
   else boot();
