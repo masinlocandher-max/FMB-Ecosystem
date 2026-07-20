@@ -1,0 +1,60 @@
+/* Final screen optimization for FMB&CO. News, Music and eBooks */
+:root{--fmb-sticky-top:156px}
+body.has-fmb-site-gateway .nc-topic-rail{top:var(--fmb-sticky-top,156px)!important}
+.fmb-site-links-shell{position:relative;min-width:0;flex:1;overflow:hidden}
+.fmb-site-links{padding-right:44px}
+.fmb-swipe-cue{position:absolute;right:0;top:50%;z-index:2;display:none;align-items:center;justify-content:flex-end;width:54px;height:100%;padding-right:4px;transform:translateY(-50%);background:linear-gradient(90deg,transparent 0%,rgba(8,5,13,.96) 48%);color:#e2c88e;font:750 7px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;pointer-events:none}
+.fmb-site-links.has-scroll-overflow:not(.is-scroll-end)+.fmb-swipe-cue{display:flex}
+.nc-topic-rail .wrap,.nc-channel-service,.fmb-footer-site-map nav{position:relative;overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch}
+.nc-topic-rail .wrap.has-scroll-overflow:not(.is-scroll-end),.nc-channel-service.has-scroll-overflow:not(.is-scroll-end),.fmb-footer-site-map nav.has-scroll-overflow:not(.is-scroll-end){padding-right:42px;mask-image:linear-gradient(90deg,#000 0%,#000 88%,transparent 100%);-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 88%,transparent 100%)}
+.nc-editor-card{align-items:stretch}
+.nc-editor-portrait{overflow:hidden;border-radius:24px;background:#d8d8dc;min-height:360px}
+.nc-editor-portrait img.nc-editor-portrait-opaque{display:block;width:100%;height:100%;min-height:360px;object-fit:cover;object-position:center 18%;background:#d8d8dc;filter:none!important;mask-image:none!important;-webkit-mask-image:none!important}
+.nc-wire-window{contain:paint}
+.music-app{padding-bottom:calc(88px + env(safe-area-inset-bottom))}
+.music-app .mini-player{left:50%;right:auto;transform:translateX(-50%);max-width:calc(100vw - max(20px,env(safe-area-inset-left)) - max(20px,env(safe-area-inset-right)))}
+
+@media(max-width:900px){
+  .fmb-site-gateway .wrap{width:min(100% - 24px,820px)}
+  .fco-product-channel-route .nc-channel-id{grid-template-columns:1fr;gap:20px}
+  .fco-product-channel-route .nc-channel-promise{max-width:none}
+  .ebooks-route .fco-product-lead-grid,.music-app .fco-product-lead-grid{grid-template-columns:1fr}
+  .ebooks-route .ebook-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .music-app .featured-player{grid-template-columns:minmax(220px,300px) minmax(0,1fr);column-gap:24px}
+  .music-app .collection-cover-gallery{grid-template-columns:1fr}
+  .nc-broadcast-grid,.nc-standard-grid,.nc-editor-card{grid-template-columns:1fr!important}
+  .nc-editor-portrait{width:min(100%,420px);min-height:0;aspect-ratio:4/5;margin-inline:auto}
+  .nc-editor-portrait img.nc-editor-portrait-opaque{min-height:0;aspect-ratio:4/5}
+}
+
+@media(max-width:800px){
+  body.has-fmb-site-gateway .nc-topic-rail{top:var(--fmb-sticky-top,143px)!important}
+  .fmb-site-gateway .wrap{padding-left:max(0px,env(safe-area-inset-left));padding-right:max(0px,env(safe-area-inset-right))}
+  .fmb-site-links-shell{padding-right:0}
+  .fmb-site-links{padding-right:48px}
+  .nc-topic-rail .wrap,.nc-channel-service{padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
+  .ebooks-route .ebook-grid{display:flex;grid-template-columns:none}
+  .music-app .featured-player{grid-template-columns:1fr;grid-template-areas:"art" "meta" "controls" "progress" "volume"}
+  .music-app .mini-player{bottom:max(10px,env(safe-area-inset-bottom))}
+}
+
+@media(max-width:520px){
+  .fmb-site-home{min-width:42px;justify-content:center;padding:0 10px}
+  .fmb-site-home span{display:none!important}
+  .fmb-swipe-cue{width:48px}
+  .nc-wire{grid-template-columns:78px minmax(0,1fr)}
+  .nc-wire-label{min-width:78px!important;width:78px;padding:0 6px!important;white-space:normal;text-align:center;line-height:1.15}
+  .nc-editor-card{padding:18px!important;border-radius:24px!important}
+  .nc-editor-portrait{width:min(100%,320px);border-radius:20px}
+  .music-app .mini-player{width:calc(100vw - 14px)!important}
+}
+
+@media(max-width:900px) and (orientation:landscape){
+  .fco-product-channel-route .nc-broadcast-identity{padding-block:22px 14px}
+  .music-app .featured-player{grid-template-columns:minmax(180px,240px) minmax(0,1fr);grid-template-areas:"art meta" "art controls" "art progress" "art volume"}
+  .music-app .featured-art{max-width:240px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .fmb-swipe-cue{display:none!important}
+}
