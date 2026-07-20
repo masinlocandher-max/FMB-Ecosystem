@@ -1,26 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-PH">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <base href="/">
-<title>FMB Ebooks &amp; Reading Library | Francine Marie Bautista</title>
-<meta name="description" content="Explore public and member readings by Francine Marie Bautista on mental health, LGBTQIA+ dignity, emotional honesty, women’s health, self-care, and becoming.">
-<meta name="robots" content="index,follow,max-image-preview:large">
+<title>FMB&amp;CO. eBook Library | Digital Publications by Francine Marie Bautista</title>
+<meta name="description" content="Explore FMB&CO. eBooks by Francine Marie Bautista. Everyone can begin reading each title through a public preview, then register to continue.">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
 <link rel="canonical" href="https://www.francinemariebautista.com/ebooks/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="FMB Ebooks and Reading Library">
-<meta property="og:description" content="Clear, compassionate reading for identity, health, self-care, emotional honesty, and becoming.">
+<meta property="og:site_name" content="FMB&amp;CO.">
+<meta property="og:title" content="FMB&amp;CO. eBook Library">
+<meta property="og:description" content="Public previews of original eBooks, cultural publications, and practical reading by Francine Marie Bautista. Register only when you continue.">
 <meta property="og:url" content="https://www.francinemariebautista.com/ebooks/">
-<meta property="og:image" content="https://www.francinemariebautista.com/assets/images/reading/B4DDDB01-C125-4E08-8908-09A5FE5157E7.png">
+<meta property="og:image" content="https://www.francinemariebautista.com/assets/images/fmbandco/fmbandco-primary-clean.png">
+<meta property="og:image:alt" content="FMB and Company eBook Library">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"CollectionPage","name":"FMB Ebooks and Reading Library","url":"https://www.francinemariebautista.com/ebooks/","description":"A collection of thoughtful reading by Francine Marie Bautista.","author":{"@type":"Person","name":"Francine Marie Bautista","url":"https://www.francinemariebautista.com/aboutfmb/"},"isPartOf":{"@type":"WebSite","name":"With love, FMB","url":"https://www.francinemariebautista.com/"}}
+{
+  "@context":"https://schema.org",
+  "@type":"CollectionPage",
+  "name":"FMB&CO. eBook Library",
+  "url":"https://www.francinemariebautista.com/ebooks/",
+  "description":"An FMB&CO. digital-product library where everyone can begin reading and registration is required only to continue beyond the public preview.",
+  "publisher":{"@type":"Organization","name":"FMB&CO.","url":"https://www.francinemariebautista.com/fmb&co/"},
+  "author":{"@type":"Person","name":"Francine Marie Bautista","url":"https://www.francinemariebautista.com/aboutfmb/"},
+  "isPartOf":{"@type":"WebSite","name":"Francine Marie Bautista","url":"https://www.francinemariebautista.com/"}
+}
 </script>
-<link rel="icon" href="assets/images/icon-transparent.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/site.css?v=20260716-mobile-first-v6">
 <link rel="stylesheet" href="assets/css/icon-fix.css">
 <link rel="stylesheet" href="assets/css/repair.css">
@@ -31,47 +41,90 @@
 <link rel="stylesheet" href="/assets/css/fmb-content.css?v=20260716-banner-v5">
 <link rel="stylesheet" href="/assets/css/fmb-mobile-luxury.css?v=20260716-mobile-first-v6">
 <link rel="stylesheet" href="/assets/css/fmb-footer-v2.css?v=20260716-footer-v2">
+<style>
+:root{--fco-deep:#180a29;--fco-purple:#54206f;--fco-gold:#c89b47;--fco-ivory:#fffaf1}
+body.ebook-library-route{background:linear-gradient(180deg,#fffdf9,#faf6fc)}
+.fco-product-header{position:sticky;top:0;z-index:90;background:rgba(24,10,41,.95);border-bottom:1px solid rgba(255,255,255,.12);backdrop-filter:blur(20px)}
+.fco-product-nav{width:min(1240px,calc(100% - 34px));min-height:82px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.fco-product-logo img{width:230px;max-height:58px;object-fit:contain;object-position:left center}
+.fco-product-links{display:flex;align-items:center;gap:20px;color:rgba(255,255,255,.78);font-size:.86rem;font-weight:760}
+.fco-product-links .cta{padding:10px 15px;border-radius:999px;background:linear-gradient(135deg,var(--fco-gold),#dfb763);color:#241526}
+.route-hero{background:radial-gradient(circle at 85% 10%,rgba(200,155,71,.18),transparent 24rem),linear-gradient(145deg,var(--fco-deep),#321449 64%,#421b5e);color:#fff}
+.route-hero .route-kicker,.ebook-shelf .route-kicker{color:var(--fco-gold)}
+.route-hero .route-lede,.route-art-copy span{color:rgba(255,255,255,.72)}
+.route-proof span{border-color:rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:rgba(255,255,255,.8)}
+.fco-preview-policy{padding:34px 0;background:#fff;border-bottom:1px solid rgba(57,25,74,.1)}
+.fco-preview-shell{display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center;padding:25px 28px;border:1px solid rgba(84,32,111,.13);border-radius:25px;background:linear-gradient(135deg,#fffaf0,#fff);box-shadow:0 16px 48px rgba(45,20,59,.06)}
+.fco-preview-shell h2{margin:5px 0 7px;font:600 clamp(1.8rem,4vw,2.8rem)/1 'Cormorant Garamond',serif;color:#351447}
+.fco-preview-shell p{margin:0;color:#6e6472}
+.fco-preview-steps{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}
+.fco-preview-steps span{padding:8px 11px;border:1px solid rgba(84,32,111,.12);border-radius:999px;color:#54206f;font-size:.76rem;font-weight:800}
+.fco-register{display:inline-flex;min-height:48px;align-items:center;justify-content:center;padding:11px 18px;border-radius:999px;background:linear-gradient(135deg,#54206f,#7c4a98);color:#fff;font-weight:800;text-decoration:none}
+.ebook-card{position:relative}
+.ebook-access-badge.is-preview{background:#f0e6f4;color:#54206f}
+.ebook-card .text-link{color:#54206f;font-weight:800}
+.library-care-note{border-color:rgba(84,32,111,.13);background:linear-gradient(145deg,#fffaf0,#fff)}
+.route-cta{background:linear-gradient(145deg,#180a29,#37154f)}
+.fco-footer{background:#120719;color:#fff;padding:62px 0 28px}
+.fco-footer-grid{display:grid;grid-template-columns:1.35fr .8fr .8fr;gap:38px}
+.fco-footer-logo{width:230px;max-height:70px;object-fit:contain;object-position:left center}
+.fco-footer p{color:rgba(255,255,255,.62)}
+.fco-footer h4{margin:0 0 13px;color:#ead5a8;font-size:.73rem;letter-spacing:.13em;text-transform:uppercase}
+.fco-footer-links{display:grid;gap:9px;color:rgba(255,255,255,.75);font-size:.9rem}
+.fco-footer-bottom{display:flex;justify-content:space-between;gap:20px;margin-top:30px;padding-top:20px;border-top:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.45);font-size:.8rem}
+@media(max-width:800px){.fco-product-links a:not(.cta){display:none}.fco-preview-shell{grid-template-columns:1fr}.fco-register{width:100%}.fco-footer-grid{grid-template-columns:1fr}}
+@media(max-width:520px){.fco-product-logo img{width:190px}.fco-footer-bottom{display:block}}
+</style>
 </head>
 <body class="organized-route ebooks-route ebook-library-route">
-<div class="top-shell"><div class="support-glass" aria-label="With Love, FMB partner brands"></div><header class="nav-glass"><a class="nav-brand" href="/" aria-label="With love, FMB home"><img class="nav-icon" src="assets/images/icon-transparent.png" alt=""><span class="nav-word">with love, <em>fmb</em></span></a><nav class="nav-links" id="navLinks" aria-label="Main navigation"><a href="/">Home</a><a href="/music/">Music</a><a href="/aboutfmb/">About FMB</a></nav><div class="nav-actions"><a class="nav-btn" href="/auth.html#signin">Sign in</a><a class="nav-btn primary" href="#library">Browse ebooks</a><button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-label="Open menu" aria-controls="navLinks"><span></span><span></span></button></div></header></div>
+<header class="fco-product-header">
+  <div class="fco-product-nav">
+    <a class="fco-product-logo" href="/ebooks/" aria-label="FMB and Company eBook Library"><img src="/assets/images/fmbandco/fmbandco-primary-reversed.png" alt="FMB&amp;CO."></a>
+    <nav class="fco-product-links" aria-label="eBook library navigation"><a href="#library">eBooks</a><a href="/music/">Music Library</a><a href="/fmb&amp;co/">FMB&amp;CO.</a><a href="/">Official Bulletin</a><a class="cta" href="/auth.html#signup">Register</a></nav>
+  </div>
+</header>
 <main id="main-content">
   <section class="route-hero">
     <div class="wrap route-hero-grid">
       <div class="reveal">
-        <p class="route-kicker">FMB Ebooks and Reading</p>
-        <h1 class="route-title">Words for the days that ask us to <em>begin again.</em></h1>
-        <p class="route-lede">A calm reading library for honest questions about identity, health, self-care, emotional courage, belonging, and change. Start with what feels useful today.</p>
-        <div class="route-actions"><a class="pill" href="#library">Explore the library</a><a class="pill secondary" href="/gethelp/">Open verified help</a></div>
-        <div class="route-proof" aria-label="Reading library principles"><span>Three public guides</span><span>Member reading library</span><span>Written for real life</span></div>
+        <p class="route-kicker">FMB&amp;CO. Digital Product</p>
+        <h1 class="route-title">eBooks built to be <em>read, kept, and returned to.</em></h1>
+        <p class="route-lede">Everyone can browse every title and read the opening chapter without an account. Register only when you choose to continue beyond the public preview.</p>
+        <div class="route-actions"><a class="pill" href="#library">Browse all eBooks</a><a class="pill secondary" href="/auth.html#signup">Register to continue</a></div>
+        <div class="route-proof" aria-label="eBook access policy"><span>All titles discoverable</span><span>Opening chapter public</span><span>Register to continue</span></div>
       </div>
-      <figure class="route-art reveal d1"><div class="library-preview-stack" aria-label="Selected FMB ebook covers"><span class="library-preview-book"><img src="assets/images/reading/B4DDDB01-C125-4E08-8908-09A5FE5157E7.png" alt="Women’s Health Matters ebook cover by Francine Marie Bautista"></span><span class="library-preview-book"><img src="assets/images/reading/07883274-1340-48DC-A112-C4AD44B5ABD1.png" alt="Pride Identity Love ebook cover by Francine Marie Bautista"></span><span class="library-preview-badge">FMB Reading Library</span></div><figcaption class="route-art-copy"><strong>Read at your own pace.</strong><span>Thoughtful guides by Francine Marie Bautista</span></figcaption></figure>
+      <figure class="route-art reveal d1"><div class="library-preview-stack" aria-label="Selected FMB and Company ebook covers"><span class="library-preview-book"><img src="assets/images/reading/B4DDDB01-C125-4E08-8908-09A5FE5157E7.png" alt="Women’s Health Matters eBook cover by Francine Marie Bautista"></span><span class="library-preview-book"><img src="assets/images/reading/07883274-1340-48DC-A112-C4AD44B5ABD1.png" alt="Pride Identity Love eBook cover by Francine Marie Bautista"></span><span class="library-preview-badge">FMB&amp;CO. eBook Library</span></div><figcaption class="route-art-copy"><strong>Begin before you register.</strong><span>Your first chapter is open.</span></figcaption></figure>
     </div>
+  </section>
+
+  <section class="fco-preview-policy" aria-labelledby="preview-policy-title">
+    <div class="wrap"><article class="fco-preview-shell"><div><p class="route-kicker">Simple access</p><h2 id="preview-policy-title">Preview first. Register only to continue.</h2><p>Your place can be restored after registration or sign-in, so the access step does not interrupt the purpose of the reading.</p><div class="fco-preview-steps"><span>1 · Choose a title</span><span>2 · Read the first chapter</span><span>3 · Register to continue</span></div></div><a class="fco-register" href="/auth.html#signup">Create a free account</a></article></div>
   </section>
 
   <section class="ebook-library-shell" id="library">
     <div class="wrap">
-      <section class="ebook-shelf" aria-labelledby="shelf-self"><div class="ebook-shelf-head"><div><p class="route-kicker">Shelf one · Self and wellbeing</p><h2 id="shelf-self">Start with what feels closest.</h2></div><p>Public and member readings for reflection, health awareness, emotional honesty, identity, and everyday care.</p></div>
+      <section class="ebook-shelf" aria-labelledby="shelf-self"><div class="ebook-shelf-head"><div><p class="route-kicker">Shelf one · Self and wellbeing</p><h2 id="shelf-self">Start with what feels closest.</h2></div><p>Every title opens with a public first-chapter preview. Registration is required only to continue.</p></div>
       <div class="ebook-grid">
-        <a class="ebook-card reveal" data-member-access="open" href="/reading.html"><div class="ebook-cover ebook-cover-designed ebook-cover-identity"><small>With love, FMB Reading</small><strong>Finding Your Way Back to Yourself</strong><span>Francine Marie Bautista</span></div><span class="ebook-card-meta">Mental health and identity · 12 minute read</span><span class="ebook-access-badge is-open">Open to everyone</span><h3>Finding Your Way Back to Yourself</h3><p>For feeling lost, left behind, unsure, unseen, or afraid to begin again.</p><span class="text-link">Open the book →</span></a>
-        <a class="ebook-card reveal d1" data-member-access="locked" href="/womens-health.html"><div class="ebook-cover"><img src="assets/images/reading/B4DDDB01-C125-4E08-8908-09A5FE5157E7.png" alt="Women’s Health Matters cover"></div><span class="ebook-card-meta">Women’s health · 16 minute read</span><span class="ebook-access-badge">Members</span><h3>Women’s Health Matters</h3><p>Body awareness, preventive care, emotional health, and speaking up during medical appointments.</p><span class="text-link">Open member book →</span></a>
-        <a class="ebook-card reveal d2" data-member-access="locked" href="/skin-care-makeup.html"><div class="ebook-cover ebook-cover-designed ebook-cover-care"><small>With love, FMB Reading</small><strong>Care Without the Pressure</strong><span>Skin care and makeup</span></div><span class="ebook-card-meta">Self-care · 14 minute read</span><span class="ebook-access-badge">Members</span><h3>Care Without the Pressure</h3><p>Simple skin care, makeup basics, product hygiene, and beauty without shame.</p><span class="text-link">Open member book →</span></a>
+        <a class="ebook-card reveal" data-member-access="preview" href="/reading.html"><div class="ebook-cover ebook-cover-designed ebook-cover-identity"><small>FMB&amp;CO. eBook</small><strong>Finding Your Way Back to Yourself</strong><span>Francine Marie Bautista</span></div><span class="ebook-card-meta">Mental health and identity · 12 minute read</span><span class="ebook-access-badge is-preview">Public preview</span><h3>Finding Your Way Back to Yourself</h3><p>For feeling lost, left behind, unsure, unseen, or afraid to begin again.</p><span class="text-link">Read the first chapter →</span></a>
+        <a class="ebook-card reveal d1" data-member-access="preview" href="/womens-health.html"><div class="ebook-cover"><img src="assets/images/reading/B4DDDB01-C125-4E08-8908-09A5FE5157E7.png" alt="Women’s Health Matters cover"></div><span class="ebook-card-meta">Women’s health · 16 minute read</span><span class="ebook-access-badge is-preview">Public preview</span><h3>Women’s Health Matters</h3><p>Body awareness, preventive care, emotional health, and speaking up during medical appointments.</p><span class="text-link">Read the first chapter →</span></a>
+        <a class="ebook-card reveal d2" data-member-access="preview" href="/skin-care-makeup.html"><div class="ebook-cover ebook-cover-designed ebook-cover-care"><small>FMB&amp;CO. eBook</small><strong>Care Without the Pressure</strong><span>Skin care and makeup</span></div><span class="ebook-card-meta">Self-care · 14 minute read</span><span class="ebook-access-badge is-preview">Public preview</span><h3>Care Without the Pressure</h3><p>Simple skin care, makeup basics, product hygiene, and beauty without shame.</p><span class="text-link">Read the first chapter →</span></a>
       </div></section>
 
-      <section class="ebook-shelf" aria-labelledby="shelf-identity"><div class="ebook-shelf-head"><div><p class="route-kicker">Shelf two · Identity and expression</p><h2 id="shelf-identity">Be seen without losing yourself.</h2></div><p>Readings on belonging, courage, public image, and the dignity every person deserves.</p></div>
+      <section class="ebook-shelf" aria-labelledby="shelf-identity"><div class="ebook-shelf-head"><div><p class="route-kicker">Shelf two · Identity and expression</p><h2 id="shelf-identity">Be seen without losing yourself.</h2></div><p>Original FMB&amp;CO. publications on belonging, courage, public image, and human dignity.</p></div>
       <div class="ebook-grid">
-        <a class="ebook-card reveal" data-member-access="open" href="/coming-out-respect.html"><div class="ebook-cover"><img src="assets/images/reading/07883274-1340-48DC-A112-C4AD44B5ABD1.png" alt="Pride Identity Love cover"></div><span class="ebook-card-meta">LGBTQIA+ · 15 minute read</span><span class="ebook-access-badge is-open">Open to everyone</span><h3>Pride. Identity. Love.</h3><p>Safety, privacy, identity, belonging, allyship, and choosing when or whether to come out.</p><span class="text-link">Open the book →</span></a>
-        <a class="ebook-card reveal d1" data-member-access="open" href="/men-can-cry.html"><div class="ebook-cover"><img src="assets/images/reading/E9562EB3-F505-4736-B5E8-E4D54C769059.png" alt="Men Can Cry cover"></div><span class="ebook-card-meta">Emotional honesty · 13 minute read</span><span class="ebook-access-badge is-open">Open to everyone</span><h3>Men Can Cry</h3><p>A compassionate guide to asking for help, respect, and healthier masculinity.</p><span class="text-link">Open the book →</span></a>
-        <a class="ebook-card reveal d2" data-member-access="locked" href="/dress-with-intention.html"><div class="ebook-cover ebook-cover-designed ebook-cover-presence"><small>With love, FMB Reading</small><strong>Dress With Intention</strong><span>Image, scent, grooming, and presence</span></div><span class="ebook-card-meta">Image and personal brand · 18 minute read</span><span class="ebook-access-badge">Members</span><h3>Dress With Intention</h3><p>Professional presence without an expensive wardrobe, including fit, scent, grooming, appearance bias, and careful marketplace links.</p><span class="text-link">Open member book →</span></a>
+        <a class="ebook-card reveal" data-member-access="preview" href="/coming-out-respect.html"><div class="ebook-cover"><img src="assets/images/reading/07883274-1340-48DC-A112-C4AD44B5ABD1.png" alt="Pride Identity Love cover"></div><span class="ebook-card-meta">LGBTQIA+ · 15 minute read</span><span class="ebook-access-badge is-preview">Public preview</span><h3>Pride. Identity. Love.</h3><p>Safety, privacy, identity, belonging, allyship, and choosing when or whether to come out.</p><span class="text-link">Read the first chapter →</span></a>
+        <a class="ebook-card reveal d1" data-member-access="preview" href="/men-can-cry.html"><div class="ebook-cover"><img src="assets/images/reading/E9562EB3-F505-4736-B5E8-E4D54C769059.png" alt="Men Can Cry cover"></div><span class="ebook-card-meta">Emotional honesty · 13 minute read</span><span class="ebook-access-badge is-preview">Public preview</span><h3>Men Can Cry</h3><p>A compassionate guide to asking for help, respect, and healthier masculinity.</p><span class="text-link">Read the first chapter →</span></a>
+        <a class="ebook-card reveal d2" data-member-access="preview" href="/dress-with-intention.html"><div class="ebook-cover ebook-cover-designed ebook-cover-presence"><small>FMB&amp;CO. eBook</small><strong>Dress With Intention</strong><span>Image, scent, grooming, and presence</span></div><span class="ebook-card-meta">Image and personal brand · 18 minute read</span><span class="ebook-access-badge is-preview">Public preview</span><h3>Dress With Intention</h3><p>Professional presence without an expensive wardrobe, including fit, scent, grooming, and appearance bias.</p><span class="text-link">Read the first chapter →</span></a>
       </div></section>
 
-      <article class="library-care-note"><div><h2>Keep what helps. Leave what does not.</h2><p>Our guides offer general education and reflection. They do not replace professional medical, psychological, legal, or emergency support.</p></div><a class="pill secondary" href="/gethelp/">Open verified help resources</a></article>
+      <article class="library-care-note"><div><h2>Keep what helps. Leave what does not.</h2><p>These eBooks provide general education and reflection. They do not replace professional medical, psychological, legal, or emergency support.</p></div><a class="pill secondary" href="/gethelp/">Open verified help resources</a></article>
     </div>
   </section>
 
-  <section class="route-section tint"><div class="wrap"><article class="route-cta"><div><p class="route-kicker" style="color:#e4c4ee">Continue in your private space</p><h2>Save what matters and return when you are ready.</h2><p>Signed-in members can keep reading close, write private journal entries, complete a daily check-in, and submit a moderated thought to the Freedom Wall.</p></div><a class="pill" href="/auth.html#signin">Sign in to your profile</a></article></div></section>
+  <section class="route-section tint"><div class="wrap"><article class="route-cta"><div><p class="route-kicker" style="color:#e6d2aa">Continue reading</p><h2>Register when the preview has earned your attention.</h2><p>Create a profile or sign in to unlock the remaining chapters and return to your reading later.</p></div><a class="pill" href="/auth.html#signup">Register to continue</a></article></div></section>
 </main>
-<footer class="footer"><div class="wrap"><div class="footer-grid"><div><img class="footer-logo" src="/assets/images/signature-transparent.png?v=20260716-signature-v5" alt="With love, FMB"><p>Thoughtful reading, gentle reflection, and clear paths to real support.</p></div><div><h4>Explore</h4><div class="footer-links"><a href="/">Home</a><a href="/music/">Music</a><a href="/communityengagements/">Community Engagements - AMDG</a><a href="/aboutfmb/">About FMB</a></div></div><div><h4>Care and contact</h4><div class="footer-links"><a href="/#support">Important help numbers</a><a href="mailto:withlovefmb@gmail.com">withlovefmb@gmail.com</a><a href="/privacy-policy.html">Privacy Policy</a></div></div></div><div class="footer-bottom"><span>© 2026 Francine Marie Bautista. All rights reserved.</span><span>With love, FMB</span></div></div></footer>
-<nav class="mobile-bar" aria-label="Mobile navigation"><a href="/"><span>Home</span></a><a class="active" href="/ebooks/"><span>Read</span></a><a href="/music/"><span>Music</span></a><a href="/auth.html#signin"><span>Profile</span></a></nav>
+<footer class="fco-footer"><div class="wrap"><div class="fco-footer-grid"><div><img class="fco-footer-logo" src="/assets/images/fmbandco/fmbandco-primary-reversed.png" alt="FMB&amp;CO."><p>The Reading Library and every eBook inside it are official FMB&amp;CO. digital products.</p></div><div><h4>Digital products</h4><div class="fco-footer-links"><a href="/ebooks/">eBook Library</a><a href="/music/">Music Library</a><a href="/fmb&amp;co/">FMB&amp;CO.</a></div></div><div><h4>Access</h4><div class="fco-footer-links"><a href="/auth.html#signup">Register</a><a href="/auth.html#signin">Sign in</a><a href="/privacy-policy.html">Privacy Policy</a></div></div></div><div class="fco-footer-bottom"><span>© 2026 FMB&amp;CO. All rights reserved.</span><span>Digital Publications</span></div></div></footer>
+<nav class="mobile-bar" aria-label="Mobile navigation"><a href="/"><span>Home</span></a><a class="active" href="/ebooks/"><span>Read</span></a><a href="/music/"><span>Music</span></a><a href="/auth.html#signup"><span>Register</span></a></nav>
 <script src="/assets/js/site.js?v=20260716-mobile-first-v6"></script>
 <script src="/assets/js/live-hotfix.js?v=20260716-mobile-first-v6"></script>
 </body>
