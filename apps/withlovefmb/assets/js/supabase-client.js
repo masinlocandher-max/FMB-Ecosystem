@@ -65,7 +65,9 @@
     getActiveProfile
   };
 
-  const isYoni=/(^yoni\.francinemariebautista\.com$)|(^app\.francinemariebautista\.com$)/i.test(window.location.hostname)||/^\/app(?:\/|$)/.test(window.location.pathname);
+  const YONI_HOST='yoni.francinemariebautista.com';
+  const LEGACY_APP_HOST='app.francinemariebautista.com';
+  const isYoni=window.location.hostname===YONI_HOST||window.location.hostname===LEGACY_APP_HOST||/^\/app(?:\/|$)/.test(window.location.pathname);
   if(!isYoni)return;
   const version='20260720-1';
   if(!document.querySelector('link[data-yoni-experience]')){
