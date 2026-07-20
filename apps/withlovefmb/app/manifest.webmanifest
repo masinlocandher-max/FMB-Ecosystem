@@ -3,7 +3,7 @@
   "short_name": "Yoni",
   "description": "A gentle digital companion for private check-ins, journaling, venting, grounding, supportive reading, and finding human support.",
   "id": "/app/",
-  "start_url": "/app/",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
