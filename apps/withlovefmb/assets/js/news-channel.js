@@ -2,8 +2,69 @@
   const body=document.body;
   const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
+  const installSiteGateway=()=>{
+    const header=document.querySelector('.nc-site-header');
+    if(!header||document.querySelector('.fmb-site-gateway'))return;
+
+    if(!document.querySelector('link[href*="fmb-sitewide-gateway.css"]')){
+      const stylesheet=document.createElement('link');
+      stylesheet.rel='stylesheet';
+      stylesheet.href='/assets/css/fmb-sitewide-gateway.css?v=20260721-connected-v1';
+      document.head.appendChild(stylesheet);
+    }
+
+    const pathname=location.pathname.replace(/\/+$/,'')||'/';
+    const routes=[
+      {href:'/aboutfmb/',label:'About FMB',match:'/aboutfmb'},
+      {href:'/communityengagements/',label:'Community',match:'/communityengagements'},
+      {href:'/gethelp/',label:'Get Help',match:'/gethelp'},
+      {href:'/news/',label:'News',match:'/news'},
+      {href:'/ebooks/',label:'eBooks',match:'/ebooks'},
+      {href:'/music/',label:'Music',match:'/music'},
+      {href:'/fmbandco/',label:'FMB&CO.',match:'/fmbandco'}
+    ];
+
+    const gateway=document.createElement('div');
+    gateway.className='fmb-site-gateway';
+    gateway.setAttribute('aria-label','Complete website navigation');
+    gateway.innerHTML=`<div class="wrap"><a class="fmb-site-home" href="/" aria-label="Return to the official home page"><span>Official Home</span></a><nav class="fmb-site-links" aria-label="Explore the complete FMB website">${routes.map(route=>`<a href="${route.href}"${pathname.startsWith(route.match)?' aria-current="page"':''}>${route.label}</a>`).join('')}</nav></div>`;
+
+    const brandline=header.querySelector('.nc-brandline');
+    if(brandline)brandline.insertAdjacentElement('afterend',gateway);
+    else header.prepend(gateway);
+    body.classList.add('has-fmb-site-gateway');
+
+    const promise=document.querySelector('.nc-broadcast-identity .nc-channel-promise');
+    if(promise&&!promise.querySelector('.fmb-channel-actions')){
+      const actions=document.createElement('div');
+      actions.className='fmb-channel-actions';
+      actions.innerHTML='<a href="/">Visit Official Home</a><a href="/aboutfmb/">Explore the Whole Website</a>';
+      promise.appendChild(actions);
+    }
+
+    const footerWrap=document.querySelector('.nc-footer > .wrap');
+    const footerBottom=footerWrap?.querySelector('.nc-footer-bottom');
+    if(footerWrap&&!footerWrap.querySelector('.fmb-footer-site-map')){
+      const sitemap=document.createElement('div');
+      sitemap.className='fmb-footer-site-map';
+      sitemap.innerHTML='<strong>Explore the complete website</strong><nav aria-label="Complete website footer navigation"><a href="/">Home</a><a href="/aboutfmb/">About FMB</a><a href="/communityengagements/">Community</a><a href="/gethelp/">Get Help</a><a href="/news/">News</a><a href="/ebooks/">eBooks</a><a href="/music/">Music</a><a href="/fmbandco/">FMB&CO.</a></nav>';
+      if(footerBottom)footerWrap.insertBefore(sitemap,footerBottom);
+      else footerWrap.appendChild(sitemap);
+    }
+
+    const mobileDock=document.querySelector('.nc-mobile-dock');
+    if(mobileDock&&!mobileDock.querySelector('a[href="/"]')){
+      const home=document.createElement('a');
+      home.href='/';
+      home.textContent='Home';
+      home.setAttribute('aria-label','Official home page');
+      mobileDock.prepend(home);
+      mobileDock.classList.add('fmb-five-link-dock');
+    }
+  };
+
   const installFounderAiWaterLead=()=>{
-    if(!body.classList.contains('news-channel-route'))return;
+    if(!body.classList.contains('news-channel-route')||body.classList.contains('fco-product-channel-route'))return;
     const story=document.querySelector('.nc-lead-broadcast');
     const link=story?.querySelector(':scope > a');
     const image=story?.querySelector('.news-visual img');
@@ -80,6 +141,7 @@
     });
   };
 
+  installSiteGateway();
   installFounderAiWaterLead();
   installFounderHeroTiles();
 
@@ -101,18 +163,19 @@
   }
 
   const menuButton=document.querySelector('[data-news-menu]');
-  const menu=document.querySelector('#newsNav');
+  const menuId=menuButton?.getAttribute('aria-controls');
+  const menu=menuId?document.getElementById(menuId):document.querySelector('#newsNav');
   if(menuButton&&menu){
     const closeMenu=()=>{
       body.classList.remove('nc-menu-open');
       menuButton.setAttribute('aria-expanded','false');
-      menuButton.setAttribute('aria-label','Open news menu');
+      menuButton.setAttribute('aria-label','Open navigation menu');
     };
     menuButton.addEventListener('click',()=>{
       const open=!body.classList.contains('nc-menu-open');
       body.classList.toggle('nc-menu-open',open);
       menuButton.setAttribute('aria-expanded',String(open));
-      menuButton.setAttribute('aria-label',open?'Close news menu':'Open news menu');
+      menuButton.setAttribute('aria-label',open?'Close navigation menu':'Open navigation menu');
     });
     menu.addEventListener('click',event=>{
       if(event.target.closest('a'))closeMenu();
