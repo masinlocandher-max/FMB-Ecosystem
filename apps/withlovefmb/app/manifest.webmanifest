@@ -11,9 +11,9 @@
   "theme_color": "#fbfaf8",
   "icons": [
     {
-      "src": "/app/assets/yoni/yoni-master-static.png",
-      "sizes": "337x420",
-      "type": "image/png",
+      "src": "/app/assets/yoni/yoni-app-icon-192.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
       "purpose": "any"
     },
     {
