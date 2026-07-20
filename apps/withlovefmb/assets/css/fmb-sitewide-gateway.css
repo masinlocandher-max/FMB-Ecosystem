@@ -1,36 +1,223 @@
-/* FMB&CO. channel gateway: connects News, eBooks, and Music to the complete website */
-.fmb-site-gateway{border-bottom:1px solid rgba(226,200,142,.16);background:#08050d;color:#fff}
-.fmb-site-gateway .wrap{display:flex;min-height:43px;align-items:center;gap:22px}
-.fmb-site-home{display:inline-flex;min-height:30px;flex:0 0 auto;align-items:center;gap:9px;padding:0 14px;border:1px solid rgba(226,200,142,.44);border-radius:999px;background:linear-gradient(135deg,rgba(104,66,131,.25),rgba(200,169,107,.1));color:#f0dca9!important;font:850 9px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:.13em;text-decoration:none!important;text-transform:uppercase}
-.fmb-site-home:before{content:"";width:7px;height:7px;border-radius:2px;background:#d4b56c;box-shadow:0 0 0 4px rgba(212,181,108,.1)}
-.fmb-site-links{display:flex;min-width:0;flex:1;align-items:center;gap:24px;overflow-x:auto;scrollbar-width:none}
+/* FMB channel experience: one website menu, responsive ticker, Apple-style eBooks and Spotify-style Music */
+:root{
+  --fmb-ios-bg:#f2f2f7;
+  --fmb-ios-card:rgba(255,255,255,.88);
+  --fmb-ios-line:rgba(60,60,67,.16);
+  --fmb-ios-label:#8e8e93;
+  --fmb-music-bg:#090909;
+  --fmb-music-card:#181818;
+  --fmb-music-card-soft:#232323;
+  --fmb-channel-gold:#d8b968;
+  --fmb-channel-purple:#6f4388;
+}
+
+/* One global website menu. The channel-specific menus remain page sections below. */
+.fmb-site-gateway{border-bottom:1px solid rgba(255,255,255,.08);background:rgba(8,5,13,.98);color:#fff}
+.fmb-site-gateway .wrap{display:flex;min-height:49px;align-items:center;gap:18px}
+.fmb-site-home{display:inline-flex;min-height:34px;flex:0 0 auto;align-items:center;gap:9px;padding:0 14px;border:1px solid rgba(226,200,142,.38);border-radius:999px;background:rgba(200,169,107,.1);color:#f0dca9!important;font:800 10px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:.04em;text-decoration:none!important;white-space:nowrap}
+.fmb-site-home:before{content:"";width:8px;height:8px;border-radius:3px;background:#d8b968;box-shadow:0 0 0 4px rgba(216,185,104,.1)}
+.fmb-site-links{display:flex;min-width:0;flex:1;align-items:center;gap:22px;overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .fmb-site-links::-webkit-scrollbar{display:none}
-.fmb-site-links a{position:relative;display:inline-flex;min-height:42px;flex:0 0 auto;align-items:center;color:rgba(255,255,255,.62)!important;font:730 9px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:.07em;text-decoration:none!important;text-transform:uppercase;white-space:nowrap}
-.fmb-site-links a:after{content:"";position:absolute;right:0;bottom:5px;left:0;height:1px;transform:scaleX(0);transform-origin:left;background:#c5a45d;transition:transform .2s ease}
+.fmb-site-links a{position:relative;display:inline-flex;min-height:48px;flex:0 0 auto;align-items:center;color:rgba(255,255,255,.62)!important;font:700 10px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:.02em;text-decoration:none!important;white-space:nowrap}
+.fmb-site-links a:after{content:"";position:absolute;right:0;bottom:7px;left:0;height:2px;transform:scaleX(0);transform-origin:left;border-radius:999px;background:#d8b968;transition:transform .2s ease}
 .fmb-site-links a:hover,.fmb-site-links a:focus-visible,.fmb-site-links a[aria-current="page"]{color:#fff!important}
 .fmb-site-links a:hover:after,.fmb-site-links a:focus-visible:after,.fmb-site-links a[aria-current="page"]:after{transform:scaleX(1)}
-.fmb-channel-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
-.fmb-channel-actions a{display:inline-flex;min-height:42px;align-items:center;justify-content:center;padding:0 16px;border:1px solid rgba(226,200,142,.35);border-radius:999px;color:#fff!important;font:820 9px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:.1em;text-decoration:none!important;text-transform:uppercase}
-.fmb-channel-actions a:first-child{border-color:transparent;background:linear-gradient(135deg,#c5a45d,#e0c47e);color:#211526!important}
-.fmb-footer-site-map{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:34px;padding:18px 0;border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1)}
-.fmb-footer-site-map strong{color:#e2c88e;font:820 9px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:.14em;text-transform:uppercase}
-.fmb-footer-site-map nav{display:flex!important;flex:1;justify-content:flex-end;gap:20px!important}
-.fmb-footer-site-map a{color:rgba(255,255,255,.65)!important;font:700 9px/1.3 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:.05em;text-decoration:none!important;text-transform:uppercase;white-space:nowrap}
-.fmb-footer-site-map a:hover,.fmb-footer-site-map a:focus-visible{color:#fff!important}
-body.has-fmb-site-gateway .nc-topic-rail{top:150px}
-.fco-product-channel-route .nc-wire-track span{display:inline-flex;align-items:center;font-size:0;white-space:nowrap}
-.fco-product-channel-route .nc-wire-track span::after{content:"Register your email to continue reading/listening - If you registered before just enter the email address you used to register - Original FMB&CO. digital products - With Love, FMB";font-size:inherit;font-size:11px}
-@media(max-width:1100px){.fmb-site-links{gap:18px}.fmb-site-links a{font-size:8px}}
+.nc-site-header .nc-site-links,.nc-site-header .nc-menu-toggle,.fmb-channel-actions{display:none!important}
+.nc-site-header .nc-nav-shell{justify-content:center}
+.fmb-footer-site-map{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:30px;padding:18px 0;border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1)}
+.fmb-footer-site-map strong{color:#e2c88e;font:800 9px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase}
+.fmb-footer-site-map nav{display:flex!important;flex:1;justify-content:flex-end;gap:20px!important;overflow-x:auto;scrollbar-width:none}
+.fmb-footer-site-map nav::-webkit-scrollbar{display:none}
+.fmb-footer-site-map a{color:rgba(255,255,255,.65)!important;font:650 10px/1.3 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;text-decoration:none!important;white-space:nowrap}
+.nc-footer-grid{grid-template-columns:minmax(0,1fr)!important}
+.nc-footer-grid>nav{display:none!important}
+.nc-mobile-dock{display:none!important}
+body.has-fmb-site-gateway .nc-topic-rail{top:156px}
+
+/* Moving message: readable and continuous at every width. */
+.nc-wire{grid-template-columns:max-content minmax(0,1fr);min-height:48px;overflow:hidden}
+.nc-wire-label{min-width:132px;justify-content:center;padding:0 18px;white-space:nowrap}
+.nc-wire-window{min-width:0;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+.nc-wire-track{width:max-content;will-change:transform;animation-duration:46s}
+.nc-wire-track span,.fco-product-channel-route .nc-wire-track span{display:inline-flex;align-items:center;font-size:10px!important;line-height:1.2;letter-spacing:.07em;white-space:nowrap}
+.nc-wire-track span:after{flex:0 0 4px;margin-inline:24px}
+.nc-wire:hover .nc-wire-track,.nc-wire:focus-within .nc-wire-track{animation-play-state:paused}
+
+/* Shared iPhone refinements */
+.fco-product-channel-route{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Arial,sans-serif}
+.fco-product-channel-route .nc-broadcast-identity{padding:34px 0 19px}
+.fco-product-channel-route .nc-channel-id{align-items:center}
+.fco-product-channel-route .nc-channel-lockup h1{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;font-size:clamp(58px,8vw,98px);font-weight:820;letter-spacing:-.075em}
+.fco-product-channel-route .nc-channel-promise p{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;font-size:clamp(24px,2.7vw,35px);font-style:normal;font-weight:700;letter-spacing:-.04em}
+.fco-product-channel-route .nc-channel-service{overflow-x:auto;scrollbar-width:none}
+.fco-product-channel-route .nc-channel-service::-webkit-scrollbar{display:none}
+.fco-product-channel-route .nc-channel-service span{min-width:max-content;padding-inline:19px}
+.fco-product-channel-route .fco-button{border-radius:999px;letter-spacing:.03em;text-transform:none}
+.fco-product-channel-route .fco-access-panel{border-top:0;border-radius:28px;box-shadow:0 18px 50px rgba(20,10,35,.09)}
+.fco-product-channel-route .fco-access-steps span{border-radius:999px;letter-spacing:.03em;text-transform:none}
+
+/* eBooks: Apple Books-inspired library */
+.ebooks-route{background:var(--fmb-ios-bg)!important;color:#1c1c1e}
+.ebooks-route .fco-product-lead,.ebooks-route .fco-library-section{background:var(--fmb-ios-bg)}
+.ebooks-route .fco-product-lead{padding:50px 0 46px}
+.ebooks-route .fco-product-lead-grid{grid-template-columns:minmax(0,1.12fr) minmax(270px,.58fr);gap:40px;padding:34px;border:1px solid rgba(255,255,255,.75);border-radius:34px;background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(247,242,249,.82));box-shadow:0 24px 70px rgba(42,20,51,.09);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)}
+.ebooks-route .fco-product-lead h2{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;font-size:clamp(48px,6vw,78px);font-weight:780;line-height:.94;letter-spacing:-.065em}
+.ebooks-route .fco-product-lead h2 em{font-style:normal}
+.ebooks-route .fco-lead-art{min-height:330px;border:0;border-radius:26px;background:#dedbe2;box-shadow:0 20px 48px rgba(30,20,36,.16)}
+.ebooks-route .fco-lead-art img{min-height:330px;object-fit:contain;background:linear-gradient(145deg,#e9e5eb,#d5ceda)}
+.ebooks-route .fco-lead-art figcaption{padding:15px 17px;background:rgba(20,14,25,.78);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.ebooks-route .fco-access-band{padding:18px 0 34px;border:0;background:var(--fmb-ios-bg)}
+.ebooks-route .fco-access-panel{background:var(--fmb-ios-card);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px)}
+.ebooks-route .fco-library-section{padding:38px 0 96px}
+.ebooks-route .ebook-shelf{margin-top:62px}
+.ebooks-route .ebook-shelf:first-child{margin-top:0}
+.ebooks-route .ebook-shelf-head{display:flex;align-items:end;justify-content:space-between;gap:30px;padding:0 2px 15px;border-bottom:0}
+.ebooks-route .ebook-shelf-head h2{margin:4px 0 0;color:#1c1c1e;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;font-size:clamp(32px,4vw,48px);font-weight:760;letter-spacing:-.05em}
+.ebooks-route .ebook-shelf-head>p{max-width:450px;color:#6e6e73}
+.ebooks-route .ebook-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:30px;margin-top:18px}
+.ebooks-route .ebook-card{display:block;min-width:0;padding:0 0 8px!important;overflow:visible!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#1c1c1e!important;scroll-snap-align:start}
+.ebooks-route .ebook-card:before{display:none!important}
+.ebooks-route .ebook-cover{width:100%;aspect-ratio:3/4;overflow:hidden;border:0;border-radius:20px;background:#dedbe2;box-shadow:0 16px 38px rgba(28,20,32,.17);transition:transform .28s cubic-bezier(.2,.75,.25,1),box-shadow .28s ease}
+.ebooks-route .ebook-card:hover .ebook-cover{transform:translateY(-5px);box-shadow:0 22px 48px rgba(28,20,32,.22)}
+.ebooks-route .ebook-cover img{width:100%;height:100%;object-fit:cover}
+.ebooks-route .ebook-cover-designed{padding:24px!important}
+.ebooks-route .ebook-card-meta{display:block;margin-top:17px;color:#8e8e93;font-size:11px;font-weight:650;line-height:1.35}
+.ebooks-route .ebook-access-badge.is-preview{display:inline-flex;margin-top:9px;padding:6px 9px;border:0;border-radius:999px;background:rgba(111,67,136,.1);color:#6f4388;font-size:9px;font-weight:750;letter-spacing:.02em;text-transform:none}
+.ebooks-route .ebook-card h3{margin:11px 0 7px;color:#1c1c1e;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;font-size:22px;font-weight:730;line-height:1.04;letter-spacing:-.035em}
+.ebooks-route .ebook-card p{display:-webkit-box;margin:0;color:#6e6e73;font-size:13px;line-height:1.45;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+.ebooks-route .ebook-card .text-link{display:inline-flex;margin-top:13px;color:#6f4388;font-size:12px;font-weight:750;letter-spacing:0;text-transform:none}
+.ebooks-route .library-care-note{border:0!important;border-radius:28px!important;background:rgba(255,255,255,.86)!important;box-shadow:0 18px 50px rgba(42,20,51,.07)!important}
+
+/* Music: Spotify-style discovery inside an Apple iPhone interaction system */
+.music-app{background:var(--fmb-music-bg)!important;color:#fff}
+.music-app main{background:var(--fmb-music-bg)}
+.music-app .nc-broadcast-identity{background:radial-gradient(circle at 83% 8%,rgba(112,67,136,.54),transparent 31%),linear-gradient(155deg,#080808,#17101d 58%,#271531)}
+.music-app .fco-product-lead{padding:48px 0;background:linear-gradient(180deg,#151018 0%,#090909 100%);color:#fff}
+.music-app .fco-product-lead-grid{grid-template-columns:minmax(0,1fr) 300px;gap:44px}
+.music-app .fco-product-lead h2{color:#fff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;font-size:clamp(48px,6.5vw,82px);font-weight:820;line-height:.92;letter-spacing:-.07em}
+.music-app .fco-product-lead h2 em{color:#d8b968;font-style:normal}
+.music-app .fco-product-lead p{color:rgba(255,255,255,.66)}
+.music-app .fco-lead-art{min-height:300px;border:0;border-radius:24px;background:#181818;box-shadow:0 28px 70px rgba(0,0,0,.42)}
+.music-app .fco-lead-art img{min-height:300px;object-fit:cover}
+.music-app .fco-access-band{padding:22px 0;background:#090909;border-color:rgba(255,255,255,.08)}
+.music-app .fco-access-panel{border:1px solid rgba(255,255,255,.09);background:linear-gradient(145deg,#1b1b1b,#121212);box-shadow:none}
+.music-app .fco-access-panel h2{color:#fff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;font-weight:760}
+.music-app .fco-access-panel p{color:rgba(255,255,255,.58)}
+.music-app .fco-access-steps span{border-color:rgba(255,255,255,.11);background:#232323;color:#d8b968}
+.music-app .fco-dark-section{padding:54px 0 66px;background:#090909}
+.music-app .fco-dark-section .fco-section-head{margin-bottom:24px;border:0}
+.music-app .fco-dark-section .fco-section-head h2{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;font-weight:780}
+.music-app .featured-player{display:grid;grid-template-columns:minmax(250px,340px) minmax(0,1fr);grid-template-areas:"art meta" "art controls" "art progress" "art volume";column-gap:36px;align-items:center;padding:28px;border:1px solid rgba(255,255,255,.08)!important;border-radius:30px!important;background:radial-gradient(circle at 17% 18%,rgba(116,70,139,.5),transparent 36%),linear-gradient(145deg,#252126,#121212)!important;box-shadow:0 28px 80px rgba(0,0,0,.36)!important}
+.music-app .featured-art{grid-area:art;width:100%;aspect-ratio:1;border-radius:22px;background-color:#232323;box-shadow:0 22px 55px rgba(0,0,0,.36)}
+.music-app .featured-art:before{display:none}
+.music-app .player-meta{grid-area:meta;padding:0}
+.music-app .player-meta h2{margin:5px 0 8px;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;font-size:clamp(32px,4vw,54px);font-weight:800;line-height:.96;letter-spacing:-.055em}
+.music-app .player-meta p{color:rgba(255,255,255,.58)}
+.music-app .player-controls{grid-area:controls;justify-content:flex-start;margin-top:18px}
+.music-app .round-control{min-width:48px;width:48px;height:48px;padding:0;border:1px solid rgba(255,255,255,.12);border-radius:50%;background:#2b2b2b;color:#fff;font-size:10px}
+.music-app .round-control.primary{width:64px;height:64px;background:#fff;color:#111;font-size:12px;box-shadow:0 12px 30px rgba(0,0,0,.3)}
+.music-app .progress-wrap{grid-area:progress;margin-top:20px}
+.music-app .progress-track{height:4px;background:rgba(255,255,255,.2)}
+.music-app .progress-fill{background:#fff}
+.music-app .volume-row{grid-area:volume;color:rgba(255,255,255,.58)}
+.music-app .fco-library-section{padding:56px 0 110px;background:#121212;color:#fff}
+.music-app .fco-library-section .fco-section-head{border-color:rgba(255,255,255,.14)}
+.music-app .fco-library-section .fco-section-head h2{color:#fff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;font-weight:800}
+.music-app .fco-library-section .fco-section-head>p{color:rgba(255,255,255,.58)}
+.music-app .collection-cover-card{overflow:hidden;border:1px solid rgba(255,255,255,.08)!important;border-radius:24px!important;background:#181818!important;box-shadow:none!important;color:#fff}
+.music-app .collection-cover-card h3,.music-app .collection-cover-card p{color:#fff}
+.music-app .playlist-list{gap:24px}
+.music-app .playlist-block{padding:20px;border:1px solid rgba(255,255,255,.07)!important;border-radius:24px!important;background:#181818!important;color:#fff}
+.music-app .playlist-block h3{color:#fff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;font-size:30px;font-weight:780}
+.music-app .playlist-description{color:rgba(255,255,255,.52)}
+.music-app .song-row{grid-template-columns:52px minmax(0,1fr) auto;gap:13px;padding:9px 10px;border-radius:14px}
+.music-app .song-row:hover,.music-app .song-row.active{background:#282828}
+.music-app .song-cover{width:52px;height:52px;border-radius:8px;background:#303030}
+.music-app .song-title{color:#fff;font-size:14px;font-weight:700}
+.music-app .song-artist{color:rgba(255,255,255,.48)}
+.music-app .song-play{min-width:46px;height:38px;border-radius:999px;background:#fff;color:#111}
+.music-app .music-credits,.music-app .fco-ownership{border:1px solid rgba(255,255,255,.08)!important;border-left:0!important;border-radius:24px!important;background:#181818!important;color:#fff}
+.music-app .music-credits h2,.music-app .music-credit-list strong,.music-app .fco-ownership h2{color:#fff}
+.music-app .music-credit-list p{border-color:rgba(255,255,255,.07);background:#202020;color:rgba(255,255,255,.58)}
+.music-app .mini-player{bottom:max(12px,env(safe-area-inset-bottom));width:min(680px,calc(100% - 20px));border:1px solid rgba(255,255,255,.12)!important;border-radius:18px!important;background:rgba(30,30,30,.9)!important;box-shadow:0 18px 55px rgba(0,0,0,.42);-webkit-backdrop-filter:blur(30px) saturate(150%);backdrop-filter:blur(30px) saturate(150%)}
+.music-app .nc-footer{background:#090909}
+
+@media(max-width:1100px){
+  .fmb-site-links{gap:18px}
+  .fmb-site-links a{font-size:9px}
+  .ebooks-route .ebook-grid{gap:22px}
+}
+
 @media(max-width:800px){
   .fmb-site-gateway .wrap{width:min(100% - 20px,680px);min-height:50px;gap:12px}
-  .fmb-site-home{min-height:34px;padding:0 12px;font-size:8px}
-  .fmb-site-links{gap:17px}
-  .fmb-site-links a{min-height:48px;font-size:8px}
+  .fmb-site-home{min-height:36px;padding:0 12px;font-size:9px}
+  .fmb-site-links{gap:18px}
+  .fmb-site-links a{min-height:50px;font-size:9px}
   body.has-fmb-site-gateway .nc-topic-rail{top:143px}
   .fmb-footer-site-map{align-items:flex-start;flex-direction:column}
-  .fmb-footer-site-map nav{width:100%;justify-content:flex-start;overflow-x:auto;scrollbar-width:none}
-  .fmb-footer-site-map nav::-webkit-scrollbar{display:none}
-  .nc-mobile-dock.fmb-five-link-dock{grid-template-columns:repeat(5,1fr)}
+  .fmb-footer-site-map nav{width:100%;justify-content:flex-start}
+  .nc-wire-label{min-width:108px;padding:0 12px;font-size:8px}
+  .nc-wire-track{animation-duration:52s}
+  .nc-wire-track span,.fco-product-channel-route .nc-wire-track span{font-size:9px!important}
+  .nc-wire-track span:after{margin-inline:18px}
+  .fco-product-channel-route .nc-channel-id{grid-template-columns:1fr;gap:20px}
+  .fco-product-channel-route .nc-channel-lockup h1{font-size:clamp(52px,16vw,78px)}
+  .fco-product-channel-route .nc-channel-promise{max-width:none}
+  .ebooks-route .fco-product-lead-grid,.music-app .fco-product-lead-grid{grid-template-columns:1fr}
+  .ebooks-route .fco-product-lead-grid{padding:24px}
+  .ebooks-route .fco-lead-art{min-height:280px}
+  .ebooks-route .fco-lead-art img{min-height:280px}
+  .ebooks-route .ebook-shelf-head{display:block}
+  .ebooks-route .ebook-shelf-head>p{margin-top:10px}
+  .ebooks-route .ebook-grid{display:flex;gap:18px;margin-right:-14px;padding:2px 14px 24px 2px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .ebooks-route .ebook-grid::-webkit-scrollbar{display:none}
+  .ebooks-route .ebook-card{flex:0 0 min(72vw,245px)}
+  .music-app .fco-lead-art{min-height:280px}
+  .music-app .fco-lead-art img{min-height:280px}
+  .music-app .featured-player{grid-template-columns:1fr;grid-template-areas:"art" "meta" "controls" "progress" "volume";gap:0;padding:18px}
+  .music-app .featured-art{max-width:430px;margin-inline:auto}
+  .music-app .player-meta{padding-top:22px;text-align:left}
+  .music-app .player-controls{justify-content:center}
+  .music-app .mini-player{bottom:max(10px,env(safe-area-inset-bottom))}
 }
-@media(max-width:520px){.fmb-site-home span{display:none}.fmb-site-home{width:38px;padding:0;justify-content:center}.fmb-site-links{gap:15px}.fmb-channel-actions a{width:100%}.fmb-footer-site-map nav{gap:16px}.nc-mobile-dock.fmb-five-link-dock a{font-size:7px}}
-@media(prefers-reduced-motion:reduce){.fmb-site-links a:after{transition:none}}
+
+@media(max-width:520px){
+  .fmb-site-gateway .wrap{width:calc(100% - 14px);gap:9px}
+  .fmb-site-home{padding:0 11px}
+  .fmb-site-home span{display:inline!important}
+  .fmb-site-links{gap:15px}
+  .fmb-footer-site-map nav{gap:16px}
+  .nc-wire{min-height:44px}
+  .nc-wire-label{min-width:86px;padding:0 8px;font-size:7px;letter-spacing:.1em}
+  .nc-wire-window{mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+  .nc-wire-track{animation-duration:58s}
+  .nc-wire-track span,.fco-product-channel-route .nc-wire-track span{font-size:8.5px!important;letter-spacing:.055em}
+  .fco-product-channel-route .nc-channel-lockup{gap:13px}
+  .fco-product-channel-route .nc-channel-lockup img{width:132px}
+  .fco-product-channel-route .nc-channel-lockup h1{padding-left:13px;font-size:clamp(44px,15vw,64px)}
+  .fco-product-channel-route .nc-channel-service span{padding:10px 14px;font-size:7px}
+  .ebooks-route .fco-product-lead{padding:30px 0}
+  .ebooks-route .fco-product-lead-grid{border-radius:27px}
+  .ebooks-route .fco-product-lead h2{font-size:clamp(42px,13vw,58px)}
+  .ebooks-route .ebook-card{flex-basis:min(76vw,238px)}
+  .ebooks-route .ebook-cover{border-radius:17px}
+  .music-app .fco-product-lead{padding:32px 0}
+  .music-app .fco-product-lead h2{font-size:clamp(43px,13vw,60px)}
+  .music-app .featured-player{border-radius:24px!important}
+  .music-app .featured-art{border-radius:18px}
+  .music-app .player-meta h2{font-size:35px}
+  .music-app .round-control{width:44px;height:44px;min-width:44px}
+  .music-app .round-control.primary{width:58px;height:58px}
+  .music-app .playlist-block{padding:15px;border-radius:20px!important}
+  .music-app .song-row{grid-template-columns:46px minmax(0,1fr) 40px;padding:8px 4px}
+  .music-app .song-cover{width:46px;height:46px}
+  .music-app .song-play{min-width:40px;width:40px;padding:0;font-size:9px}
+  .music-app .mini-player{grid-template-columns:42px minmax(0,1fr) auto;padding:8px 9px;border-radius:16px!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .fmb-site-links a:after,.ebooks-route .ebook-cover{transition:none}
+  .nc-wire-window{overflow-x:auto;mask-image:none;-webkit-mask-image:none;scrollbar-width:none}
+  .nc-wire-window::-webkit-scrollbar{display:none}
+  .nc-wire-track{animation:none}
+}
