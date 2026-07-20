@@ -2,14 +2,25 @@
   const body=document.body;
   const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
+  const syncChannelLayout=()=>{
+    const header=document.querySelector('.nc-site-header');
+    if(!header)return;
+    const height=Math.max(0,Math.ceil(header.getBoundingClientRect().height));
+    document.documentElement.style.setProperty('--fmb-channel-sticky-offset',`${height}px`);
+  };
+
   const installSiteGateway=()=>{
     const header=document.querySelector('.nc-site-header');
-    if(!header||document.querySelector('.fmb-site-gateway'))return;
+    if(!header||document.querySelector('.fmb-site-gateway')){
+      syncChannelLayout();
+      return;
+    }
 
     if(!document.querySelector('link[href*="fmb-sitewide-gateway.css"]')){
       const stylesheet=document.createElement('link');
       stylesheet.rel='stylesheet';
-      stylesheet.href='/assets/css/fmb-sitewide-gateway.css?v=20260721-connected-v1';
+      stylesheet.href='/assets/css/fmb-sitewide-gateway.css?v=20260721-responsive-v2';
+      stylesheet.fetchPriority='high';
       document.head.appendChild(stylesheet);
     }
 
@@ -27,12 +38,17 @@
     const gateway=document.createElement('div');
     gateway.className='fmb-site-gateway';
     gateway.setAttribute('aria-label','Complete website navigation');
-    gateway.innerHTML=`<div class="wrap"><a class="fmb-site-home" href="/" aria-label="Return to the official home page"><span>Official Home</span></a><nav class="fmb-site-links" aria-label="Explore the complete FMB website">${routes.map(route=>`<a href="${route.href}"${pathname.startsWith(route.match)?' aria-current="page"':''}>${route.label}</a>`).join('')}</nav></div>`;
+    gateway.innerHTML=`<div class="wrap"><a class="fmb-site-home" href="/" aria-label="Return to the official home page"><span>Official Home</span></a><nav class="fmb-site-links" aria-label="Explore the complete FMB website">${routes.map(route=>`<a href="${route.href}"${pathname.startsWith(route.match)?' aria-current="page"':''}>${route.label}</a>`).join('')}</nav></div><span class="fmb-site-swipe-cue" aria-hidden="true">Swipe menu</span>`;
 
     const brandline=header.querySelector('.nc-brandline');
     if(brandline)brandline.insertAdjacentElement('afterend',gateway);
     else header.prepend(gateway);
     body.classList.add('has-fmb-site-gateway');
+
+    const gatewayLinks=gateway.querySelector('.fmb-site-links');
+    gatewayLinks?.addEventListener('scroll',()=>{
+      gateway.classList.toggle('is-scrolled',gatewayLinks.scrollLeft>10);
+    },{passive:true});
 
     const promise=document.querySelector('.nc-broadcast-identity .nc-channel-promise');
     if(promise&&!promise.querySelector('.fmb-channel-actions')){
@@ -61,6 +77,28 @@
       mobileDock.prepend(home);
       mobileDock.classList.add('fmb-five-link-dock');
     }
+
+    requestAnimationFrame(syncChannelLayout);
+    if('ResizeObserver' in window)new ResizeObserver(syncChannelLayout).observe(header);
+    window.addEventListener('resize',syncChannelLayout,{passive:true});
+    window.addEventListener('orientationchange',syncChannelLayout,{passive:true});
+  };
+
+  const installEditorialPortrait=()=>{
+    if(!body.classList.contains('news-channel-route')||body.classList.contains('fco-product-channel-route'))return;
+    const image=document.querySelector('.nc-editor-portrait img');
+    const frame=image?.closest('.nc-editor-portrait');
+    if(!image)return;
+    image.src='/assets/images/news/francine-editorial-leadership-800.webp';
+    image.srcset='/assets/images/news/francine-editorial-leadership-480.webp 480w, /assets/images/news/francine-editorial-leadership-800.webp 800w';
+    image.sizes='(max-width:720px) calc(100vw - 32px), 360px';
+    image.width=800;
+    image.height=1000;
+    image.alt='Francine Marie Bautista, founder and editorial leader of FMB&CO. News';
+    image.loading='lazy';
+    image.decoding='async';
+    Object.assign(image.style,{display:'block',width:'100%',height:'100%',objectFit:'cover',objectPosition:'center 20%',background:'#d8d8de'});
+    if(frame)Object.assign(frame.style,{overflow:'hidden',background:'#d8d8de'});
   };
 
   const installFounderAiWaterLead=()=>{
@@ -142,6 +180,7 @@
   };
 
   installSiteGateway();
+  installEditorialPortrait();
   installFounderAiWaterLead();
   installFounderHeroTiles();
 
