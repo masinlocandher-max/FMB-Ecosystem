@@ -69,7 +69,7 @@
   const LEGACY_APP_HOST='app.francinemariebautista.com';
   const isYoni=window.location.hostname===YONI_HOST||window.location.hostname===LEGACY_APP_HOST||/^\/app(?:\/|$)/.test(window.location.pathname);
   if(!isYoni)return;
-  const version='20260720-1';
+  const version='20260720-2';
   if(!document.querySelector('link[data-yoni-experience]')){
     const link=document.createElement('link');
     link.rel='stylesheet';
