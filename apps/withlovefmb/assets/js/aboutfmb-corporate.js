@@ -26,11 +26,14 @@
     ];
     navigation.setAttribute('aria-label', 'Main website navigation');
     navigation.innerHTML = menu.map(([href, label, className]) => {
+      const onReceptionDesk = location.pathname.startsWith('/aboutfmb') && location.hash === '#work-with-fmb';
       const current = label === 'Reception Desk'
-        ? location.pathname.startsWith('/aboutfmb') && location.hash === '#work-with-fmb'
-        : href === '/'
-          ? location.pathname === '/'
-          : location.pathname.startsWith(href.split('#')[0]);
+        ? onReceptionDesk
+        : label === 'About FMB'
+          ? location.pathname.startsWith('/aboutfmb') && !onReceptionDesk
+          : href === '/'
+            ? location.pathname === '/'
+            : location.pathname.startsWith(href.split('#')[0]);
       return `<a${className ? ` class="${className}"` : ''} href="${href}"${current ? ' aria-current="page"' : ''}>${label}</a>`;
     }).join('');
   }
