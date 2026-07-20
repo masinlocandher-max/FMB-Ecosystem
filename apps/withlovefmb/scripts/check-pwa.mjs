@@ -2,13 +2,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const root=path.resolve(new URL('..',import.meta.url).pathname);
-const manifest=JSON.parse(fs.readFileSync(path.join(root,'manifest.webmanifest'),'utf8'));
 const fail=message=>{console.error(message);process.exit(1)};
+const manifest=JSON.parse(fs.readFileSync(path.join(root,'manifest.webmanifest'),'utf8'));
 
 if(manifest.display!=='standalone')fail('PWA manifest must use standalone display mode.');
 if(manifest.scope!=='/')fail('PWA manifest scope must cover the full website.');
 if(!Array.isArray(manifest.icons)||manifest.icons.length<3)fail('PWA manifest requires any and maskable icons.');
-
 for(const icon of manifest.icons){
   const sizes=String(icon.sizes||'').match(/^(\d+)x(\d+)$/);
   if(!sizes)fail(`Invalid icon size declaration: ${icon.sizes||'missing'}`);
@@ -16,8 +15,7 @@ for(const icon of manifest.icons){
   if(!fs.existsSync(file))fail(`Missing PWA icon: ${icon.src}`);
   const png=fs.readFileSync(file);
   if(png.toString('hex',0,8)!=='89504e470d0a1a0a')fail(`PWA icon is not a PNG: ${icon.src}`);
-  const width=png.readUInt32BE(16);
-  const height=png.readUInt32BE(20);
+  const width=png.readUInt32BE(16),height=png.readUInt32BE(20);
   if(width!==Number(sizes[1])||height!==Number(sizes[2]))fail(`PWA icon dimensions do not match manifest: ${icon.src}`);
 }
 
@@ -44,4 +42,24 @@ for(const asset of ('/app/install/ /app/install/index.html /app/install/install.
   if(!worker.includes(`'${asset}'`))fail(`Service worker is missing install campaign asset: ${asset}`);
 }
 
-console.log('Website and Yoni PWA manifests, icons, install metadata, and service worker passed.');
+const yoniDir=path.join(root,'app/assets/yoni');
+const yoniFiles=['yoni-master-static.png','yoni-dancing.png','yoni-happy-wave.png','yoni-heart-hug.png','yoni-sleepy-rest.png','yoni-journal.png','yoni-music.png','yoni-meditation.png'];
+for(const fileName of yoniFiles){
+  const file=path.join(yoniDir,fileName);
+  if(!fs.existsSync(file))fail(`Missing Yoni visual asset: ${fileName}`);
+  if(fs.readFileSync(file).toString('hex',0,8)!=='89504e470d0a1a0a')fail(`Yoni asset is not a PNG: ${fileName}`);
+  if(!worker.includes(`/app/assets/yoni/${fileName}`))fail(`Service worker does not cache Yoni asset: ${fileName}`);
+}
+const yoniLoader=fs.readFileSync(path.join(root,'assets/js/yoni-experience.js'),'utf8');
+const yoniReply=fs.readFileSync(path.join(root,'assets/js/yoni-reply-core.js'),'utf8');
+const yoniVisual=fs.readFileSync(path.join(root,'assets/js/yoni-visual-final.js'),'utf8');
+const yoniCss=fs.readFileSync(path.join(root,'assets/css/yoni-visual-final.css'),'utf8');
+if(!yoniLoader.includes('yoni-reply-core.js')||!yoniLoader.includes('yoni-visual-final.js'))fail('Yoni experience loader is missing the emotional or visual module.');
+if(!yoniReply.includes('yoni-master-static.png'))fail('Yoni reply layer does not use the official master identity.');
+if(!yoniVisual.includes('/app/assets/yoni/'))fail('Yoni visual layer does not use the official asset folder.');
+if(!yoniVisual.includes('Yoni is an FMB&CO. digital product.'))fail('Yoni product attribution is missing.');
+if(!worker.includes('/assets/js/yoni-reply-core.js')||!worker.includes('/assets/js/yoni-visual-final.js')||!worker.includes('/assets/css/yoni-visual-final.css'))fail('Service worker does not cache the final Yoni experience modules.');
+for(const width of ['320px','375px','390px','430px'])if(!yoniCss.includes(width))fail(`Yoni CSS is missing the ${width} mobile optimization.`);
+if(!yoniCss.includes('prefers-reduced-motion'))fail('Yoni visual layer must support reduced motion.');
+
+console.log('Website and Yoni PWA, official visual identity, responsive ads, cache, and accessibility checks passed.');
