@@ -6,11 +6,12 @@ import quality_check as checks
 
 
 LEGACY_APP_ERROR = "app/index.html: missing verified app-entry marker:"
+ORIGINAL_MEMBERSHIP_CHECK = checks.check_membership_features
 
 
 def check_current_membership_features(errors: list[str]) -> None:
     legacy_errors: list[str] = []
-    checks.check_membership_features(legacy_errors)
+    ORIGINAL_MEMBERSHIP_CHECK(legacy_errors)
     errors.extend(error for error in legacy_errors if not error.startswith(LEGACY_APP_ERROR))
 
     app_html = (checks.ROOT / "app/index.html").read_text(encoding="utf-8")
