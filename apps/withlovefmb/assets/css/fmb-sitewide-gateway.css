@@ -1,0 +1,34 @@
+/* FMB&CO. channel gateway: connects News, eBooks, and Music to the complete website */
+.fmb-site-gateway{border-bottom:1px solid rgba(226,200,142,.16);background:#08050d;color:#fff}
+.fmb-site-gateway .wrap{display:flex;min-height:43px;align-items:center;gap:22px}
+.fmb-site-home{display:inline-flex;min-height:30px;flex:0 0 auto;align-items:center;gap:9px;padding:0 14px;border:1px solid rgba(226,200,142,.44);border-radius:999px;background:linear-gradient(135deg,rgba(104,66,131,.25),rgba(200,169,107,.1));color:#f0dca9!important;font:850 9px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:.13em;text-decoration:none!important;text-transform:uppercase}
+.fmb-site-home:before{content:"";width:7px;height:7px;border-radius:2px;background:#d4b56c;box-shadow:0 0 0 4px rgba(212,181,108,.1)}
+.fmb-site-links{display:flex;min-width:0;flex:1;align-items:center;gap:24px;overflow-x:auto;scrollbar-width:none}
+.fmb-site-links::-webkit-scrollbar{display:none}
+.fmb-site-links a{position:relative;display:inline-flex;min-height:42px;flex:0 0 auto;align-items:center;color:rgba(255,255,255,.62)!important;font:730 9px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:.07em;text-decoration:none!important;text-transform:uppercase;white-space:nowrap}
+.fmb-site-links a:after{content:"";position:absolute;right:0;bottom:5px;left:0;height:1px;transform:scaleX(0);transform-origin:left;background:#c5a45d;transition:transform .2s ease}
+.fmb-site-links a:hover,.fmb-site-links a:focus-visible,.fmb-site-links a[aria-current="page"]{color:#fff!important}
+.fmb-site-links a:hover:after,.fmb-site-links a:focus-visible:after,.fmb-site-links a[aria-current="page"]:after{transform:scaleX(1)}
+.fmb-channel-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+.fmb-channel-actions a{display:inline-flex;min-height:42px;align-items:center;justify-content:center;padding:0 16px;border:1px solid rgba(226,200,142,.35);border-radius:999px;color:#fff!important;font:820 9px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:.1em;text-decoration:none!important;text-transform:uppercase}
+.fmb-channel-actions a:first-child{border-color:transparent;background:linear-gradient(135deg,#c5a45d,#e0c47e);color:#211526!important}
+.fmb-footer-site-map{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:34px;padding:18px 0;border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1)}
+.fmb-footer-site-map strong{color:#e2c88e;font:820 9px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:.14em;text-transform:uppercase}
+.fmb-footer-site-map nav{display:flex!important;flex:1;justify-content:flex-end;gap:20px!important}
+.fmb-footer-site-map a{color:rgba(255,255,255,.65)!important;font:700 9px/1.3 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;letter-spacing:.05em;text-decoration:none!important;text-transform:uppercase;white-space:nowrap}
+.fmb-footer-site-map a:hover,.fmb-footer-site-map a:focus-visible{color:#fff!important}
+body.has-fmb-site-gateway .nc-topic-rail{top:150px}
+@media(max-width:1100px){.fmb-site-links{gap:18px}.fmb-site-links a{font-size:8px}}
+@media(max-width:800px){
+  .fmb-site-gateway .wrap{width:min(100% - 20px,680px);min-height:50px;gap:12px}
+  .fmb-site-home{min-height:34px;padding:0 12px;font-size:8px}
+  .fmb-site-links{gap:17px}
+  .fmb-site-links a{min-height:48px;font-size:8px}
+  body.has-fmb-site-gateway .nc-topic-rail{top:143px}
+  .fmb-footer-site-map{align-items:flex-start;flex-direction:column}
+  .fmb-footer-site-map nav{width:100%;justify-content:flex-start;overflow-x:auto;scrollbar-width:none}
+  .fmb-footer-site-map nav::-webkit-scrollbar{display:none}
+  .nc-mobile-dock.fmb-five-link-dock{grid-template-columns:repeat(5,1fr)}
+}
+@media(max-width:520px){.fmb-site-home span{display:none}.fmb-site-home{width:38px;padding:0;justify-content:center}.fmb-site-links{gap:15px}.fmb-channel-actions a{width:100%}.fmb-footer-site-map nav{gap:16px}.nc-mobile-dock.fmb-five-link-dock a{font-size:7px}}
+@media(prefers-reduced-motion:reduce){.fmb-site-links a:after{transition:none}}
