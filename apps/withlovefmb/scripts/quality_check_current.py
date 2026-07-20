@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
-"""Run the site quality suite using the current modular Yoni application contract."""
+"""Run the site quality suite using the current modular Yoni and News contracts."""
 from __future__ import annotations
 
 import quality_check as checks
 
 
 LEGACY_APP_ERROR = "app/index.html: missing verified app-entry marker:"
+STALE_NEWS_ERRORS = {
+    "news/index.html: every main story must have one sourced lead visual",
+    "news/index.html: every editorial visual must show its source or credit below it",
+}
 ORIGINAL_MEMBERSHIP_CHECK = checks.check_membership_features
+ORIGINAL_EDITORIAL_MEDIA_CHECK = checks.check_mobile_and_editorial_media
 
 
 def check_current_membership_features(errors: list[str]) -> None:
@@ -110,5 +115,29 @@ def check_current_membership_features(errors: list[str]) -> None:
                 errors.append(f"assets/js/supabase-client.js: missing Yoni experience loader: {marker}")
 
 
+def check_current_mobile_and_editorial_media(errors: list[str]) -> None:
+    legacy_errors: list[str] = []
+    ORIGINAL_EDITORIAL_MEDIA_CHECK(legacy_errors)
+    errors.extend(error for error in legacy_errors if error not in STALE_NEWS_ERRORS)
+
+    news = (checks.ROOT / "news/index.html").read_text(encoding="utf-8")
+    if news.count('class="news-visual"') != 6:
+        errors.append("news/index.html: all six current main stories must have one sourced lead visual")
+    required_credits = (
+        "GMA Public Affairs / I-Witness",
+        "Micluna / Wikimedia Commons, CC BY-SA 4.0",
+        "Philippine Information Agency",
+        "Earl D.C. Bracamonte / Philstar.com",
+        "does not reproduce the racist video",
+        "FMB editorial illustration based on public releases",
+    )
+    if news.count("<figcaption>") != 6:
+        errors.append("news/index.html: all six current editorial visuals must show a source or credit below them")
+    for credit in required_credits:
+        if credit not in news:
+            errors.append(f"news/index.html: missing current editorial visual credit: {credit}")
+
+
 checks.check_membership_features = check_current_membership_features
+checks.check_mobile_and_editorial_media = check_current_mobile_and_editorial_media
 raise SystemExit(checks.main())
