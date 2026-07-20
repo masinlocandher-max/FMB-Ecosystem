@@ -1,0 +1,47 @@
+{
+  "version": "2026-07-21",
+  "authoritative_identity": "yoni-master-static.png",
+  "assets": {
+    "master": {
+      "file": "yoni-master-static.png",
+      "alt": "Yoni, an orange bear companion wearing a green beanie",
+      "use": ["loading", "default companion", "home identity", "settings", "fallback"]
+    },
+    "dancing": {
+      "file": "yoni-dancing.png",
+      "alt": "Yoni dancing in celebration",
+      "use": ["completed check-in", "streak", "positive reinforcement"]
+    },
+    "happy_wave": {
+      "file": "yoni-happy-wave.png",
+      "alt": "Yoni waving hello",
+      "use": ["welcome", "onboarding", "success"]
+    },
+    "heart_hug": {
+      "file": "yoni-heart-hug.png",
+      "alt": "Yoni offering a comforting heart hug",
+      "use": ["comfort", "reassurance", "emotional support"]
+    },
+    "sleepy_rest": {
+      "file": "yoni-sleepy-rest.png",
+      "alt": "Yoni getting ready to rest",
+      "use": ["night mode", "rest reminder", "wind-down"]
+    },
+    "journal": {
+      "file": "yoni-journal.png",
+      "alt": "Yoni writing in a journal",
+      "use": ["journal", "reflection", "saved entry"]
+    },
+    "music": {
+      "file": "yoni-music.png",
+      "alt": "Yoni listening to music",
+      "use": ["music", "sound settings", "ambient listening"]
+    },
+    "meditation": {
+      "file": "yoni-meditation.png",
+      "alt": "Yoni sitting calmly for a grounding exercise",
+      "use": ["breathing", "grounding", "calm mode"]
+    }
+  },
+  "product_attribution": "Yoni is an FMB&CO. digital product."
+}

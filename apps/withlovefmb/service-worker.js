@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260720-news-desk-az-website-only-v18';
+const CACHE_NAME='fmb-app-shell-20260721-yoni-visual-v19';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -6,39 +6,16 @@ const PUBLIC_PAGES=new Set([
   '/app/index.html',
   '/app/install/',
   '/app/install/index.html',
-  '/about.html',
-  '/auth.html',
-  '/freedom-wall.html',
+  '/aboutfmb/',
   '/ebooks/',
   '/music/',
-  '/communityengagements/',
-  '/aboutfmb/',
-  '/fmb&co/',
-  '/fmb&co/senz/',
-  '/fmb&co/cognita/',
-  '/fmbandco/',
   '/gethelp/',
+  '/fmbandco/',
   '/news/',
-  '/news/subic-aeta-landfill/',
-  '/news/pax-silica-water/',
-  '/news/binibining-pilipinas-2026/',
-  '/news/china-ai-monkey-video/',
-  '/news/cleopatra-barrera/',
-  '/news/impeachment/',
-  '/news/pax-silica/',
-  '/news/good-news/',
-  '/reading.html',
-  '/dress-with-intention.html',
-  '/music.html',
-  '/womens-health.html',
-  '/coming-out-respect.html',
-  '/men-can-cry.html',
-  '/skin-care-makeup.html',
   '/privacy-policy.html',
   '/membership-agreement.html',
   '/community-guidelines.html',
-  '/data-rights.html',
-  '/volunteer.html'
+  '/data-rights.html'
 ]);
 const APP_SHELL=[
   '/',
@@ -53,85 +30,27 @@ const APP_SHELL=[
   '/app/install/index.html',
   '/app/install/install.css',
   '/app/install/install.js',
-  '/freedom-wall.html',
-  '/auth.html',
-  '/news/',
-  '/news/subic-aeta-landfill/',
-  '/news/pax-silica-water/',
-  '/news/binibining-pilipinas-2026/',
-  '/news/china-ai-monkey-video/',
-  '/news/cleopatra-barrera/',
-  '/news/impeachment/',
-  '/news/pax-silica/',
-  '/news/good-news/',
   '/manifest.webmanifest',
   '/assets/css/site.css',
-  '/assets/css/icon-fix.css',
-  '/assets/css/repair.css',
-  '/assets/css/live-hotfix.css',
-  '/assets/css/landing.css',
-  '/assets/css/apple-mobile.css',
-  '/assets/css/experience-refresh.css',
-  '/assets/css/organized-pages.css',
-  '/assets/css/fmb-polish.css',
-  '/assets/css/fmbandco-brand.css',
-  '/assets/css/aboutfmb-corporate.css',
-  '/assets/css/fmb-content.css',
-  '/assets/css/fmb-mobile-clean.css',
-  '/assets/css/fmb-mobile-luxury.css',
-  '/assets/css/website-responsive-parity.css',
-  '/assets/css/centered-partner-marquee.css',
-  '/assets/css/desktop-premium.css',
-  '/assets/css/member-experience.css',
-  '/assets/css/mobile-app.css',
-  '/assets/css/volunteer.css',
-  '/assets/css/music-ui.css',
-  '/assets/css/news-channel.css',
-  '/assets/js/site.js',
+  '/assets/css/yoni-experience.css',
+  '/assets/css/yoni-visual-final.css',
   '/assets/js/config.js',
   '/assets/js/supabase-client.js',
-  '/assets/js/live-hotfix.js',
-  '/assets/js/volunteer.js',
-  '/assets/js/music.js',
-  '/assets/js/desktop-premium.js',
-  '/assets/js/global-music.js',
-  '/assets/js/fmbandco-motion.js',
-  '/assets/js/aboutfmb-corporate.js',
-  '/assets/js/news-channel.js',
-  '/assets/data/music-library.json',
-  '/assets/images/music/fmb-calm-official-album-cover.jpg',
-  '/assets/images/icon-transparent.png',
-  '/assets/images/signature-transparent.png',
-  '/assets/images/fmbandco/fmbandco-primary-transparent.png',
-  '/assets/images/fmbandco/fmbandco-primary-clean.png',
-  '/assets/images/fmbandco/fmbandco-primary-reversed.png',
-  '/assets/images/fmbandco/fmbandco-ampersand-gold.png',
-  '/assets/images/fmbandco/francine-founder-hero-640.webp',
-  '/assets/images/fmbandco/francine-founder-hero-923.webp',
-  '/assets/images/fmb/francine-marie-bautista-wordmark-white-v2.png',
-  '/assets/images/fmb/francine-founder-front-cutout-640-v1.webp',
-  '/assets/images/fmb/francine-founder-front-cutout-900-v1.webp',
-  '/assets/images/fmb/francine-founder-side-cutout-640-v1.webp',
-  '/assets/images/fmb/francine-founder-side-cutout-900-v1.webp',
-  '/assets/images/projects/senz-logo.png',
-  '/assets/images/projects/cognita-logo.png',
-  '/assets/images/projects/senz-logo-clean.png',
-  '/assets/images/projects/cognita-logo-clean.png',
-  '/assets/images/projects/senz-transparent.png',
-  '/assets/images/projects/cognita-transparent.png',
-  '/assets/images/news/cleopatra-barrera-zambales-ocean-feature.jpeg',
-  '/assets/images/news/subic-aeta-dumpsite-iwitness.jpg',
-  '/assets/images/news/new-clark-city-pax-silica-pia.jpg',
-  '/assets/images/news/binibining-pilipinas-2026-winners.jpg',
-  '/assets/images/news/china-ai-propaganda-editorial.webp',
-  '/assets/images/news/sara-duterte-impeachment.webp',
-  '/assets/images/news/pax-silica-briefing.png',
-  '/assets/images/news/good-news-briefing.png',
+  '/assets/js/yoni-experience.js',
+  '/assets/js/yoni-reply-core.js',
+  '/assets/js/yoni-visual-final.js',
+  '/app/assets/yoni/manifest.json',
+  '/app/assets/yoni/yoni-master-static.png',
+  '/app/assets/yoni/yoni-dancing.png',
+  '/app/assets/yoni/yoni-happy-wave.png',
+  '/app/assets/yoni/yoni-heart-hug.png',
+  '/app/assets/yoni/yoni-sleepy-rest.png',
+  '/app/assets/yoni/yoni-journal.png',
+  '/app/assets/yoni/yoni-music.png',
+  '/app/assets/yoni/yoni-meditation.png',
   '/assets/images/app-icon-192.png',
   '/assets/images/app-icon-512.png',
-  '/assets/images/apple-touch-icon.png',
-  '/assets/images/volunteer/francine-leading-with-love-fmb.webp',
-  '/assets/images/volunteer/community-and-volunteer-team.webp'
+  '/assets/images/apple-touch-icon.png'
 ];
 
 self.addEventListener('install',event=>{
@@ -141,6 +60,7 @@ self.addEventListener('install',event=>{
     await self.skipWaiting();
   })());
 });
+
 self.addEventListener('activate',event=>{
   event.waitUntil((async()=>{
     const keys=await caches.keys();
@@ -158,8 +78,6 @@ self.addEventListener('fetch',event=>{
   if(request.method!=='GET')return;
   const url=new URL(request.url);
   if(url.origin!==self.location.origin)return;
-
-  // Audio is streamed with byte ranges. Never cache or rewrite these requests.
   if(url.pathname==='/api/music'||request.headers.has('range'))return;
 
   if(request.mode==='navigate'){
@@ -180,7 +98,6 @@ self.addEventListener('fetch',event=>{
   }
 
   if(!['style','script','image','font','audio','manifest'].includes(request.destination))return;
-
   if(['style','script','manifest'].includes(request.destination)){
     event.respondWith((async()=>{
       try{
