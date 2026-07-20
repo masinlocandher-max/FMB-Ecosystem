@@ -2,16 +2,29 @@
   const body=document.body;
   const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
+  const ensureStyles=()=>{
+    const styles=[
+      ['/assets/css/fmb-sitewide-gateway.css?v=20260721-connected-v1','fmb-sitewide-gateway.css'],
+      ['/assets/css/fmb-responsive-final.css?v=20260721-screen-optimization-v1','fmb-responsive-final.css']
+    ];
+    styles.forEach(([href,marker])=>{
+      if(document.querySelector(`link[href*="${marker}"]`))return;
+      const link=document.createElement('link');
+      link.rel='stylesheet';
+      link.href=href;
+      document.head.appendChild(link);
+    });
+  };
+
+  const normalizeRoutes=()=>{
+    document.querySelectorAll('a[href^="/fmb&co/"]').forEach(link=>{
+      link.href=link.getAttribute('href').replace('/fmb&co/','/fmbandco/');
+    });
+  };
+
   const installSiteGateway=()=>{
     const header=document.querySelector('.nc-site-header');
     if(!header||document.querySelector('.fmb-site-gateway'))return;
-
-    if(!document.querySelector('link[href*="fmb-sitewide-gateway.css"]')){
-      const stylesheet=document.createElement('link');
-      stylesheet.rel='stylesheet';
-      stylesheet.href='/assets/css/fmb-sitewide-gateway.css?v=20260721-connected-v1';
-      document.head.appendChild(stylesheet);
-    }
 
     const pathname=location.pathname.replace(/\/+$/,'')||'/';
     const routes=[
@@ -27,7 +40,7 @@
     const gateway=document.createElement('div');
     gateway.className='fmb-site-gateway';
     gateway.setAttribute('aria-label','Complete website navigation');
-    gateway.innerHTML=`<div class="wrap"><a class="fmb-site-home" href="/" aria-label="Return to the official home page"><span>Official Home</span></a><nav class="fmb-site-links" aria-label="Explore the complete FMB website">${routes.map(route=>`<a href="${route.href}"${pathname.startsWith(route.match)?' aria-current="page"':''}>${route.label}</a>`).join('')}</nav></div>`;
+    gateway.innerHTML=`<div class="wrap"><a class="fmb-site-home" href="/" aria-label="Return to the official home page"><span>Official Home</span></a><div class="fmb-site-links-shell"><nav class="fmb-site-links" aria-label="Explore the complete FMB website">${routes.map(route=>`<a href="${route.href}"${pathname.startsWith(route.match)?' aria-current="page"':''}>${route.label}</a>`).join('')}</nav><span class="fmb-swipe-cue" aria-hidden="true">Swipe</span></div></div>`;
 
     const brandline=header.querySelector('.nc-brandline');
     if(brandline)brandline.insertAdjacentElement('afterend',gateway);
@@ -52,15 +65,22 @@
       else footerWrap.appendChild(sitemap);
     }
 
-    const mobileDock=document.querySelector('.nc-mobile-dock');
-    if(mobileDock&&!mobileDock.querySelector('a[href="/"]')){
-      const home=document.createElement('a');
-      home.href='/';
-      home.textContent='Home';
-      home.setAttribute('aria-label','Official home page');
-      mobileDock.prepend(home);
-      mobileDock.classList.add('fmb-five-link-dock');
-    }
+    document.querySelector('.nc-mobile-dock')?.setAttribute('hidden','');
+  };
+
+  const installEditorialLeadershipPortrait=()=>{
+    if(!body.classList.contains('news-channel-route')||body.classList.contains('fco-product-channel-route'))return;
+    const image=document.querySelector('.nc-editor-portrait img');
+    if(!image)return;
+    image.src='/assets/images/news/francine-editorial-leadership-480.webp';
+    image.srcset='/assets/images/news/francine-editorial-leadership-320.webp 320w, /assets/images/news/francine-editorial-leadership-480.webp 480w';
+    image.sizes='(max-width:700px) min(82vw,320px), 320px';
+    image.width=480;
+    image.height=600;
+    image.alt='Francine Marie Bautista, founder and editorial leader of FMB&CO. News';
+    image.loading='lazy';
+    image.decoding='async';
+    image.classList.add('nc-editor-portrait-opaque');
   };
 
   const installFounderAiWaterLead=()=>{
@@ -91,8 +111,7 @@
     if(deck)deck.textContent='Francine Marie Bautista explains what Filipinos need to know about AI, freshwater, data centers, and responsible innovation.';
     if(action)action.innerHTML='Read the founder article <b aria-hidden="true">→</b>';
 
-    const bulletin=[...document.querySelectorAll('.nc-wire-track span')];
-    bulletin.forEach((item,index)=>{
+    [...document.querySelectorAll('.nc-wire-track span')].forEach((item,index)=>{
       if(index===0||index===5)item.textContent='AI uses water: FMB explains the full story';
     });
 
@@ -141,9 +160,52 @@
     });
   };
 
+  const installResponsiveMetrics=()=>{
+    const root=document.documentElement;
+    const header=document.querySelector('.nc-site-header');
+    const setMetrics=()=>{
+      const headerHeight=Math.ceil(header?.getBoundingClientRect().height||0);
+      root.style.setProperty('--fmb-sticky-top',`${Math.max(0,headerHeight)}px`);
+    };
+    const scrollTargets=[
+      document.querySelector('.fmb-site-links'),
+      document.querySelector('.nc-topic-rail .wrap'),
+      document.querySelector('.nc-channel-service'),
+      ...document.querySelectorAll('.fmb-footer-site-map nav')
+    ].filter(Boolean);
+    const updateOverflow=element=>{
+      const overflow=element.scrollWidth>element.clientWidth+4;
+      const atEnd=element.scrollLeft+element.clientWidth>=element.scrollWidth-8;
+      element.classList.toggle('has-scroll-overflow',overflow);
+      element.classList.toggle('is-scroll-end',atEnd);
+    };
+    scrollTargets.forEach(element=>{
+      updateOverflow(element);
+      element.addEventListener('scroll',()=>updateOverflow(element),{passive:true});
+    });
+    setMetrics();
+    if('ResizeObserver' in window){
+      const observer=new ResizeObserver(()=>{
+        setMetrics();
+        scrollTargets.forEach(updateOverflow);
+      });
+      if(header)observer.observe(header);
+      scrollTargets.forEach(element=>observer.observe(element));
+    }else{
+      window.addEventListener('resize',()=>{
+        setMetrics();
+        scrollTargets.forEach(updateOverflow);
+      },{passive:true});
+    }
+  };
+
+  ensureStyles();
+  normalizeRoutes();
   installSiteGateway();
+  installEditorialLeadershipPortrait();
   installFounderAiWaterLead();
   installFounderHeroTiles();
+  requestAnimationFrame(installResponsiveMetrics);
 
   const clocks=[...document.querySelectorAll('[data-news-clock]')];
   if(clocks.length){
@@ -177,15 +239,9 @@
       menuButton.setAttribute('aria-expanded',String(open));
       menuButton.setAttribute('aria-label',open?'Close navigation menu':'Open navigation menu');
     });
-    menu.addEventListener('click',event=>{
-      if(event.target.closest('a'))closeMenu();
-    });
-    document.addEventListener('keydown',event=>{
-      if(event.key==='Escape')closeMenu();
-    });
-    window.addEventListener('resize',()=>{
-      if(window.innerWidth>800)closeMenu();
-    },{passive:true});
+    menu.addEventListener('click',event=>{if(event.target.closest('a'))closeMenu();});
+    document.addEventListener('keydown',event=>{if(event.key==='Escape')closeMenu();});
+    window.addEventListener('resize',()=>{if(window.innerWidth>900)closeMenu();},{passive:true});
   }
 
   const revealItems=[...document.querySelectorAll('.nc-reveal')];
