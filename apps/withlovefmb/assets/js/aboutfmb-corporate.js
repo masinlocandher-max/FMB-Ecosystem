@@ -49,7 +49,10 @@
       ['/music/', 'Music']
     ];
     mobileDock.setAttribute('aria-label', 'Complete website mobile navigation');
-    mobileDock.innerHTML = dockLinks.map(([href, label]) => `<a class="fco-dock-link" href="${href}"${location.pathname.startsWith(href) && href !== '/' ? ' aria-current="page" class="fco-dock-link active"' : ''}><span class="fco-dock-site-dot" aria-hidden="true"></span><span>${label}</span></a>`).join('');
+    mobileDock.innerHTML = dockLinks.map(([href, label]) => {
+      const active = href === '/' ? location.pathname === '/' : location.pathname.startsWith(href);
+      return `<a class="fco-dock-link${active ? ' active' : ''}" href="${href}"${active ? ' aria-current="page"' : ''}><span class="fco-dock-site-dot" aria-hidden="true"></span><span>${label}</span></a>`;
+    }).join('');
   }
 
   const revealTargets = [...page.querySelectorAll('.about-reveal')];
