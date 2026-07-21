@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
-"""Run the site quality suite against the current static FMB, Yoni, and News contracts."""
+"""Run the site quality suite using the current modular Yoni and News contracts."""
 from __future__ import annotations
-
-from pathlib import Path
 
 import quality_check as checks
 
@@ -12,50 +10,8 @@ STALE_NEWS_ERRORS = {
     "news/index.html: every main story must have one sourced lead visual",
     "news/index.html: every editorial visual must show its source or credit below it",
 }
-STALE_HOME_ERRORS = {
-    "index.html: missing first-visit benefit: Meet Yoni. A complete space to listen, read, write, and check in.",
-    "index.html: missing first-visit benefit: /assets/js/fmb-bulletin-home.js",
-}
-GENERATED_HOME_REFERENCES = (
-    "/assets/images/home/francine-home-hero-hd.webp",
-    "/assets/images/home/francine-home-founder-hd.webp",
-)
-
-ORIGINAL_CHECK_HTML = checks.check_html
 ORIGINAL_MEMBERSHIP_CHECK = checks.check_membership_features
-ORIGINAL_NAVIGATION_CHECK = checks.check_navigation_experience
 ORIGINAL_EDITORIAL_MEDIA_CHECK = checks.check_mobile_and_editorial_media
-
-
-def home_generation_is_configured() -> bool:
-    source = checks.ROOT / "assets/data/home"
-    script = checks.ROOT.parents[1] / "scripts/home-image-assets.mjs"
-    return script.exists() and all(
-        (source / name).exists()
-        for name in (
-            "hero-01.txt",
-            "hero-02.txt",
-            "hero-03.txt",
-            "hero-04.txt",
-            "founder-01.txt",
-            "founder-02.txt",
-            "founder-03.txt",
-            "founder-04.txt",
-            "founder-05.txt",
-        )
-    )
-
-
-def check_current_html(path: Path, errors: list[str]) -> None:
-    local_errors: list[str] = []
-    ORIGINAL_CHECK_HTML(path, local_errors)
-    generated_home_ready = path == checks.ROOT / "index.html" and home_generation_is_configured()
-    for error in local_errors:
-        generated_reference = generated_home_ready and error.startswith("index.html: broken ") and any(
-            reference in error for reference in GENERATED_HOME_REFERENCES
-        )
-        if not generated_reference:
-            errors.append(error)
 
 
 def check_current_membership_features(errors: list[str]) -> None:
@@ -75,7 +31,7 @@ def check_current_membership_features(errors: list[str]) -> None:
         'data-fruit="orange"',
         'data-theme-choice="midnight"',
         'id="screen-help"',
-        "/app/assets/yoni/yoni-hero.webp",
+        'data-yoni-asset="mascot"',
         "const YONI_URL='https://yoni.francinemariebautista.com/'",
         "Yoni is a digital companion",
     )
@@ -83,81 +39,80 @@ def check_current_membership_features(errors: list[str]) -> None:
         if marker not in app_html:
             errors.append(f"app/index.html: missing current Yoni marker: {marker}")
 
-    current_files = (
-        "assets/css/yoni-app-refresh.css",
-        "assets/css/yoni-native-libraries.css",
-        "assets/css/yoni-native-reader-compat.css",
-        "assets/js/yoni-experience-loader.js",
-        "assets/js/yoni-native-libraries.js",
-        "assets/js/yoni-native-music.js",
-        "assets/js/yoni-native-ebooks.js",
-        "assets/js/supabase-client.js",
-        "app/assets/yoni/yoni-app-icon-192.png",
-        "app/assets/yoni/yoni-app-icon-512.png",
-        "app/assets/yoni/yoni-apple-touch-icon-180.png",
-        "app/assets/yoni/yoni-hero.webp",
-        "app/assets/yoni/yoni-theme-background.webp",
-        "app/assets/yoni/yoni-wordmark.png",
-    )
-    for relative in current_files:
-        if not (checks.ROOT / relative).exists():
-            errors.append(f"{relative}: current Yoni experience file is missing")
+    experience_css_path = checks.ROOT / "assets/css/yoni-experience.css"
+    visual_css_path = checks.ROOT / "assets/css/yoni-visual-final.css"
+    loader_script_path = checks.ROOT / "assets/js/yoni-experience.js"
+    reply_script_path = checks.ROOT / "assets/js/yoni-reply-core.js"
+    visual_script_path = checks.ROOT / "assets/js/yoni-visual-final.js"
+    supabase_loader_path = checks.ROOT / "assets/js/supabase-client.js"
 
-    loader_path = checks.ROOT / "assets/js/yoni-experience-loader.js"
-    if loader_path.exists():
-        loader = loader_path.read_text(encoding="utf-8")
+    required_paths = (
+        experience_css_path,
+        visual_css_path,
+        loader_script_path,
+        reply_script_path,
+        visual_script_path,
+        supabase_loader_path,
+    )
+    for path in required_paths:
+        if not path.exists():
+            errors.append(f"{path.relative_to(checks.ROOT)}: Yoni experience file is missing")
+
+    css = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in (experience_css_path, visual_css_path)
+        if path.exists()
+    )
+    for marker in (
+        ".yoni-comfort-dock",
+        ".yoni-comfort-layer",
+        ".yoni-preferences-card",
+        ".yoni-reading-status",
+        ".yoni-final-loader",
+        ".yoni-responsive-ad",
+        "prefers-reduced-motion",
+    ):
+        if marker not in css:
+            errors.append(f"Yoni CSS modules: missing emotional or responsive UI marker: {marker}")
+
+    scripts = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in (loader_script_path, reply_script_path, visual_script_path)
+        if path.exists()
+    )
+    for marker in (
+        "yoni-language-v2",
+        "yoni-sound-effects-v2",
+        "Binabasa ko nang maayos",
+        "reviewed response library",
+        "911",
+        "NCMH",
+        "Yoni remains a digital companion",
+        "yoni-master-static.png",
+        "Yoni is an FMB&CO. digital product.",
+    ):
+        if marker not in scripts:
+            errors.append(f"Yoni JavaScript modules: missing pacing, language, safety, or identity marker: {marker}")
+
+    if loader_script_path.exists():
+        loader = loader_script_path.read_text(encoding="utf-8")
         for marker in (
-            "/assets/css/yoni-app-refresh.css",
-            "/assets/css/yoni-native-libraries.css",
-            "/assets/css/yoni-native-reader-compat.css",
-            "/assets/js/yoni-native-libraries.js",
-            "/assets/js/yoni-native-music.js",
-            "/assets/js/yoni-native-ebooks.js",
+            "/assets/css/yoni-visual-final.css",
+            "/assets/js/yoni-reply-core.js",
+            "/assets/js/yoni-visual-final.js",
         ):
             if marker not in loader:
-                errors.append(f"assets/js/yoni-experience-loader.js: missing current experience module: {marker}")
+                errors.append(f"assets/js/yoni-experience.js: missing modular experience loader: {marker}")
 
-    supabase_path = checks.ROOT / "assets/js/supabase-client.js"
-    if supabase_path.exists():
-        supabase_loader = supabase_path.read_text(encoding="utf-8")
+    if supabase_loader_path.exists():
+        loader = supabase_loader_path.read_text(encoding="utf-8")
         for marker in (
             "yoni.francinemariebautista.com",
-            "/assets/js/yoni-experience-loader.js",
+            "/assets/css/yoni-experience.css",
+            "/assets/js/yoni-experience.js",
         ):
-            if marker not in supabase_loader:
-                errors.append(f"assets/js/supabase-client.js: missing current Yoni loader: {marker}")
-
-    service_worker_path = checks.ROOT / "service-worker.js"
-    if service_worker_path.exists():
-        worker = service_worker_path.read_text(encoding="utf-8")
-        for marker in (
-            "/app/assets/yoni/yoni-hero.webp",
-            "/app/assets/yoni/yoni-theme-background.webp",
-            "/assets/js/yoni-experience-loader.js",
-            "/assets/js/yoni-native-libraries.js",
-            "/assets/js/yoni-native-music.js",
-            "/assets/js/yoni-native-ebooks.js",
-        ):
-            if marker not in worker:
-                errors.append(f"service-worker.js: current Yoni cache marker is missing: {marker}")
-
-
-def check_current_navigation_experience(errors: list[str]) -> None:
-    legacy_errors: list[str] = []
-    ORIGINAL_NAVIGATION_CHECK(legacy_errors)
-    errors.extend(error for error in legacy_errors if error not in STALE_HOME_ERRORS)
-
-    index = (checks.ROOT / "index.html").read_text(encoding="utf-8")
-    for marker in (
-        "Meet Yoni. A complete place to listen, read, write and check in.",
-        "/assets/js/fmb-home-static.js",
-        "/assets/images/home/francine-home-hero-hd.webp",
-        "/assets/images/home/francine-home-founder-hd.webp",
-        'id="homeHeroImage"',
-        'id="homeFounderImage"',
-    ):
-        if marker not in index:
-            errors.append(f"index.html: missing current static-home marker: {marker}")
+            if marker not in loader:
+                errors.append(f"assets/js/supabase-client.js: missing Yoni experience loader: {marker}")
 
 
 def check_current_mobile_and_editorial_media(errors: list[str]) -> None:
@@ -166,27 +121,23 @@ def check_current_mobile_and_editorial_media(errors: list[str]) -> None:
     errors.extend(error for error in legacy_errors if error not in STALE_NEWS_ERRORS)
 
     news = (checks.ROOT / "news/index.html").read_text(encoding="utf-8")
-    if news.count('class="news-visual"') != 7:
-        errors.append("news/index.html: the current lead story and six-story rundown must each have one sourced visual")
-    if news.count("<figcaption>") != 7:
-        errors.append("news/index.html: the current lead story and six-story rundown must each show a visual credit")
-
+    if news.count('class="news-visual"') != 6:
+        errors.append("news/index.html: all six current main stories must have one sourced lead visual")
     required_credits = (
         "GMA Public Affairs / I-Witness",
-        "DILG Zambales, 2018",
         "Micluna / Wikimedia Commons, CC BY-SA 4.0",
         "Philippine Information Agency",
         "Earl D.C. Bracamonte / Philstar.com",
         "does not reproduce the racist video",
         "FMB editorial illustration based on public releases",
     )
+    if news.count("<figcaption>") != 6:
+        errors.append("news/index.html: all six current editorial visuals must show a source or credit below them")
     for credit in required_credits:
         if credit not in news:
             errors.append(f"news/index.html: missing current editorial visual credit: {credit}")
 
 
-checks.check_html = check_current_html
 checks.check_membership_features = check_current_membership_features
-checks.check_navigation_experience = check_current_navigation_experience
 checks.check_mobile_and_editorial_media = check_current_mobile_and_editorial_media
 raise SystemExit(checks.main())
