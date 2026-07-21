@@ -69,6 +69,15 @@ async function injectStylesheet(relativePagePath, stylesheetHref) {
   await writeFile(pagePath, html.replace('</head>', `${stylesheet}\n</head>`), 'utf8');
 }
 
+async function lockYoniFirstPaintIdentity() {
+  const pagePath = path.join(outputDirectory, 'app', 'index.html');
+  let html = await readFile(pagePath, 'utf8');
+  html = html
+    .replaceAll('/app/yoni-icon.svg', '/app/assets/yoni/yoni-app-icon-192.jpg')
+    .replaceAll('/app/yoni-mascot.svg', '/app/assets/yoni/yoni-master-static.png');
+  await writeFile(pagePath, html, 'utf8');
+}
+
 function run(command, args, cwd) {
   const result = spawnSync(command, args, {
     cwd,
@@ -99,6 +108,7 @@ await Promise.all([
   injectStylesheet('music/index.html', '/assets/css/fmb-sitewide-gateway.css?v=20260721-responsive-v2'),
   injectStylesheet('ebooks/index.html', '/assets/css/fmb-sitewide-gateway.css?v=20260721-responsive-v2'),
   injectStylesheet('aboutfmb/index.html', '/assets/css/aboutfmb-seamless.css?v=20260721-responsive-v2'),
+  lockYoniFirstPaintIdentity(),
   downloadImage(
     amorDelosoShareSource,
     'assets/images/news/amor-deloso-share-1200x630.jpg',
