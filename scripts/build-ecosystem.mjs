@@ -15,6 +15,7 @@ const cognitaWebsite = path.join(applicationsDirectory, 'cognita');
 const cognitaOutput = path.join(cognitaWebsite, 'dist');
 
 const amorDelosoHdSource = 'https://at.adobe.com/QdMpFXIcRloBpGGK';
+const aiFounderPortraitSource = 'https://at.adobe.com/QzoS1xWoJzEZPC00';
 
 async function requireFile(filePath) {
   const details = await stat(filePath);
@@ -84,6 +85,13 @@ async function applyHdNewsImages() {
     .replaceAll('2026-07-21T11:30:00+08:00', '2026-07-21T12:15:00+08:00');
   await writeFile(amorArticlePath, amorArticle, 'utf8');
 
+  const aiRelativePath = 'assets/images/news/fmb-ai-water-founder-portrait.jpg';
+  await downloadImage(aiFounderPortraitSource, aiRelativePath, 300000);
+  const aiPublicPath = `/${aiRelativePath}`;
+  const aiPublicUrl = `https://www.francinemariebautista.com/${aiRelativePath}`;
+  const aiAlt = 'Francine Marie Bautista in the official FMB founder portrait';
+  const aiModifiedTime = '2026-07-21T16:20:00+08:00';
+
   const newsIndexPath = path.join(outputDirectory, 'news', 'index.html');
   let newsIndex = await readFile(newsIndexPath, 'utf8');
   newsIndex = newsIndex
@@ -93,20 +101,27 @@ async function applyHdNewsImages() {
     .replaceAll('/assets/images/news/amor-deloso-generated-hero.jpg', amorPublicPath)
     .replaceAll('width="1200" height="630"', 'width="1672" height="941"')
     .replaceAll('width="640" height="360"', 'width="1672" height="941"')
-    .replaceAll('https://www.francinemariebautista.com/assets/images/news/fmbco-ai-water-founder-hero.svg', 'https://www.francinemariebautista.com/assets/images/hero.webp')
-    .replaceAll('/assets/images/news/fmbco-ai-water-founder-hero.svg', '/assets/images/hero.webp');
+    .replaceAll('https://www.francinemariebautista.com/assets/images/news/fmbco-ai-water-founder-hero.svg', aiPublicUrl)
+    .replaceAll('/assets/images/news/fmbco-ai-water-founder-hero.svg', aiPublicPath)
+    .replaceAll('https://www.francinemariebautista.com/assets/images/hero.webp', aiPublicUrl)
+    .replaceAll('/assets/images/hero.webp', aiPublicPath);
   await writeFile(newsIndexPath, newsIndex, 'utf8');
 
   const aiArticlePath = path.join(outputDirectory, 'news', 'ai-water-consumption-responsible-ai-philippines', 'index.html');
   let aiArticle = await readFile(aiArticlePath, 'utf8');
   aiArticle = aiArticle
-    .replaceAll('https://www.francinemariebautista.com/assets/images/news/fmbco-ai-water-founder-hero.svg', 'https://www.francinemariebautista.com/assets/images/hero.webp')
-    .replaceAll('/assets/images/news/fmbco-ai-water-founder-hero.svg', '/assets/images/hero.webp')
-    .replaceAll('<meta property="og:image:width" content="1000"><meta property="og:image:height" content="563">', '')
-    .replaceAll('width="1000" height="563"', '')
-    .replaceAll('2026-07-20T10:00:00+08:00', '2026-07-21T12:15:00+08:00')
-    .replaceAll('Francine Marie Bautista beside the headline AI Uses Water. That Is Not the Whole Story', 'Francine Marie Bautista in the official FMB founder portrait')
-    .replace('Portrait supplied by FMB. FMB&amp;CO. News graphic.', 'Official high-resolution FMB founder portrait.');
+    .replaceAll('https://www.francinemariebautista.com/assets/images/news/fmbco-ai-water-founder-hero.svg', aiPublicUrl)
+    .replaceAll('/assets/images/news/fmbco-ai-water-founder-hero.svg', aiPublicPath)
+    .replaceAll('https://www.francinemariebautista.com/assets/images/hero.webp', aiPublicUrl)
+    .replaceAll('/assets/images/hero.webp', aiPublicPath)
+    .replaceAll('<meta property="og:image:width" content="1000">', '<meta property="og:image:width" content="1364">')
+    .replaceAll('<meta property="og:image:height" content="563">', '<meta property="og:image:height" content="768">')
+    .replaceAll('width="1000" height="563"', 'width="1364" height="768" decoding="async"')
+    .replaceAll('"dateModified":"2026-07-20T10:00:00+08:00"', `"dateModified":"${aiModifiedTime}"`)
+    .replaceAll('<meta property="article:modified_time" content="2026-07-20T10:00:00+08:00">', `<meta property="article:modified_time" content="${aiModifiedTime}">`)
+    .replaceAll('Francine Marie Bautista beside the headline AI Uses Water. That Is Not the Whole Story', aiAlt)
+    .replaceAll('Portrait supplied by FMB. FMB&amp;CO. News graphic.', 'Official FMB founder portrait.')
+    .replaceAll('Official high-resolution FMB founder portrait.', 'Official FMB founder portrait.');
   await writeFile(aiArticlePath, aiArticle, 'utf8');
 }
 
@@ -156,7 +171,7 @@ await Promise.all([
   requireFile(path.join(outputDirectory, 'projects', 'index.html')),
   requireFile(path.join(outputDirectory, 'app', 'index.html')),
   requireFile(path.join(outputDirectory, 'assets', 'images', 'news', 'amor-deloso-generated-hero-hd.png')),
-  requireFile(path.join(outputDirectory, 'assets', 'images', 'hero.webp')),
+  requireFile(path.join(outputDirectory, 'assets', 'images', 'news', 'fmb-ai-water-founder-portrait.jpg')),
   requireFile(path.join(privateSitesDirectory, 'senz', 'index.html')),
   requireFile(path.join(privateSitesDirectory, 'cognita', 'index.html')),
 ]);
