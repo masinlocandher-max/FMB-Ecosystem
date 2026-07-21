@@ -2,6 +2,7 @@ import { cp, mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { applyEntityAuthority } from './entity-authority.mjs';
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptDirectory, '..');
@@ -165,6 +166,7 @@ await Promise.all([
 run('npm', ['ci'], cognitaWebsite);
 run('npm', ['run', 'build'], cognitaWebsite);
 await cp(cognitaOutput, path.join(privateSitesDirectory, 'cognita'), { recursive: true });
+await applyEntityAuthority({ outputDirectory, privateSitesDirectory });
 
 await Promise.all([
   requireFile(path.join(outputDirectory, 'index.html')),
@@ -176,4 +178,4 @@ await Promise.all([
   requireFile(path.join(privateSitesDirectory, 'cognita', 'index.html')),
 ]);
 
-console.log('FMB ecosystem build completed successfully.');
+console.log('FMB ecosystem build completed successfully with unified entity authority.');
