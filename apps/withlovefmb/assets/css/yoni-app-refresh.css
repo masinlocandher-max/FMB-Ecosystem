@@ -1,0 +1,216 @@
+/* Yoni 2026 app shell. The approved mascot appears only in the entry hero and app icon. */
+:root{
+  --yoni-orange:#f47721;
+  --yoni-orange-deep:#b94d12;
+  --yoni-green:#4d9d4a;
+  --yoni-cream:#fffaf0;
+  --yoni-surface:rgba(255,255,255,.88);
+  --yoni-line:rgba(87,67,39,.1);
+  --yoni-spring:cubic-bezier(.22,1,.36,1);
+}
+
+html,body{max-width:100%;overflow-x:hidden}
+body{
+  min-height:100dvh;
+  background:#fff8df;
+  isolation:isolate;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  background:url('/app/assets/yoni/yoni-theme-background.webp') center/cover no-repeat;
+  opacity:.31;
+  transform:scale(1.02);
+}
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background:linear-gradient(180deg,rgba(255,251,235,.78),rgba(255,255,255,.94) 48%,rgba(246,250,237,.92));
+  pointer-events:none;
+}
+body[data-theme="dusk"]::after{background:linear-gradient(180deg,rgba(253,248,255,.84),rgba(255,255,255,.95) 52%,rgba(242,235,250,.94))}
+body[data-theme="forest"]::after{background:linear-gradient(180deg,rgba(247,255,239,.82),rgba(255,255,255,.95) 52%,rgba(232,245,223,.94))}
+body[data-theme="midnight"]::after{background:linear-gradient(180deg,rgba(242,249,255,.84),rgba(255,255,255,.95) 52%,rgba(229,239,247,.94))}
+
+button,a,input,textarea,select{-webkit-tap-highlight-color:transparent}
+button,a{touch-action:manipulation}
+button:disabled{cursor:not-allowed;opacity:.62}
+.access-gate,.app-shell,.tabbar,.toast,.app-launch,.post-login-layer{position:relative;z-index:1}
+
+/* Entry screen */
+.access-gate{padding:calc(var(--safe-top) + 20px) clamp(14px,3vw,30px) calc(32px + var(--safe-bottom))}
+.access-stage{width:min(1180px,100%)}
+.access-brandbar{margin-bottom:14px}
+.access-brand img,.brand img{
+  object-fit:cover;
+  border:1px solid rgba(255,255,255,.9);
+  background:#fff;
+}
+.access-site-link{min-height:44px;display:inline-flex;align-items:center}
+.access-layout{grid-template-columns:minmax(0,1.1fr) minmax(350px,.72fr);gap:16px}
+.access-intro,.access-card{
+  border-color:rgba(255,255,255,.9);
+  background:rgba(255,255,255,.78);
+  box-shadow:0 28px 80px rgba(92,66,26,.12);
+}
+.access-intro{
+  min-height:670px;
+  padding:clamp(28px,4vw,48px);
+  background:
+    linear-gradient(105deg,rgba(255,255,255,.96) 0 48%,rgba(255,255,255,.34) 64%,rgba(255,255,255,.12)),
+    url('/app/assets/yoni/yoni-theme-background.webp') center/cover no-repeat;
+}
+.access-copy{max-width:53%}
+.access-intro h1{font-size:clamp(48px,6.5vw,82px)}
+.access-lede{color:#665c4c}
+.access-benefits span{background:rgba(255,255,255,.8);backdrop-filter:blur(10px)}
+.access-mascot{
+  right:clamp(10px,2vw,28px);
+  bottom:clamp(12px,2vw,24px);
+  width:min(49%,500px);
+  max-height:none;
+  aspect-ratio:1;
+  object-fit:cover;
+  border:1px solid rgba(255,255,255,.84);
+  border-radius:32px;
+  box-shadow:0 24px 60px rgba(111,76,20,.16);
+  filter:none;
+  animation:yoniHeroFloat 7s ease-in-out infinite;
+}
+.access-card{padding:clamp(20px,3vw,30px);border-radius:34px}
+.access-primary{min-height:52px;transition:transform .2s var(--yoni-spring),box-shadow .2s ease}
+.access-primary:active{transform:scale(.985)}
+
+/* Signed-in app */
+.app-shell{width:min(1040px,100%);padding-top:8px}
+.app-header{
+  top:max(6px,var(--safe-top));
+  margin:0 10px;
+  padding:10px 12px;
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:22px;
+  background:rgba(255,255,255,.78);
+  box-shadow:0 12px 34px rgba(63,54,42,.07);
+  backdrop-filter:blur(22px) saturate(155%);
+  -webkit-backdrop-filter:blur(22px) saturate(155%);
+}
+.brand img{width:44px;height:44px;border-radius:15px}
+.screen{padding:16px clamp(13px,3vw,22px) 32px}
+.card{border-color:var(--yoni-line);background:var(--yoni-surface)}
+.page-title{overflow-wrap:anywhere}
+.home-welcome{
+  min-height:350px;
+  border-color:rgba(255,255,255,.92);
+  background:
+    radial-gradient(circle at 84% 30%,rgba(255,208,98,.36),transparent 33%),
+    radial-gradient(circle at 95% 92%,rgba(135,194,92,.25),transparent 32%),
+    linear-gradient(145deg,rgba(255,255,255,.94),rgba(255,250,225,.88));
+}
+.home-yoni-stage{height:310px}
+.home-yoni-signature{
+  position:absolute;
+  inset:12% 2% 8% 0;
+  background:url('/app/assets/yoni/yoni-wordmark.png') center/contain no-repeat;
+  filter:drop-shadow(0 20px 30px rgba(162,80,24,.12));
+}
+.home-leaf{background:rgba(112,163,77,.24)}
+.listener-mark,.bubble-avatar-mark,.yoni-nav-face{
+  display:grid;
+  place-items:center;
+  flex:0 0 auto;
+  border:1px solid rgba(255,255,255,.92);
+  background:linear-gradient(145deg,#ff8a28,#f26b16);
+  color:#fff;
+  font-weight:900;
+  box-shadow:0 9px 22px rgba(185,77,18,.18);
+}
+.listener-mark{width:54px;height:54px;border-radius:18px;font-size:20px}
+.bubble-avatar-mark{width:36px;height:36px;border-radius:13px;font-size:13px}
+.chat-head .bubble-avatar-mark{width:45px;height:45px;border-radius:15px}
+.bubble-row .bubble-avatar-mark{margin-top:2px}
+.yoni-nav-face{width:46px;height:46px;border-radius:17px;font-size:16px}
+.tabbar{
+  left:50%;right:auto;
+  width:min(630px,calc(100% - 20px));
+  transform:translateX(-50%);
+  bottom:max(8px,var(--safe-bottom));
+  border:1px solid rgba(255,255,255,.92);
+  background:rgba(255,255,255,.86);
+  box-shadow:0 20px 60px rgba(52,46,39,.14);
+  backdrop-filter:blur(24px) saturate(165%);
+  -webkit-backdrop-filter:blur(24px) saturate(165%);
+}
+.tabbar button{min-width:0}
+
+/* Keep approved mascot artwork out of signed-in utility screens. */
+.app-shell [data-yoni-asset],
+.tabbar [data-yoni-asset],
+.yoni-activity-card,
+.yoni-product-card img,
+.yoni-settings-face,
+.yoni-comfort-dock,
+.yoni-peek,
+.yoni-final-loader{display:none!important}
+.yoni-library-intro{grid-template-columns:1fr!important}
+.yoni-library-intro>img{display:none!important}
+.yoni-library-intro.music{background:linear-gradient(145deg,rgba(255,255,255,.95),rgba(246,240,255,.9))}
+.yoni-music-cover .yoni-cover-placeholder{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:38px}
+.yoni-music-cover:not(.fallback) .yoni-cover-placeholder{display:none}
+.yoni-track-thumb.placeholder{display:grid;place-items:center;color:var(--orange-800);font-size:17px}
+.yoni-reader-shell{max-width:860px;margin-inline:auto}
+.yoni-reader-document{min-width:0}
+.yoni-reader-document *{max-width:100%}
+
+.app-footer{padding-bottom:calc(var(--tab-height) + var(--safe-bottom) + 18px)}
+.post-login-layer{display:none!important}
+
+@keyframes yoniHeroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+@media(max-width:800px){
+  .access-layout{grid-template-columns:1fr}
+  .access-intro{min-height:620px}
+  .access-card{width:min(620px,100%);justify-self:center}
+}
+@media(max-width:650px){
+  body::before{opacity:.22}
+  .access-gate{padding-inline:11px}
+  .access-brand span small{max-width:190px;white-space:normal}
+  .access-intro{min-height:660px;padding:26px 22px;border-radius:30px;background:linear-gradient(180deg,rgba(255,255,255,.96) 0 54%,rgba(255,255,255,.24) 72%),url('/app/assets/yoni/yoni-theme-background.webp') center/cover no-repeat}
+  .access-copy{max-width:100%}
+  .access-intro h1{font-size:clamp(45px,13vw,62px)}
+  .access-lede{font-size:14px}
+  .access-benefits{display:none}
+  .access-mascot{right:18px;bottom:18px;width:calc(100% - 36px);max-height:320px;border-radius:27px}
+  .access-float{display:none}
+  .app-header{margin-inline:8px;border-radius:20px}
+  .screen{padding-inline:12px}
+  .home-welcome{min-height:430px;margin-inline:0;padding:27px 22px 0}
+  .home-yoni-stage{height:190px}
+  .home-yoni-signature{inset:8% 1% 10% 0}
+  .home-action-grid.redesigned{padding-inline:0}
+  .home-care-heading,.home-today-heading{padding-inline:0}
+  .today-card,.home-privacy-note,.home-journal{margin-inline:0}
+  .yoni-book-grid{grid-template-columns:1fr}
+  .tabbar{width:calc(100% - 16px)}
+}
+@media(max-width:390px){
+  .access-brand span small{display:none}
+  .access-site-link{padding-inline:11px}
+  .access-intro{min-height:620px}
+  .access-intro h1{font-size:43px}
+  .access-lede{font-size:12.5px}
+  .access-mascot{max-height:280px}
+  .brand-copy span{display:none}
+  .home-welcome h1{font-size:43px}
+  .home-welcome-copy>p:last-of-type{font-size:13px}
+  .home-action-grid.redesigned .home-action-card{min-height:156px}
+  .tabbar button span:last-child{font-size:8px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important}
+  .access-mascot{animation:none}
+}

@@ -37,7 +37,7 @@
             <div class="yoni-promo-copy">
               <span class="yoni-promo-badge">New mental health companion</span>
               <div class="yoni-promo-brand">
-                <img src="/app/yoni-icon.svg" alt="Yoni app icon">
+                <img src="/app/assets/yoni/yoni-app-icon-192.png" alt="Yoni app icon">
                 <span><strong>yoni</strong><small>your gentle digital companion</small></span>
               </div>
               <h2 id="app-promo-title">Meet Yoni. A softer place to say what you <em>really feel.</em></h2>
@@ -61,10 +61,10 @@
               <div class="yoni-promo-device">
                 <div class="yoni-promo-device-screen">
                   <div class="yoni-promo-device-island"></div>
-                  <div class="yoni-promo-device-head"><span><strong>Hi, I’m Yoni.</strong><small>digital companion</small></span><img src="/app/yoni-icon.svg" alt=""></div>
+                  <div class="yoni-promo-device-head"><span><strong>Hi, I’m Yoni.</strong><small>digital companion</small></span><img src="/app/assets/yoni/yoni-app-icon-192.png" alt=""></div>
                   <div class="yoni-promo-device-copy"><small>A safe place to start</small><h3>You can vent here.</h3></div>
                   <div class="yoni-promo-chat"><span>You do not have to make the story neat. I can listen first.</span><span>I just need someone to hear me.</span></div>
-                  <img class="yoni-promo-mascot" src="/app/yoni-mascot.svg" alt="Yoni, an orange bear wearing a green beanie">
+                  <img class="yoni-promo-mascot" src="/app/assets/yoni/yoni-hero.webp" alt="Yoni, an orange bear wearing a green beanie">
                 </div>
               </div>
             </div>

@@ -82,47 +82,34 @@
   if(!isYoni)return;
 
   const YONI_ROOT='/app/assets/yoni/';
-  const officialMaster=YONI_ROOT+'yoni-master-static.png';
-  const officialAppIcon=YONI_ROOT+'yoni-app-icon-192.jpg';
+  const officialHero=YONI_ROOT+'yoni-hero.webp';
+  const officialBackground=YONI_ROOT+'yoni-theme-background.webp';
+  const officialAppIcon=YONI_ROOT+'yoni-app-icon-192.png';
   window.YONI_ASSETS={
     ...(window.YONI_ASSETS||{}),
-    mascot:officialMaster,
-    motion:officialMaster,
-    master:officialMaster,
     appIcon:officialAppIcon,
-    dancing:YONI_ROOT+'yoni-dancing.png',
-    happy:YONI_ROOT+'yoni-happy-wave.png',
-    heart:YONI_ROOT+'yoni-heart-hug.png',
-    sleepy:YONI_ROOT+'yoni-sleepy-rest.png',
-    journal:YONI_ROOT+'yoni-journal.png',
-    music:YONI_ROOT+'yoni-music.png',
-    meditation:YONI_ROOT+'yoni-meditation.png'
+    hero:officialHero,
+    background:officialBackground
   };
 
-  // Lock browser and iPhone install metadata to the approved square Yoni artwork.
+  // Lock browser and iPhone install metadata to the approved square launch artwork.
   document.querySelectorAll('link[rel="icon"],link[rel="shortcut icon"],link[rel="apple-touch-icon"]').forEach(link=>{
-    link.href=officialAppIcon;
-    link.type='image/jpeg';
-    if(link.rel==='apple-touch-icon')link.sizes='192x192';
+    const apple=link.rel==='apple-touch-icon';
+    link.href=apple?YONI_ROOT+'yoni-apple-touch-icon-180.png':officialAppIcon;
+    link.type='image/png';
+    link.sizes=apple?'180x180':'192x192';
   });
 
-  if(!document.querySelector('link[data-yoni-master-preload]')){
+  if(!document.querySelector('link[data-yoni-hero-preload]')){
     const preload=document.createElement('link');
     preload.rel='preload';
     preload.as='image';
-    preload.href=officialMaster;
-    preload.dataset.yoniMasterPreload='true';
+    preload.href=officialHero;
+    preload.dataset.yoniHeroPreload='true';
     document.head.appendChild(preload);
   }
 
-  const experienceVersion='20260721-icon-ad-v1';
-  if(!document.querySelector('link[data-yoni-experience]')){
-    const link=document.createElement('link');
-    link.rel='stylesheet';
-    link.href=`/assets/css/yoni-experience.css?v=${experienceVersion}`;
-    link.dataset.yoniExperience='true';
-    document.head.appendChild(link);
-  }
+  const experienceVersion='20260721-complete-app-v1';
 
   function loadScript(src,marker){
     return new Promise(resolve=>{
@@ -137,7 +124,6 @@
   }
 
   const loadExperience=async()=>{
-    await loadScript(`/assets/js/yoni-experience.js?v=${experienceVersion}`,'data-yoni-experience');
     await loadScript(`/assets/js/yoni-experience-loader.js?v=${experienceVersion}`,'data-yoni-final-loader');
   };
 
