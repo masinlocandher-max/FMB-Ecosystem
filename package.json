@@ -2,7 +2,7 @@
   "name": "fmb-ecosystem",
   "version": "1.0.0",
   "private": true,
-  "description": "Unified repository and deployment build for the FMB personal website, Yoni, SENZ, and Cognita.",
+  "description": "Unified production build for the FMB personal website, Yoni, SENZ, and Cognita.",
   "scripts": {
     "build": "node --import ./scripts/fetch-shim.mjs scripts/build-ecosystem.mjs"
   },
