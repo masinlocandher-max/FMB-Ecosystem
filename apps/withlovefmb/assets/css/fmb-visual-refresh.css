@@ -1,0 +1,311 @@
+/* FMB visual system refresh, 22 July 2026.
+   This layer enhances existing pages without removing their content or functions. */
+:root{
+  --fmb-ink:#0d0718;
+  --fmb-purple:#2b0b45;
+  --fmb-purple-deep:#12071f;
+  --fmb-purple-bright:#5b1eb2;
+  --fmb-gold:#d7ad4a;
+  --fmb-gold-soft:#f4d98b;
+  --fmb-ivory:#f7f3ed;
+  --fmb-white:#fff;
+  --fmb-line:rgba(215,173,74,.34);
+  --fmb-shadow:0 30px 80px rgba(12,4,24,.28);
+}
+
+/* Shared page polish */
+body.fmb-visual-refresh{
+  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased;
+}
+body.fmb-visual-refresh img{image-rendering:auto}
+body.fmb-visual-refresh .fmb-hd-photo{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+}
+body.fmb-visual-refresh .fmb-hd-photo-frame{
+  overflow:hidden;
+  border:1px solid rgba(215,173,74,.28);
+  border-radius:28px;
+  box-shadow:var(--fmb-shadow);
+  background:#d8d5d8;
+}
+
+/* About FMB and FMB&CO. use the first approved HD portrait as a complete hero. */
+body.fmb-founder-page .fco-hero,
+body.fmb-company-page .fco-hero{
+  --fmb-hero-image:none;
+  position:relative;
+  min-height:clamp(680px,82vh,920px);
+  isolation:isolate;
+  display:flex;
+  align-items:center;
+  background-image:
+    linear-gradient(90deg,rgba(10,5,18,.08) 0%,rgba(10,5,18,.18) 36%,rgba(18,7,31,.82) 67%,rgba(18,7,31,.97) 100%),
+    var(--fmb-hero-image);
+  background-size:cover;
+  background-position:center;
+  overflow:hidden;
+}
+body.fmb-founder-page .fco-hero::after,
+body.fmb-company-page .fco-hero::after{
+  content:"";
+  position:absolute;
+  inset:auto 0 0;
+  height:170px;
+  z-index:-1;
+  background:linear-gradient(transparent,rgba(18,7,31,.78));
+}
+body.fmb-founder-page .fco-hero-grid,
+body.fmb-company-page .fco-hero-grid{
+  width:100%;
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+}
+body.fmb-founder-page .fco-hero-copy,
+body.fmb-company-page .fco-hero-copy{
+  width:min(590px,48vw);
+  margin-left:auto;
+  padding:clamp(30px,4vw,58px);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:30px;
+  background:linear-gradient(145deg,rgba(34,10,57,.86),rgba(13,7,24,.76));
+  box-shadow:0 32px 90px rgba(0,0,0,.3);
+  -webkit-backdrop-filter:blur(20px);
+  backdrop-filter:blur(20px);
+}
+body.fmb-founder-page .fco-hero-visual,
+body.fmb-company-page .fco-hero-visual{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  overflow:hidden!important;
+  clip:rect(0 0 0 0)!important;
+  clip-path:inset(50%)!important;
+  white-space:nowrap!important;
+}
+body.fmb-founder-page .fco-hero h1,
+body.fmb-company-page .fco-hero h1,
+body.fmb-founder-page .fco-hero .fco-lead,
+body.fmb-company-page .fco-hero .fco-lead{color:#fff}
+body.fmb-founder-page .fco-hero .fco-btn.secondary,
+body.fmb-company-page .fco-hero .fco-btn.secondary{border-color:rgba(255,255,255,.4);color:#fff}
+
+/* The second supplied HD portrait becomes the next editorial overview. */
+body.fmb-founder-page .fmb-about-profile-grid,
+body.fmb-company-page .fco-about-grid{align-items:stretch}
+body.fmb-founder-page .fmb-about-profile-grid > figure,
+body.fmb-company-page .fco-about-grid > figure{
+  position:relative;
+  min-height:clamp(360px,45vw,610px);
+  padding:0;
+  overflow:hidden;
+  border-radius:30px;
+  background:#dedbd8;
+}
+body.fmb-founder-page .fmb-about-profile-grid > figure picture,
+body.fmb-company-page .fco-about-grid > figure picture{position:absolute;inset:0}
+body.fmb-founder-page .fmb-about-profile-grid > figure img,
+body.fmb-company-page .fco-about-grid > figure img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  object-position:center!important;
+}
+body.fmb-founder-page .fmb-about-profile-grid > figure figcaption,
+body.fmb-company-page .fco-about-grid > figure figcaption{
+  position:absolute;
+  left:20px;
+  right:20px;
+  bottom:18px;
+  z-index:2;
+  width:auto;
+  padding:11px 14px;
+  border:1px solid rgba(255,255,255,.32);
+  border-radius:999px;
+  background:rgba(20,8,31,.66);
+  color:#fff;
+  -webkit-backdrop-filter:blur(14px);
+  backdrop-filter:blur(14px);
+}
+
+/* With love, FMB keeps every community section and gains an editorial HD landing hero. */
+body.fmb-with-love-page .wlf-hero{
+  --fmb-hero-image:none;
+  position:relative;
+  isolation:isolate;
+  min-height:clamp(720px,88vh,980px);
+  display:flex;
+  align-items:center;
+  background-image:
+    linear-gradient(90deg,rgba(49,6,63,.1) 0%,rgba(49,6,63,.16) 40%,rgba(37,7,50,.82) 70%,rgba(28,5,39,.95) 100%),
+    var(--fmb-hero-image);
+  background-size:cover;
+  background-position:center;
+}
+body.fmb-with-love-page .wlf-hero-grid{display:flex;justify-content:flex-end;width:100%}
+body.fmb-with-love-page .wlf-hero-copy{
+  width:min(620px,49vw);
+  margin-left:auto;
+  padding:clamp(30px,4vw,58px);
+  border:1px solid rgba(255,255,255,.17);
+  border-radius:30px;
+  background:linear-gradient(145deg,rgba(69,18,86,.86),rgba(31,6,43,.8));
+  box-shadow:var(--fmb-shadow);
+  -webkit-backdrop-filter:blur(18px);
+  backdrop-filter:blur(18px);
+}
+body.fmb-with-love-page .wlf-hero-copy h1,
+body.fmb-with-love-page .wlf-hero-copy .wlf-lede,
+body.fmb-with-love-page .wlf-hero-copy .wlf-kicker,
+body.fmb-with-love-page .wlf-hero-principles{color:#fff}
+body.fmb-with-love-page .wlf-portrait-stage{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  overflow:hidden!important;
+  clip-path:inset(50%)!important;
+}
+body.fmb-with-love-page .fmb-with-love-overview{
+  grid-column:1/-1;
+  margin:clamp(28px,4vw,56px) 0 0;
+  position:relative;
+  min-height:clamp(300px,45vw,620px);
+  overflow:hidden;
+  border-radius:30px;
+  border:1px solid rgba(215,173,74,.25);
+  box-shadow:var(--fmb-shadow);
+}
+body.fmb-with-love-page .fmb-with-love-overview img{width:100%;height:100%;position:absolute;inset:0;object-fit:cover}
+body.fmb-with-love-page .fmb-with-love-overview figcaption{
+  position:absolute;
+  left:22px;
+  bottom:20px;
+  z-index:2;
+  max-width:520px;
+  padding:15px 18px;
+  border-radius:18px;
+  color:#fff;
+  background:rgba(36,7,48,.72);
+  -webkit-backdrop-filter:blur(14px);
+  backdrop-filter:blur(14px);
+}
+
+/* FMB media family: retain News architecture, give Music and eBook their approved identities. */
+body.fmb-media-channel .nc-publication-brand img,
+body.fmb-media-channel .nc-channel-lockup img,
+body.fmb-media-channel .nc-footer-brand img{
+  display:block;
+  width:auto!important;
+  height:auto!important;
+  object-fit:contain;
+}
+body.fmb-media-channel .nc-publication-brand img{max-width:min(310px,56vw);max-height:74px}
+body.fmb-media-channel .nc-channel-lockup img{max-width:min(580px,70vw);max-height:210px}
+body.fmb-media-channel .nc-footer-brand img{max-width:260px;max-height:90px}
+body.fmb-media-channel.fmb-logo-lockup .nc-publication-brand > span,
+body.fmb-media-channel.fmb-logo-lockup .nc-channel-lockup > h1,
+body.fmb-media-channel.fmb-logo-lockup .nc-footer-brand > span{display:none!important}
+body.fmb-media-channel .nc-broadcast-identity{
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 78% 20%,rgba(108,40,196,.36),transparent 34%),
+    linear-gradient(135deg,#090412 0%,#1b082f 55%,#2b0b45 100%);
+}
+body.fmb-media-channel .nc-broadcast-identity::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(215,173,74,.08),transparent);
+  transform:translateX(-100%);
+  animation:fmbChannelSweep 9s ease-in-out infinite;
+}
+body.fmb-ebook-channel .fco-product-lead,
+body.fmb-music-channel .fco-product-lead{
+  background:
+    radial-gradient(circle at 86% 12%,rgba(95,35,169,.13),transparent 30%),
+    linear-gradient(180deg,#fff,#f7f3ed);
+}
+body.fmb-ebook-channel .fco-product-lead-grid,
+body.fmb-music-channel .fco-product-lead-grid{gap:clamp(34px,6vw,96px)}
+body.fmb-ebook-channel .fco-lead-art,
+body.fmb-music-channel .fco-lead-art{
+  border:1px solid rgba(215,173,74,.32);
+  border-radius:26px;
+  overflow:hidden;
+  box-shadow:0 26px 70px rgba(22,8,39,.18);
+}
+body.fmb-ebook-channel .ebook-card,
+body.fmb-music-channel .collection-cover-card,
+body.fmb-music-channel .featured-player{
+  transition:transform .35s ease,box-shadow .35s ease,border-color .35s ease;
+}
+body.fmb-ebook-channel .ebook-card:hover,
+body.fmb-music-channel .collection-cover-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 24px 54px rgba(24,8,41,.16);
+  border-color:rgba(215,173,74,.5);
+}
+
+/* Pearly remains the receptionist; the launcher now carries the approved FMB&CO. symbol. */
+body.fmb-visual-refresh .az-help-trigger-icon{
+  overflow:hidden;
+  background:linear-gradient(145deg,#2b0b45,#12071f)!important;
+  border:1px solid rgba(215,173,74,.58)!important;
+  box-shadow:0 8px 22px rgba(13,7,24,.28)!important;
+}
+body.fmb-visual-refresh .az-help-trigger-icon img{
+  width:76%!important;
+  height:76%!important;
+  object-fit:contain!important;
+  filter:drop-shadow(0 2px 5px rgba(0,0,0,.25));
+}
+
+@keyframes fmbChannelSweep{0%,68%{transform:translateX(-110%)}82%,100%{transform:translateX(110%)}}
+
+@media(max-width:900px){
+  body.fmb-founder-page .fco-hero,
+  body.fmb-company-page .fco-hero,
+  body.fmb-with-love-page .wlf-hero{
+    min-height:780px;
+    align-items:flex-end;
+    background-position:34% center;
+  }
+  body.fmb-founder-page .fco-hero,
+  body.fmb-company-page .fco-hero{
+    background-image:linear-gradient(180deg,rgba(10,5,18,.04) 24%,rgba(18,7,31,.26) 50%,rgba(18,7,31,.96) 76%),var(--fmb-hero-image);
+  }
+  body.fmb-with-love-page .wlf-hero{
+    background-image:linear-gradient(180deg,rgba(49,6,63,.02) 24%,rgba(49,6,63,.24) 50%,rgba(31,6,43,.96) 76%),var(--fmb-hero-image);
+  }
+  body.fmb-founder-page .fco-hero-copy,
+  body.fmb-company-page .fco-hero-copy,
+  body.fmb-with-love-page .wlf-hero-copy{
+    width:100%;
+    margin:0 0 24px;
+    border-radius:24px;
+    padding:25px;
+  }
+}
+
+@media(max-width:600px){
+  body.fmb-media-channel .nc-publication-brand img{max-width:205px;max-height:54px}
+  body.fmb-media-channel .nc-channel-lockup img{max-width:86vw;max-height:150px}
+  body.fmb-founder-page .fco-hero,
+  body.fmb-company-page .fco-hero,
+  body.fmb-with-love-page .wlf-hero{min-height:760px;background-position:31% center}
+  body.fmb-with-love-page .wlf-hero-principles{grid-template-columns:1fr}
+}
+
+@media(prefers-reduced-motion:reduce){
+  body.fmb-media-channel .nc-broadcast-identity::after{display:none}
+  body.fmb-ebook-channel .ebook-card,
+  body.fmb-music-channel .collection-cover-card,
+  body.fmb-music-channel .featured-player{transition:none}
+}
