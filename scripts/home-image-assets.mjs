@@ -66,7 +66,7 @@ async function decodeChunkedImage({ outputDirectory, name, parts, filename, mini
   }
 
   const bytes = Buffer.from(chunks.join(''), 'base64');
-  if (bytes.length < 120000) throw new Error(`${filename} is unexpectedly small (${bytes.length} bytes).`);
+  if (bytes.length < 16000) throw new Error(`${filename} is unexpectedly small or incomplete (${bytes.length} bytes).`);
 
   const dimensions = getWebpDimensions(bytes);
   if (dimensions.width < minimumWidth || dimensions.height < minimumHeight) {
