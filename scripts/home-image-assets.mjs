@@ -3,6 +3,7 @@ import path from 'node:path';
 
 const HOME_IMAGE_SOURCE = path.join('assets', 'data', 'home');
 const HOME_IMAGE_OUTPUT = path.join('assets', 'images', 'home');
+const HOME_IMAGE_VERSION = '20260721-home-hd-assets-v2';
 
 function readUInt24LE(buffer, offset) {
   return buffer[offset] | (buffer[offset + 1] << 8) | (buffer[offset + 2] << 16);
@@ -81,6 +82,28 @@ async function decodeChunkedImage({ outputDirectory, name, parts, filename, mini
   return { filename, bytes: bytes.length, ...dimensions };
 }
 
+async function patchHomepageDocument(outputDirectory, hero) {
+  const pagePath = path.join(outputDirectory, 'index.html');
+  let html = await readFile(pagePath, 'utf8');
+  const heroPath = `/assets/images/home/${hero.filename}`;
+  const heroUrl = `https://www.francinemariebautista.com${heroPath}`;
+
+  html = html
+    .replaceAll('https://www.francinemariebautista.com/assets/images/hero.webp', heroUrl)
+    .replace('<meta property="og:image:width" content="1536">', `<meta property="og:image:width" content="${hero.width}">`)
+    .replace('<meta property="og:image:height" content="864">', `<meta property="og:image:height" content="${hero.height}">`)
+    .replace(
+      '<link rel="preload" as="image" href="/assets/images/fmb/francine-founder-side-cutout-900-v1.webp" type="image/webp" fetchpriority="high">',
+      `<link rel="preload" as="image" href="${heroPath}?v=${HOME_IMAGE_VERSION}" type="image/webp" fetchpriority="high">`,
+    )
+    .replace(
+      '/assets/js/fmb-bulletin-home.js?v=20260721-official-bulletin-v1',
+      `/assets/js/fmb-bulletin-home.js?v=${HOME_IMAGE_VERSION}`,
+    );
+
+  await writeFile(pagePath, html, 'utf8');
+}
+
 export async function materializeHomeImages({ outputDirectory }) {
   const hero = await decodeChunkedImage({
     outputDirectory,
@@ -99,6 +122,8 @@ export async function materializeHomeImages({ outputDirectory }) {
     minimumWidth: 1280,
     minimumHeight: 720,
   });
+
+  await patchHomepageDocument(outputDirectory, hero);
 
   const manifest = {
     generatedAt: new Date().toISOString(),
