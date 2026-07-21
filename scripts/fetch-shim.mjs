@@ -4,7 +4,7 @@ import path from 'node:path';
 const nativeFetch = globalThis.fetch.bind(globalThis);
 const imageExtensions = new Set(['.jpg', '.jpeg', '.png', '.webp', '.avif']);
 
-async function collectImages(directory, matches = []) {
+async function collectImages(directory, matcher, matches = []) {
   let entries = [];
   try {
     entries = await readdir(directory, { withFileTypes: true });
@@ -15,36 +15,59 @@ async function collectImages(directory, matches = []) {
   for (const entry of entries) {
     const fullPath = path.join(directory, entry.name);
     if (entry.isDirectory()) {
-      await collectImages(fullPath, matches);
+      await collectImages(fullPath, matcher, matches);
       continue;
     }
 
     const extension = path.extname(entry.name).toLowerCase();
-    if (!imageExtensions.has(extension)) continue;
-    if (!/(amor.*deloso|deloso.*amor)/i.test(entry.name)) continue;
+    if (!imageExtensions.has(extension) || !matcher(entry.name, fullPath)) continue;
 
     try {
       const details = await stat(fullPath);
       if (details.size > 0) matches.push({ path: fullPath, size: details.size, extension });
     } catch {
-      // A missing optional fallback must not stop the normal build.
+      // Optional local fallbacks must never stop the normal build.
     }
   }
 
   return matches;
 }
 
-async function findAmorFallback() {
+async function findLargestImage(matcher) {
   const candidates = [];
   for (const root of [
     path.resolve('apps/withlovefmb'),
     path.resolve('public'),
     path.resolve('assets'),
   ]) {
-    await collectImages(root, candidates);
+    await collectImages(root, matcher, candidates);
+  }
+  return candidates.sort((a, b) => b.size - a.size)[0] ?? null;
+}
+
+async function findAmorFallback() {
+  return findLargestImage(name => /(?:amor.*deloso|deloso.*amor)/i.test(name));
+}
+
+async function findFounderFallback() {
+  const preferred = [
+    path.resolve('apps/withlovefmb/assets/images/hero.webp'),
+    path.resolve('apps/withlovefmb/assets/images/fmb/francine-founder-front-cutout-900-v1.webp'),
+    path.resolve('apps/withlovefmb/assets/images/founder.webp'),
+  ];
+
+  for (const candidate of preferred) {
+    try {
+      const details = await stat(candidate);
+      if (details.isFile() && details.size > 0) {
+        return { path: candidate, size: details.size, extension: path.extname(candidate).toLowerCase() };
+      }
+    } catch {
+      // Continue to the broader founder-image search.
+    }
   }
 
-  return candidates.sort((a, b) => b.size - a.size)[0] ?? null;
+  return findLargestImage((name, fullPath) => /(?:francine|founder|fmb)/i.test(name) && !/logo|icon/i.test(fullPath));
 }
 
 function contentType(extension) {
@@ -57,27 +80,42 @@ function contentType(extension) {
   })[extension] ?? 'application/octet-stream';
 }
 
+async function repositoryFallbackFor(url) {
+  if (/QdMpFXIcRloBpGGK|amor|deloso/i.test(url)) return findAmorFallback();
+  if (/QzoS1xWoJzEZPC00|founder|portrait/i.test(url)) return findFounderFallback();
+  return null;
+}
+
 globalThis.fetch = async function resilientBuildFetch(input, init = {}) {
   const url = typeof input === 'string' ? input : input?.url ?? String(input);
   const isFacebookImage = /(?:scontent[^/]*|fbcdn\.net)/i.test(url);
+  const isAdobeAsset = /(?:^|\.)at\.adobe\.com/i.test(new URL(url).hostname);
 
-  if (!isFacebookImage) return nativeFetch(input, init);
+  if (!isFacebookImage && !isAdobeAsset) return nativeFetch(input, init);
 
   const headers = new Headers(init.headers ?? (typeof input !== 'string' ? input?.headers : undefined));
   if (!headers.has('user-agent')) {
     headers.set('user-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/126 Safari/537.36');
   }
   if (!headers.has('accept')) headers.set('accept', 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8');
-  if (!headers.has('referer')) headers.set('referer', 'https://www.facebook.com/');
+  if (isFacebookImage && !headers.has('referer')) headers.set('referer', 'https://www.facebook.com/');
 
-  const response = await nativeFetch(input, { ...init, headers });
-  if (response.ok) return response;
+  let response;
+  try {
+    response = await nativeFetch(input, { ...init, headers });
+    if (response.ok) return response;
+  } catch (error) {
+    console.warn(`Remote image request failed for ${url}: ${error?.message || error}`);
+  }
 
-  const fallback = await findAmorFallback();
-  if (!fallback) return response;
+  const fallback = await repositoryFallbackFor(url);
+  if (!fallback) {
+    if (response) return response;
+    throw new Error(`Remote image request failed and no repository fallback exists for ${url}`);
+  }
 
   const bytes = await readFile(fallback.path);
-  console.warn(`Remote News image returned ${response.status}; preserving repository fallback ${path.relative(process.cwd(), fallback.path)} (${fallback.size} bytes).`);
+  console.warn(`Remote image unavailable; preserving repository fallback ${path.relative(process.cwd(), fallback.path)} (${fallback.size} bytes).`);
 
   return new Response(bytes, {
     status: 200,
