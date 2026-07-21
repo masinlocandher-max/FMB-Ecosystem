@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260721-yoni-native-libraries-v24';
+const CACHE_NAME='fmb-app-shell-20260721-yoni-native-libraries-v25';
 const YONI_HOSTS=new Set(['yoni.francinemariebautista.com','app.francinemariebautista.com']);
 const PUBLIC_PAGES=new Set([
   '/',
@@ -44,6 +44,7 @@ const APP_SHELL=[
   '/assets/css/yoni-visual-final.css',
   '/assets/css/yoni-human-taglish.css',
   '/assets/css/yoni-native-libraries.css',
+  '/assets/css/yoni-native-reader-compat.css',
   '/assets/js/config.js',
   '/assets/js/supabase-client.js',
   '/assets/js/yoni-experience.js',
@@ -74,78 +75,17 @@ const APP_SHELL=[
   '/assets/images/app-icon-512.png',
   '/assets/images/apple-touch-icon.png'
 ];
-
-self.addEventListener('install',event=>{
-  event.waitUntil((async()=>{
-    const cache=await caches.open(CACHE_NAME);
-    await Promise.allSettled(APP_SHELL.map(url=>cache.add(new Request(url,{cache:'reload'}))));
-    await self.skipWaiting();
-  })());
-});
-
-self.addEventListener('activate',event=>{
-  event.waitUntil((async()=>{
-    const keys=await caches.keys();
-    await Promise.all(keys.filter(key=>key!==CACHE_NAME).map(key=>caches.delete(key)));
-    await self.clients.claim();
-  })());
-});
-
-self.addEventListener('message',event=>{
-  if(event.data?.type==='SKIP_WAITING')self.skipWaiting();
-});
-
+self.addEventListener('install',event=>{event.waitUntil((async()=>{const cache=await caches.open(CACHE_NAME);await Promise.allSettled(APP_SHELL.map(url=>cache.add(new Request(url,{cache:'reload'}))));await self.skipWaiting()})())});
+self.addEventListener('activate',event=>{event.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(key=>key!==CACHE_NAME).map(key=>caches.delete(key)));await self.clients.claim()})())});
+self.addEventListener('message',event=>{if(event.data?.type==='SKIP_WAITING')self.skipWaiting()});
 self.addEventListener('fetch',event=>{
-  const request=event.request;
-  if(request.method!=='GET')return;
-  const url=new URL(request.url);
-  if(url.origin!==self.location.origin)return;
-  if(url.pathname==='/api/music'||request.headers.has('range'))return;
-
+  const request=event.request;if(request.method!=='GET')return;const url=new URL(request.url);if(url.origin!==self.location.origin)return;if(url.pathname==='/api/music'||request.headers.has('range'))return;
   if(request.mode==='navigate'){
-    event.respondWith((async()=>{
-      try{
-        const response=await fetch(request);
-        if(response.ok&&PUBLIC_PAGES.has(url.pathname)){
-          const cache=await caches.open(CACHE_NAME);
-          cache.put(request,response.clone()).catch(()=>{});
-        }
-        return response;
-      }catch{
-        const cached=await caches.match(request,{ignoreSearch:true});
-        const yoniNavigation=YONI_HOSTS.has(url.hostname)||url.pathname.startsWith('/app/');
-        return cached||await caches.match(yoniNavigation?'/app/index.html':'/index.html')||Response.error();
-      }
-    })());
-    return;
+    event.respondWith((async()=>{try{const response=await fetch(request);if(response.ok&&PUBLIC_PAGES.has(url.pathname)){const cache=await caches.open(CACHE_NAME);cache.put(request,response.clone()).catch(()=>{})}return response}catch{const cached=await caches.match(request,{ignoreSearch:true});const yoniNavigation=YONI_HOSTS.has(url.hostname)||url.pathname.startsWith('/app/');return cached||await caches.match(yoniNavigation?'/app/index.html':'/index.html')||Response.error()}})());return;
   }
-
   if(!['style','script','image','font','audio','manifest'].includes(request.destination))return;
   if(['style','script','manifest'].includes(request.destination)){
-    event.respondWith((async()=>{
-      try{
-        const response=await fetch(new Request(request,{cache:'no-store'}));
-        if(response.ok){
-          const cache=await caches.open(CACHE_NAME);
-          cache.put(request,response.clone()).catch(()=>{});
-        }
-        return response;
-      }catch{
-        return await caches.match(request)||await caches.match(url.pathname)||Response.error();
-      }
-    })());
-    return;
+    event.respondWith((async()=>{try{const response=await fetch(new Request(request,{cache:'no-store'}));if(response.ok){const cache=await caches.open(CACHE_NAME);cache.put(request,response.clone()).catch(()=>{})}return response}catch{return await caches.match(request)||await caches.match(url.pathname)||Response.error()}})());return;
   }
-
-  event.respondWith((async()=>{
-    const cached=await caches.match(request,{ignoreSearch:true});
-    const fresh=fetch(request).then(async response=>{
-      if(response.ok){
-        const cache=await caches.open(CACHE_NAME);
-        cache.put(request,response.clone()).catch(()=>{});
-      }
-      return response;
-    }).catch(()=>null);
-    return cached||await fresh||Response.error();
-  })());
+  event.respondWith((async()=>{const cached=await caches.match(request,{ignoreSearch:true});const fresh=fetch(request).then(async response=>{if(response.ok){const cache=await caches.open(CACHE_NAME);cache.put(request,response.clone()).catch(()=>{})}return response}).catch(()=>null);return cached||await fresh||Response.error()})());
 });
