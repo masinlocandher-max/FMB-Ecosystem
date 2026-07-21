@@ -11,12 +11,13 @@
   const MAIN_MENU=[
     {href:'/',label:'Home',description:'Return to the official FMB bulletin and latest announcements.'},
     {href:'/aboutfmb/',label:'About FMB',description:'Meet Francine Marie Bautista and explore her work and public mission.'},
-    {href:'/withlovefmb/',label:'With love, FMB',description:'Community service, volunteering, public-help resources, Yoni, and future people-first apps.'},
-    {href:'/music/',label:'Music',description:'Listen to original FMB music and digital releases.'},
-    {href:'/ebooks/',label:'eBook',description:'Open the FMB reading library and public guides.'},
     {href:'/news/',label:'News',description:'Read verified updates, context, reporting, and reflection.'},
-    {href:'/fmb&co/',label:'FMB&CO.',description:'Explore the company and its SENZ and Cognita portfolio.'},
-    {href:'/aboutfmb/#work-with-fmb',label:'Reception Desk',description:'Send work, partnership, advertising, booking, and coordination inquiries.'}
+    {href:'/projects/',label:'Projects',description:'Explore applications, cultural work, publications, and founder-led builds.'},
+    {href:'/ebooks/',label:'eBooks',description:'Open six complete original publications and public guides.'},
+    {href:'/music/',label:'Music',description:'Listen to the complete FMB music catalog and digital releases.'},
+    {href:'/withlovefmb/#volunteer',label:'Get Involved',description:'Join community service, volunteer action, and people-first initiatives.'},
+    {href:'/gethelp/',label:'Get Help',description:'Open verified emergency, wellbeing, protection, and assistance contacts.'},
+    {href:'/fmbandco/',label:'FMB&CO.',description:'Explore the company and its SENZ and Cognita portfolio.'}
   ];
 
   /* The Yoni domain and legacy app domains open the focused app. */
@@ -36,7 +37,7 @@
   function menuItemIsCurrent(item){
     const path=location.pathname.replace(/\/index\.html$/,'/').replace(/\/+$/,'')||'/';
     if(item.href==='/')return path==='/';
-    if(item.label==='Reception Desk')return path==='/aboutfmb'&&location.hash==='#work-with-fmb';
+    if(item.label==='Get Involved')return path==='/withlovefmb'||path==='/communityengagements';
     const target=item.href.split('#')[0].replace(/\/+$/,'');
     return target&&path.startsWith(target);
   }
@@ -45,7 +46,7 @@
     const nav=document.getElementById('navLinks');
     if(nav){
       nav.setAttribute('aria-label','Main website navigation');
-      nav.innerHTML=`<div class="nav-menu-intro"><strong>FMB Website</strong><span>Each main page has one clear purpose. Community work, volunteering, Yoni, and public-help resources are inside With love, FMB.</span></div>${MAIN_MENU.map(item=>`<a class="nav-menu-link" href="${item.href}"${menuItemIsCurrent(item)?' aria-current="page"':''}><span class="nav-link-label">${item.label}</span><small>${item.description}</small></a>`).join('')}<div class="nav-mobile-actions"><a class="pill secondary nav-signin-link" href="https://yoni.francinemariebautista.com/app/?auth=signin">Sign in to Yoni</a><a class="pill nav-install-link" href="https://yoni.francinemariebautista.com/app/install/">Install Yoni</a></div>`;
+      nav.innerHTML=`<div class="nav-menu-intro"><strong>Official FMB Bulletin</strong><span>Each destination has one clear purpose, from public reporting and projects to reading, music, participation, and help.</span></div>${MAIN_MENU.map(item=>`<a class="nav-menu-link" href="${item.href}"${menuItemIsCurrent(item)?' aria-current="page"':''}><span class="nav-link-label">${item.label}</span><small>${item.description}</small></a>`).join('')}<div class="nav-mobile-actions"><a class="pill secondary nav-signin-link" href="https://yoni.francinemariebautista.com/app/?auth=signin">Sign in to Yoni</a><a class="pill nav-install-link" href="https://yoni.francinemariebautista.com/app/install/">Install Yoni</a></div>`;
     }
 
     document.querySelectorAll('.fmb-site-links').forEach(gateway=>{

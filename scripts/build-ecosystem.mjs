@@ -34,8 +34,8 @@ async function lockYoniFirstPaintIdentity() {
   const pagePath = path.join(outputDirectory, 'app', 'index.html');
   let html = await readFile(pagePath, 'utf8');
   html = html
-    .replaceAll('/app/yoni-icon.svg', '/app/assets/yoni/yoni-app-icon-192.jpg')
-    .replaceAll('/app/yoni-mascot.svg', '/app/assets/yoni/yoni-master-static.png');
+    .replaceAll('/app/yoni-icon.svg', '/app/assets/yoni/yoni-app-icon-192.png')
+    .replaceAll('/app/yoni-mascot.svg', '/app/assets/yoni/yoni-app-icon-512.png');
   await writeFile(pagePath, html, 'utf8');
 }
 
@@ -121,6 +121,13 @@ function run(command, args, cwd) {
 
 await Promise.all([
   requireFile(path.join(personalWebsite, 'index.html')),
+  requireFile(path.join(personalWebsite, 'app', 'assets', 'yoni', 'yoni-hero.webp')),
+  requireFile(path.join(personalWebsite, 'app', 'assets', 'yoni', 'yoni-theme-background.webp')),
+  requireFile(path.join(personalWebsite, 'app', 'assets', 'yoni', 'yoni-app-icon-192.png')),
+  requireFile(path.join(personalWebsite, 'app', 'assets', 'yoni', 'yoni-app-icon-512.png')),
+  requireFile(path.join(personalWebsite, 'app', 'assets', 'yoni', 'yoni-apple-touch-icon-180.png')),
+  requireFile(path.join(personalWebsite, 'app', 'assets', 'yoni', 'yoni-social-1200.jpg')),
+  requireFile(path.join(personalWebsite, 'app', 'assets', 'yoni', 'yoni-wordmark.png')),
   requireFile(path.join(senzWebsite, 'index.html')),
   requireFile(path.join(cognitaWebsite, 'index.html')),
   requireFile(path.join(cognitaWebsite, 'package.json')),
@@ -146,6 +153,7 @@ await cp(cognitaOutput, path.join(privateSitesDirectory, 'cognita'), { recursive
 
 await Promise.all([
   requireFile(path.join(outputDirectory, 'index.html')),
+  requireFile(path.join(outputDirectory, 'projects', 'index.html')),
   requireFile(path.join(outputDirectory, 'app', 'index.html')),
   requireFile(path.join(outputDirectory, 'assets', 'images', 'news', 'amor-deloso-generated-hero-hd.png')),
   requireFile(path.join(outputDirectory, 'assets', 'images', 'hero.webp')),

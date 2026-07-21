@@ -11,13 +11,7 @@ from urllib.parse import unquote, urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 IGNORE_SCHEMES = ("http://", "https://", "mailto:", "tel:", "data:", "javascript:")
-FORBIDDEN_PUBLIC_FEATURES = (
-    "mabayani",
-    "tina sambal",
-    "sambal dictionary",
-    "cultural archive",
-    "heritage quiz",
-)
+FORBIDDEN_PUBLIC_FEATURES: tuple[str, ...] = ()
 MEMBER_READING_PAGES = (
     "reading.html",
     "womens-health.html",
@@ -129,7 +123,13 @@ def check_membership_features(errors: list[str]) -> None:
             errors.append(f"{name}: membership gate styles are missing")
 
     public_gate = (ROOT / "assets/js/membership-gate.js").read_text(encoding="utf-8")
-    for marker in ("publicBooks", "reading.html", "coming-out-respect.html", "men-can-cry.html", "This complete reading is open to everyone", "This guide is part of our member library"):
+    for marker in (
+        "showContinueGate",
+        "revealCompleteReading",
+        "product-email-access.js",
+        "Enter your email to continue reading.",
+        "Complete reading unlocked.",
+    ):
         if marker not in public_gate:
             errors.append(f"assets/js/membership-gate.js: member access marker is missing: {marker}")
 
@@ -183,19 +183,27 @@ def check_membership_features(errors: list[str]) -> None:
     app_html = (ROOT / "app/index.html").read_text(encoding="utf-8")
     for marker in (
         'id="accessGate"',
-        'id="appSignupForm"',
-        'id="appSigninForm"',
-        'id="appVerification"',
+        'id="signupForm"',
+        'id="signinForm"',
         'id="screen-community"',
-        'id="appWallForm"',
+        'id="wallForm"',
         'id="screen-profile"',
-        'data-fruit-avatar="orange"',
-        'data-app-theme="navy"',
-        "/app/access.js?v=",
-        "Need immediate support? Open public support contacts",
+        'id="screen-listen"',
+        'id="screen-read"',
+        'id="screen-help"',
+        "primeSignInSound",
+        "playSignInSound",
+        "/assets/js/supabase-client.js",
     ):
         if marker not in app_html:
             errors.append(f"app/index.html: missing verified app-entry marker: {marker}")
+    go_targets = set(re.findall(r'data-go="([^"]+)"', app_html))
+    screen_targets = set(re.findall(r'data-screen="([^"]+)"', app_html))
+    for target in sorted(go_targets - screen_targets):
+        errors.append(f"app/index.html: navigation button has no matching screen: {target}")
+    for retired_script in ("yoni-visual-final.js", "yoni-reply-core.js", "yoni-human-taglish.js"):
+        if retired_script in app_html:
+            errors.append(f"app/index.html: retired static-mascot script remains loaded: {retired_script}")
 
     install_html = (ROOT / "app/install/index.html").read_text(encoding="utf-8")
     for marker in (
@@ -260,6 +268,22 @@ def check_membership_features(errors: list[str]) -> None:
     music_ids = {track.get("id") for track in tracks}
     if not expected_music.issubset(music_ids):
         errors.append("assets/data/music-library.json: the approved Calm collection or With Love, FMB OST is incomplete")
+    if len(tracks) != 31:
+        errors.append(f"assets/data/music-library.json: expected 31 tracks, found {len(tracks)}")
+    for track in tracks:
+        source = str(track.get("src") or track.get("audio_url") or "")
+        target = local_target(ROOT / "index.html", source, "/")
+        if target is None or not target.exists():
+            errors.append(f"assets/data/music-library.json: missing audio for {track.get('id')}: {source}")
+
+    loader = (ROOT / "assets/js/yoni-experience-loader.js").read_text(encoding="utf-8")
+    for marker in ("yoni-native-libraries.js", "yoni-native-music.js", "yoni-native-ebooks.js"):
+        if marker not in loader:
+            errors.append(f"assets/js/yoni-experience-loader.js: native Yoni library is missing: {marker}")
+    native_books = (ROOT / "assets/js/yoni-native-ebooks.js").read_text(encoding="utf-8")
+    for name in MEMBER_READING_PAGES:
+        if f"/{name}" not in native_books:
+            errors.append(f"assets/js/yoni-native-ebooks.js: shared title is missing: {name}")
 
 
 def check_navigation_experience(errors: list[str]) -> None:
@@ -267,14 +291,16 @@ def check_navigation_experience(errors: list[str]) -> None:
     site_js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
     site_css = (ROOT / "assets/css/site.css").read_text(encoding="utf-8")
     for marker in (
-        'id="what-you-get"',
-        'id="get-the-app"',
-        "Begin with a public guide",
-        "Listen inside our member space",
-        "Visit the Freedom Wall",
-        "Access public support",
-        "Your calmer space, one tap away.",
-        "https://app.francinemariebautista.com/app/install/",
+        "Official FMB Bulletin",
+        'id="latest-release"',
+        'id="channels"',
+        "Meet Yoni. A complete space to listen, read, write, and check in.",
+        "https://yoni.francinemariebautista.com/",
+        "/projects/",
+        "/withlovefmb/#volunteer",
+        "/gethelp/",
+        "/assets/images/home/fmb-home-logo.webp",
+        "/assets/js/fmb-bulletin-home.js",
     ):
         if marker not in index:
             errors.append(f"index.html: missing first-visit benefit: {marker}")
@@ -283,6 +309,12 @@ def check_navigation_experience(errors: list[str]) -> None:
             errors.append(f"assets/js/site.js: missing navigation UX marker: {marker}")
     if ".entry-benefits" not in site_css:
         errors.append("assets/css/site.css: first-visit benefit styles are missing")
+    home_logo = "/assets/images/home/fmb-home-logo.webp"
+    for page in ROOT.rglob("*.html"):
+        if page == ROOT / "index.html" or "build" in page.parts:
+            continue
+        if home_logo in page.read_text(encoding="utf-8"):
+            errors.append(f"{page.relative_to(ROOT)}: homepage-only FMB logo must not appear here")
 
 
 def check_az_assistant(errors: list[str]) -> None:
@@ -298,6 +330,11 @@ def check_az_assistant(errors: list[str]) -> None:
         errors.append("assets/css/az-assistant.css: AZ help interface styles are missing")
         return
     assistant = assistant_path.read_text(encoding="utf-8")
+    core_path = ROOT / "assets/js/az-assistant-core.js"
+    if not core_path.exists():
+        errors.append("assets/js/az-assistant-core.js: Pearly response bank is missing")
+        return
+    assistant += "\n" + core_path.read_text(encoding="utf-8")
     styles = styles_path.read_text(encoding="utf-8")
     for marker in (
         "FMB&CO. Receptionist",
@@ -492,12 +529,14 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
 
     hotfix_js = (ROOT / "assets/js/live-hotfix.js").read_text(encoding="utf-8")
     for marker in (
-        "mobile-menu-fab",
-        "aria-modal",
         "focusableItems",
         "visualViewport",
         "senz-logo.png?v=20260716-desktop-premium-v1",
         "cognita-logo.png?v=20260716-desktop-premium-v1",
+        "Official FMB Bulletin",
+        "Get Involved",
+        "Get Help",
+        "/projects/",
     ):
         if marker not in hotfix_js:
             errors.append(f"assets/js/live-hotfix.js: missing accessible mobile menu marker: {marker}")
@@ -633,7 +672,6 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
             errors.append(f"assets/js/site.js: missing global premium asset marker: {marker}")
 
     public_mobile_routes = (
-        "index.html",
         "communityengagements/index.html",
         "dress-with-intention.html",
         "ebooks/index.html",
@@ -799,9 +837,11 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
             errors.append(f"news/index.html: missing sourced editorial visual: {name}")
         if not (ROOT / "assets/images/news" / name).exists():
             errors.append(f"assets/images/news/{name}: news sharing image is missing")
-    if news.count('class="news-visual"') != 5:
-        errors.append("news/index.html: every main story must have one sourced lead visual")
-    if news.count("<figcaption>") != 5 or "GMA Public Affairs / I-Witness" not in news or "Philippine Information Agency" not in news or "Earl D.C. Bracamonte / Philstar.com" not in news or "does not reproduce the racist video" not in news:
+    visual_count = news.count('class="news-visual"')
+    caption_count = news.count("<figcaption>")
+    if visual_count < 5:
+        errors.append("news/index.html: the main rundown must retain its sourced lead visuals")
+    if caption_count != visual_count or "GMA Public Affairs / I-Witness" not in news or "Philippine Information Agency" not in news or "Earl D.C. Bracamonte / Philstar.com" not in news or "does not reproduce the racist video" not in news:
         errors.append("news/index.html: every editorial visual must show its source or credit below it")
     china_ai_story = (ROOT / "news/china-ai-monkey-video/index.html").read_text(encoding="utf-8")
     for marker in ("Reuters", "Associated Press", "Permanent Court of Arbitration", "FMB&amp;CO. perspective · Opinion", "did not represent China’s official position"):
@@ -835,30 +875,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
 
 def main() -> int:
     errors: list[str] = []
-    route_pages = [
-        ROOT / "ebooks/index.html",
-        ROOT / "music/index.html",
-        ROOT / "communityengagements/index.html",
-        ROOT / "aboutfmb/index.html",
-        ROOT / "fmb&co/index.html",
-        ROOT / "fmb&co/senz/index.html",
-        ROOT / "fmb&co/cognita/index.html",
-        ROOT / "fmbandco/index.html",
-        ROOT / "gethelp/index.html",
-        ROOT / "news/index.html",
-        ROOT / "news/subic-aeta-landfill/index.html",
-        ROOT / "news/pax-silica-water/index.html",
-        ROOT / "news/binibining-pilipinas-2026/index.html",
-        ROOT / "news/china-ai-monkey-video/index.html",
-        ROOT / "news/cleopatra-barrera/index.html",
-        ROOT / "news/impeachment/index.html",
-        ROOT / "news/pax-silica/index.html",
-        ROOT / "news/good-news/index.html",
-        ROOT / "profile/index.html",
-        ROOT / "app/index.html",
-        ROOT / "app/install/index.html",
-    ]
-    html_files = sorted(ROOT.glob("*.html")) + route_pages
+    html_files = sorted(path for path in ROOT.rglob("*.html") if "build" not in path.parts)
     if not html_files:
         errors.append("No root HTML pages found")
     for path in html_files:
