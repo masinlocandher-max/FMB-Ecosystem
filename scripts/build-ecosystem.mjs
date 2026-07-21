@@ -3,6 +3,7 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { applyEntityAuthority } from './entity-authority.mjs';
+import { materializeHomeImages } from './home-image-assets.mjs';
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptDirectory, '..');
@@ -153,6 +154,7 @@ await rm(outputDirectory, { recursive: true, force: true });
 await mkdir(privateSitesDirectory, { recursive: true });
 await cp(personalWebsite, outputDirectory, { recursive: true });
 await cp(senzWebsite, path.join(privateSitesDirectory, 'senz'), { recursive: true });
+await materializeHomeImages({ outputDirectory });
 
 await Promise.all([
   injectStylesheet('news/index.html', '/assets/css/fmb-sitewide-gateway.css?v=20260721-responsive-v2'),
@@ -172,10 +174,13 @@ await Promise.all([
   requireFile(path.join(outputDirectory, 'index.html')),
   requireFile(path.join(outputDirectory, 'projects', 'index.html')),
   requireFile(path.join(outputDirectory, 'app', 'index.html')),
+  requireFile(path.join(outputDirectory, 'assets', 'images', 'home', 'francine-home-hero-hd.webp')),
+  requireFile(path.join(outputDirectory, 'assets', 'images', 'home', 'francine-home-founder-hd.webp')),
+  requireFile(path.join(outputDirectory, 'assets', 'images', 'home', 'home-image-manifest.json')),
   requireFile(path.join(outputDirectory, 'assets', 'images', 'news', 'amor-deloso-generated-hero-hd.png')),
   requireFile(path.join(outputDirectory, 'assets', 'images', 'news', 'fmb-ai-water-founder-portrait.jpg')),
   requireFile(path.join(privateSitesDirectory, 'senz', 'index.html')),
   requireFile(path.join(privateSitesDirectory, 'cognita', 'index.html')),
 ]);
 
-console.log('FMB ecosystem build completed successfully with unified entity authority.');
+console.log('FMB ecosystem build completed successfully with unified entity authority and direct HD homepage images.');
