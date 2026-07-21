@@ -1,0 +1,118 @@
+/* Verified FMB brand lock and shared public-page theme layer. */
+body.fmb-unified-page{
+  --fmb-page-accent:#d7ad4a;
+  --fmb-page-accent-soft:rgba(215,173,74,.16);
+  --fmb-page-ink:#250936;
+  --fmb-page-surface:#f8f4fb;
+  accent-color:var(--fmb-page-accent);
+}
+body.fmb-theme-bulletin{--fmb-page-accent:#d7ad4a;--fmb-page-ink:#250936;--fmb-page-surface:#f8f4fb}
+body.fmb-theme-news{--fmb-page-accent:#e0b34f;--fmb-page-ink:#16091f;--fmb-page-surface:#f5f1f7}
+body.fmb-theme-music{--fmb-page-accent:#e5bd59;--fmb-page-ink:#291044;--fmb-page-surface:#f4eff9}
+body.fmb-theme-reading{--fmb-page-accent:#c99a3c;--fmb-page-ink:#3b143f;--fmb-page-surface:#faf4f7}
+body.fmb-theme-projects{--fmb-page-accent:#b890ee;--fmb-page-ink:#211035;--fmb-page-surface:#f5f0fb}
+body.fmb-theme-care{--fmb-page-accent:#c8a1da;--fmb-page-ink:#4a1857;--fmb-page-surface:#fbf5fc}
+body.fmb-theme-support{--fmb-page-accent:#6ea99c;--fmb-page-ink:#173a3d;--fmb-page-surface:#f1f8f6}
+body.fmb-theme-founder{--fmb-page-accent:#d7ad4a;--fmb-page-ink:#2b0b45;--fmb-page-surface:#f7f3ed}
+body.fmb-theme-corporate{--fmb-page-accent:#d7ad4a;--fmb-page-ink:#160722;--fmb-page-surface:#f4f0f7}
+body.fmb-theme-public{--fmb-page-accent:#b98a42;--fmb-page-ink:#311443;--fmb-page-surface:#f8f5fa}
+
+body.fmb-unified-page ::selection{background:var(--fmb-page-accent-soft);color:var(--fmb-page-ink)}
+body.fmb-unified-page :focus-visible{outline-color:var(--fmb-page-accent)!important}
+body.fmb-unified-page a,
+body.fmb-unified-page button{transition-timing-function:cubic-bezier(.22,1,.36,1)}
+body.fmb-unified-page footer{border-top-color:var(--fmb-page-accent-soft)!important}
+body.fmb-unified-page .fmb-transparent-logo{background:transparent!important;border:0!important;box-shadow:none!important;filter:none}
+
+/* The FMB homepage mark is the approved lowercase FMB silhouette with no box. */
+body.fmb-theme-bulletin .bulletin-brand img.fmb-home-mark{
+  width:64px!important;
+  height:44px!important;
+  padding:0!important;
+  object-fit:contain!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+/* Override the older channel-label hiding rule only for the approved composed lockup. */
+body.fmb-media-channel.fmb-logo-lockup .nc-publication-brand > .fmb-channel-brand-lockup,
+body.fmb-media-channel.fmb-logo-lockup .nc-channel-lockup > .fmb-channel-brand-lockup,
+body.fmb-media-channel.fmb-logo-lockup .nc-footer-brand > .fmb-channel-brand-lockup{display:inline-grid!important}
+
+/* Transparent channel lockups only. The FMB silhouette, divider, and page label are vector/CSS, never a baked-in panel. */
+body.fmb-media-channel .fmb-channel-brand-lockup{
+  display:inline-grid;
+  grid-template-columns:auto 1px auto;
+  align-items:center;
+  gap:clamp(14px,2.1vw,29px);
+  width:max-content;
+  max-width:100%;
+  color:#fff;
+}
+body.fmb-media-channel .fmb-channel-brand-lockup img{
+  display:block;
+  width:clamp(130px,23vw,300px)!important;
+  height:auto!important;
+  max-height:105px;
+  object-fit:contain!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+body.fmb-media-channel .fmb-channel-brand-lockup i{
+  display:block;
+  width:1px;
+  height:clamp(54px,8vw,105px);
+  background:linear-gradient(180deg,#fff0a6,#c7861d,#f4d16c);
+  box-shadow:0 0 10px rgba(238,188,70,.28);
+}
+body.fmb-media-channel .fmb-channel-brand-lockup strong{
+  color:#d7ad4a;
+  background:linear-gradient(180deg,#fff0a6 0%,#e8b84b 38%,#a75d10 72%,#f2cd66 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:clamp(24px,5vw,72px);
+  font-weight:500;
+  line-height:.9;
+  letter-spacing:.22em;
+  text-indent:.22em;
+  white-space:nowrap;
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,.35));
+}
+body.fmb-media-channel .nc-publication-brand .fmb-channel-brand-lockup{gap:13px}
+body.fmb-media-channel .nc-publication-brand .fmb-channel-brand-lockup img{width:clamp(90px,13vw,165px)!important;max-height:58px}
+body.fmb-media-channel .nc-publication-brand .fmb-channel-brand-lockup i{height:44px}
+body.fmb-media-channel .nc-publication-brand .fmb-channel-brand-lockup strong{font-size:clamp(17px,2.5vw,32px)}
+body.fmb-media-channel .nc-footer-brand .fmb-channel-brand-lockup{gap:12px}
+body.fmb-media-channel .nc-footer-brand .fmb-channel-brand-lockup img{width:145px!important;max-height:54px}
+body.fmb-media-channel .nc-footer-brand .fmb-channel-brand-lockup i{height:42px}
+body.fmb-media-channel .nc-footer-brand .fmb-channel-brand-lockup strong{font-size:28px}
+
+/* Founder identity lock: image one is the hero, image two is the next overview. */
+body.fmb-founder-page .fco-hero,
+body.fmb-company-page .fco-hero,
+body.fmb-with-love-page .wlf-hero{background-repeat:no-repeat;background-color:#160722}
+body.fmb-founder-page .fmb-hd-photo,
+body.fmb-company-page .fmb-hd-photo,
+body.fmb-with-love-page .fmb-with-love-overview img,
+body.fmb-theme-bulletin #homeHeroImage,
+body.fmb-theme-bulletin #homeFounderImage{image-rendering:auto;transform:translateZ(0)}
+
+/* Pearly keeps the receptionist function and uses the transparent FMB&CO. ampersand. */
+body.fmb-unified-page .az-help-trigger-icon img{background:transparent!important;border:0!important;box-shadow:none!important}
+
+@media(max-width:600px){
+  body.fmb-theme-bulletin .bulletin-brand img.fmb-home-mark{width:56px!important;height:38px!important}
+  body.fmb-media-channel .fmb-channel-brand-lockup{gap:12px}
+  body.fmb-media-channel .fmb-channel-brand-lockup img{width:clamp(112px,34vw,185px)!important}
+  body.fmb-media-channel .fmb-channel-brand-lockup i{height:58px}
+  body.fmb-media-channel .fmb-channel-brand-lockup strong{font-size:clamp(20px,7.6vw,38px);letter-spacing:.16em;text-indent:.16em}
+}
+
+@media(prefers-reduced-motion:reduce){
+  body.fmb-unified-page *,body.fmb-unified-page *::before,body.fmb-unified-page *::after{scroll-behavior:auto!important}
+}
