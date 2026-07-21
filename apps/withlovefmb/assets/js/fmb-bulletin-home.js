@@ -1,12 +1,12 @@
 (function(){
 'use strict';
-const VERSION='20260721-home-polish-v1';
+const VERSION='20260721-home-hd-assets-v2';
 const BUNDLE=`/assets/data/home/home-bundle.txt?v=${VERSION}`;
-const IMAGE_PARTS={hero:4,founder:5};
+const HERO_IMAGE=`/assets/images/home/francine-home-hero-hd.webp?v=${VERSION}`;
+const FOUNDER_IMAGE=`/assets/images/home/francine-home-founder-hd.webp?v=${VERSION}`;
 const fetchText=url=>fetch(url,{credentials:'same-origin'}).then(response=>{if(!response.ok)throw new Error(`${url}: ${response.status}`);return response.text()});
 function addStyles(css){if(document.getElementById('fmb-ecosystem-home-style'))return;const style=document.createElement('style');style.id='fmb-ecosystem-home-style';style.textContent=css;document.head.appendChild(style)}
 function setMeta(selector,content){let node=document.querySelector(selector);if(!node){node=document.createElement('meta');const match=selector.match(/meta\[([^=]+)="([^"]+)"\]/);if(match)node.setAttribute(match[1],match[2]);document.head.appendChild(node)}node.setAttribute('content',content)}
-async function readImage(name,count){const paths=Array.from({length:count},(_,i)=>`/assets/data/home/${name}-${String(i+1).padStart(2,'0')}.txt?v=${VERSION}`);return `data:image/webp;base64,${(await Promise.all(paths.map(fetchText))).join('')}`}
 
 async function decodeBundle(value){
  const bytes=Uint8Array.from(atob(value.trim()),char=>char.charCodeAt(0));
@@ -15,6 +15,17 @@ async function decodeBundle(value){
  return JSON.parse(await new Response(stream).text());
 }
 function templateContent(documentFragment,id){const template=documentFragment.getElementById(id);return template?template.innerHTML:''}
+function directHomeImages(markup){
+ return markup
+  .replaceAll('data:image/webp;base64,__FMB_HERO__',HERO_IMAGE)
+  .replaceAll('data:image/webp;base64,__FMB_FOUNDER__',FOUNDER_IMAGE)
+  .replaceAll('__FMB_HERO__',HERO_IMAGE)
+  .replaceAll('__FMB_FOUNDER__',FOUNDER_IMAGE);
+}
+function recoverHomeImages(){
+ document.querySelectorAll(`img[src*="francine-home-hero-hd.webp"]`).forEach(image=>{image.addEventListener('error',()=>{image.src='/assets/images/fmb/francine-founder-side-cutout-900-v1.webp';image.removeAttribute('srcset')},{once:true})});
+ document.querySelectorAll(`img[src*="francine-home-founder-hd.webp"]`).forEach(image=>{image.addEventListener('error',()=>{image.src='/assets/images/fmb/francine-founder-front-cutout-900-v1.webp';image.removeAttribute('srcset')},{once:true})});
+}
 function updateHead(){
  document.title='Francine Marie Bautista | FMB Ecosystem Bulletin, SENZ, Cognita & Yoni';
  setMeta('meta[name="description"]','The official FMB Ecosystem Bulletin of Francine Marie Bautista. Discover what is new from FMB&CO., SENZ marketing and digital solutions, Cognita AI learning, Yoni, public-interest news, books, music, cultural work, offers, and future applications.');
@@ -38,13 +49,13 @@ async function apply(){
   const bundle=await decodeBundle(await fetchText(BUNDLE));
   addStyles(bundle.css);
   const shell=bundle.template.replaceAll('/assets/images/home/cognita-wordmark-transparent.svg',`data:image/svg+xml;base64,${bundle.cognita}`);
-  const [hero,founder]=await Promise.all([readImage('hero',IMAGE_PARTS.hero),readImage('founder',IMAGE_PARTS.founder)]);
   const shellDoc=new DOMParser().parseFromString(shell,'text/html');
   const wire=document.querySelector('.bulletin-wire');if(wire)wire.innerHTML=templateContent(shellDoc,'fmb-wire');
   const header=document.querySelector('.bulletin-header,.site-header');if(header){header.className='site-header';header.innerHTML=templateContent(shellDoc,'fmb-header')}
-  const main=document.querySelector('main');if(main)main.innerHTML=templateContent(shellDoc,'fmb-main').replaceAll('__FMB_HERO__',hero.replace('data:image/webp;base64,','')).replaceAll('__FMB_FOUNDER__',founder.replace('data:image/webp;base64,',''));
+  const main=document.querySelector('main');if(main)main.innerHTML=directHomeImages(templateContent(shellDoc,'fmb-main'));
   const footer=document.querySelector('.bulletin-footer,.site-footer');if(footer){footer.className='site-footer';footer.innerHTML=templateContent(shellDoc,'fmb-footer')}
   const dock=document.querySelector('.mobile-dock');if(dock)dock.innerHTML=templateContent(shellDoc,'fmb-dock');
+  recoverHomeImages();
   document.body.classList.add('fmb-home-polished');updateHead();activateInteractions();
  }catch(error){console.error('FMB homepage polish could not load; keeping the verified fallback homepage.',error)}
 }
