@@ -14,21 +14,18 @@ const senzWebsite = path.join(applicationsDirectory, 'senz');
 const cognitaWebsite = path.join(applicationsDirectory, 'cognita');
 const cognitaOutput = path.join(cognitaWebsite, 'dist');
 
+const amorDelosoHdSource = 'https://at.adobe.com/QdMpFXIcRloBpGGK';
+
 async function requireFile(filePath) {
   const details = await stat(filePath);
-  if (!details.isFile()) {
-    throw new Error(`Expected a file at ${filePath}`);
-  }
+  if (!details.isFile()) throw new Error(`Expected a file at ${filePath}`);
 }
 
 async function injectStylesheet(relativePagePath, stylesheetHref) {
   const pagePath = path.join(outputDirectory, relativePagePath);
   const html = await readFile(pagePath, 'utf8');
   if (html.includes(`href="${stylesheetHref}"`)) return;
-  if (!html.includes('</head>')) {
-    throw new Error(`Expected </head> in ${relativePagePath}`);
-  }
-
+  if (!html.includes('</head>')) throw new Error(`Expected </head> in ${relativePagePath}`);
   const stylesheet = `<link rel="stylesheet" href="${stylesheetHref}">`;
   await writeFile(pagePath, html.replace('</head>', `${stylesheet}\n</head>`), 'utf8');
 }
@@ -42,101 +39,75 @@ async function lockYoniFirstPaintIdentity() {
   await writeFile(pagePath, html, 'utf8');
 }
 
-async function applyAmorDelosoGeneratedHero() {
-  const encodedSourcePath = path.join(
-    personalWebsite,
-    'assets',
-    'images',
-    'news',
-    'amor-deloso-generated-hero.b64',
-  );
-  const encodedImage = (await readFile(encodedSourcePath, 'utf8')).trim();
-  const imageBytes = Buffer.from(encodedImage, 'base64');
-
-  if (imageBytes.byteLength < 10_000) {
-    throw new Error(
-      `Generated Amor Deloso hero is unexpectedly small (${imageBytes.byteLength} bytes)`,
-    );
-  }
-
-  const relativeImagePath = 'assets/images/news/amor-deloso-generated-hero.jpg';
-  const destination = path.join(outputDirectory, relativeImagePath);
+async function downloadImage(sourceUrl, relativeOutputPath, minimumBytes = 100000) {
+  const response = await fetch(sourceUrl, {
+    redirect: 'follow',
+    headers: {
+      Accept: 'image/png,image/jpeg,image/webp,image/*;q=0.8',
+      'User-Agent': 'FMB-Ecosystem-Build/2.0',
+    },
+  });
+  if (!response.ok) throw new Error(`Unable to download ${relativeOutputPath}: ${response.status}`);
+  const contentType = response.headers.get('content-type') || '';
+  if (!contentType.startsWith('image/')) throw new Error(`Expected image for ${relativeOutputPath}, received ${contentType}`);
+  const bytes = Buffer.from(await response.arrayBuffer());
+  if (bytes.byteLength < minimumBytes) throw new Error(`${relativeOutputPath} is too small (${bytes.byteLength} bytes)`);
+  const destination = path.join(outputDirectory, relativeOutputPath);
   await mkdir(path.dirname(destination), { recursive: true });
-  await writeFile(destination, imageBytes);
+  await writeFile(destination, bytes);
+}
 
-  const publicImagePath = `/${relativeImagePath}`;
-  const publicImageUrl = `https://www.francinemariebautista.com/${relativeImagePath}`;
+async function applyHdNewsImages() {
+  const amorRelativePath = 'assets/images/news/amor-deloso-generated-hero-hd.png';
+  await downloadImage(amorDelosoHdSource, amorRelativePath, 150000);
 
-  const articlePath = path.join(
-    outputDirectory,
-    'news',
-    'remembering-amor-deloso',
-    'index.html',
-  );
-  let article = await readFile(articlePath, 'utf8');
-  article = article
-    .replaceAll(
-      'https://www.francinemariebautista.com/assets/images/news/amor-deloso-share-1200x630.jpg',
-      publicImageUrl,
-    )
-    .replaceAll('<meta property="og:image:width" content="1200">', '<meta property="og:image:width" content="640">')
-    .replaceAll('<meta property="og:image:height" content="630">', '<meta property="og:image:height" content="360">')
-    .replaceAll(
-      'Former Zambales governor Amor Deloso during a provincial peace and order meeting in Iba, Zambales',
-      'Amor Deloso in a dignified black-and-white memorial portrait before classical civic architecture',
-    )
-    .replaceAll(
-      'Former Zambales governor Amor Deloso during a provincial peace and order meeting',
-      'Amor Deloso in a dignified black-and-white memorial portrait',
-    )
-    .replace(
-      '"dateModified":"2026-07-21T09:15:00+08:00"',
-      '"dateModified":"2026-07-21T11:30:00+08:00"',
-    )
-    .replace(
-      '<meta property="article:modified_time" content="2026-07-21T09:15:00+08:00">',
-      '<meta property="article:modified_time" content="2026-07-21T11:30:00+08:00">',
-    )
-    .replace(
-      '"image":{"@type":"ImageObject","url":"https://www.francinemariebautista.com/assets/images/news/amor-deloso-share-1200x630.jpg","width":1200,"height":630,"caption":"Governor Amor D. Deloso during a Provincial Peace and Order Council and Provincial Anti-Drug Abuse Council meeting in Iba, Zambales. Photo: DILG Zambales."}',
-      `"image":{"@type":"ImageObject","url":"${publicImageUrl}","width":640,"height":360,"caption":"Amor Deloso in a dignified black-and-white memorial portrait prepared for FMB&CO. News."}`,
-    )
-    .replace(
-      '<section class="nc-story-media nc-story-media--portrait" aria-label="Historical photograph of Amor Deloso">',
-      '<section class="nc-story-media nc-story-media--portrait" aria-label="Memorial portrait of Amor Deloso">',
-    )
-    .replace(
-      '<div class="wrap"><figure class="news-visual"><img src="/assets/images/news/amor-deloso-share-1200x630.jpg" width="1200" height="630" alt="Governor Amor Deloso during a provincial peace and order meeting in Iba, Zambales" fetchpriority="high" decoding="async"><figcaption>Governor Amor D. Deloso during a Provincial Peace and Order Council and Provincial Anti-Drug Abuse Council meeting in Iba, Zambales. Photo: DILG Zambales, 2018.</figcaption></figure></div>',
-      `<div class="wrap"><figure class="news-visual"><img src="${publicImagePath}" width="640" height="360" alt="Amor Deloso in a dignified black-and-white memorial portrait before classical civic architecture" fetchpriority="high" decoding="async"><figcaption>Amor D. Deloso. Memorial portrait prepared for FMB&CO. News.</figcaption></figure></div>`,
-    )
-    .replace(
-      'The historical photograph is from a 2018 DILG Zambales public record. ',
-      '',
-    );
-  await writeFile(articlePath, article, 'utf8');
+  const amorPublicPath = `/${amorRelativePath}`;
+  const amorPublicUrl = `https://www.francinemariebautista.com/${amorRelativePath}`;
+  const oldAmorUrl = 'https://www.francinemariebautista.com/assets/images/news/amor-deloso-share-1200x630.jpg';
+  const oldGeneratedUrl = 'https://www.francinemariebautista.com/assets/images/news/amor-deloso-generated-hero.jpg';
+
+  const amorArticlePath = path.join(outputDirectory, 'news', 'remembering-amor-deloso', 'index.html');
+  let amorArticle = await readFile(amorArticlePath, 'utf8');
+  amorArticle = amorArticle
+    .replaceAll(oldAmorUrl, amorPublicUrl)
+    .replaceAll(oldGeneratedUrl, amorPublicUrl)
+    .replaceAll('/assets/images/news/amor-deloso-share-1200x630.jpg', amorPublicPath)
+    .replaceAll('/assets/images/news/amor-deloso-generated-hero.jpg', amorPublicPath)
+    .replaceAll('<meta property="og:image:width" content="1200">', '<meta property="og:image:width" content="1672">')
+    .replaceAll('<meta property="og:image:height" content="630">', '<meta property="og:image:height" content="941">')
+    .replaceAll('<meta property="og:image:width" content="640">', '<meta property="og:image:width" content="1672">')
+    .replaceAll('<meta property="og:image:height" content="360">', '<meta property="og:image:height" content="941">')
+    .replaceAll('width="1200" height="630"', 'width="1672" height="941"')
+    .replaceAll('width="640" height="360"', 'width="1672" height="941"')
+    .replaceAll('"width":1200,"height":630', '"width":1672,"height":941')
+    .replaceAll('"width":640,"height":360', '"width":1672,"height":941')
+    .replaceAll('2026-07-21T11:30:00+08:00', '2026-07-21T12:15:00+08:00');
+  await writeFile(amorArticlePath, amorArticle, 'utf8');
 
   const newsIndexPath = path.join(outputDirectory, 'news', 'index.html');
   let newsIndex = await readFile(newsIndexPath, 'utf8');
   newsIndex = newsIndex
-    .replaceAll(
-      'https://www.francinemariebautista.com/assets/images/news/amor-deloso-share-1200x630.jpg',
-      publicImageUrl,
-    )
-    .replaceAll('<meta property="og:image:width" content="1200">', '<meta property="og:image:width" content="640">')
-    .replaceAll('<meta property="og:image:height" content="630">', '<meta property="og:image:height" content="360">')
-    .replaceAll(
-      'Former Zambales governor Amor Deloso during a provincial peace and order meeting in Iba, Zambales',
-      'Amor Deloso in a dignified black-and-white memorial portrait before classical civic architecture',
-    )
-    .replaceAll(
-      'Former Zambales governor Amor Deloso during a provincial peace and order meeting',
-      'Amor Deloso in a dignified black-and-white memorial portrait',
-    )
-    .replace(
-      '<img src="/assets/images/news/amor-deloso-share-1200x630.jpg" width="1200" height="630" alt="Former Zambales governor Amor Deloso during a provincial peace and order meeting" loading="lazy"><figcaption>Photo: DILG Zambales, 2018. Full source and credit appear in the article.</figcaption>',
-      `<img src="${publicImagePath}" width="640" height="360" alt="Amor Deloso in a dignified black-and-white memorial portrait" loading="lazy"><figcaption>Memorial portrait prepared for FMB&CO. News.</figcaption>`,
-    );
+    .replaceAll(oldAmorUrl, amorPublicUrl)
+    .replaceAll(oldGeneratedUrl, amorPublicUrl)
+    .replaceAll('/assets/images/news/amor-deloso-share-1200x630.jpg', amorPublicPath)
+    .replaceAll('/assets/images/news/amor-deloso-generated-hero.jpg', amorPublicPath)
+    .replaceAll('width="1200" height="630"', 'width="1672" height="941"')
+    .replaceAll('width="640" height="360"', 'width="1672" height="941"')
+    .replaceAll('https://www.francinemariebautista.com/assets/images/news/fmbco-ai-water-founder-hero.svg', 'https://www.francinemariebautista.com/assets/images/hero.webp')
+    .replaceAll('/assets/images/news/fmbco-ai-water-founder-hero.svg', '/assets/images/hero.webp');
   await writeFile(newsIndexPath, newsIndex, 'utf8');
+
+  const aiArticlePath = path.join(outputDirectory, 'news', 'ai-water-consumption-responsible-ai-philippines', 'index.html');
+  let aiArticle = await readFile(aiArticlePath, 'utf8');
+  aiArticle = aiArticle
+    .replaceAll('https://www.francinemariebautista.com/assets/images/news/fmbco-ai-water-founder-hero.svg', 'https://www.francinemariebautista.com/assets/images/hero.webp')
+    .replaceAll('/assets/images/news/fmbco-ai-water-founder-hero.svg', '/assets/images/hero.webp')
+    .replaceAll('<meta property="og:image:width" content="1000"><meta property="og:image:height" content="563">', '')
+    .replaceAll('width="1000" height="563"', '')
+    .replaceAll('2026-07-20T10:00:00+08:00', '2026-07-21T12:15:00+08:00')
+    .replaceAll('Francine Marie Bautista beside the headline AI Uses Water. That Is Not the Whole Story', 'Francine Marie Bautista in the official FMB founder portrait')
+    .replace('Portrait supplied by FMB. FMB&amp;CO. News graphic.', 'Official high-resolution FMB founder portrait.');
+  await writeFile(aiArticlePath, aiArticle, 'utf8');
 }
 
 function run(command, args, cwd) {
@@ -145,10 +116,7 @@ function run(command, args, cwd) {
     stdio: 'inherit',
     shell: process.platform === 'win32',
   });
-
-  if (result.status !== 0) {
-    throw new Error(`${command} ${args.join(' ')} failed in ${cwd}`);
-  }
+  if (result.status !== 0) throw new Error(`${command} ${args.join(' ')} failed in ${cwd}`);
 }
 
 await Promise.all([
@@ -160,7 +128,6 @@ await Promise.all([
 
 await rm(outputDirectory, { recursive: true, force: true });
 await mkdir(privateSitesDirectory, { recursive: true });
-
 await cp(personalWebsite, outputDirectory, { recursive: true });
 await cp(senzWebsite, path.join(privateSitesDirectory, 'senz'), { recursive: true });
 
@@ -170,28 +137,18 @@ await Promise.all([
   injectStylesheet('ebooks/index.html', '/assets/css/fmb-sitewide-gateway.css?v=20260721-responsive-v2'),
   injectStylesheet('aboutfmb/index.html', '/assets/css/aboutfmb-seamless.css?v=20260721-responsive-v2'),
   lockYoniFirstPaintIdentity(),
-  applyAmorDelosoGeneratedHero(),
+  applyHdNewsImages(),
 ]);
 
 run('npm', ['ci'], cognitaWebsite);
 run('npm', ['run', 'build'], cognitaWebsite);
-
-await cp(cognitaOutput, path.join(privateSitesDirectory, 'cognita'), {
-  recursive: true,
-});
+await cp(cognitaOutput, path.join(privateSitesDirectory, 'cognita'), { recursive: true });
 
 await Promise.all([
   requireFile(path.join(outputDirectory, 'index.html')),
   requireFile(path.join(outputDirectory, 'app', 'index.html')),
-  requireFile(
-    path.join(
-      outputDirectory,
-      'assets',
-      'images',
-      'news',
-      'amor-deloso-generated-hero.jpg',
-    ),
-  ),
+  requireFile(path.join(outputDirectory, 'assets', 'images', 'news', 'amor-deloso-generated-hero-hd.png')),
+  requireFile(path.join(outputDirectory, 'assets', 'images', 'hero.webp')),
   requireFile(path.join(privateSitesDirectory, 'senz', 'index.html')),
   requireFile(path.join(privateSitesDirectory, 'cognita', 'index.html')),
 ]);
