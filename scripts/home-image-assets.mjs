@@ -87,8 +87,8 @@ export async function materializeHomeImages({ outputDirectory }) {
     name: 'hero',
     parts: 4,
     filename: 'francine-home-hero-hd.webp',
-    minimumWidth: 1400,
-    minimumHeight: 800,
+    minimumWidth: 1280,
+    minimumHeight: 720,
   });
 
   const founder = await decodeChunkedImage({
@@ -96,8 +96,8 @@ export async function materializeHomeImages({ outputDirectory }) {
     name: 'founder',
     parts: 5,
     filename: 'francine-home-founder-hd.webp',
-    minimumWidth: 1400,
-    minimumHeight: 800,
+    minimumWidth: 1280,
+    minimumHeight: 720,
   });
 
   const manifest = {
