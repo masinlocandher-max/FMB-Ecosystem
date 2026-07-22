@@ -1,0 +1,8 @@
+/* Shared content compatibility layer.
+   Page-specific luxury layouts are defined in their scoped stylesheets. */
+
+main img,
+article img,
+figure img{
+  image-rendering:auto;
+}
