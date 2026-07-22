@@ -4,9 +4,9 @@ import path from 'node:path';
 const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
 const approved='/assets/images/fmb-approved';
 const exactChannels={
-  news:'/assets/images/fmb-official-2026/fmb-news-official.webp',
-  music:'/assets/images/fmb-official-2026/fmb-music-official.webp',
-  ebook:'/assets/images/channels/fmb-ebook-official.svg'
+  news:`${approved}/fmb-news-official-transparent.webp`,
+  music:`${approved}/fmb-music-official-transparent.webp`,
+  ebook:`${approved}/fmb-ebook-official-transparent.webp`
 };
 const fail=message=>{throw new Error(`FMB public-route brand audit: ${message}`)};
 const protectedRoots=['app/','_sites/senz/','_sites/cognita/'];
@@ -47,7 +47,10 @@ for(const file of await walk(root)){
     '/assets/images/home/fmb-home-logo.webp',
     '/assets/images/fmb-official-2026/fmb-master-square.webp',
     '/assets/images/news/fmb-news-official.svg',
-    '/assets/images/channels/fmb-music-official.svg'
+    '/assets/images/channels/fmb-music-official.svg',
+    '/assets/images/channels/fmb-ebook-official.svg',
+    '/assets/images/fmb-official-2026/fmb-news-official.webp',
+    '/assets/images/fmb-official-2026/fmb-music-official.webp'
   ]){
     if(html.includes(retired))fail(`${name} still exposes retired identity ${retired}`);
   }
@@ -71,4 +74,4 @@ for(const [route,marker] of Object.entries(representativeRoutes)){
   requireMarker(html,route,marker);
 }
 
-console.log(`FMB public-route brand audit verified ${publicPages} public HTML pages, including ${newsPages} News routes and ${readingRoutes.length} reading routes, with GitHub-owned channel identities and no retired founder assets.`);
+console.log(`FMB public-route brand audit verified ${publicPages} public HTML pages, including ${newsPages} News routes and ${readingRoutes.length} reading routes, with repository-owned exact channel identities and no retired founder assets.`);
