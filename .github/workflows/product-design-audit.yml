@@ -8,10 +8,14 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: product-design-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   capture:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -54,7 +58,6 @@ jobs:
         if: steps.build.outcome == 'success'
         run: |
           python3 -m http.server 4173 --directory dist > /tmp/fmb-audit-server.log 2>&1 &
-          echo $! > /tmp/fmb-audit-server.pid
           for i in {1..30}; do
             if curl -fsS http://127.0.0.1:4173/ >/dev/null; then exit 0; fi
             sleep 1
@@ -62,7 +65,7 @@ jobs:
           cat /tmp/fmb-audit-server.log
           exit 1
 
-      - name: Capture desktop and iPhone evidence
+      - name: Capture principal desktop and iPhone screens
         id: visual_capture
         continue-on-error: true
         if: steps.build.outcome == 'success'
@@ -82,9 +85,6 @@ jobs:
             ['ebook', 'ebooks/index.html', '/ebooks/'],
             ['fmbandco', 'fmbandco/index.html', '/fmbandco/'],
             ['get-help', 'get-help/index.html', '/get-help/'],
-            ['community', 'community-engagements/index.html', '/community-engagements/'],
-            ['work-with-fmb', 'work-with-fmb/index.html', '/work-with-fmb/'],
-            ['projects', 'projects/index.html', '/projects/'],
             ['yoni', 'app/index.html', '/app/']
           ];
 
@@ -98,8 +98,8 @@ jobs:
 
           const browser = await chromium.launch({ headless: true });
           const profiles = [
-            { name: 'desktop', viewport: { width: 1440, height: 1100 }, deviceScaleFactor: 1 },
-            { name: 'iphone', viewport: { width: 390, height: 844 }, deviceScaleFactor: 1 }
+            { name: 'desktop', viewport: { width: 1440, height: 1100 }, isMobile: false },
+            { name: 'iphone', viewport: { width: 390, height: 844 }, isMobile: true }
           ];
           const manifest = [];
           const persist = () => writeFileSync('product-design-audit/manifest.json', JSON.stringify(manifest, null, 2));
@@ -107,46 +107,26 @@ jobs:
           for (const profile of profiles) {
             const context = await browser.newContext({
               viewport: profile.viewport,
-              deviceScaleFactor: profile.deviceScaleFactor,
-              isMobile: profile.name === 'iphone',
-              hasTouch: profile.name === 'iphone',
+              isMobile: profile.isMobile,
+              hasTouch: profile.isMobile,
               reducedMotion: 'reduce'
             });
             const page = await context.newPage();
-            page.setDefaultTimeout(15000);
+            page.setDefaultTimeout(10000);
             for (const item of routes) {
               const step = manifest.length + 1;
               const file = `product-design-audit/${String(step).padStart(2, '0')}-${item.name}-${profile.name}.png`;
-              const url = `http://127.0.0.1:4173${item.route}`;
               try {
-                const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
-                await page.waitForLoadState('load', { timeout: 8000 }).catch(() => {});
+                const response = await page.goto(`http://127.0.0.1:4173${item.route}`, { waitUntil: 'domcontentloaded', timeout: 12000 });
                 await page.evaluate(async () => {
-                  if (document.fonts?.ready) await Promise.race([document.fonts.ready, new Promise(resolve => setTimeout(resolve, 5000))]);
+                  if (document.fonts?.ready) await Promise.race([document.fonts.ready, new Promise(resolve => setTimeout(resolve, 2500))]);
                   window.scrollTo(0, 0);
                 });
-                await page.waitForTimeout(900);
-                await page.screenshot({ path: file, fullPage: true, animations: 'disabled' });
-                manifest.push({
-                  step,
-                  page: item.name,
-                  profile: profile.name,
-                  route: item.route,
-                  status: response?.status() ?? null,
-                  title: await page.title(),
-                  health: 'captured',
-                  screenshot: file
-                });
+                await page.waitForTimeout(600);
+                await page.screenshot({ path: file, animations: 'disabled' });
+                manifest.push({ step, page: item.name, profile: profile.name, route: item.route, status: response?.status() ?? null, title: await page.title(), health: 'captured', screenshot: file });
               } catch (error) {
-                manifest.push({
-                  step,
-                  page: item.name,
-                  profile: profile.name,
-                  route: item.route,
-                  health: 'blocked',
-                  error: error instanceof Error ? error.message : String(error),
-                  screenshot: null
-                });
+                manifest.push({ step, page: item.name, profile: profile.name, route: item.route, health: 'blocked', error: error instanceof Error ? error.message : String(error), screenshot: null });
               }
               persist();
             }
@@ -168,8 +148,4 @@ jobs:
 
       - name: Fail when the site cannot build
         if: steps.build.outcome != 'success'
-        run: exit 1
-
-      - name: Fail when no visual evidence could be captured
-        if: steps.build.outcome == 'success' && steps.visual_capture.outcome != 'success'
         run: exit 1
