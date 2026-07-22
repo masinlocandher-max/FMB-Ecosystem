@@ -1,0 +1,52 @@
+name: Monorepo checks
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  boundaries:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node tooling/check-monorepo.mjs
+      - run: node tooling/check-deployment-boundaries.mjs
+      - run: node --check apps/senz/server.js
+      - run: node --check apps/senz/api/handler.js
+
+  static-builds:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node apps/withlovefmb/build.mjs
+      - run: test -f apps/withlovefmb/dist/index.html
+      - run: test -f apps/withlovefmb/dist/app/index.html
+      - run: node apps/senz/build.mjs
+      - run: test -f apps/senz/dist/index.html
+
+  cognita-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/cognita
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: apps/cognita/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run build
