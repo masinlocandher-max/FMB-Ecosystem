@@ -1,0 +1,41 @@
+:root{
+  --fmb-purple-950:#12031b;
+  --fmb-purple-900:#250936;
+  --fmb-purple-800:#3b1152;
+  --fmb-purple-700:#5a1e78;
+  --fmb-purple-500:#8a5aa0;
+  --fmb-gold-500:#d8ae4a;
+  --fmb-gold-300:#f4dea0;
+  --fmb-ivory:#fbf8ff;
+  --fmb-white:#fff;
+  --fmb-ink:#1f1822;
+  --fmb-muted:#766d79;
+  --fmb-line:#e7dfea;
+  --fmb-news-paper:#f5f1e9;
+  --fmb-news-ink:#171218;
+  --fmb-news-wine:#7d243b;
+  --fmb-news-gold:#c5a45d;
+  --fmb-radius-sm:14px;
+  --fmb-radius-md:22px;
+  --fmb-radius-lg:30px;
+  --fmb-radius-xl:40px;
+  --fmb-radius-pill:999px;
+  --fmb-wrap:min(1220px,calc(100vw - 44px));
+  --fmb-font-display:"Cormorant Garamond",Iowan Old Style,"Palatino Linotype",Georgia,serif;
+  --fmb-font-ui:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,Helvetica,Arial,sans-serif;
+  --fmb-ease:cubic-bezier(.22,1,.36,1);
+  --fmb-ease-soft:cubic-bezier(.2,.8,.2,1);
+  --fmb-shadow-sm:0 12px 38px rgba(31,8,43,.08);
+  --fmb-shadow-md:0 24px 68px rgba(31,8,43,.13);
+  --fmb-shadow-lg:0 42px 110px rgba(24,4,34,.2);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
+body{margin:0;font-family:var(--fmb-font-ui)}
+img{max-width:100%}
+a{-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:3px solid var(--fmb-gold-500);outline-offset:4px}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.001ms!important}
+}

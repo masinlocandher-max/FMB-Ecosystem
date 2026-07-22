@@ -1,0 +1,113 @@
+{
+  "version": "2026-07-22-hard-correction-v1",
+  "policy": {
+    "source": "Exact user-supplied masters archived through the Adobe connector",
+    "fallbacksAllowed": false,
+    "volunteerImagesMutable": false,
+    "photoFiltersAllowed": false,
+    "photoParallaxAllowed": false,
+    "destructiveCroppingAllowed": false
+  },
+  "assets": [
+    {
+      "key": "masterSquare",
+      "file": "fmb-master-purple-square.webp",
+      "adobeAssetId": "urn:aaid:sc:AP:0f636964-adaf-424f-bb9d-7af5a81771d4",
+      "sourceUrl": "https://at.adobe.com/gZJAeYnia7XLUasN",
+      "sha256": "a09318464ba1754e27fa01c395ff061fc903eaffa7102d96ffb30f2cdcd0664a",
+      "width": 1254,
+      "height": 1254,
+      "usage": ["favicon", "social sharing", "brand tile"]
+    },
+    {
+      "key": "masterTransparent",
+      "file": "fmb-master-transparent.webp",
+      "adobeAssetId": "urn:aaid:sc:AP:615d8883-02c1-4bb7-b832-c4e5155e89b4",
+      "sourceUrl": "https://at.adobe.com/LZziV5Nn3T6sndsc",
+      "sha256": "358979e43610880882579742e8e15d1a5d02a74ff654f1c4b026b5f76affc79c",
+      "width": 1129,
+      "height": 724,
+      "usage": ["primary header", "footer", "Reception Desk"]
+    },
+    {
+      "key": "news",
+      "file": "fmb-news-official-transparent.webp",
+      "adobeAssetId": "urn:aaid:sc:AP:e1b7c2a4-c23b-4c5e-a2cc-1506d135376d",
+      "sourceUrl": "https://at.adobe.com/emmceZnPY7QjQRdt",
+      "sha256": "07d98324158fc90ec51bc53b99ef7884ac9932a7e6c8b7783970c99b68995ed1",
+      "width": 909,
+      "height": 210,
+      "usage": ["FMB News masthead", "News social image"]
+    },
+    {
+      "key": "music",
+      "file": "fmb-music-official-transparent.webp",
+      "adobeAssetId": "urn:aaid:sc:AP:3eb4db72-08a5-4e1a-8299-4de6cd0e13c5",
+      "sourceUrl": "https://at.adobe.com/bacTx44MoZj1NJVC",
+      "sha256": "de13bfb1f2e0e092c4fb1a9b4dcb6f88e814dabb668478d879fda9e6cb593248",
+      "width": 916,
+      "height": 212,
+      "usage": ["FMB Music masthead", "Music social image"]
+    },
+    {
+      "key": "ebook",
+      "file": "fmb-ebook-official-transparent.webp",
+      "adobeAssetId": "urn:aaid:sc:AP:29348d3d-c5ba-427f-928b-6c69e3c14cae",
+      "sourceUrl": "https://at.adobe.com/JSHKZvFoglgLDNVI",
+      "sha256": "4e0f06e94e785fb55fa02a7f5ae2e65f0a6b4e0f769cf2e0648cd16366f5f3ef",
+      "width": 939,
+      "height": 210,
+      "usage": ["FMB eBook masthead", "eBook social image"]
+    },
+    {
+      "key": "standingLandscape",
+      "file": "francine-standing-landscape.webp",
+      "adobeAssetId": "urn:aaid:sc:AP:eccdbf19-b752-492f-b04c-5b1224038f14",
+      "sourceUrl": "https://at.adobe.com/ZJUxqdX476ECWmOk",
+      "sha256": "e62c59ac30aed18d309484cc454bb099951f890f80a866233e0bce4f1702e016",
+      "width": 1364,
+      "height": 768,
+      "usage": ["Home hero", "About hero", "FMB&CO. hero"]
+    },
+    {
+      "key": "seatedLandscape",
+      "file": "francine-seated-landscape.webp",
+      "adobeAssetId": "urn:aaid:sc:AP:a98c5663-bf4f-46c6-b342-9067f924a7cc",
+      "sourceUrl": "https://at.adobe.com/JReiFSwvpLashCrx",
+      "sha256": "dac899ab3e625efbdf49044d5870e77ad5f19112498967f3ad4eeb7c69e690db",
+      "width": 1364,
+      "height": 768,
+      "usage": ["Home founder overview", "With Love FMB founder feature"]
+    },
+    {
+      "key": "portraitAngleLeft",
+      "file": "francine-portrait-angle-left.webp",
+      "adobeAssetId": "urn:aaid:sc:AP:7966bad3-9b0c-46c3-b209-04e6148b8b12",
+      "sourceUrl": "https://at.adobe.com/Tl2YM3IjgUFpALPF",
+      "sha256": "c23e6754666902c423cc0c0ab4245ca188d5990cfa0dcb1cc9071701a3693ebe",
+      "width": 1122,
+      "height": 1402,
+      "usage": ["FMB Music direction", "SENZ founder feature"]
+    },
+    {
+      "key": "portraitAngleRight",
+      "file": "francine-portrait-angle-right.webp",
+      "adobeAssetId": "urn:aaid:sc:AP:b0587af0-1d9c-4562-a8fc-ec70fcd86279",
+      "sourceUrl": "https://at.adobe.com/NTx55sHwOkXOBCfp",
+      "sha256": "cde469bef1238b30535a55432c3fed4a0de48d9c5839a84cd0f9377d7f894c9d",
+      "width": 1122,
+      "height": 1402,
+      "usage": ["FMB eBook direction", "Cognita founder feature"]
+    },
+    {
+      "key": "portraitFront",
+      "file": "francine-portrait-front.webp",
+      "adobeAssetId": "urn:aaid:sc:AP:e210540f-fa83-4350-a591-da7f7b7ed685",
+      "sourceUrl": "https://at.adobe.com/ONxdPGD4ocsPtEvc",
+      "sha256": "cd41d7a47590d93171628ac99a7c50ae6776b83fcf64a46a25f9ecb15d90c6de",
+      "width": 922,
+      "height": 1152,
+      "usage": ["About biography", "FMB News founder note", "FMB&CO. founder card"]
+    }
+  ]
+}
