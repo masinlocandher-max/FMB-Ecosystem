@@ -29,9 +29,11 @@ if(!index.includes('/assets/images/home/fmb-home-logo.webp'))fail('Home page is 
 
 const appManifest=readJson('app/manifest.webmanifest');
 if(appManifest.display!=='standalone')fail('Yoni manifest must use standalone display mode.');
-if(appManifest.scope!=='/app/')fail('Yoni manifest scope must stay inside /app/.');
-if(appManifest.start_url!=='/app/')fail('Installed Yoni must open /app/.');
-if(appManifest.short_name!=='With love, FMB')fail('The companion manifest must identify the current product.');
+if(appManifest.scope!=='/')fail('Yoni manifest must cover the complete Yoni host experience.');
+if(appManifest.id!=='/app/')fail('Yoni manifest must keep the /app/ product identity.');
+if(appManifest.start_url!=='/app/#home')fail('Installed Yoni must open the Yoni home screen.');
+if(appManifest.short_name!=='Yoni')fail('The companion manifest must identify Yoni.');
+if(appManifest.name!=='Yoni Mental Health Companion')fail('The companion manifest must retain the current Yoni product name.');
 const expectedYoniIcons={
   '/app/assets/yoni/yoni-app-icon-192.png':'192x192',
   '/app/assets/yoni/yoni-app-icon-512.png':'512x512',
@@ -51,20 +53,21 @@ const appleDimensions=pngDimensions(appleIcon);
 if(appleDimensions.width!==180||appleDimensions.height!==180)fail('Yoni Apple touch icon must be 180x180.');
 
 const appHtml=fs.readFileSync(path.join(root,'app/index.html'),'utf8');
-for(const marker of (
-  '/app/manifest.webmanifest /app/assets/yoni/yoni-apple-touch-icon-180.png /app/assets/yoni/yoni-app-icon-512.png'.split(' ')
-))if(!appHtml.includes(marker))fail(`Yoni app shell is missing current install marker: ${marker}`);
+for(const marker of '/app/manifest.webmanifest /app/assets/yoni/yoni-apple-touch-icon-180.png /app/assets/yoni/yoni-app-icon-512.png'.split(' ')){
+  if(!appHtml.includes(marker))fail(`Yoni app shell is missing current install marker: ${marker}`);
+}
 
 const installPage=fs.readFileSync(path.join(root,'app/install/index.html'),'utf8');
 const installScript=fs.readFileSync(path.join(root,'app/install/install.js'),'utf8');
 if(!/rel="manifest"[^>]+\/app\/manifest\.webmanifest/.test(installPage))fail('Install campaign is not connected to the Yoni manifest.');
 if(!installPage.includes('id="installNow"'))fail('Install campaign is missing its primary installation action.');
 if(!installScript.includes('installInstructions'))fail('Install campaign is missing the current platform instruction flow.');
+if(!installScript.includes('beforeinstallprompt'))fail('Install campaign is missing the browser installation event.');
 
 const worker=fs.readFileSync(path.join(root,'service-worker.js'),'utf8');
-for(const asset of (
-  '/app/ /app/index.html /app/install/ /app/install/index.html /app/install/install.css /app/install/install.js /app/assets/yoni/yoni-app-icon-192.png /app/assets/yoni/yoni-app-icon-512.png /app/assets/yoni/yoni-apple-touch-icon-180.png /app/assets/yoni/yoni-hero.webp /app/assets/yoni/yoni-theme-background.webp /app/assets/yoni/yoni-wordmark.png /assets/js/yoni-experience-loader.js /assets/js/yoni-native-libraries.js /assets/js/yoni-native-music.js /assets/js/yoni-native-ebooks.js'.split(' ')
-))if(!worker.includes(`'${asset}'`))fail(`Service worker is missing current Yoni cache asset: ${asset}`);
+for(const asset of '/app/ /app/index.html /app/install/ /app/install/index.html /app/install/install.css /app/install/install.js /app/assets/yoni/yoni-app-icon-192.png /app/assets/yoni/yoni-app-icon-512.png /app/assets/yoni/yoni-apple-touch-icon-180.png /app/assets/yoni/yoni-hero.webp /app/assets/yoni/yoni-theme-background.webp /app/assets/yoni/yoni-wordmark.png /assets/js/yoni-experience-loader.js /assets/js/yoni-native-libraries.js /assets/js/yoni-native-music.js /assets/js/yoni-native-ebooks.js'.split(' ')){
+  if(!worker.includes(`'${asset}'`))fail(`Service worker is missing current Yoni cache asset: ${asset}`);
+}
 
 for(const fileName of ['yoni-hero.webp','yoni-theme-background.webp','yoni-wordmark.png']){
   const file=path.join(root,'app/assets/yoni',fileName);
@@ -78,6 +81,8 @@ for(const relative of [
   'assets/js/yoni-native-libraries.js',
   'assets/js/yoni-native-music.js',
   'assets/js/yoni-native-ebooks.js',
-])if(!fs.existsSync(path.join(root,relative)))fail(`Missing current Yoni experience module: ${relative}`);
+]){
+  if(!fs.existsSync(path.join(root,relative)))fail(`Missing current Yoni experience module: ${relative}`);
+}
 
 console.log('Website and Yoni install experience, current identity, libraries, cache, and responsive shell checks passed.');
