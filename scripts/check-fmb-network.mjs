@@ -92,7 +92,8 @@ requireMarkers(home,'Home',[
   'withlovefmb@gmail.com'
 ]);
 if((home.match(/fetchpriority=["']high["']/g)||[]).length!==1)fail('homepage must have exactly one high-priority image');
-if(!/<img\b[^>]*loading=["']lazy["'][^>]*src=["']\/app\/assets\/yoni\/yoni-hero\.webp/i.test(home))fail('homepage still downloads below-fold Yoni artwork eagerly');
+const yoniArtwork=[...home.matchAll(/<img\b[^>]*src=["']\/app\/assets\/yoni\/yoni-hero\.webp["'][^>]*>/gi)].map(match=>match[0]);
+if(!yoniArtwork.length||yoniArtwork.some(tag=>!(/\bloading=["']lazy["']/i.test(tag))))fail('homepage still downloads below-fold Yoni artwork eagerly');
 if(!home.includes('body{visibility:hidden}')||!home.includes('<noscript><style>body{visibility:visible}</style></noscript>'))fail('homepage does not protect against unstyled content with a no-script fallback');
 
 const about=await read('aboutfmb/index.html');
