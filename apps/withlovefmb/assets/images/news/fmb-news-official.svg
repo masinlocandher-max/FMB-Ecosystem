@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="909" height="210" viewBox="0 0 909 210" role="img" aria-labelledby="title desc">
   <title id="title">FMB News</title>
-  <desc id="desc">Transparent browser-safe delivery of the official FMB News identity supplied by Francine Marie Bautista</desc>
-  <image href="/assets/images/fmb-approved/fmb-news-browser-safe.png" width="909" height="210" preserveAspectRatio="xMidYMid meet"/>
+  <desc id="desc">Transparent delivery wrapper for the exact approved FMB News identity supplied by Francine Marie Bautista</desc>
+  <image href="/assets/images/fmb-approved/fmb-news-official-transparent.webp" width="909" height="210" preserveAspectRatio="xMidYMid meet"/>
 </svg>
