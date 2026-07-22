@@ -1,0 +1,19 @@
+{
+  "name": "@fmb/about-motion",
+  "private": true,
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render:hero": "remotion render src/index.ts FmbHero ../../../apps/withlovefmb/assets/video/fmb-about-hero.mp4",
+    "render:social": "remotion render src/index.ts FmbSocial ../../../apps/withlovefmb/assets/video/fmb-about-social.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "latest",
+    "@remotion/media": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "remotion": "latest"
+  },
+  "devDependencies": {
+    "typescript": "latest"
+  }
+}
