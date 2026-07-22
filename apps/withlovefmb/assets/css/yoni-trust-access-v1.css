@@ -40,6 +40,13 @@ body[data-yoni-access="guest"] .home-action-card[data-go="checkin"],
 body[data-yoni-access="guest"] .home-today-heading,
 body[data-yoni-access="guest"] #todayCard,
 body[data-yoni-access="guest"] .home-privacy-note{display:none!important}
+body[data-yoni-access="guest"] #screen-home{display:block!important}
+body[data-yoni-access="guest"] #screen-checkin,
+body[data-yoni-access="guest"] #screen-journal,
+body[data-yoni-access="guest"] #screen-history,
+body[data-yoni-access="guest"] #screen-community,
+body[data-yoni-access="guest"] #screen-profile,
+body[data-yoni-access="guest"] #screen-privacy{display:none!important}
 body[data-yoni-access="guest"] #tabbar{grid-template-columns:repeat(2,1fr)}
 body[data-yoni-access="guest"] .home-action-grid.redesigned{grid-template-columns:repeat(3,minmax(0,1fr))}
 body[data-yoni-access="guest"] #profileResetPassword{display:none}
