@@ -1,0 +1,100 @@
+name: Product Design Visual Audit
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: product-design-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Prepare audit evidence folder
+        run: mkdir -p product-design-audit
+
+      - name: Ensure deterministic monorepo dependencies
+        run: |
+          if [ ! -f package-lock.json ]; then
+            npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+          fi
+          cp package-lock.json product-design-audit/root-package-lock.json
+
+      - name: Confirm verified FMB masters are stored in GitHub
+        run: |
+          test -f apps/withlovefmb/assets/images/fmb-approved/fmb-news-official-transparent.webp
+          test -f apps/withlovefmb/assets/images/fmb-approved/fmb-music-official-transparent.webp
+          test -f apps/withlovefmb/assets/images/fmb-approved/fmb-ebook-official-transparent.webp
+          test -f apps/withlovefmb/assets/images/fmb-approved/francine-standing-landscape.webp
+          test -f apps/withlovefmb/assets/images/fmb-approved/francine-seated-landscape.webp
+
+      - name: Build the complete FMB website
+        id: build
+        continue-on-error: true
+        run: npm run build > product-design-audit/full-build.log 2>&1
+
+      - name: Preserve the exact build record
+        if: always()
+        run: |
+          if [ -f /tmp/fmb-ecosystem-build.log ]; then
+            cp /tmp/fmb-ecosystem-build.log product-design-audit/build.log
+            tail -n 240 /tmp/fmb-ecosystem-build.log > product-design-audit/build-tail.txt
+          fi
+          if [ -f product-design-audit/full-build.log ]; then
+            tail -n 260 product-design-audit/full-build.log > product-design-audit/full-build-tail.txt
+          fi
+
+      - name: Install Chromium capture tools
+        if: steps.build.outcome == 'success'
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start the audited build
+        if: steps.build.outcome == 'success'
+        run: |
+          python3 -m http.server 4173 --directory dist > /tmp/fmb-audit-server.log 2>&1 &
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/fmb-audit-server.log
+          exit 1
+
+      - name: Capture bounded Product Design evidence
+        id: visual_capture
+        continue-on-error: true
+        if: steps.build.outcome == 'success'
+        run: node scripts/product-design-capture.mjs > product-design-audit/capture.log 2>&1
+
+      - name: Upload Product Design evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-design-audit-evidence
+          path: product-design-audit
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Fail when the site cannot build
+        if: steps.build.outcome != 'success'
+        run: exit 1
+
+      - name: Fail when visual evidence could not be captured
+        if: steps.build.outcome == 'success' && steps.visual_capture.outcome != 'success'
+        run: exit 1
