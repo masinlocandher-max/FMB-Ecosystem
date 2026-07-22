@@ -72,9 +72,9 @@ if(!home.includes('body{visibility:visible}')||home.includes('body{visibility:hi
 const pageContracts=[
   ['aboutfmb/index.html','About FMB',[`${approved}francine-standing-landscape.webp`,`${approved}francine-seated-landscape.webp`,`${approved}francine-portrait-front.webp`,'data-fmb-signature="about"']],
   ['withlovefmb/index.html','With Love FMB',[`${approved}francine-seated-landscape.webp`,`${approved}francine-portrait-angle-right.webp`,'data-fmb-signature="withlove"','/assets/images/volunteer/francine-leading-with-love-fmb.webp','/assets/images/volunteer/francine-serving-with-volunteers.webp']],
-  ['news/index.html','FMB News',[renderedChannels.news,`${approved}francine-portrait-front.webp`,'data-fmb-signature="news"']],
-  ['music/index.html','FMB Music',[renderedChannels.music,`${approved}francine-portrait-angle-left.webp`,'data-fmb-signature="music"','31 published tracks','fmb-product-menu']],
-  ['ebooks/index.html','FMB eBook',[renderedChannels.ebook,`${approved}francine-portrait-angle-right.webp`,'data-fmb-signature="ebook"','Six books. Clear access.','fmb-product-menu']],
+  ['news/index.html','FMB News',[`${approved}fmb-news-official-transparent.webp`,`${approved}francine-portrait-front.webp`,'data-fmb-signature="news"']],
+  ['music/index.html','FMB Music',[`${approved}fmb-music-official-transparent.webp`,`${approved}francine-portrait-angle-left.webp`,'data-fmb-signature="music"','31 published tracks','fmb-product-menu']],
+  ['ebooks/index.html','FMB eBook',[`${approved}fmb-ebook-official-transparent.webp`,`${approved}francine-portrait-angle-right.webp`,'data-fmb-signature="ebook"','Six books. Clear access.','fmb-product-menu']],
   ['fmb&co/index.html','FMB&CO.',[`${approved}francine-standing-landscape.webp`,`${approved}francine-portrait-front.webp`,'data-fmb-signature="fmbandco"']],
   ['fmb&co/senz/index.html','SENZ gateway',[`${approved}francine-portrait-angle-left.webp`,'data-fmb-signature="senz"']],
   ['fmb&co/cognita/index.html','Cognita gateway',[`${approved}francine-portrait-angle-right.webp`,'data-fmb-signature="cognita"']]
