@@ -44,5 +44,16 @@
       if(!ranked.length)return;event.preventDefault();event.stopImmediatePropagation();render(form,query,ranked);
     },true);
   };
-  const observer=new MutationObserver(wire);observer.observe(document.documentElement,{subtree:true,childList:true});wire();
+  let scopedObserver=null;
+  const attach=()=>{
+    wire();
+    const layer=document.querySelector('.az-help-layer');
+    if(layer&&!scopedObserver){
+      scopedObserver=new MutationObserver(wire);
+      scopedObserver.observe(layer,{subtree:true,childList:true});
+    }
+  };
+  addEventListener('pearly:ready',attach);
+  document.addEventListener('click',event=>{if(event.target.closest('.pearly-lazy-trigger,.az-help-trigger'))setTimeout(attach,0)},true);
+  attach();
 })();
