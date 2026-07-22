@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the site quality suite against the approved FMB Digital Headquarters, Yoni, and newsroom contracts."""
+"""Run the site quality suite against the approved FMB Digital Headquarters, modern product channels, Yoni, and newsroom contracts."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -24,6 +24,15 @@ STALE_HOME_ERRORS = {
     "index.html: missing first-visit benefit: Meet Yoni. A complete space to listen, read, write, and check in.",
     "index.html: missing first-visit benefit: /assets/js/fmb-bulletin-home.js",
 }
+STALE_PRODUCT_ERRORS = {
+    "ebooks/index.html: deterministic mobile luxury stylesheet is missing",
+    "ebooks/index.html: accessible floating mobile menu is missing",
+    "music/index.html: deterministic mobile luxury stylesheet is missing",
+    "music/index.html: accessible floating mobile menu is missing",
+}
+STALE_PRODUCT_PREFIXES = (
+    "assets/js/music.js: missing cross-page playback marker:",
+)
 GENERATED_HOME_REFERENCES = (
     "/assets/images/fmb-approved/francine-standing-landscape.webp",
     "/assets/images/fmb-approved/francine-seated-landscape.webp",
@@ -132,10 +141,7 @@ def check_current_membership_features(errors: list[str]) -> None:
     supabase_path = checks.ROOT / "assets/js/supabase-client.js"
     if supabase_path.exists():
         supabase_loader = supabase_path.read_text(encoding="utf-8")
-        for marker in (
-            "yoni.francinemariebautista.com",
-            "/assets/js/yoni-experience-loader.js",
-        ):
+        for marker in ("yoni.francinemariebautista.com", "/assets/js/yoni-experience-loader.js"):
             if marker not in supabase_loader:
                 errors.append(f"assets/js/supabase-client.js: missing current Yoni loader: {marker}")
 
@@ -185,6 +191,29 @@ def check_current_navigation_experience(errors: list[str]) -> None:
         if marker not in index:
             errors.append(f"index.html: missing current Digital Headquarters marker: {marker}")
 
+    integrity_path = checks.ROOT / "assets/css/fmb-visual-integrity.css"
+    if not integrity_path.exists():
+        errors.append("assets/css/fmb-visual-integrity.css: transparent-logo guardrail is missing")
+    else:
+        integrity = integrity_path.read_text(encoding="utf-8")
+        for marker in (
+            'img[src*="/assets/images/fmb-approved/"]',
+            "background-color:transparent!important",
+            "border-color:transparent!important",
+        ):
+            if marker not in integrity:
+                errors.append(f"assets/css/fmb-visual-integrity.css: missing transparent-logo rule: {marker}")
+
+    for relative in (
+        "assets/images/fmb-approved/fmb-master-purple-square.webp",
+        "assets/images/fmb-approved/fmb-master-transparent.webp",
+        "assets/images/fmb-approved/fmb-news-official-transparent.webp",
+        "assets/images/fmb-approved/fmb-music-official-transparent.webp",
+        "assets/images/fmb-approved/fmb-ebook-official-transparent.webp",
+    ):
+        if not (checks.ROOT / relative).exists():
+            errors.append(f"{relative}: approved identity asset is missing")
+
 
 def check_current_mobile_and_editorial_media(errors: list[str]) -> None:
     legacy_errors: list[str] = []
@@ -192,7 +221,10 @@ def check_current_mobile_and_editorial_media(errors: list[str]) -> None:
     errors.extend(
         error
         for error in legacy_errors
-        if error not in STALE_NEWS_ERRORS and not error.startswith(STALE_NEWS_PREFIXES)
+        if error not in STALE_NEWS_ERRORS
+        and error not in STALE_PRODUCT_ERRORS
+        and not error.startswith(STALE_NEWS_PREFIXES)
+        and not error.startswith(STALE_PRODUCT_PREFIXES)
     )
 
     news = (checks.ROOT / "news/index.html").read_text(encoding="utf-8")
@@ -238,6 +270,44 @@ def check_current_mobile_and_editorial_media(errors: list[str]) -> None:
     for marker in ("Asia/Manila", "data-news-clock", "IntersectionObserver", "navigator.share"):
         if marker not in news_js:
             errors.append(f"assets/js/news-channel.js: missing current newsroom interaction marker: {marker}")
+
+    music = (checks.ROOT / "music/index.html").read_text(encoding="utf-8")
+    for marker in (
+        "fmb-product-modern.css?v=20260723-music-ebooks-v1",
+        'id="musicNav"',
+        'class="fmb-product-menu"',
+        "/assets/images/fmb-approved/fmb-music-official-transparent.webp",
+        "31 published tracks",
+        'id="audioPlayer"',
+        'id="playlistGrid"',
+    ):
+        if marker not in music:
+            errors.append(f"music/index.html: missing modern music-product marker: {marker}")
+
+    music_js = (checks.ROOT / "assets/js/music.js").read_text(encoding="utf-8")
+    for marker in (
+        "const PREVIEW_LIMIT=30",
+        "MUSIC_STATE_KEY='fmb_music_state_v3'",
+        "dispatchEvent(new CustomEvent('fmb:music-state'",
+        "audio.removeAttribute('src')",
+        "function beginPlayback()",
+    ):
+        if marker not in music_js:
+            errors.append(f"assets/js/music.js: missing modern deferred-audio marker: {marker}")
+
+    ebooks = (checks.ROOT / "ebooks/index.html").read_text(encoding="utf-8")
+    for marker in (
+        "fmb-product-modern.css?v=20260723-music-ebooks-v1",
+        'id="ebookNav"',
+        'class="fmb-product-menu"',
+        "/assets/images/fmb-approved/fmb-ebook-official-transparent.webp",
+        "Six books. Clear access.",
+        "Full book open",
+        "First chapter open",
+        'class="fmb-mobile-dock"',
+    ):
+        if marker not in ebooks:
+            errors.append(f"ebooks/index.html: missing modern reading-product marker: {marker}")
 
 
 checks.check_html = check_current_html
