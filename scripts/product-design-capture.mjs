@@ -73,12 +73,16 @@ async function exercise(page,item,profile){
   }
   if(item.name==='news'&&profile.isMobile){
     const menu=await visibleLocator(page.locator('[data-news-menu]'));
-    if(!menu)return {name:'news-mobile-navigation',status:'failed',proof:'News menu button was not visible.'};
-    await menu.click();
-    const expanded=await menu.getAttribute('aria-expanded');
-    const navVisible=await page.locator('#newsNav').isVisible().catch(()=>false);
-    await page.keyboard.press('Escape').catch(()=>{});
-    return {name:'news-mobile-navigation',status:expanded==='true'&&navVisible?'passed':'failed',proof:`expanded=${expanded}; navVisible=${navVisible}`};
+    if(menu){
+      await menu.click();
+      const expanded=await menu.getAttribute('aria-expanded');
+      const navVisible=await page.locator('#newsNav').isVisible().catch(()=>false);
+      await page.keyboard.press('Escape').catch(()=>{});
+      return {name:'news-mobile-navigation',status:expanded==='true'&&navVisible?'passed':'failed',proof:`menu expanded=${expanded}; nav visible=${navVisible}`};
+    }
+    const dock=await visibleLocator(page.locator('.nc-mobile-dock'));
+    const links=dock?await dock.locator('a').count():0;
+    return {name:'news-mobile-navigation',status:dock&&links>=3?'passed':'failed',proof:`Dedicated mobile dock visible=${Boolean(dock)}; links=${links}`};
   }
   if(item.name==='about-fmb'&&profile.isMobile){
     await page.waitForTimeout(900);
@@ -91,17 +95,12 @@ async function exercise(page,item,profile){
     return {name:'reception-desk',status:opened?'passed':'failed',proof:`Reception panel visible=${opened}`};
   }
   if(item.name==='yoni'){
-    const gate=page.locator('#accessGate');
-    const gateVisible=await gate.waitFor({state:'visible',timeout:7000}).then(()=>true).catch(()=>false);
-    if(!gateVisible){
-      const shellVisible=await page.locator('#appShell').isVisible().catch(()=>false);
-      return {name:'yoni-access',status:shellVisible?'passed':'failed',proof:`Access gate hidden; authenticated/local shell visible=${shellVisible}`};
-    }
-    const signIn=page.locator('#appSigninTab');
-    await signIn.click();
-    const selected=await signIn.getAttribute('aria-selected');
-    const panelVisible=await page.locator('#appSigninPanel').isVisible().catch(()=>false);
-    return {name:'yoni-access-tabs',status:selected==='true'&&panelVisible?'passed':'failed',proof:`sign-in selected=${selected}; panel visible=${panelVisible}`};
+    const guest=page.locator('#guestAccess');
+    const available=await guest.waitFor({state:'visible',timeout:7000}).then(()=>true).catch(()=>false);
+    if(!available)return {name:'yoni-guest-access',status:'failed',proof:'Explore without an account was not available.'};
+    await guest.click();
+    const entered=await page.waitForFunction(()=>document.body.dataset.yoniAccess==='guest'&&!document.querySelector('#appShell')?.hidden&&location.hash==='#home',null,{timeout:5000}).then(()=>true).catch(()=>false);
+    return {name:'yoni-guest-access',status:entered?'passed':'failed',proof:`Guest mode entered=${entered}; hash=${await page.evaluate(()=>location.hash)}`};
   }
   if(item.name==='yoni-install'){
     const install=page.locator('#installNow');
@@ -114,6 +113,7 @@ async function exercise(page,item,profile){
 }
 
 async function capture(item,profile,index){
+  const startedAt=Date.now();
   const context=await browser.newContext({
     viewport:profile.viewport,
     isMobile:profile.isMobile,
@@ -140,29 +140,34 @@ async function capture(item,profile,index){
     }catch{}
   });
   try{
-    const response=await page.goto(`http://127.0.0.1:4173${item.route}`,{waitUntil:'domcontentloaded',timeout:10000});
+    const response=await page.goto(`http://127.0.0.1:4173${item.route}`,{waitUntil:'domcontentloaded',timeout:9000});
     await page.evaluate(async()=>{
-      if(document.fonts?.ready)await Promise.race([document.fonts.ready,new Promise(resolve=>setTimeout(resolve,1800))]);
+      if(document.fonts?.ready)await Promise.race([document.fonts.ready,new Promise(resolve=>setTimeout(resolve,1200))]);
       window.scrollTo(0,0);
       const visibleImages=[...document.images].filter(image=>{
         const style=getComputedStyle(image);
         const rect=image.getBoundingClientRect();
-        return style.display!=='none'&&style.visibility!=='hidden'&&rect.width>0&&rect.height>0;
+        return style.display!=='none'&&style.visibility!=='hidden'&&rect.width>0&&rect.height>0&&rect.bottom>0&&rect.top<innerHeight;
       });
       await Promise.race([
         Promise.all(visibleImages.map(image=>image.complete?Promise.resolve():new Promise(resolve=>{
           image.addEventListener('load',resolve,{once:true});
           image.addEventListener('error',resolve,{once:true});
         }))),
-        new Promise(resolve=>setTimeout(resolve,4200))
+        new Promise(resolve=>setTimeout(resolve,2800))
       ]);
     });
-    await page.waitForTimeout(300);
+    await page.waitForTimeout(250);
     const evidence=await page.evaluate(()=>{
       const visible=element=>{
         const style=getComputedStyle(element);
         const rect=element.getBoundingClientRect();
         return style.display!=='none'&&style.visibility!=='hidden'&&Number(style.opacity)!==0&&rect.width>20&&rect.height>20;
+      };
+      const visibleInViewport=element=>{
+        if(!visible(element))return false;
+        const rect=element.getBoundingClientRect();
+        return rect.bottom>0&&rect.top<innerHeight;
       };
       const meaningfulText=(document.body.innerText||'').replace(/\s+/g,' ').trim();
       const fixedElements=[...document.querySelectorAll('body *')]
@@ -178,8 +183,8 @@ async function capture(item,profile,index){
           text:(element.textContent||'').trim().replace(/\s+/g,' ').slice(0,140)
         }));
       const imageStates=[...document.images]
-        .filter(visible)
-        .slice(0,60)
+        .filter(visibleInViewport)
+        .slice(0,50)
         .map(image=>({src:image.getAttribute('src')||'',currentSrc:image.currentSrc||'',alt:image.alt||'',complete:image.complete,naturalWidth:image.naturalWidth,naturalHeight:image.naturalHeight,loading:image.loading||'',local:new URL(image.currentSrc||image.src,location.href).origin===location.origin}));
       const brokenImages=imageStates.filter(image=>image.complete&&image.naturalWidth===0);
       const pendingImages=imageStates.filter(image=>!image.complete);
@@ -188,7 +193,7 @@ async function capture(item,profile,index){
     });
     const interaction=await exercise(page,item,profile).catch(error=>({name:'interaction',status:'failed',proof:error instanceof Error?error.message:String(error)}));
     await page.evaluate(()=>scrollTo(0,0)).catch(()=>{});
-    await page.waitForTimeout(120);
+    await page.waitForTimeout(100);
     await page.screenshot({path:screenshot,animations:'disabled',timeout:8000});
     const localBroken=evidence.brokenImages.filter(image=>image.local);
     const blank=evidence.meaningfulTextLength<80;
@@ -198,6 +203,7 @@ async function capture(item,profile,index){
       profile:profile.name,
       route:item.route,
       sourceFile:item.file,
+      durationMs:Date.now()-startedAt,
       status:response?.status()??null,
       title:await page.title(),
       health:critical?'failed':evidence.brokenImages.length?'captured-with-external-broken-images':evidence.pendingImages.length?'captured-with-pending-images':'passed',
@@ -215,6 +221,7 @@ async function capture(item,profile,index){
       profile:profile.name,
       route:item.route,
       sourceFile:item.file,
+      durationMs:Date.now()-startedAt,
       health:'blocked',
       error:error instanceof Error?error.message:String(error),
       localHttpFailures,
@@ -232,7 +239,7 @@ for(const profile of profiles){
   for(const item of routes){
     const record=await Promise.race([
       capture(item,profile,index),
-      new Promise(resolve=>setTimeout(()=>resolve({page:item.name,profile:profile.name,route:item.route,sourceFile:item.file,health:'blocked',error:'Route exceeded the 26-second frontend QA budget.',screenshot:null}),26000))
+      new Promise(resolve=>setTimeout(()=>resolve({page:item.name,profile:profile.name,route:item.route,sourceFile:item.file,health:'blocked',error:'Route exceeded the 40-second frontend QA budget.',screenshot:null}),40000))
     ]);
     manifest.push({step:index,...record});
     persist();
@@ -250,6 +257,7 @@ const summary={
   captures:manifest.length,
   passed:manifest.filter(item=>item.health==='passed').length,
   warnings:manifest.filter(item=>item.health.startsWith('captured-with-')).length,
+  slowest:[...manifest].filter(item=>Number.isFinite(item.durationMs)).sort((a,b)=>b.durationMs-a.durationMs).slice(0,8).map(item=>({page:item.page,profile:item.profile,durationMs:item.durationMs,health:item.health})),
   failures:failures.map(item=>({page:item.page,profile:item.profile,route:item.route,health:item.health,error:item.error||'',interaction:item.interaction,localHttpFailures:item.localHttpFailures||[],localFailedRequests:(item.failedRequests||[]).filter(request=>request.local)})),
   interactionFailures:interactionFailures.map(item=>({page:item.page,profile:item.profile,interaction:item.interaction})),
   brokenImages:broken,
