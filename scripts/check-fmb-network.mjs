@@ -107,5 +107,7 @@ if(/observer\.observe\(document\.documentElement|script\.defer=false/.test(recep
 const receptionSearch=await read('assets/js/fmb-reception-search.js');
 for(const marker of ['Search full articles, FAQs and brands','Women’s Health Matters','Pax Silica','Cognita Institute of AI'])if(!receptionSearch.includes(marker))fail(`Reception Desk search is missing ${marker}`);
 if(receptionSearch.includes('observe(document.documentElement'))fail('Reception search still watches the complete document');
+const builtSiteScript=await read('assets/js/site.js');
+if(builtSiteScript.includes("ensureStylesheet('/assets/css/az-assistant.css")||builtSiteScript.includes("loadScript('/assets/js/az-assistant.js"))fail('legacy site.js still starts a duplicate eager Reception load');
 
 console.log(`FMB Network performance and quality checks passed for ${requiredPages.length} public pages.`);
