@@ -53,7 +53,7 @@ const appleDimensions=pngDimensions(appleIcon);
 if(appleDimensions.width!==180||appleDimensions.height!==180)fail('Yoni Apple touch icon must be 180x180.');
 
 const appHtml=fs.readFileSync(path.join(root,'app/index.html'),'utf8');
-for(const marker of '/app/manifest.webmanifest /app/assets/yoni/yoni-apple-touch-icon-180.png /app/assets/yoni/yoni-app-icon-512.png'.split(' ')){
+for(const marker of '/app/manifest.webmanifest /app/assets/yoni/yoni-apple-touch-icon-180.png /app/assets/yoni/yoni-app-icon-192.png'.split(' ')){
   if(!appHtml.includes(marker))fail(`Yoni app shell is missing current install marker: ${marker}`);
 }
 
