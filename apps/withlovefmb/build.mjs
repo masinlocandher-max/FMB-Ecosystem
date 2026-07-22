@@ -1,4 +1,4 @@
-import { cp, mkdir, readdir, rm } from 'node:fs/promises';
+import { cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -24,4 +24,11 @@ for (const entry of await readdir(root, { withFileTypes: true })) {
   });
 }
 
-console.log('Built the FMB public website and Yoni application into apps/withlovefmb/dist.');
+const homePath = path.join(output, 'index.html');
+let homeHtml = await readFile(homePath, 'utf8');
+if (!/rel=["']manifest["']/i.test(homeHtml)) {
+  homeHtml = homeHtml.replace('</head>', '<link rel="manifest" href="/manifest.webmanifest">\n</head>');
+  await writeFile(homePath, homeHtml, 'utf8');
+}
+
+console.log('Built the FMB public website and Yoni application into apps/withlovefmb/dist with the public web app manifest connected.');
