@@ -61,7 +61,7 @@ jobs:
           cache: npm
           cache-dependency-path: apps/cognita/package-lock.json
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --workspaces=false
       - name: Build Cognita
         run: npm run build
       - name: Smoke test Cognita build
