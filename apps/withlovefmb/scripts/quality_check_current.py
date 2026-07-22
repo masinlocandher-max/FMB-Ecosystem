@@ -27,6 +27,7 @@ STALE_HOME_ERRORS = {
 GENERATED_HOME_REFERENCES = (
     "/assets/images/fmb-approved/francine-standing-landscape.webp",
     "/assets/images/fmb-approved/francine-seated-landscape.webp",
+    "/assets/images/home/francine-home-founder-hd.webp",
 )
 
 ORIGINAL_CHECK_HTML = checks.check_html
