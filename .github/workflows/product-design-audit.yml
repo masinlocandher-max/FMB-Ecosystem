@@ -1,0 +1,122 @@
+name: Product Design Visual Audit
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build the complete FMB website
+        run: npm run build
+
+      - name: Install Chromium capture tools
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start the audited build
+        run: |
+          python3 -m http.server 4173 --directory dist > /tmp/fmb-audit-server.log 2>&1 &
+          echo $! > /tmp/fmb-audit-server.pid
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/fmb-audit-server.log
+          exit 1
+
+      - name: Capture desktop and iPhone evidence
+        run: |
+          mkdir -p product-design-audit
+          cat > /tmp/capture-fmb.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          import { existsSync, writeFileSync } from 'node:fs';
+          import path from 'node:path';
+
+          const candidates = [
+            ['home', 'index.html', '/'],
+            ['about-fmb', 'aboutfmb/index.html', '/aboutfmb/'],
+            ['with-love-fmb', 'withlovefmb/index.html', '/withlovefmb/'],
+            ['with-love-fmb', 'with-love-fmb/index.html', '/with-love-fmb/'],
+            ['news', 'news/index.html', '/news/'],
+            ['music', 'music/index.html', '/music/'],
+            ['ebook', 'ebooks/index.html', '/ebooks/'],
+            ['fmbandco', 'fmbandco/index.html', '/fmbandco/'],
+            ['get-help', 'get-help/index.html', '/get-help/'],
+            ['community', 'community-engagements/index.html', '/community-engagements/'],
+            ['work-with-fmb', 'work-with-fmb/index.html', '/work-with-fmb/'],
+            ['projects', 'projects/index.html', '/projects/'],
+            ['yoni', 'app/index.html', '/app/']
+          ];
+
+          const seen = new Set();
+          const routes = [];
+          for (const [name, file, route] of candidates) {
+            if (!existsSync(path.join('dist', file)) || seen.has(name)) continue;
+            seen.add(name);
+            routes.push({ name, route });
+          }
+
+          const browser = await chromium.launch({ headless: true });
+          const profiles = [
+            { name: 'desktop', viewport: { width: 1440, height: 1100 }, deviceScaleFactor: 1 },
+            { name: 'iphone', viewport: { width: 390, height: 844 }, deviceScaleFactor: 1 }
+          ];
+          const manifest = [];
+
+          for (const profile of profiles) {
+            const context = await browser.newContext({
+              viewport: profile.viewport,
+              deviceScaleFactor: profile.deviceScaleFactor,
+              isMobile: profile.name === 'iphone',
+              hasTouch: profile.name === 'iphone',
+              reducedMotion: 'reduce'
+            });
+            const page = await context.newPage();
+            for (const item of routes) {
+              const url = `http://127.0.0.1:4173${item.route}`;
+              const response = await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
+              await page.evaluate(async () => {
+                if (document.fonts?.ready) await document.fonts.ready;
+                window.scrollTo(0, 0);
+              });
+              await page.waitForTimeout(500);
+              const file = `product-design-audit/${String(manifest.length + 1).padStart(2, '0')}-${item.name}-${profile.name}.png`;
+              await page.screenshot({ path: file, fullPage: true });
+              manifest.push({
+                step: manifest.length + 1,
+                page: item.name,
+                profile: profile.name,
+                route: item.route,
+                status: response?.status() ?? null,
+                title: await page.title(),
+                screenshot: file
+              });
+            }
+            await context.close();
+          }
+          await browser.close();
+          writeFileSync('product-design-audit/manifest.json', JSON.stringify(manifest, null, 2));
+          NODE
+          node /tmp/capture-fmb.mjs
+
+      - name: Upload Product Design evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-design-audit-screenshots
+          path: product-design-audit
+          if-no-files-found: error
+          retention-days: 14
