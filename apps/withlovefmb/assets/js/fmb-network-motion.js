@@ -78,21 +78,6 @@
     [...revealItems,...mediaItems].forEach(node=>observer.observe(node));
   }
 
-  const contact=document.createElement('aside');
-  contact.className='fmb-network-contact network-reveal';
-  contact.setAttribute('aria-label','Official FMB contact channels');
-  contact.innerHTML=`
-    <div><small>Official channels</small><strong>Stay connected with FMB.</strong><p>Use these public channels for verified updates, messages, and professional inquiries.</p></div>
-    <a href="https://www.instagram.com/bb.fmb/" target="_blank" rel="noopener"><span>Instagram</span><b>@bb.fmb</b></a>
-    <a href="https://www.facebook.com/BinibiningFrancineMarie" target="_blank" rel="noopener"><span>Facebook</span><b>/BinibiningFrancineMarie</b></a>
-    <a href="mailto:withlovefmb@gmail.com"><span>Email</span><b>withlovefmb@gmail.com</b></a>`;
-  const footer=document.querySelector('footer');
-  if(footer)footer.before(contact);else document.body.appendChild(contact);
-  if(reduced)contact.classList.add('is-visible');else{
-    const contactObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');contactObserver.disconnect()}}),{threshold:.08});
-    contactObserver.observe(contact);
-  }
-
   document.querySelectorAll('main img').forEach(image=>{
     image.style.removeProperty('transform');
     image.addEventListener('error',()=>image.closest('figure,div')?.classList.add('media-unavailable'),{once:true});
