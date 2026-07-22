@@ -1,4 +1,4 @@
-import { copyFile, mkdir } from 'node:fs/promises';
+import { copyFile, mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -7,7 +7,12 @@ const sourceRoot = path.join(repositoryRoot, 'apps', 'withlovefmb');
 const outputRoot = path.join(repositoryRoot, 'dist');
 
 await mkdir(path.join(outputRoot, 'assets', 'js'), { recursive: true });
-await copyFile(path.join(sourceRoot, 'index.html'), path.join(outputRoot, 'index.html'));
+const sourceHtml = await readFile(path.join(sourceRoot, 'index.html'), 'utf8');
+const productionHtml = sourceHtml.replaceAll(
+  '/assets/images/home/fmb-home-logo.webp',
+  '/assets/images/fmb-approved/fmb-master-transparent.webp',
+);
+await writeFile(path.join(outputRoot, 'index.html'), productionHtml, 'utf8');
 await copyFile(
   path.join(sourceRoot, 'assets', 'js', 'fmb-home-approved.js'),
   path.join(outputRoot, 'assets', 'js', 'fmb-home-approved.js'),
