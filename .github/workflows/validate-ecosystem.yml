@@ -112,3 +112,10 @@ jobs:
           grep -qi 'Francine Marie Bautista\|With love, FMB' dist/index.html
           grep -qi 'SENZ' dist/_sites/senz/index.html
           grep -qi 'Cognita' dist/_sites/cognita/index.html
+      - name: Preserve audited preview output
+        uses: actions/upload-artifact@v4
+        with:
+          name: fmb-audited-preview-${{ github.run_id }}
+          path: dist
+          if-no-files-found: error
+          retention-days: 7
