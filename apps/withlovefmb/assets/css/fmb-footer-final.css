@@ -1,0 +1,6 @@
+/* Shared footer compatibility layer.
+   Final footer styling remains scoped to each public page system. */
+
+footer a{
+  text-underline-offset:.2em;
+}
