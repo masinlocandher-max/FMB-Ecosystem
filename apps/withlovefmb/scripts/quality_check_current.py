@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the site quality suite against the current static FMB, Yoni, and News contracts."""
+"""Run the site quality suite against the current FMB Network, Yoni, and newsroom contracts."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -12,6 +12,10 @@ STALE_NEWS_ERRORS = {
     "news/index.html: every main story must have one sourced lead visual",
     "news/index.html: every editorial visual must show its source or credit below it",
 }
+STALE_NEWS_PREFIXES = (
+    "news/index.html: missing broadcast channel marker:",
+    "assets/js/news-channel.js: missing clock, motion, or sharing marker:",
+)
 STALE_HOME_ERRORS = {
     "index.html: missing first-visit benefit: Meet Yoni. A complete space to listen, read, write, and check in.",
     "index.html: missing first-visit benefit: /assets/js/fmb-bulletin-home.js",
@@ -49,10 +53,13 @@ def home_generation_is_configured() -> bool:
 def check_current_html(path: Path, errors: list[str]) -> None:
     local_errors: list[str] = []
     ORIGINAL_CHECK_HTML(path, local_errors)
-    generated_home_ready = path == checks.ROOT / "index.html" and home_generation_is_configured()
+    generated_home_ready = home_generation_is_configured()
+    relative = str(path.relative_to(checks.ROOT))
     for error in local_errors:
-        generated_reference = generated_home_ready and error.startswith("index.html: broken ") and any(
-            reference in error for reference in GENERATED_HOME_REFERENCES
+        generated_reference = (
+            generated_home_ready
+            and error.startswith(f"{relative}: broken ")
+            and any(reference in error for reference in GENERATED_HOME_REFERENCES)
         )
         if not generated_reference:
             errors.append(error)
@@ -163,13 +170,37 @@ def check_current_navigation_experience(errors: list[str]) -> None:
 def check_current_mobile_and_editorial_media(errors: list[str]) -> None:
     legacy_errors: list[str] = []
     ORIGINAL_EDITORIAL_MEDIA_CHECK(legacy_errors)
-    errors.extend(error for error in legacy_errors if error not in STALE_NEWS_ERRORS)
+    errors.extend(
+        error
+        for error in legacy_errors
+        if error not in STALE_NEWS_ERRORS and not error.startswith(STALE_NEWS_PREFIXES)
+    )
 
     news = (checks.ROOT / "news/index.html").read_text(encoding="utf-8")
     if news.count('class="news-visual"') != 7:
         errors.append("news/index.html: the current lead story and six-story rundown must each have one sourced visual")
     if news.count("<figcaption>") != 7:
         errors.append("news/index.html: the current lead story and six-story rundown must each show a visual credit")
+
+    required_news_markers = (
+        "FMB News Network",
+        "Context before noise.",
+        'id="rundown"',
+        'id="editorial-standard"',
+        'class="nc-site-header"',
+        "/assets/images/news/fmb-news-official.svg",
+        "/news/subic-aeta-landfill/",
+        "/news/remembering-amor-deloso/",
+        "/news/filipinos-monkey-insult-racism/",
+        "/news/pax-silica-water/",
+        "/news/binibining-pilipinas-2026/",
+        "/news/china-ai-monkey-video/",
+        "/news/good-news/",
+        "fmb-news-luxury.css?v=20260722-luxury-v3",
+    )
+    for marker in required_news_markers:
+        if marker not in news:
+            errors.append(f"news/index.html: missing current newsroom marker: {marker}")
 
     required_credits = (
         "GMA Public Affairs / I-Witness",
@@ -183,6 +214,11 @@ def check_current_mobile_and_editorial_media(errors: list[str]) -> None:
     for credit in required_credits:
         if credit not in news:
             errors.append(f"news/index.html: missing current editorial visual credit: {credit}")
+
+    news_js = (checks.ROOT / "assets/js/news-channel.js").read_text(encoding="utf-8")
+    for marker in ("Asia/Manila", "data-news-clock", "IntersectionObserver", "navigator.share"):
+        if marker not in news_js:
+            errors.append(f"assets/js/news-channel.js: missing current newsroom interaction marker: {marker}")
 
 
 checks.check_html = check_current_html
