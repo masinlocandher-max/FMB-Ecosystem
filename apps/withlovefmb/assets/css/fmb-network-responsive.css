@@ -16,6 +16,8 @@ body.fmb-network-page .fmb-network-contact,body.fmb-network-page footer{content-
   body.fmb-network-page main>section:nth-of-type(n+2){content-visibility:auto;contain-intrinsic-size:auto 760px}
   body.fmb-network-page.fmb-motion-on .network-media-reveal{clip-path:none!important;transition:opacity .55s var(--network-ease),transform .55s var(--network-ease)!important}
   body.fmb-network-page .fmb-network-contact,body.fmb-network-page .az-help-panel,body.fmb-network-page .az-help-trigger,.pearly-lazy-trigger{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+  body.fmb-network-about .fco-nav-links{display:none!important}
+  body.fmb-network-about .fco-header{overflow:visible!important}
   body.fmb-network-home .final-home-hero{display:grid!important;width:calc(100% - 16px)!important;aspect-ratio:auto!important;border-radius:28px!important;background:var(--network-purple-950)!important}
   body.fmb-network-home .hero-photo{position:relative!important;aspect-ratio:1364/768!important;background:#dedade!important}
   body.fmb-network-home .hero-photo img{object-fit:contain!important}
