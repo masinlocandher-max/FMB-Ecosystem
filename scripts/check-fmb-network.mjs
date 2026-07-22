@@ -11,11 +11,16 @@ const requiredPages=['index.html','aboutfmb/index.html','withlovefmb/index.html'
 const networkPages=requiredPages.filter(page=>page!=='index.html');
 const sharedMarkers=['/assets/css/fmb-network-optimized.css?v=20260722-enterprise-v5-exact-assets','/assets/js/fmb-network-optimized.js?v=20260722-enterprise-v5-exact-assets','/assets/js/az-assistant.js','data-fmb-network-schema','fmb-identity-v3'];
 const retiredDeliveryMarkers=['/assets/css/fmb-network-core.css','/assets/css/fmb-network-pages.css','/assets/css/fmb-network-channels.css','/assets/css/fmb-network-reception.css','/assets/css/fmb-network-responsive.css','/assets/js/fmb-network-motion.js','/assets/js/fmb-reception-search.js','/assets/css/az-assistant.css'];
-const prohibitedBrandFallbacks=['/assets/images/home/fmb-home-logo.webp','/assets/images/home/francine-home-hero-hd.webp','/assets/images/home/francine-home-founder-hd.webp','/assets/images/news/fmb-news-official.svg','/assets/images/channels/fmb-music-official.svg','/assets/images/channels/fmb-ebook-official.svg','/assets/images/fmb-official-2026/fmb-master-square.webp','/assets/images/fmb-official-2026/fmb-news-official.webp','/assets/images/fmb-official-2026/fmb-music-official.webp'];
-const exactChannels={
-  news:{relative:'assets/images/fmb-approved/fmb-news-official-transparent.webp',publicPath:'/assets/images/fmb-approved/fmb-news-official-transparent.webp',manifestKey:'news'},
-  music:{relative:'assets/images/fmb-approved/fmb-music-official-transparent.webp',publicPath:'/assets/images/fmb-approved/fmb-music-official-transparent.webp',manifestKey:'music'},
-  ebook:{relative:'assets/images/fmb-approved/fmb-ebook-official-transparent.webp',publicPath:'/assets/images/fmb-approved/fmb-ebook-official-transparent.webp',manifestKey:'ebook'}
+const prohibitedBrandFallbacks=['/assets/images/home/fmb-home-logo.webp','/assets/images/home/francine-home-hero-hd.webp','/assets/images/home/francine-home-founder-hd.webp','/assets/images/fmb-official-2026/fmb-master-square.webp','/assets/images/fmb-official-2026/fmb-news-official.webp','/assets/images/fmb-official-2026/fmb-music-official.webp'];
+const exactChannelMasters={
+  news:{relative:'assets/images/fmb-approved/fmb-news-official-transparent.webp',manifestKey:'news'},
+  music:{relative:'assets/images/fmb-approved/fmb-music-official-transparent.webp',manifestKey:'music'},
+  ebook:{relative:'assets/images/fmb-approved/fmb-ebook-official-transparent.webp',manifestKey:'ebook'}
+};
+const renderedChannels={
+  news:'/assets/images/news/fmb-news-official.svg',
+  music:'/assets/images/channels/fmb-music-official.svg',
+  ebook:'/assets/images/channels/fmb-ebook-official.svg'
 };
 
 function webpDimensions(bytes,name){
@@ -43,16 +48,19 @@ for(const asset of manifest.assets){
   const bytes=await readBytes(relative);
   const dimensions=webpDimensions(bytes,relative);
   if(dimensions.width!==asset.width||dimensions.height!==asset.height)fail(`${relative} must be ${asset.width}x${asset.height}; found ${dimensions.width}x${dimensions.height}`);
-  const receivedHash=sha256(bytes);
-  if(receivedHash!==asset.sha256)fail(`${relative} does not match the exact uploaded master. Expected ${asset.sha256}, received ${receivedHash}`);
+  if(sha256(bytes)!==asset.sha256)fail(`${relative} does not match the exact uploaded master`);
 }
-for(const channel of Object.values(exactChannels)){
+for(const channel of Object.values(exactChannelMasters)){
   const expected=manifestByKey.get(channel.manifestKey);
   if(!expected)fail(`approved asset manifest is missing ${channel.manifestKey}`);
   const bytes=await readBytes(channel.relative);
   const dimensions=webpDimensions(bytes,channel.relative);
   if(dimensions.width!==expected.width||dimensions.height!==expected.height)fail(`${channel.relative} must be ${expected.width}x${expected.height}`);
   if(sha256(bytes)!==expected.sha256)fail(`${channel.relative} is not byte-identical to the uploaded ${channel.manifestKey} master`);
+}
+for(const rendered of Object.values(renderedChannels)){
+  const source=await readFile(path.join(root,rendered.replace(/^\//,'')),'utf8');
+  if(!source.includes('<svg')||!source.includes('<title'))fail(`${rendered} is not a valid accessible SVG delivery wrapper`);
 }
 
 for(const page of requiredPages){
@@ -73,23 +81,9 @@ for(const page of networkPages){
 const approved='/assets/images/fmb-approved/';
 const home=await read('index.html');
 requireMarkers(home,'Home',[
-  `${approved}fmb-master-transparent.webp`,
-  `${approved}fmb-master-purple-square.webp`,
-  `${approved}francine-standing-landscape.webp`,
-  `${approved}francine-seated-landscape.webp`,
-  exactChannels.news.publicPath,
-  exactChannels.music.publicPath,
-  exactChannels.ebook.publicPath,
-  '/assets/js/fmb-home-approved.js',
-  '/assets/js/az-assistant.js',
-  'Official Digital Headquarters',
-  'Yoni App 2.0',
-  'One Direction.',
-  'Ideas Turned',
-  'Mabayani',
-  '@bb.fmb',
-  '/BinibiningFrancineMarie',
-  'withlovefmb@gmail.com'
+  `${approved}fmb-master-transparent.webp`,`${approved}fmb-master-purple-square.webp`,`${approved}francine-standing-landscape.webp`,`${approved}francine-seated-landscape.webp`,
+  renderedChannels.news,renderedChannels.music,renderedChannels.ebook,
+  '/assets/js/fmb-home-approved.js','/assets/js/az-assistant.js','Official Digital Headquarters','Yoni App 2.0','One Direction.','Ideas Turned','Mabayani','@bb.fmb','/BinibiningFrancineMarie','withlovefmb@gmail.com'
 ]);
 if((home.match(/fetchpriority=["']high["']/g)||[]).length!==1)fail('homepage must have exactly one high-priority image');
 const yoniArtwork=[...home.matchAll(/<img\b[^>]*src=["']\/app\/assets\/yoni\/yoni-hero\.webp["'][^>]*>/gi)].map(match=>match[0]);
@@ -98,20 +92,15 @@ if(!home.includes('body{visibility:hidden}')||!home.includes('<noscript><style>b
 
 const about=await read('aboutfmb/index.html');
 requireMarkers(about,'About FMB',[`${approved}francine-standing-landscape.webp`,`${approved}francine-seated-landscape.webp`,`${approved}francine-portrait-front.webp`,'data-fmb-signature="about"']);
-
 const withLove=await read('withlovefmb/index.html');
 requireMarkers(withLove,'With Love FMB',[`${approved}francine-seated-landscape.webp`,`${approved}francine-portrait-angle-right.webp`,'data-fmb-signature="withlove"','/assets/images/volunteer/francine-leading-with-love-fmb.webp','/assets/images/volunteer/francine-serving-with-volunteers.webp']);
-
 const news=await read('news/index.html');
-requireMarkers(news,'FMB News',[exactChannels.news.publicPath,`${approved}francine-portrait-front.webp`,'data-fmb-signature="news"']);
+requireMarkers(news,'FMB News',[renderedChannels.news,`${approved}francine-portrait-front.webp`,'data-fmb-signature="news"']);
 if((news.match(/<figcaption/g)||[]).length<7)fail('News visual credits are incomplete');
-
 const music=await read('music/index.html');
-requireMarkers(music,'FMB Music',[exactChannels.music.publicPath,`${approved}francine-portrait-angle-left.webp`,'data-fmb-signature="music"']);
-
+requireMarkers(music,'FMB Music',[renderedChannels.music,`${approved}francine-portrait-angle-left.webp`,'data-fmb-signature="music"']);
 const ebooks=await read('ebooks/index.html');
-requireMarkers(ebooks,'FMB eBook',[exactChannels.ebook.publicPath,`${approved}francine-portrait-angle-right.webp`,'data-fmb-signature="ebook"']);
-
+requireMarkers(ebooks,'FMB eBook',[renderedChannels.ebook,`${approved}francine-portrait-angle-right.webp`,'data-fmb-signature="ebook"']);
 const company=await read('fmb&co/index.html');
 requireMarkers(company,'FMB&CO.',[`${approved}francine-standing-landscape.webp`,`${approved}francine-portrait-front.webp`,'data-fmb-signature="fmbandco"']);
 const senz=await read('fmb&co/senz/index.html');
@@ -139,4 +128,4 @@ if(!builtSiteScript.includes('hasDedicatedDock'))fail('site.js does not prevent 
 const redesignSource=await readFile(path.join(sourceRoot,'scripts/post-build-network-redesign.mjs'),'utf8');
 if(redesignSource.includes('francine-serving-with-volunteers.webp')||redesignSource.includes('wlf-volunteer-photo'))fail('redesign script attempts to replace protected volunteer imagery');
 for(const fallback of prohibitedBrandFallbacks)if(redesignSource.includes(`'${fallback}'`)&&!redesignSource.includes('replaceImagesUsing'))fail(`redesign source retains unsafe fallback ${fallback}`);
-console.log(`FMB brand-accuracy gate verified ${manifest.assets.length} GitHub-owned binaries, the final custom homepage, collision-safe mobile navigation, and page assignments across ${requiredPages.length} principal pages.`);
+console.log(`FMB brand-accuracy gate verified ${manifest.assets.length} exact GitHub-owned masters, browser-safe channel delivery, the final custom homepage, and ${requiredPages.length} principal pages.`);
