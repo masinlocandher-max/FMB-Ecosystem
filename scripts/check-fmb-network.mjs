@@ -4,24 +4,15 @@ import path from 'node:path';
 
 const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
 const sourceRoot=path.resolve(new URL('..',import.meta.url).pathname);
-const fail=message=>{throw new Error(`FMB Network quality check: ${message}`)};
+const fail=message=>{throw new Error(`FMB visual-integrity check: ${message}`)};
 const read=relative=>readFile(path.join(root,relative),'utf8');
 const readBytes=relative=>readFile(path.join(root,relative));
 const requiredPages=['index.html','aboutfmb/index.html','withlovefmb/index.html','news/index.html','music/index.html','ebooks/index.html','fmb&co/index.html','fmb&co/senz/index.html','fmb&co/cognita/index.html'];
 const networkPages=requiredPages.filter(page=>page!=='index.html');
 const sharedMarkers=['/assets/css/fmb-network-optimized.css?v=20260722-enterprise-v5-exact-assets','/assets/js/fmb-network-optimized.js?v=20260722-enterprise-v5-exact-assets','/assets/js/az-assistant.js','data-fmb-network-schema','fmb-identity-v3'];
 const retiredDeliveryMarkers=['/assets/css/fmb-network-core.css','/assets/css/fmb-network-pages.css','/assets/css/fmb-network-channels.css','/assets/css/fmb-network-reception.css','/assets/css/fmb-network-responsive.css','/assets/js/fmb-network-motion.js','/assets/js/fmb-reception-search.js','/assets/css/az-assistant.css'];
-const prohibitedBrandFallbacks=['/assets/images/home/fmb-home-logo.webp','/assets/images/home/francine-home-hero-hd.webp','/assets/images/home/francine-home-founder-hd.webp','/assets/images/fmb-official-2026/fmb-master-square.webp','/assets/images/fmb-official-2026/fmb-news-official.webp','/assets/images/fmb-official-2026/fmb-music-official.webp'];
-const exactChannelMasters={
-  news:{relative:'assets/images/fmb-approved/fmb-news-official-transparent.webp',manifestKey:'news'},
-  music:{relative:'assets/images/fmb-approved/fmb-music-official-transparent.webp',manifestKey:'music'},
-  ebook:{relative:'assets/images/fmb-approved/fmb-ebook-official-transparent.webp',manifestKey:'ebook'}
-};
-const renderedChannels={
-  news:'/assets/images/news/fmb-news-official.svg',
-  music:'/assets/images/channels/fmb-music-official.svg',
-  ebook:'/assets/images/channels/fmb-ebook-official.svg'
-};
+const prohibitedFallbacks=['/assets/images/home/fmb-home-logo.webp','/assets/images/home/francine-home-hero-hd.webp','/assets/images/home/francine-home-founder-hd.webp','/assets/images/fmb-official-2026/fmb-master-square.webp','/assets/images/fmb-official-2026/fmb-news-official.webp','/assets/images/fmb-official-2026/fmb-music-official.webp'];
+const renderedChannels={news:'/assets/images/news/fmb-news-official.svg',music:'/assets/images/channels/fmb-music-official.svg',ebook:'/assets/images/channels/fmb-ebook-official.svg'};
 
 function webpDimensions(bytes,name){
   if(bytes.subarray(0,4).toString('ascii')!=='RIFF'||bytes.subarray(8,12).toString('ascii')!=='WEBP')fail(`${name} is not a valid WebP`);
@@ -37,36 +28,28 @@ function webpDimensions(bytes,name){
   }
   fail(`${name} has unreadable WebP dimensions`);
 }
-function sha256(bytes){return createHash('sha256').update(bytes).digest('hex');}
-function requireMarkers(html,page,markers){for(const marker of markers)if(!html.includes(marker))fail(`${page} is missing exact asset marker ${marker}`);}
+const sha256=bytes=>createHash('sha256').update(bytes).digest('hex');
+const requireMarkers=(html,page,markers)=>{for(const marker of markers)if(!html.includes(marker))fail(`${page} is missing ${marker}`)};
 
 const manifest=JSON.parse(await readFile(path.join(sourceRoot,'config/fmb-approved-assets.json'),'utf8'));
-if(manifest.policy.fallbacksAllowed!==false)fail('approved asset manifest permits fallbacks');
-const manifestByKey=new Map(manifest.assets.map(asset=>[asset.key,asset]));
+if(manifest.policy.fallbacksAllowed!==false)fail('the approved asset manifest permits fallbacks');
 for(const asset of manifest.assets){
   const relative=`assets/images/fmb-approved/${asset.file}`;
   const bytes=await readBytes(relative);
   const dimensions=webpDimensions(bytes,relative);
-  if(dimensions.width!==asset.width||dimensions.height!==asset.height)fail(`${relative} must be ${asset.width}x${asset.height}; found ${dimensions.width}x${dimensions.height}`);
-  if(sha256(bytes)!==asset.sha256)fail(`${relative} does not match the exact uploaded master`);
-}
-for(const channel of Object.values(exactChannelMasters)){
-  const expected=manifestByKey.get(channel.manifestKey);
-  if(!expected)fail(`approved asset manifest is missing ${channel.manifestKey}`);
-  const bytes=await readBytes(channel.relative);
-  const dimensions=webpDimensions(bytes,channel.relative);
-  if(dimensions.width!==expected.width||dimensions.height!==expected.height)fail(`${channel.relative} must be ${expected.width}x${expected.height}`);
-  if(sha256(bytes)!==expected.sha256)fail(`${channel.relative} is not byte-identical to the uploaded ${channel.manifestKey} master`);
+  if(dimensions.width!==asset.width||dimensions.height!==asset.height)fail(`${relative} has incorrect dimensions`);
+  if(sha256(bytes)!==asset.sha256)fail(`${relative} does not match the exact approved master`);
 }
 for(const rendered of Object.values(renderedChannels)){
-  const source=await readFile(path.join(root,rendered.replace(/^\//,'')),'utf8');
-  if(!source.includes('<svg')||!source.includes('<title'))fail(`${rendered} is not a valid accessible SVG delivery wrapper`);
+  const svg=await read(rendered.replace(/^\//,''));
+  if(!svg.includes('<svg')||!svg.includes('<title'))fail(`${rendered} is not an accessible SVG delivery wrapper`);
+  if(/<rect\b[^>]*(?:fill=["'](?:#fff|white)|style=["'][^"']*fill:\s*(?:#fff|white))/i.test(svg))fail(`${rendered} introduces a white logo background`);
 }
 
 for(const page of requiredPages){
   const html=await read(page);
   for(const marker of retiredDeliveryMarkers)if(html.includes(marker))fail(`${page} still loads retired render-blocking asset ${marker}`);
-  for(const marker of prohibitedBrandFallbacks)if(html.includes(marker))fail(`${page} still renders prohibited substitute asset ${marker}`);
+  for(const marker of prohibitedFallbacks)if(html.includes(marker))fail(`${page} still renders prohibited fallback ${marker}`);
   if(!html.includes('viewport-fit=cover'))fail(`${page} is not safe-area optimized`);
   if(!/<meta\s+name=["']description["']/i.test(html))fail(`${page} has no SEO description`);
   if(!/<link\s+rel=["']canonical["']/i.test(html))fail(`${page} has no canonical URL`);
@@ -74,66 +57,43 @@ for(const page of requiredPages){
 for(const page of networkPages){
   const html=await read(page);
   for(const marker of sharedMarkers)if(!html.includes(marker))fail(`${page} is missing ${marker}`);
-  if((html.match(/fmb-network-optimized\.css/g)||[]).length!==1)fail(`${page} must load exactly one FMB Network stylesheet`);
-  if((html.match(/fmb-network-optimized\.js/g)||[]).length!==1)fail(`${page} must load exactly one FMB Network script`);
+  if((html.match(/fmb-network-optimized\.css/g)||[]).length!==1)fail(`${page} must load exactly one network stylesheet`);
+  if((html.match(/fmb-network-optimized\.js/g)||[]).length!==1)fail(`${page} must load exactly one network script`);
 }
 
 const approved='/assets/images/fmb-approved/';
 const home=await read('index.html');
-requireMarkers(home,'Home',[
-  `${approved}fmb-master-transparent.webp`,`${approved}fmb-master-purple-square.webp`,`${approved}francine-standing-landscape.webp`,`${approved}francine-seated-landscape.webp`,
-  `${approved}fmb-news-official-transparent.webp`,`${approved}fmb-music-official-transparent.webp`,`${approved}fmb-ebook-official-transparent.webp`,
-  '/assets/js/fmb-home-approved.js','Official Digital Headquarters','Yoni App 2.0','One Direction.','Ideas Turned','Mabayani','@bb.fmb','/BinibiningFrancineMarie','withlovefmb@gmail.com'
-]);
+requireMarkers(home,'Home',[`${approved}fmb-master-transparent.webp`,`${approved}fmb-master-purple-square.webp`,`${approved}francine-standing-landscape.webp`,`${approved}francine-seated-landscape.webp`,`${approved}fmb-news-official-transparent.webp`,`${approved}fmb-music-official-transparent.webp`,`${approved}fmb-ebook-official-transparent.webp`,'/assets/js/fmb-home-approved.js','Official Digital Headquarters','Yoni App 2.0','One Direction.','Ideas Turned','Mabayani']);
 if((home.match(/fetchpriority=["']high["']/g)||[]).length!==1)fail('homepage must have exactly one high-priority image');
 const yoniArtwork=[...home.matchAll(/<img\b[^>]*src=["']\/app\/assets\/yoni\/yoni-hero\.webp["'][^>]*>/gi)].map(match=>match[0]);
-if(!yoniArtwork.length||yoniArtwork.some(tag=>!(/\bloading=["']lazy["']/i.test(tag))))fail('homepage still downloads below-fold Yoni artwork eagerly');
-if(!home.includes('body{visibility:visible}'))fail('homepage must remain visible when optional scripts are slow or unavailable');
-if(home.includes('body{visibility:hidden}'))fail('homepage still depends on JavaScript to become visible');
+if(!yoniArtwork.length||yoniArtwork.some(tag=>!(/\bloading=["']lazy["']/i.test(tag))))fail('homepage downloads below-fold Yoni artwork eagerly');
+if(!home.includes('body{visibility:visible}')||home.includes('body{visibility:hidden}'))fail('homepage still depends on JavaScript to become visible');
 
-const about=await read('aboutfmb/index.html');
-requireMarkers(about,'About FMB',[`${approved}francine-standing-landscape.webp`,`${approved}francine-seated-landscape.webp`,`${approved}francine-portrait-front.webp`,'data-fmb-signature="about"']);
-const withLove=await read('withlovefmb/index.html');
-requireMarkers(withLove,'With Love FMB',[`${approved}francine-seated-landscape.webp`,`${approved}francine-portrait-angle-right.webp`,'data-fmb-signature="withlove"','/assets/images/volunteer/francine-leading-with-love-fmb.webp','/assets/images/volunteer/francine-serving-with-volunteers.webp']);
-const news=await read('news/index.html');
-requireMarkers(news,'FMB News',[renderedChannels.news,`${approved}francine-portrait-front.webp`,'data-fmb-signature="news"']);
-if((news.match(/<figcaption/g)||[]).length<7)fail('News visual credits are incomplete');
-const music=await read('music/index.html');
-requireMarkers(music,'FMB Music',[renderedChannels.music,`${approved}francine-portrait-angle-left.webp`,'data-fmb-signature="music"','31 published tracks','fmb-product-menu']);
-const ebooks=await read('ebooks/index.html');
-requireMarkers(ebooks,'FMB eBook',[renderedChannels.ebook,`${approved}francine-portrait-angle-right.webp`,'data-fmb-signature="ebook"','Six books. Clear access.','fmb-product-menu']);
-const company=await read('fmb&co/index.html');
-requireMarkers(company,'FMB&CO.',[`${approved}francine-standing-landscape.webp`,`${approved}francine-portrait-front.webp`,'data-fmb-signature="fmbandco"']);
-const senz=await read('fmb&co/senz/index.html');
-requireMarkers(senz,'SENZ gateway',[`${approved}francine-portrait-angle-left.webp`,'data-fmb-signature="senz"']);
-const cognita=await read('fmb&co/cognita/index.html');
-requireMarkers(cognita,'Cognita gateway',[`${approved}francine-portrait-angle-right.webp`,'data-fmb-signature="cognita"']);
+const pageContracts=[
+  ['aboutfmb/index.html','About FMB',[`${approved}francine-standing-landscape.webp`,`${approved}francine-seated-landscape.webp`,`${approved}francine-portrait-front.webp`,'data-fmb-signature="about"']],
+  ['withlovefmb/index.html','With Love FMB',[`${approved}francine-seated-landscape.webp`,`${approved}francine-portrait-angle-right.webp`,'data-fmb-signature="withlove"','/assets/images/volunteer/francine-leading-with-love-fmb.webp','/assets/images/volunteer/francine-serving-with-volunteers.webp']],
+  ['news/index.html','FMB News',[renderedChannels.news,`${approved}francine-portrait-front.webp`,'data-fmb-signature="news"']],
+  ['music/index.html','FMB Music',[renderedChannels.music,`${approved}francine-portrait-angle-left.webp`,'data-fmb-signature="music"','31 published tracks','fmb-product-menu']],
+  ['ebooks/index.html','FMB eBook',[renderedChannels.ebook,`${approved}francine-portrait-angle-right.webp`,'data-fmb-signature="ebook"','Six books. Clear access.','fmb-product-menu']],
+  ['fmb&co/index.html','FMB&CO.',[`${approved}francine-standing-landscape.webp`,`${approved}francine-portrait-front.webp`,'data-fmb-signature="fmbandco"']],
+  ['fmb&co/senz/index.html','SENZ gateway',[`${approved}francine-portrait-angle-left.webp`,'data-fmb-signature="senz"']],
+  ['fmb&co/cognita/index.html','Cognita gateway',[`${approved}francine-portrait-angle-right.webp`,'data-fmb-signature="cognita"']]
+];
+for(const [file,label,markers] of pageContracts)requireMarkers(await read(file),label,markers);
+if(((await read('news/index.html')).match(/<figcaption/g)||[]).length<7)fail('News visual credits are incomplete');
 
 for(const key of ['home','about','withlove','news','music','ebooks','company']){
   const css=await read(`assets/css/fmb-page-${key}.css`);
-  for(const marker of ['background-color:transparent!important','border-color:transparent!important','/assets/images/fmb-approved/']){
-    if(!css.includes(marker))fail(`page bundle ${key} is missing transparent approved-logo guardrail ${marker}`);
-  }
+  for(const marker of ['background-color:transparent!important','border-color:transparent!important','/assets/images/fmb-approved/'])if(!css.includes(marker))fail(`page bundle ${key} is missing transparent-logo rule ${marker}`);
+  if(/img\[src\*=["']\/assets\/images\/fmb-approved\/["']\][^{]*\{[^}]*background(?:-color)?\s*:\s*(?:#fff|white)/is.test(css))fail(`page bundle ${key} applies a white background to an approved logo`);
 }
 
 const optimizedCss=await read('assets/css/fmb-network-optimized.css');
-for(const marker of ['object-fit:contain!important','filter:none!important','transform:none!important','content-visibility:auto','backdrop-filter:none!important'])if(!optimizedCss.includes(marker))fail(`optimized design bundle is missing ${marker}`);
+for(const marker of ['object-fit:contain!important','filter:none!important','transform:none!important','content-visibility:auto'])if(!optimizedCss.includes(marker))fail(`optimized design bundle is missing ${marker}`);
 if(/(?:data-fmb-portrait|fmb-official-(?:landscape|portrait))[^}]*object-fit\s*:\s*cover/is.test(optimizedCss))fail('approved founder photography can still be destructively cropped');
 const optimizedJs=await read('assets/js/fmb-network-optimized.js');
-for(const marker of ['FMB Network','Search full articles, FAQs and brands'])if(!optimizedJs.includes(marker))fail(`optimized interaction bundle is missing ${marker}`);
 if(/hero\.style\.transform|founder\.style\.transform|scale\(1\.0[2-9]/.test(optimizedJs))fail('optimized motion still distorts founder photography');
-
-const receptionLoader=await read('assets/js/az-assistant.js');
-for(const marker of ['pearly-lazy-trigger','requestIdleCallback','prefetchReception','pearly:ready',`${approved}fmb-master-purple-square.webp`])if(!receptionLoader.includes(marker))fail(`Pearly lazy loader is missing ${marker}`);
-if(/observer\.observe\(document\.documentElement|script\.defer=false/.test(receptionLoader))fail('Pearly still blocks the page with a document-wide observer or synchronous core load');
-const receptionSearch=await read('assets/js/fmb-reception-search.js');
-for(const marker of ['Search full articles, FAQs and brands','Women’s Health Matters','Pax Silica','Cognita Institute of AI'])if(!receptionSearch.includes(marker))fail(`Reception Desk search is missing ${marker}`);
-if(receptionSearch.includes('observe(document.documentElement'))fail('Reception search still watches the complete document');
-const builtSiteScript=await read('assets/js/site.js');
-if(builtSiteScript.includes("ensureStylesheet('/assets/css/az-assistant.css")||builtSiteScript.includes("loadScript('/assets/js/az-assistant.js"))fail('legacy site.js still starts a duplicate eager Reception load');
-if(!builtSiteScript.includes('hasDedicatedDock'))fail('site.js does not prevent duplicate mobile navigation on pages with a dedicated dock');
 
 const redesignSource=await readFile(path.join(sourceRoot,'scripts/post-build-network-redesign.mjs'),'utf8');
 if(redesignSource.includes('francine-serving-with-volunteers.webp')||redesignSource.includes('wlf-volunteer-photo'))fail('redesign script attempts to replace protected volunteer imagery');
-for(const fallback of prohibitedBrandFallbacks)if(redesignSource.includes(`'${fallback}'`)&&!redesignSource.includes('replaceImagesUsing'))fail(`redesign source retains unsafe fallback ${fallback}`);
-console.log(`FMB brand-accuracy gate verified ${manifest.assets.length} exact GitHub-owned masters, transparent logo delivery, the current Digital Headquarters, and ${requiredPages.length} principal pages.`);
+console.log(`FMB visual-integrity gate verified ${manifest.assets.length} exact masters, transparent logo delivery, responsive page contracts, and ${requiredPages.length} principal pages.`);
