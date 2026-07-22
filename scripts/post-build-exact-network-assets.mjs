@@ -3,6 +3,11 @@ import path from 'node:path';
 
 const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
 const approved='/assets/images/fmb-approved';
+const channelAssets={
+  news:{path:'/assets/images/fmb-official-2026/fmb-news-official.webp',width:909,height:210,label:'FMB News'},
+  music:{path:'/assets/images/fmb-official-2026/fmb-music-official.webp',width:916,height:212,label:'FMB Music'},
+  ebook:{path:'/assets/images/channels/fmb-ebook-official.svg',width:939,height:210,label:'FMB eBook'}
+};
 const protectedRoots=['app/','_sites/senz/','_sites/cognita/'];
 const ebookRoutes=new Set([
   'coming-out-respect.html',
@@ -14,9 +19,9 @@ const ebookRoutes=new Set([
   'herra.html'
 ]);
 const principalChannels={
-  'news/index.html':{type:'news',logo:`${approved}/fmb-news-official-transparent.webp`,width:909,height:210,label:'FMB News',href:'/news/'},
-  'music/index.html':{type:'music',logo:`${approved}/fmb-music-official-transparent.webp`,width:916,height:212,label:'FMB Music',href:'/music/'},
-  'ebooks/index.html':{type:'ebook',logo:`${approved}/fmb-ebook-official-transparent.webp`,width:939,height:210,label:'FMB eBook',href:'/ebooks/'}
+  'news/index.html':{type:'news',logo:channelAssets.news.path,width:channelAssets.news.width,height:channelAssets.news.height,label:channelAssets.news.label,href:'/news/'},
+  'music/index.html':{type:'music',logo:channelAssets.music.path,width:channelAssets.music.width,height:channelAssets.music.height,label:channelAssets.music.label,href:'/music/'},
+  'ebooks/index.html':{type:'ebook',logo:channelAssets.ebook.path,width:channelAssets.ebook.width,height:channelAssets.ebook.height,label:channelAssets.ebook.label,href:'/ebooks/'}
 };
 const channelStyle=`<style data-fmb-exact-channel-bars>
 .fmb-exact-channel-bar{position:relative;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:24px;width:min(1180px,calc(100% - 32px));margin:18px auto 0;padding:14px 18px;border:1px solid rgba(255,255,255,.16);border-radius:22px;background:linear-gradient(135deg,rgba(20,4,34,.96),rgba(48,8,71,.94));box-shadow:0 18px 55px rgba(20,4,34,.2);color:#fff}
@@ -25,9 +30,9 @@ const channelStyle=`<style data-fmb-exact-channel-bars>
 .fmb-exact-channel-bar a{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 16px;border:1px solid rgba(255,255,255,.24);border-radius:999px;color:#fff;text-decoration:none;font:700 12px/1 -apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,sans-serif;white-space:nowrap}
 .fmb-exact-channel-bar a:hover,.fmb-exact-channel-bar a:focus-visible{background:#fff;color:#26063b;outline:none}
 .fmb-channel-title-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
-.nc-publication-brand>img[src^="${approved}/fmb-"],.nc-channel-lockup>img[src^="${approved}/fmb-"],.nc-footer-brand>img[src^="${approved}/fmb-"]{display:block!important;width:min(100%,940px)!important;height:auto!important;max-height:112px!important;object-fit:contain!important;object-position:left center!important;filter:none!important;transform:none!important;background:transparent!important}
-.nc-channel-lockup>img[src^="${approved}/fmb-"]{max-height:210px!important}
-@media(max-width:680px){.fmb-exact-channel-bar{align-items:flex-start;flex-direction:column;gap:12px;margin-top:10px;padding:14px;border-radius:18px}.fmb-exact-channel-bar img{width:min(100%,330px);max-height:70px}.fmb-exact-channel-bar div{width:100%;justify-content:space-between;margin-left:0;gap:10px}.fmb-exact-channel-bar span{max-width:55%}.nc-publication-brand>img[src^="${approved}/fmb-"]{max-height:64px!important}.nc-channel-lockup>img[src^="${approved}/fmb-"]{max-height:116px!important}}
+.nc-publication-brand>img,.nc-channel-lockup>img,.nc-footer-brand>img{display:block!important;width:min(100%,940px)!important;height:auto!important;max-height:112px!important;object-fit:contain!important;object-position:left center!important;filter:none!important;transform:none!important;background:transparent!important}
+.nc-channel-lockup>img{max-height:210px!important}
+@media(max-width:680px){.fmb-exact-channel-bar{align-items:flex-start;flex-direction:column;gap:12px;margin-top:10px;padding:14px;border-radius:18px}.fmb-exact-channel-bar img{width:min(100%,330px);max-height:70px}.fmb-exact-channel-bar div{width:100%;justify-content:space-between;margin-left:0;gap:10px}.fmb-exact-channel-bar span{max-width:55%}.nc-publication-brand>img{max-height:64px!important}.nc-channel-lockup>img{max-height:116px!important}}
 </style>`;
 
 async function walk(directory){
@@ -99,24 +104,24 @@ for(const file of await walk(root)){
   }
 
   if(name.startsWith('news/')){
-    for(const oldPath of ['/assets/images/fmbandco/fmbandco-primary-reversed.png','/assets/images/news/fmb-news-official.svg','/assets/images/fmb-official-2026/fmb-news-official.webp']){
-      html=replaceImagePath(html,oldPath,`${approved}/fmb-news-official-transparent.webp`);
+    for(const oldPath of ['/assets/images/fmbandco/fmbandco-primary-reversed.png','/assets/images/news/fmb-news-official.svg','/assets/images/fmb-approved/fmb-news-official-transparent.webp']){
+      html=replaceImagePath(html,oldPath,channelAssets.news.path);
     }
-    if(!html.includes(`${approved}/fmb-news-official-transparent.webp`)){
-      html=injectChannelBar(html,{type:'news',logo:`${approved}/fmb-news-official-transparent.webp`,width:909,height:210,label:'FMB News',href:'/news/',action:'Back to newsroom'});
+    if(!html.includes(channelAssets.news.path)){
+      html=injectChannelBar(html,{type:'news',logo:channelAssets.news.path,width:channelAssets.news.width,height:channelAssets.news.height,label:channelAssets.news.label,href:'/news/',action:'Back to newsroom'});
       injectedNews+=1;
     }
   }
   if(ebookRoutes.has(name)){
-    for(const oldPath of ['/assets/images/fmbandco/fmbandco-primary-reversed.png','/assets/images/channels/fmb-ebook-official.svg']){
-      html=replaceImagePath(html,oldPath,`${approved}/fmb-ebook-official-transparent.webp`);
+    for(const oldPath of ['/assets/images/fmbandco/fmbandco-primary-reversed.png','/assets/images/fmb-approved/fmb-ebook-official-transparent.webp']){
+      html=replaceImagePath(html,oldPath,channelAssets.ebook.path);
     }
-    if(!html.includes(`${approved}/fmb-ebook-official-transparent.webp`)){
-      html=injectChannelBar(html,{type:'ebook',logo:`${approved}/fmb-ebook-official-transparent.webp`,width:939,height:210,label:'FMB eBook',href:'/ebooks/',action:'Open the library'});
+    if(!html.includes(channelAssets.ebook.path)){
+      html=injectChannelBar(html,{type:'ebook',logo:channelAssets.ebook.path,width:channelAssets.ebook.width,height:channelAssets.ebook.height,label:channelAssets.ebook.label,href:'/ebooks/',action:'Open the library'});
       injectedEbooks+=1;
     }
   }
 
   if(html!==before){await writeFile(file,html,'utf8');changed+=1;}
 }
-console.log(`Enforced the supplied News, Music and eBook lockups across ${correctedPrincipals} principal channels and ${changed} public routes, adding ${injectedNews} News mastheads and ${injectedEbooks} eBook mastheads without changing article content or volunteer assets.`);
+console.log(`Enforced GitHub-owned News, Music and eBook lockups across ${correctedPrincipals} principal channels and ${changed} public routes, adding ${injectedNews} News mastheads and ${injectedEbooks} eBook mastheads without changing article content or volunteer assets.`);
