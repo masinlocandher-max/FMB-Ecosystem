@@ -4,9 +4,9 @@ import path from 'node:path';
 const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
 const approved='/assets/images/fmb-approved';
 const channelAssets={
-  news:{path:'/assets/images/fmb-official-2026/fmb-news-official.webp',width:909,height:210,label:'FMB News'},
-  music:{path:'/assets/images/fmb-official-2026/fmb-music-official.webp',width:916,height:212,label:'FMB Music'},
-  ebook:{path:'/assets/images/channels/fmb-ebook-official.svg',width:939,height:210,label:'FMB eBook'}
+  news:{path:`${approved}/fmb-news-official-transparent.webp`,width:909,height:210,label:'FMB News'},
+  music:{path:`${approved}/fmb-music-official-transparent.webp`,width:916,height:212,label:'FMB Music'},
+  ebook:{path:`${approved}/fmb-ebook-official-transparent.webp`,width:939,height:210,label:'FMB eBook'}
 };
 const protectedRoots=['app/','_sites/senz/','_sites/cognita/'];
 const ebookRoutes=new Set([
@@ -104,7 +104,7 @@ for(const file of await walk(root)){
   }
 
   if(name.startsWith('news/')){
-    for(const oldPath of ['/assets/images/fmbandco/fmbandco-primary-reversed.png','/assets/images/news/fmb-news-official.svg','/assets/images/fmb-approved/fmb-news-official-transparent.webp']){
+    for(const oldPath of ['/assets/images/fmbandco/fmbandco-primary-reversed.png','/assets/images/news/fmb-news-official.svg','/assets/images/fmb-official-2026/fmb-news-official.webp']){
       html=replaceImagePath(html,oldPath,channelAssets.news.path);
     }
     if(!html.includes(channelAssets.news.path)){
@@ -113,7 +113,7 @@ for(const file of await walk(root)){
     }
   }
   if(ebookRoutes.has(name)){
-    for(const oldPath of ['/assets/images/fmbandco/fmbandco-primary-reversed.png','/assets/images/fmb-approved/fmb-ebook-official-transparent.webp']){
+    for(const oldPath of ['/assets/images/fmbandco/fmbandco-primary-reversed.png','/assets/images/channels/fmb-ebook-official.svg']){
       html=replaceImagePath(html,oldPath,channelAssets.ebook.path);
     }
     if(!html.includes(channelAssets.ebook.path)){
@@ -124,4 +124,4 @@ for(const file of await walk(root)){
 
   if(html!==before){await writeFile(file,html,'utf8');changed+=1;}
 }
-console.log(`Enforced GitHub-owned News, Music and eBook lockups across ${correctedPrincipals} principal channels and ${changed} public routes, adding ${injectedNews} News mastheads and ${injectedEbooks} eBook mastheads without changing article content or volunteer assets.`);
+console.log(`Enforced repository-owned exact News, Music and eBook lockups across ${correctedPrincipals} principal channels and ${changed} public routes, adding ${injectedNews} News mastheads and ${injectedEbooks} eBook mastheads without changing article content or volunteer assets.`);
