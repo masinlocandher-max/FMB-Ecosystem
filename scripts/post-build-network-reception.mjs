@@ -27,10 +27,12 @@ await writeFile(receptionScriptPath,receptionScript,'utf8');
 const siteScriptPath=path.join(root,'assets/js/site.js');
 let siteScript=await readFile(siteScriptPath,'utf8');
 siteScript=siteScript
+  .replace(/(["'])assets\//g,'$1/assets/')
+  .replace("manifest.href='manifest.webmanifest'","manifest.href='/manifest.webmanifest'")
   .replace("if(isPublicWebsiteHost)ensureStylesheet('/assets/css/az-assistant.css?v=20260720-az-website-only-v1');","/* Pearly CSS is loaded on first Reception interaction by az-assistant.js. */")
   .replace("if(isPublicWebsiteHost)loadScript('/assets/js/az-assistant.js?v=20260720-az-website-only-v1').catch(()=>{});","/* Pearly is injected once by the verified network build. */")
-  .replace("let mobileBar=$('.mobile-bar:not(.member-mobile-bar):not(.admin-mobile-bar)');","const hasDedicatedDock=Boolean(document.querySelector('.fco-mobile-dock'));let mobileBar=$('.mobile-bar:not(.member-mobile-bar):not(.admin-mobile-bar)');if(hasDedicatedDock&&mobileBar){mobileBar.remove();mobileBar=null}")
+  .replace("let mobileBar=$('.mobile-bar:not(.member-mobile-bar):not(.admin-mobile-bar)');","const hasDedicatedDock=Boolean(document.querySelector('.fco-mobile-dock,.nc-mobile-dock,.mobile-dock'));let mobileBar=$('.mobile-bar:not(.member-mobile-bar):not(.admin-mobile-bar)');if(hasDedicatedDock&&mobileBar){mobileBar.remove();mobileBar=null}")
   .replace('if(!mobileBar){','if(!mobileBar&&!hasDedicatedDock){');
 await writeFile(siteScriptPath,siteScript,'utf8');
 
-console.log(`Enabled a compact, collision-safe FMB Reception Desk on ${pages.length} public pages and removed duplicate mobile navigation when a page already owns its dock.`);
+console.log(`Enabled a compact, collision-safe FMB Reception Desk on ${pages.length} public pages, normalized root asset URLs for nested routes, and removed duplicate mobile navigation when a page already owns its dock.`);
