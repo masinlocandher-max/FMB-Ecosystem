@@ -25,7 +25,7 @@ for(const icon of manifest.icons){
 
 const index=fs.readFileSync(path.join(root,'index.html'),'utf8');
 if(!/rel="manifest"[^>]+manifest\.webmanifest/.test(index))fail('Home page is missing its manifest link.');
-if(!index.includes('/assets/images/home/fmb-home-logo.webp'))fail('Home page is missing the current FMB icon.');
+if(!index.includes('/assets/images/fmb-approved/fmb-master-transparent.webp'))fail('Home page is missing the verified FMB master identity.');
 
 const appManifest=readJson('app/manifest.webmanifest');
 if(appManifest.display!=='standalone')fail('Yoni manifest must use standalone display mode.');
