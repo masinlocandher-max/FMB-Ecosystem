@@ -8,7 +8,10 @@ const pages=[
   ['music/index.html','music'],['ebooks/index.html','ebooks'],['fmb&co/index.html','company'],
   ['fmb&co/senz/index.html','senz-gateway'],['fmb&co/cognita/index.html','cognita-gateway'],['app/install/index.html','yoni-install']
 ];
-const version='20260722-enterprise-v1';
+const version='20260723-visual-integrity-v1';
+const integrityFile=path.join(root,'assets','css','fmb-visual-integrity.css');
+let integrityCss='';
+try{integrityCss=await readFile(integrityFile,'utf8');}catch{}
 
 function resolveLocal(pageFile,html,href){
   const clean=href.split(/[?#]/)[0];
@@ -41,20 +44,22 @@ for(const [relativePage,key] of pages){
   for(const match of matches){
     const tag=match[0],href=match[1];
     if(/\bmedia=["'](?!all["'])/i.test(tag))continue;
-    if(/^(?:https?:|\/\/)/i.test(href)||href.includes('fmb-network-optimized.css'))continue;
+    if(/^(?:https?:|\/\/)/i.test(href)||href.includes('fmb-network-optimized.css')||href.includes('fmb-visual-integrity.css'))continue;
     const file=resolveLocal(pageFile,html,href);if(!file)continue;
     try{selected.push({tag,href,file,css:await readFile(file,'utf8')});}catch{}
   }
-  if(selected.length<2)continue;
-  const bundle=selected.map(item=>`/* ${item.href} */\n${rewriteCssUrls(item.css,item.file)}`).join('\n\n');
+  if(!selected.length&&!integrityCss)continue;
+  const bundleParts=selected.map(item=>`/* ${item.href} */\n${rewriteCssUrls(item.css,item.file)}`);
+  if(integrityCss)bundleParts.push(`/* final approved-logo visual integrity */\n${rewriteCssUrls(integrityCss,integrityFile)}`);
   const outputFile=path.join(root,'assets','css',`fmb-page-${key}.css`);
-  await writeFile(outputFile,bundle,'utf8');
+  await writeFile(outputFile,bundleParts.join('\n\n'),'utf8');
   const link=`<link rel="stylesheet" href="/assets/css/fmb-page-${key}.css?v=${version}">`;
   let inserted=false;
   for(const item of selected){
     if(!inserted){html=html.replace(item.tag,link);inserted=true;}
     else html=html.replace(item.tag,'');
   }
+  if(!inserted)html=html.replace('</head>',`${link}</head>`);
   await writeFile(pageFile,html,'utf8');
-  console.log(`Bundled ${selected.length} stylesheets for ${relativePage}.`);
+  console.log(`Bundled ${selected.length} page stylesheet(s) plus the visual-integrity guardrail for ${relativePage}.`);
 }
