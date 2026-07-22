@@ -38,17 +38,29 @@ async function capture(item,profile,index){
     reducedMotion:'reduce'
   });
   const page=await context.newPage();
-  page.setDefaultTimeout(7000);
+  page.setDefaultTimeout(8000);
   const screenshot=`${evidenceDirectory}/${String(index).padStart(2,'0')}-${item.name}-${profile.name}.png`;
   const consoleErrors=[];
   page.on('console',message=>{if(message.type()==='error')consoleErrors.push(message.text().slice(0,240));});
   try{
-    const response=await page.goto(`http://127.0.0.1:4173${item.route}`,{waitUntil:'domcontentloaded',timeout:8000});
+    const response=await page.goto(`http://127.0.0.1:4173${item.route}`,{waitUntil:'domcontentloaded',timeout:9000});
     await page.evaluate(async()=>{
       if(document.fonts?.ready)await Promise.race([document.fonts.ready,new Promise(resolve=>setTimeout(resolve,1500))]);
       window.scrollTo(0,0);
+      const visibleImages=[...document.images].filter(image=>{
+        const style=getComputedStyle(image);
+        const rect=image.getBoundingClientRect();
+        return style.display!=='none'&&style.visibility!=='hidden'&&rect.width>0&&rect.height>0;
+      });
+      await Promise.race([
+        Promise.all(visibleImages.map(image=>image.complete?Promise.resolve():new Promise(resolve=>{
+          image.addEventListener('load',resolve,{once:true});
+          image.addEventListener('error',resolve,{once:true});
+        }))),
+        new Promise(resolve=>setTimeout(resolve,4500))
+      ]);
     });
-    await page.waitForTimeout(350);
+    await page.waitForTimeout(250);
     const evidence=await page.evaluate(()=>{
       const visible=element=>{
         const style=getComputedStyle(element);
@@ -67,19 +79,22 @@ async function capture(item,profile,index){
           className:typeof element.className==='string'?element.className:'',
           text:(element.textContent||'').trim().replace(/\s+/g,' ').slice(0,120)
         }));
-      const brokenImages=[...document.images]
-        .filter(image=>image.complete&&image.naturalWidth===0)
-        .map(image=>({src:image.getAttribute('src')||'',alt:image.alt||''}));
-      return {fixedElements,brokenImages,bodyClasses:document.body.className};
+      const imageStates=[...document.images]
+        .filter(visible)
+        .slice(0,40)
+        .map(image=>({src:image.getAttribute('src')||'',currentSrc:image.currentSrc||'',alt:image.alt||'',complete:image.complete,naturalWidth:image.naturalWidth,naturalHeight:image.naturalHeight,loading:image.loading||''}));
+      const brokenImages=imageStates.filter(image=>image.complete&&image.naturalWidth===0);
+      const pendingImages=imageStates.filter(image=>!image.complete);
+      return {fixedElements,imageStates,brokenImages,pendingImages,bodyClasses:document.body.className};
     });
-    await page.screenshot({path:screenshot,animations:'disabled',timeout:7000});
+    await page.screenshot({path:screenshot,animations:'disabled',timeout:8000});
     return {
       page:item.name,
       profile:profile.name,
       route:item.route,
       status:response?.status()??null,
       title:await page.title(),
-      health:evidence.brokenImages.length?'captured-with-broken-images':'captured',
+      health:evidence.brokenImages.length?'captured-with-broken-images':evidence.pendingImages.length?'captured-with-pending-images':'captured',
       ...evidence,
       consoleErrors:consoleErrors.slice(0,10),
       screenshot
@@ -104,7 +119,7 @@ for(const profile of profiles){
   for(const item of routes){
     const record=await Promise.race([
       capture(item,profile,index),
-      new Promise(resolve=>setTimeout(()=>resolve({page:item.name,profile:profile.name,route:item.route,health:'blocked',error:'Route exceeded the 18-second Product Design capture budget.',screenshot:null}),18000))
+      new Promise(resolve=>setTimeout(()=>resolve({page:item.name,profile:profile.name,route:item.route,health:'blocked',error:'Route exceeded the 24-second Product Design capture budget.',screenshot:null}),24000))
     ]);
     manifest.push({step:index,...record});
     persist();
@@ -115,4 +130,5 @@ for(const profile of profiles){
 await browser.close();
 if(!manifest.some(item=>item.health.startsWith('captured')))throw new Error('No valid Product Design screenshots were captured.');
 const broken=manifest.flatMap(item=>(item.brokenImages||[]).map(image=>({...image,page:item.page,profile:item.profile})));
-writeFileSync(path.join(evidenceDirectory,'summary.json'),JSON.stringify({routes:routes.length,captures:manifest.length,blocked:manifest.filter(item=>item.health==='blocked').length,brokenImages:broken},null,2));
+const pending=manifest.flatMap(item=>(item.pendingImages||[]).map(image=>({...image,page:item.page,profile:item.profile})));
+writeFileSync(path.join(evidenceDirectory,'summary.json'),JSON.stringify({routes:routes.length,captures:manifest.length,blocked:manifest.filter(item=>item.health==='blocked').length,brokenImages:broken,pendingImages:pending},null,2));
