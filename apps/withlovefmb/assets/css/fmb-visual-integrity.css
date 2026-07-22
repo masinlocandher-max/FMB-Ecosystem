@@ -1,0 +1,21 @@
+/* Final production guardrail for approved FMB identity assets. */
+img[src*="/assets/images/fmb-approved/"]{
+  background-color:transparent!important;
+  border-color:transparent!important;
+}
+:where(.site-brand,.fmb-product-brand,.fmb-product-footer,.nc-publication-brand,.nc-channel-lockup,.fmb-network-brand,.fmb-identity-lockup) img[src*="/assets/images/fmb-approved/"],
+:where(.site-brand,.fmb-product-brand,.fmb-product-footer,.nc-publication-brand,.nc-channel-lockup,.fmb-network-brand,.fmb-identity-lockup) img[src$=".svg"]{
+  display:block;
+  object-fit:contain;
+  background:transparent!important;
+  border:0!important;
+}
+.fmb-product-brand,
+.site-brand,
+.nc-publication-brand,
+.nc-channel-lockup{
+  background-color:transparent!important;
+}
+@media (forced-colors:active){
+  img[src*="/assets/images/fmb-approved/"]{forced-color-adjust:none}
+}
