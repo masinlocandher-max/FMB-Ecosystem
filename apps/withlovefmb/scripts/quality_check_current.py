@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the site quality suite against the current FMB Network, Yoni, and newsroom contracts."""
+"""Run the site quality suite against the current FMB Network, Yoni, newsroom, Music, and eBook contracts."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -17,8 +17,19 @@ STALE_NEWS_PREFIXES = (
     "assets/js/news-channel.js: missing clock, motion, or sharing marker:",
 )
 STALE_HOME_ERRORS = {
+    "index.html: missing first-visit benefit: Official FMB Bulletin",
+    'index.html: missing first-visit benefit: id="latest-release"',
+    'index.html: missing first-visit benefit: id="channels"',
     "index.html: missing first-visit benefit: Meet Yoni. A complete space to listen, read, write, and check in.",
     "index.html: missing first-visit benefit: /assets/js/fmb-bulletin-home.js",
+}
+STALE_PRODUCT_ERRORS = {
+    "ebooks/index.html: deterministic mobile luxury stylesheet is missing",
+    "ebooks/index.html: core persistent mobile menu script is missing",
+    "ebooks/index.html: accessible floating mobile menu is missing",
+    "music/index.html: deterministic mobile luxury stylesheet is missing",
+    "music/index.html: core persistent mobile menu script is missing",
+    "music/index.html: accessible floating mobile menu is missing",
 }
 GENERATED_HOME_REFERENCES = (
     "/assets/images/home/francine-home-hero-hd.webp",
@@ -156,15 +167,18 @@ def check_current_navigation_experience(errors: list[str]) -> None:
 
     index = (checks.ROOT / "index.html").read_text(encoding="utf-8")
     for marker in (
-        "Meet Yoni. A complete place to listen, read, write and check in.",
-        "/assets/js/fmb-home-static.js",
-        "/assets/images/home/francine-home-hero-hd.webp",
-        "/assets/images/home/francine-home-founder-hd.webp",
+        "Official Bulletin",
+        'id="bulletin"',
+        'id="ecosystem"',
+        'id="work"',
+        "Shaping What Comes Next.",
+        "/music/",
+        "/ebooks/",
         'id="homeHeroImage"',
         'id="homeFounderImage"',
     ):
         if marker not in index:
-            errors.append(f"index.html: missing current static-home marker: {marker}")
+            errors.append(f"index.html: missing current official-bulletin marker: {marker}")
 
 
 def check_current_mobile_and_editorial_media(errors: list[str]) -> None:
@@ -173,8 +187,49 @@ def check_current_mobile_and_editorial_media(errors: list[str]) -> None:
     errors.extend(
         error
         for error in legacy_errors
-        if error not in STALE_NEWS_ERRORS and not error.startswith(STALE_NEWS_PREFIXES)
+        if error not in STALE_NEWS_ERRORS
+        and error not in STALE_PRODUCT_ERRORS
+        and not error.startswith(STALE_NEWS_PREFIXES)
     )
+
+    product_js = (checks.ROOT / "assets/js/fmb-product-modern.js").read_text(encoding="utf-8")
+    for marker in (
+        "data-music-filter",
+        "data-ebook-filter",
+        "fmb_music_state_v3",
+        "fmb:global-music-command",
+        "Restoring your listening session",
+    ):
+        if marker not in product_js:
+            errors.append(f"assets/js/fmb-product-modern.js: missing modern product marker: {marker}")
+
+    for name in ("music/index.html", "ebooks/index.html"):
+        page = (checks.ROOT / name).read_text(encoding="utf-8")
+        for marker in (
+            "/assets/css/fmb-product-modern.css",
+            'class="fmb-product-menu"',
+            'class="fmb-product-nav"',
+            "/assets/js/fmb-product-modern.js",
+        ):
+            if marker not in page:
+                errors.append(f"{name}: missing modern responsive product marker: {marker}")
+
+    ebooks = (checks.ROOT / "ebooks/index.html").read_text(encoding="utf-8")
+    for marker in (
+        'data-ebook-filter="open"',
+        'data-ebook-filter="email"',
+        'data-access="open"',
+        'data-access="email"',
+        'data-topics="wellbeing"',
+        'data-topics="identity"',
+    ):
+        if marker not in ebooks:
+            errors.append(f"ebooks/index.html: missing current library filter marker: {marker}")
+
+    music = (checks.ROOT / "music/index.html").read_text(encoding="utf-8")
+    for marker in ('id="playlistGrid"', 'id="mainPlayButton"', 'id="audioPlayer"'):
+        if marker not in music:
+            errors.append(f"music/index.html: missing current listening marker: {marker}")
 
     news = (checks.ROOT / "news/index.html").read_text(encoding="utf-8")
     if news.count('class="news-visual"') != 7:
