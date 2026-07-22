@@ -63,6 +63,8 @@ jobs:
           exit 1
 
       - name: Capture desktop and iPhone evidence
+        id: visual_capture
+        continue-on-error: true
         if: steps.build.outcome == 'success'
         run: |
           cat > /tmp/capture-fmb.mjs <<'NODE'
@@ -100,6 +102,7 @@ jobs:
             { name: 'iphone', viewport: { width: 390, height: 844 }, deviceScaleFactor: 1 }
           ];
           const manifest = [];
+          const persist = () => writeFileSync('product-design-audit/manifest.json', JSON.stringify(manifest, null, 2));
 
           for (const profile of profiles) {
             const context = await browser.newContext({
@@ -110,32 +113,49 @@ jobs:
               reducedMotion: 'reduce'
             });
             const page = await context.newPage();
+            page.setDefaultTimeout(15000);
             for (const item of routes) {
+              const step = manifest.length + 1;
+              const file = `product-design-audit/${String(step).padStart(2, '0')}-${item.name}-${profile.name}.png`;
               const url = `http://127.0.0.1:4173${item.route}`;
-              const response = await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
-              await page.evaluate(async () => {
-                if (document.fonts?.ready) await document.fonts.ready;
-                window.scrollTo(0, 0);
-              });
-              await page.waitForTimeout(500);
-              const file = `product-design-audit/${String(manifest.length + 1).padStart(2, '0')}-${item.name}-${profile.name}.png`;
-              await page.screenshot({ path: file, fullPage: true });
-              manifest.push({
-                step: manifest.length + 1,
-                page: item.name,
-                profile: profile.name,
-                route: item.route,
-                status: response?.status() ?? null,
-                title: await page.title(),
-                screenshot: file
-              });
+              try {
+                const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
+                await page.waitForLoadState('load', { timeout: 8000 }).catch(() => {});
+                await page.evaluate(async () => {
+                  if (document.fonts?.ready) await Promise.race([document.fonts.ready, new Promise(resolve => setTimeout(resolve, 5000))]);
+                  window.scrollTo(0, 0);
+                });
+                await page.waitForTimeout(900);
+                await page.screenshot({ path: file, fullPage: true, animations: 'disabled' });
+                manifest.push({
+                  step,
+                  page: item.name,
+                  profile: profile.name,
+                  route: item.route,
+                  status: response?.status() ?? null,
+                  title: await page.title(),
+                  health: 'captured',
+                  screenshot: file
+                });
+              } catch (error) {
+                manifest.push({
+                  step,
+                  page: item.name,
+                  profile: profile.name,
+                  route: item.route,
+                  health: 'blocked',
+                  error: error instanceof Error ? error.message : String(error),
+                  screenshot: null
+                });
+              }
+              persist();
             }
             await context.close();
           }
           await browser.close();
-          writeFileSync('product-design-audit/manifest.json', JSON.stringify(manifest, null, 2));
+          if (!manifest.some(item => item.health === 'captured')) throw new Error('No valid Product Design screenshots were captured.');
           NODE
-          node /tmp/capture-fmb.mjs
+          node /tmp/capture-fmb.mjs > product-design-audit/capture.log 2>&1
 
       - name: Upload Product Design evidence
         if: always()
@@ -148,4 +168,8 @@ jobs:
 
       - name: Fail when the site cannot build
         if: steps.build.outcome != 'success'
+        run: exit 1
+
+      - name: Fail when no visual evidence could be captured
+        if: steps.build.outcome == 'success' && steps.visual_capture.outcome != 'success'
         run: exit 1
