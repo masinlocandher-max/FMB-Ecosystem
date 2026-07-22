@@ -1,0 +1,35 @@
+/* NEWS: broadcasting network, exact imagery visible in full */
+body.fmb-network-news{background:var(--network-paper)!important;color:#171218!important}
+body.fmb-network-news::before{background-image:linear-gradient(rgba(23,18,24,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(23,18,24,.025) 1px,transparent 1px)!important}
+body.fmb-network-news .nc-site-header{box-shadow:0 16px 45px rgba(23,18,24,.1)!important}
+body.fmb-network-news .nc-publication-brand img,body.fmb-network-news .nc-channel-lockup img,body.fmb-network-news .nc-footer-brand img{object-fit:contain!important;filter:none!important;transform:none!important}
+body.fmb-network-news .news-visual{display:grid!important;place-items:center!important;background:#ddd7d0!important;overflow:hidden!important}
+body.fmb-network-news .news-visual img{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important;filter:none!important;transform:none!important;background:#ddd7d0!important}
+body.fmb-network-news .nc-lead-visual{min-height:520px!important}
+body.fmb-network-news .nc-rundown-card .news-visual{aspect-ratio:16/10!important}
+body.fmb-network-news figcaption{background:rgba(23,18,24,.92)!important;color:rgba(255,255,255,.76)!important}
+body.fmb-network-news .nc-story-index{border-radius:34px!important;overflow:hidden!important;box-shadow:var(--network-shadow-lg)!important}
+
+body.fmb-network-music,body.fmb-network-ebook{background:linear-gradient(180deg,#100819,#21102e 35%,#f8f4fa 35.1%,#fff 100%)!important}
+body.fmb-network-music .nc-publication-brand img,body.fmb-network-music .nc-channel-lockup img,body.fmb-network-music .nc-footer-brand img,
+body.fmb-network-ebook .nc-publication-brand img,body.fmb-network-ebook .nc-channel-lockup img,body.fmb-network-ebook .nc-footer-brand img{width:auto!important;height:auto!important;max-width:min(520px,76vw)!important;max-height:118px!important;object-fit:contain!important;filter:none!important;transform:none!important}
+body.fmb-network-music .nc-publication-brand>span,body.fmb-network-music .nc-channel-lockup>h1,body.fmb-network-music .nc-footer-brand>span,
+body.fmb-network-ebook .nc-publication-brand>span,body.fmb-network-ebook .nc-channel-lockup>h1,body.fmb-network-ebook .nc-footer-brand>span{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+body.fmb-network-music .fco-lead-art,body.fmb-network-ebook .fco-lead-art{background:#eee9f0!important}
+body.fmb-network-music .fco-lead-art img,body.fmb-network-ebook .fco-lead-art img,body.fmb-network-ebook .ebook-cover img,body.fmb-network-music .collection-cover-card img{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important;filter:none!important;transform:none!important}
+body.fmb-network-music .featured-art{background-size:contain!important;background-repeat:no-repeat!important;background-position:center!important}
+body.fmb-network-music .featured-player,body.fmb-network-ebook .ebook-card{border-radius:30px!important;box-shadow:var(--network-shadow-lg)!important}
+
+body.fmb-network-fmbandco,body.fmb-network-senz,body.fmb-network-cognita{background:linear-gradient(180deg,#13051c 0%,#250936 31%,#fbf8ff 31.1%,#fff 100%)!important}
+body.fmb-network-fmbandco .fco-hero-grid{grid-template-columns:minmax(0,.9fr) minmax(520px,1.1fr)!important;gap:clamp(38px,6vw,88px)!important}
+body.fmb-network-fmbandco .fco-hero-visual{min-height:0!important;aspect-ratio:1364/768!important;border-radius:38px!important;background:#dedade!important;overflow:hidden!important;box-shadow:var(--network-shadow-xl)!important}
+body.fmb-network-fmbandco .fco-portrait-shape,body.fmb-network-fmbandco .fco-founder-card-shape{display:none!important}
+body.fmb-network-fmbandco .fco-founder-portrait{position:absolute!important;inset:0!important}
+body.fmb-network-fmbandco .fco-founder-portrait img{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important;filter:none!important;transform:none!important}
+body.fmb-network-fmbandco .fco-founder-portrait-card{min-height:0!important;aspect-ratio:1364/768!important;overflow:hidden!important;background:#dedade!important}
+body.fmb-network-fmbandco .fco-founder-card-portrait{position:absolute!important;inset:0!important}
+body.fmb-network-fmbandco .fco-founder-card-portrait img{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important;filter:none!important;transform:none!important}
+body.fmb-network-fmbandco .fco-company-logo img,body.fmb-network-senz .fco-gateway-logo-card img,body.fmb-network-cognita .fco-gateway-logo-card img{object-fit:contain!important;filter:none!important;transform:none!important}
+body.fmb-network-senz{--gateway-accent:#2451d9;--gateway-soft:#8fd3ff}
+body.fmb-network-cognita{--gateway-accent:#246fc8;--gateway-soft:#b6ddff}
+body.fmb-network-senz .fco-gateway-logo-card,body.fmb-network-cognita .fco-gateway-logo-card{border-radius:34px!important;box-shadow:var(--network-shadow-xl)!important;background:rgba(255,255,255,.96)!important}
