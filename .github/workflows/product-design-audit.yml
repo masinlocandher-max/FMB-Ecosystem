@@ -19,15 +19,32 @@ jobs:
         with:
           node-version: 20
 
+      - name: Prepare audit evidence folder
+        run: mkdir -p product-design-audit
+
       - name: Build the complete FMB website
+        id: build
+        continue-on-error: true
         run: npm run build
 
+      - name: Preserve the exact build record
+        if: always()
+        run: |
+          if [ -f /tmp/fmb-ecosystem-build.log ]; then
+            cp /tmp/fmb-ecosystem-build.log product-design-audit/build.log
+            tail -n 240 /tmp/fmb-ecosystem-build.log > product-design-audit/build-tail.txt
+          else
+            printf 'No /tmp/fmb-ecosystem-build.log was produced. Build outcome: %s\n' '${{ steps.build.outcome }}' > product-design-audit/build-tail.txt
+          fi
+
       - name: Install Chromium capture tools
+        if: steps.build.outcome == 'success'
         run: |
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
 
       - name: Start the audited build
+        if: steps.build.outcome == 'success'
         run: |
           python3 -m http.server 4173 --directory dist > /tmp/fmb-audit-server.log 2>&1 &
           echo $! > /tmp/fmb-audit-server.pid
@@ -39,8 +56,8 @@ jobs:
           exit 1
 
       - name: Capture desktop and iPhone evidence
+        if: steps.build.outcome == 'success'
         run: |
-          mkdir -p product-design-audit
           cat > /tmp/capture-fmb.mjs <<'NODE'
           import { chromium } from 'playwright';
           import { existsSync, writeFileSync } from 'node:fs';
@@ -114,9 +131,14 @@ jobs:
           node /tmp/capture-fmb.mjs
 
       - name: Upload Product Design evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: product-design-audit-screenshots
+          name: product-design-audit-evidence
           path: product-design-audit
           if-no-files-found: error
           retention-days: 14
+
+      - name: Fail when the site cannot build
+        if: steps.build.outcome != 'success'
+        run: exit 1
