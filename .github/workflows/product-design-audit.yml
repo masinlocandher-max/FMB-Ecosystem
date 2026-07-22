@@ -15,7 +15,7 @@ concurrency:
 jobs:
   capture:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
@@ -28,43 +28,25 @@ jobs:
       - name: Prepare audit evidence folder
         run: mkdir -p product-design-audit
 
-      - name: Generate the missing monorepo lockfile for a deterministic audit
+      - name: Ensure deterministic monorepo dependencies
         run: |
           if [ ! -f package-lock.json ]; then
             npm install --package-lock-only --ignore-scripts --no-audit --no-fund
           fi
           cp package-lock.json product-design-audit/root-package-lock.json
 
-      - name: Bootstrap verified FMB masters into GitHub
-        id: bootstrap
-        if: github.event_name == 'pull_request' && github.head_ref == 'audit/product-design-fortune500'
+      - name: Confirm verified FMB masters are stored in GitHub
         run: |
-          set -e
-          required='apps/withlovefmb/assets/images/fmb-approved/fmb-news-official-transparent.webp'
-          if [ ! -f "$required" ]; then
-            rm -rf dist/assets/images/fmb-approved
-            node scripts/fetch-fmb-approved-assets.mjs
-            mkdir -p apps/withlovefmb/assets/images/fmb-approved
-            cp dist/assets/images/fmb-approved/*.webp apps/withlovefmb/assets/images/fmb-approved/
-          fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add package-lock.json apps/withlovefmb/assets/images/fmb-approved/*.webp
-          if git diff --cached --quiet; then
-            echo 'pushed=false' >> "$GITHUB_OUTPUT"
-            echo 'Verified masters and root lockfile are already stored in GitHub.'
-          else
-            git commit -m 'Store verified FMB masters and monorepo lockfile in GitHub'
-            git push origin HEAD:${{ github.head_ref }}
-            echo 'pushed=true' >> "$GITHUB_OUTPUT"
-          fi
+          test -f apps/withlovefmb/assets/images/fmb-approved/fmb-news-official-transparent.webp
+          test -f apps/withlovefmb/assets/images/fmb-approved/fmb-music-official-transparent.webp
+          test -f apps/withlovefmb/assets/images/fmb-approved/fmb-ebook-official-transparent.webp
+          test -f apps/withlovefmb/assets/images/fmb-approved/francine-standing-landscape.webp
+          test -f apps/withlovefmb/assets/images/fmb-approved/francine-seated-landscape.webp
 
       - name: Build the complete FMB website
         id: build
-        if: steps.bootstrap.outputs.pushed != 'true'
         continue-on-error: true
-        run: |
-          npm run build > product-design-audit/full-build.log 2>&1
+        run: npm run build > product-design-audit/full-build.log 2>&1
 
       - name: Preserve the exact build record
         if: always()
@@ -75,18 +57,16 @@ jobs:
           fi
           if [ -f product-design-audit/full-build.log ]; then
             tail -n 260 product-design-audit/full-build.log > product-design-audit/full-build-tail.txt
-          else
-            printf 'Build skipped after a verified bootstrap commit. A new GitHub run will audit that commit.\n' > product-design-audit/full-build-tail.txt
           fi
 
       - name: Install Chromium capture tools
-        if: steps.bootstrap.outputs.pushed != 'true' && steps.build.outcome == 'success'
+        if: steps.build.outcome == 'success'
         run: |
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
 
       - name: Start the audited build
-        if: steps.bootstrap.outputs.pushed != 'true' && steps.build.outcome == 'success'
+        if: steps.build.outcome == 'success'
         run: |
           python3 -m http.server 4173 --directory dist > /tmp/fmb-audit-server.log 2>&1 &
           for i in {1..30}; do
@@ -96,82 +76,11 @@ jobs:
           cat /tmp/fmb-audit-server.log
           exit 1
 
-      - name: Capture principal desktop and iPhone screens
+      - name: Capture bounded Product Design evidence
         id: visual_capture
         continue-on-error: true
-        if: steps.bootstrap.outputs.pushed != 'true' && steps.build.outcome == 'success'
-        run: |
-          cat > capture-fmb.mjs <<'NODE'
-          import { chromium } from 'playwright';
-          import { existsSync, writeFileSync } from 'node:fs';
-          import path from 'node:path';
-
-          const candidates = [
-            ['home', 'index.html', '/'],
-            ['about-fmb', 'aboutfmb/index.html', '/aboutfmb/'],
-            ['with-love-fmb', 'withlovefmb/index.html', '/withlovefmb/'],
-            ['with-love-fmb', 'with-love-fmb/index.html', '/with-love-fmb/'],
-            ['news', 'news/index.html', '/news/'],
-            ['music', 'music/index.html', '/music/'],
-            ['ebook', 'ebooks/index.html', '/ebooks/'],
-            ['fmbandco', 'fmbandco/index.html', '/fmbandco/'],
-            ['get-help', 'gethelp/index.html', '/gethelp/'],
-            ['yoni', 'app/index.html', '/app/']
-          ];
-
-          const seen = new Set();
-          const routes = [];
-          for (const [name, file, route] of candidates) {
-            if (!existsSync(path.join('dist', file)) || seen.has(name)) continue;
-            seen.add(name);
-            routes.push({ name, route });
-          }
-
-          const browser = await chromium.launch({ headless: true });
-          const profiles = [
-            { name: 'desktop', viewport: { width: 1440, height: 1100 }, isMobile: false },
-            { name: 'iphone', viewport: { width: 390, height: 844 }, isMobile: true }
-          ];
-          const manifest = [];
-          const persist = () => writeFileSync('product-design-audit/manifest.json', JSON.stringify(manifest, null, 2));
-
-          for (const profile of profiles) {
-            const context = await browser.newContext({
-              viewport: profile.viewport,
-              isMobile: profile.isMobile,
-              hasTouch: profile.isMobile,
-              reducedMotion: 'reduce'
-            });
-            const page = await context.newPage();
-            page.setDefaultTimeout(10000);
-            for (const item of routes) {
-              const step = manifest.length + 1;
-              const file = `product-design-audit/${String(step).padStart(2, '0')}-${item.name}-${profile.name}.png`;
-              try {
-                const response = await page.goto(`http://127.0.0.1:4173${item.route}`, { waitUntil: 'domcontentloaded', timeout: 12000 });
-                await page.evaluate(async () => {
-                  if (document.fonts?.ready) await Promise.race([document.fonts.ready, new Promise(resolve => setTimeout(resolve, 2500))]);
-                  window.scrollTo(0, 0);
-                });
-                await page.waitForTimeout(600);
-                const fixedElements=await page.evaluate(()=>[...document.querySelectorAll('body *')].filter(element=>{
-                  const style=getComputedStyle(element);
-                  const rect=element.getBoundingClientRect();
-                  return (style.position==='fixed'||style.position==='sticky')&&style.display!=='none'&&style.visibility!=='hidden'&&rect.width>20&&rect.height>20;
-                }).slice(0,30).map(element=>({tag:element.tagName.toLowerCase(),className:String(element.className||''),text:(element.textContent||'').trim().replace(/\s+/g,' ').slice(0,120)})));
-                await page.screenshot({ path: file, animations: 'disabled' });
-                manifest.push({ step, page: item.name, profile: profile.name, route: item.route, status: response?.status() ?? null, title: await page.title(), health: 'captured', fixedElements, screenshot: file });
-              } catch (error) {
-                manifest.push({ step, page: item.name, profile: profile.name, route: item.route, health: 'blocked', error: error instanceof Error ? error.message : String(error), screenshot: null });
-              }
-              persist();
-            }
-            await context.close();
-          }
-          await browser.close();
-          if (!manifest.some(item => item.health === 'captured')) throw new Error('No valid Product Design screenshots were captured.');
-          NODE
-          node capture-fmb.mjs > product-design-audit/capture.log 2>&1
+        if: steps.build.outcome == 'success'
+        run: node scripts/product-design-capture.mjs > product-design-audit/capture.log 2>&1
 
       - name: Upload Product Design evidence
         if: always()
@@ -183,5 +92,9 @@ jobs:
           retention-days: 14
 
       - name: Fail when the site cannot build
-        if: steps.bootstrap.outputs.pushed != 'true' && steps.build.outcome != 'success'
+        if: steps.build.outcome != 'success'
+        run: exit 1
+
+      - name: Fail when visual evidence could not be captured
+        if: steps.build.outcome == 'success' && steps.visual_capture.outcome != 'success'
         run: exit 1
