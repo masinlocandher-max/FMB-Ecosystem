@@ -1,0 +1,13 @@
+{
+  "name": "@fmb/withlovefmb",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Francine Marie Bautista public website and Yoni web application.",
+  "scripts": {
+    "build": "node ./build.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
