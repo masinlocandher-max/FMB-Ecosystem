@@ -27,7 +27,7 @@
       .fmb-email-card{position:relative;width:min(510px,100%);padding:34px;border:1px solid rgba(60,60,67,.14);border-radius:28px;background:rgba(253,252,255,.96);box-shadow:0 36px 110px rgba(10,5,15,.38);color:#1d1d1f;transform:translateY(18px) scale(.985);opacity:0;animation:fmbEmailIn .48s cubic-bezier(.22,1,.36,1) forwards}
       @keyframes fmbEmailIn{to{transform:none;opacity:1}}
       .fmb-email-close{position:absolute;top:15px;right:15px;width:38px;height:38px;border:1px solid rgba(60,60,67,.12);border-radius:50%;background:#f2f2f7;color:#3a3a3c;font:650 18px/1 system-ui;cursor:pointer}
-      .fmb-email-lockup{width:min(250px,68%);height:48px;object-fit:contain;object-position:left center;margin-bottom:24px}
+      .fmb-email-lockup{display:block;width:min(280px,76%);height:58px;padding:8px 12px;border-radius:14px;background:#0d0713;object-fit:contain;object-position:left center;margin-bottom:24px}
       .fmb-email-kicker{margin:0 46px 9px 0;color:#7a3fe4;font:800 10px/1.2 system-ui;letter-spacing:.13em;text-transform:uppercase}
       .fmb-email-card h2{margin:0 42px 13px 0;font:500 clamp(2rem,7vw,3.25rem)/.98 Cinzel,Georgia,serif;color:#1d1d1f;letter-spacing:-.035em}
       .fmb-email-card>p{margin:0;color:#6e6e73;font:400 14px/1.65 system-ui}

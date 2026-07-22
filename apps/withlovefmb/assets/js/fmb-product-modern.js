@@ -61,8 +61,10 @@
   function filterBooks(){
     const query=(ebookSearch?.value||'').trim().toLowerCase();
     ebookCards.forEach(card=>{
-      const category=card.dataset.category||'';
-      const match=(activeEbook==='all'||category===activeEbook)&&(!query||(card.textContent||'').toLowerCase().includes(query));
+      const access=card.dataset.access||'';
+      const topics=(card.dataset.topics||'').split(/\s+/).filter(Boolean);
+      const facetMatch=activeEbook==='all'||access===activeEbook||topics.includes(activeEbook);
+      const match=facetMatch&&(!query||(card.textContent||'').toLowerCase().includes(query));
       card.hidden=!match;
     });
   }

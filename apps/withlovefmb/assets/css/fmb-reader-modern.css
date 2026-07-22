@@ -13,7 +13,7 @@ body.fmb-reader-modern.reader-theme-sepia{--reader-bg:#f4ede1;--reader-surface:#
 body.fmb-reader-modern.reader-theme-dark{--reader-bg:#111014;--reader-surface:#1b191f;--reader-ink:#f5f1f7;--reader-muted:#aaa3ae;--reader-line:rgba(255,255,255,.12)}
 body.fmb-reader-modern :is(.top-shell,.nav-glass,.reading-progress){display:none!important}
 .fmb-reader-topbar{position:fixed;top:10px;right:10px;left:10px;z-index:1000;display:grid;grid-template-columns:minmax(180px,1fr) auto minmax(180px,1fr);align-items:center;gap:14px;min-height:62px;padding:8px 10px;border:1px solid var(--reader-line);border-radius:20px;background:color-mix(in srgb,var(--reader-surface) 82%,transparent);box-shadow:0 16px 50px rgba(20,10,30,.1);-webkit-backdrop-filter:blur(28px) saturate(150%);backdrop-filter:blur(28px) saturate(150%)}
-.fmb-reader-brand{display:flex;min-width:0;align-items:center;gap:12px;color:var(--reader-ink);text-decoration:none}
+.fmb-reader-brand{display:flex;min-width:0;align-items:center;gap:12px;padding:6px 12px;border-radius:14px;background:#0d0713;color:#fff;text-decoration:none}
 .fmb-reader-brand img{width:min(190px,36vw);height:38px;object-fit:contain;object-position:left center}
 .fmb-reader-current{min-width:0;text-align:center}
 .fmb-reader-current strong{display:block;max-width:420px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:Cinzel,Georgia,serif;font-size:12px;font-weight:500}
