@@ -15,10 +15,11 @@ function resolveReference(file,siteRoot,html,value){
   if(!href||href.startsWith('#')||/^(?:https?:|mailto:|tel:|sms:|javascript:|data:|blob:|intent:)/i.test(href))return;
   const clean=decodeURIComponent(href.split('#')[0].split('?')[0]);
   if(!clean)return;
+  if(clean.startsWith('/_sites/'))return path.join(root,clean.replace(/^\//,''));
   if(clean.startsWith('/'))return path.join(siteRoot,clean.replace(/^\//,''));
   const baseHref=html.match(/<base\b[^>]*href=["']([^"']+)["']/i)?.[1];
   if(baseHref&&!/^https?:/i.test(baseHref)){
-    const base=baseHref.startsWith('/')?path.join(siteRoot,baseHref.replace(/^\//,'')):path.resolve(path.dirname(file),baseHref);
+    const base=baseHref.startsWith('/_sites/')?path.join(root,baseHref.replace(/^\//,'')):baseHref.startsWith('/')?path.join(siteRoot,baseHref.replace(/^\//,'')):path.resolve(path.dirname(file),baseHref);
     return path.resolve(base,clean);
   }
   return path.resolve(path.dirname(file),clean);
@@ -51,7 +52,12 @@ for(const file of htmlFiles){
   if(duplicates.length)add('error',`duplicate ids: ${duplicates.join(', ')}`);
   for(const match of html.matchAll(/<img\b[^>]*>/gi)){const tag=match[0];if(!/\salt=/i.test(tag))add('warning','image missing alt attribute');if(!/\swidth=/i.test(tag)||!/\sheight=/i.test(tag))add('warning','image missing intrinsic dimensions');}
   const siteRoot=siteRootFor(name);
-  for(const match of html.matchAll(localAssetPattern)){const asset=decodeURIComponent(match[1]);if(asset.endsWith('/'))continue;const target=path.join(siteRoot,asset.replace(/^\//,''));try{if(!(await stat(target)).isFile())add('error',`missing local asset ${asset}`);}catch{add('error',`missing local asset ${asset}`);}}
+  for(const match of html.matchAll(localAssetPattern)){
+    const asset=decodeURIComponent(match[1]);
+    if(asset.endsWith('/'))continue;
+    const target=asset.startsWith('/_sites/')?path.join(root,asset.replace(/^\//,'')):path.join(siteRoot,asset.replace(/^\//,''));
+    try{if(!(await stat(target)).isFile())add('error',`missing local asset ${asset}`);}catch{add('error',`missing local asset ${asset}`);}
+  }
   const checkedLinks=new Set();
   for(const match of html.matchAll(/<a\b[^>]*href=["']([^"']+)["'][^>]*>/gi)){
     const href=cleanReference(match[1]);if(checkedLinks.has(href))continue;checkedLinks.add(href);
