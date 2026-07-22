@@ -2,11 +2,11 @@ name: Product Design Visual Audit
 
 on:
   pull_request:
-    branches: [main]
+    branches: [qa/whole-site-run-base]
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: product-design-${{ github.ref }}
@@ -15,7 +15,7 @@ concurrency:
 jobs:
   capture:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
         with:
@@ -76,17 +76,17 @@ jobs:
           cat /tmp/fmb-audit-server.log
           exit 1
 
-      - name: Capture bounded Product Design evidence
+      - name: Capture whole-site Build Web Apps evidence
         id: visual_capture
         continue-on-error: true
         if: steps.build.outcome == 'success'
         run: node scripts/product-design-capture.mjs > product-design-audit/capture.log 2>&1
 
-      - name: Upload Product Design evidence
+      - name: Upload whole-site QA evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: product-design-audit-evidence
+          name: whole-site-build-web-apps-evidence
           path: product-design-audit
           if-no-files-found: error
           retention-days: 14
@@ -95,6 +95,6 @@ jobs:
         if: steps.build.outcome != 'success'
         run: exit 1
 
-      - name: Fail when visual evidence could not be captured
+      - name: Fail when whole-site evidence could not be captured
         if: steps.build.outcome == 'success' && steps.visual_capture.outcome != 'success'
         run: exit 1
