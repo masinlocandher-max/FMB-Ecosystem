@@ -10,7 +10,6 @@
   const hero=document.getElementById('homeHeroImage');
   const founder=document.getElementById('homeFounderImage');
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const finePointer=matchMedia('(hover:hover) and (pointer:fine)').matches;
 
   body.classList.toggle('js-luxury-motion',!reduced);
 
@@ -58,37 +57,13 @@
     header?.classList.toggle('is-condensed',y>72);
     dock?.classList.toggle('visible',y>420);
     root.style.setProperty('--fmb-scroll',String(y));
-    if(!reduced&&innerWidth>820){
-      if(hero){
-        const travel=Math.min(34,Math.max(-8,y*.032));
-        hero.style.transform=`translate3d(0,${travel}px,0) scale(1.035)`;
-      }
-      if(founder){
-        const rect=founder.getBoundingClientRect();
-        const offset=(rect.top-innerHeight*.55)*-.025;
-        founder.style.transform=`translate3d(0,${Math.max(-18,Math.min(18,offset))}px,0) scale(1.025)`;
-      }
-    }else{
-      hero?.style.removeProperty('transform');
-      founder?.style.removeProperty('transform');
-    }
+    hero?.style.removeProperty('transform');
+    founder?.style.removeProperty('transform');
   };
   const requestScrollUpdate=()=>{if(ticking)return;ticking=true;requestAnimationFrame(updateScroll)};
   addEventListener('scroll',requestScrollUpdate,{passive:true});
   addEventListener('resize',()=>{closeMenu();requestScrollUpdate()},{passive:true});
   requestScrollUpdate();
-
-  if(finePointer&&!reduced){
-    document.querySelectorAll('.ecosystem-card,.offer-card,.channel-card').forEach(card=>{
-      card.addEventListener('pointermove',event=>{
-        const rect=card.getBoundingClientRect();
-        const x=(event.clientX-rect.left)/rect.width-.5;
-        const y=(event.clientY-rect.top)/rect.height-.5;
-        card.style.transform=`perspective(900px) rotateX(${y*-2.2}deg) rotateY(${x*2.8}deg) translateY(-6px)`;
-      });
-      card.addEventListener('pointerleave',()=>card.style.removeProperty('transform'));
-    });
-  }
 
   const sections=[...document.querySelectorAll('main section[id]')];
   const internalLinks=[...document.querySelectorAll('.bulletin-nav a[href^="#"],.mobile-dock a[href^="#"]')];
@@ -106,5 +81,5 @@
     image.removeAttribute('srcset');
   },{once:true});
   fallback(hero,'/assets/images/hero.webp');
-  fallback(founder,'/assets/images/fmb/francine-founder-front-cutout-900-v1.webp');
+  fallback(founder,'/assets/images/home/francine-home-founder-hd.webp');
 })();
