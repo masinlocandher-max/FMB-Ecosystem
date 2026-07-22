@@ -5,11 +5,16 @@ import { defineConfig } from "vite";
 export default defineConfig(() => {
   const deployTarget = process.env.VITE_DEPLOY_TARGET;
   const isLegacyProjectPages = deployTarget === "github-project-pages";
+  const isLegacyEcosystem = deployTarget === "legacy-ecosystem";
 
   return {
-    // Cognita now builds at the root path for thecognitainstitute.com.
-    // The legacy GitHub project-site target remains available for emergency fallback builds.
-    base: isLegacyProjectPages ? "/cognita-institute/" : "/",
+    // Cognita deploys at the root on its independent production project.
+    // The combined legacy ecosystem and GitHub fallback builds receive explicit bases.
+    base: isLegacyProjectPages
+      ? "/cognita-institute/"
+      : isLegacyEcosystem
+        ? "/_sites/cognita/"
+        : "/",
     plugins: [
       base44({
         // Support for legacy code that imports the Base44 SDK with @/integrations, @/entities, etc.
