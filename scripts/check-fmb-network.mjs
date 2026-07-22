@@ -12,9 +12,9 @@ const sharedMarkers=['/assets/css/fmb-network-optimized.css?v=20260722-enterpris
 const retiredDeliveryMarkers=['/assets/css/fmb-network-core.css','/assets/css/fmb-network-pages.css','/assets/css/fmb-network-channels.css','/assets/css/fmb-network-reception.css','/assets/css/fmb-network-responsive.css','/assets/js/fmb-network-motion.js','/assets/js/fmb-reception-search.js','/assets/css/az-assistant.css'];
 const prohibitedBrandFallbacks=['/assets/images/home/fmb-home-logo.webp','/assets/images/home/francine-home-hero-hd.webp','/assets/images/home/francine-home-founder-hd.webp','/assets/images/news/fmb-news-official.svg','/assets/images/channels/fmb-music-official.svg','/assets/images/fmb-official-2026/fmb-master-square.webp'];
 const exactChannels={
-  news:{relative:'assets/images/fmb-official-2026/fmb-news-official.webp',publicPath:'/assets/images/fmb-official-2026/fmb-news-official.webp',manifestKey:'newsLogo'},
-  music:{relative:'assets/images/fmb-official-2026/fmb-music-official.webp',publicPath:'/assets/images/fmb-official-2026/fmb-music-official.webp',manifestKey:'musicLogo'},
-  ebook:{relative:'assets/images/channels/fmb-ebook-official.svg',publicPath:'/assets/images/channels/fmb-ebook-official.svg',manifestKey:'ebookLogo'}
+  news:{relative:'assets/images/fmb-official-2026/fmb-news-official.webp',publicPath:'/assets/images/fmb-official-2026/fmb-news-official.webp',manifestKey:'news'},
+  music:{relative:'assets/images/fmb-official-2026/fmb-music-official.webp',publicPath:'/assets/images/fmb-official-2026/fmb-music-official.webp',manifestKey:'music'},
+  ebook:{relative:'assets/images/channels/fmb-ebook-official.svg',publicPath:'/assets/images/channels/fmb-ebook-official.svg',manifestKey:'ebook'}
 };
 
 function webpDimensions(bytes,name){
