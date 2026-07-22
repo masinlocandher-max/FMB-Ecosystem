@@ -9,13 +9,20 @@ const requiredPages=[
   'index.html','aboutfmb/index.html','withlovefmb/index.html','news/index.html','music/index.html','ebooks/index.html','fmb&co/index.html','fmb&co/senz/index.html','fmb&co/cognita/index.html'
 ];
 const sharedMarkers=[
-  '/assets/css/fmb-network-core.css?v=20260722-network-v2',
-  '/assets/css/fmb-network-responsive.css?v=20260722-network-v2',
-  '/assets/js/fmb-network-motion.js?v=20260722-network-v2',
-  '/assets/js/fmb-reception-search.js?v=20260722-network-v2',
-  '/assets/css/az-assistant.css',
-  '/assets/js/az-assistant.js',
+  '/assets/css/fmb-network-optimized.css?v=20260722-network-fast-v1',
+  '/assets/js/fmb-network-optimized.js?v=20260722-network-fast-v1',
+  '/assets/js/az-assistant.js?v=20260722-pearly-lazy-v1',
   'data-fmb-network-schema'
+];
+const retiredDeliveryMarkers=[
+  '/assets/css/fmb-network-core.css',
+  '/assets/css/fmb-network-pages.css',
+  '/assets/css/fmb-network-channels.css',
+  '/assets/css/fmb-network-reception.css',
+  '/assets/css/fmb-network-responsive.css',
+  '/assets/js/fmb-network-motion.js',
+  '/assets/js/fmb-reception-search.js',
+  '/assets/css/az-assistant.css'
 ];
 
 function webpDimensions(bytes,name){
@@ -39,6 +46,9 @@ function webpDimensions(bytes,name){
 for(const page of requiredPages){
   const html=await read(page);
   for(const marker of sharedMarkers)if(!html.includes(marker))fail(`${page} is missing ${marker}`);
+  for(const marker of retiredDeliveryMarkers)if(html.includes(marker))fail(`${page} still loads retired render-blocking asset ${marker}`);
+  if((html.match(/fmb-network-optimized\.css/g)||[]).length!==1)fail(`${page} must load exactly one FMB Network stylesheet`);
+  if((html.match(/fmb-network-optimized\.js/g)||[]).length!==1)fail(`${page} must load exactly one FMB Network script`);
   if(!html.includes('viewport-fit=cover'))fail(`${page} is not safe-area optimized`);
   if(!/<meta\s+name=["']description["']/i.test(html))fail(`${page} has no SEO description`);
   if(!/<link\s+rel=["']canonical["']/i.test(html))fail(`${page} has no canonical URL`);
@@ -53,6 +63,7 @@ for(const marker of [
   'Institute Qualifying Test',
   '@bb.fmb','/BinibiningFrancineMarie','withlovefmb@gmail.com'
 ])if(!home.includes(marker))fail(`homepage is missing ${marker}`);
+if(!/<img\b[^>]*loading=["']lazy["'][^>]*src=["']\/app\/assets\/yoni\/yoni-hero\.webp/i.test(home))fail('homepage still downloads the below-fold Yoni artwork eagerly');
 
 const about=await read('aboutfmb/index.html');
 if(!about.includes('/assets/images/home/francine-home-hero-hd.webp')||!about.includes('/assets/images/home/francine-home-founder-hd.webp'))fail('About FMB does not use the approved HD founder pair');
@@ -81,13 +92,20 @@ for(const asset of ['assets/images/home/francine-home-hero-hd.webp','assets/imag
   if(dimensions.width!==1364||dimensions.height!==768)fail(`${asset} must remain the approved 1364x768 HD composition; found ${dimensions.width}x${dimensions.height}`);
 }
 
-const photoCss=await read('assets/css/fmb-network-pages.css');
-for(const marker of ['object-fit:contain!important','filter:none!important','transform:none!important'])if(!photoCss.includes(marker))fail(`photo protection is missing ${marker}`);
-const motion=await read('assets/js/fmb-network-motion.js');
-if(/hero\.style\.transform|founder\.style\.transform|scale\(1\.0[2-9]/.test(motion))fail('motion system still distorts founder photography');
+const optimizedCss=await read('assets/css/fmb-network-optimized.css');
+for(const marker of ['object-fit:contain!important','filter:none!important','transform:none!important','content-visibility:auto','backdrop-filter:none!important'])if(!optimizedCss.includes(marker))fail(`optimized design bundle is missing ${marker}`);
+const optimizedJs=await read('assets/js/fmb-network-optimized.js');
+for(const marker of ['FMB Network','Search full articles, FAQs and brands'])if(!optimizedJs.includes(marker))fail(`optimized interaction bundle is missing ${marker}`);
+if(/hero\.style\.transform|founder\.style\.transform|scale\(1\.0[2-9]/.test(optimizedJs))fail('optimized motion still distorts founder photography');
+
 const newsMotion=await read('assets/js/news-channel.js');
 if(/lead\.style\.transform|scale\(1\.0[2-9]/.test(newsMotion))fail('News motion system still distorts editorial photography');
-const reception=await read('assets/js/fmb-reception-search.js');
-for(const marker of ['Search full articles, FAQs and brands','Women’s Health Matters','Pax Silica','Cognita Institute of AI'])if(!reception.includes(marker))fail(`Reception Desk search is missing ${marker}`);
 
-console.log(`FMB Network quality check passed for ${requiredPages.length} public pages.`);
+const receptionLoader=await read('assets/js/az-assistant.js');
+for(const marker of ['pearly-lazy-trigger','requestIdleCallback','prefetchReception','pearly:ready'])if(!receptionLoader.includes(marker))fail(`Pearly lazy loader is missing ${marker}`);
+if(/observer\.observe\(document\.documentElement|script\.defer=false/.test(receptionLoader))fail('Pearly still blocks the page with a document-wide observer or synchronous core load');
+const receptionSearch=await read('assets/js/fmb-reception-search.js');
+for(const marker of ['Search full articles, FAQs and brands','Women’s Health Matters','Pax Silica','Cognita Institute of AI'])if(!receptionSearch.includes(marker))fail(`Reception Desk search is missing ${marker}`);
+if(receptionSearch.includes('observe(document.documentElement'))fail('Reception search still watches the complete document');
+
+console.log(`FMB Network performance and quality checks passed for ${requiredPages.length} public pages.`);
