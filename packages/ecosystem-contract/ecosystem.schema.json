@@ -25,7 +25,7 @@
         "additionalProperties": false,
         "properties": {
           "workspace": { "type": "string", "pattern": "^apps/" },
-          "package": { "type": "string", "pattern": "^@fmb/" },
+          "package": { "type": "string", "minLength": 1 },
           "vercelProject": { "type": "string", "minLength": 1 },
           "domains": {
             "type": "array",

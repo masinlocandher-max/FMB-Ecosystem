@@ -179,7 +179,7 @@ await Promise.all([
   applyHdNewsImages(),
 ]);
 
-run('npm', ['ci'], cognitaWebsite);
+run('npm', ['ci', '--workspaces=false'], cognitaWebsite);
 run('npm', ['run', 'build'], cognitaWebsite);
 await cp(cognitaOutput, path.join(privateSitesDirectory, 'cognita'), { recursive: true });
 await applyEntityAuthority({ outputDirectory, privateSitesDirectory });

@@ -1,0 +1,54 @@
+name: Vercel Project Bootstrap
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Plan, verify, or create the three app-root Vercel projects
+        required: true
+        default: plan
+        type: choice
+        options:
+          - plan
+          - verify
+          - apply
+
+permissions:
+  contents: read
+
+jobs:
+  vercel-projects:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TEAM_ID: ${{ vars.VERCEL_TEAM_ID || 'team_KRSlI8wfigrmTrcCfbLIu9C6' }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Require Vercel token for API operations
+        if: ${{ inputs.mode != 'plan' }}
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "Add a repository secret named VERCEL_TOKEN before using verify or apply mode."
+            exit 1
+          fi
+
+      - name: Run Vercel project setup
+        run: node tooling/vercel-projects.mjs "${{ inputs.mode }}"
+
+      - name: Write safety summary
+        run: |
+          {
+            echo "## Vercel monorepo setup"
+            echo "Mode: ${{ inputs.mode }}"
+            echo ""
+            echo "This workflow does not move domains, copy environment variables, or remove the legacy deployment."
+          } >> "$GITHUB_STEP_SUMMARY"

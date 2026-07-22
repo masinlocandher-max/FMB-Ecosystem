@@ -21,6 +21,9 @@
     "check": "npm run check:structure && npm run check:boundaries",
     "check:structure": "node tooling/check-monorepo.mjs",
     "check:boundaries": "node tooling/check-deployment-boundaries.mjs",
+    "vercel:plan": "node tooling/vercel-projects.mjs plan",
+    "vercel:verify": "node tooling/vercel-projects.mjs verify",
+    "vercel:bootstrap": "node tooling/vercel-projects.mjs apply",
     "test": "npm run check"
   },
   "engines": {
