@@ -13,6 +13,8 @@ const sharedMarkers=[
   '/assets/css/fmb-network-responsive.css?v=20260722-network-v2',
   '/assets/js/fmb-network-motion.js?v=20260722-network-v2',
   '/assets/js/fmb-reception-search.js?v=20260722-network-v2',
+  '/assets/css/az-assistant.css',
+  '/assets/js/az-assistant.js',
   'data-fmb-network-schema'
 ];
 
