@@ -1,0 +1,1 @@
+This QA-only marker triggers a protected whole-site browser run against commit 5d3ccf70ce6df553928f1cd9e6795f741cbf8d02 and its test-workflow wrapper. It has no production effect.
