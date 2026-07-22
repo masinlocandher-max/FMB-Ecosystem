@@ -11,7 +11,7 @@ permissions:
 jobs:
   capture:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
 
@@ -21,6 +21,13 @@ jobs:
 
       - name: Prepare audit evidence folder
         run: mkdir -p product-design-audit
+
+      - name: Generate the missing Cognita lockfile for a deterministic audit
+        run: |
+          if [ ! -f apps/cognita/package-lock.json ]; then
+            npm install --package-lock-only --ignore-scripts --no-audit --no-fund --prefix apps/cognita
+          fi
+          cp apps/cognita/package-lock.json product-design-audit/cognita-package-lock.json
 
       - name: Build the complete FMB website
         id: build
