@@ -10,11 +10,11 @@ const readBytes=relative=>readFile(path.join(root,relative));
 const requiredPages=['index.html','aboutfmb/index.html','withlovefmb/index.html','news/index.html','music/index.html','ebooks/index.html','fmb&co/index.html','fmb&co/senz/index.html','fmb&co/cognita/index.html'];
 const sharedMarkers=['/assets/css/fmb-network-optimized.css?v=20260722-enterprise-v5-exact-assets','/assets/js/fmb-network-optimized.js?v=20260722-enterprise-v5-exact-assets','/assets/js/az-assistant.js','data-fmb-network-schema','fmb-identity-v3'];
 const retiredDeliveryMarkers=['/assets/css/fmb-network-core.css','/assets/css/fmb-network-pages.css','/assets/css/fmb-network-channels.css','/assets/css/fmb-network-reception.css','/assets/css/fmb-network-responsive.css','/assets/js/fmb-network-motion.js','/assets/js/fmb-reception-search.js','/assets/css/az-assistant.css'];
-const prohibitedBrandFallbacks=['/assets/images/home/fmb-home-logo.webp','/assets/images/home/francine-home-hero-hd.webp','/assets/images/home/francine-home-founder-hd.webp','/assets/images/news/fmb-news-official.svg','/assets/images/channels/fmb-music-official.svg','/assets/images/fmb-official-2026/fmb-master-square.webp'];
+const prohibitedBrandFallbacks=['/assets/images/home/fmb-home-logo.webp','/assets/images/home/francine-home-hero-hd.webp','/assets/images/home/francine-home-founder-hd.webp','/assets/images/news/fmb-news-official.svg','/assets/images/channels/fmb-music-official.svg','/assets/images/channels/fmb-ebook-official.svg','/assets/images/fmb-official-2026/fmb-master-square.webp','/assets/images/fmb-official-2026/fmb-news-official.webp','/assets/images/fmb-official-2026/fmb-music-official.webp'];
 const exactChannels={
-  news:{relative:'assets/images/fmb-official-2026/fmb-news-official.webp',publicPath:'/assets/images/fmb-official-2026/fmb-news-official.webp',manifestKey:'news'},
-  music:{relative:'assets/images/fmb-official-2026/fmb-music-official.webp',publicPath:'/assets/images/fmb-official-2026/fmb-music-official.webp',manifestKey:'music'},
-  ebook:{relative:'assets/images/channels/fmb-ebook-official.svg',publicPath:'/assets/images/channels/fmb-ebook-official.svg',manifestKey:'ebook'}
+  news:{relative:'assets/images/fmb-approved/fmb-news-official-transparent.webp',publicPath:'/assets/images/fmb-approved/fmb-news-official-transparent.webp',manifestKey:'news'},
+  music:{relative:'assets/images/fmb-approved/fmb-music-official-transparent.webp',publicPath:'/assets/images/fmb-approved/fmb-music-official-transparent.webp',manifestKey:'music'},
+  ebook:{relative:'assets/images/fmb-approved/fmb-ebook-official-transparent.webp',publicPath:'/assets/images/fmb-approved/fmb-ebook-official-transparent.webp',manifestKey:'ebook'}
 };
 
 function webpDimensions(bytes,name){
@@ -48,12 +48,10 @@ for(const asset of manifest.assets){
 for(const channel of Object.values(exactChannels)){
   const expected=manifestByKey.get(channel.manifestKey);
   if(!expected)fail(`approved asset manifest is missing ${channel.manifestKey}`);
-  if(channel.relative.endsWith('.webp')){
-    const bytes=await readBytes(channel.relative);
-    const dimensions=webpDimensions(bytes,channel.relative);
-    if(dimensions.width!==expected.width||dimensions.height!==expected.height)fail(`${channel.relative} must be ${expected.width}x${expected.height}`);
-    if(sha256(bytes)!==expected.sha256)fail(`${channel.relative} is not byte-identical to the uploaded ${channel.manifestKey} master`);
-  }
+  const bytes=await readBytes(channel.relative);
+  const dimensions=webpDimensions(bytes,channel.relative);
+  if(dimensions.width!==expected.width||dimensions.height!==expected.height)fail(`${channel.relative} must be ${expected.width}x${expected.height}`);
+  if(sha256(bytes)!==expected.sha256)fail(`${channel.relative} is not byte-identical to the uploaded ${channel.manifestKey} master`);
 }
 
 for(const page of requiredPages){
@@ -116,4 +114,4 @@ if(!builtSiteScript.includes('hasDedicatedDock'))fail('site.js does not prevent 
 const redesignSource=await readFile(path.join(sourceRoot,'scripts/post-build-network-redesign.mjs'),'utf8');
 if(redesignSource.includes('francine-serving-with-volunteers.webp')||redesignSource.includes('wlf-volunteer-photo'))fail('redesign script attempts to replace protected volunteer imagery');
 for(const fallback of prohibitedBrandFallbacks)if(redesignSource.includes(`'${fallback}'`)&&!redesignSource.includes('replaceImagesUsing'))fail(`redesign source retains unsafe fallback ${fallback}`);
-console.log(`FMB brand-accuracy gate verified ${manifest.assets.length} uploaded binaries, GitHub-owned channel lockups, collision-safe mobile navigation, and page assignments across ${requiredPages.length} principal pages.`);
+console.log(`FMB brand-accuracy gate verified ${manifest.assets.length} GitHub-owned uploaded binaries, collision-safe mobile navigation, and page assignments across ${requiredPages.length} principal pages.`);
