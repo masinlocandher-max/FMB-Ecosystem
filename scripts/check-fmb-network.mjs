@@ -8,6 +8,7 @@ const fail=message=>{throw new Error(`FMB Network quality check: ${message}`)};
 const read=relative=>readFile(path.join(root,relative),'utf8');
 const readBytes=relative=>readFile(path.join(root,relative));
 const requiredPages=['index.html','aboutfmb/index.html','withlovefmb/index.html','news/index.html','music/index.html','ebooks/index.html','fmb&co/index.html','fmb&co/senz/index.html','fmb&co/cognita/index.html'];
+const networkPages=requiredPages.filter(page=>page!=='index.html');
 const sharedMarkers=['/assets/css/fmb-network-optimized.css?v=20260722-enterprise-v5-exact-assets','/assets/js/fmb-network-optimized.js?v=20260722-enterprise-v5-exact-assets','/assets/js/az-assistant.js','data-fmb-network-schema','fmb-identity-v3'];
 const retiredDeliveryMarkers=['/assets/css/fmb-network-core.css','/assets/css/fmb-network-pages.css','/assets/css/fmb-network-channels.css','/assets/css/fmb-network-reception.css','/assets/css/fmb-network-responsive.css','/assets/js/fmb-network-motion.js','/assets/js/fmb-reception-search.js','/assets/css/az-assistant.css'];
 const prohibitedBrandFallbacks=['/assets/images/home/fmb-home-logo.webp','/assets/images/home/francine-home-hero-hd.webp','/assets/images/home/francine-home-founder-hd.webp','/assets/images/news/fmb-news-official.svg','/assets/images/channels/fmb-music-official.svg','/assets/images/channels/fmb-ebook-official.svg','/assets/images/fmb-official-2026/fmb-master-square.webp','/assets/images/fmb-official-2026/fmb-news-official.webp','/assets/images/fmb-official-2026/fmb-music-official.webp'];
@@ -56,20 +57,43 @@ for(const channel of Object.values(exactChannels)){
 
 for(const page of requiredPages){
   const html=await read(page);
-  for(const marker of sharedMarkers)if(!html.includes(marker))fail(`${page} is missing ${marker}`);
   for(const marker of retiredDeliveryMarkers)if(html.includes(marker))fail(`${page} still loads retired render-blocking asset ${marker}`);
   for(const marker of prohibitedBrandFallbacks)if(html.includes(marker))fail(`${page} still renders prohibited substitute asset ${marker}`);
-  if((html.match(/fmb-network-optimized\.css/g)||[]).length!==1)fail(`${page} must load exactly one FMB Network stylesheet`);
-  if((html.match(/fmb-network-optimized\.js/g)||[]).length!==1)fail(`${page} must load exactly one FMB Network script`);
   if(!html.includes('viewport-fit=cover'))fail(`${page} is not safe-area optimized`);
   if(!/<meta\s+name=["']description["']/i.test(html))fail(`${page} has no SEO description`);
   if(!/<link\s+rel=["']canonical["']/i.test(html))fail(`${page} has no canonical URL`);
 }
+for(const page of networkPages){
+  const html=await read(page);
+  for(const marker of sharedMarkers)if(!html.includes(marker))fail(`${page} is missing ${marker}`);
+  if((html.match(/fmb-network-optimized\.css/g)||[]).length!==1)fail(`${page} must load exactly one FMB Network stylesheet`);
+  if((html.match(/fmb-network-optimized\.js/g)||[]).length!==1)fail(`${page} must load exactly one FMB Network script`);
+}
 
 const approved='/assets/images/fmb-approved/';
 const home=await read('index.html');
-requireMarkers(home,'Home',[`${approved}fmb-master-transparent.webp`,`${approved}francine-standing-landscape.webp`,'data-fmb-portrait="standing-landscape-exact"',`${approved}francine-seated-landscape.webp`,'data-fmb-portrait="seated-landscape-exact"','Yoni, our complete companion app','Digital Space for Rent','Institute Qualifying Test','@bb.fmb','/BinibiningFrancineMarie','withlovefmb@gmail.com']);
-if(!/<img\b[^>]*loading=["']lazy["'][^>]*src=["']\/app\/assets\/yoni\/yoni-hero\.webp/i.test(home))fail('homepage still downloads the below-fold Yoni artwork eagerly');
+requireMarkers(home,'Home',[
+  `${approved}fmb-master-transparent.webp`,
+  `${approved}fmb-master-purple-square.webp`,
+  `${approved}francine-standing-landscape.webp`,
+  `${approved}francine-seated-landscape.webp`,
+  exactChannels.news.publicPath,
+  exactChannels.music.publicPath,
+  exactChannels.ebook.publicPath,
+  '/assets/js/fmb-home-approved.js',
+  '/assets/js/az-assistant.js',
+  'Official Digital Headquarters',
+  'Yoni App 2.0',
+  'One Direction.',
+  'Ideas Turned',
+  'Mabayani',
+  '@bb.fmb',
+  '/BinibiningFrancineMarie',
+  'withlovefmb@gmail.com'
+]);
+if((home.match(/fetchpriority=["']high["']/g)||[]).length!==1)fail('homepage must have exactly one high-priority image');
+if(!/<img\b[^>]*loading=["']lazy["'][^>]*src=["']\/app\/assets\/yoni\/yoni-hero\.webp/i.test(home))fail('homepage still downloads below-fold Yoni artwork eagerly');
+if(!home.includes('body{visibility:hidden}')||!home.includes('<noscript><style>body{visibility:visible}</style></noscript>'))fail('homepage does not protect against unstyled content with a no-script fallback');
 
 const about=await read('aboutfmb/index.html');
 requireMarkers(about,'About FMB',[`${approved}francine-standing-landscape.webp`,`${approved}francine-seated-landscape.webp`,`${approved}francine-portrait-front.webp`,'data-fmb-signature="about"']);
@@ -114,4 +138,4 @@ if(!builtSiteScript.includes('hasDedicatedDock'))fail('site.js does not prevent 
 const redesignSource=await readFile(path.join(sourceRoot,'scripts/post-build-network-redesign.mjs'),'utf8');
 if(redesignSource.includes('francine-serving-with-volunteers.webp')||redesignSource.includes('wlf-volunteer-photo'))fail('redesign script attempts to replace protected volunteer imagery');
 for(const fallback of prohibitedBrandFallbacks)if(redesignSource.includes(`'${fallback}'`)&&!redesignSource.includes('replaceImagesUsing'))fail(`redesign source retains unsafe fallback ${fallback}`);
-console.log(`FMB brand-accuracy gate verified ${manifest.assets.length} GitHub-owned uploaded binaries, collision-safe mobile navigation, and page assignments across ${requiredPages.length} principal pages.`);
+console.log(`FMB brand-accuracy gate verified ${manifest.assets.length} GitHub-owned binaries, the final custom homepage, collision-safe mobile navigation, and page assignments across ${requiredPages.length} principal pages.`);
