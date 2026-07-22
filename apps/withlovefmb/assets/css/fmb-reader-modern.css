@@ -1,0 +1,71 @@
+:root{
+  --reader-font-scale:1;
+  --reader-bg:#f5f5f7;
+  --reader-surface:#fff;
+  --reader-ink:#1d1d1f;
+  --reader-muted:#6e6e73;
+  --reader-line:rgba(60,60,67,.14);
+  --reader-accent:#7a3fe4;
+}
+html.fmb-reader-loaded{background:var(--reader-bg)}
+body.fmb-reader-modern{margin:0;background:var(--reader-bg)!important;color:var(--reader-ink)!important;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif!important;transition:background .35s ease,color .35s ease}
+body.fmb-reader-modern.reader-theme-sepia{--reader-bg:#f4ede1;--reader-surface:#fbf6ed;--reader-ink:#342a21;--reader-muted:#77685d;--reader-line:rgba(74,55,39,.16)}
+body.fmb-reader-modern.reader-theme-dark{--reader-bg:#111014;--reader-surface:#1b191f;--reader-ink:#f5f1f7;--reader-muted:#aaa3ae;--reader-line:rgba(255,255,255,.12)}
+body.fmb-reader-modern :is(.top-shell,.nav-glass,.reading-progress){display:none!important}
+.fmb-reader-topbar{position:fixed;top:10px;right:10px;left:10px;z-index:1000;display:grid;grid-template-columns:minmax(180px,1fr) auto minmax(180px,1fr);align-items:center;gap:14px;min-height:62px;padding:8px 10px;border:1px solid var(--reader-line);border-radius:20px;background:color-mix(in srgb,var(--reader-surface) 82%,transparent);box-shadow:0 16px 50px rgba(20,10,30,.1);-webkit-backdrop-filter:blur(28px) saturate(150%);backdrop-filter:blur(28px) saturate(150%)}
+.fmb-reader-brand{display:flex;min-width:0;align-items:center;gap:12px;padding:6px 12px;border-radius:14px;background:#0d0713;color:#fff;text-decoration:none}
+.fmb-reader-brand img{width:min(190px,36vw);height:38px;object-fit:contain;object-position:left center}
+.fmb-reader-current{min-width:0;text-align:center}
+.fmb-reader-current strong{display:block;max-width:420px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:Cinzel,Georgia,serif;font-size:12px;font-weight:500}
+.fmb-reader-current span{display:block;margin-top:4px;color:var(--reader-muted);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.fmb-reader-tools{display:flex;justify-content:flex-end;gap:6px}
+.reader-tool{display:grid;min-width:40px;height:40px;place-items:center;padding:0 11px;border:1px solid var(--reader-line);border-radius:13px;background:var(--reader-surface);color:var(--reader-ink);font-size:11px;font-weight:750;cursor:pointer}
+.reader-tool.reader-toc-button{min-width:auto}
+.fmb-reader-progress{position:fixed;top:0;right:0;left:0;z-index:1100;height:3px;background:transparent}
+.fmb-reader-progress span{display:block;width:0;height:100%;background:linear-gradient(90deg,#7a3fe4,#c792ff);box-shadow:0 0 12px rgba(122,63,228,.4)}
+.fmb-reader-drawer{position:fixed;top:0;bottom:0;left:0;z-index:1200;width:min(410px,90vw);padding:26px;overflow:auto;border-right:1px solid var(--reader-line);background:var(--reader-surface);color:var(--reader-ink);box-shadow:30px 0 90px rgba(10,5,15,.2);transform:translateX(-105%);transition:transform .45s cubic-bezier(.22,1,.36,1)}
+.fmb-reader-drawer.open{transform:none}
+.fmb-reader-drawer-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:24px}
+.fmb-reader-drawer h2{margin:0;font-family:Cinzel,Georgia,serif;font-size:24px;font-weight:500}
+.fmb-reader-drawer nav{display:grid}
+.fmb-reader-drawer nav a{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 4px;border-bottom:1px solid var(--reader-line);color:var(--reader-ink);font-size:12px;text-decoration:none}
+.fmb-reader-drawer nav a.is-locked{opacity:.48}
+.fmb-reader-scrim{position:fixed;inset:0;z-index:1150;background:rgba(15,8,20,.38);opacity:0;pointer-events:none;transition:opacity .35s ease;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.fmb-reader-scrim.open{opacity:1;pointer-events:auto}
+body.fmb-reader-modern :is(.reader,.reading-page,.article-shell){width:min(920px,calc(100% - 32px))!important;margin:0 auto!important;padding:118px 0 100px!important;font-size:calc(17px * var(--reader-font-scale))!important}
+body.fmb-reader-modern :is(.reader-cover,.reading-hero){position:relative;padding:clamp(42px,7vw,82px)!important;overflow:hidden;border:1px solid var(--reader-line)!important;border-radius:32px!important;background:var(--reader-surface)!important;color:var(--reader-ink)!important;box-shadow:0 24px 70px rgba(25,15,35,.08)!important;text-align:left!important}
+body.fmb-reader-modern :is(.reader-cover,.reading-hero)::before{content:"";position:absolute;width:420px;height:420px;right:-180px;top:-220px;border-radius:50%;background:radial-gradient(circle,rgba(199,146,255,.28),transparent 66%);pointer-events:none}
+body.fmb-reader-modern :is(.reader-cover,.reading-hero) img{width:min(260px,65%)!important;height:auto!important;max-height:85px!important;margin:0 0 34px!important;object-fit:contain!important;object-position:left center!important;mix-blend-mode:normal!important}
+body.fmb-reader-modern :is(.reader-cover,.reading-hero) h1{max-width:800px;margin:0!important;color:var(--reader-ink)!important;font-family:Cinzel,Georgia,serif!important;font-size:clamp(2.65rem,6.5vw,5.9rem)!important;font-weight:500!important;line-height:.96!important;letter-spacing:-.045em!important}
+body.fmb-reader-modern :is(.reader-cover,.reading-hero)>p{max-width:68ch;margin:20px 0 0!important;color:var(--reader-muted)!important;font-size:calc(15px * var(--reader-font-scale))!important;line-height:1.75!important}
+body.fmb-reader-modern .eyebrow{color:var(--reader-accent)!important;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif!important;font-size:10px!important;font-weight:800!important;letter-spacing:.13em!important;text-transform:uppercase!important}
+body.fmb-reader-modern :is(.toc,.reading-toc){display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:0 24px!important;margin-top:36px!important}
+body.fmb-reader-modern :is(.toc,.reading-toc) a{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;padding:14px 2px!important;border-bottom:1px solid var(--reader-line)!important;color:var(--reader-ink)!important;font-size:11px!important;text-decoration:none!important}
+body.fmb-reader-modern :is(.chapter,.reading-chapter){margin-top:26px!important;padding:clamp(32px,5vw,58px)!important;border:1px solid var(--reader-line)!important;border-radius:28px!important;background:var(--reader-surface)!important;color:var(--reader-ink)!important;box-shadow:0 16px 52px rgba(25,15,35,.055)!important}
+body.fmb-reader-modern :is(.chapter,.reading-chapter) h2{max-width:780px;margin:0 0 24px!important;color:var(--reader-ink)!important;font-family:Cinzel,Georgia,serif!important;font-size:clamp(2rem,4.2vw,3.9rem)!important;font-weight:500!important;line-height:1.05!important;letter-spacing:-.03em!important}
+body.fmb-reader-modern :is(.chapter,.reading-chapter) h3{margin:34px 0 12px!important;color:var(--reader-ink)!important;font-family:Cinzel,Georgia,serif!important;font-size:clamp(1.3rem,2.4vw,2rem)!important;font-weight:500!important}
+body.fmb-reader-modern :is(.chapter,.reading-chapter) p,body.fmb-reader-modern :is(.chapter,.reading-chapter) li{color:var(--reader-ink)!important;font-family:Georgia,"Times New Roman",serif!important;font-size:calc(1rem * var(--reader-font-scale))!important;line-height:1.9!important}
+body.fmb-reader-modern :is(.chapter,.reading-chapter) p{margin:0 0 1.15em!important}
+body.fmb-reader-modern :is(.chapter,.reading-chapter) ul{padding-left:1.4em!important}
+body.fmb-reader-modern .reader-quote{margin:30px 0!important;padding:24px 0 24px 24px!important;border:0!important;border-left:3px solid var(--reader-accent)!important;background:transparent!important;color:var(--reader-ink)!important;font-family:Cinzel,Georgia,serif!important;font-size:calc(1.35rem * var(--reader-font-scale))!important;font-style:normal!important;line-height:1.5!important}
+body.fmb-reader-modern .prompt{margin-top:28px!important;padding:22px!important;border:1px solid var(--reader-line)!important;border-radius:18px!important;background:var(--reader-bg)!important;color:var(--reader-ink)!important;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif!important;font-size:calc(14px * var(--reader-font-scale))!important;line-height:1.7!important}
+body.fmb-reader-modern .prompt strong{color:var(--reader-accent)!important}
+body.fmb-reader-modern :is(.footer,.site-footer){border-top:1px solid var(--reader-line)!important;background:var(--reader-bg)!important;color:var(--reader-ink)!important}
+body.fmb-reader-modern .fmbandco-preview-note,body.fmb-reader-modern .fmbandco-continue-gate{border:1px solid var(--reader-line)!important;border-radius:24px!important;background:var(--reader-surface)!important;color:var(--reader-ink)!important;box-shadow:0 18px 50px rgba(20,10,30,.07)!important}
+body.fmb-reader-modern .fmbandco-preview-note p,body.fmb-reader-modern .fmbandco-continue-gate p{color:var(--reader-muted)!important}
+body.fmb-reader-modern .fmbandco-continue-gate .pill{background:var(--reader-ink)!important;color:var(--reader-surface)!important}
+@media(max-width:760px){
+  .fmb-reader-topbar{top:7px;right:7px;left:7px;grid-template-columns:minmax(0,1fr) auto;min-height:58px;padding:7px;border-radius:17px}
+  .fmb-reader-brand img{width:min(155px,42vw);height:34px}
+  .fmb-reader-current{display:none}
+  .fmb-reader-tools{gap:4px}
+  .reader-tool{min-width:38px;height:38px;padding:0 9px}
+  .reader-tool.reader-font-down,.reader-tool.reader-font-up{display:none}
+  body.fmb-reader-modern :is(.reader,.reading-page,.article-shell){width:min(100% - 18px,920px)!important;padding-top:86px!important}
+  body.fmb-reader-modern :is(.reader-cover,.reading-hero){padding:38px 24px!important;border-radius:25px!important}
+  body.fmb-reader-modern :is(.reader-cover,.reading-hero) h1{font-size:clamp(2.4rem,12.5vw,4rem)!important}
+  body.fmb-reader-modern :is(.toc,.reading-toc){grid-template-columns:1fr!important}
+  body.fmb-reader-modern :is(.chapter,.reading-chapter){padding:32px 22px!important;border-radius:24px!important}
+  body.fmb-reader-modern :is(.chapter,.reading-chapter) p,body.fmb-reader-modern :is(.chapter,.reading-chapter) li{line-height:1.82!important}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important}}
