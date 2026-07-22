@@ -61,8 +61,9 @@ const installPage=fs.readFileSync(path.join(root,'app/install/index.html'),'utf8
 const installScript=fs.readFileSync(path.join(root,'app/install/install.js'),'utf8');
 if(!/rel="manifest"[^>]+\/app\/manifest\.webmanifest/.test(installPage))fail('Install campaign is not connected to the Yoni manifest.');
 if(!installPage.includes('id="installNow"'))fail('Install campaign is missing its primary installation action.');
-if(!installScript.includes('installInstructions'))fail('Install campaign is missing the current platform instruction flow.');
-if(!installScript.includes('beforeinstallprompt'))fail('Install campaign is missing the browser installation event.');
+for(const marker of ['renderSteps','revealGuide','beforeinstallprompt','appinstalled','navigator.share']){
+  if(!installScript.includes(marker))fail(`Install campaign is missing the current platform flow: ${marker}`);
+}
 
 const worker=fs.readFileSync(path.join(root,'service-worker.js'),'utf8');
 for(const asset of '/app/ /app/index.html /app/install/ /app/install/index.html /app/install/install.css /app/install/install.js /app/assets/yoni/yoni-app-icon-192.png /app/assets/yoni/yoni-app-icon-512.png /app/assets/yoni/yoni-apple-touch-icon-180.png /app/assets/yoni/yoni-hero.webp /app/assets/yoni/yoni-theme-background.webp /app/assets/yoni/yoni-wordmark.png /assets/js/yoni-experience-loader.js /assets/js/yoni-native-libraries.js /assets/js/yoni-native-music.js /assets/js/yoni-native-ebooks.js'.split(' ')){
