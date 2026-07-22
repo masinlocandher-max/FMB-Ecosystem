@@ -63,7 +63,8 @@ body.fmb-identity-v3 .bulletin-brand>img{
 body.fmb-identity-v3 .final-home-hero{
   position:relative!important;
   width:var(--fmb-v3-wrap)!important;
-  min-height:clamp(640px,72vw,820px)!important;
+  min-height:0!important;
+  aspect-ratio:1364/768!important;
   margin-inline:auto!important;
   overflow:hidden!important;
   border-radius:44px!important;
@@ -81,8 +82,9 @@ body.fmb-identity-v3 .final-home-hero .hero-photo{
 }
 
 body.fmb-identity-v3 .final-home-hero .hero-photo img{
-  object-fit:cover!important;
-  object-position:center center!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  background:#d9d6da!important;
 }
 
 body.fmb-identity-v3 .final-home-hero .hero-photo-shade{
@@ -224,6 +226,7 @@ body.fmb-identity-v3 .network-media-reveal{
   body.fmb-identity-v3 .fmb-identity-signature{
     display:grid!important;
     min-height:0!important;
+    aspect-ratio:auto!important;
     border-radius:28px!important;
   }
 
