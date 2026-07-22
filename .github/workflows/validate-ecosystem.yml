@@ -88,7 +88,20 @@ jobs:
       - name: Validate Vercel configuration
         run: node -e "JSON.parse(require('node:fs').readFileSync('vercel.json', 'utf8'))"
       - name: Build complete ecosystem
-        run: npm run build
+        run: |
+          set +e
+          npm run build > fmb-hard-audit.log 2>&1
+          STATUS=$?
+          tail -n 160 fmb-hard-audit.log
+          exit $STATUS
+      - name: Preserve hard-audit log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fmb-hard-audit-${{ github.run_id }}
+          path: fmb-hard-audit.log
+          if-no-files-found: error
+          retention-days: 7
       - name: Verify combined output
         run: |
           set -euo pipefail
