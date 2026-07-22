@@ -1,0 +1,71 @@
+name: GitHub Pages Preview
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Build audited FMB ecosystem
+        run: npm run build
+      - name: Adapt root paths for GitHub Pages
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('dist')
+          prefix = '/FMB-Ecosystem'
+          text_ext = {'.html','.css','.js','.json','.webmanifest','.xml','.txt'}
+
+          attr_re = re.compile(r'(?P<a>\b(?:href|src|action|poster)=(["\']))/(?!/)')
+          css_re = re.compile(r'url\((?P<q>["\']?)/(?!/)')
+
+          for file in root.rglob('*'):
+              if not file.is_file() or file.suffix.lower() not in text_ext:
+                  continue
+              try:
+                  text = file.read_text('utf-8')
+              except UnicodeDecodeError:
+                  continue
+              text = attr_re.sub(lambda m: f"{m.group('a')}{prefix}/", text)
+              text = css_re.sub(lambda m: f"url({m.group('q')}{prefix}/", text)
+              text = text.replace('scope":"/"', f'scope":"{prefix}/"')
+              text = text.replace('start_url":"/"', f'start_url":"{prefix}/"')
+              file.write_text(text, 'utf-8')
+
+          (root / '.nojekyll').write_text('', 'utf-8')
+          PY
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
