@@ -45,4 +45,69 @@ if (musicScript === originalMusicScript) {
 }
 await writeFile(musicScriptPath, musicScript, 'utf8');
 
-console.log('Built the FMB public website and Yoni application with Music audio requests deferred until an explicit play action.');
+const emailAccessPath = path.join(output, 'assets', 'js', 'product-email-access.js');
+let emailAccess = await readFile(emailAccessPath, 'utf8');
+const originalEmailAccess = emailAccess;
+emailAccess = emailAccess.replace(
+`  function connectMusicPrompt(){
+    const original=document.getElementById('musicAccessPrompt');
+    if(!original||original.dataset.fmbEmailConnected==='true')return;
+    original.dataset.fmbEmailConnected='true';
+    const sync=()=>{
+      if(!original.classList.contains('open'))return;
+      original.classList.remove('open');
+      open({mode:'music'});
+    };
+    new MutationObserver(sync).observe(original,{attributes:true,attributeFilter:['class']});
+    sync();
+  }
+
+  document.addEventListener('click',event=>{
+    const trigger=event.target.closest('[data-fmb-email-access]');
+    if(!trigger)return;
+    event.preventDefault();
+    open({mode:trigger.dataset.fmbEmailAccess==='music'?'music':'reading'});
+  });
+
+  new MutationObserver(connectMusicPrompt).observe(document.documentElement,{childList:true,subtree:true});
+  connectMusicPrompt();`,
+`  function connectMusicPrompt(){
+    const original=document.getElementById('musicAccessPrompt');
+    if(!original)return false;
+    if(original.dataset.fmbEmailConnected==='true')return true;
+    original.dataset.fmbEmailConnected='true';
+    const sync=()=>{
+      if(!original.classList.contains('open'))return;
+      original.classList.remove('open');
+      open({mode:'music'});
+    };
+    new MutationObserver(sync).observe(original,{attributes:true,attributeFilter:['class']});
+    sync();
+    return true;
+  }
+
+  document.addEventListener('click',event=>{
+    const trigger=event.target.closest('[data-fmb-email-access]');
+    if(!trigger)return;
+    event.preventDefault();
+    open({mode:trigger.dataset.fmbEmailAccess==='music'?'music':'reading'});
+  });
+
+  function connectMusicPromptOnce(){
+    if(connectMusicPrompt())return;
+    const root=document.body||document.documentElement;
+    const observer=new MutationObserver(()=>{
+      if(connectMusicPrompt())observer.disconnect();
+    });
+    observer.observe(root,{childList:true,subtree:true});
+    window.setTimeout(()=>observer.disconnect(),8000);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',connectMusicPromptOnce,{once:true});
+  else connectMusicPromptOnce();`,
+);
+if (emailAccess === originalEmailAccess) {
+  throw new Error('Product email observer patch did not match the current access source.');
+}
+await writeFile(emailAccessPath, emailAccess, 'utf8');
+
+console.log('Built the FMB public website and Yoni application with Music audio deferred and its email observer disconnected after setup.');
