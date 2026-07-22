@@ -1,4 +1,4 @@
-import { cp, mkdir, readdir, rm } from 'node:fs/promises';
+import { cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -24,4 +24,25 @@ for (const entry of await readdir(root, { withFileTypes: true })) {
   });
 }
 
-console.log('Built the FMB public website and Yoni application into apps/withlovefmb/dist.');
+const musicScriptPath = path.join(output, 'assets', 'js', 'music.js');
+let musicScript = await readFile(musicScriptPath, 'utf8');
+const originalMusicScript = musicScript;
+musicScript = musicScript
+  .replace(
+    "const timer=window.setTimeout(()=>done(false),7000);",
+    "const timer=window.setTimeout(()=>done(false),2500);",
+  )
+  .replace(
+    "function beginPlayback(){\n    playRequested=true;",
+    "function beginPlayback(){\n    const track=tracks[currentIndex];\n    if(track&&!audio.getAttribute('src')&&!applySource(track,0)){note.textContent='This track does not have a playable audio file.';return Promise.resolve()}\n    playRequested=true;",
+  )
+  .replace(
+    "    applySource(track,0);\n    title.textContent=track.title||'Untitled track';",
+    "    audio.pause();\n    audio.removeAttribute('src');\n    currentSourceIndex=0;\n    if(shouldPlay)applySource(track,0);\n    title.textContent=track.title||'Untitled track';",
+  );
+if (musicScript === originalMusicScript) {
+  throw new Error('Music performance patch did not match the current player source.');
+}
+await writeFile(musicScriptPath, musicScript, 'utf8');
+
+console.log('Built the FMB public website and Yoni application with Music audio requests deferred until an explicit play action.');
