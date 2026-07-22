@@ -51,7 +51,7 @@ Every release must pass:
 
 ## Final release result
 
-Commit `a9e68948415ed3b73ad706e763db17a2e1d8c0ab` passed:
+Release candidate `a9e68948415ed3b73ad706e763db17a2e1d8c0ab` passed:
 
 - 77 routes audited
 - 0 errors
@@ -67,4 +67,4 @@ Commit `a9e68948415ed3b73ad706e763db17a2e1d8c0ab` passed:
 - Complete ecosystem validation passed
 - Vercel preview deployment ready
 
-Production remains unchanged until the final visual review is approved.
+The audit documentation was finalized in the following documentation-only commit. Production remains unchanged until the final visual review is approved.
