@@ -35,10 +35,22 @@ async function injectStylesheet(relativePagePath, stylesheetHref) {
 
 async function lockYoniFirstPaintIdentity() {
   const pagePath = path.join(outputDirectory, 'app', 'index.html');
+  const stylesheetHref = '/assets/css/yoni-trust-access-v1.css?v=20260722-trust-v1';
+  const scriptSrc = '/assets/js/yoni-trust-access-v1.js?v=20260722-trust-v1';
   let html = await readFile(pagePath, 'utf8');
   html = html
     .replaceAll('/app/yoni-icon.svg', '/app/assets/yoni/yoni-app-icon-192.png')
-    .replaceAll('/app/yoni-mascot.svg', '/app/assets/yoni/yoni-app-icon-512.png');
+    .replaceAll('/app/yoni-mascot.svg', '/app/assets/yoni/yoni-app-icon-512.png')
+    .replace(
+      '<title>Yoni | Private Mental Health Companion by FMB</title>',
+      '<title>Yoni | Private Digital Wellbeing Companion by FMB</title>',
+    );
+  if (!html.includes(`href="${stylesheetHref}"`)) {
+    html = html.replace('</head>', `<link rel="stylesheet" href="${stylesheetHref}">\n</head>`);
+  }
+  if (!html.includes(`src="${scriptSrc}"`)) {
+    html = html.replace('</body>', `<script src="${scriptSrc}"></script>\n</body>`);
+  }
   await writeFile(pagePath, html, 'utf8');
 }
 
@@ -145,6 +157,8 @@ await Promise.all([
   requireFile(path.join(personalWebsite, 'app', 'assets', 'yoni', 'yoni-apple-touch-icon-180.png')),
   requireFile(path.join(personalWebsite, 'app', 'assets', 'yoni', 'yoni-social-1200.jpg')),
   requireFile(path.join(personalWebsite, 'app', 'assets', 'yoni', 'yoni-wordmark.png')),
+  requireFile(path.join(personalWebsite, 'assets', 'css', 'yoni-trust-access-v1.css')),
+  requireFile(path.join(personalWebsite, 'assets', 'js', 'yoni-trust-access-v1.js')),
   requireFile(path.join(senzWebsite, 'index.html')),
   requireFile(path.join(cognitaWebsite, 'index.html')),
   requireFile(path.join(cognitaWebsite, 'package.json')),
