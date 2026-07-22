@@ -15,7 +15,7 @@ concurrency:
 jobs:
   capture:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
         with:
@@ -35,10 +35,36 @@ jobs:
           fi
           cp package-lock.json product-design-audit/root-package-lock.json
 
+      - name: Bootstrap verified FMB masters into GitHub
+        id: bootstrap
+        if: github.event_name == 'pull_request' && github.head_ref == 'audit/product-design-fortune500'
+        run: |
+          set -e
+          required='apps/withlovefmb/assets/images/fmb-approved/fmb-news-official-transparent.webp'
+          if [ ! -f "$required" ]; then
+            rm -rf dist/assets/images/fmb-approved
+            node scripts/fetch-fmb-approved-assets.mjs
+            mkdir -p apps/withlovefmb/assets/images/fmb-approved
+            cp dist/assets/images/fmb-approved/*.webp apps/withlovefmb/assets/images/fmb-approved/
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add package-lock.json apps/withlovefmb/assets/images/fmb-approved/*.webp
+          if git diff --cached --quiet; then
+            echo 'pushed=false' >> "$GITHUB_OUTPUT"
+            echo 'Verified masters and root lockfile are already stored in GitHub.'
+          else
+            git commit -m 'Store verified FMB masters and monorepo lockfile in GitHub'
+            git push origin HEAD:${{ github.head_ref }}
+            echo 'pushed=true' >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build the complete FMB website
         id: build
+        if: steps.bootstrap.outputs.pushed != 'true'
         continue-on-error: true
-        run: npm run build
+        run: |
+          npm run build > product-design-audit/full-build.log 2>&1
 
       - name: Preserve the exact build record
         if: always()
@@ -46,18 +72,21 @@ jobs:
           if [ -f /tmp/fmb-ecosystem-build.log ]; then
             cp /tmp/fmb-ecosystem-build.log product-design-audit/build.log
             tail -n 240 /tmp/fmb-ecosystem-build.log > product-design-audit/build-tail.txt
+          fi
+          if [ -f product-design-audit/full-build.log ]; then
+            tail -n 260 product-design-audit/full-build.log > product-design-audit/full-build-tail.txt
           else
-            printf 'No /tmp/fmb-ecosystem-build.log was produced. Build outcome: %s\n' '${{ steps.build.outcome }}' > product-design-audit/build-tail.txt
+            printf 'Build skipped after a verified bootstrap commit. A new GitHub run will audit that commit.\n' > product-design-audit/full-build-tail.txt
           fi
 
       - name: Install Chromium capture tools
-        if: steps.build.outcome == 'success'
+        if: steps.bootstrap.outputs.pushed != 'true' && steps.build.outcome == 'success'
         run: |
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
 
       - name: Start the audited build
-        if: steps.build.outcome == 'success'
+        if: steps.bootstrap.outputs.pushed != 'true' && steps.build.outcome == 'success'
         run: |
           python3 -m http.server 4173 --directory dist > /tmp/fmb-audit-server.log 2>&1 &
           for i in {1..30}; do
@@ -70,7 +99,7 @@ jobs:
       - name: Capture principal desktop and iPhone screens
         id: visual_capture
         continue-on-error: true
-        if: steps.build.outcome == 'success'
+        if: steps.bootstrap.outputs.pushed != 'true' && steps.build.outcome == 'success'
         run: |
           cat > capture-fmb.mjs <<'NODE'
           import { chromium } from 'playwright';
@@ -86,7 +115,7 @@ jobs:
             ['music', 'music/index.html', '/music/'],
             ['ebook', 'ebooks/index.html', '/ebooks/'],
             ['fmbandco', 'fmbandco/index.html', '/fmbandco/'],
-            ['get-help', 'get-help/index.html', '/get-help/'],
+            ['get-help', 'gethelp/index.html', '/gethelp/'],
             ['yoni', 'app/index.html', '/app/']
           ];
 
@@ -125,8 +154,13 @@ jobs:
                   window.scrollTo(0, 0);
                 });
                 await page.waitForTimeout(600);
+                const fixedElements=await page.evaluate(()=>[...document.querySelectorAll('body *')].filter(element=>{
+                  const style=getComputedStyle(element);
+                  const rect=element.getBoundingClientRect();
+                  return (style.position==='fixed'||style.position==='sticky')&&style.display!=='none'&&style.visibility!=='hidden'&&rect.width>20&&rect.height>20;
+                }).slice(0,30).map(element=>({tag:element.tagName.toLowerCase(),className:String(element.className||''),text:(element.textContent||'').trim().replace(/\s+/g,' ').slice(0,120)})));
                 await page.screenshot({ path: file, animations: 'disabled' });
-                manifest.push({ step, page: item.name, profile: profile.name, route: item.route, status: response?.status() ?? null, title: await page.title(), health: 'captured', screenshot: file });
+                manifest.push({ step, page: item.name, profile: profile.name, route: item.route, status: response?.status() ?? null, title: await page.title(), health: 'captured', fixedElements, screenshot: file });
               } catch (error) {
                 manifest.push({ step, page: item.name, profile: profile.name, route: item.route, health: 'blocked', error: error instanceof Error ? error.message : String(error), screenshot: null });
               }
@@ -148,21 +182,6 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-      - name: Persist verified masters and root lockfile in GitHub
-        if: steps.build.outcome == 'success' && github.event_name == 'pull_request' && github.head_ref == 'audit/product-design-fortune500'
-        run: |
-          mkdir -p apps/withlovefmb/assets/images/fmb-approved
-          cp dist/assets/images/fmb-approved/*.webp apps/withlovefmb/assets/images/fmb-approved/
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add package-lock.json apps/withlovefmb/assets/images/fmb-approved/*.webp
-          if git diff --cached --quiet; then
-            echo 'Verified assets and lockfile are already stored in GitHub.'
-          else
-            git commit -m 'Store verified FMB masters and monorepo lockfile in GitHub'
-            git push origin HEAD:${{ github.head_ref }}
-          fi
-
       - name: Fail when the site cannot build
-        if: steps.build.outcome != 'success'
+        if: steps.bootstrap.outputs.pushed != 'true' && steps.build.outcome != 'success'
         run: exit 1
