@@ -10,7 +10,9 @@ GitHub stores and versions the code. Vercel builds and hosts each application. S
 | --- | --- | --- | --- |
 | `apps/withlovefmb` | `@fmb/withlovefmb` | Francine Marie Bautista public website, With love FMB, Yoni, News, Music, eBooks, Mabayani public pages | `fmb-public-and-yoni` |
 | `apps/senz` | `@fmb/senz` | SENZ website, inquiries, and business-facing systems | `senz` |
-| `apps/cognita` | `@fmb/cognita` | Cognita website, learning application, and learner systems | `cognita` |
+| `apps/cognita` | `base44-app` | Cognita website, learning application, and learner systems | `cognita` |
+
+Cognita retains its existing internal package name so its committed npm lockfile remains valid. Its public identity and deployment boundary remain Cognita.
 
 The machine-readable ownership and domain rules live in `packages/ecosystem-contract/ecosystem.json`.
 
