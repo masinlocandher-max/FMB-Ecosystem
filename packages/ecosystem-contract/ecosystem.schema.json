@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.francinemariebautista.com/schemas/fmb-ecosystem-contract.json",
+  "title": "FMB Ecosystem Contract",
+  "type": "object",
+  "required": ["repository", "policy", "applications"],
+  "properties": {
+    "repository": { "type": "string", "minLength": 1 },
+    "policy": {
+      "type": "object",
+      "required": ["sourceControl", "deployment", "data"],
+      "additionalProperties": false,
+      "properties": {
+        "sourceControl": { "type": "string", "minLength": 1 },
+        "deployment": { "type": "string", "minLength": 1 },
+        "data": { "type": "string", "minLength": 1 }
+      }
+    },
+    "applications": {
+      "type": "object",
+      "minProperties": 3,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["workspace", "package", "vercelProject", "domains", "dataBoundary", "owns"],
+        "additionalProperties": false,
+        "properties": {
+          "workspace": { "type": "string", "pattern": "^apps/" },
+          "package": { "type": "string", "pattern": "^@fmb/" },
+          "vercelProject": { "type": "string", "minLength": 1 },
+          "domains": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "dataBoundary": { "type": "string", "minLength": 1 },
+          "owns": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    }
+  }
+}

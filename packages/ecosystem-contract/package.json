@@ -1,0 +1,9 @@
+{
+  "name": "@fmb/ecosystem-contract",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Machine-readable ownership, domain, deployment, and data-boundary rules for the FMB ecosystem.",
+  "files": [
+    "ecosystem.json"
+  ]
+}

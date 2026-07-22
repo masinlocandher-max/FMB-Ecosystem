@@ -1,10 +1,27 @@
 {
   "name": "fmb-ecosystem",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
-  "description": "Unified production build for the FMB personal website, Yoni, SENZ, and Cognita.",
+  "description": "GitHub monorepo for the independently deployed FMB/Yoni, SENZ, and Cognita applications.",
+  "workspaces": [
+    "apps/withlovefmb",
+    "apps/senz",
+    "apps/cognita",
+    "packages/*"
+  ],
   "scripts": {
-    "build": "(node --import ./scripts/fetch-shim.mjs scripts/build-ecosystem.mjs > /tmp/fmb-ecosystem-build.log 2>&1 || (tail -n 120 /tmp/fmb-ecosystem-build.log && exit 1)) && node scripts/post-build-entity-copy.mjs && node scripts/fetch-fmb-approved-assets.mjs && node scripts/post-build-network-redesign.mjs && node scripts/post-build-official-withlove-portrait.mjs && node scripts/post-build-network-reception.mjs && node scripts/post-build-network-contact.mjs && node scripts/post-build-exact-asset-paths.mjs && node scripts/post-build-exact-network-assets.mjs && node scripts/post-build-page-style-bundles.mjs && node scripts/post-build-image-dimensions.mjs && node scripts/check-fmb-network.mjs && node scripts/check-fmb-public-brand-routes.mjs && node scripts/audit-fmb-enterprise.mjs && node scripts/audit-fmb-performance.mjs"
+    "build": "npm run build:legacy",
+    "build:legacy": "(node --import ./scripts/fetch-shim.mjs scripts/build-ecosystem.mjs > /tmp/fmb-ecosystem-build.log 2>&1 || (tail -n 120 /tmp/fmb-ecosystem-build.log && exit 1)) && node scripts/post-build-entity-copy.mjs && node scripts/fetch-fmb-approved-assets.mjs && node scripts/post-build-network-redesign.mjs && node scripts/post-build-official-withlove-portrait.mjs && node scripts/post-build-network-reception.mjs && node scripts/post-build-network-contact.mjs && node scripts/post-build-exact-asset-paths.mjs && node scripts/post-build-exact-network-assets.mjs && node scripts/post-build-page-style-bundles.mjs && node scripts/post-build-image-dimensions.mjs && node scripts/check-fmb-network.mjs && node scripts/check-fmb-public-brand-routes.mjs && node scripts/audit-fmb-enterprise.mjs && node scripts/audit-fmb-performance.mjs",
+    "build:all": "npm run build:fmb && npm run build:senz && npm run build:cognita",
+    "build:fmb": "npm --workspace @fmb/withlovefmb run build",
+    "build:senz": "npm --workspace @fmb/senz run build",
+    "build:cognita": "npm --workspace base44-app run build",
+    "dev:cognita": "npm --workspace base44-app run dev",
+    "dev:senz": "npm --workspace @fmb/senz run dev",
+    "check": "npm run check:structure && npm run check:boundaries",
+    "check:structure": "node tooling/check-monorepo.mjs",
+    "check:boundaries": "node tooling/check-deployment-boundaries.mjs",
+    "test": "npm run check"
   },
   "engines": {
     "node": ">=20"

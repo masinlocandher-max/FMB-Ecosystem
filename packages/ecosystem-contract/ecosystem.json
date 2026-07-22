@@ -1,0 +1,62 @@
+{
+  "$schema": "./ecosystem.schema.json",
+  "repository": "masinlocandher-max/FMB-Ecosystem",
+  "policy": {
+    "sourceControl": "One GitHub monorepo",
+    "deployment": "One independently configured Vercel project per application boundary",
+    "data": "No production database, authentication tenant, service-role key, or private environment variable may be shared across FMB/Yoni, SENZ, and Cognita unless explicitly approved and documented."
+  },
+  "applications": {
+    "fmb": {
+      "workspace": "apps/withlovefmb",
+      "package": "@fmb/withlovefmb",
+      "vercelProject": "fmb-public-and-yoni",
+      "domains": [
+        "www.francinemariebautista.com",
+        "francinemariebautista.com",
+        "yoni.francinemariebautista.com",
+        "app.francinemariebautista.com"
+      ],
+      "dataBoundary": "fmb-public-member",
+      "owns": [
+        "FMB public website",
+        "With love, FMB",
+        "Yoni",
+        "FMB News",
+        "FMB Music",
+        "FMB eBooks",
+        "Mabayani public pages"
+      ]
+    },
+    "senz": {
+      "workspace": "apps/senz",
+      "package": "@fmb/senz",
+      "vercelProject": "senz",
+      "domains": [
+        "www.senzpr.com",
+        "senzpr.com"
+      ],
+      "dataBoundary": "senz-business-client",
+      "owns": [
+        "SENZ public website",
+        "SENZ inquiries",
+        "SENZ business and client systems"
+      ]
+    },
+    "cognita": {
+      "workspace": "apps/cognita",
+      "package": "base44-app",
+      "vercelProject": "cognita",
+      "domains": [
+        "www.thecognitainstitute.com",
+        "thecognitainstitute.com"
+      ],
+      "dataBoundary": "cognita-learning",
+      "owns": [
+        "Cognita public website",
+        "Cognita learning application",
+        "Cognita learner and institutional systems"
+      ]
+    }
+  }
+}

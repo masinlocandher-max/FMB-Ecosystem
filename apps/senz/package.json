@@ -1,15 +1,16 @@
 {
-  "name": "senz-website",
+  "name": "@fmb/senz",
   "version": "1.0.0",
   "private": true,
-  "description": "SENZ Strategic Communications website with intake backend.",
+  "description": "SENZ Marketing and Digital Solutions website and intake service.",
   "main": "server.js",
   "scripts": {
+    "build": "node build.mjs",
     "start": "node server.js",
     "dev": "node server.js",
-    "check": "node --check server.js"
+    "check": "node --check server.js && node --check api/handler.js"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   }
 }
