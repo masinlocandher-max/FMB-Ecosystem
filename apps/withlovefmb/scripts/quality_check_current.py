@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the site quality suite against the current FMB Network, Yoni, and newsroom contracts."""
+"""Run the site quality suite against the approved FMB Digital Headquarters, Yoni, and newsroom contracts."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -17,12 +17,16 @@ STALE_NEWS_PREFIXES = (
     "assets/js/news-channel.js: missing clock, motion, or sharing marker:",
 )
 STALE_HOME_ERRORS = {
+    "index.html: missing first-visit benefit: Official FMB Bulletin",
+    'index.html: missing first-visit benefit: id="latest-release"',
+    'index.html: missing first-visit benefit: id="channels"',
+    "index.html: missing first-visit benefit: /assets/images/home/fmb-home-logo.webp",
     "index.html: missing first-visit benefit: Meet Yoni. A complete space to listen, read, write, and check in.",
     "index.html: missing first-visit benefit: /assets/js/fmb-bulletin-home.js",
 }
 GENERATED_HOME_REFERENCES = (
-    "/assets/images/home/francine-home-hero-hd.webp",
-    "/assets/images/home/francine-home-founder-hd.webp",
+    "/assets/images/fmb-approved/francine-standing-landscape.webp",
+    "/assets/images/fmb-approved/francine-seated-landscape.webp",
 )
 
 ORIGINAL_CHECK_HTML = checks.check_html
@@ -155,16 +159,30 @@ def check_current_navigation_experience(errors: list[str]) -> None:
     errors.extend(error for error in legacy_errors if error not in STALE_HOME_ERRORS)
 
     index = (checks.ROOT / "index.html").read_text(encoding="utf-8")
-    for marker in (
-        "Meet Yoni. A complete place to listen, read, write and check in.",
-        "/assets/js/fmb-home-static.js",
-        "/assets/images/home/francine-home-hero-hd.webp",
-        "/assets/images/home/francine-home-founder-hd.webp",
+    current_markers = (
+        "Official Digital Headquarters",
+        'id="bulletin"',
+        'id="ecosystem"',
+        'id="work"',
+        "Yoni App 2.0",
+        "One Direction.",
+        "Ideas Turned",
+        "Shaping What Comes Next.",
+        "Mabayani",
+        "/assets/js/fmb-home-approved.js",
+        "/assets/images/fmb-approved/fmb-master-transparent.webp",
+        "/assets/images/fmb-approved/francine-standing-landscape.webp",
+        "/assets/images/fmb-approved/francine-seated-landscape.webp",
+        "/assets/images/fmb-approved/fmb-news-official-transparent.webp",
+        "/assets/images/fmb-approved/fmb-music-official-transparent.webp",
+        "/assets/images/fmb-approved/fmb-ebook-official-transparent.webp",
         'id="homeHeroImage"',
         'id="homeFounderImage"',
-    ):
+        'rel="manifest" href="/manifest.webmanifest"',
+    )
+    for marker in current_markers:
         if marker not in index:
-            errors.append(f"index.html: missing current static-home marker: {marker}")
+            errors.append(f"index.html: missing current Digital Headquarters marker: {marker}")
 
 
 def check_current_mobile_and_editorial_media(errors: list[str]) -> None:
