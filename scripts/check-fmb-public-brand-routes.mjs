@@ -3,6 +3,11 @@ import path from 'node:path';
 
 const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
 const approved='/assets/images/fmb-approved';
+const exactChannels={
+  news:'/assets/images/fmb-official-2026/fmb-news-official.webp',
+  music:'/assets/images/fmb-official-2026/fmb-music-official.webp',
+  ebook:'/assets/images/channels/fmb-ebook-official.svg'
+};
 const fail=message=>{throw new Error(`FMB public-route brand audit: ${message}`)};
 const protectedRoots=['app/','_sites/senz/','_sites/cognita/'];
 const readingRoutes=[
@@ -42,29 +47,28 @@ for(const file of await walk(root)){
     '/assets/images/home/fmb-home-logo.webp',
     '/assets/images/fmb-official-2026/fmb-master-square.webp',
     '/assets/images/news/fmb-news-official.svg',
-    '/assets/images/channels/fmb-music-official.svg',
-    '/assets/images/channels/fmb-ebook-official.svg'
+    '/assets/images/channels/fmb-music-official.svg'
   ]){
     if(html.includes(retired))fail(`${name} still exposes retired identity ${retired}`);
   }
 
   if(name.startsWith('news/')){
-    requireMarker(html,name,`${approved}/fmb-news-official-transparent.webp`);
+    requireMarker(html,name,exactChannels.news);
     newsPages+=1;
   }
-  if(readingRoutes.includes(name))requireMarker(html,name,`${approved}/fmb-ebook-official-transparent.webp`);
+  if(readingRoutes.includes(name))requireMarker(html,name,exactChannels.ebook);
 }
 
 const representativeRoutes={
   'index.html':`${approved}/francine-standing-landscape.webp`,
-  'news/remembering-amor-deloso/index.html':`${approved}/fmb-news-official-transparent.webp`,
-  'womens-health.html':`${approved}/fmb-ebook-official-transparent.webp`,
-  'music/index.html':`${approved}/fmb-music-official-transparent.webp`,
-  'ebooks/index.html':`${approved}/fmb-ebook-official-transparent.webp`
+  'news/remembering-amor-deloso/index.html':exactChannels.news,
+  'womens-health.html':exactChannels.ebook,
+  'music/index.html':exactChannels.music,
+  'ebooks/index.html':exactChannels.ebook
 };
 for(const [route,marker] of Object.entries(representativeRoutes)){
   const html=await readFile(path.join(root,route),'utf8');
   requireMarker(html,route,marker);
 }
 
-console.log(`FMB public-route brand audit verified ${publicPages} public HTML pages, including ${newsPages} News routes and ${readingRoutes.length} reading routes, with no retired founder or channel assets.`);
+console.log(`FMB public-route brand audit verified ${publicPages} public HTML pages, including ${newsPages} News routes and ${readingRoutes.length} reading routes, with GitHub-owned channel identities and no retired founder assets.`);
