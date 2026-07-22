@@ -3,7 +3,7 @@ import path from 'node:path';
 
 const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
 const pages=['index.html','aboutfmb/index.html','withlovefmb/index.html','news/index.html','music/index.html','ebooks/index.html','fmb&co/index.html','fmb&co/senz/index.html','fmb&co/cognita/index.html'];
-const script='/assets/js/az-assistant.js?v=20260722-pearly-lazy-v1';
+const script='/assets/js/az-assistant.js?v=20260722-pearly-official-fmb-v3';
 
 for(const relative of pages){
   const file=path.join(root,relative);
@@ -13,6 +13,15 @@ for(const relative of pages){
   await writeFile(file,html,'utf8');
 }
 
+const receptionScriptPath=path.join(root,'assets/js/az-assistant.js');
+let receptionScript=await readFile(receptionScriptPath,'utf8');
+receptionScript=receptionScript
+  .replace('/assets/images/fmbandco/fmbandco-ampersand-gold.png','/assets/images/fmb-official-2026/fmb-master-square.webp')
+  .replace('width="257" height="282"','width="1254" height="1254"')
+  .replace('.pearly-lazy-trigger img{width:25px;height:28px;', '.pearly-lazy-trigger img{width:30px;height:30px;border-radius:9px;')
+  .replace('.az-help-trigger-icon img{width:27px!important;height:30px!important;', '.az-help-trigger-icon img{width:30px!important;height:30px!important;border-radius:9px!important;');
+await writeFile(receptionScriptPath,receptionScript,'utf8');
+
 const siteScriptPath=path.join(root,'assets/js/site.js');
 let siteScript=await readFile(siteScriptPath,'utf8');
 siteScript=siteScript
@@ -20,4 +29,4 @@ siteScript=siteScript
   .replace("if(isPublicWebsiteHost)loadScript('/assets/js/az-assistant.js?v=20260720-az-website-only-v1').catch(()=>{});","/* Pearly is injected once by the optimized network build. */");
 await writeFile(siteScriptPath,siteScript,'utf8');
 
-console.log(`Enabled lazy Pearly Reception Desk loading on ${pages.length} public pages and removed the duplicate eager loader.`);
+console.log(`Enabled the official FMB Reception Desk identity on ${pages.length} public pages without adding it to the critical rendering path.`);
