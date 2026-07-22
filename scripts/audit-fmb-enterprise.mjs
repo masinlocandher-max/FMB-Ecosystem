@@ -16,6 +16,11 @@ async function walk(directory){
   }
   return files;
 }
+function siteRootFor(name){
+  if(name.startsWith('_sites/cognita/'))return path.join(root,'_sites','cognita');
+  if(name.startsWith('_sites/senz/'))return path.join(root,'_sites','senz');
+  return root;
+}
 
 const allFiles=await walk(root);
 const htmlFiles=allFiles.filter(file=>file.endsWith('.html'));
@@ -29,7 +34,7 @@ for(const file of htmlFiles){
   if(!/<title>[^<]{3,}<\/title>/i.test(html))add('error','missing or empty title');
   if(!/<meta\s+name=["']viewport["']/i.test(html))add('error','missing viewport');
   if(!/<html\b[^>]*lang=/i.test(html))add('warning','missing html language');
-  if(!/<main\b/i.test(html)&&!name.startsWith('app/'))add('warning','missing main landmark');
+  if(!/<main\b/i.test(html)&&!name.startsWith('app/')&&!name.startsWith('_sites/'))add('warning','missing main landmark');
   const ids=[...html.matchAll(/\sid=["']([^"']+)["']/gi)].map(match=>match[1]);
   const duplicates=[...new Set(ids.filter((id,index)=>ids.indexOf(id)!==index))];
   if(duplicates.length)add('error',`duplicate ids: ${duplicates.join(', ')}`);
@@ -38,10 +43,11 @@ for(const file of htmlFiles){
     if(!/\salt=/i.test(tag))add('warning','image missing alt attribute');
     if(!/\swidth=/i.test(tag)||!/\sheight=/i.test(tag))add('warning','image missing intrinsic dimensions');
   }
+  const siteRoot=siteRootFor(name);
   for(const match of html.matchAll(localAssetPattern)){
     const asset=decodeURIComponent(match[1]);
     if(asset.endsWith('/'))continue;
-    const target=path.join(root,asset.replace(/^\//,''));
+    const target=path.join(siteRoot,asset.replace(/^\//,''));
     try{if(!(await stat(target)).isFile())add('error',`missing local asset ${asset}`);}catch{add('error',`missing local asset ${asset}`);}
   }
   if(name==='index.html'||/^(aboutfmb|withlovefmb|news|music|ebooks|fmb&co)\//.test(name)){
