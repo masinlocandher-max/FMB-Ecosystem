@@ -4,6 +4,33 @@ The code remains in one GitHub repository. The migration changes only the Vercel
 
 Do not move all domains at once. Verify one application project at a time and keep the current combined deployment available for rollback until the final step.
 
+## Automated project setup
+
+The repository includes an idempotent project setup tool:
+
+```bash
+npm run vercel:plan
+VERCEL_TOKEN=... npm run vercel:verify
+VERCEL_TOKEN=... npm run vercel:bootstrap
+```
+
+The setup creates or verifies these Vercel projects in the connected `senz` team:
+
+- `fmb-public-and-yoni` with Root Directory `apps/withlovefmb`
+- `senz` with Root Directory `apps/senz`
+- `cognita` with Root Directory `apps/cognita`
+
+It connects each project to `masinlocandher-max/FMB-Ecosystem`, sets the application build and output directories, and enables affected-project deployments.
+
+The automation intentionally does **not**:
+
+- move or attach production domains
+- copy environment variables or Supabase credentials
+- delete or modify the legacy `withlovefmb` Vercel project
+- silently rewrite an existing project with conflicting settings
+
+A manual GitHub Actions workflow is also available at **Actions > Vercel Project Bootstrap**. Add a repository secret named `VERCEL_TOKEN`, select `apply`, and run it. The Vercel token is used only by GitHub Actions and must never be committed to the repository.
+
 ## 1. Merge and verify the monorepo branch
 
 Run:
@@ -21,6 +48,7 @@ The root `npm run build` remains the legacy combined build during migration.
 
 Connect the existing GitHub repository and configure:
 
+- Project Name: `fmb-public-and-yoni`
 - Root Directory: `apps/withlovefmb`
 - Build Command: `npm run build`
 - Output Directory: `dist`
@@ -43,6 +71,7 @@ Before moving the domains, verify the Vercel preview URL for:
 
 Connect the same GitHub repository and configure:
 
+- Project Name: `senz`
 - Root Directory: `apps/senz`
 - Build Command: `npm run build`
 - Output Directory: `dist`
@@ -73,6 +102,7 @@ Verify:
 
 Connect the same GitHub repository and configure:
 
+- Project Name: `cognita`
 - Root Directory: `apps/cognita`
 - Build Command: `npm run build`
 - Output Directory: `dist`

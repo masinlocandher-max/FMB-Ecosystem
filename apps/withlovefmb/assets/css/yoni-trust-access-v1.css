@@ -1,5 +1,12 @@
-/* Yoni trust, guest-access, and disclosure layer. */
+/* Yoni trust, guest-access, disclosure, and interface-polish layer. */
+.access-card{
+  display:flex;
+  flex-direction:column;
+}
+.access-card-head{order:0}
+.access-segment{order:1}
 .access-guest{
+  order:2;
   display:flex;
   width:100%;
   min-height:50px;
@@ -18,13 +25,16 @@
   -webkit-backdrop-filter:blur(18px) saturate(165%);
 }
 .access-guest:active{transform:scale(.975);opacity:.86}
-.access-guest-note{margin-top:8px;color:var(--muted);font-size:9.5px;line-height:1.48;text-align:center}
+.access-guest-note{order:3;margin-top:8px;color:var(--muted);font-size:9.5px;line-height:1.48;text-align:center}
+#guestStatus{order:4}
 #guestStatus[data-type="error"]{margin-top:10px;background:var(--danger-soft);color:var(--danger)}
-.access-data-map{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}
+.access-panel{order:5}
+.access-data-map{order:6;display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}
 .access-data-map article{padding:12px 13px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.62)}
 .access-data-map strong{display:block;color:var(--orange-900);font-size:10px}
 .access-data-map span{display:block;margin-top:5px;color:var(--muted);font-size:9px;line-height:1.48}
 .access-data-map .device-only{background:linear-gradient(145deg,rgba(255,255,255,.76),rgba(233,245,223,.68))}
+.access-security{order:7}
 .yoni-guest-pill{display:inline-flex;align-items:center;gap:6px;margin-left:2px;padding:5px 8px;border:1px solid rgba(87,56,38,.11);border-radius:999px;background:rgba(255,255,255,.7);color:var(--muted);font-size:8px;font-weight:850;letter-spacing:.04em;text-transform:uppercase}
 .yoni-guest-pill:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green)}
 .local-preview-note{margin-top:13px;padding:12px 13px;border:1px solid rgba(156,130,217,.18);border-radius:16px;background:var(--lavender-soft);color:#625478;font-size:10px;line-height:1.55}
@@ -40,7 +50,6 @@ body[data-yoni-access="guest"] .home-action-card[data-go="checkin"],
 body[data-yoni-access="guest"] .home-today-heading,
 body[data-yoni-access="guest"] #todayCard,
 body[data-yoni-access="guest"] .home-privacy-note{display:none!important}
-body[data-yoni-access="guest"] #screen-home{display:block!important}
 body[data-yoni-access="guest"] #screen-checkin,
 body[data-yoni-access="guest"] #screen-journal,
 body[data-yoni-access="guest"] #screen-history,
@@ -52,21 +61,57 @@ body[data-yoni-access="guest"] .home-action-grid.redesigned{grid-template-column
 body[data-yoni-access="guest"] #profileResetPassword{display:none}
 body[data-yoni-access="guest"] #signOut{border-color:rgba(87,56,38,.12);background:var(--orange-100);color:var(--orange-900)}
 
+/* Calm the desktop access hero without weakening the brand. */
+@media(min-width:901px){
+  .access-layout{grid-template-columns:minmax(0,1fr) minmax(370px,.76fr)}
+  .access-intro{min-height:610px;padding:38px}
+  .access-intro h1{max-width:610px;font-size:clamp(48px,5.7vw,70px)}
+  .access-lede{max-width:520px;font-size:15px}
+  .access-mascot{width:min(365px,45%);right:18px}
+}
+
 @media(max-width:900px){
   .access-layout{display:flex;flex-direction:column}
   .access-card{order:-1}
-  .access-intro{min-height:520px}
+  .access-intro{min-height:480px}
 }
 @media(max-width:650px){
-  .access-gate{place-items:start center}
-  .access-card{max-width:none}
-  .access-data-map{grid-template-columns:1fr}
-  .access-intro{min-height:510px}
-  body[data-yoni-access="guest"] .home-action-grid.redesigned{grid-template-columns:1fr 1fr}
+  .access-gate{place-items:start center;padding-inline:10px}
+  .access-card{max-width:none;padding:17px}
+  .access-card-head{margin-bottom:13px}
+  .access-card-head h2{font-size:25px}
+  .access-panel{padding-top:15px}
+  .access-data-map{grid-template-columns:1fr;gap:7px;margin-top:13px}
+  .access-intro{min-height:430px;padding:24px}
+  .access-intro h1{font-size:43px;line-height:.96}
+  .access-lede{margin-top:15px;font-size:12.5px}
+  .access-benefits{margin-top:18px}
+  .access-mascot{width:68%;max-height:270px;right:-35px}
+  .yoni-guest-pill{display:none}
+  body[data-yoni-access="guest"] .app-header-actions{gap:5px}
+  body[data-yoni-access="guest"] .app-header .help-button{min-height:38px;padding:8px 10px;font-size:9px}
+  body[data-yoni-access="guest"] #guestExit{font-size:0}
+  body[data-yoni-access="guest"] #guestExit:after{content:"Exit";font-size:9px}
+  body[data-yoni-access="guest"] .brand-copy span{display:none}
+  body[data-yoni-access="guest"] .home-welcome{min-height:390px;padding:24px 22px 0}
+  body[data-yoni-access="guest"] .home-welcome h1{font-size:44px}
+  body[data-yoni-access="guest"] .home-yoni-stage{height:170px}
+  body[data-yoni-access="guest"] .home-yoni-stage img{width:215px;height:195px;right:0;bottom:-5px}
+  body[data-yoni-access="guest"] .home-yoni-glow{width:160px;height:160px;right:2%}
+  body[data-yoni-access="guest"] .home-action-grid.redesigned{grid-template-columns:1fr 1fr;gap:9px}
+  body[data-yoni-access="guest"] .home-action-grid.redesigned .home-action-card{min-height:138px;padding:14px;gap:9px}
+  body[data-yoni-access="guest"] .home-action-grid.redesigned .home-action-card>span:last-child{min-height:67px}
+  body[data-yoni-access="guest"] .home-action-grid.redesigned .home-action-icon{width:46px;height:46px}
 }
 @media(max-width:420px){
-  .access-intro{min-height:475px}
-  .access-intro h1{font-size:44px}
-  body[data-yoni-access="guest"] .home-action-grid.redesigned{grid-template-columns:1fr}
+  .access-intro{min-height:405px}
+  .access-intro h1{font-size:40px}
+  .access-mascot{width:72%;right:-42px}
+  body[data-yoni-access="guest"] .home-welcome{min-height:375px}
+  body[data-yoni-access="guest"] .home-welcome h1{font-size:41px}
+  body[data-yoni-access="guest"] .home-action-grid.redesigned{grid-template-columns:1fr 1fr}
+  body[data-yoni-access="guest"] .home-action-grid.redesigned .home-action-card{min-height:128px;padding:12px}
+  body[data-yoni-access="guest"] .home-action-grid.redesigned strong{font-size:12px}
+  body[data-yoni-access="guest"] .home-action-grid.redesigned em{font-size:8.5px}
 }
 @media(prefers-reduced-motion:reduce){.access-guest:active{transform:none}}
