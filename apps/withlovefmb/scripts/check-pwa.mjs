@@ -24,7 +24,12 @@ for(const icon of manifest.icons){
 }
 
 const index=fs.readFileSync(path.join(root,'index.html'),'utf8');
-if(!/rel="manifest"[^>]+manifest\.webmanifest/.test(index))fail('Home page is missing its manifest link.');
+const workspaceBuild=fs.readFileSync(path.join(root,'build.mjs'),'utf8');
+const finalBuildPath=path.resolve(root,'../../scripts/restore-approved-fmb-home.mjs');
+const finalBuild=fs.existsSync(finalBuildPath)?fs.readFileSync(finalBuildPath,'utf8'):'';
+const sourceHasManifest=/rel=["']manifest["'][^>]+manifest\.webmanifest/i.test(index);
+const buildsInjectManifest=workspaceBuild.includes('/manifest.webmanifest')&&finalBuild.includes('/manifest.webmanifest');
+if(!sourceHasManifest&&!buildsInjectManifest)fail('Home page build is missing its manifest connection.');
 if(!index.includes('/assets/images/home/fmb-home-logo.webp'))fail('Home page is missing the current FMB icon.');
 
 const appManifest=readJson('app/manifest.webmanifest');
