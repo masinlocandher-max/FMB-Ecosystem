@@ -118,26 +118,28 @@ function transformFmbCo(html){
 }
 
 function transformMusic(html){
+  const asset='/assets/images/channels/fmb-music-official.svg';
   html=replaceTitle(html,'FMB Music | Original Music and Digital Releases');
   html=setMeta(html,'property','og:site_name','FMB Music');
   html=setMeta(html,'property','og:title','FMB Music | Original Music and Digital Releases');
-  html=setMeta(html,'property','og:image','https://www.francinemariebautista.com/assets/images/channels/fmb-music-official.webp');
-  html=setMeta(html,'name','twitter:image','https://www.francinemariebautista.com/assets/images/channels/fmb-music-official.webp');
-  html=html.replaceAll('/assets/images/fmbandco/fmbandco-primary-reversed.png','/assets/images/channels/fmb-music-official.webp');
-  html=html.replaceAll('width="1414" height="405"','width="1411" height="320"');
+  html=setMeta(html,'property','og:image',`https://www.francinemariebautista.com${asset}`);
+  html=setMeta(html,'name','twitter:image',`https://www.francinemariebautista.com${asset}`);
+  html=html.replaceAll('/assets/images/fmbandco/fmbandco-primary-reversed.png',asset);
+  html=html.replaceAll('width="1414" height="405"','width="1400" height="320"');
   html=html.replaceAll('alt="FMB&amp;CO."','alt="FMB Music"');
   html=html.replaceAll('FMB&amp;CO. Music','FMB Music');
   return html;
 }
 
 function transformEbook(html){
+  const asset='/assets/images/channels/fmb-ebook-official.svg';
   html=replaceTitle(html,'FMB eBook | Digital Publications by Francine Marie Bautista');
   html=setMeta(html,'property','og:site_name','FMB eBook');
   html=setMeta(html,'property','og:title','FMB eBook | Digital Publications by Francine Marie Bautista');
-  html=setMeta(html,'property','og:image','https://www.francinemariebautista.com/assets/images/channels/fmb-ebook-official.webp');
-  html=setMeta(html,'name','twitter:image','https://www.francinemariebautista.com/assets/images/channels/fmb-ebook-official.webp');
-  html=html.replaceAll('/assets/images/fmbandco/fmbandco-primary-reversed.png','/assets/images/channels/fmb-ebook-official.webp');
-  html=html.replaceAll('width="1414" height="405"','width="1398" height="315"');
+  html=setMeta(html,'property','og:image',`https://www.francinemariebautista.com${asset}`);
+  html=setMeta(html,'name','twitter:image',`https://www.francinemariebautista.com${asset}`);
+  html=html.replaceAll('/assets/images/fmbandco/fmbandco-primary-reversed.png',asset);
+  html=html.replaceAll('width="1414" height="405"','width="1400" height="320"');
   html=html.replaceAll('alt="FMB&amp;CO."','alt="FMB eBook"');
   html=html.replaceAll('FMB&amp;CO. eBooks','FMB eBook');
   return html;
