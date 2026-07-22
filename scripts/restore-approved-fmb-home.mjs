@@ -21,6 +21,10 @@ let productionHtml = sourceHtml
     '/assets/images/home/francine-home-founder-hd.webp',
     '/assets/images/fmb-approved/francine-seated-landscape.webp',
   )
+  .replaceAll(
+    '/assets/images/fmb-approved/fmb-news-official-transparent.webp',
+    '/assets/images/fmb-approved/fmb-news-browser-safe.png',
+  )
   .replace(
     '<link rel="icon" href="/assets/images/fmb-approved/fmb-master-transparent.webp" type="image/webp">',
     '<link rel="icon" href="/assets/images/fmb-approved/fmb-master-purple-square.webp" type="image/webp">',
@@ -42,4 +46,4 @@ await copyFile(
   path.join(outputRoot, 'assets', 'js', 'fmb-home-approved.js'),
 );
 
-console.log('Restored the approved transparent FMB homepage assets as visible, resilient production output.');
+console.log('Restored approved transparent FMB homepage assets with browser-safe News delivery and resilient visibility.');
