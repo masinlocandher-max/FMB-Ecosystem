@@ -3,13 +3,13 @@ import path from 'node:path';
 
 const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
 const approved='/assets/images/fmb-approved';
-const newsBrowserSafe=`${approved}/fmb-news-browser-safe.png`;
+const newsLogo=`${approved}/fmb-news-official-transparent.webp`;
 const protectedRoots=['app/','_sites/senz/','_sites/cognita/'];
 const ebookRoutes=new Set([
   'coming-out-respect.html','dress-with-intention.html','men-can-cry.html','reading.html','skin-care-makeup.html','womens-health.html','herra.html'
 ]);
 const principalChannels={
-  'news/index.html':{type:'news',logo:newsBrowserSafe,socialLogo:`${approved}/fmb-news-official-transparent.webp`,width:909,height:210,label:'FMB News',href:'/news/'},
+  'news/index.html':{type:'news',logo:newsLogo,socialLogo:newsLogo,width:909,height:210,label:'FMB News',href:'/news/'},
   'music/index.html':{type:'music',logo:`${approved}/fmb-music-official-transparent.webp`,socialLogo:`${approved}/fmb-music-official-transparent.webp`,width:916,height:212,label:'FMB Music',href:'/music/'},
   'ebooks/index.html':{type:'ebook',logo:`${approved}/fmb-ebook-official-transparent.webp`,socialLogo:`${approved}/fmb-ebook-official-transparent.webp`,width:939,height:210,label:'FMB eBook',href:'/ebooks/'}
 };
@@ -26,7 +26,7 @@ body.news-channel-route .nc-nav-shell{border-color:rgba(255,255,255,.13)!importa
 body.news-channel-route .nc-site-header.is-condensed .nc-nav-shell{background:rgba(20,10,24,.96)!important}
 body.news-channel-route .nc-site-links a{color:rgba(255,255,255,.74)!important}
 body.news-channel-route .nc-site-links .nc-corporate-link{background:#c6a45d!important;color:#150b18!important}
-body.news-channel-route .nc-publication-brand::before,body.news-channel-route .nc-channel-lockup::before,body.news-channel-route .nc-footer-brand::before{background-image:url("${newsBrowserSafe}")!important;background-color:transparent!important}
+body.news-channel-route .nc-publication-brand::before,body.news-channel-route .nc-channel-lockup::before,body.news-channel-route .nc-footer-brand::before{background-image:url("${newsLogo}")!important;background-color:transparent!important}
 body.news-channel-route .nc-broadcast-identity{background:radial-gradient(circle at 18% 18%,rgba(126,36,59,.32),transparent 34%),linear-gradient(135deg,#140a18,#281027 72%,#3d1324)!important;color:#fff!important}
 body.news-channel-route .nc-channel-promise{border-left-color:rgba(226,200,142,.32)!important}
 body.news-channel-route .nc-channel-promise p{color:#fff!important}
@@ -115,8 +115,8 @@ for(const file of await walk(root)){
   if(principal){html=enforcePrincipalChannel(html,principal);correctedPrincipals+=1;}
 
   if(name.startsWith('news/')){
-    for(const oldPath of ['/assets/images/fmbandco/fmbandco-primary-reversed.png','/assets/images/news/fmb-news-official.svg','/assets/images/fmb-official-2026/fmb-news-official.webp',`${approved}/fmb-news-official-transparent.webp`])html=replaceImagePath(html,oldPath,newsBrowserSafe);
-    if(!html.includes(newsBrowserSafe)){html=injectChannelBar(html,{type:'news',logo:newsBrowserSafe,width:909,height:210,label:'FMB News',href:'/news/',action:'Back to newsroom'});injectedNews+=1;}
+    for(const oldPath of ['/assets/images/fmbandco/fmbandco-primary-reversed.png','/assets/images/news/fmb-news-official.svg','/assets/images/fmb-official-2026/fmb-news-official.webp',`${approved}/fmb-news-browser-safe.png`])html=replaceImagePath(html,oldPath,newsLogo);
+    if(!html.includes(newsLogo)){html=injectChannelBar(html,{type:'news',logo:newsLogo,width:909,height:210,label:'FMB News',href:'/news/',action:'Back to newsroom'});injectedNews+=1;}
   }
   if(ebookRoutes.has(name)){
     for(const oldPath of ['/assets/images/fmbandco/fmbandco-primary-reversed.png','/assets/images/channels/fmb-ebook-official.svg'])html=replaceImagePath(html,oldPath,`${approved}/fmb-ebook-official-transparent.webp`);
@@ -125,4 +125,4 @@ for(const file of await walk(root)){
 
   if(html!==before){await writeFile(file,html,'utf8');changed+=1;}
 }
-console.log(`Enforced transparent browser-safe News, Music and eBook lockups across ${correctedPrincipals} principal channels and ${changed} public routes, adding ${injectedNews} News mastheads and ${injectedEbooks} eBook mastheads without changing article content or volunteer assets.`);
+console.log(`Enforced exact transparent News, Music and eBook lockups across ${correctedPrincipals} principal channels and ${changed} public routes, adding ${injectedNews} News mastheads and ${injectedEbooks} eBook mastheads without changing article content or volunteer assets.`);
