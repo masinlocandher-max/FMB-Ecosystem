@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Generated application outputs
+apps/*/dist/
+dist/
+
+# Vercel local metadata
+.vercel/
+apps/*/.vercel/
+
+# Environment files
+.env
+.env.*
+!.env.example
+!apps/*/.env.example
+
+# Local operating-system and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs and temporary files
+*.log
+.tmp/
+tmp/
