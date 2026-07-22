@@ -45,7 +45,7 @@
     },
     "cognita": {
       "workspace": "apps/cognita",
-      "package": "@fmb/cognita",
+      "package": "base44-app",
       "vercelProject": "cognita",
       "domains": [
         "www.thecognitainstitute.com",
