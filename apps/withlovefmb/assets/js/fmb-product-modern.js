@@ -90,11 +90,49 @@
     }
   }
 
+  const audio=document.getElementById('audioPlayer');
+  const mainPlay=document.getElementById('mainPlayButton');
+  const nextButton=document.getElementById('nextButton');
+  const prevButton=document.getElementById('prevButton');
+  const playerNote=document.getElementById('playerNote');
+  let activeMusicIndex=-1;
+  let restoreState=null;
+  let restored=false;
+  try{restoreState=JSON.parse(sessionStorage.getItem('fmb_music_state_v3')||'null')}catch{}
+
+  function restoreListeningPosition(){
+    if(restored||!audio||!restoreState||activeMusicIndex!==Number(restoreState.index))return;
+    const target=Number(restoreState.currentTime);
+    if(!Number.isFinite(target)||target<=1||!Number.isFinite(audio.duration)||audio.duration<=1)return;
+    audio.currentTime=Math.min(target,Math.max(0,audio.duration-.25));
+    restored=true;
+    if(playerNote)playerNote.textContent='Restoring your listening session. Press play when you are ready.';
+  }
+  audio?.addEventListener('loadedmetadata',restoreListeningPosition);
+
   document.addEventListener('fmb:music-state',event=>{
     const detail=event.detail||{};
+    activeMusicIndex=Number.isInteger(detail.index)?detail.index:Number(detail.index);
     const play=document.getElementById('mainPlayButton');
     const miniFill=document.getElementById('miniProgressFill');
     if(play)play.dataset.playing=String(Boolean(detail.playing));
     if(miniFill&&detail.duration)miniFill.style.width=`${Math.min(100,(detail.currentTime/detail.duration)*100)}%`;
+  });
+
+  addEventListener('fmb:global-music-command',event=>{
+    if(!audio||!mainPlay)return;
+    const detail=event.detail||{};
+    const command=String(detail.command||detail.action||'').toLowerCase();
+    if(command==='play'&&audio.paused)mainPlay.click();
+    else if(command==='pause'&&!audio.paused)audio.pause();
+    else if(command==='toggle')mainPlay.click();
+    else if(command==='next')nextButton?.click();
+    else if(command==='previous'||command==='prev')prevButton?.click();
+    else if(command==='seek'&&Number.isFinite(Number(detail.currentTime))){
+      const applySeek=()=>{audio.currentTime=Math.max(0,Math.min(Number(detail.currentTime),audio.duration||Number(detail.currentTime)))};
+      if(audio.readyState>=1)applySeek();else audio.addEventListener('loadedmetadata',applySeek,{once:true});
+    }else if(command==='select'&&Number.isInteger(Number(detail.index))){
+      document.querySelector(`.song-row[data-index="${Number(detail.index)}"] .song-play`)?.click();
+    }
   });
 })();
