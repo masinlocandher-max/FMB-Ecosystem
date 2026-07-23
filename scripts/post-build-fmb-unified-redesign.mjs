@@ -91,7 +91,7 @@ function sharedShell(page) {
   </div>
   <div class="fmb-unified-nav-shell">
     <a class="fmb-unified-brand" href="/" aria-label="Francine Marie Bautista home">
-      <img src="/assets/images/fmb-approved/fmb-master-transparent.webp" width="1129" height="724" alt="FMB, Francine Marie Bautista">
+      <img src="/assets/images/fmb-approved/fmb-master-transparent.webp" width="1129" height="724" loading="lazy" decoding="async" alt="FMB, Francine Marie Bautista">
     </a>
     <nav class="fmb-unified-nav" id="fmbUnifiedNav" aria-label="Primary navigation">${navigation}</nav>
     <div class="fmb-unified-actions">
@@ -107,7 +107,7 @@ function sharedFooter() {
   return `<footer class="fmb-unified-footer">
   <div class="fmb-unified-footer-grid">
     <section class="fmb-unified-footer-brand" aria-labelledby="fmbFooterTitle">
-      <img src="/assets/images/fmb-approved/fmb-master-transparent.webp" width="1129" height="724" alt="FMB">
+      <img src="/assets/images/fmb-approved/fmb-master-transparent.webp" width="1129" height="724" loading="lazy" decoding="async" alt="FMB">
       <h2 id="fmbFooterTitle">The vision behind the ecosystem.</h2>
       <p>The official public headquarters for Francine Marie Bautista, her projects, published work, advocacy, and the companies organized through FMB&amp;CO.</p>
     </section>
@@ -159,7 +159,7 @@ function addHomeMark(html, page) {
   if (page !== 'home' || html.includes('class="fmb-hero-mark"')) return html;
   return html.replace(
     /(<div\b[^>]*class=["'][^"']*\bhero-copy\b[^"']*["'][^>]*>)/i,
-    '$1\n<img class="fmb-hero-mark" src="/assets/images/fmb-approved/fmb-master-transparent.webp" width="1129" height="724" alt="FMB" fetchpriority="high">',
+    '$1\n<img class="fmb-hero-mark" src="/assets/images/fmb-approved/fmb-master-transparent.webp" width="1129" height="724" loading="lazy" decoding="async" alt="FMB">',
   );
 }
 
