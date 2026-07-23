@@ -1,10 +1,9 @@
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
-import {createRequire} from 'node:module';
 import fs from 'node:fs';
 import path from 'node:path';
+import {pathToFileURL} from 'node:url';
 
-const require=createRequire(import.meta.url);
 const root=process.cwd();
 const libPath=path.join(root,'apps/withlovefmb/api/automation/_automation-lib.js');
 const metaPath=path.join(root,'apps/withlovefmb/api/automation/meta-webhook.js');
@@ -18,7 +17,11 @@ for(const file of [libPath,metaPath,intakePath,statusPath,scriptPath,docsPath]){
   assert.ok(fs.statSync(file).size>100,`Automation Hub file is unexpectedly empty: ${path.relative(root,file)}`);
 }
 
-const lib=require(libPath);
+const lib=await import(pathToFileURL(libPath).href);
+for(const endpoint of [metaPath,intakePath,statusPath]){
+  const module=await import(pathToFileURL(endpoint).href);
+  assert.equal(typeof module.default,'function',`${path.relative(root,endpoint)} must export a default handler.`);
+}
 
 assert.deepEqual(lib.classify('Can you send your branding package and website proposal?'),{
   brand:'FMB&CO. / SENZ',owner:'Business Desk',intent:'business_general',priority:'Normal',unknown:false
@@ -68,4 +71,4 @@ for(const marker of ['HUMAN_REVIEW_ONLY=true','META_APP_SECRET','AUTOMATION_INGE
   assert.ok(docs.toLowerCase().includes(marker.toLowerCase()),`Automation documentation is missing ${marker}`);
 }
 
-console.log('Automation Hub routing, signature verification, event normalization, Sheet receiver, and privacy-boundary checks passed.');
+console.log('Automation Hub ESM handlers, routing, signature verification, event normalization, Sheet receiver, and privacy-boundary checks passed.');
