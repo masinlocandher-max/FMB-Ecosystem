@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cognita | Knowledge and Learning within FMB&amp;CO.</title>
     <meta name="description" content="Cognita is the knowledge and learning arm of FMB&amp;CO. Public registration and paid offers are closed." />
@@ -21,10 +21,18 @@
       (() => {
         const redirectKey = "cognita:spa-redirect";
         const redirectTarget = window.sessionStorage.getItem(redirectKey);
+        const host = window.location.hostname.toLowerCase();
+        const isCognitaHost = host === "thecognitainstitute.com" || host === "www.thecognitainstitute.com";
+        const isInternalEntry = window.location.pathname.startsWith("/_sites/cognita");
 
         if (redirectTarget) {
           window.sessionStorage.removeItem(redirectKey);
           window.history.replaceState(null, "", redirectTarget);
+          return;
+        }
+
+        if (isCognitaHost && isInternalEntry) {
+          window.history.replaceState(null, "", `/${window.location.search}${window.location.hash}`);
         }
       })();
     </script>
