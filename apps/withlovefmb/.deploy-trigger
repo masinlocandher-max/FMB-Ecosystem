@@ -1,2 +1,3 @@
 Production redeploy requested on 2026-07-23 (Asia/Manila).
+Release commit: b43000ae9c48f9ab9d0226313a8dfa252f8ed29a.
 This marker is intentionally non-functional and exists only to trigger the existing Vercel Git deployment.
