@@ -1,6 +1,6 @@
 name: Prebuilt production deploy
 
-# Production upload trigger for audited host-routing merge aaf1d7a.
+# Production upload trigger for audited host-routing merge aaf1d7a99344a9985228a2f2d265427c197a0ab8.
 on:
   push:
     branches: [main]
