@@ -17,10 +17,6 @@ const FALLBACK_IMAGES = {
   'good-news': '/assets/images/news/good-news-briefing.png'
 };
 
-function first(value) {
-  return Array.isArray(value) ? value[0] : value;
-}
-
 function escapeHtml(value = '') {
   return String(value)
     .replaceAll('&', '&amp;')
@@ -75,8 +71,22 @@ function imageMime(imageUrl) {
   return 'image/jpeg';
 }
 
+function requestSlug(req) {
+  const requestUrl = new URL(req.url || '/', SITE);
+  return String(requestUrl.searchParams.get('slug') || '').trim().toLowerCase();
+}
+
 module.exports = function handler(req, res) {
-  const slug = String(first(req.query?.slug) || '').trim().toLowerCase();
+  let slug;
+
+  try {
+    slug = requestSlug(req);
+  } catch {
+    res.statusCode = 400;
+    res.end('Invalid request URL');
+    return;
+  }
+
   if (!SLUG_PATTERN.test(slug)) {
     res.statusCode = 400;
     res.end('Invalid article');
