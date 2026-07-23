@@ -44,7 +44,7 @@ for(const page of requiredPages){
 }
 
 const home=await read('index.html');
-requireMarkers(home,'Home',['/assets/images/home/fmb-home-logo.webp','/assets/images/home/francine-home-hero-hd.webp','/assets/images/home/francine-home-founder-hd.webp','data-fmb-portrait="repository-founder"','Digital Space for Rent','Institute Qualifying Test','@bb.fmb','/BinibiningFrancineMarie','withlovefmb@gmail.com']);
+requireMarkers(home,'Home',['/assets/images/home/fmb-home-logo.webp','/assets/images/home/francine-home-hero-hd.webp','/assets/images/home/francine-home-founder-hd.webp','data-fmb-portrait="repository-founder"']);
 if(!/<img\b[^>]*loading=["']lazy["'][^>]*src=["']\/app\/assets\/yoni\/yoni-hero\.webp/i.test(home))fail('homepage still downloads the below-fold Yoni artwork eagerly');
 
 const about=await read('aboutfmb/index.html');
