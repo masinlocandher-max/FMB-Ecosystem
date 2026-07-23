@@ -12,6 +12,7 @@ const replacements=new Map([
   ['/assets/images/fmb-approved/francine-portrait-angle-left.webp','/assets/images/home/francine-home-founder-hd.webp'],
   ['/assets/images/fmb-approved/francine-portrait-angle-right.webp','/assets/images/home/francine-home-founder-hd.webp'],
   ['/assets/images/fmb-approved/francine-portrait-front.webp','/assets/images/home/francine-home-founder-hd.webp'],
+  ['/assets/images/fmb-official-2026/fmb-master-square.webp','/assets/images/home/fmb-home-logo.webp'],
 ]);
 const localRequired=[
   'assets/images/home/fmb-home-logo.webp',
@@ -50,6 +51,11 @@ for(const file of await walk(root)){
       changedReferences+=occurrences;
     }
   }
+  const genericFounderMatches=text.match(/\/assets\/images\/fmb\/francine-founder-[^"'\s)]+\.(?:webp|png|jpe?g)/gi)||[];
+  if(genericFounderMatches.length){
+    text=text.replace(/\/assets\/images\/fmb\/francine-founder-[^"'\s)]+\.(?:webp|png|jpe?g)/gi,'/assets/images/home/francine-home-founder-hd.webp');
+    changedReferences+=genericFounderMatches.length;
+  }
   if(file.endsWith('.html')){
     text=text.replace(/<img\b[^>]*src=["'](?:\/assets\/images\/home\/(?:fmb-home-logo|francine-home-(?:hero|founder)-hd)\.webp|\/assets\/images\/news\/fmb-news-official\.svg)["'][^>]*>/gi,tag=>tag
       .replace(/\swidth=["'][^"']*["']/i,'')
@@ -79,4 +85,4 @@ for(const file of await walk(root)){
   }
 }
 
-console.log(`Replaced ${changedReferences} expiring or uncommitted asset references across ${changedFiles} output files with repository-contained FMB assets.`);
+console.log(`Replaced ${changedReferences} expiring, generic, or uncommitted asset references across ${changedFiles} output files with repository-contained FMB assets.`);
