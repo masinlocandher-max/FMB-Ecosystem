@@ -64,6 +64,12 @@ for(const file of await walk(root)){
       .replaceAll('fmb-identity-signature-portrait','fmb-identity-signature-landscape')
       .replaceAll('fmb-official-portrait','fmb-official-landscape')
       .replace(/data-fmb-portrait=["'](?:standing-landscape-exact|seated-landscape-exact|portrait-angle-left-exact|portrait-angle-right-exact|portrait-front-exact)["']/g,'data-fmb-portrait="repository-founder"');
+
+    let highPriorityKept=false;
+    text=text.replace(/<img\b[^>]*fetchpriority=["']high["'][^>]*>/gi,tag=>{
+      if(!highPriorityKept){highPriorityKept=true;return tag;}
+      return tag.replace(/\sfetchpriority=["']high["']/i,' fetchpriority="auto"');
+    });
   }
   if(text!==before){await writeFile(file,text,'utf8');changedFiles++;}
 }
