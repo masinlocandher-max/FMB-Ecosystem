@@ -46,17 +46,20 @@ jobs:
         run: npx --yes vercel@56.5.0 pull --yes --environment=production --token="$VERCEL_TOKEN"
       - name: Build audited production output locally
         run: npx --yes vercel@56.5.0 build --prod --token="$VERCEL_TOKEN"
-      - name: Upload prebuilt production release
+      - name: Upload archived prebuilt production release
         shell: bash
         run: |
-          npx --yes vercel@56.5.0 deploy --prebuilt --prod --token="$VERCEL_TOKEN" | tee deployment-url.txt
-          grep -E '^https://[^ ]+' deployment-url.txt | tail -n 1 > production-url.txt
+          set -o pipefail
+          npx --yes vercel@56.5.0 deploy --prebuilt --prod --archive=tgz --yes --no-color --token="$VERCEL_TOKEN" > deployment-url.txt 2> deployment-error.txt
+          cat deployment-error.txt
+          cat deployment-url.txt
+          test -s deployment-url.txt
       - name: Preserve deployment reference
         uses: actions/upload-artifact@v4
         with:
           name: fmb-production-deployment-${{ github.run_id }}
           path: |
             deployment-url.txt
-            production-url.txt
+            deployment-error.txt
           if-no-files-found: error
           retention-days: 7
