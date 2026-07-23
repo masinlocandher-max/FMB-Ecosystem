@@ -13,6 +13,14 @@ const replacements=new Map([
   ['/assets/images/fmb-approved/francine-portrait-angle-right.webp','/assets/images/home/francine-home-founder-hd.webp'],
   ['/assets/images/fmb-approved/francine-portrait-front.webp','/assets/images/home/francine-home-founder-hd.webp'],
   ['/assets/images/fmb-official-2026/fmb-master-square.webp','/assets/images/home/fmb-home-logo.webp'],
+  ['/assets/images/fmbandco/francine-founder-hero-640.webp','/assets/images/home/francine-home-founder-hd.webp'],
+  ['/assets/images/founder.webp','/assets/images/home/francine-home-founder-hd.webp'],
+  ['assets/images/founder.webp','/assets/images/home/francine-home-founder-hd.webp'],
+  ['/assets/images/home/cognita-wordmark-transparent.svg','/assets/images/projects/cognita-transparent.png'],
+  ['assets/images/home/cognita-wordmark-transparent.svg','/assets/images/projects/cognita-transparent.png'],
+  ['/app/assets/yoni/yoni-music.png','/app/assets/yoni/yoni-hero.webp'],
+  ['/app/assets/yoni/yoni-master-static.png','/app/assets/yoni/yoni-hero.webp'],
+  ['/assets/images/news/amor-deloso-generated-hero-hd.png','/assets/images/news/amor-deloso-share-1200x630.jpg'],
 ]);
 const localRequired=[
   'assets/images/home/fmb-home-logo.webp',
@@ -21,6 +29,8 @@ const localRequired=[
   'assets/images/news/fmb-news-official.svg',
   'assets/images/fmb-approved/fmb-music-official-transparent.webp',
   'assets/images/fmb-approved/fmb-ebook-official-transparent.webp',
+  'assets/images/projects/cognita-transparent.png',
+  'app/assets/yoni/yoni-hero.webp',
 ];
 
 async function walk(directory){
@@ -57,7 +67,7 @@ for(const file of await walk(root)){
     changedReferences+=genericFounderMatches.length;
   }
   if(file.endsWith('.html')){
-    text=text.replace(/<img\b[^>]*src=["'](?:\/assets\/images\/home\/(?:fmb-home-logo|francine-home-(?:hero|founder)-hd)\.webp|\/assets\/images\/news\/fmb-news-official\.svg)["'][^>]*>/gi,tag=>tag
+    text=text.replace(/<img\b[^>]*src=["'](?:\/assets\/images\/home\/(?:fmb-home-logo|francine-home-(?:hero|founder)-hd)\.webp|\/assets\/images\/news\/fmb-news-official\.svg|\/assets\/images\/projects\/cognita-transparent\.png|\/app\/assets\/yoni\/yoni-hero\.webp)["'][^>]*>/gi,tag=>tag
       .replace(/\swidth=["'][^"']*["']/i,'')
       .replace(/\sheight=["'][^"']*["']/i,''));
     text=text
@@ -82,13 +92,21 @@ const forbidden=[
   '/assets/images/fmb-approved/francine-portrait-angle-left.webp',
   '/assets/images/fmb-approved/francine-portrait-angle-right.webp',
   '/assets/images/fmb-approved/francine-portrait-front.webp',
+  '/assets/images/fmbandco/francine-founder-hero-640.webp',
+  '/assets/images/founder.webp',
+  'assets/images/founder.webp',
+  '/assets/images/home/cognita-wordmark-transparent.svg',
+  'assets/images/home/cognita-wordmark-transparent.svg',
+  '/app/assets/yoni/yoni-music.png',
+  '/app/assets/yoni/yoni-master-static.png',
+  '/assets/images/news/amor-deloso-generated-hero-hd.png',
   'https://at.adobe.com/',
 ];
 for(const file of await walk(root)){
   const text=await readFile(file,'utf8');
   for(const marker of forbidden){
-    if(text.includes(marker))throw new Error(`${path.relative(root,file)} still depends on unavailable external or uncommitted asset ${marker}`);
+    if(text.includes(marker))throw new Error(`${path.relative(root,file)} still depends on unavailable, low-resolution, or unapproved asset ${marker}`);
   }
 }
 
-console.log(`Replaced ${changedReferences} expiring, generic, or uncommitted asset references across ${changedFiles} output files with repository-contained FMB assets.`);
+console.log(`Replaced ${changedReferences} expiring, generic, low-resolution, or uncommitted asset references across ${changedFiles} output files with repository-contained approved assets.`);
