@@ -8,32 +8,88 @@
     {
       "source": "/assets/js/fmb-home-approved.js",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
       ]
     }
   ],
   "redirects": [
     {
+      "source": "/data-center",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.francinemariebautista.com"
+        }
+      ],
+      "destination": "https://data.francinemariebautista.com/",
+      "permanent": true
+    },
+    {
+      "source": "/data-center/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.francinemariebautista.com"
+        }
+      ],
+      "destination": "https://data.francinemariebautista.com/",
+      "permanent": true
+    },
+    {
+      "source": "/data-center/index.html",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.francinemariebautista.com"
+        }
+      ],
+      "destination": "https://data.francinemariebautista.com/",
+      "permanent": true
+    },
+    {
       "source": "/",
-      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
       "destination": "/app/",
       "permanent": false
     },
     {
       "source": "/index.html",
-      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
       "destination": "/app/",
       "permanent": false
     },
     {
       "source": "/",
-      "has": [{ "type": "host", "value": "app.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "app.francinemariebautista.com"
+        }
+      ],
       "destination": "/app/",
       "permanent": false
     },
     {
       "source": "/index.html",
-      "has": [{ "type": "host", "value": "app.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "app.francinemariebautista.com"
+        }
+      ],
       "destination": "/app/",
       "permanent": false
     }
@@ -41,102 +97,252 @@
   "rewrites": [
     {
       "source": "/",
-      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "data.francinemariebautista.com"
+        }
+      ],
+      "destination": "/data-center/index.html"
+    },
+    {
+      "source": "/index.html",
+      "has": [
+        {
+          "type": "host",
+          "value": "data.francinemariebautista.com"
+        }
+      ],
+      "destination": "/data-center/index.html"
+    },
+    {
+      "source": "/dashboard.css",
+      "has": [
+        {
+          "type": "host",
+          "value": "data.francinemariebautista.com"
+        }
+      ],
+      "destination": "/data-center/dashboard.css"
+    },
+    {
+      "source": "/dashboard.js",
+      "has": [
+        {
+          "type": "host",
+          "value": "data.francinemariebautista.com"
+        }
+      ],
+      "destination": "/data-center/dashboard.js"
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "data.francinemariebautista.com"
+        }
+      ],
+      "destination": "/data-center/index.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
       "destination": "/app/index.html"
     },
     {
       "source": "/app",
-      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
       "destination": "/app/index.html"
     },
     {
       "source": "/app/",
-      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
       "destination": "/app/index.html"
     },
     {
       "source": "/app/:path*",
-      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
       "destination": "/app/:path*"
     },
     {
       "source": "/assets/:path*",
-      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
       "destination": "/assets/:path*"
     },
     {
       "source": "/privacy-policy.html",
-      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
       "destination": "/privacy-policy.html"
     },
     {
       "source": "/community-guidelines.html",
-      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
       "destination": "/community-guidelines.html"
     },
     {
       "source": "/membership-agreement.html",
-      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
       "destination": "/membership-agreement.html"
     },
     {
       "source": "/data-rights.html",
-      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
       "destination": "/data-rights.html"
     },
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "yoni.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
       "destination": "/app/index.html"
     },
     {
       "source": "/",
-      "has": [{ "type": "host", "value": "app.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "app.francinemariebautista.com"
+        }
+      ],
       "destination": "/app/index.html"
     },
     {
       "source": "/app",
-      "has": [{ "type": "host", "value": "app.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "app.francinemariebautista.com"
+        }
+      ],
       "destination": "/app/index.html"
     },
     {
       "source": "/app/",
-      "has": [{ "type": "host", "value": "app.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "app.francinemariebautista.com"
+        }
+      ],
       "destination": "/app/index.html"
     },
     {
       "source": "/app/:path*",
-      "has": [{ "type": "host", "value": "app.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "app.francinemariebautista.com"
+        }
+      ],
       "destination": "/app/:path*"
     },
     {
       "source": "/assets/:path*",
-      "has": [{ "type": "host", "value": "app.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "app.francinemariebautista.com"
+        }
+      ],
       "destination": "/assets/:path*"
     },
     {
       "source": "/privacy-policy.html",
-      "has": [{ "type": "host", "value": "app.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "app.francinemariebautista.com"
+        }
+      ],
       "destination": "/privacy-policy.html"
     },
     {
       "source": "/community-guidelines.html",
-      "has": [{ "type": "host", "value": "app.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "app.francinemariebautista.com"
+        }
+      ],
       "destination": "/community-guidelines.html"
     },
     {
       "source": "/membership-agreement.html",
-      "has": [{ "type": "host", "value": "app.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "app.francinemariebautista.com"
+        }
+      ],
       "destination": "/membership-agreement.html"
     },
     {
       "source": "/data-rights.html",
-      "has": [{ "type": "host", "value": "app.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "app.francinemariebautista.com"
+        }
+      ],
       "destination": "/data-rights.html"
     },
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "app.francinemariebautista.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "app.francinemariebautista.com"
+        }
+      ],
       "destination": "/app/index.html"
     }
   ]
