@@ -16,7 +16,7 @@
   }
 
   function unavailable(message){
-    state.textContent='Membership launch control is not installed.';
+    state.textContent='Registration status is unavailable.';
     detail.textContent=message;
     button.disabled=true;
     button.textContent='Registration closed';
@@ -34,7 +34,7 @@
 
   async function loadStatus(){
     client=await resolveClient();
-    if(!client){unavailable('Sign in with the administrator account before changing registration.');return}
+    if(!client){unavailable('Sign in with the administrator account to verify registration status.');return}
 
     const {data:{session}}=await client.auth.getSession();
     const {data:profile,error:profileError}=await client.from('profiles').select('role,status').eq('id',session.user.id).maybeSingle();
