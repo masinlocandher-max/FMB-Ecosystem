@@ -46,6 +46,7 @@ const replacements=new Map([
   ['assets/images/founder.webp',publicPath('portraitFront')],
   ['/assets/images/home/cognita-wordmark-transparent.svg','/assets/images/projects/cognita-logo-clean.png'],
   ['assets/images/home/cognita-wordmark-transparent.svg','/assets/images/projects/cognita-logo-clean.png'],
+  ['cognita-wordmark-transparent.svg','../projects/cognita-logo-clean.png'],
   ['https://www.francinemariebautista.com/assets/images/news/amor-deloso-generated-hero-hd.png','https://www.francinemariebautista.com/assets/images/news/amor-deloso-share-1200x630.jpg'],
   ['/assets/images/news/amor-deloso-generated-hero-hd.png','/assets/images/news/amor-deloso-share-1200x630.jpg']
 ]);
