@@ -124,7 +124,8 @@ for(const image of ['/assets/images/volunteer/francine-leading-with-love-fmb.web
   if(!withLove.includes(image))throw new Error(`Protected volunteer image is missing: ${image}`);
 }
 
-const retired=[...replacements.keys().filter(marker=>marker!=='cognita-wordmark-transparent.svg'),'https://at.adobe.com/'];
+const retired=[...replacements.keys()].filter(marker=>marker!=='cognita-wordmark-transparent.svg');
+retired.push('https://at.adobe.com/');
 for(const file of files){
   const text=await readFile(file,'utf8');
   for(const marker of retired)if(text.includes(marker))throw new Error(`${path.relative(root,file)} still renders retired asset ${marker}`);
