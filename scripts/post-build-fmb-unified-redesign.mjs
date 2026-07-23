@@ -11,6 +11,7 @@ const version = '20260723-unified-v1';
 const stylesheetHref = `/assets/css/fmb-unified-redesign.css?v=${version}`;
 const priorityHref = `/assets/css/fmb-unified-priority.css?v=${version}`;
 const contentHref = `/assets/css/fmb-unified-content.css?v=${version}`;
+const cleanupHref = `/assets/css/fmb-unified-cleanup.css?v=${version}`;
 const scriptSrc = `/assets/js/fmb-unified-shell.js?v=${version}`;
 const fontHref = 'https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Montserrat:wght@400;500;600;700;800&display=swap';
 
@@ -76,7 +77,7 @@ function addHeadAssets(html) {
   const fontLinks = next.includes('fonts.googleapis.com/css2?family=Cinzel')
     ? ''
     : `\n  <link rel="preconnect" href="https://fonts.googleapis.com">\n  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n  <link href="${fontHref}" rel="stylesheet">`;
-  const designLinks = [stylesheetHref, priorityHref, contentHref]
+  const designLinks = [stylesheetHref, priorityHref, contentHref, cleanupHref]
     .filter((href) => !next.includes(href))
     .map((href) => `  <link rel="stylesheet" href="${href}">`)
     .join('\n');
@@ -102,6 +103,7 @@ for (const stylesheet of [
   'fmb-unified-redesign.css',
   'fmb-unified-priority.css',
   'fmb-unified-content.css',
+  'fmb-unified-cleanup.css',
 ]) {
   await copyFile(
     path.join(sourceRoot, 'assets', 'css', stylesheet),
@@ -142,6 +144,7 @@ for (const { file, relative, page } of publicPages) {
   if (count(html, stylesheetHref) !== 1) errors.push(`${relative}: unified stylesheet must appear exactly once`);
   if (count(html, priorityHref) !== 1) errors.push(`${relative}: priority stylesheet must appear exactly once`);
   if (count(html, contentHref) !== 1) errors.push(`${relative}: content stylesheet must appear exactly once`);
+  if (count(html, cleanupHref) !== 1) errors.push(`${relative}: cleanup stylesheet must appear exactly once`);
   if (count(html, scriptSrc) !== 1) errors.push(`${relative}: unified shell script must appear exactly once`);
   if (!new RegExp(`<body\\b[^>]*data-fmb-page=["']${page}["']`, 'i').test(html)) {
     errors.push(`${relative}: missing route design marker ${page}`);
