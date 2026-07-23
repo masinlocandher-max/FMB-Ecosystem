@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { readFile, readdir, stat, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
@@ -101,6 +101,13 @@ for(const file of files){
   if(text!==before){await writeFile(file,text,'utf8');changedFiles+=1;}
 }
 
+const cognitaLogo='assets/images/projects/cognita-logo-clean.png';
+const cognitaLogoInfo=await stat(path.join(root,cognitaLogo));
+if(!cognitaLogoInfo.isFile()||cognitaLogoInfo.size<100)throw new Error(`Official Cognita logo is missing: ${cognitaLogo}`);
+const cognitaAliasPath=path.join(root,'assets/images/home/cognita-wordmark-transparent.svg');
+await mkdir(path.dirname(cognitaAliasPath),{recursive:true});
+await writeFile(cognitaAliasPath,`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 600" role="img" aria-label="Cognita Institute of Artificial Intelligence"><image href="/assets/images/projects/cognita-logo-clean.png" width="1600" height="600" preserveAspectRatio="xMidYMid meet"/></svg>`,'utf8');
+
 const assignments={
   'index.html':[publicPath('masterTransparent'),publicPath('standingLandscape'),publicPath('seatedLandscape')],
   'news/index.html':[publicPath('news')],
@@ -117,10 +124,10 @@ for(const image of ['/assets/images/volunteer/francine-leading-with-love-fmb.web
   if(!withLove.includes(image))throw new Error(`Protected volunteer image is missing: ${image}`);
 }
 
-const retired=[...replacements.keys(),'https://at.adobe.com/'];
+const retired=[...replacements.keys().filter(marker=>marker!=='cognita-wordmark-transparent.svg'),'https://at.adobe.com/'];
 for(const file of files){
   const text=await readFile(file,'utf8');
   for(const marker of retired)if(text.includes(marker))throw new Error(`${path.relative(root,file)} still renders retired asset ${marker}`);
 }
 
-console.log(`Verified ${manifest.assets.length} exact uploaded masters, normalized nested route paths, and replaced ${changedReferences} retired references across ${changedFiles} final files.`);
+console.log(`Verified ${manifest.assets.length} exact uploaded masters, normalized nested route paths, added the official Cognita compatibility alias, and replaced ${changedReferences} retired references across ${changedFiles} final files.`);
