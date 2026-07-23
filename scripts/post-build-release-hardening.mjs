@@ -39,6 +39,12 @@ function hardenHomepageImages(html) {
     .replace(/<img\b(?=[^>]*id=["']homeFounderImage["'])[^>]*>/gi, makeImageLazy);
 }
 
+function addNewsMobileDock(html) {
+  if (html.includes('class="nc-mobile-dock"')) return html;
+  const dock = '<nav class="nc-mobile-dock" aria-label="Mobile newsroom navigation"><a href="#top">Home</a><a href="#rundown">Latest</a><a href="#philippines">Philippines</a><a href="#editorial-standard">Standards</a></nav>';
+  return html.replace('</body>', `${dock}\n</body>`);
+}
+
 let changed = 0;
 for (const file of await walk(root)) {
   let html = await readFile(file, 'utf8');
@@ -60,6 +66,8 @@ for (const file of await walk(root)) {
       );
   }
 
+  if (relative === 'news/index.html') html = addNewsMobileDock(html);
+
   if (html !== before) {
     await writeFile(file, html, 'utf8');
     changed += 1;
@@ -77,5 +85,9 @@ for (const pattern of [
 ]) {
   if (!pattern.test(home)) throw new Error('Homepage below-fold imagery is not fully protected by lazy loading.');
 }
+const news = await readFile(path.join(root, 'news/index.html'), 'utf8');
+if (!news.includes('class="nc-mobile-dock"') || (news.match(/class="nc-mobile-dock"/g) || []).length !== 1) {
+  throw new Error('FMB News must have exactly one persistent mobile newsroom dock.');
+}
 
-console.log(`Release hardening updated ${changed} HTML file(s): legal navigation is current, the homepage renders without JavaScript, and below-fold Yoni/founder artwork is lazy-loaded.`);
+console.log(`Release hardening updated ${changed} HTML file(s): legal navigation is current, below-fold homepage artwork is lazy-loaded, and FMB News has persistent mobile navigation.`);
