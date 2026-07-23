@@ -20,26 +20,29 @@ function isWebP(buffer) {
   return buffer.length >= 12 && buffer.subarray(0, 4).toString('ascii') === 'RIFF' && buffer.subarray(8, 12).toString('ascii') === 'WEBP';
 }
 
-async function collectLocalWebp(directory, matches = new Map()) {
+async function collectLocalWebp(directory, catalog = { byHash: new Map(), byName: new Map() }) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     const fullPath = path.join(directory, entry.name);
     if (entry.isDirectory()) {
-      await collectLocalWebp(fullPath, matches);
+      await collectLocalWebp(fullPath, catalog);
       continue;
     }
     if (!entry.name.toLowerCase().endsWith('.webp')) continue;
     const buffer = await readFile(fullPath);
     if (!isWebP(buffer)) continue;
-    const hash = sha256(buffer);
-    if (!matches.has(hash)) matches.set(hash, { buffer, fullPath });
+    const record = { buffer, fullPath, hash: sha256(buffer), bytes: buffer.length };
+    if (!catalog.byHash.has(record.hash)) catalog.byHash.set(record.hash, record);
+    const sameName = catalog.byName.get(entry.name) || [];
+    sameName.push(record);
+    catalog.byName.set(entry.name, sameName);
   }
-  return matches;
+  return catalog;
 }
 
 const localMasters = await collectLocalWebp(localImageRoot);
 
 async function fetchVerifiedAsset(asset) {
-  const local = localMasters.get(asset.sha256);
+  const local = localMasters.byHash.get(asset.sha256);
   if (local) {
     console.log(`Using repository master for ${asset.key}: ${path.relative(repositoryRoot, local.fullPath)}`);
     return local.buffer;
@@ -72,7 +75,12 @@ async function fetchVerifiedAsset(asset) {
       clearTimeout(timeout);
     }
   }
-  throw new Error(`Unable to retrieve verified asset ${asset.key} (${asset.file}). No hash-matching repository master was found and the archived source failed: ${lastError?.message || 'unknown error'}`);
+
+  const candidates = (localMasters.byName.get(asset.file) || [])
+    .map(candidate => `${path.relative(repositoryRoot, candidate.fullPath)} · ${candidate.bytes} bytes · sha256 ${candidate.hash}`)
+    .join('; ');
+  const candidateNote = candidates ? ` Same-name repository candidates: ${candidates}.` : '';
+  throw new Error(`Unable to retrieve verified asset ${asset.key} (${asset.file}). No hash-matching repository master was found and the archived source failed: ${lastError?.message || 'unknown error'}.${candidateNote}`);
 }
 
 for (const asset of manifest.assets) {
