@@ -20,7 +20,7 @@ function isWebP(buffer) {
   return buffer.length >= 12 && buffer.subarray(0, 4).toString('ascii') === 'RIFF' && buffer.subarray(8, 12).toString('ascii') === 'WEBP';
 }
 
-async function collectLocalWebp(directory, catalog = { byHash: new Map(), byName: new Map() }) {
+async function collectLocalWebp(directory, catalog = { byHash: new Map(), byName: new Map(), all: [] }) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     const fullPath = path.join(directory, entry.name);
     if (entry.isDirectory()) {
@@ -30,7 +30,8 @@ async function collectLocalWebp(directory, catalog = { byHash: new Map(), byName
     if (!entry.name.toLowerCase().endsWith('.webp')) continue;
     const buffer = await readFile(fullPath);
     if (!isWebP(buffer)) continue;
-    const record = { buffer, fullPath, hash: sha256(buffer), bytes: buffer.length };
+    const record = { buffer, fullPath, fileName: entry.name, hash: sha256(buffer), bytes: buffer.length };
+    catalog.all.push(record);
     if (!catalog.byHash.has(record.hash)) catalog.byHash.set(record.hash, record);
     const sameName = catalog.byName.get(entry.name) || [];
     sameName.push(record);
@@ -40,6 +41,16 @@ async function collectLocalWebp(directory, catalog = { byHash: new Map(), byName
 }
 
 const localMasters = await collectLocalWebp(localImageRoot);
+
+function diagnosticCandidates(asset) {
+  const exactName = localMasters.byName.get(asset.file) || [];
+  if (exactName.length) return exactName;
+  const tokens = asset.file.toLowerCase().replace(/\.webp$/, '').split('-').filter(token => token !== 'purple');
+  return localMasters.all.filter(candidate => {
+    const candidateName = candidate.fileName.toLowerCase().replace(/\.webp$/, '');
+    return tokens.every(token => candidateName.includes(token));
+  });
+}
 
 async function fetchVerifiedAsset(asset) {
   const local = localMasters.byHash.get(asset.sha256);
@@ -76,10 +87,10 @@ async function fetchVerifiedAsset(asset) {
     }
   }
 
-  const candidates = (localMasters.byName.get(asset.file) || [])
+  const candidates = diagnosticCandidates(asset)
     .map(candidate => `${path.relative(repositoryRoot, candidate.fullPath)} · ${candidate.bytes} bytes · sha256 ${candidate.hash}`)
     .join('; ');
-  const candidateNote = candidates ? ` Same-name repository candidates: ${candidates}.` : '';
+  const candidateNote = candidates ? ` Related repository candidates: ${candidates}.` : '';
   throw new Error(`Unable to retrieve verified asset ${asset.key} (${asset.file}). No hash-matching repository master was found and the archived source failed: ${lastError?.message || 'unknown error'}.${candidateNote}`);
 }
 
