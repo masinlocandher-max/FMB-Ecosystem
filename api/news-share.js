@@ -4,6 +4,13 @@ const path = require('node:path');
 const SITE = 'https://www.francinemariebautista.com';
 const SLUG_PATTERN = /^[a-z0-9-]+$/;
 const RASTER_PATTERN = /\.(?:avif|jpe?g|png|webp)(?:[?#].*)?$/i;
+const NAMED_ENTITIES = {
+  amp: '&',
+  quot: '"',
+  apos: "'",
+  lt: '<',
+  gt: '>'
+};
 
 const FALLBACK_IMAGES = {
   'ai-water-consumption-responsible-ai-philippines': '/assets/images/fmbandco/francine-founder-hero-923.webp',
@@ -26,6 +33,19 @@ function escapeHtml(value = '') {
     .replaceAll("'", '&#39;');
 }
 
+function codePoint(raw, radix) {
+  const value = Number.parseInt(raw, radix);
+  if (!Number.isInteger(value) || value < 0 || value > 0x10FFFF) return '';
+  return String.fromCodePoint(value);
+}
+
+function decodeHtml(value = '') {
+  return String(value)
+    .replace(/&#x([0-9a-f]+);/gi, (_, raw) => codePoint(raw, 16))
+    .replace(/&#(\d+);/g, (_, raw) => codePoint(raw, 10))
+    .replace(/&(amp|quot|apos|lt|gt);/gi, (_, name) => NAMED_ENTITIES[name.toLowerCase()]);
+}
+
 function meta(html, property) {
   const escaped = property.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const patterns = [
@@ -36,7 +56,7 @@ function meta(html, property) {
   ];
   for (const pattern of patterns) {
     const match = html.match(pattern);
-    if (match) return match[1];
+    if (match) return decodeHtml(match[1]);
   }
   return '';
 }
@@ -44,7 +64,7 @@ function meta(html, property) {
 function canonical(html, slug) {
   const match = html.match(/<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)["'][^>]*>/i)
     || html.match(/<link[^>]+href=["']([^"']+)["'][^>]+rel=["']canonical["'][^>]*>/i);
-  return match?.[1] || `${SITE}/news/${slug}/`;
+  return match?.[1] ? decodeHtml(match[1]) : `${SITE}/news/${slug}/`;
 }
 
 function locateArticle(slug) {
@@ -102,7 +122,8 @@ module.exports = function handler(req, res) {
 
   const article = fs.readFileSync(articlePath, 'utf8');
   const articleUrl = canonical(article, slug);
-  const title = meta(article, 'og:title') || article.match(/<title>([^<]+)<\/title>/i)?.[1] || 'FMB&CO. News';
+  const htmlTitle = decodeHtml(article.match(/<title>([^<]+)<\/title>/i)?.[1] || '');
+  const title = meta(article, 'og:title') || htmlTitle || 'FMB&CO. News';
   const description = meta(article, 'og:description') || meta(article, 'description') || 'Read the latest report from FMB&CO. News.';
   const declaredImage = meta(article, 'og:image');
   const image = absoluteUrl(RASTER_PATTERN.test(declaredImage) ? declaredImage : FALLBACK_IMAGES[slug]);
