@@ -1,0 +1,70 @@
+/* Final duplicate-chrome cleanup. Original content stays in the document for rollback and audit. */
+
+body[data-fmb-unified-shell] > header,
+body[data-fmb-unified-shell] > footer:not(.fmb-unified-footer),
+body[data-fmb-unified-shell] > .top-shell,
+body[data-fmb-unified-shell] > .bulletin-wire,
+body[data-fmb-unified-shell] > .fco-topline,
+body[data-fmb-unified-shell] > .fco-header,
+body[data-fmb-unified-shell] > .nc-site-header,
+body[data-fmb-unified-shell] > .fmb-product-header,
+body[data-fmb-unified-shell] > .nc-mobile-dock,
+body[data-fmb-unified-shell] > .mobile-dock {
+  display: none !important;
+}
+
+body[data-fmb-unified-shell] > .fmb-unified-shell,
+body[data-fmb-unified-shell] > .fmb-unified-footer {
+  display: block !important;
+}
+
+body[data-fmb-page="news"] .nc-story-masthead {
+  margin-top: 0 !important;
+}
+
+body[data-fmb-page="news"] .nc-article-hero {
+  padding-top: clamp(58px,7vw,94px) !important;
+}
+
+body[data-fmb-page="news"] :where(.nc-article-hero h1,.nc-story-body h2,.nc-next h2) {
+  font-family: Cinzel,Georgia,serif !important;
+}
+
+body[data-fmb-page="news"] :where(.nc-article,.nc-next,.nc-story-media) {
+  color: #23152c;
+}
+
+body[data-fmb-page="news"] :where(.nc-story-aside,.nc-story-rail,.nc-brief-card,.nc-reflection,.nc-sources) {
+  border-radius: 22px !important;
+}
+
+body[data-fmb-page="company"] .fco-header-logo,
+body[data-fmb-page="company"] .fco-hero-logo,
+body[data-fmb-page="company"] .fco-company-logo,
+body[data-fmb-page="home"] .brand-card,
+body[data-fmb-page="news"] .nc-channel-lockup,
+body[data-fmb-page="music"] .fmb-product-brand,
+body[data-fmb-page="ebooks"] .fmb-product-brand {
+  isolation: isolate;
+}
+
+body[data-fmb-page="company"] :where(.fco-header-logo img,.fco-hero-logo img,.fco-company-logo img),
+body[data-fmb-page="home"] .brand-card img,
+body[data-fmb-page="news"] .nc-channel-lockup img,
+body[data-fmb-page="music"] .fmb-product-brand img,
+body[data-fmb-page="ebooks"] .fmb-product-brand img {
+  object-fit: contain !important;
+  object-position: center !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+body[data-fmb-unified-shell] img {
+  image-rendering: auto !important;
+}
+
+@media (max-width: 700px) {
+  body[data-fmb-page="news"] .nc-article-hero {
+    padding-top: 48px !important;
+  }
+}
