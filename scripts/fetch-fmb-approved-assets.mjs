@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -7,6 +7,7 @@ const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url))
 const distRoot = path.join(repositoryRoot, 'dist');
 const manifestPath = path.join(repositoryRoot, 'config', 'fmb-approved-assets.json');
 const outputDirectory = path.join(distRoot, 'assets', 'images', 'fmb-approved');
+const localImageRoot = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'images');
 const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
 
 await mkdir(outputDirectory, { recursive: true });
@@ -19,7 +20,45 @@ function isWebP(buffer) {
   return buffer.length >= 12 && buffer.subarray(0, 4).toString('ascii') === 'RIFF' && buffer.subarray(8, 12).toString('ascii') === 'WEBP';
 }
 
+async function collectLocalWebp(directory, catalog = { byHash: new Map(), byName: new Map(), all: [] }) {
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    const fullPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      await collectLocalWebp(fullPath, catalog);
+      continue;
+    }
+    if (!entry.name.toLowerCase().endsWith('.webp')) continue;
+    const buffer = await readFile(fullPath);
+    if (!isWebP(buffer)) continue;
+    const record = { buffer, fullPath, fileName: entry.name, hash: sha256(buffer), bytes: buffer.length };
+    catalog.all.push(record);
+    if (!catalog.byHash.has(record.hash)) catalog.byHash.set(record.hash, record);
+    const sameName = catalog.byName.get(entry.name) || [];
+    sameName.push(record);
+    catalog.byName.set(entry.name, sameName);
+  }
+  return catalog;
+}
+
+const localMasters = await collectLocalWebp(localImageRoot);
+
+function diagnosticCandidates(asset) {
+  const exactName = localMasters.byName.get(asset.file) || [];
+  if (exactName.length) return exactName;
+  const tokens = asset.file.toLowerCase().replace(/\.webp$/, '').split('-').filter(token => token !== 'purple');
+  return localMasters.all.filter(candidate => {
+    const candidateName = candidate.fileName.toLowerCase().replace(/\.webp$/, '');
+    return tokens.every(token => candidateName.includes(token));
+  });
+}
+
 async function fetchVerifiedAsset(asset) {
+  const local = localMasters.byHash.get(asset.sha256);
+  if (local) {
+    console.log(`Using repository master for ${asset.key}: ${path.relative(repositoryRoot, local.fullPath)}`);
+    return local.buffer;
+  }
+
   let lastError;
   for (let attempt = 1; attempt <= 3; attempt += 1) {
     const controller = new AbortController();
@@ -47,7 +86,12 @@ async function fetchVerifiedAsset(asset) {
       clearTimeout(timeout);
     }
   }
-  throw new Error(`Unable to retrieve verified asset ${asset.key} (${asset.file}): ${lastError?.message || 'unknown error'}`);
+
+  const candidates = diagnosticCandidates(asset)
+    .map(candidate => `${path.relative(repositoryRoot, candidate.fullPath)} · ${candidate.bytes} bytes · sha256 ${candidate.hash}`)
+    .join('; ');
+  const candidateNote = candidates ? ` Related repository candidates: ${candidates}.` : '';
+  throw new Error(`Unable to retrieve verified asset ${asset.key} (${asset.file}). No hash-matching repository master was found and the archived source failed: ${lastError?.message || 'unknown error'}.${candidateNote}`);
 }
 
 for (const asset of manifest.assets) {
