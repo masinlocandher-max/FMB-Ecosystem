@@ -1,6 +1,4 @@
-'use strict';
-
-const crypto = require('node:crypto');
+import crypto from 'node:crypto';
 
 const MAX_BODY_BYTES = 1024 * 1024;
 const FORWARD_TIMEOUT_MS = 4200;
@@ -49,21 +47,21 @@ const URGENT_TERMS = [
   'abuse right now', 'violence right now', 'missing person', 'medical emergency'
 ];
 
-function clean(value, max = 5000) {
+export function clean(value, max = 5000) {
   return String(value ?? '')
     .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '')
     .trim()
     .slice(0, max);
 }
 
-function json(res, status, body) {
+export function json(res, status, body) {
   res.statusCode = status;
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   res.setHeader('Cache-Control', 'no-store');
   res.end(JSON.stringify(body));
 }
 
-async function readRawBody(req, maxBytes = MAX_BODY_BYTES) {
+export async function readRawBody(req, maxBytes = MAX_BODY_BYTES) {
   if (Buffer.isBuffer(req.body)) return req.body;
   if (typeof req.body === 'string') return Buffer.from(req.body);
 
@@ -85,7 +83,7 @@ async function readRawBody(req, maxBytes = MAX_BODY_BYTES) {
   return Buffer.alloc(0);
 }
 
-function parseJson(raw) {
+export function parseJson(raw) {
   try {
     return JSON.parse(raw.toString('utf8') || '{}');
   } catch {
@@ -95,14 +93,14 @@ function parseJson(raw) {
   }
 }
 
-function timingSafeEqualText(left, right) {
+export function timingSafeEqualText(left, right) {
   const a = Buffer.from(String(left || ''));
   const b = Buffer.from(String(right || ''));
   if (a.length !== b.length) return false;
   return crypto.timingSafeEqual(a, b);
 }
 
-function verifyMetaSignature(raw, signatureHeader, appSecret) {
+export function verifyMetaSignature(raw, signatureHeader, appSecret) {
   if (!appSecret || !signatureHeader?.startsWith('sha256=')) return false;
   const expected = `sha256=${crypto.createHmac('sha256', appSecret).update(raw).digest('hex')}`;
   return timingSafeEqualText(expected, signatureHeader);
@@ -112,7 +110,7 @@ function hashId(value) {
   return crypto.createHash('sha256').update(String(value)).digest('hex').slice(0, 32);
 }
 
-function classify(message, hint = '') {
+export function classify(message, hint = '') {
   const combined = `${hint} ${message}`.toLowerCase();
   const urgent = URGENT_TERMS.some(term => combined.includes(term));
 
@@ -151,7 +149,7 @@ function messageFromMetaItem(item) {
   return null;
 }
 
-function normalizeMetaEvents(payload) {
+export function normalizeMetaEvents(payload) {
   const channel = payload.object === 'instagram' ? 'Instagram' : 'Messenger';
   const output = [];
 
@@ -193,7 +191,7 @@ function normalizeMetaEvents(payload) {
   return output;
 }
 
-function normalizeGenericEvent(input) {
+export function normalizeGenericEvent(input) {
   const message = clean(input.message, 10000);
   if (!message) {
     const error = new Error('message is required.');
@@ -230,12 +228,12 @@ function normalizeGenericEvent(input) {
   };
 }
 
-function bearerToken(req) {
+export function bearerToken(req) {
   const header = String(req.headers.authorization || '');
   return header.startsWith('Bearer ') ? header.slice(7).trim() : '';
 }
 
-async function forwardEvent(event) {
+export async function forwardEvent(event) {
   const url = process.env.AUTOMATION_INGEST_URL;
   const secret = process.env.AUTOMATION_INGEST_SECRET;
   if (!url || !secret) {
@@ -267,17 +265,3 @@ async function forwardEvent(event) {
     clearTimeout(timer);
   }
 }
-
-module.exports = {
-  bearerToken,
-  clean,
-  classify,
-  forwardEvent,
-  json,
-  normalizeGenericEvent,
-  normalizeMetaEvents,
-  parseJson,
-  readRawBody,
-  timingSafeEqualText,
-  verifyMetaSignature
-};
