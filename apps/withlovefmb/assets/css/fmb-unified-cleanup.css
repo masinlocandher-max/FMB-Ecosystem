@@ -14,8 +14,13 @@ body[data-fmb-unified-shell] > .mobile-dock {
 }
 
 body[data-fmb-unified-shell] > .fmb-unified-shell,
-body[data-fmb-unified-shell] > .fmb-unified-footer {
+body[data-fmb-unified-shell] > .fmb-unified-footer,
+body[data-fmb-page="company"] > .fmb-unified-shell.fco-header {
   display: block !important;
+}
+
+body.fmb-menu-open {
+  overflow: hidden !important;
 }
 
 body[data-fmb-page="news"] .nc-story-masthead {
@@ -52,11 +57,25 @@ body[data-fmb-page="company"] :where(.fco-header-logo img,.fco-hero-logo img,.fc
 body[data-fmb-page="home"] .brand-card img,
 body[data-fmb-page="news"] .nc-channel-lockup img,
 body[data-fmb-page="music"] .fmb-product-brand img,
-body[data-fmb-page="ebooks"] .fmb-product-brand img {
+body[data-fmb-page="ebooks"] .fmb-product-brand img,
+body[data-fmb-unified-shell] .fmb-unified-brand img,
+body[data-fmb-unified-shell] .fmb-unified-footer-brand img,
+body[data-fmb-page="home"] .fmb-hero-mark {
   object-fit: contain !important;
   object-position: center !important;
   filter: none !important;
   transform: none !important;
+  mix-blend-mode: normal !important;
+}
+
+body[data-fmb-unified-shell] .fmb-unified-brand img {
+  width: 108px !important;
+  height: 54px !important;
+}
+
+body[data-fmb-unified-shell] .fmb-unified-footer-brand img {
+  width: 132px !important;
+  height: 84px !important;
 }
 
 body[data-fmb-unified-shell] img {
