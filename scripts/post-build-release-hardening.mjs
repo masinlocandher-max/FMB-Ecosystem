@@ -25,14 +25,18 @@ function addLegalLinks(html) {
   return result;
 }
 
-function lazyLoadYoniHomepageArt(html) {
-  return html.replace(/<img\b[^>]*src=["']\/app\/assets\/yoni\/yoni-hero\.webp["'][^>]*>/gi, tag => {
-    let next = tag
-      .replace(/\sloading=["'][^"']*["']/i, '')
-      .replace(/\sfetchpriority=["'][^"']*["']/i, '')
-      .replace(/\sdecoding=["'][^"']*["']/i, '');
-    return next.replace(/<img/i, '<img loading="lazy" decoding="async" fetchpriority="low"');
-  });
+function makeImageLazy(tag) {
+  const next = tag
+    .replace(/\sloading=["'][^"']*["']/i, '')
+    .replace(/\sfetchpriority=["'][^"']*["']/i, '')
+    .replace(/\sdecoding=["'][^"']*["']/i, '');
+  return next.replace(/<img/i, '<img loading="lazy" decoding="async" fetchpriority="low"');
+}
+
+function hardenHomepageImages(html) {
+  return html
+    .replace(/<img\b[^>]*src=["']\/app\/assets\/yoni\/yoni-hero\.webp["'][^>]*>/gi, makeImageLazy)
+    .replace(/<img\b(?=[^>]*id=["']homeFounderImage["'])[^>]*>/gi, makeImageLazy);
 }
 
 let changed = 0;
@@ -44,7 +48,7 @@ for (const file of await walk(root)) {
   html = addLegalLinks(html);
 
   if (relative === 'index.html') {
-    html = lazyLoadYoniHomepageArt(html)
+    html = hardenHomepageImages(html)
       .replace(
         /<style>html\{background:#05020a\}body\{visibility:hidden\}<\/style><noscript><style>body\{visibility:visible\}<\/style><\/noscript>/i,
         '<style>html{background:#05020a}</style>',
@@ -67,8 +71,11 @@ for (const required of ['/privacy/', '/terms/', '/data-deletion/']) {
   if (!home.includes(`href="${required}"`)) throw new Error(`Homepage legal navigation is missing ${required}`);
 }
 if (/body\{visibility:hidden\}/i.test(home)) throw new Error('Homepage still depends on a JavaScript-only body visibility reveal.');
-if (!/<img\b(?=[^>]*src=["']\/app\/assets\/yoni\/yoni-hero\.webp["'])(?=[^>]*loading=["']lazy["'])(?=[^>]*fetchpriority=["']low["'])[^>]*>/i.test(home)) {
-  throw new Error('Homepage Yoni artwork is not protected as a below-fold lazy image.');
+for (const pattern of [
+  /<img\b(?=[^>]*src=["']\/app\/assets\/yoni\/yoni-hero\.webp["'])(?=[^>]*loading=["']lazy["'])(?=[^>]*fetchpriority=["']low["'])[^>]*>/i,
+  /<img\b(?=[^>]*id=["']homeFounderImage["'])(?=[^>]*loading=["']lazy["'])(?=[^>]*fetchpriority=["']low["'])[^>]*>/i,
+]) {
+  if (!pattern.test(home)) throw new Error('Homepage below-fold imagery is not fully protected by lazy loading.');
 }
 
-console.log(`Release hardening updated ${changed} HTML file(s): legal navigation is current, the homepage renders without JavaScript, and below-fold Yoni artwork is lazy-loaded.`);
+console.log(`Release hardening updated ${changed} HTML file(s): legal navigation is current, the homepage renders without JavaScript, and below-fold Yoni/founder artwork is lazy-loaded.`);
