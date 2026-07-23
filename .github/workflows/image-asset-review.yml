@@ -1,5 +1,6 @@
 name: Image asset integrity
 
+# This gate imports the Automation Hub ESM handlers before auditing the final production image output.
 on:
   push:
     branches: [main]
