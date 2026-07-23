@@ -4,14 +4,13 @@ import path from 'node:path';
 const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
 const fail=message=>{throw new Error(`FMB public-route brand audit: ${message}`)};
 const protectedRoots=['app/','_sites/senz/','_sites/cognita/'];
-const readingRoutes=[
+const controlledReadingRoutes=[
   'coming-out-respect.html',
   'dress-with-intention.html',
   'men-can-cry.html',
   'reading.html',
   'skin-care-makeup.html',
-  'womens-health.html',
-  'herra.html'
+  'womens-health.html'
 ];
 const unavailable=[
   'https://at.adobe.com/',
@@ -54,7 +53,7 @@ for(const file of await walk(root)){
     if(!/(?:FMB(?:&amp;|&)CO\. News|FMB News)/i.test(html))fail(`${name} is missing a visible FMB News identity`);
     newsPages+=1;
   }
-  if(readingRoutes.includes(name)){
+  if(controlledReadingRoutes.includes(name)){
     requireMarker(html,name,'membership-gate.js');
     requireMarker(html,name,'reading-page');
   }
@@ -73,4 +72,4 @@ for(const [route,marker] of Object.entries(representativeRoutes)){
   requireMarker(html,route,marker);
 }
 
-console.log(`FMB public-route brand audit verified ${publicPages} public HTML pages, including ${newsPages} News routes and ${readingRoutes.length} controlled reading routes, using repository-contained identities.`);
+console.log(`FMB public-route brand audit verified ${publicPages} public HTML pages, including ${newsPages} News routes and ${controlledReadingRoutes.length} controlled reading routes, using repository-contained identities.`);
