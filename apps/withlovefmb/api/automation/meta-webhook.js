@@ -1,6 +1,4 @@
-'use strict';
-
-const {
+import {
   clean,
   forwardEvent,
   json,
@@ -9,9 +7,9 @@ const {
   readRawBody,
   timingSafeEqualText,
   verifyMetaSignature
-} = require('./_automation-lib');
+} from './_automation-lib.js';
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method === 'GET') {
     const requestUrl = new URL(req.url || '/api/automation/meta-webhook', 'https://www.francinemariebautista.com');
     const mode = requestUrl.searchParams.get('hub.mode');
@@ -73,4 +71,4 @@ module.exports = async function handler(req, res) {
     console.error('Meta webhook error', clean(error?.message, 500));
     json(res, error.statusCode || 500, {ok: false, error: clean(error.message || 'Webhook processing failed.', 300)});
   }
-};
+}
