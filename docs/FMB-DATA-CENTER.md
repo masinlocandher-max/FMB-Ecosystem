@@ -2,11 +2,14 @@
 
 Private operational dashboard for `www.francinemariebautista.com` and the FMB/Yoni member platform.
 
-## Route
+## Domain
 
-- Production: `/data-center/`
+- Production: `https://data.francinemariebautista.com/`
+- Previous path: `https://www.francinemariebautista.com/data-center/` redirects to the dedicated subdomain
 - Public navigation: intentionally omitted
 - Search indexing: disabled with `noindex`, `nofollow`, and `noarchive`
+
+The dashboard remains inside the existing `withlovefmb` Vercel project and FMB codebase. The dedicated subdomain is a presentation and routing boundary, not a separate database or a separate paid application.
 
 ## Security model
 
@@ -43,4 +46,6 @@ These require separate, properly authorized analytics connectors. Database activ
 
 ## Deployment
 
-The static route is copied automatically by `apps/withlovefmb/build.mjs`. Deploy the Edge Function with JWT verification enabled. No public homepage link is required.
+The static dashboard files remain under `apps/withlovefmb/data-center/` and are copied automatically by `apps/withlovefmb/build.mjs`. `apps/withlovefmb/vercel.json` serves those files at the root of `data.francinemariebautista.com` and redirects the former public-site path to the subdomain.
+
+Attach `data.francinemariebautista.com` to the existing `withlovefmb` Vercel project. Because the domain uses Cloudflare DNS, create the DNS record requested by Vercel after the domain is added. Deploy the Edge Function with JWT verification enabled. No public homepage link is required.
