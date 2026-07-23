@@ -1,6 +1,4 @@
-'use strict';
-
-const {
+import {
   bearerToken,
   clean,
   forwardEvent,
@@ -9,9 +7,9 @@ const {
   parseJson,
   readRawBody,
   timingSafeEqualText
-} = require('./_automation-lib');
+} from './_automation-lib.js';
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     json(res, 405, {ok: false, error: 'Method not allowed.'});
@@ -43,4 +41,4 @@ module.exports = async function handler(req, res) {
     console.error('Automation intake error', clean(error?.message, 500));
     json(res, error.statusCode || 500, {ok: false, error: clean(error.message || 'Intake failed.', 300)});
   }
-};
+}
