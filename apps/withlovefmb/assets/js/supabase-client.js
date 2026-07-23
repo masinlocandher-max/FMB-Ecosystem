@@ -1,10 +1,9 @@
 (function(){
   'use strict';
   const YONI_HOST='yoni.francinemariebautista.com';
-  const LEGACY_APP_HOST='app.francinemariebautista.com';
   const hostname=window.location.hostname;
   const pathname=window.location.pathname;
-  const isDedicatedYoniHost=hostname===YONI_HOST||hostname===LEGACY_APP_HOST;
+  const isDedicatedYoniHost=hostname===YONI_HOST;
 
   // Hard routing fallback. Vercel also redirects these hosts, but this prevents
   // the main FMB website from remaining visible if a stale edge route is served.
@@ -88,7 +87,7 @@
     const status=document.getElementById('signupStatus');
     if(!form||!button)return;
 
-    let registrationOpen=false;
+    const registrationOpen=false;
 
     function showStatus(message,type=''){
       if(!status)return;
@@ -97,43 +96,20 @@
       status.classList.toggle('visible',Boolean(message));
     }
 
-    function setAvailability(open,message){
-      registrationOpen=Boolean(open);
-      window.FMB.registrationOpen=registrationOpen;
-      button.disabled=!registrationOpen;
-      button.textContent=registrationOpen?'Create my Yoni profile':'Membership opening soon';
-      form.dataset.registration=registrationOpen?'open':'closed';
-      showStatus(message,registrationOpen?'success':'');
+    function setAvailability(message){
+      window.FMB.registrationOpen=false;
+      button.disabled=true;
+      button.textContent='Registration closed';
+      form.dataset.registration='closed';
+      showStatus(message);
     }
 
-    // Registration is closed first and opens only after the protected readiness
-    // function explicitly confirms it. This capture listener runs before the
-    // inline sign-up handler and prevents accidental or stale-form submissions.
-    setAvailability(false,'Checking membership availability. Existing members may still sign in.');
+    setAvailability('Registration is closed. Existing members may still sign in.');
     form.addEventListener('submit',event=>{
-      if(registrationOpen)return;
       event.preventDefault();
       event.stopImmediatePropagation();
-      showStatus('Membership registration is not open yet. Existing members may still sign in.','error');
+      showStatus('Registration is closed. Existing members may still sign in.','error');
     },true);
-
-    (async()=>{
-      if(!configured){
-        setAvailability(false,'Membership setup is still being completed. Existing members may sign in.');
-        return;
-      }
-      try{
-        const client=createClient('local');
-        const {data,error}=await client.rpc('get_membership_status');
-        if(error||data?.ready!==true||data?.registration_open!==true){
-          setAvailability(false,'Membership profiles are being prepared for public opening. Existing members may sign in.');
-          return;
-        }
-        setAvailability(true,'Membership is open. Complete the form to create a verified profile.');
-      }catch{
-        setAvailability(false,'Membership availability could not be confirmed. Registration remains safely closed.');
-      }
-    })();
   }
 
   installYoniRegistrationGuard();

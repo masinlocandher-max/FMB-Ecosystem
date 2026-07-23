@@ -36,10 +36,10 @@ function activities(){
   const welcome=$('.access-intro .access-mascot');if(welcome){welcome.src=A.happy;welcome.alt='Yoni waving hello'}
 }
 function productNotes(){
-  const exact='Yoni is an FMB&CO. digital product.';
-  const footer=$('.app-footer');if(footer&&!footer.querySelector('.yoni-product-footnote'))footer.insertAdjacentHTML('beforeend',`<p class="yoni-product-footnote"><a href="/fmbandco/">${exact}</a></p>`);
-  const profile=$('#screen-profile');if(profile&&!$('#yoniProductCard'))profile.insertAdjacentHTML('beforeend',`<article class="card yoni-product-card" id="yoniProductCard"><img src="${A.master}" width="90" height="112" loading="lazy" alt="Yoni"><div><p class="kicker">About Yoni</p><h2>A gentle digital companion</h2><p>Yoni supports private reflection, check-ins, grounding, and access to human support. Yoni does not replace a therapist, doctor, or emergency service.</p><a href="/fmbandco/">${exact}</a></div></article>`);
-  const privacy=$('#screen-privacy');if(privacy&&!privacy.querySelector('.yoni-legal-footnote'))privacy.insertAdjacentHTML('beforeend',`<aside class="yoni-legal-footnote"><a href="/fmbandco/">${exact}</a></aside>`);
+  const exact='Yoni is an FMB project.';
+  const footer=$('.app-footer');if(footer&&!footer.querySelector('.yoni-product-footnote'))footer.insertAdjacentHTML('beforeend',`<p class="yoni-product-footnote"><a href="/projects/">${exact}</a></p>`);
+  const profile=$('#screen-profile');if(profile&&!$('#yoniProductCard'))profile.insertAdjacentHTML('beforeend',`<article class="card yoni-product-card" id="yoniProductCard"><img src="${A.master}" width="90" height="112" loading="lazy" alt="Yoni"><div><p class="kicker">About Yoni</p><h2>A gentle digital companion</h2><p>Yoni supports private reflection, check-ins, grounding, and access to human support. Yoni does not replace a therapist, doctor, or emergency service.</p><a href="/projects/">${exact}</a></div></article>`);
+  const privacy=$('#screen-privacy');if(privacy&&!privacy.querySelector('.yoni-legal-footnote'))privacy.insertAdjacentHTML('beforeend',`<aside class="yoni-legal-footnote"><a href="/projects/">${exact}</a></aside>`);
   const settings=$('#yoniPreferencesCard');if(settings&&!settings.querySelector('.yoni-product-footnote'))settings.insertAdjacentHTML('beforeend',`<p class="yoni-product-footnote"><a href="/fmbandco/">${exact}</a></p>`);
 }
 function tuneOldComfort(){

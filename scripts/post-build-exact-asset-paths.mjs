@@ -3,7 +3,7 @@ import path from 'node:path';
 
 const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
 const approved='/assets/images/fmb-approved';
-const pages=['index.html','aboutfmb/index.html','withlovefmb/index.html','news/index.html','music/index.html','ebooks/index.html','fmb&co/index.html','fmb&co/senz/index.html','fmb&co/cognita/index.html'];
+const pages=['index.html','aboutfmb/index.html','withlovefmb/index.html','news/index.html','music/index.html','ebooks/index.html','fmbandco/index.html','fmbandco/senz/index.html','fmbandco/cognita/index.html'];
 const globalReplacements=new Map([
   ['/assets/images/home/fmb-home-logo.webp',`${approved}/fmb-master-transparent.webp`],
   ['/assets/images/home/francine-home-hero-hd.webp',`${approved}/francine-standing-landscape.webp`],
@@ -22,7 +22,7 @@ const priorityAssetByPage={
   'news/index.html':`${approved}/fmb-news-official-transparent.webp`,
   'music/index.html':`${approved}/fmb-music-official-transparent.webp`,
   'ebooks/index.html':`${approved}/fmb-ebook-official-transparent.webp`,
-  'fmb&co/index.html':`${approved}/francine-standing-landscape.webp`
+  'fmbandco/index.html':`${approved}/francine-standing-landscape.webp`
 };
 const exactLayout=`<style data-fmb-exact-asset-layout>
 body.fmb-identity-v3 img[src^="${approved}/"]{filter:none!important;transform:none!important;animation:none!important}

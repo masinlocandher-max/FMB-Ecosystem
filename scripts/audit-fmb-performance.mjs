@@ -2,7 +2,7 @@ import { readFile, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
-const pages=['index.html','aboutfmb/index.html','withlovefmb/index.html','communityengagements/index.html','gethelp/index.html','news/index.html','music/index.html','ebooks/index.html','fmb&co/index.html','fmb&co/senz/index.html','fmb&co/cognita/index.html','app/install/index.html'];
+const pages=['index.html','aboutfmb/index.html','withlovefmb/index.html','communityengagements/index.html','gethelp/index.html','news/index.html','music/index.html','ebooks/index.html','fmbandco/index.html','fmbandco/senz/index.html','fmbandco/cognita/index.html','app/install/index.html'];
 const errors=[];
 const results=[];
 

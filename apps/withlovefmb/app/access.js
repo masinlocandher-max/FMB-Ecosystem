@@ -89,7 +89,7 @@
     name=>`Hi ${name}. Ready for a tiny reset?`
   ];
 
-  let registrationOpen=false;
+  const registrationOpen=false;
   let readinessPromise=null;
   let activeClient=null;
   let activeMode='local';
@@ -134,15 +134,15 @@
   }
 
   function showPanel(name,{focus=false}={}){
-    const signingIn=name==='signin';
-    signupTab.classList.toggle('active',!signingIn);
-    signinTab.classList.toggle('active',signingIn);
-    signupTab.setAttribute('aria-selected',String(!signingIn));
-    signinTab.setAttribute('aria-selected',String(signingIn));
-    signupPanel.hidden=signingIn;
-    signinPanel.hidden=!signingIn;
+    signupTab.classList.remove('active');
+    signinTab.classList.add('active');
+    signupTab.setAttribute('aria-selected','false');
+    signinTab.setAttribute('aria-selected','true');
+    signupTab.disabled=true;
+    signupPanel.hidden=true;
+    signinPanel.hidden=false;
     if(focus){
-      requestAnimationFrame(()=>$(signingIn?'#appSigninEmail':'#appFullName')?.focus({preventScroll:true}));
+      requestAnimationFrame(()=>$('#appSigninEmail')?.focus({preventScroll:true}));
     }
   }
 
@@ -151,10 +151,7 @@
   }
 
   function authRedirect(){
-    if(location.hostname.toLowerCase()==='app.francinemariebautista.com'){
-      return 'https://app.francinemariebautista.com/app/';
-    }
-    return new URL('/app/',location.origin).href;
+    return 'https://yoni.francinemariebautista.com/app/';
   }
 
   function passwordResetRedirect(){
@@ -276,7 +273,7 @@
     return params.get('error_description')||params.get('error')||'';
   }
 
-  function showAccess(message='',panel='signup'){
+  function showAccess(message='',panel='signin'){
     setLoading(signinButton,false);
     setLoading(signupButton,false);
     appShell.hidden=true;
@@ -287,35 +284,19 @@
     accessContent.hidden=false;
     document.body.classList.remove('auth-pending','app-authenticated');
     document.body.classList.add('auth-required');
-    showPanel(panel);
-    if(message)setStatus(panel==='signin'?'#appSigninStatus':'#appSignupStatus',message,'error');
+    showPanel('signin');
+    if(message)setStatus('#appSigninStatus',message,'error');
     checkReadiness();
   }
 
   async function checkReadiness(){
     if(readinessPromise)return readinessPromise;
-    readinessPromise=(async()=>{
-      if(!window.FMB?.configured){
-        readiness.textContent='Secure profile creation is temporarily unavailable. Existing members may still sign in.';
-        readiness.dataset.state='closed';
-        signupButton.textContent='Profile creation unavailable';
-        signupButton.disabled=true;
-        return;
-      }
-      try{
-        const client=window.FMB.createClient('local');
-        const {data,error}=await client.rpc('get_membership_status');
-        registrationOpen=!error&&data?.ready===true&&data?.registration_open===true;
-      }catch{
-        registrationOpen=false;
-      }
-      readiness.dataset.state=registrationOpen?'open':'closed';
-      readiness.textContent=registrationOpen
-        ?'Profile creation is open. We will verify your email before opening the app.'
-        :'New profiles are temporarily paused. Existing members may still sign in.';
-      signupButton.disabled=!registrationOpen;
-      signupButton.textContent=registrationOpen?'Create my profile':'Profile creation paused';
-    })();
+    readinessPromise=Promise.resolve().then(()=>{
+      readiness.dataset.state='closed';
+      readiness.textContent='Registration is closed. Existing members may still sign in.';
+      signupButton.disabled=true;
+      signupButton.textContent='Registration closed';
+    });
     return readinessPromise;
   }
 
@@ -370,11 +351,10 @@
         if(await openVerifiedSession(client,mode,userData.user))return;
       }catch{}
     }
-    const requestedPanel=new URLSearchParams(location.search).get('auth')==='signin'?'signin':'signup';
-    showAccess(redirectError?decodeURIComponent(redirectError.replace(/\+/g,' ')):'',redirectError?'signin':requestedPanel);
+    showAccess(redirectError?decodeURIComponent(redirectError.replace(/\+/g,' ')):'','signin');
   }
 
-  signupTab.addEventListener('click',()=>showPanel('signup',{focus:true}));
+  signupTab.addEventListener('click',()=>showPanel('signin',{focus:true}));
   signinTab.addEventListener('click',()=>showPanel('signin',{focus:true}));
 
   $$('[data-access-toggle]').forEach(button=>button.addEventListener('click',()=>{
@@ -433,73 +413,10 @@
     }
   });
 
-  signupForm.addEventListener('submit',async event=>{
+  signupForm.addEventListener('submit',event=>{
     event.preventDefault();
-    await checkReadiness();
-    if(!registrationOpen){
-      setStatus('#appSignupStatus','New profile creation is temporarily paused. Existing members may still sign in.','error');
-      return;
-    }
-    const fullName=window.FMB?.cleanText($('#appFullName').value,80)||'';
-    const email=$('#appSignupEmail').value.trim().toLowerCase();
-    const password=$('#appSignupPassword').value;
-    const confirmation=$('#appConfirmPassword').value;
-    if(fullName.length<2){setStatus('#appSignupStatus','Enter your full name.','error');$('#appFullName').focus();return}
-    if(!validEmail(email)){setStatus('#appSignupStatus','Enter a valid email address.','error');$('#appSignupEmail').focus();return}
-    if(!validPassword(password)){setStatus('#appSignupStatus','Use at least 10 characters with a lowercase letter, uppercase letter, and number.','error');$('#appSignupPassword').focus();return}
-    if(password!==confirmation){setStatus('#appSignupStatus','The passwords do not match.','error');$('#appConfirmPassword').focus();return}
-    if(!$('#appLegalConsent').checked){setStatus('#appSignupStatus','Read and accept the membership, privacy, and community terms before continuing.','error');return}
-    if(!window.FMB?.configured){serviceMessage('#appSignupStatus');return}
-
-    setStatus('#appSignupStatus','');
-    setLoading(signupButton,true,'Creating your profile');
-    const client=window.FMB.createClient('local');
-    const {data,error}=await client.auth.signUp({
-      email,
-      password,
-      options:{
-        emailRedirectTo:authRedirect(),
-        data:{
-          full_name:fullName,
-          display_name:fullName,
-          username:window.FMB.usernameFrom(fullName),
-          accepted_membership_version:'2026-07-12',
-          accepted_privacy_version:'2026-07-12',
-          accepted_guidelines_version:'2026-07-12'
-        }
-      }
-    });
-    setLoading(signupButton,false);
-    signupButton.disabled=!registrationOpen;
-    if(error){
-      const duplicate=['user_already_exists','email_exists'].includes(error.code)||/already registered|already exists/i.test(error.message||'');
-      const limited=error.code==='over_email_send_rate_limit'||/rate limit|too many requests/i.test(error.message||'');
-      setStatus('#appSignupStatus',duplicate
-        ?'A profile may already use this email. Choose Sign in or reset the password.'
-        :limited
-          ?'Verification email sending is temporarily at its limit. Please wait before trying again.'
-          :'The profile could not be created. Review the details and try again.','error');
-      if(duplicate){
-        $('#appSigninEmail').value=email;
-        showPanel('signin');
-      }
-      return;
-    }
-    const existingAccount=Boolean(data.user&&Array.isArray(data.user.identities)&&data.user.identities.length===0);
-    if(existingAccount){
-      $('#appSigninEmail').value=email;
-      showPanel('signin');
-      setStatus('#appSigninStatus','A profile already uses this email. Sign in, or reset the password if needed.','error');
-      return;
-    }
-    rememberInstallOffer(email);
-    if(data.session&&data.user?.email_confirmed_at){
-      await openVerifiedSession(client,'local',data.user);
-      return;
-    }
-    signupForm.reset();
-    $$('#appPasswordRules span').forEach(rule=>rule.classList.remove('valid'));
-    showVerification(email);
+    setStatus('#appSignupStatus','Registration is closed. Existing members may still sign in.','error');
+    showPanel('signin',{focus:true});
   });
 
   $('#appOpenSignin').addEventListener('click',()=>{

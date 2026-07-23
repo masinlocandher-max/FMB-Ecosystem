@@ -30,7 +30,7 @@ const finalBuild=fs.existsSync(finalBuildPath)?fs.readFileSync(finalBuildPath,'u
 const sourceHasManifest=/rel=["']manifest["'][^>]+manifest\.webmanifest/i.test(index);
 const buildsInjectManifest=workspaceBuild.includes('/manifest.webmanifest')&&finalBuild.includes('/manifest.webmanifest');
 if(!sourceHasManifest&&!buildsInjectManifest)fail('Home page build is missing its manifest connection.');
-if(!index.includes('/assets/images/home/fmb-home-logo.webp'))fail('Home page is missing the current FMB icon.');
+if(!index.includes('/assets/images/fmb-approved/fmb-master-transparent.webp'))fail('Home page is missing the exact approved FMB master.');
 
 const appManifest=readJson('app/manifest.webmanifest');
 if(appManifest.display!=='standalone')fail('Yoni manifest must use standalone display mode.');
@@ -38,7 +38,7 @@ if(appManifest.scope!=='/')fail('Yoni manifest must cover the complete Yoni host
 if(appManifest.id!=='/app/')fail('Yoni manifest must keep the /app/ product identity.');
 if(appManifest.start_url!=='/app/#home')fail('Installed Yoni must open the Yoni home screen.');
 if(appManifest.short_name!=='Yoni')fail('The companion manifest must identify Yoni.');
-if(appManifest.name!=='Yoni Mental Health Companion')fail('The companion manifest must retain the current Yoni product name.');
+if(appManifest.name!=='Yoni Digital Companion')fail('The companion manifest must retain the current Yoni product name.');
 const expectedYoniIcons={
   '/app/assets/yoni/yoni-app-icon-192.png':'192x192',
   '/app/assets/yoni/yoni-app-icon-512.png':'512x512',
@@ -94,12 +94,23 @@ for(const relative of [
 const supabaseClient=fs.readFileSync(path.join(root,'assets/js/supabase-client.js'),'utf8');
 for(const marker of [
   "registrationOpen:false",
-  "get_membership_status",
-  "Membership opening soon",
+  "Registration is closed.",
   "event.stopImmediatePropagation()",
-  "data?.registration_open!==true",
 ]){
   if(!supabaseClient.includes(marker))fail(`Yoni registration guard is missing: ${marker}`);
+}
+for(const forbidden of ["get_membership_status","data?.registration_open===true"]){
+  if(supabaseClient.includes(forbidden))fail(`Yoni registration guard can still open registration: ${forbidden}`);
+}
+
+const musicLibrary=readJson('assets/data/music-library.json');
+const musicReferences=musicLibrary.playlists.flatMap(playlist=>[
+  playlist.cover_url,
+  ...playlist.tracks.flatMap(track=>[track.cover_url,track.src]),
+]);
+for(const reference of new Set(musicReferences)){
+  if(!String(reference).startsWith('/assets/'))fail(`Music library reference is not root-relative: ${reference}`);
+  if(!fs.existsSync(path.join(root,String(reference).slice(1))))fail(`Music library reference is missing: ${reference}`);
 }
 
 console.log('Website and Yoni install experience, registration guard, current identity, libraries, cache, and responsive shell checks passed.');

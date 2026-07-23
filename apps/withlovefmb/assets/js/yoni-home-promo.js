@@ -4,7 +4,7 @@
   const YONI_URL='https://yoni.francinemariebautista.com/';
 
   function updateYoniEntryPoints(){
-    document.querySelectorAll('a[href*="app.francinemariebautista.com"]').forEach(link=>{
+    document.querySelectorAll('a[href*="yoni.francinemariebautista.com"]').forEach(link=>{
       const href=link.getAttribute('href')||'';
       link.href=href.includes('auth=signin')?`${YONI_URL}?auth=signin`:YONI_URL;
       const text=link.textContent.trim().toLowerCase();
@@ -35,7 +35,7 @@
         <article class="yoni-promo-shell">
           <div class="yoni-promo-top">
             <div class="yoni-promo-copy">
-              <span class="yoni-promo-badge">New mental health companion</span>
+              <span class="yoni-promo-badge">FMB digital companion</span>
               <div class="yoni-promo-brand">
                 <img src="/app/assets/yoni/yoni-app-icon-192.png" alt="Yoni app icon">
                 <span><strong>yoni</strong><small>your gentle digital companion</small></span>

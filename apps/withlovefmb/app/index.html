@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Yoni">
 <meta name="robots" content="index,follow">
-<title>Yoni | Private Mental Health Companion by FMB</title>
+<title>Yoni | Private Digital Companion by FMB</title>
 <meta name="description" content="Yoni is a private digital wellbeing companion by Francine Marie Bautista for honest check-ins, journaling, grounding, supportive reading, original music, and finding human help.">
 <meta property="og:title" content="Yoni | Your Gentle Digital Companion">
 <meta property="og:description" content="Check in, write privately, listen, read, and find support inside one focused wellbeing app.">
@@ -515,7 +515,7 @@ body{background:linear-gradient(180deg,#fffdfb 0%,#fbfaf8 48%,#f6f4f2 100%)}
         <img src="/app/assets/yoni/yoni-app-icon-192.png" alt="Yoni app icon">
         <span><strong>yoni</strong><small>your gentle digital companion</small></span>
       </a>
-      <a class="access-site-link" href="tel:1553">Need support?</a>
+      <a class="access-site-link" href="/gethelp/">Need support?</a>
     </header>
     <div class="access-layout">
       <section class="access-intro">
@@ -534,24 +534,24 @@ body{background:linear-gradient(180deg,#fffdfb 0%,#fbfaf8 48%,#f6f4f2 100%)}
       </section>
 
       <article class="access-card">
-        <div class="access-card-head"><h2>Your private space</h2><p>Create a profile or sign in securely. Existing members can use the same email and password.</p></div>
+        <div class="access-card-head"><h2>Your private space</h2><p>Registration is closed. Existing members can sign in with the email and password already connected to their profile.</p></div>
         <div class="access-segment" role="tablist" aria-label="Profile access">
-          <button class="active" id="signupTab" type="button" role="tab" aria-selected="true">Create profile</button>
-          <button id="signinTab" type="button" role="tab" aria-selected="false">Sign in</button>
+          <button id="signupTab" type="button" role="tab" aria-selected="false" disabled>Registration closed</button>
+          <button class="active" id="signinTab" type="button" role="tab" aria-selected="true">Sign in</button>
         </div>
-        <section class="access-panel" id="signupPanel">
-          <div class="access-panel-heading"><h3>Hi, new friend.</h3><p>One private profile opens the complete Yoni experience.</p></div>
+        <section class="access-panel" id="signupPanel" hidden inert>
+          <div class="access-panel-heading"><h3>Registration is closed.</h3><p>No new Yoni profile can be created here. Existing members may sign in.</p></div>
           <form class="access-form" id="signupForm">
             <label class="access-field"><span>Full name</span><input id="signupName" maxlength="80" autocomplete="name" placeholder="How Yoni should welcome you" required></label>
             <label class="access-field"><span>Email</span><input id="signupEmail" type="email" autocomplete="email" inputmode="email" maxlength="254" placeholder="name@example.com" required></label>
             <label class="access-field"><span>Password</span><input id="signupPassword" type="password" autocomplete="new-password" minlength="10" placeholder="At least 10 characters" required></label>
             <label class="access-field"><span>Confirm password</span><input id="signupConfirm" type="password" autocomplete="new-password" minlength="10" placeholder="Enter it again" required></label>
             <label class="access-consent"><input id="legalConsent" type="checkbox" required><span>I understand that Yoni is a digital companion, not a therapist, doctor, or emergency service, and I agree to the <a href="/privacy-policy.html" target="_blank" rel="noopener">Privacy Policy</a> and <a href="/community-guidelines.html" target="_blank" rel="noopener">Community Guidelines</a>.</span></label>
-            <button class="access-primary" type="submit">Create my Yoni profile</button>
+            <button class="access-primary" type="submit" disabled>Registration closed</button>
             <div class="access-status" id="signupStatus" role="status"></div>
           </form>
         </section>
-        <section class="access-panel" id="signinPanel" hidden>
+        <section class="access-panel" id="signinPanel">
           <div class="access-panel-heading"><h3>Welcome back.</h3><p>Return to your private Yoni space.</p></div>
           <form class="access-form" id="signinForm">
             <label class="access-field"><span>Email</span><input id="signinEmail" type="email" autocomplete="email" placeholder="name@example.com" required></label>
@@ -591,20 +591,20 @@ body{background:linear-gradient(180deg,#fffdfb 0%,#fbfaf8 48%,#f6f4f2 100%)}
     <div class="work-content">
       <span class="sponsored-label">Advertisement</span>
       <h2 id="workWithFmbTitle">Work with FMB.</h2>
-      <p class="work-lede">For brands, founders, organizations, and teams that need clearer strategy, stronger communication, thoughtful digital systems, or practical learning experiences.</p>
+      <p class="work-lede">FMB&amp;CO. is the company home of SENZ and Cognita. Visit the company page for the current, verified description of each brand.</p>
       <div class="work-brand-grid">
-        <article class="work-brand-card senz-card"><img class="work-brand-logo" src="/app/senz-wordmark.svg" alt="SENZ Strategic Communications"><small>Marketing and digital solutions</small><p>Brand strategy, public relations, campaigns, content systems, websites, and digital products.</p></article>
-        <article class="work-brand-card cognita-card"><img class="work-brand-logo" src="/app/cognita-wordmark.svg" alt="Cognita Institute of AI"><small>AI learning and capability</small><p>Practical AI education, responsible adoption, workshops, and capability-building for people and organizations.</p></article>
+        <article class="work-brand-card senz-card"><img class="work-brand-logo" src="/app/senz-wordmark.svg" alt="SENZ"><small>Marketing and digital solutions</small><p>Open the official SENZ gateway from FMB&amp;CO.</p></article>
+        <article class="work-brand-card cognita-card"><img class="work-brand-logo" src="/app/cognita-wordmark.svg" alt="Cognita"><small>Knowledge and learning</small><p>Open the official Cognita gateway from FMB&amp;CO.</p></article>
       </div>
-      <p class="work-fmb-line"><strong>Led by Francine Marie Bautista.</strong> Separate from Yoni’s private wellbeing tools.</p>
-      <div class="modal-actions"><a class="modal-primary" href="https://www.francinemariebautista.com/work-with-fmb/" target="_blank" rel="noopener">Explore professional work</a><button class="modal-secondary" id="workWithFmbLater" type="button">Not now</button></div>
+      <p class="work-fmb-line"><strong>Yoni remains an FMB project.</strong> It is separate from the FMB&amp;CO. company page.</p>
+      <div class="modal-actions"><a class="modal-primary" href="https://www.francinemariebautista.com/fmbandco/" target="_blank" rel="noopener">Open FMB&amp;CO.</a><button class="modal-secondary" id="workWithFmbLater" type="button">Not now</button></div>
     </div>
   </article>
 </div>
 
 <div class="app-shell" id="appShell" hidden>
   <header class="app-header">
-    <a class="brand" href="#home" data-go="home" aria-label="Yoni home"><img src="/app/assets/yoni/yoni-app-icon-192.png" alt=""><span class="brand-copy"><strong>yoni</strong><span>your gentle digital companion</span></span></a>
+    <a class="brand" href="#screen-home" data-go="home" aria-label="Yoni home"><img src="/app/assets/yoni/yoni-app-icon-192.png" alt=""><span class="brand-copy"><strong>yoni</strong><span>your gentle digital companion</span></span></a>
     <div class="app-header-actions"><button class="help-button" type="button" data-go="help">Support</button><button class="account-button" id="accountButton" type="button" data-go="profile" aria-label="Open profile"><span id="accountAvatar">F</span></button></div>
   </header>
 
@@ -752,7 +752,7 @@ body{background:linear-gradient(180deg,#fffdfb 0%,#fbfaf8 48%,#f6f4f2 100%)}
     </section>
 
     <section class="screen" id="screen-help" data-screen="help">
-      <span id="supportYoni"></span><p class="kicker">Reach a real person</p><h1 class="page-title">Human help comes first.</h1><p class="page-lede">Yoni is a digital companion for reflection and general support. He is not an emergency, medical, psychological, legal, or crisis-response service.</p><div class="hotline-list"><a class="hotline urgent" href="tel:911"><small>Immediate danger or emergency</small><h2>911</h2><p>For police, fire, ambulance, violence, or an immediate threat to safety.</p></a><a class="hotline" href="tel:1553"><small>National Center for Mental Health</small><h2>1553</h2><p>Nationwide NCMH crisis hotline.</p></a><a class="hotline" href="tel:09178998727"><small>NCMH mobile line</small><h2>0917 899 8727</h2><p>Tap to call from a mobile phone.</p></a><a class="hotline" href="tel:09663514518"><small>NCMH mobile line</small><h2>0966 351 4518</h2><p>Tap to call from a mobile phone.</p></a><a class="hotline" href="tel:09086392672"><small>NCMH mobile line</small><h2>0908 639 2672</h2><p>Smart, Sun, and TNT subscribers.</p></a><a class="hotline" href="https://loveyourself.ph/mental-health/" target="_blank" rel="noopener"><small>Inclusive community support</small><h2>LoveYourself</h2><p>Mental-health and affirming community support, including LGBTQIA+ focused services.</p></a></div><p class="disclaimer">Hotline availability and phone routing can change. When a number does not connect and there is immediate danger, call 911, contact a trusted person nearby, or go to the nearest emergency department.</p>
+      <span id="supportYoni"></span><p class="kicker">Reach a real person</p><h1 class="page-title">Human help comes first.</h1><p class="page-lede">Yoni is a digital companion for reflection and general support. He is not an emergency, medical, psychological, legal, or crisis-response service.</p><div class="hotline-list"><a class="hotline urgent" href="tel:911"><small>Immediate danger or emergency</small><h2>911</h2><p>For police, fire, ambulance, violence, or an immediate threat to safety.</p></a><a class="hotline" href="tel:1553"><small>National Center for Mental Health</small><h2>1553</h2><p>Nationwide NCMH crisis hotline.</p></a><a class="hotline" href="tel:09178998727"><small>NCMH mobile line</small><h2>0917 899 8727</h2><p>Tap to call from a mobile phone.</p></a><a class="hotline" href="tel:09663514518"><small>NCMH mobile line</small><h2>0966 351 4518</h2><p>Tap to call from a mobile phone.</p></a><a class="hotline" href="https://loveyourself.ph/mental-health/" target="_blank" rel="noopener"><small>Inclusive community support</small><h2>LoveYourself</h2><p>Mental-health and affirming community support, including LGBTQIA+ focused services.</p></a><a class="hotline" href="/gethelp/"><small>Maintained public directory</small><h2>Get Help</h2><p>Open the full list of official safety, health, child-protection, and assistance resources.</p></a></div><p class="disclaimer">Contacts were checked on 23 July 2026. Hotline availability and phone routing can change. When a number does not connect and there is immediate danger, call 911, contact a trusted person nearby, or go to the nearest emergency department.</p>
     </section>
   </main>
   <footer class="app-footer"><p><strong>Yoni</strong> is a digital companion, not a therapist, doctor, or emergency service.</p></footer>
@@ -928,29 +928,12 @@ async function initializeAuth(){
   }catch(error){console.warn('Session check failed',error)}
   $('#accessGate').hidden=false;
 }
-$('#signupTab').onclick=()=>{$('#signupTab').classList.add('active');$('#signinTab').classList.remove('active');$('#signupPanel').hidden=false;$('#signinPanel').hidden=true};
+$('#signupTab').onclick=()=>{$('#signupPanel').hidden=true;$('#signinPanel').hidden=false};
 $('#signinTab').onclick=()=>{$('#signinTab').classList.add('active');$('#signupTab').classList.remove('active');$('#signinPanel').hidden=false;$('#signupPanel').hidden=true};
-$('#signupForm').onsubmit=async e=>{
+$('#signupForm').onsubmit=e=>{
   e.preventDefault();
-  primeSignInSound();
-  const name=$('#signupName').value.trim();
-  const email=$('#signupEmail').value.trim().toLowerCase();
-  const password=$('#signupPassword').value;
-  const confirmPassword=$('#signupConfirm').value;
-  const button=e.currentTarget.querySelector('[type="submit"]'),st=$('#signupStatus');
-  if(password!==confirmPassword){authStatus(st,'The passwords do not match.','error');return}
-  if(password.length<10){authStatus(st,'Use at least 10 characters for your password.','error');return}
-  if(!$('#legalConsent').checked){authStatus(st,'Please confirm the safety and privacy notice.','error');return}
-  if(!window.FMB?.configured){authStatus(st,'Account service is temporarily unavailable.','error');return}
-  authClient=authClient||window.FMB.createClient('local');
-  setButtonLoading(button,true,'Creating your Yoni profile');
-  authStatus(st,'Creating your secure member profile...');
-  const {data,error}=await authClient.auth.signUp({email,password,options:{data:{full_name:name},emailRedirectTo:YONI_URL}});
-  setButtonLoading(button,false);
-  if(error){authStatus(st,error.message,'error');return}
-  if(data?.session?.user){await openAuthenticatedUser(data.session.user,true);return}
-  authStatus(st,`Check ${email} for the verification link, then return here and sign in.`,'success');
-  $('#signinEmail').value=email;
+  authStatus($('#signupStatus'),'Registration is closed. Existing members may sign in.','error');
+  $('#signinTab').click();
 };
 $('#signinForm').onsubmit=async e=>{
   e.preventDefault();

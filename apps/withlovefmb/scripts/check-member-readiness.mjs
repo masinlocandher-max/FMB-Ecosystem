@@ -3,7 +3,6 @@ import fs from 'node:fs';
 const source=fs.readFileSync(new URL('../assets/js/config.js',import.meta.url),'utf8');
 const url=source.match(/SUPABASE_URL:\s*'([^']+)'/)?.[1];
 const key=source.match(/SUPABASE_ANON_KEY:\s*'([^']+)'/)?.[1];
-const requireOpen=process.argv.includes('--require-open');
 const headers={
   apikey:key,
   Authorization:`Bearer ${key}`,
@@ -38,8 +37,8 @@ if(!status?.ready){
 console.log(`Live membership schema: ${status.schema_version||'unknown'}`);
 console.log(`Registration open: ${status.registration_open===true?'yes':'no'}`);
 
-if(requireOpen&&status.registration_open!==true){
-  console.error('Registration is safely closed. Open it from the administrator dashboard only after completing member tests.');
+if(status.registration_open!==false){
+  console.error('Security check failed: Yoni registration must remain closed.');
   process.exit(1);
 }
 
