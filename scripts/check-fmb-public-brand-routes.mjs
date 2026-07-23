@@ -3,7 +3,7 @@ import path from 'node:path';
 
 const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
 const approved='/assets/images/fmb-approved';
-const newsBrowserSafe=`${approved}/fmb-news-browser-safe.png`;
+const newsLogo=`${approved}/fmb-news-official-transparent.webp`;
 const fail=message=>{throw new Error(`FMB public-route brand audit: ${message}`)};
 const protectedRoots=['app/','_sites/senz/','_sites/cognita/'];
 const readingRoutes=[
@@ -44,13 +44,14 @@ for(const file of await walk(root)){
     '/assets/images/fmb-official-2026/fmb-master-square.webp',
     '/assets/images/news/fmb-news-official.svg',
     '/assets/images/channels/fmb-music-official.svg',
-    '/assets/images/channels/fmb-ebook-official.svg'
+    '/assets/images/channels/fmb-ebook-official.svg',
+    '/assets/images/fmb-approved/fmb-news-browser-safe.png'
   ]){
     if(html.includes(retired))fail(`${name} still exposes retired identity ${retired}`);
   }
 
   if(name.startsWith('news/')){
-    requireMarker(html,name,newsBrowserSafe);
+    requireMarker(html,name,newsLogo);
     newsPages+=1;
   }
   if(readingRoutes.includes(name))requireMarker(html,name,`${approved}/fmb-ebook-official-transparent.webp`);
@@ -58,7 +59,7 @@ for(const file of await walk(root)){
 
 const representativeRoutes={
   'index.html':`${approved}/francine-standing-landscape.webp`,
-  'news/remembering-amor-deloso/index.html':newsBrowserSafe,
+  'news/remembering-amor-deloso/index.html':newsLogo,
   'womens-health.html':`${approved}/fmb-ebook-official-transparent.webp`,
   'music/index.html':`${approved}/fmb-music-official-transparent.webp`,
   'ebooks/index.html':`${approved}/fmb-ebook-official-transparent.webp`
@@ -68,4 +69,4 @@ for(const [route,marker] of Object.entries(representativeRoutes)){
   requireMarker(html,route,marker);
 }
 
-console.log(`FMB public-route brand audit verified ${publicPages} public HTML pages, including ${newsPages} News routes with transparent browser-safe identity and ${readingRoutes.length} reading routes, with no retired founder or channel assets.`);
+console.log(`FMB public-route brand audit verified ${publicPages} public HTML pages, including ${newsPages} News routes with the exact transparent master and ${readingRoutes.length} reading routes, with no retired founder or channel assets.`);
