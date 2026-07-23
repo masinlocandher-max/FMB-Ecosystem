@@ -1,0 +1,55 @@
+name: Image asset integrity
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/image-asset-review.yml'
+      - 'apps/withlovefmb/**'
+      - 'scripts/audit-fmb-image-integrity.mjs'
+      - 'scripts/post-build-repository-assets.mjs'
+      - 'scripts/post-build-release-hardening.mjs'
+      - 'package.json'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/image-asset-review.yml'
+      - 'apps/withlovefmb/**'
+      - 'scripts/audit-fmb-image-integrity.mjs'
+      - 'scripts/post-build-repository-assets.mjs'
+      - 'scripts/post-build-release-hardening.mjs'
+      - 'package.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: image-integrity-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify-production-images:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - name: Install dependencies
+        run: npm install --ignore-scripts
+      - name: Build and audit production assets
+        run: npm run build
+      - name: Preserve image sources for failed-run review
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fmb-image-review-${{ github.run_id }}
+          path: |
+            apps/withlovefmb/assets/images
+            apps/withlovefmb/app/assets/yoni
+            /tmp/fmb-ecosystem-build.log
+          if-no-files-found: warn
+          retention-days: 3
