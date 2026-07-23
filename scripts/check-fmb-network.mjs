@@ -7,6 +7,7 @@ const sourceRoot=path.resolve(new URL('..',import.meta.url).pathname);
 const fail=message=>{throw new Error(`FMB Network quality check: ${message}`)};
 const read=relative=>readFile(path.join(root,relative),'utf8');
 const manifest=JSON.parse(await readFile(path.join(sourceRoot,'config/fmb-approved-assets.json'),'utf8'));
+const vercel=JSON.parse(await readFile(path.join(sourceRoot,'vercel.json'),'utf8'));
 const byKey=new Map(manifest.assets.map(asset=>[asset.key,asset]));
 const asset=key=>`/assets/images/fmb-approved/${byKey.get(key).file}`;
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -65,6 +66,24 @@ for(const relative of ['assets/js/aboutfmb-corporate.js','assets/js/fmbandco-mot
 }
 
 const home=await read('index.html');
+for(const marker of [
+  'data-fmb-host-router',
+  "host === 'data.francinemariebautista.com'",
+  "host === 'app.francinemariebautista.com'",
+  'window.location.replace(`/admin.html${suffix}`)',
+  'https://yoni.francinemariebautista.com${targetPath}${suffix}',
+])if(!home.includes(marker))fail(`homepage host router is missing ${marker}`);
+for(const domain of [
+  'www.francinemariebautista.com',
+  'francinemariebautista.com',
+  'yoni.francinemariebautista.com',
+  'app.francinemariebautista.com',
+  'data.francinemariebautista.com',
+  'senzpr.com',
+  'www.senzpr.com',
+  'thecognitainstitute.com',
+  'www.thecognitainstitute.com',
+])if(!vercel.alias?.includes(domain))fail(`production alias is missing ${domain}`);
 if((home.match(/fetchpriority=["']high["']/g)||[]).length>1)fail('homepage has more than one high-priority image');
 if(!/<img\b(?=[^>]*src=["']\/app\/assets\/yoni\/yoni-hero\.webp["'])(?=[^>]*loading=["']lazy["'])[^>]*>/i.test(home))fail('Yoni homepage art is not lazy-loaded');
 const news=await read('news/index.html');
