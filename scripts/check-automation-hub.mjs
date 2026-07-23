@@ -64,7 +64,7 @@ for(const marker of ['FMB_AUTOMATION_SHEET_ID','FMB_AUTOMATION_SECRET','isDuplic
 }
 
 const docs=fs.readFileSync(docsPath,'utf8');
-for(const marker of ['HUMAN_REVIEW_ONLY=true','META_APP_SECRET','AUTOMATION_INGEST_URL','do not place casual inquiries','api/automation/meta-webhook']){
+for(const marker of ['HUMAN_REVIEW_ONLY=true','META_APP_SECRET','AUTOMATION_INGEST_URL','does not place casual inquiries','api/automation/meta-webhook']){
   assert.ok(docs.toLowerCase().includes(marker.toLowerCase()),`Automation documentation is missing ${marker}`);
 }
 
