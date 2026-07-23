@@ -59,7 +59,7 @@ for(const file of await walk(root)){
 const representativeRoutes={
   'index.html':'/assets/images/home/fmb-home-logo.webp',
   'news/index.html':'/assets/images/news/fmb-news-official.svg',
-  'news/remembering-amor-deloso/index.html':'FMB&amp;CO. News Network',
+  'news/remembering-amor-deloso/index.html':'Remembering Amor Deloso',
   'womens-health.html':'membership-gate.js',
   'music/index.html':'/assets/images/fmb-approved/fmb-music-official-transparent.webp',
   'ebooks/index.html':'/assets/images/fmb-approved/fmb-ebook-official-transparent.webp'
