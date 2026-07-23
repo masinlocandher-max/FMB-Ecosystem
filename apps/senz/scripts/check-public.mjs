@@ -18,6 +18,8 @@ const required = [
   'SENZ is the marketing and digital solutions business of FMB',
   'Public service menu',
   'Not published',
+  'href="components/safe-site.css"',
+  'src="assets/senz-original-mark.png"',
 ];
 const prohibited = [
   'Visibility Launch System',

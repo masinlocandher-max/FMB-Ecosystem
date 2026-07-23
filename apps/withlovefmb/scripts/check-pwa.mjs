@@ -103,4 +103,14 @@ for(const forbidden of ["get_membership_status","data?.registration_open===true"
   if(supabaseClient.includes(forbidden))fail(`Yoni registration guard can still open registration: ${forbidden}`);
 }
 
+const musicLibrary=readJson('assets/data/music-library.json');
+const musicReferences=musicLibrary.playlists.flatMap(playlist=>[
+  playlist.cover_url,
+  ...playlist.tracks.flatMap(track=>[track.cover_url,track.src]),
+]);
+for(const reference of new Set(musicReferences)){
+  if(!String(reference).startsWith('/assets/'))fail(`Music library reference is not root-relative: ${reference}`);
+  if(!fs.existsSync(path.join(root,String(reference).slice(1))))fail(`Music library reference is missing: ${reference}`);
+}
+
 console.log('Website and Yoni install experience, registration guard, current identity, libraries, cache, and responsive shell checks passed.');
