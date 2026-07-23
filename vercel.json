@@ -1,11 +1,33 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "ignoreCommand": "if [ \"$VERCEL_ENV\" = \"production\" ] || [ \"$VERCEL_GIT_COMMIT_REF\" = \"main\" ]; then exit 1; else echo \"Skipping non-production Vercel build for ${VERCEL_GIT_COMMIT_REF:-unknown}\"; exit 0; fi",
+  "ignoreCommand": "if [ \"$VERCEL_ENV\" = \"production\" ] || [ \"$VERCEL_GIT$COMMIT_REF\" = \"main\" ]; then exit 1; else echo \"Skipping non-production Vercel build for ${VERCEL_GIT_COMMIT_REF:-unknown}\"; exit 0; fi",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "cleanUrls": false,
   "trailingSlash": false,
   "redirects": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "data.francinemariebautista.com"
+        }
+      ],
+      "destination": "/data-center/",
+      "permanent": false
+    },
+    {
+      "source": "/index.html",
+      "has": [
+        {
+          "type": "host",
+          "value": "data.francinemariebautista.com"
+        }
+      ],
+      "destination": "/data-center/",
+      "permanent": false
+    },
     {
       "source": "/data-center",
       "has": [
@@ -356,7 +378,7 @@
       "destination": "/_sites/senz/:path*"
     },
     {
-      "source": "/:path((?:.*\\.[^/]+))",
+      "source": "/:path((?:.*\\.[\^/]+))",
       "has": [
         {
           "type": "host",
@@ -366,7 +388,7 @@
       "destination": "/_sites/cognita/:path"
     },
     {
-      "source": "/:path((?:.*\\.[^/]+))",
+      "source": "/:path((?:.*\\.[\^/]+))",
       "has": [
         {
           "type": "host",
