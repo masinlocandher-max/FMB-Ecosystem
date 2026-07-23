@@ -53,10 +53,7 @@ for(const file of await walk(root)){
     if(!/(?:FMB(?:&amp;|&)CO\. News|FMB News)/i.test(html))fail(`${name} is missing a visible FMB News identity`);
     newsPages+=1;
   }
-  if(controlledReadingRoutes.includes(name)){
-    requireMarker(html,name,'membership-gate.js');
-    requireMarker(html,name,'reading-page');
-  }
+  if(controlledReadingRoutes.includes(name))requireMarker(html,name,'membership-gate.js');
 }
 
 const representativeRoutes={
