@@ -91,4 +91,15 @@ for(const relative of [
   if(!fs.existsSync(path.join(root,relative)))fail(`Missing current Yoni experience module: ${relative}`);
 }
 
-console.log('Website and Yoni install experience, current identity, libraries, cache, and responsive shell checks passed.');
+const supabaseClient=fs.readFileSync(path.join(root,'assets/js/supabase-client.js'),'utf8');
+for(const marker of [
+  "registrationOpen:false",
+  "get_membership_status",
+  "Membership opening soon",
+  "event.stopImmediatePropagation()",
+  "data?.registration_open!==true",
+]){
+  if(!supabaseClient.includes(marker))fail(`Yoni registration guard is missing: ${marker}`);
+}
+
+console.log('Website and Yoni install experience, registration guard, current identity, libraries, cache, and responsive shell checks passed.');
