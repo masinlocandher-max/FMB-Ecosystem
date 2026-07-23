@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en-PH">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#07030d">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>FMB Data Center | Private Operations Dashboard</title>
+  <meta name="description" content="Private operations dashboard for Francine Marie Bautista and the FMB public and member platform.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./dashboard.css">
+</head>
+<body>
+  <a class="skip-link" href="#dashboardMain">Skip to dashboard</a>
+
+  <section class="auth-screen" id="authScreen" aria-labelledby="authTitle">
+    <div class="auth-aura" aria-hidden="true"></div>
+    <div class="auth-shell">
+      <div class="auth-brand">
+        <div class="brand-mark" aria-hidden="true">fmb</div>
+        <div>
+          <strong>FMB Data Center</strong>
+          <span>Private operations dashboard</span>
+        </div>
+      </div>
+
+      <div class="auth-layout">
+        <div class="auth-intro">
+          <p class="section-label">Official Digital Headquarters</p>
+          <h1 id="authTitle">See the whole picture. Act on what matters.</h1>
+          <p>Monitor the public website, member platform, publishing system, community queues, inquiries, and platform health from one protected workspace.</p>
+          <div class="auth-principles" aria-label="Dashboard principles">
+            <span>Operational, not decorative</span>
+            <span>Privacy-aware by design</span>
+            <span>FMB systems only</span>
+          </div>
+        </div>
+
+        <form class="login-card" id="loginForm" novalidate>
+          <div>
+            <p class="section-label">Administrator Access</p>
+            <h2>Sign in</h2>
+            <p class="form-note">Use an FMB account with the administrator role.</p>
+          </div>
+          <label>
+            <span>Email address</span>
+            <input id="emailInput" name="email" type="email" autocomplete="email" required>
+          </label>
+          <label>
+            <span>Password</span>
+            <input id="passwordInput" name="password" type="password" autocomplete="current-password" required minlength="8">
+          </label>
+          <button class="primary-button" id="loginButton" type="submit">Enter Data Center</button>
+          <p class="form-status" id="loginStatus" role="status" aria-live="polite"></p>
+          <div class="security-note">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3M5 10h14v10H5z"/></svg>
+            <span>Access is verified through Supabase Auth and the FMB admin role. This page is not linked from the public website.</span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <div class="dashboard-shell" id="dashboardShell" hidden>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-mark small" aria-hidden="true">fmb</div>
+        <div>
+          <strong>Data Center</strong>
+          <span>FMB Headquarters</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Dashboard sections">
+        <button class="nav-item active" data-view="overview" type="button"><span>01</span>Overview</button>
+        <button class="nav-item" data-view="audience" type="button"><span>02</span>Audience</button>
+        <button class="nav-item" data-view="content" type="button"><span>03</span>Content</button>
+        <button class="nav-item" data-view="community" type="button"><span>04</span>Community</button>
+        <button class="nav-item" data-view="messages" type="button"><span>05</span>Messages</button>
+        <button class="nav-item" data-view="system" type="button"><span>06</span>System</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="/" target="_blank" rel="noopener">Open public website <span>↗</span></a>
+        <button id="logoutButton" type="button">Sign out</button>
+        <p>Private workspace<br>FMB public and member platform</p>
+      </div>
+    </aside>
+
+    <div class="mobile-topbar">
+      <button class="menu-toggle" id="menuToggle" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Open dashboard navigation"><span></span><span></span></button>
+      <div><strong>FMB Data Center</strong><span>Private operations</span></div>
+      <button class="mobile-refresh" id="mobileRefresh" type="button" aria-label="Refresh dashboard">↻</button>
+    </div>
+
+    <main class="dashboard-main" id="dashboardMain">
+      <header class="dashboard-header">
+        <div>
+          <p class="section-label">Official Digital Headquarters</p>
+          <h1 id="viewTitle">Operations Overview</h1>
+          <p id="viewDescription">What is happening now, what needs attention, and what should happen next.</p>
+        </div>
+        <div class="header-actions">
+          <div class="live-state" id="liveState"><i></i><span>Connecting</span></div>
+          <div class="updated-at"><span>Last updated</span><strong id="updatedAt">Not yet</strong></div>
+          <button class="refresh-button" id="refreshButton" type="button">Refresh data</button>
+        </div>
+      </header>
+
+      <div class="global-alert" id="globalAlert" role="status" aria-live="polite" hidden></div>
+
+      <section class="dashboard-view active" data-panel="overview" aria-labelledby="viewTitle">
+        <div class="metric-grid" id="overviewMetrics" aria-label="Key operational metrics"></div>
+
+        <div class="overview-grid">
+          <article class="panel trend-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-label">Thirty-Day Movement</p>
+                <h2>Member and platform activity</h2>
+              </div>
+              <div class="chart-legend" aria-label="Chart legend"><span><i class="joins"></i>New members</span><span><i class="checkins"></i>Check-ins</span></div>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="activityChart" width="920" height="320" aria-label="Thirty-day member joins and check-ins chart" role="img"></canvas>
+              <p class="empty-chart" id="emptyChart" hidden>No activity has been recorded for this period yet.</p>
+            </div>
+          </article>
+
+          <article class="panel attention-panel">
+            <div class="panel-heading compact">
+              <div><p class="section-label">Action Queue</p><h2>Needs attention</h2></div>
+            </div>
+            <div class="attention-list" id="attentionList"></div>
+          </article>
+
+          <article class="panel content-panel">
+            <div class="panel-heading compact">
+              <div><p class="section-label">Publishing Pulse</p><h2>Content status</h2></div>
+            </div>
+            <div class="content-pulse">
+              <div class="donut" id="contentDonut" aria-hidden="true"><div><strong id="publishedTotal">0</strong><span>published</span></div></div>
+              <div class="content-breakdown" id="contentBreakdown"></div>
+            </div>
+          </article>
+
+          <article class="panel activity-panel">
+            <div class="panel-heading compact">
+              <div><p class="section-label">Audit Trail</p><h2>Recent admin activity</h2></div>
+            </div>
+            <div class="activity-list" id="activityList"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="dashboard-view" data-panel="audience" aria-labelledby="viewTitle">
+        <div class="section-metrics" id="audienceMetrics"></div>
+        <article class="panel table-panel">
+          <div class="panel-heading">
+            <div><p class="section-label">Recent Membership</p><h2>Latest members</h2></div>
+            <p class="panel-note">Private emails and full legal names are intentionally excluded from this view.</p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Member</th><th>Username</th><th>Role</th><th>Status</th><th>Joined</th></tr></thead>
+              <tbody id="membersTable"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section class="dashboard-view" data-panel="content" aria-labelledby="viewTitle">
+        <div class="section-metrics" id="contentMetrics"></div>
+        <div class="two-column">
+          <article class="panel">
+            <div class="panel-heading compact"><div><p class="section-label">Editorial System</p><h2>Publishing inventory</h2></div></div>
+            <div class="inventory-list" id="inventoryList"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading compact"><div><p class="section-label">Media Library</p><h2>Storage footprint</h2></div></div>
+            <div class="storage-summary" id="storageSummary"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="dashboard-view" data-panel="community" aria-labelledby="viewTitle">
+        <div class="section-metrics" id="communityMetrics"></div>
+        <div class="two-column">
+          <article class="panel">
+            <div class="panel-heading compact"><div><p class="section-label">Freedom Wall</p><h2>Moderation posture</h2></div></div>
+            <div class="moderation-summary" id="moderationSummary"></div>
+          </article>
+          <article class="panel privacy-panel">
+            <div class="panel-heading compact"><div><p class="section-label">Privacy Boundary</p><h2>What this dashboard will not expose</h2></div></div>
+            <ul>
+              <li>Journal entry titles, bodies, or user-level counts</li>
+              <li>Daily check-in notes or individual mood histories</li>
+              <li>Full legal names or private profile details</li>
+              <li>SENZ or Cognita production data</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="dashboard-view" data-panel="messages" aria-labelledby="viewTitle">
+        <div class="section-metrics" id="messageMetrics"></div>
+        <article class="panel table-panel">
+          <div class="panel-heading">
+            <div><p class="section-label">Inbox</p><h2>Recent inquiries</h2></div>
+            <p class="panel-note">Only administrators can retrieve this information.</p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Sender</th><th>Subject</th><th>Type</th><th>Status</th><th>Received</th></tr></thead>
+              <tbody id="messagesTable"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section class="dashboard-view" data-panel="system" aria-labelledby="viewTitle">
+        <div class="section-metrics" id="systemMetrics"></div>
+        <div class="two-column">
+          <article class="panel system-panel">
+            <div class="panel-heading compact"><div><p class="section-label">Live Sources</p><h2>Connected systems</h2></div></div>
+            <div class="source-list" id="sourceList"></div>
+          </article>
+          <article class="panel system-panel">
+            <div class="panel-heading compact"><div><p class="section-label">Data Quality</p><h2>Known boundaries</h2></div></div>
+            <div class="boundary-list">
+              <div><strong>Website traffic</strong><span>Not connected yet. No page-view claims are shown.</span></div>
+              <div><strong>Facebook and Instagram</strong><span>Not connected. Social performance remains outside this dashboard.</span></div>
+              <div><strong>SENZ and Cognita</strong><span>Deliberately isolated in their own production boundaries.</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <footer class="dashboard-footer">
+        <p>FMB Data Center · Private operational intelligence</p>
+        <p>Last known good data stays visible during reconnects and is clearly marked as stale.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script type="module" src="./dashboard.js"></script>
+</body>
+</html>
