@@ -20,6 +20,23 @@
   <meta name="twitter:description" content="The official bulletin and gateway to the projects, public channels, and businesses of Francine Marie Bautista.">
   <meta name="twitter:image" content="https://www.francinemariebautista.com/assets/images/fmb-approved/francine-standing-landscape.webp">
   <link rel="icon" href="/assets/images/fmb-approved/fmb-master-purple-square.webp" type="image/webp">
+  <script data-fmb-host-router>
+    (() => {
+      const host = window.location.hostname.toLowerCase();
+      const path = window.location.pathname;
+      const suffix = `${window.location.search}${window.location.hash}`;
+
+      if (host === 'data.francinemariebautista.com' && (path === '/' || path === '/index.html')) {
+        window.location.replace(`/admin.html${suffix}`);
+        return;
+      }
+
+      if (host === 'app.francinemariebautista.com') {
+        const targetPath = path === '/index.html' ? '/' : path;
+        window.location.replace(`https://yoni.francinemariebautista.com${targetPath}${suffix}`);
+      }
+    })();
+  </script>
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",

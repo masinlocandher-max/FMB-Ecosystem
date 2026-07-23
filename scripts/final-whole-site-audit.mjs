@@ -146,6 +146,36 @@ async function exercise(page,item,profile){
     const valid=Boolean(header&&logo)&&headerHeight>=60&&(profile.isMobile||links>=11);
     return {name:'company-navigation',status:valid?'passed':'failed',proof:`header=${Boolean(header)}; logo=${Boolean(logo)}; height=${headerHeight}; links=${links}`};
   }
+  if(item.name==='senz-site'||item.name==='cognita-site'){
+    const text=((await page.locator('body').innerText())||'').replace(/\s+/g,' ').trim();
+    const required=item.name==='senz-site'
+      ? [
+          'SENZ is the marketing and digital solutions business of FMB&CO.',
+          'No service package, price, division, product, client result, or availability claim is published'
+        ]
+      : [
+          'Cognita is the knowledge and learning arm of FMB&CO.',
+          'No public registration, paid enrollment, course, credential, or accreditation claim is active'
+        ];
+    const forbidden=item.name==='senz-site'
+      ? [
+          'Six specialist divisions',
+          'Strategic communications, PR, and brand strategy for people and organizations that need to be understood.',
+          'Explore SENZ Strategic Communications, six specialist divisions, and digital products'
+        ]
+      : [
+          'Cognita Institute is currently under maintenance',
+          'Join the waitlist'
+        ];
+    const missing=required.filter(marker=>!text.includes(marker));
+    const normalized=text.toLowerCase();
+    const found=forbidden.filter(marker=>normalized.includes(marker.toLowerCase()));
+    return {
+      name:'standalone-publication-status',
+      status:missing.length===0&&found.length===0?'passed':'failed',
+      proof:`missing=${missing.length?missing.join(' | '):'none'}; forbidden=${found.length?found.join(' | '):'none'}`
+    };
+  }
   return {name:'route-smoke',status:'passed',proof:'First meaningful screen rendered.'};
 }
 

@@ -1,5 +1,16 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "alias": [
+    "www.francinemariebautista.com",
+    "francinemariebautista.com",
+    "yoni.francinemariebautista.com",
+    "app.francinemariebautista.com",
+    "data.francinemariebautista.com",
+    "senzpr.com",
+    "www.senzpr.com",
+    "thecognitainstitute.com",
+    "www.thecognitainstitute.com"
+  ],
   "ignoreCommand": "if [ \"$VERCEL_ENV\" = \"production\" ] || [ \"$VERCEL_GIT_COMMIT_REF\" = \"main\" ]; then exit 1; else echo \"Skipping non-production Vercel build for ${VERCEL_GIT_COMMIT_REF:-unknown}\"; exit 0; fi",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
