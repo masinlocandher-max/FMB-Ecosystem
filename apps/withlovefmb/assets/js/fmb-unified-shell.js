@@ -12,12 +12,12 @@
     { label: 'Home', href: '/', match: ['home'] },
     { label: 'About FMB', href: '/aboutfmb/', match: ['about'] },
     { label: 'News', href: '/news/', match: ['news'] },
-    { label: 'Projects', href: '/projects/', match: ['projects'] },
-    { label: 'Reading', href: '/ebooks/', match: ['ebooks'] },
+    { label: 'Projects', href: '/projects/', match: ['projects', 'mabayani'] },
+    { label: 'Reading', href: '/ebooks/', match: ['ebooks', 'reading'] },
     { label: 'Music', href: '/music/', match: ['music'] },
     { label: 'Get Involved', href: '/withlovefmb/#volunteer', match: ['withlove', 'community'] },
     { label: 'Get Help', href: '/gethelp/', match: ['help'] },
-    { label: 'FMB&CO.', href: '/fmbandco/', match: ['company'] },
+    { label: 'FMB&amp;CO.', href: '/fmbandco/', match: ['company'] },
   ];
 
   const shell = document.createElement('div');
@@ -54,7 +54,7 @@
       <section class="fmb-unified-footer-brand" aria-labelledby="fmbFooterTitle">
         <img src="/assets/images/fmb-approved/fmb-master-transparent.webp" width="1129" height="724" alt="FMB">
         <h2 id="fmbFooterTitle">The vision behind the ecosystem.</h2>
-        <p>The official public headquarters for Francine Marie Bautista, her projects, published work, advocacy, and the companies organized through FMB&CO.</p>
+        <p>The official public headquarters for Francine Marie Bautista, her projects, published work, advocacy, and the companies organized through FMB&amp;CO.</p>
       </section>
       <nav aria-label="Official website links">
         <strong>Official Site</strong>
@@ -74,7 +74,7 @@
       </nav>
       <nav aria-label="Ecosystem links">
         <strong>Ecosystem</strong>
-        <a href="/fmbandco/">FMB&CO.</a>
+        <a href="/fmbandco/">FMB&amp;CO.</a>
         <a href="https://senzpr.com/">SENZ</a>
         <a href="https://thecognitainstitute.com/">Cognita</a>
         <a href="/withlovefmb/">With Love, FMB</a>
@@ -86,9 +86,9 @@
       <span><a href="/privacy-policy.html">Privacy</a> · <a href="/sitemap.xml">Sitemap</a> · <a href="mailto:withlovefmb@gmail.com?subject=Accessibility%20Support">Accessibility</a></span>
     </div>`;
 
-  const backToTop = document.createElement('a');
+  const backToTop = document.createElement('button');
   backToTop.className = 'fmb-back-to-top';
-  backToTop.href = '#top';
+  backToTop.type = 'button';
   backToTop.setAttribute('aria-label', 'Back to top');
   backToTop.textContent = '↑';
 
@@ -112,7 +112,7 @@
 
   document.querySelectorAll('img[src*="francine-"]').forEach((image) => {
     image.dataset.fmbHdPhoto = 'true';
-    image.decoding = image.decoding || 'async';
+    image.decoding = 'async';
     if (!image.hasAttribute('sizes')) {
       image.sizes = image.width > image.height
         ? '(max-width: 960px) 100vw, 55vw'
@@ -137,6 +137,10 @@
   shell.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') closeMenu();
+  });
+
+  backToTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
   const updateBackToTop = () => {
