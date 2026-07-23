@@ -60,9 +60,9 @@ const groups=[
   {name:'news',required:true,origin:primaryOrigin,options:[['news/index.html','/news/']]},
   {name:'music',required:true,origin:primaryOrigin,options:[['music/index.html','/music/']]},
   {name:'ebooks',required:true,origin:primaryOrigin,options:[['ebooks/index.html','/ebooks/']]},
-  {name:'fmbandco',required:true,origin:primaryOrigin,options:[['fmb&co/index.html','/fmb&co/'],['fmbandco/index.html','/fmbandco/']]},
-  {name:'senz-gateway',required:true,origin:primaryOrigin,options:[['fmb&co/senz/index.html','/fmb&co/senz/']]},
-  {name:'cognita-gateway',required:true,origin:primaryOrigin,options:[['fmb&co/cognita/index.html','/fmb&co/cognita/']]},
+  {name:'fmbandco',required:true,origin:primaryOrigin,options:[['fmbandco/index.html','/fmbandco/'],['fmb&co/index.html','/fmb&co/']]},
+  {name:'senz-gateway',required:true,origin:primaryOrigin,options:[['fmbandco/senz/index.html','/fmbandco/senz/'],['fmb&co/senz/index.html','/fmb&co/senz/']]},
+  {name:'cognita-gateway',required:true,origin:primaryOrigin,options:[['fmbandco/cognita/index.html','/fmbandco/cognita/'],['fmb&co/cognita/index.html','/fmb&co/cognita/']]},
   {name:'projects',required:true,origin:primaryOrigin,options:[['projects/index.html','/projects/']]},
   {name:'get-help',required:true,origin:primaryOrigin,options:[['gethelp/index.html','/gethelp/'],['get-help/index.html','/get-help/']]},
   {name:'community',required:true,origin:primaryOrigin,options:[['communityengagements/index.html','/communityengagements/']]},
@@ -176,6 +176,19 @@ async function exercise(page,item,profile){
     const email=await firstVisible(page,'input[type="email"],input[name="email"]');
     const submit=await firstVisible(page,'button[type="submit"],.primary-button');
     return {name:'data-center-login',status:email&&submit?'passed':'failed',proof:`email=${Boolean(email)}; submit=${Boolean(submit)}`};
+  }
+
+  if(['fmbandco','senz-gateway','cognita-gateway'].includes(item.name)){
+    const header=await firstVisible(page,'.fco-header');
+    const logo=await firstVisible(page,'.fco-header-logo img');
+    const links=await page.locator('.fco-nav-links a').count();
+    const headerHeight=header?await header.evaluate(element=>Math.round(element.getBoundingClientRect().height)):0;
+    const valid=Boolean(header&&logo)&&headerHeight>=60&&(profile.isMobile||links>=11);
+    return {
+      name:'company-navigation',
+      status:valid?'passed':'failed',
+      proof:`header=${Boolean(header)}; logo=${Boolean(logo)}; height=${headerHeight}; links=${links}`
+    };
   }
 
   return {name:'route-smoke',status:'passed',proof:'First meaningful screen rendered.'};
