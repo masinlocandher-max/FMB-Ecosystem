@@ -1,0 +1,27 @@
+name: Image asset review
+
+on:
+  push:
+    branches: [fix/hd-image-integrity]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package FMB image sources for integrity review
+        uses: actions/upload-artifact@v4
+        with:
+          name: fmb-image-sources-${{ github.run_id }}
+          path: |
+            apps/withlovefmb/assets/images/news
+            apps/withlovefmb/assets/images/fmbandco
+            apps/withlovefmb/assets/images/home
+            apps/withlovefmb/assets/images/projects
+            apps/withlovefmb/app/assets/yoni
+          if-no-files-found: error
+          retention-days: 1
