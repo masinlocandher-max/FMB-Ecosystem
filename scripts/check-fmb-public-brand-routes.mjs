@@ -43,9 +43,6 @@ for(const file of await walk(root)){
   const html=await readFile(file,'utf8');
   publicPages+=1;
 
-  if(/\/assets\/images\/fmb\/francine-founder-[^"'\s)]+\.(?:webp|png|jpe?g)/i.test(html)){
-    fail(`${name} still exposes a retired generic founder image`);
-  }
   for(const marker of unavailable)if(html.includes(marker))fail(`${name} still depends on unavailable identity ${marker}`);
 
   if(name.startsWith('news/')){

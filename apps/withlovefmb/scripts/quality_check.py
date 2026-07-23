@@ -163,22 +163,28 @@ def check_membership_features(errors: list[str]) -> None:
     if "/profile/" not in auth_js:
         errors.append("assets/js/auth.js: successful sign-in must open /profile/")
     for marker in (
-        "showExistingAccount",
-        "data.user.identities.length===0",
-        "Normal sign-in does not send an email",
-        "Already verified profiles will not receive another signup email",
+        "signInWithPassword",
+        "Registration is closed",
+        "signupTab.disabled=true",
+        "showPanel('signin')",
     ):
         if marker not in auth_js:
-            errors.append(f"assets/js/auth.js: missing existing-account guidance: {marker}")
+            errors.append(f"assets/js/auth.js: missing closed-registration marker: {marker}")
+    if ".auth.signUp(" in auth_js:
+        errors.append("assets/js/auth.js: closed registration must not call signUp")
     auth_html = (ROOT / "auth.html").read_text(encoding="utf-8")
     for marker in (
         "Normal sign-in does not send an email",
-        'id="verificationLead"',
-        "Already verified profiles will not receive another verification email",
+        "Registration is closed",
+        'id="signinPanel"',
+        'id="signupTab" type="button" role="tab" aria-controls="signupPanel" aria-selected="false" disabled',
         "assets/js/auth.js?v=",
     ):
         if marker not in auth_html:
-            errors.append(f"auth.html: missing member access guidance: {marker}")
+            errors.append(f"auth.html: missing closed-registration guidance: {marker}")
+    for forbidden in ("Join our community", "Creating a profile is free"):
+        if forbidden in auth_html:
+            errors.append(f"auth.html: closed registration still advertises signup: {forbidden}")
 
     app_html = (ROOT / "app/index.html").read_text(encoding="utf-8")
     for marker in (
@@ -211,7 +217,7 @@ def check_membership_features(errors: list[str]) -> None:
         'id="sharePromotion"',
         'id="installGuide"',
         "Your calmer space, one tap away.",
-        "Continue to profile creation or sign in",
+        "Open Yoni or sign in",
         'rel="manifest" href="/app/manifest.webmanifest"',
     ):
         if marker not in install_html:
@@ -228,17 +234,24 @@ def check_membership_features(errors: list[str]) -> None:
             errors.append(f"app/install/install.js: missing device-aware installation marker: {marker}")
     app_access = (ROOT / "app/access.js").read_text(encoding="utf-8")
     for marker in (
-        "get_membership_status",
         "signInWithPassword",
-        "signUp",
-        "emailRedirectTo:authRedirect()",
-        "data.user.identities.length===0",
         "getUser",
+        "const registrationOpen=false",
+        "Registration is closed",
+        "signupTab.disabled=true",
         "const greetings=[",
         "window.FMB_APP_SESSION",
     ):
         if marker not in app_access:
             errors.append(f"app/access.js: missing secure profile-access marker: {marker}")
+    for forbidden in (".auth.signUp(", "registration_open===true"):
+        if forbidden in app_access:
+            errors.append(f"app/access.js: closed registration still contains: {forbidden}")
+    product_email = (ROOT / "assets/js/product-email-access.js").read_text(encoding="utf-8")
+    if "shouldCreateUser:false" not in product_email:
+        errors.append("assets/js/product-email-access.js: email links must be existing-member only")
+    if "shouldCreateUser:true" in product_email:
+        errors.append("assets/js/product-email-access.js: email links must not create users")
     app_js = (ROOT / "app/app.js").read_text(encoding="utf-8")
     for marker in (
         "freedom_wall_posts",
@@ -304,7 +317,7 @@ def check_navigation_experience(errors: list[str]) -> None:
     ):
         if marker not in index:
             errors.append(f"index.html: missing first-visit benefit: {marker}")
-    for marker in ("setupFriendlyNavigation", "nav-mobile-actions", "nav-install-link", "https://app.francinemariebautista.com/app/install/", "Get help", "News", "Freedom Wall", "Community Engagements", "FMB & Co."):
+    for marker in ("setupFriendlyNavigation", "nav-mobile-actions", "nav-install-link", "https://yoni.francinemariebautista.com/", "About FMB", "News", "Projects", "Reading", "Music", "Get Involved", "Get Help", "FMB&CO."):
         if marker not in site_js:
             errors.append(f"assets/js/site.js: missing navigation UX marker: {marker}")
     if ".entry-benefits" not in site_css:
@@ -339,7 +352,7 @@ def check_az_assistant(errors: list[str]) -> None:
     for marker in (
         "FMB&CO. Receptionist",
         "Receptionist",
-        "We do not accept donations.",
+        "AZ does not invent prices, packages, payment instructions, or availability.",
         "verified premade reply bank",
         "UNKNOWN_QUESTION_KEY",
         "fmb:az-unmatched",
@@ -365,7 +378,7 @@ def check_az_assistant(errors: list[str]) -> None:
     for marker in (".az-help-trigger", ".az-help-panel", ".az-help-role", ".az-quick-reply", "min-height:44px", "min-width:150px", "fmb-mobile-host"):
         if marker not in styles:
             errors.append(f"assets/css/az-assistant.css: missing responsive help style: {marker}")
-    for marker in ("az-assistant.css", "az-assistant.js", "APP_HOST", "isPublicWebsiteHost"):
+    for marker in ("az-assistant.css", "az-assistant.js", "YONI_HOST", "isPublicWebsiteHost"):
         if marker not in site_js:
             errors.append(f"assets/js/site.js: AZ website-only loading guard is missing: {marker}")
     for marker in ("az-assistant.css", "az-assistant.js"):
@@ -373,39 +386,34 @@ def check_az_assistant(errors: list[str]) -> None:
             errors.append(f"app/index.html: AZ must not load inside the companion app: {marker}")
         if marker in worker:
             errors.append(f"service-worker.js: AZ must not be part of the companion app shell: {marker}")
-    if "app.francinemariebautista.com')return" not in assistant:
-        errors.append("assets/js/az-assistant.js: AZ app-host safety guard is missing")
+    if "yoni.francinemariebautista.com')return" not in assistant:
+        errors.append("assets/js/az-assistant.js: AZ Yoni-host safety guard is missing")
 
 
 def check_advertising_flow(errors: list[str]) -> None:
     site_js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
     banner_css = (ROOT / "assets/css/experience-refresh.css").read_text(encoding="utf-8")
     about = (ROOT / "aboutfmb/index.html").read_text(encoding="utf-8")
-    edge_path = ROOT / "supabase/functions/advertising-inquiry/index.ts"
     for marker in (
-        "With love, FMB is brought to you by:",
+        "From the FMB&amp;CO. ecosystem:",
         "/assets/images/projects/senz-logo.png",
         "/assets/images/projects/cognita-logo.png",
-        "Advertise your brand or business across the website",
-        "/aboutfmb/?category=advertise-with-us#work-with-fmb",
-        "client.functions.invoke('advertising-inquiry'",
-        "button.disabled=!(name&&business&&isValidEmail(email))",
+        "Official inquiries begin at the FMB reception desk",
+        "/aboutfmb/#work-with-fmb",
+        "setupWorkInquiry",
+        "submit_contact_message",
     ):
         if marker not in site_js:
-            errors.append(f"assets/js/site.js: missing advertising marker: {marker}")
+            errors.append(f"assets/js/site.js: missing verified inquiry marker: {marker}")
     for marker in (".top-shell", "position:fixed!important", ".promo-marquee", "animation:fmb-public-care-marquee", ".banner-divider", ".banner-advertise-button"):
         if marker not in banner_css:
             errors.append(f"assets/css/experience-refresh.css: missing moving banner marker: {marker}")
-    for marker in ('id="workBusiness"', 'id="advertisePrefill"', "Request the advertising tier packages"):
+    for marker in ('id="workWithFmbForm"', 'id="workService"', 'id="workBrief"', "does not confirm availability, a meeting, pricing, or a service agreement"):
         if marker not in about:
-            errors.append(f"aboutfmb/index.html: missing advertising form marker: {marker}")
-    if not edge_path.exists():
-        errors.append("supabase/functions/advertising-inquiry/index.ts: advertising email function is missing")
-    else:
-        edge = edge_path.read_text(encoding="utf-8")
-        for marker in ("withlovefmb@gmail.com", "RESEND_API_KEY", "emails/batch", "submit_contact_message", "noreply@francinemariebautista.com"):
-            if marker not in edge:
-                errors.append(f"supabase/functions/advertising-inquiry/index.ts: missing delivery marker: {marker}")
+            errors.append(f"aboutfmb/index.html: missing verified inquiry marker: {marker}")
+    for retired_marker in ("advertising tier packages", "Request advertising tiers", "Open availability", "Full, priority review"):
+        if retired_marker in about or retired_marker in site_js:
+            errors.append(f"retired simulated offer or availability remains: {retired_marker}")
 
 
 def check_sharing_and_footer(errors: list[str]) -> None:
@@ -472,8 +480,8 @@ def check_sharing_and_footer(errors: list[str]) -> None:
 
     footer_release = "/assets/css/fmb-footer-v2.css?v=20260716-footer-v2"
     standalone_footer_pages = {
-        Path("fmb&co/senz/index.html"),
-        Path("fmb&co/cognita/index.html"),
+        Path("fmbandco/senz/index.html"),
+        Path("fmbandco/cognita/index.html"),
     }
     for page in ROOT.rglob("*.html"):
         relative_page = page.relative_to(ROOT)
@@ -689,9 +697,9 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
             errors.append(f"{name}: accessible floating mobile menu is missing")
 
     fmbandco_pages = (
-        "fmb&co/index.html",
-        "fmb&co/senz/index.html",
-        "fmb&co/cognita/index.html",
+        "fmbandco/index.html",
+        "fmbandco/senz/index.html",
+        "fmbandco/cognita/index.html",
     )
     for name in fmbandco_pages:
         page = (ROOT / name).read_text(encoding="utf-8")
@@ -709,12 +717,12 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
             if marker in page:
                 errors.append(f"{name}: generic decorative ampersand remains: {marker}")
 
-    fmbandco_home = (ROOT / "fmb&co/index.html").read_text(encoding="utf-8")
-    for marker in ("francine-founder-hero-640.webp", "francine-founder-hero-923.webp", "francine-founder-front-cutout-640-v1.webp", "francine-founder-front-cutout-900-v1.webp", "francine-founder-side-cutout-640-v1.webp", "francine-founder-side-cutout-900-v1.webp", "francine-marie-bautista-wordmark-white-v2.png", 'class="fco-hero-visual"', 'fetchpriority="high"', "fco-founder-nameplate", "fco-founder-signature", "fco-founder-title", "fco-founder-portrait-card is-front", "fco-founder-portrait-card is-side", "Founder &amp; CEO", "Francine Marie Bautista"):
+    fmbandco_home = (ROOT / "fmbandco/index.html").read_text(encoding="utf-8")
+    for marker in ("francine-founder-hero-640.webp", "francine-founder-hero-923.webp", "francine-founder-front-cutout-640-v1.webp", "francine-founder-front-cutout-900-v1.webp", "francine-founder-side-cutout-640-v1.webp", "francine-founder-side-cutout-900-v1.webp", "francine-marie-bautista-wordmark-white-v2.png", 'class="fco-hero-visual"', 'fetchpriority="high"', "fco-founder-nameplate", "fco-founder-signature", "fco-founder-title", "fco-founder-portrait-card is-front", "fco-founder-portrait-card is-side", "Founder", "Francine Marie Bautista"):
         if marker not in fmbandco_home:
-            errors.append(f"fmb&co/index.html: responsive founder hero marker is missing: {marker}")
+            errors.append(f"fmbandco/index.html: responsive founder hero marker is missing: {marker}")
     if "fmbandco-motion.js?v=20260718-motion-v1" not in fmbandco_home:
-        errors.append("fmb&co/index.html: restrained homepage motion script is missing")
+        errors.append("fmbandco/index.html: restrained homepage motion script is missing")
     fmbandco_motion_path = ROOT / "assets/js/fmbandco-motion.js"
     if not fmbandco_motion_path.exists():
         errors.append("assets/js/fmbandco-motion.js: homepage motion script is missing")
@@ -738,12 +746,11 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         "fco-founder-signature",
         "fco-founder-title",
         "fmb-about-portrait-card is-front",
-        "Founder &amp; CEO",
+        "Founder &middot; Strategist &middot; Creative Director &middot; Storyteller",
         'id="expertise"',
         'id="journey"',
         'id="portfolio"',
         'id="work-with-fmb"',
-        'id="workCalendarCard"',
         'id="workWithFmbForm"',
         "site.js?v=20260716-mobile-first-v6",
     ):

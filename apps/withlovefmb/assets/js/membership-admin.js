@@ -8,23 +8,18 @@
   if(!control||!state||!detail||!button)return;
 
   let client=null;
-  let isOpen=false;
-
   function render(status){
-    isOpen=status?.registration_open===true;
-    state.textContent=isOpen?'Membership registration is open.':'Membership registration is closed.';
-    detail.textContent=isOpen
-      ?'New visitors can create verified profiles. Close registration immediately if testing reveals a problem.'
-      :`New profiles cannot be created. Existing members can still sign in.${status?.schema_version?` Schema ${status.schema_version} is responding.`:''}`;
-    button.disabled=false;
-    button.textContent=isOpen?'Close membership':'Open membership';
+    state.textContent='Membership registration is closed.';
+    detail.textContent=`New profiles cannot be created. Existing members can still sign in.${status?.schema_version?` Schema ${status.schema_version} is responding.`:''}`;
+    button.disabled=true;
+    button.textContent='Registration closed';
   }
 
   function unavailable(message){
     state.textContent='Membership launch control is not installed.';
     detail.textContent=message;
     button.disabled=true;
-    button.textContent='Run Supabase migration first';
+    button.textContent='Registration closed';
   }
 
   async function resolveClient(){
@@ -55,24 +50,6 @@
     }
     render(data);
   }
-
-  button.addEventListener('click',async()=>{
-    if(!client||button.disabled)return;
-    const nextOpen=!isOpen;
-    const action=nextOpen?'open':'close';
-    if(!confirm(`Are you sure you want to ${action} public member registration?`))return;
-
-    button.disabled=true;
-    button.textContent=nextOpen?'Opening…':'Closing…';
-    const {data,error}=await client.rpc('admin_set_membership_open',{p_open:nextOpen});
-    if(error){
-      detail.textContent='The registration setting could not be changed. Check administrator access and the Supabase migration.';
-      button.disabled=false;
-      button.textContent=isOpen?'Close membership':'Open membership';
-      return;
-    }
-    render(data);
-  });
 
   loadStatus();
 })();

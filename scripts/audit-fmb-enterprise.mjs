@@ -58,11 +58,11 @@ for(const file of htmlFiles){
     const target=resolveReference(file,siteRoot,html,href);if(!target)continue;
     if(!(await routeExists(target)))add('error',`broken internal link ${href}`);
   }
-  if(name==='index.html'||/^(aboutfmb|withlovefmb|news|music|ebooks|fmb&co)\//.test(name)){if(!/<meta\s+name=["']description["']/i.test(html))add('error','missing SEO description');if(!/<link\s+rel=["']canonical["']/i.test(html))add('error','missing canonical URL');}
+  if(name==='index.html'||/^(aboutfmb|withlovefmb|news|music|ebooks|fmbandco)\//.test(name)){if(!/<meta\s+name=["']description["']/i.test(html))add('error','missing SEO description');if(!/<link\s+rel=["']canonical["']/i.test(html))add('error','missing canonical URL');}
   pages.push({file:name,bytes:Buffer.byteLength(html),issues});
 }
 
-const requiredRoutes=['index.html','aboutfmb/index.html','withlovefmb/index.html','communityengagements/index.html','news/index.html','music/index.html','ebooks/index.html','fmb&co/index.html','app/index.html','app/install/index.html'];
+const requiredRoutes=['index.html','aboutfmb/index.html','withlovefmb/index.html','communityengagements/index.html','news/index.html','music/index.html','ebooks/index.html','fmbandco/index.html','app/index.html','app/install/index.html'];
 for(const route of requiredRoutes)if(!htmlFiles.some(file=>relative(file)===route))errors.push(`required route missing: ${route}`);
 const report={standard:'FMB Network Fortune 500 release audit',generatedAt:new Date().toISOString(),pagesAudited:pages.length,summary:{errors:errors.length,warnings:warnings.length,passed:errors.length===0&&warnings.length===0},errors,warnings,pages};
 await writeFile(path.join(root,'enterprise-audit.json'),JSON.stringify(report,null,2),'utf8');

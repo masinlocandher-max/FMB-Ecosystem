@@ -6,21 +6,21 @@
   const host=location.hostname.toLowerCase();
   const previewMode=new URLSearchParams(location.search).get('experience');
   const isPreviewHost=/\.vercel\.app$/i.test(host)||/^(localhost|127\.0\.0\.1)$/i.test(host);
-  const isAppHost=host==='yoni.francinemariebautista.com'||host==='app.francinemariebautista.com'||host==='mobile.francinemariebautista.com'||(isPreviewHost&&previewMode==='app');
+  const isAppHost=host==='yoni.francinemariebautista.com'||host==='mobile.francinemariebautista.com'||(isPreviewHost&&previewMode==='app');
 
   const MAIN_MENU=[
     {href:'/',label:'Home',description:'Return to the official FMB bulletin and latest announcements.'},
     {href:'/aboutfmb/',label:'About FMB',description:'Meet Francine Marie Bautista and explore her work and public mission.'},
     {href:'/news/',label:'News',description:'Read verified updates, context, reporting, and reflection.'},
-    {href:'/projects/',label:'Projects',description:'Explore applications, cultural work, publications, and founder-led builds.'},
-    {href:'/ebooks/',label:'eBooks',description:'Open six complete original publications and public guides.'},
-    {href:'/music/',label:'Music',description:'Listen to the complete FMB music catalog and digital releases.'},
-    {href:'/withlovefmb/#volunteer',label:'Get Involved',description:'Join community service, volunteer action, and people-first initiatives.'},
-    {href:'/gethelp/',label:'Get Help',description:'Open verified emergency, wellbeing, protection, and assistance contacts.'},
-    {href:'/fmbandco/',label:'FMB&CO.',description:'Explore the company and its SENZ and Cognita portfolio.'}
+    {href:'/projects/',label:'Projects',description:'Explore Yoni, Mabayani, and With Love, FMB.'},
+    {href:'/ebooks/',label:'Reading',description:'Open the FMB reading library.'},
+    {href:'/music/',label:'Music',description:'Open the FMB music library.'},
+    {href:'/withlovefmb/#volunteer',label:'Get Involved',description:'Find current public ways to participate.'},
+    {href:'/gethelp/',label:'Get Help',description:'Open the public support directory.'},
+    {href:'/fmbandco/',label:'FMB&CO.',description:'Meet SENZ and Cognita within FMB&CO.'}
   ];
 
-  /* The Yoni domain and legacy app domains open the focused app. */
+  /* The dedicated Yoni and mobile application hosts open the focused app. */
   if(isAppHost&&!location.pathname.startsWith('/app/')){
     location.replace(`/app/${location.search}${location.hash}`);
     return;

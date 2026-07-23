@@ -79,7 +79,7 @@
     }
 
     const accessHeading = $('.access-card-head p');
-    if (accessHeading) accessHeading.textContent = 'Explore first, create a profile, or sign in securely. Existing members can use the same email and password.';
+    if (accessHeading) accessHeading.textContent = 'Explore the public app or sign in securely. Registration is closed; existing members can use the same email and password.';
 
     const profileLede = $('#screen-profile .page-lede');
     if (profileLede) profileLede.textContent = 'Your preferred name personalizes your private account. It never appears on the Kind Wall. Your username is what the community sees.';

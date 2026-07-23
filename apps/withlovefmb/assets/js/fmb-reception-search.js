@@ -16,11 +16,11 @@
     {section:'eBook',title:'Men Can Cry',href:'/men-can-cry.html',summary:'A compassionate guide to emotional honesty, respect and healthier masculinity.',terms:'men can cry masculinity emotions mental health ebook book'},
     {section:'eBook',title:'Dress With Intention',href:'/dress-with-intention.html',summary:'Professional presence, grooming, scent, fit and appearance bias.',terms:'dress intention image personal brand grooming scent wardrobe ebook book'},
     {section:'Music',title:'FMB Music Library',href:'/music/',summary:'Original Calm, Feel Good and With Love, FMB soundtrack collections.',terms:'music songs audio calm feel good ost soundtrack player tracks'},
-    {section:'Biography',title:'Francine Marie Bautista, FMB',href:'/aboutfmb/',summary:'The official biography, professional journey, expertise and public work of Francine Marie Bautista.',terms:'francine marie bautista fmb biography founder strategist creative director educator advocate'},
-    {section:'Community',title:'With Love, FMB',href:'/withlovefmb/',summary:'Projects, people-first applications, volunteer opportunities, public support and ways to get involved.',terms:'with love fmb projects apps volunteer get involved support community'},
-    {section:'Corporate',title:'FMB&Co.',href:'/fmb&co/',summary:'The founder-led company and portfolio connecting SENZ and Cognita.',terms:'fmb co company corporate portfolio senz cognita'},
-    {section:'SENZ',title:'SENZ Marketing and Digital Solutions',href:'/fmb&co/senz/',summary:'Marketing, PR, branding, websites, digital systems and public positioning.',terms:'senz marketing pr branding digital solutions website space for rent'},
-    {section:'Cognita',title:'Cognita Institute of AI',href:'/fmb&co/cognita/',summary:'Practical, responsible and human-centered AI education and the upcoming qualifying test.',terms:'cognita institute ai qualifying test education learning artificial intelligence'}
+    {section:'Biography',title:'Francine Marie Bautista, FMB',href:'/aboutfmb/',summary:'The official profile of Francine Marie Bautista, founder, strategist, creative director, and storyteller.',terms:'francine marie bautista fmb biography founder strategist creative director storyteller'},
+    {section:'Projects',title:'FMB Projects',href:'/projects/',summary:'Yoni, Mabayani, and With Love, FMB.',terms:'projects yoni mabayani with love fmb'},
+    {section:'Corporate',title:'FMB&CO.',href:'/fmbandco/',summary:'The company home of SENZ and Cognita.',terms:'fmb co company senz cognita'},
+    {section:'SENZ',title:'SENZ Marketing and Digital Solutions',href:'/fmbandco/senz/',summary:'The marketing and digital solutions business of FMB&CO.',terms:'senz marketing digital solutions'},
+    {section:'Cognita',title:'Cognita',href:'/fmbandco/cognita/',summary:'The knowledge and learning arm of FMB&CO.',terms:'cognita knowledge learning'}
   ];
   const normalise=value=>String(value||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();
   const render=(form,query,results)=>{

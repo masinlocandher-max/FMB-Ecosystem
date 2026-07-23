@@ -31,7 +31,10 @@
     $$('.admin-nav button').forEach(button=>button.classList.toggle('active',button.dataset.adminPanel===id));
     $$('.admin-panel').forEach(panel=>panel.hidden=panel.id!==id);
     $$('[data-admin-open]').forEach(button=>button.classList.toggle('active',button.dataset.adminOpen===id));
-    history.replaceState(null,'',`#${id}`);
+    const label=$(`.admin-nav button[data-admin-panel="${id}"]`)?.dataset.panelTitle;
+    if(label)document.title=`${label} | FMB&CO. Orchestrator`;
+    history.replaceState(null,'',`${location.pathname}${location.search}#${id}`);
+    window.dispatchEvent(new CustomEvent('fmb:admin-panel',{detail:{id}}));
   }
   $$('.admin-nav button').forEach(button=>button.addEventListener('click',()=>showPanel(button.dataset.adminPanel)));
   $$('[data-admin-open]').forEach(button=>button.addEventListener('click',()=>{showPanel(button.dataset.adminOpen);scrollTo({top:0,behavior:'smooth'})}));
@@ -265,12 +268,27 @@
   $('#adminSignOut').addEventListener('click',async()=>{if(client)await client.auth.signOut();location.replace('auth.html#signin')});
 
   async function init(){
-    if(!window.FMB?.configured){setStatus('The secure account service has not been connected. Administrator tools are disabled.','error');$$('button,input,textarea,select').forEach(control=>control.disabled=true);return}
+    const localPreview=/^(localhost|127\.0\.0\.1)$/i.test(location.hostname)&&new URLSearchParams(location.search).get('preview')==='1';
+    if(localPreview){
+      $('#adminIdentity').textContent='Local design preview · live member data is paused';
+      ['membersCommunityPanel','membersPanel','moderationPanel','contentPanel','musicPanel','mediaPanel','messagesPanel'].forEach(id=>{
+        const panel=document.getElementById(id);if(!panel)return;
+        panel.querySelectorAll('button,input,textarea,select').forEach(control=>control.disabled=true);
+      });
+      document.body.classList.add('orchestrator-ready');
+      window.dispatchEvent(new CustomEvent('fmb:admin-ready',{detail:{client:null,user:null,profile:null,preview:true}}));
+      const initial=location.hash.slice(1);if(document.getElementById(initial)?.classList.contains('admin-panel'))showPanel(initial);else showPanel('overviewPanel');
+      return;
+    }
+    if(!window.FMB?.configured){
+      const splash=document.querySelector('.orchestrator-auth-splash span');if(splash)splash.textContent='Secure account service is not connected';
+      return;
+    }
     client=await resolveClient();
     const {data,error}=await client.auth.getSession();
-    if(error||!data.session){location.replace('auth.html#signin');return}
+    if(error||!data.session){location.replace('auth.html?next=%2Fadmin.html#signin');return}
     const {data:{user:verifiedUser},error:userError}=await client.auth.getUser();
-    if(userError||!verifiedUser){location.replace('auth.html#signin');return}
+    if(userError||!verifiedUser){location.replace('auth.html?next=%2Fadmin.html#signin');return}
     user=verifiedUser;
     const {data:profile,error:profileError}=await client.from('profiles').select('full_name,role,status').eq('id',user.id).maybeSingle();
     if(profileError||!profile||profile.role!=='admin'||profile.status!=='active'){
@@ -279,8 +297,10 @@
       return;
     }
     $('#adminIdentity').textContent=`Signed in as ${profile.full_name} · administrator`;
+    document.body.classList.add('orchestrator-ready');
+    window.dispatchEvent(new CustomEvent('fmb:admin-ready',{detail:{client,user,profile,preview:false}}));
     await Promise.all([loadOverview(),loadMembers(),loadModeration(),loadContent(),loadMusic(),loadMedia(),loadMessages()]);
-    const initial=location.hash.slice(1);if(document.getElementById(initial)?.classList.contains('admin-panel'))showPanel(initial);
+    const initial=location.hash.slice(1);if(document.getElementById(initial)?.classList.contains('admin-panel'))showPanel(initial);else showPanel('overviewPanel');
   }
   init();
 })();

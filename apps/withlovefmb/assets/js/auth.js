@@ -21,18 +21,18 @@
   }
 
   function showPanel(name){
-    const signup=name==='signup';
-    signinTab.classList.toggle('active',!signup);
-    signupTab.classList.toggle('active',signup);
-    signinTab.setAttribute('aria-selected',String(!signup));
-    signupTab.setAttribute('aria-selected',String(signup));
-    signinPanel.hidden=signup;
-    signupPanel.hidden=!signup;
-    history.replaceState(null,'',signup?'#signup':'#signin');
+    signinTab.classList.add('active');
+    signupTab.classList.remove('active');
+    signinTab.setAttribute('aria-selected','true');
+    signupTab.setAttribute('aria-selected','false');
+    signupTab.disabled=true;
+    signinPanel.hidden=false;
+    signupPanel.hidden=true;
+    history.replaceState(null,'',`${location.pathname}${location.search}#signin`);
   }
   signinTab.addEventListener('click',()=>showPanel('signin'));
-  signupTab.addEventListener('click',()=>showPanel('signup'));
-  showPanel(location.hash==='#signup'?'signup':'signin');
+  signupTab.addEventListener('click',()=>showPanel('signin'));
+  showPanel('signin');
 
   document.querySelectorAll('[data-toggle-password]').forEach(button=>button.addEventListener('click',()=>{
     const input=document.getElementById(button.dataset.togglePassword);
@@ -68,6 +68,17 @@
     if(/(^|\.)francinemariebautista\.com$/i.test(location.hostname))return 'https://www.francinemariebautista.com/';
     return location.origin+location.pathname.replace(/[^/]*$/,'');
   }
+  function signedInDestination(){
+    const next=new URLSearchParams(location.search).get('next');
+    if(next&&next.startsWith('/')&&!next.startsWith('//')&&!next.includes('\\')){
+      try{
+        const target=new URL(next,location.origin);
+        if(target.origin===location.origin)return `${target.pathname}${target.search}${target.hash}`;
+      }catch{}
+    }
+    if(location.hostname.toLowerCase()==='data.francinemariebautista.com')return '/admin.html';
+    return '/profile/';
+  }
   function showVerification(email){
     if(!verificationActions||!verificationEmail)return;
     if(verificationLead)verificationLead.textContent='Verification requested for';
@@ -100,7 +111,7 @@
     for(const client of [localClient,sessionClient]){
       if(!client)continue;
       const {data}=await client.auth.getSession();
-      if(data.session?.user?.email_confirmed_at){location.replace('/profile/');return}
+      if(data.session?.user?.email_confirmed_at){location.replace(signedInDestination());return}
     }
   }
   redirectExistingSession();
@@ -136,66 +147,13 @@
       setStatus('#signinStatus','This profile is suspended. Contact withlovefmb@gmail.com if you believe this is a mistake.','error');
       return;
     }
-    location.replace('/profile/');
+    location.replace(signedInDestination());
   });
 
-  $('#signupForm').addEventListener('submit',async event=>{
+  $('#signupForm').addEventListener('submit',event=>{
     event.preventDefault();
-    const fullName=window.FMB?.cleanText($('#fullName').value,80)||'';
-    const email=$('#signupEmail').value.trim().toLowerCase();
-    const password=signupPassword.value;
-    const confirmation=$('#confirmPassword').value;
-    if(fullName.length<2){setStatus('#signupStatus','Enter your full name.','error');return}
-    if(!validEmail(email)){setStatus('#signupStatus','Enter a valid email address.','error');return}
-    if(!validPassword(password)){setStatus('#signupStatus','Use at least 10 characters with a lowercase letter, uppercase letter, and number.','error');return}
-    if(password!==confirmation){setStatus('#signupStatus','The passwords do not match.','error');return}
-    if(!$('#legalConsent').checked){setStatus('#signupStatus','Read and accept the membership, privacy, and community terms before continuing.','error');return}
-    if(!window.FMB?.configured){serviceUnavailable('#signupStatus');return}
-
-    const button=$('#signupButton');
-    setLoading(button,true,'Creating profile…');
-    const client=window.FMB.createClient('local');
-    const base=authBase();
-    const redirectTo=window.FMB.config.AUTH_REDIRECT_URL||new URL('profile/',base).href;
-    const {data,error}=await client.auth.signUp({
-      email,
-      password,
-      options:{
-        emailRedirectTo:redirectTo,
-        data:{
-          full_name:fullName,
-          display_name:fullName,
-          username:window.FMB.usernameFrom(fullName),
-          accepted_membership_version:'2026-07-12',
-          accepted_privacy_version:'2026-07-12',
-          accepted_guidelines_version:'2026-07-12'
-        }
-      }
-    });
-    setLoading(button,false);
-    if(error){
-      const duplicate=['user_already_exists','email_exists'].includes(error.code)||/already registered|already exists/i.test(error.message||'');
-      const rateLimited=error.code==='over_email_send_rate_limit'||/rate limit|too many requests/i.test(error.message||'');
-      const message=duplicate
-        ? 'A profile may already use this email. Try signing in or resetting the password.'
-        : rateLimited
-          ? 'Verification email sending is temporarily at its limit. Please wait before trying again. If this email already has a profile, use Sign in instead.'
-          : 'The profile could not be created. Please review the details and try again.';
-      setStatus('#signupStatus',message,'error');
-      return;
-    }
-    const existingAccount=Boolean(data.user&&Array.isArray(data.user.identities)&&data.user.identities.length===0);
-    if(existingAccount){
-      setStatus('#signupStatus','A profile already uses this email. No new verification email will be sent. Open Sign in, or use Forgot password if you do not remember the password.','error');
-      showExistingAccount(email);
-      return;
-    }
-    rememberInstallOffer(email);
-    if(data.session){location.replace('/profile/');return}
-    $('#signupForm').reset();
-    document.querySelectorAll('#passwordRules span').forEach(rule=>rule.classList.remove('valid'));
-    setStatus('#signupStatus','If this is a new profile, check your email and open the verification link. Existing profiles should use Sign in or Forgot password.','success');
-    showVerification(email);
+    setStatus('#signupStatus','Registration is closed. Existing members may sign in.','error');
+    showPanel('signin');
   });
 
   $('#resetPassword').addEventListener('click',async()=>{
@@ -249,6 +207,4 @@
     setStatus('#signupStatus','If this profile is still awaiting verification, a fresh message was requested. Already verified profiles will not receive another signup email.','success');
   });
 
-  const pendingEmail=sessionStorage.getItem(pendingEmailKey);
-  if(validEmail(pendingEmail||''))showVerification(pendingEmail);
 })();

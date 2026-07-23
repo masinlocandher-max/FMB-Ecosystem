@@ -83,7 +83,7 @@
 @media(max-width:520px){.member-header,.admin-head{padding:22px}.member-header h1{font-size:43px}.member-tabs,.admin-nav{border-radius:17px}.affirmation-card,.checkin-card,.admin-welcome-banner{border-radius:26px}.affirmation-card{padding:30px 24px}.affirmation-card blockquote{font-size:40px}.checkin-card{padding:25px 20px}.mood-option small{font-size:8.5px}.admin-kpis{grid-template-columns:1fr 1fr}.admin-kpi{padding:16px}.admin-welcome-banner{padding:30px 23px}.admin-welcome-banner h2{font-size:44px}.member-grid .glass-card{min-height:185px}}
 @media(prefers-reduced-motion:reduce){.member-grid .glass-card,.admin-quick-card,.mood-face{transition:none}}
 
-/* Post-verification installation opportunity. Excluded by script on app.francinemariebautista.com. */
+/* Post-verification installation opportunity. Excluded by script on the dedicated Yoni host. */
 .member-install-onboarding[hidden]{display:none!important}
 .member-install-onboarding{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;padding:24px}
 .member-install-backdrop{position:absolute;inset:0;border:0;background:rgba(37,12,49,.58);backdrop-filter:blur(16px)}

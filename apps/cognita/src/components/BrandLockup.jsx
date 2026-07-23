@@ -29,7 +29,7 @@ export default function BrandLockup({ size = "md", className = "" }) {
       <div
         className={`relative whitespace-nowrap font-display font-normal uppercase leading-none text-white ${selectedSize.title}`}
         style={{ letterSpacing: "0.22em", paddingLeft: "0.22em" }}
-        aria-label="Cognita Institute of Artificial Intelligence"
+        aria-label="Cognita"
       >
         COGN
         <span className="relative inline-block">
@@ -53,7 +53,7 @@ export default function BrandLockup({ size = "md", className = "" }) {
         className={`font-display font-normal uppercase text-white/65 ${selectedSize.subtitle} ${selectedSize.subtitleMargin}`}
         style={{ letterSpacing: "0.58em", paddingLeft: "0.58em" }}
       >
-        Institute
+        Knowledge &amp; Learning
       </p>
     </div>
   );

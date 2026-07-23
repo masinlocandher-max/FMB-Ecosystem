@@ -7,17 +7,17 @@ const replacements=new Map([
   ['/assets/images/fmb-approved/fmb-master-purple-square.webp','/assets/images/home/fmb-home-logo.webp'],
   ['/assets/images/fmb-approved/fmb-master-transparent.webp','/assets/images/home/fmb-home-logo.webp'],
   ['/assets/images/fmb-approved/fmb-news-official-transparent.webp','/assets/images/news/fmb-news-official.svg'],
-  ['/assets/images/fmb-approved/francine-standing-landscape.webp','/assets/images/home/francine-home-hero-hd.webp'],
-  ['/assets/images/fmb-approved/francine-seated-landscape.webp','/assets/images/home/francine-home-founder-hd.webp'],
-  ['/assets/images/fmb-approved/francine-portrait-angle-left.webp','/assets/images/home/francine-home-founder-hd.webp'],
-  ['/assets/images/fmb-approved/francine-portrait-angle-right.webp','/assets/images/home/francine-home-founder-hd.webp'],
-  ['/assets/images/fmb-approved/francine-portrait-front.webp','/assets/images/home/francine-home-founder-hd.webp'],
+  ['/assets/images/fmb-approved/francine-standing-landscape.webp','/assets/images/fmb/francine-founder-front-cutout-900-v1.webp'],
+  ['/assets/images/fmb-approved/francine-seated-landscape.webp','/assets/images/fmb/francine-founder-side-cutout-900-v1.webp'],
+  ['/assets/images/fmb-approved/francine-portrait-angle-left.webp','/assets/images/fmb/francine-founder-side-cutout-900-v1.webp'],
+  ['/assets/images/fmb-approved/francine-portrait-angle-right.webp','/assets/images/fmb/francine-founder-front-cutout-900-v1.webp'],
+  ['/assets/images/fmb-approved/francine-portrait-front.webp','/assets/images/fmb/francine-founder-front-cutout-900-v1.webp'],
   ['/assets/images/fmb-official-2026/fmb-master-square.webp','/assets/images/home/fmb-home-logo.webp'],
 ]);
 const localRequired=[
   'assets/images/home/fmb-home-logo.webp',
-  'assets/images/home/francine-home-hero-hd.webp',
-  'assets/images/home/francine-home-founder-hd.webp',
+  'assets/images/fmb/francine-founder-front-cutout-900-v1.webp',
+  'assets/images/fmb/francine-founder-side-cutout-900-v1.webp',
   'assets/images/news/fmb-news-official.svg',
   'assets/images/fmb-approved/fmb-music-official-transparent.webp',
   'assets/images/fmb-approved/fmb-ebook-official-transparent.webp',
@@ -51,19 +51,10 @@ for(const file of await walk(root)){
       changedReferences+=occurrences;
     }
   }
-  const genericFounderMatches=text.match(/\/assets\/images\/fmb\/francine-founder-[^"'\s)]+\.(?:webp|png|jpe?g)/gi)||[];
-  if(genericFounderMatches.length){
-    text=text.replace(/\/assets\/images\/fmb\/francine-founder-[^"'\s)]+\.(?:webp|png|jpe?g)/gi,'/assets/images/home/francine-home-founder-hd.webp');
-    changedReferences+=genericFounderMatches.length;
-  }
   if(file.endsWith('.html')){
-    text=text.replace(/<img\b[^>]*src=["'](?:\/assets\/images\/home\/(?:fmb-home-logo|francine-home-(?:hero|founder)-hd)\.webp|\/assets\/images\/news\/fmb-news-official\.svg)["'][^>]*>/gi,tag=>tag
+    text=text.replace(/<img\b[^>]*src=["'](?:\/assets\/images\/home\/fmb-home-logo\.webp|\/assets\/images\/news\/fmb-news-official\.svg)["'][^>]*>/gi,tag=>tag
       .replace(/\swidth=["'][^"']*["']/i,'')
       .replace(/\sheight=["'][^"']*["']/i,''));
-    text=text
-      .replaceAll('fmb-identity-signature-portrait','fmb-identity-signature-landscape')
-      .replaceAll('fmb-official-portrait','fmb-official-landscape')
-      .replace(/data-fmb-portrait=["'](?:standing-landscape-exact|seated-landscape-exact|portrait-angle-left-exact|portrait-angle-right-exact|portrait-front-exact)["']/g,'data-fmb-portrait="repository-founder"');
 
     let highPriorityKept=false;
     text=text.replace(/<img\b[^>]*fetchpriority=["']high["'][^>]*>/gi,tag=>{

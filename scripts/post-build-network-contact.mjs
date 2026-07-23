@@ -2,7 +2,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
-const pages=['index.html','aboutfmb/index.html','withlovefmb/index.html','news/index.html','music/index.html','ebooks/index.html','fmb&co/index.html','fmb&co/senz/index.html','fmb&co/cognita/index.html'];
+const pages=['index.html','aboutfmb/index.html','withlovefmb/index.html','news/index.html','music/index.html','ebooks/index.html','fmbandco/index.html','fmbandco/senz/index.html','fmbandco/cognita/index.html'];
 const contact=`<aside class="fmb-network-contact network-reveal" aria-label="Official FMB contact channels">
   <div><small>Official channels</small><strong>Stay connected with FMB.</strong><p>Use these public channels for verified updates, messages, and professional inquiries.</p></div>
   <a href="https://www.instagram.com/bb.fmb/" target="_blank" rel="noopener"><span>Instagram</span><b>@bb.fmb</b></a>

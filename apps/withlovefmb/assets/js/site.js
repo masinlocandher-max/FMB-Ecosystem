@@ -3,8 +3,8 @@
   const $=selector=>document.querySelector(selector);
   const $$=selector=>document.querySelectorAll(selector);
   const MOBILE_EXPERIENCE_HOST='mobile.francinemariebautista.com';
-  const APP_HOST='app.francinemariebautista.com';
-  const isPublicWebsiteHost=location.hostname.toLowerCase()!==APP_HOST;
+  const YONI_HOST='yoni.francinemariebautista.com';
+  const isPublicWebsiteHost=location.hostname.toLowerCase()!==YONI_HOST;
   const isPreviewMobileExperience=(/\.vercel\.app$/i.test(location.hostname)||/^(localhost|127\.0\.0\.1)$/i.test(location.hostname))&&new URLSearchParams(location.search).get('experience')==='mobile';
   const isDedicatedMobileHost=location.hostname.toLowerCase()===MOBILE_EXPERIENCE_HOST||isPreviewMobileExperience;
 
@@ -105,18 +105,18 @@
     if(protectedRoutes.has(route)||protectedRoutes.has(page))return;
     const onHome=route==='home';
     const items=[
-      {label:'Home',description:'Understand the project and find the right starting point',href:onHome?'#top':'/',current:onHome&&!location.hash},
-      {label:'Ebooks',description:'Open the complete FMB reading library',href:'/ebooks/',current:route==='ebooks'||['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html','dress-with-intention.html'].includes(page)},
-      {label:'Music',description:'Open our app-like original music library',href:'/music/',current:route==='music'||page==='music.html'},
-      {label:'News',description:'Read the latest verified FMB briefing and reflection',href:'/news/',current:route==='news'},
-      {label:'Freedom Wall',description:'Read positive reflections selected with care',href:'/freedom-wall.html',current:page==='freedom-wall.html'},
-      {label:'Community',description:'Discover Community Engagements - AMDG and ways to take part',href:'/communityengagements/',current:route==='communityengagements'||page==='volunteer.html'},
-      {label:'FMB & Co.',description:'Explore the three founder-led brands',href:'/fmb&co/',current:route==='fmb&co'},
-      {label:'About FMB',description:'Meet Francine and understand her authority',href:'/aboutfmb/',current:route==='aboutfmb'||page==='about.html'},
-      {label:'Get help',description:'Open verified crisis, health, safety, and assistance contacts',href:'/gethelp/',current:route==='gethelp',help:true}
+      {label:'Home',description:'Open the official FMB bulletin and headquarters',href:onHome?'#top':'/',current:onHome&&!location.hash},
+      {label:'About FMB',description:'Meet Francine Marie Bautista and read her official profile',href:'/aboutfmb/',current:route==='aboutfmb'||page==='about.html'},
+      {label:'News',description:'Read the latest FMB News reports and context',href:'/news/',current:route==='news'},
+      {label:'Projects',description:'Explore Yoni, Mabayani, and With Love, FMB',href:'/projects/',current:route==='projects'},
+      {label:'Reading',description:'Open the FMB reading library',href:'/ebooks/',current:route==='ebooks'||['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html','dress-with-intention.html'].includes(page)},
+      {label:'Music',description:'Open the FMB music library',href:'/music/',current:route==='music'||page==='music.html'},
+      {label:'Get Involved',description:'Find public ways to participate through With Love, FMB',href:'/withlovefmb/#volunteer',current:route==='withlovefmb'||route==='communityengagements'||page==='volunteer.html'},
+      {label:'Get Help',description:'Open the public support directory',href:'/gethelp/',current:route==='gethelp',help:true},
+      {label:'FMB&CO.',description:'Meet SENZ and Cognita within FMB&CO.',href:'/fmbandco/',current:route==='fmbandco'}
     ];
-    links.innerHTML=`<div class="nav-menu-intro"><strong>More from FMB</strong><span>Reading, music, news, and help stay in the quick menu below. Open the menu for our other spaces.</span></div>${items.map(item=>`<a class="nav-menu-link${item.help?' nav-help-link':''}" href="${item.href}"${item.current?' aria-current="page"':''}><span class="nav-link-label">${item.label}</span><small>${item.description}</small></a>`).join('')}<div class="nav-mobile-actions"><a class="pill secondary nav-signin-link" href="https://app.francinemariebautista.com/app/?auth=signin">Sign in</a><a class="pill nav-install-link" href="https://app.francinemariebautista.com/app/install/">Get the app</a></div>`;
-    actions.innerHTML='<a class="nav-btn nav-signin-link" href="https://app.francinemariebautista.com/app/?auth=signin">Sign in</a><a class="nav-btn primary nav-install-link" href="https://app.francinemariebautista.com/app/install/">Get the app</a><button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-label="Open menu" aria-controls="navLinks"><span></span><span></span></button>';
+    links.innerHTML=`<div class="nav-menu-intro"><strong>Official FMB navigation</strong><span>Use these verified destinations to move through the website.</span></div>${items.map(item=>`<a class="nav-menu-link${item.help?' nav-help-link':''}" href="${item.href}"${item.current?' aria-current="page"':''}><span class="nav-link-label">${item.label}</span><small>${item.description}</small></a>`).join('')}<div class="nav-mobile-actions"><a class="pill secondary" href="/aboutfmb/#work-with-fmb">Work with FMB</a><a class="pill nav-install-link" href="https://yoni.francinemariebautista.com/">Open Yoni</a></div>`;
+    actions.innerHTML='<a class="nav-btn" href="/aboutfmb/#work-with-fmb">Work with FMB</a><a class="nav-btn primary nav-install-link" href="https://yoni.francinemariebautista.com/">Open Yoni</a><button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-label="Open menu" aria-controls="navLinks"><span></span><span></span></button>';
     const menuToggle=actions.querySelector('#navToggle');
     if(menuToggle)menuToggle.setAttribute('aria-controls','navLinks');
     let mobileBar=$('.mobile-bar:not(.member-mobile-bar):not(.admin-mobile-bar)');
@@ -127,10 +127,10 @@
       document.body.appendChild(mobileBar);
     }
     if(mobileBar){
-      const readingCurrent=route==='ebooks'||['reading.html','womens-health.html','men-can-cry.html','coming-out-respect.html','skin-care-makeup.html','dress-with-intention.html'].includes(page);
-      const musicCurrent=route==='music'||page==='music.html';
+      const newsCurrent=route==='news';
+      const projectsCurrent=route==='projects';
       const helpCurrent=route==='gethelp';
-      mobileBar.innerHTML=`<a class="${onHome?'active':''}" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 11 8-7 8 7v9H4Z"/><path d="M9 20v-6h6v6"/></svg><span>Home</span></a><a class="${readingCurrent?'active':''}" href="/ebooks/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2Z"/><path d="M7 4v14a2 2 0 0 0 2 2"/></svg><span>Read</span></a><a class="${musicCurrent?'active':''}" href="/music/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg><span>Music</span></a><a class="${helpCurrent?'active':''}" href="/gethelp/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-3.7 7-10V5l-7-2-7 2v6c0 6.3 7 10 7 10Z"/><path d="M9 12h6M12 9v6"/></svg><span>Help</span></a><a href="https://app.francinemariebautista.com/app/install/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12M7.5 10.5 12 15l4.5-4.5"/><path d="M5 19h14"/></svg><span>Get app</span></a>`;
+      mobileBar.innerHTML=`<a class="${onHome?'active':''}" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 11 8-7 8 7v9H4Z"/><path d="M9 20v-6h6v6"/></svg><span>Home</span></a><a class="${newsCurrent?'active':''}" href="/news/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg><span>News</span></a><a class="${projectsCurrent?'active':''}" href="/projects/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5h6v6H5zM13 5h6v6h-6zM5 13h6v6H5zM13 13h6v6h-6z"/></svg><span>Projects</span></a><a class="${helpCurrent?'active':''}" href="/gethelp/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-3.7 7-10V5l-7-2-7 2v6c0 6.3 7 10 7 10Z"/><path d="M9 12h6M12 9v6"/></svg><span>Help</span></a><a href="https://yoni.francinemariebautista.com/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12M7.5 10.5 12 15l4.5-4.5"/><path d="M5 19h14"/></svg><span>Yoni</span></a>`;
     }
   }
   setupFriendlyNavigation();
@@ -203,7 +203,7 @@
     welcome.setAttribute('role','dialog');
     welcome.setAttribute('aria-modal','true');
     welcome.setAttribute('aria-labelledby','mobileWelcomeTitle');
-    welcome.innerHTML='<div class="mobile-app-welcome-backdrop"></div><section class="mobile-app-welcome-card"><img src="/assets/images/icon-transparent.png" width="72" height="72" alt=""><p class="mobile-app-welcome-kicker">With love, FMB Mobile</p><h1 id="mobileWelcomeTitle">Welcome to our space.</h1><p>Sign in for member music and your private profile, create an account, or continue into our public reading, news, and support spaces.</p><div class="mobile-app-welcome-actions"><a class="mobile-app-primary" href="/auth.html#signin">Sign in</a><a class="mobile-app-secondary" href="/auth.html#signup">Create an account</a><button class="mobile-app-continue" type="button">Continue without an account</button></div><small>Member-only areas will always be clearly marked before you open them.</small></section>';
+    welcome.innerHTML='<div class="mobile-app-welcome-backdrop"></div><section class="mobile-app-welcome-card"><img src="/assets/images/icon-transparent.png" width="72" height="72" alt=""><p class="mobile-app-welcome-kicker">With love, FMB Mobile</p><h1 id="mobileWelcomeTitle">Welcome to our space.</h1><p>Existing members can sign in for member music and a private profile. Registration is closed, and the public reading, news, and support spaces remain open.</p><div class="mobile-app-welcome-actions"><a class="mobile-app-primary" href="/auth.html#signin">Sign in</a><button class="mobile-app-continue" type="button">Continue to the public website</button></div><small>Member-only areas will always be clearly marked before you open them.</small></section>';
     document.body.appendChild(welcome);
     document.body.classList.add('mobile-welcome-open');
     const continueButton=welcome.querySelector('.mobile-app-continue');
@@ -388,9 +388,9 @@
   const topShell=$('.top-shell');
   if(!topPromo&&topShell){topPromo=document.createElement('div');topPromo.className='support-glass';topShell.prepend(topPromo)}
   if(topPromo){
-    topPromo.setAttribute('aria-label','With love, FMB partner brands and advertising announcement');
-    const advertisingHref='/aboutfmb/?category=advertise-with-us#work-with-fmb';
-    const promoGroup=({duplicate=false}={})=>`<div class="promo-group"${duplicate?' aria-hidden="true"':''}><span class="brand-marquee-label">With love, FMB is brought to you by:</span><a class="brand-chip-logo" href="/fmb&co/senz/" aria-label="View SENZ announcements"${duplicate?' tabindex="-1"':''}><img src="/assets/images/projects/senz-logo.png?v=20260716-desktop-premium-v1" alt="${duplicate?'':'SENZ'}" width="480" height="185" decoding="async"></a><a class="brand-chip-logo cognita-chip" href="/fmb&co/cognita/" aria-label="View Cognita announcements"${duplicate?' tabindex="-1"':''}><img src="/assets/images/projects/cognita-logo.png?v=20260716-desktop-premium-v1" alt="${duplicate?'':'Cognita Institute of AI'}" width="520" height="188" decoding="async"></a><span class="banner-divider" aria-hidden="true"></span><span class="advertise-marquee-label">Advertise your brand or business across the website</span><a class="banner-advertise-button" href="${advertisingHref}"${duplicate?' tabindex="-1"':''}>Advertise with us</a></div>`;
+    topPromo.setAttribute('aria-label','FMB ecosystem and official inquiry links');
+    const inquiryHref='/aboutfmb/#work-with-fmb';
+    const promoGroup=({duplicate=false}={})=>`<div class="promo-group"${duplicate?' aria-hidden="true"':''}><span class="brand-marquee-label">From the FMB&amp;CO. ecosystem:</span><a class="brand-chip-logo" href="/fmbandco/senz/" aria-label="Open the SENZ gateway"${duplicate?' tabindex="-1"':''}><img src="/assets/images/projects/senz-logo.png?v=20260716-desktop-premium-v1" alt="${duplicate?'':'SENZ'}" width="480" height="185" decoding="async"></a><a class="brand-chip-logo cognita-chip" href="/fmbandco/cognita/" aria-label="Open the Cognita gateway"${duplicate?' tabindex="-1"':''}><img src="/assets/images/projects/cognita-logo.png?v=20260716-desktop-premium-v1" alt="${duplicate?'':'Cognita'}" width="520" height="188" decoding="async"></a><span class="banner-divider" aria-hidden="true"></span><span class="advertise-marquee-label">Official inquiries begin at the FMB reception desk</span><a class="banner-advertise-button" href="${inquiryHref}"${duplicate?' tabindex="-1"':''}>Work with FMB</a></div>`;
     topPromo.innerHTML=`<div class="promo-marquee">${promoGroup()}${promoGroup({duplicate:true})}</div>`;
   }
 
@@ -687,125 +687,41 @@
     });
   }
 
-  function setupWorkCalendar(){
-    const calendar=$('#calendarDays'),monthLabel=$('#calendarMonth'),form=$('#workWithFmbForm');
-    if(!calendar||!monthLabel||!form)return;
-    const today=new Date();today.setHours(0,0,0,0);
-    const firstAllowedMonth=new Date(today.getFullYear(),today.getMonth(),1);
-    const lastAllowedMonth=new Date(today.getFullYear(),today.getMonth()+2,1);
-    let visibleMonth=new Date(firstAllowedMonth),selectedDate='';
-    const prev=$('#calendarPrev'),next=$('#calendarNext'),dateInput=$('#workDate'),availabilityInput=$('#workAvailability'),selectedLabel=$('#selectedWorkDate');
-    const section=$('#work-with-fmb'),calendarCard=$('#workCalendarCard'),serviceInput=$('#workService'),businessField=$('#workBusinessField'),businessInput=$('#workBusiness'),advertisePrefill=$('#advertisePrefill'),formNote=$('#workFormNote'),routeNote=$('#advertiseRouteNote');
-    const standardFields=[...form.querySelectorAll('.work-standard-field')];
-    const requestedCategory=new URLSearchParams(location.search).get('category');
-    const tierRequest='Please send us the current advertising tier packages and available placement options across the With love, FMB website.';
-    const formStartedAt=Date.now();
-    const iso=date=>`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
-    const readable=value=>new Date(`${value}T12:00:00`).toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-    const sameMonth=(a,b)=>a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth();
-    const dayDistance=date=>Math.round((Date.UTC(date.getFullYear(),date.getMonth(),date.getDate())-Date.UTC(today.getFullYear(),today.getMonth(),today.getDate()))/86400000);
-    const availabilityFor=date=>{
-      const distance=dayDistance(date),weekday=date.getDay();
-      if(distance<0)return{key:'past',short:'Unavailable',long:'Unavailable'};
-      if(distance<=2)return{key:'full',short:'Full',long:'Full, priority review'};
-      if(distance<=21&&(weekday===0||weekday===1||weekday===3||weekday===5))return{key:'full',short:'Full',long:'Full, priority review'};
-      if(distance<=21)return{key:'limited',short:'Limited',long:'Limited availability'};
-      if(weekday===0)return{key:'full',short:'Full',long:'Full, priority review'};
-      if(weekday===1||weekday===5)return{key:'limited',short:'Limited',long:'Limited availability'};
-      return{key:'open',short:'Open',long:'Open availability'};
-    };
-    const selectedCopy=(value,availability)=>availability.key==='full'
-      ?`Priority review: ${readable(value)}. This date is currently full, but FMB’s assistant will review the context.`
-      :`Preferred date: ${readable(value)}. ${availability.long}.`;
-    function render(){
-      const year=visibleMonth.getFullYear(),month=visibleMonth.getMonth(),firstDay=new Date(year,month,1).getDay(),days=new Date(year,month+1,0).getDate();
-      monthLabel.textContent=new Date(year,month,1,12).toLocaleDateString(undefined,{month:'long',year:'numeric'});
-      calendar.innerHTML='';
-      for(let i=0;i<firstDay;i++){const blank=document.createElement('span');blank.className='calendar-blank';calendar.appendChild(blank)}
-      for(let day=1;day<=days;day++){
-        const date=new Date(year,month,day),value=iso(date),button=document.createElement('button');
-        const availability=availabilityFor(date);
-        button.type='button';button.className=`calendar-day ${availability.key}`;button.dataset.date=value;
-        button.innerHTML=`<span class="calendar-date-number">${day}</span>${date>=today?`<span class="calendar-status">${availability.short}</span>`:''}`;
-        button.setAttribute('aria-label',`${readable(value)}. ${availability.long}${availability.key==='full'?'. Select to request priority review':''}`);
-        if(date<today)button.disabled=true;
-        if(value===iso(today))button.classList.add('today');
-        if(value===selectedDate){button.classList.add('selected');button.setAttribute('aria-pressed','true')}else button.setAttribute('aria-pressed','false');
-        button.addEventListener('click',()=>{selectedDate=value;dateInput.value=value;availabilityInput.value=availability.long;selectedLabel.textContent=selectedCopy(value,availability);selectedLabel.dataset.availability=availability.key;render()});
-        calendar.appendChild(button);
-      }
-      prev.disabled=sameMonth(visibleMonth,firstAllowedMonth);
-      next.disabled=sameMonth(visibleMonth,lastAllowedMonth);
-    }
-    prev.addEventListener('click',()=>{visibleMonth=new Date(visibleMonth.getFullYear(),visibleMonth.getMonth()-1,1);render()});
-    next.addEventListener('click',()=>{visibleMonth=new Date(visibleMonth.getFullYear(),visibleMonth.getMonth()+1,1);render()});
-    render();
-
+  function setupWorkInquiry(){
+    const form=$('#workWithFmbForm');
+    if(!form)return;
     const button=form.querySelector('button[type="submit"]'),status=$('#workFormStatus');
-    const setStatus=(message,type='')=>{status.textContent=message;status.className=`inline-status${type?' '+type:''}`;status.hidden=false};
-    const isValidEmail=value=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-    const isAdvertising=()=>serviceInput?.value==='Advertise with us';
-    const updateAdvertisingButton=()=>{
-      if(!isAdvertising()){button.disabled=false;return}
-      const name=String($('#workName')?.value||'').trim();
-      const business=String(businessInput?.value||'').trim();
-      const email=String($('#workEmail')?.value||'').trim().toLowerCase();
-      button.disabled=!(name&&business&&isValidEmail(email));
+    const setStatus=(message,type='')=>{
+      if(!status)return;
+      status.textContent=message;
+      status.className=`inline-status${type?' '+type:''}`;
+      status.hidden=false;
     };
-    const syncInquiryMode=()=>{
-      const advertising=isAdvertising();
-      section?.classList.toggle('advertising-inquiry-mode',advertising);
-      if(calendarCard)calendarCard.hidden=advertising;
-      standardFields.forEach(field=>field.hidden=advertising);
-      if(businessField)businessField.hidden=!advertising;
-      if(advertisePrefill)advertisePrefill.hidden=!advertising;
-      if(routeNote)routeNote.hidden=!advertising;
-      if(businessInput)businessInput.required=advertising;
-      if(advertising){
-        selectedDate='';dateInput.value='';availabilityInput.value='';
-        button.textContent='Request advertising tiers';
-        if(formNote)formNote.textContent='Only your name, business name, and email are required. A detailed copy of this inquiry will be emailed to you automatically.';
-      }else{
-        button.textContent='Send work inquiry';
-        if(formNote)formNote.textContent='Every request is reviewed with care. Please share enough context for FMB’s assistant to understand the timing and priority. This request does not confirm a meeting, price, or service agreement.';
-      }
-      updateAdvertisingButton();
-    };
-    serviceInput?.addEventListener('change',syncInquiryMode);
-    form.addEventListener('input',updateAdvertisingButton);
-    if(requestedCategory==='advertise-with-us'&&serviceInput){serviceInput.value='Advertise with us'}
-    syncInquiryMode();
     form.addEventListener('submit',async event=>{
       event.preventDefault();
-      const name=String($('#workName')?.value||'').trim().slice(0,80),email=String($('#workEmail')?.value||'').trim().toLowerCase(),business=String(businessInput?.value||'').trim().slice(0,120),phone=String($('#workPhone')?.value||'').trim().slice(0,80),service=String(serviceInput?.value||'').trim().slice(0,120),brief=String($('#workBrief')?.value||'').trim().slice(0,3000),advertising=isAdvertising();
-      if(advertising&&!name){setStatus('Please enter your name.','error');return}
-      if(advertising&&!business){setStatus('Please enter your business name.','error');return}
-      if(advertising&&!email){setStatus('Please enter your email address.','error');return}
-      if(!advertising&&(!name||!email||!service||!brief||!selectedDate)){setStatus('Please complete the form and choose a preferred date.','error');return}
-      if(!isValidEmail(email)){setStatus('Please enter a valid email address.','error');return}
+      const name=String($('#workName')?.value||'').trim().slice(0,80);
+      const email=String($('#workEmail')?.value||'').trim().toLowerCase();
+      const route=String($('#workService')?.value||'').trim().slice(0,120);
+      const brief=String($('#workBrief')?.value||'').trim().slice(0,3000);
+      const website=String($('#workWebsite')?.value||'').trim();
+      if(website)return;
+      if(!name||!email||!route||!brief){setStatus('Please complete every required field.','error');return}
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){setStatus('Please enter a valid email address.','error');return}
       const ready=await ensureMemberServices();
       if(!ready||!window.FMB?.configured){setStatus('The secure inquiry service is temporarily unavailable. Please email withlovefmb@gmail.com.','error');return}
-      button.disabled=true;button.textContent=advertising?'Sending request…':'Sending inquiry…';
+      button.disabled=true;
+      button.textContent='Sending inquiry…';
       const client=window.FMB.createClient('local');
-      if(advertising){
-        const {data,error}=await client.functions.invoke('advertising-inquiry',{body:{name,businessName:business,email,category:'advertise-with-us',request:tierRequest,website:String($('#workWebsite')?.value||''),formStartedAt}});
-        button.textContent='Request advertising tiers';
-        if(error||!data?.ok){updateAdvertisingButton();setStatus('The advertising inquiry could not be sent right now. Please try again or email withlovefmb@gmail.com.','error');return}
-        form.reset();
-        if(serviceInput)serviceInput.value='Advertise with us';
-        syncInquiryMode();
-        setStatus('Your advertising inquiry was sent. Please check your email for the detailed automated acknowledgment.','success');
-        return;
-      }
-      const availability=availabilityFor(new Date(`${selectedDate}T12:00:00`));
-      const message=[`Service: ${service}`,`Preferred date: ${readable(selectedDate)}`,`Calendar status: ${availability.long}`,phone?`Phone or Messenger: ${phone}`:'',`Project brief:\n${brief}`].filter(Boolean).join('\n\n');
-      const {error}=await client.rpc('submit_contact_message',{p_name:name,p_email:email,p_subject:`Work with FMB: ${service}`.slice(0,120),p_message:message,p_kind:'contact'});
-      button.disabled=false;button.textContent='Send work inquiry';
+      const message=`Inquiry route: ${route}\n\nContext:\n${brief}`;
+      const {error}=await client.rpc('submit_contact_message',{p_name:name,p_email:email,p_subject:`FMB inquiry: ${route}`.slice(0,120),p_message:message,p_kind:'contact'});
+      button.disabled=false;
+      button.textContent='Send work inquiry';
       if(error){setStatus('The inquiry could not be sent right now. Please try again or email withlovefmb@gmail.com.','error');return}
-      form.reset();selectedDate='';selectedLabel.textContent='Choose a preferred date from the calendar.';delete selectedLabel.dataset.availability;render();setStatus('Your request was sent. FMB’s assistant will review the date and context, then reply by email.','success');
+      form.reset();
+      setStatus('Your inquiry was sent for review. A reply will confirm whether there is an available next step.','success');
     });
   }
-  setupWorkCalendar();
+  setupWorkInquiry();
 
   if('serviceWorker' in navigator&&location.protocol==='https:')window.addEventListener('load',()=>navigator.serviceWorker.register('/service-worker.js',{updateViaCache:'none'}).catch(()=>{}),{once:true});
 })();

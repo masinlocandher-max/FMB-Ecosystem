@@ -1,1 +1,196 @@
-{"$schema":"https://openapi.vercel.sh/vercel.json","ignoreCommand":"if [ \"$VERCEL_ENV\" = \"production\" ] || [ \"$VERCEL_GIT_COMMIT_REF\" = \"main\" ]; then exit 1; else echo \"Skipping non-production Vercel build for ${VERCEL_GIT_COMMIT_REF:-unknown}\"; exit 0; fi","buildCommand":"npm run build","outputDirectory":"dist","cleanUrls":false,"trailingSlash":false,"redirects":[{"source":"/","has":[{"type":"host","value":"data.francinemariebautista.com"}],"destination":"/data-center","permanent":false},{"source":"/index.html","has":[{"type":"host","value":"data.francinemariebautista.com"}],"destination":"/data-center","permanent":false},{"source":"/data-center","has":[{"type":"host","value":"www.francinemariebautista.com"}],"destination":"https://data.francinemariebautista.com/","permanent":true},{"source":"/data-center/","has":[{"type":"host","value":"www.francinemariebautista.com"}],"destination":"https://data.francinemariebautista.com/","permanent":true},{"source":"/data-center/index.html","has":[{"type":"host","value":"www.francinemariebautista.com"}],"destination":"https://data.francinemariebautista.com/","permanent":true},{"source":"/","has":[{"type":"host","value":"yoni.francinemariebautista.com"}],"destination":"/app/","permanent":false},{"source":"/index.html","has":[{"type":"host","value":"yoni.francinemariebautista.com"}],"destination":"/app/","permanent":false},{"source":"/","has":[{"type":"host","value":"app.francinemariebautista.com"}],"destination":"/app/","permanent":false},{"source":"/index.html","has":[{"type":"host","value":"app.francinemariebautista.com"}],"destination":"/app/","permanent":false}],"rewrites":[{"source":"/","has":[{"type":"host","value":"data.francinemariebautista.com"}],"destination":"/data-center/index.html"},{"source":"/index.html","has":[{"type":"host","value":"data.francinemariebautista.com"}],"destination":"/data-center/index.html"},{"source":"/dashboard.css","has":[{"type":"host","value":"data.francinemariebautista.com"}],"destination":"/data-center/dashboard.css"},{"source":"/dashboard.js","has":[{"type":"host","value":"data.francinemariebautista.com"}],"destination":"/data-center/dashboard.js"},{"source":"/:path*","has":[{"type":"host","value":"data.francinemariebautista.com"}],"destination":"/data-center/index.html"},{"source":"/","has":[{"type":"host","value":"yoni.francinemariebautista.com"}],"destination":"/app/index.html"},{"source":"/app","has":[{"type":"host","value":"yoni.francinemariebautista.com"}],"destination":"/app/index.html"},{"source":"/app/","has":[{"type":"host","value":"yoni.francinemariebautista.com"}],"destination":"/app/index.html"},{"source":"/app/:path*","has":[{"type":"host","value":"yoni.francinemariebautista.com"}],"destination":"/app/:path*"},{"source":"/assets/:path*","has":[{"type":"host","value":"yoni.francinemariebautista.com"}],"destination":"/assets/:path*"},{"source":"/privacy-policy.html","has":[{"type":"host","value":"yoni.francinemariebautista.com"}],"destination":"/privacy-policy.html"},{"source":"/community-guidelines.html","has":[{"type":"host","value":"yoni.francinemariebautista.com"}],"destination":"/community-guidelines.html"},{"source":"/membership-agreement.html","has":[{"type":"host","value":"yoni.francinemariebautista.com"}],"destination":"/membership-agreement.html"},{"source":"/data-rights.html","has":[{"type":"host","value":"yoni.francinemariebautista.com"}],"destination":"/data-rights.html"},{"source":"/:path*","has":[{"type":"host","value":"yoni.francinemariebautista.com"}],"destination":"/app/index.html"},{"source":"/","has":[{"type":"host","value":"app.francinemariebautista.com"}],"destination":"/app/index.html"},{"source":"/app","has":[{"type":"host","value":"app.francinemariebautista.com"}],"destination":"/app/index.html"},{"source":"/app/","has":[{"type":"host","value":"app.francinemariebautista.com"}],"destination":"/app/index.html"},{"source":"/app/:path*","has":[{"type":"host","value":"app.francinemariebautista.com"}],"destination":"/app/:path*"},{"source":"/assets/:path*","has":[{"type":"host","value":"app.francinemariebautista.com"}],"destination":"/assets/:path*"},{"source":"/privacy-policy.html","has":[{"type":"host","value":"app.francinemariebautista.com"}],"destination":"/privacy-policy.html"},{"source":"/community-guidelines.html","has":[{"type":"host","value":"app.francinemariebautista.com"}],"destination":"/community-guidelines.html"},{"source":"/membership-agreement.html","has":[{"type":"host","value":"app.francinemariebautista.com"}],"destination":"/membership-agreement.html"},{"source":"/data-rights.html","has":[{"type":"host","value":"app.francinemariebautista.com"}],"destination":"/data-rights.html"},{"source":"/:path*","has":[{"type":"host","value":"app.francinemariebautista.com"}],"destination":"/app/index.html"},{"source":"/:path*","has":[{"type":"host","value":"senzpr.com"}],"destination":"/_sites/senz/:path*"},{"source":"/:path*","has":[{"type":"host","value":"www.senzpr.com"}],"destination":"/_sites/senz/:path*"},{"source":"/:path((?:.*\\.[^/]+))","has":[{"type":"host","value":"thecognitainstitute.com"}],"destination":"/_sites/cognita/:path"},{"source":"/:path((?:.*\\.[^/]+))","has":[{"type":"host","value":"www.thecognitainstitute.com"}],"destination":"/_sites/cognita/:path"},{"source":"/:path*","has":[{"type":"host","value":"thecognitainstitute.com"}],"destination":"/_sites/cognita/index.html"},{"source":"/:path*","has":[{"type":"host","value":"www.thecognitainstitute.com"}],"destination":"/_sites/cognita/index.html"}],"headers":[{"source":"/_sites/:path*","headers":[{"key":"X-Robots-Tag","value":"noindex"}]}]}
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "ignoreCommand": "if [ \"$VERCEL_ENV\" = \"production\" ] || [ \"$VERCEL_GIT_COMMIT_REF\" = \"main\" ]; then exit 1; else echo \"Skipping non-production Vercel build for ${VERCEL_GIT_COMMIT_REF:-unknown}\"; exit 0; fi",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "cleanUrls": false,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/data-center",
+      "has": [{"type": "host", "value": "www.francinemariebautista.com"}],
+      "destination": "https://data.francinemariebautista.com/",
+      "permanent": true
+    },
+    {
+      "source": "/data-center/",
+      "has": [{"type": "host", "value": "www.francinemariebautista.com"}],
+      "destination": "https://data.francinemariebautista.com/",
+      "permanent": true
+    },
+    {
+      "source": "/data-center/index.html",
+      "has": [{"type": "host", "value": "www.francinemariebautista.com"}],
+      "destination": "https://data.francinemariebautista.com/",
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/app/",
+      "permanent": false
+    },
+    {
+      "source": "/index.html",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/app/",
+      "permanent": false
+    },
+    {
+      "source": "/:path*",
+      "has": [{"type": "host", "value": "app.francinemariebautista.com"}],
+      "destination": "https://yoni.francinemariebautista.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/fmb&co",
+      "destination": "/fmbandco/",
+      "permanent": true
+    },
+    {
+      "source": "/fmb&co/",
+      "destination": "/fmbandco/",
+      "permanent": true
+    },
+    {
+      "source": "/fmb&co/:path*",
+      "destination": "/fmbandco/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/herra.html",
+      "destination": "/projects/",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [{"type": "host", "value": "data.francinemariebautista.com"}],
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/index.html",
+      "has": [{"type": "host", "value": "data.francinemariebautista.com"}],
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/admin.html",
+      "has": [{"type": "host", "value": "data.francinemariebautista.com"}],
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/auth.html",
+      "has": [{"type": "host", "value": "data.francinemariebautista.com"}],
+      "destination": "/auth.html"
+    },
+    {
+      "source": "/assets/:path*",
+      "has": [{"type": "host", "value": "data.francinemariebautista.com"}],
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/:path*",
+      "has": [{"type": "host", "value": "data.francinemariebautista.com"}],
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/app/index.html"
+    },
+    {
+      "source": "/app",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/app/index.html"
+    },
+    {
+      "source": "/app/",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/app/index.html"
+    },
+    {
+      "source": "/app/:path*",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/app/:path*"
+    },
+    {
+      "source": "/assets/:path*",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/privacy-policy.html",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/privacy-policy.html"
+    },
+    {
+      "source": "/community-guidelines.html",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/community-guidelines.html"
+    },
+    {
+      "source": "/membership-agreement.html",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/membership-agreement.html"
+    },
+    {
+      "source": "/data-rights.html",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/data-rights.html"
+    },
+    {
+      "source": "/:path*",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/app/index.html"
+    },
+    {
+      "source": "/:path*",
+      "has": [{"type": "host", "value": "senzpr.com"}],
+      "destination": "/_sites/senz/:path*"
+    },
+    {
+      "source": "/:path*",
+      "has": [{"type": "host", "value": "www.senzpr.com"}],
+      "destination": "/_sites/senz/:path*"
+    },
+    {
+      "source": "/:path((?:.*\\.[^/]+))",
+      "has": [{"type": "host", "value": "thecognitainstitute.com"}],
+      "destination": "/_sites/cognita/:path"
+    },
+    {
+      "source": "/:path((?:.*\\.[^/]+))",
+      "has": [{"type": "host", "value": "www.thecognitainstitute.com"}],
+      "destination": "/_sites/cognita/:path"
+    },
+    {
+      "source": "/:path*",
+      "has": [{"type": "host", "value": "thecognitainstitute.com"}],
+      "destination": "/_sites/cognita/index.html"
+    },
+    {
+      "source": "/:path*",
+      "has": [{"type": "host", "value": "www.thecognitainstitute.com"}],
+      "destination": "/_sites/cognita/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/:path*",
+      "has": [{"type": "host", "value": "data.francinemariebautista.com"}],
+      "headers": [
+        {"key": "Cache-Control", "value": "private, no-store, max-age=0"},
+        {"key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive"}
+      ]
+    },
+    {
+      "source": "/:path*",
+      "headers": [{"key": "Access-Control-Allow-Origin", "value": "https://data.francinemariebautista.com"}]
+    },
+    {
+      "source": "/_sites/:path*",
+      "headers": [{"key": "X-Robots-Tag", "value": "noindex"}]
+    }
+  ]
+}

@@ -34,7 +34,7 @@
   }
   const installPendingKey='fmb-member-install-after-verification';
   const installSeenPrefix='fmb-member-install-seen:';
-  const excludedInstallHost='app.francinemariebautista.com';
+  const excludedInstallHost='yoni.francinemariebautista.com';
   let installPromptEvent=null;
 
   function safeStorageGet(key){

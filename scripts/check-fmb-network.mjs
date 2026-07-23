@@ -5,14 +5,14 @@ const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
 const fail=message=>{throw new Error(`FMB Network quality check: ${message}`)};
 const read=relative=>readFile(path.join(root,relative),'utf8');
 const readBytes=relative=>readFile(path.join(root,relative));
-const requiredPages=['index.html','aboutfmb/index.html','withlovefmb/index.html','news/index.html','music/index.html','ebooks/index.html','fmb&co/index.html','fmb&co/senz/index.html','fmb&co/cognita/index.html'];
+const requiredPages=['index.html','aboutfmb/index.html','withlovefmb/index.html','news/index.html','music/index.html','ebooks/index.html','fmbandco/index.html','fmbandco/senz/index.html','fmbandco/cognita/index.html'];
 const sharedMarkers=['/assets/css/fmb-network-optimized.css?v=20260722-enterprise-v5-exact-assets','/assets/js/fmb-network-optimized.js?v=20260722-enterprise-v5-exact-assets','/assets/js/az-assistant.js','data-fmb-network-schema','fmb-identity-v3'];
 const retiredDeliveryMarkers=['/assets/css/fmb-network-core.css','/assets/css/fmb-network-pages.css','/assets/css/fmb-network-channels.css','/assets/css/fmb-network-reception.css','/assets/css/fmb-network-responsive.css','/assets/js/fmb-network-motion.js','/assets/js/fmb-reception-search.js','/assets/css/az-assistant.css'];
 const prohibitedDependencies=['https://at.adobe.com/','/assets/images/fmb-approved/fmb-master-purple-square.webp','/assets/images/fmb-approved/fmb-master-transparent.webp','/assets/images/fmb-approved/francine-standing-landscape.webp','/assets/images/fmb-approved/francine-seated-landscape.webp','/assets/images/fmb-approved/francine-portrait-angle-left.webp','/assets/images/fmb-approved/francine-portrait-angle-right.webp','/assets/images/fmb-approved/francine-portrait-front.webp'];
 const requiredAssets=[
   'assets/images/home/fmb-home-logo.webp',
-  'assets/images/home/francine-home-hero-hd.webp',
-  'assets/images/home/francine-home-founder-hd.webp',
+  'assets/images/fmb/francine-founder-front-cutout-900-v1.webp',
+  'assets/images/fmb/francine-founder-side-cutout-900-v1.webp',
   'assets/images/news/fmb-news-official.svg',
   'assets/images/fmb-approved/fmb-music-official-transparent.webp',
   'assets/images/fmb-approved/fmb-ebook-official-transparent.webp',
@@ -44,31 +44,31 @@ for(const page of requiredPages){
 }
 
 const home=await read('index.html');
-requireMarkers(home,'Home',['/assets/images/home/fmb-home-logo.webp','/assets/images/home/francine-home-hero-hd.webp','/assets/images/home/francine-home-founder-hd.webp','data-fmb-portrait="repository-founder"']);
+requireMarkers(home,'Home',['/assets/images/home/fmb-home-logo.webp','/assets/images/fmb/francine-founder-front-cutout-900-v1.webp','/assets/images/fmb/francine-founder-side-cutout-900-v1.webp']);
 if(!/<img\b[^>]*loading=["']lazy["'][^>]*src=["']\/app\/assets\/yoni\/yoni-hero\.webp/i.test(home))fail('homepage still downloads the below-fold Yoni artwork eagerly');
 
 const about=await read('aboutfmb/index.html');
-requireMarkers(about,'About FMB',['/assets/images/home/francine-home-hero-hd.webp','/assets/images/home/francine-home-founder-hd.webp','data-fmb-signature="about"']);
+requireMarkers(about,'About FMB',['/assets/images/fmb/francine-founder-front-cutout-900-v1.webp','/assets/images/fmb/francine-founder-side-cutout-900-v1.webp','data-fmb-signature="about"']);
 
 const withLove=await read('withlovefmb/index.html');
-requireMarkers(withLove,'With Love FMB',['/assets/images/home/francine-home-founder-hd.webp','data-fmb-signature="withlove"','/assets/images/volunteer/francine-leading-with-love-fmb.webp','/assets/images/volunteer/francine-serving-with-volunteers.webp']);
+requireMarkers(withLove,'With Love FMB',['/assets/images/fmb/francine-founder-side-cutout-900-v1.webp','data-fmb-signature="withlove"','/assets/images/volunteer/francine-leading-with-love-fmb.webp','/assets/images/volunteer/francine-serving-with-volunteers.webp']);
 
 const news=await read('news/index.html');
-requireMarkers(news,'FMB News',['/assets/images/news/fmb-news-official.svg','/assets/images/home/francine-home-founder-hd.webp','data-fmb-signature="news"']);
+requireMarkers(news,'FMB News',['/assets/images/news/fmb-news-official.svg','/assets/images/fmb/francine-founder-front-cutout-900-v1.webp','data-fmb-signature="news"']);
 if((news.match(/<figcaption/g)||[]).length<7)fail('News visual credits are incomplete');
 
 const music=await read('music/index.html');
-requireMarkers(music,'FMB Music',['/assets/images/fmb-approved/fmb-music-official-transparent.webp','/assets/images/home/francine-home-founder-hd.webp','data-fmb-signature="music"','id="audioPlayer"','id="playlistGrid"']);
+requireMarkers(music,'FMB Music',['/assets/images/fmb-approved/fmb-music-official-transparent.webp','/assets/images/fmb/francine-founder-side-cutout-900-v1.webp','data-fmb-signature="music"','id="audioPlayer"','id="playlistGrid"']);
 
 const ebooks=await read('ebooks/index.html');
-requireMarkers(ebooks,'FMB eBook',['/assets/images/fmb-approved/fmb-ebook-official-transparent.webp','/assets/images/home/francine-home-founder-hd.webp','data-fmb-signature="ebook"','data-ebook-filter="open"','data-ebook-filter="preview"']);
+requireMarkers(ebooks,'FMB eBook',['/assets/images/fmb-approved/fmb-ebook-official-transparent.webp','/assets/images/fmb/francine-founder-front-cutout-900-v1.webp','data-fmb-signature="ebook"','data-ebook-filter="open"','data-ebook-filter="preview"']);
 
-const company=await read('fmb&co/index.html');
-requireMarkers(company,'FMB&CO.',['/assets/images/home/francine-home-hero-hd.webp','/assets/images/home/francine-home-founder-hd.webp','data-fmb-signature="fmbandco"']);
-const senz=await read('fmb&co/senz/index.html');
-requireMarkers(senz,'SENZ gateway',['/assets/images/home/francine-home-founder-hd.webp','data-fmb-signature="senz"']);
-const cognita=await read('fmb&co/cognita/index.html');
-requireMarkers(cognita,'Cognita gateway',['/assets/images/home/francine-home-founder-hd.webp','data-fmb-signature="cognita"']);
+const company=await read('fmbandco/index.html');
+requireMarkers(company,'FMB&CO.',['/assets/images/fmb/francine-founder-front-cutout-900-v1.webp','/assets/images/fmb/francine-founder-side-cutout-900-v1.webp','data-fmb-signature="fmbandco"']);
+const senz=await read('fmbandco/senz/index.html');
+requireMarkers(senz,'SENZ gateway',['/assets/images/fmb/francine-founder-side-cutout-900-v1.webp','data-fmb-signature="senz"']);
+const cognita=await read('fmbandco/cognita/index.html');
+requireMarkers(cognita,'Cognita gateway',['/assets/images/fmb/francine-founder-front-cutout-900-v1.webp','data-fmb-signature="cognita"']);
 
 const optimizedCss=await read('assets/css/fmb-network-optimized.css');
 for(const marker of ['object-fit:contain!important','filter:none!important','transform:none!important','content-visibility:auto','backdrop-filter:none!important'])if(!optimizedCss.includes(marker))fail(`optimized design bundle is missing ${marker}`);

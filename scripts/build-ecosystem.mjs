@@ -13,6 +13,7 @@ const privateSitesDirectory = path.join(outputDirectory, '_sites');
 
 const personalWebsite = path.join(applicationsDirectory, 'withlovefmb');
 const senzWebsite = path.join(applicationsDirectory, 'senz');
+const senzOutput = path.join(senzWebsite, 'dist');
 const cognitaWebsite = path.join(applicationsDirectory, 'cognita');
 const cognitaOutput = path.join(cognitaWebsite, 'dist');
 
@@ -160,6 +161,7 @@ await Promise.all([
   requireFile(path.join(personalWebsite, 'assets', 'css', 'yoni-trust-access-v1.css')),
   requireFile(path.join(personalWebsite, 'assets', 'js', 'yoni-trust-access-v1.js')),
   requireFile(path.join(senzWebsite, 'index.html')),
+  requireFile(path.join(senzWebsite, 'package.json')),
   requireFile(path.join(cognitaWebsite, 'index.html')),
   requireFile(path.join(cognitaWebsite, 'package.json')),
 ]);
@@ -167,7 +169,8 @@ await Promise.all([
 await rm(outputDirectory, { recursive: true, force: true });
 await mkdir(privateSitesDirectory, { recursive: true });
 await cp(personalWebsite, outputDirectory, { recursive: true });
-await cp(senzWebsite, path.join(privateSitesDirectory, 'senz'), { recursive: true });
+run('npm', ['run', 'build'], senzWebsite);
+await cp(senzOutput, path.join(privateSitesDirectory, 'senz'), { recursive: true });
 await materializeHomeImages({ outputDirectory });
 
 await Promise.all([

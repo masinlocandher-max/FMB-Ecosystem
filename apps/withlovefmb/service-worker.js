@@ -1,5 +1,5 @@
 const CACHE_NAME='fmb-app-shell-20260721-complete-yoni-v26';
-const YONI_HOSTS=new Set(['yoni.francinemariebautista.com','app.francinemariebautista.com']);
+const YONI_HOSTS=new Set(['yoni.francinemariebautista.com']);
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',

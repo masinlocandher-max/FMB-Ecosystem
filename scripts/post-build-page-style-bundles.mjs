@@ -5,8 +5,8 @@ const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
 const pages=[
   ['index.html','home'],['aboutfmb/index.html','about'],['withlovefmb/index.html','withlove'],
   ['communityengagements/index.html','community'],['gethelp/index.html','help'],['news/index.html','news'],
-  ['music/index.html','music'],['ebooks/index.html','ebooks'],['fmb&co/index.html','company'],
-  ['fmb&co/senz/index.html','senz-gateway'],['fmb&co/cognita/index.html','cognita-gateway'],['app/install/index.html','yoni-install']
+  ['music/index.html','music'],['ebooks/index.html','ebooks'],['fmbandco/index.html','company'],
+  ['fmbandco/senz/index.html','senz-gateway'],['fmbandco/cognita/index.html','cognita-gateway'],['app/install/index.html','yoni-install']
 ];
 const version='20260722-enterprise-v1';
 
