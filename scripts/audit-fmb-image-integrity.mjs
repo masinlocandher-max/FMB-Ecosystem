@@ -5,7 +5,7 @@ const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
 const textExtensions=new Set(['.html','.css','.js','.json','.webmanifest']);
 const imageExtensions=new Set(['.png','.jpg','.jpeg','.webp','.gif','.svg']);
 const protectedPrefixes=['_sites/senz/','_sites/cognita/'];
-const forbiddenPathPatterns=[/placeholder/i,/ai-generated/i,/\/generated\//i,/\/mockups?\//i,/\/temp(?:orary)?\//i];
+const forbiddenPathPatterns=[/placeholder/i,/ai-generated/i,/generated-(?:hero|image|portrait|photo)/i,/\/generated\//i,/\/mockups?\//i,/\/temp(?:orary)?\//i];
 
 async function walk(directory){
   const files=[];
@@ -75,6 +75,7 @@ function extractReferences(text){
 function resolveReference(sourceFile,reference){
   const clean=decodeURIComponent(reference.split(/[?#]/)[0]);
   if(clean.startsWith('/'))return path.join(root,clean.slice(1));
+  if(clean.startsWith('assets/')||clean.startsWith('app/assets/'))return path.join(root,clean);
   return path.resolve(path.dirname(sourceFile),clean);
 }
 
@@ -85,11 +86,14 @@ function requirementFor(name,size){
   const result={long,short,minLong:720,minShort:480,label:'supporting raster'};
 
   if(size.vector)return {...result,minLong:0,minShort:0,label:'vector identity'};
-  if(/(?:favicon|apple-touch|maskable|app-icon|icon-|\/icons?\/|avatar|emoji|badge|qr|seal|sprite)/i.test(lower)){
-    return {...result,minLong:180,minShort:180,label:'icon or avatar'};
+  if(/(?:favicon|apple-touch|maskable|app-icon|icon-|\/icons?\/|avatar|emoji|badge|qr|seal|sprite|yoni-music|yoni-master-static)/i.test(lower)){
+    return {...result,minLong:180,minShort:180,label:'icon, avatar, or compact mascot'};
   }
-  if(/(?:logo|wordmark|lockup|brandmark|fmb-music-official|fmb-ebook-official)/i.test(lower)){
-    return {...result,minLong:512,minShort:96,label:'logo or wordmark'};
+  if(/(?:logo|wordmark|lockup|brandmark|signature|ampersand|fmbandco|fmb-music-official|fmb-ebook-official)/i.test(lower)){
+    return {...result,minLong:512,minShort:96,label:'logo, signature, or wordmark'};
+  }
+  if(/(?:share-1200x630|briefing|editorial-card)/i.test(lower)){
+    return {...result,minLong:1200,minShort:630,label:'editorial share artwork'};
   }
   if(/(?:album|track|music-cover|ebook-cover|book-cover|reading-cover|pubmat)/i.test(lower)){
     return {...result,minLong:1080,minShort:720,label:'cover or publication artwork'};
@@ -98,6 +102,25 @@ function requirementFor(name,size){
     return {...result,minLong:1200,minShort:720,label:'public photography or hero artwork'};
   }
   return result;
+}
+
+async function nearbyCandidates(file,requirement){
+  const directory=path.dirname(file);
+  const candidates=[];
+  try{
+    for(const entry of await readdir(directory,{withFileTypes:true})){
+      if(!entry.isFile())continue;
+      const candidate=path.join(directory,entry.name);
+      if(candidate===file||!imageExtensions.has(path.extname(candidate).toLowerCase()))continue;
+      const size=await dimensions(candidate);
+      if(!size?.width||!size?.height)continue;
+      const long=Math.max(size.width,size.height),short=Math.min(size.width,size.height);
+      if(size.vector||long>=requirement.minLong&&short>=requirement.minShort){
+        candidates.push(`${entry.name} ${size.width}×${size.height}`);
+      }
+    }
+  }catch{}
+  return candidates.slice(0,8);
 }
 
 const allFiles=await walk(root);
@@ -139,7 +162,9 @@ for(const record of references.values()){
   }
   const requirement=requirementFor(name,size);
   if(requirement.long<requirement.minLong||requirement.short<requirement.minShort){
-    errors.push(`${name}: ${size.width}×${size.height} is below the ${requirement.label} release minimum of ${requirement.minLong}×${requirement.minShort} on long/short edges`);
+    const candidates=await nearbyCandidates(record.target,requirement);
+    const candidateNote=candidates.length?`; nearby HD candidates: ${candidates.join(', ')}`:'';
+    errors.push(`${name}: ${size.width}×${size.height} is below the ${requirement.label} release minimum of ${requirement.minLong}×${requirement.minShort} on long/short edges${candidateNote}`);
     continue;
   }
   verified.push({name,width:size.width,height:size.height,label:requirement.label});
