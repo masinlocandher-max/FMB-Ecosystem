@@ -86,19 +86,22 @@ function requirementFor(name,size){
   const result={long,short,minLong:720,minShort:480,label:'supporting raster'};
 
   if(size.vector)return {...result,minLong:0,minShort:0,label:'vector identity'};
-  if(/(?:favicon|apple-touch|maskable|app-icon|icon-|\/icons?\/|avatar|emoji|badge|qr|seal|sprite|yoni-music|yoni-master-static)/i.test(lower)){
-    return {...result,minLong:180,minShort:180,label:'icon, avatar, or compact mascot'};
+  if(/(?:favicon|apple-touch|maskable|app-icon|icon-|\/icons?\/|avatar|emoji|badge|qr|seal|sprite|ampersand|yoni-music|yoni-master-static)/i.test(lower)){
+    return {...result,minLong:180,minShort:180,label:'icon, compact mark, avatar, or mascot'};
   }
-  if(/(?:logo|wordmark|lockup|brandmark|signature|ampersand|fmbandco|fmb-music-official|fmb-ebook-official)/i.test(lower)){
+  if(/(?:logo|wordmark|lockup|brandmark|signature|fmbandco|fmb-music-official|fmb-ebook-official)/i.test(lower)){
     return {...result,minLong:512,minShort:96,label:'logo, signature, or wordmark'};
   }
   if(/(?:share-1200x630|briefing|editorial-card)/i.test(lower)){
     return {...result,minLong:1200,minShort:630,label:'editorial share artwork'};
   }
+  if(/(?:^|\/)assets\/images\/news\//i.test(lower)){
+    return {...result,minLong:800,minShort:500,label:'faithful editorial source photography'};
+  }
   if(/(?:album|track|music-cover|ebook-cover|book-cover|reading-cover|pubmat)/i.test(lower)){
     return {...result,minLong:1080,minShort:720,label:'cover or publication artwork'};
   }
-  if(/(?:francine|founder|hero|portrait|volunteer|community|project|article|story|news|campaign|event|feature|background)/i.test(lower)){
+  if(/(?:francine|founder|hero|portrait|volunteer|community|project|article|story|campaign|event|feature|background)/i.test(lower)){
     return {...result,minLong:1200,minShort:720,label:'public photography or hero artwork'};
   }
   return result;
