@@ -21,19 +21,33 @@ if(!html.includes(marker)){
 
 const assetsDirectory=path.join(cognitaRoot,'assets');
 const scripts=(await readdir(assetsDirectory)).filter(name=>/^index-.*\.js$/.test(name));
-let patched=false;
+let patchedAuth=false;
+let patchedSettings=false;
 for(const name of scripts){
   const scriptPath=path.join(assetsDirectory,name);
   let source=await readFile(scriptPath,'utf8');
-  const pattern=/queryFn:async\(\)=>\{try\{return\{user:await ([A-Za-z_$][\w$]*)\.auth\.me\(\),isAuthenticated:!0\}\}catch\{return\{user:null,isAuthenticated:!1\}\}\}/;
-  const match=source.match(pattern);
-  if(!match)continue;
-  const client=match[1];
-  const replacement=`queryFn:async()=>window.__FMB_COGNITA_STATIC_PREVIEW__?{user:null,isAuthenticated:!1}:(async()=>{try{return{user:await ${client}.auth.me(),isAuthenticated:!0}}catch{return{user:null,isAuthenticated:!1}}})()`;
-  source=source.replace(pattern,replacement);
-  await writeFile(scriptPath,source,'utf8');
-  patched=true;
-  break;
+  let changed=false;
+
+  const authPattern=/queryFn:async\(\)=>\{try\{return\{user:await ([A-Za-z_$][\w$]*)\.auth\.me\(\),isAuthenticated:!0\}\}catch\{return\{user:null,isAuthenticated:!1\}\}\}/;
+  const authMatch=source.match(authPattern);
+  if(authMatch){
+    const client=authMatch[1];
+    const authReplacement=`queryFn:async()=>window.__FMB_COGNITA_STATIC_PREVIEW__?{user:null,isAuthenticated:!1}:(async()=>{try{return{user:await ${client}.auth.me(),isAuthenticated:!0}}catch{return{user:null,isAuthenticated:!1}}})()`;
+    source=source.replace(authPattern,authReplacement);
+    patchedAuth=true;
+    changed=true;
+  }
+
+  const settingsNeedle='z=async()=>{if(p(!0),g(null),!bn.appId){b({type:"backend_not_configured",message:"The public website is available while applicant services are being configured."});return}';
+  const settingsReplacement='z=async()=>{if(p(!0),g(null),window.__FMB_COGNITA_STATIC_PREVIEW__){b({type:"backend_not_configured",message:"The public website is available while applicant services are being configured."});return}if(!bn.appId){b({type:"backend_not_configured",message:"The public website is available while applicant services are being configured."});return}';
+  if(source.includes(settingsNeedle)){
+    source=source.replace(settingsNeedle,settingsReplacement);
+    patchedSettings=true;
+    changed=true;
+  }
+
+  if(changed)await writeFile(scriptPath,source,'utf8');
 }
-if(!patched)throw new Error('Unable to isolate Cognita authentication in the combined static preview.');
-console.log('Prepared Cognita combined-build preview to render its public root without production-only authentication calls.');
+if(!patchedAuth)throw new Error('Unable to isolate Cognita authentication in the combined static preview.');
+if(!patchedSettings)throw new Error('Unable to isolate Cognita public-settings lookup in the combined static preview.');
+console.log('Prepared Cognita combined-build preview to render its public root without production-only authentication or settings calls.');
