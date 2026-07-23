@@ -10,7 +10,6 @@ const manifest=JSON.parse(await readFile(path.join(sourceRoot,'config/fmb-approv
 if(manifest.policy?.fallbacksAllowed!==false)throw new Error('Approved FMB assets must prohibit fallbacks.');
 const byKey=new Map(manifest.assets.map(asset=>[asset.key,asset]));
 const publicPath=key=>`${approvedPublic}/${byKey.get(key).file}`;
-const relativePath=key=>`assets/images/fmb-approved/${byKey.get(key).file}`;
 const sha256=bytes=>createHash('sha256').update(bytes).digest('hex');
 
 async function walk(directory){
@@ -44,7 +43,11 @@ const replacements=new Map([
   ['/assets/images/fmb-official-2026/fmb-music-official.webp',publicPath('music')],
   ['/assets/images/fmbandco/francine-founder-hero-640.webp',publicPath('portraitFront')],
   ['/assets/images/founder.webp',publicPath('portraitFront')],
-  ['assets/images/founder.webp',publicPath('portraitFront')]
+  ['assets/images/founder.webp',publicPath('portraitFront')],
+  ['/assets/images/home/cognita-wordmark-transparent.svg','/assets/images/projects/cognita-logo-clean.png'],
+  ['assets/images/home/cognita-wordmark-transparent.svg','/assets/images/projects/cognita-logo-clean.png'],
+  ['https://www.francinemariebautista.com/assets/images/news/amor-deloso-generated-hero-hd.png','https://www.francinemariebautista.com/assets/images/news/amor-deloso-share-1200x630.jpg'],
+  ['/assets/images/news/amor-deloso-generated-hero-hd.png','/assets/images/news/amor-deloso-share-1200x630.jpg']
 ]);
 const dimensions=new Map(manifest.assets.map(asset=>[`${approvedPublic}/${asset.file}`,asset]));
 const files=await walk(root);
