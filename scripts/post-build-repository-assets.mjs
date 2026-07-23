@@ -65,15 +65,30 @@ function normalizeDimensions(html){
   });
 }
 
+function normalizeRoutePaths(text,relative){
+  if(relative==='_sites/cognita/index.html'){
+    return text.replace(/(\b(?:src|href|poster)=["'])\/assets\//gi,'$1./assets/');
+  }
+  if(relative.endsWith('.html')&&relative!=='index.html'&&!relative.startsWith('app/')&&!relative.startsWith('_sites/')){
+    text=text.replace(/(\b(?:src|href|poster)=["'])assets\//gi,'$1/assets/');
+  }
+  if(relative.startsWith('assets/js/')){
+    text=text.replace(/(["'])assets\/(css|js|images)\//g,'$1/assets/$2/');
+  }
+  return text;
+}
+
 for(const file of files){
   let text=await readFile(file,'utf8');
   const before=text;
+  const relative=path.relative(root,file).replaceAll(path.sep,'/');
   for(const [oldPath,newPath] of replacements){
     const count=text.split(oldPath).length-1;
     if(count){text=text.replaceAll(oldPath,newPath);changedReferences+=count;}
   }
   const generic=text.match(/\/assets\/images\/fmb\/francine-founder-[^"'\s)]+\.(?:webp|png|jpe?g)/gi)||[];
   if(generic.length){text=text.replace(/\/assets\/images\/fmb\/francine-founder-[^"'\s)]+\.(?:webp|png|jpe?g)/gi,publicPath('portraitFront'));changedReferences+=generic.length;}
+  text=normalizeRoutePaths(text,relative);
   if(file.endsWith('.html')){
     text=normalizeDimensions(text);
     let highPriority=false;
@@ -107,4 +122,4 @@ for(const file of files){
   for(const marker of retired)if(text.includes(marker))throw new Error(`${path.relative(root,file)} still renders retired asset ${marker}`);
 }
 
-console.log(`Verified ${manifest.assets.length} exact uploaded masters and replaced ${changedReferences} retired references across ${changedFiles} final files.`);
+console.log(`Verified ${manifest.assets.length} exact uploaded masters, normalized nested route paths, and replaced ${changedReferences} retired references across ${changedFiles} final files.`);
