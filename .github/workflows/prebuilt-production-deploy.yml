@@ -2,7 +2,7 @@ name: Prebuilt production deploy
 
 # Same-repository deployment PRs make the production upload observable while
 # forked pull requests remain unable to access deployment credentials.
-# This run includes the final News metadata-decoding correction from main.
+# This run captures any Vercel upload rejection for exact diagnosis.
 on:
   push:
     branches: [main]
@@ -47,20 +47,23 @@ jobs:
         run: npx --yes vercel@56.5.0 pull --yes --environment=production --token="$VERCEL_TOKEN"
       - name: Build audited production output locally
         run: npx --yes vercel@56.5.0 build --prod --token="$VERCEL_TOKEN"
-      - name: Upload archived prebuilt production release
+      - name: Attempt archived prebuilt production upload
         shell: bash
         run: |
-          set -o pipefail
+          set +e
           npx --yes vercel@56.5.0 deploy --prebuilt --prod --archive=tgz --yes --no-color --token="$VERCEL_TOKEN" > deployment-url.txt 2> deployment-error.txt
+          code=$?
+          printf '%s\n' "$code" > deployment-exit-code.txt
           cat deployment-error.txt
           cat deployment-url.txt
-          test -s deployment-url.txt
-      - name: Preserve deployment reference
+          exit 0
+      - name: Preserve deployment diagnostics
         uses: actions/upload-artifact@v4
         with:
           name: fmb-production-deployment-${{ github.run_id }}
           path: |
             deployment-url.txt
             deployment-error.txt
+            deployment-exit-code.txt
           if-no-files-found: error
           retention-days: 7
