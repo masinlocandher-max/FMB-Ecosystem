@@ -33,6 +33,18 @@ const readingFiles = new Set([
   'men-can-cry.html',
 ]);
 
+const routes = [
+  { label: 'Home', href: '/', match: ['home'] },
+  { label: 'About FMB', href: '/aboutfmb/', match: ['about'] },
+  { label: 'News', href: '/news/', match: ['news'] },
+  { label: 'Projects', href: '/projects/', match: ['projects', 'mabayani'] },
+  { label: 'Reading', href: '/ebooks/', match: ['ebooks', 'reading'] },
+  { label: 'Music', href: '/music/', match: ['music'] },
+  { label: 'Get Involved', href: '/withlovefmb/#volunteer', match: ['withlove', 'community'] },
+  { label: 'Get Help', href: '/gethelp/', match: ['help'] },
+  { label: 'FMB&amp;CO.', href: '/fmbandco/', match: ['company'] },
+];
+
 function normalize(relativePath) {
   return relativePath.replaceAll(path.sep, '/');
 }
@@ -65,10 +77,54 @@ async function walk(directory) {
   return files;
 }
 
+function sharedShell(page) {
+  const navigation = routes.map((route) => {
+    const current = route.match.includes(page) ? ' aria-current="page"' : '';
+    return `<a href="${route.href}"${current}>${route.label}</a>`;
+  }).join('');
+
+  return `<div class="fmb-unified-shell">
+  <div class="fmb-unified-rail">
+    <i aria-hidden="true"></i>
+    <span>Francine Marie Bautista · Official Digital Headquarters</span>
+    <a href="/news/">Open the latest bulletin</a>
+  </div>
+  <div class="fmb-unified-nav-shell">
+    <a class="fmb-unified-brand" href="/" aria-label="Francine Marie Bautista home">
+      <img src="/assets/images/fmb-approved/fmb-master-transparent.webp" width="1129" height="724" alt="FMB, Francine Marie Bautista">
+    </a>
+    <nav class="fmb-unified-nav" id="fmbUnifiedNav" aria-label="Primary navigation">${navigation}</nav>
+    <div class="fmb-unified-actions">
+      <a class="quiet" href="https://yoni.francinemariebautista.com/">Open Yoni</a>
+      <a class="primary" href="/aboutfmb/#work-with-fmb">Work with FMB</a>
+      <button class="fmb-unified-menu-button" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="fmbUnifiedNav"><span></span><span></span></button>
+    </div>
+  </div>
+</div>`;
+}
+
+function sharedFooter() {
+  return `<footer class="fmb-unified-footer">
+  <div class="fmb-unified-footer-grid">
+    <section class="fmb-unified-footer-brand" aria-labelledby="fmbFooterTitle">
+      <img src="/assets/images/fmb-approved/fmb-master-transparent.webp" width="1129" height="724" alt="FMB">
+      <h2 id="fmbFooterTitle">The vision behind the ecosystem.</h2>
+      <p>The official public headquarters for Francine Marie Bautista, her projects, published work, advocacy, and the companies organized through FMB&amp;CO.</p>
+    </section>
+    <nav aria-label="Official website links"><strong>Official Site</strong><a href="/">Home</a><a href="/aboutfmb/">About FMB</a><a href="/news/">News</a><a href="/projects/">Projects</a><a href="/aboutfmb/#work-with-fmb">Work with FMB</a></nav>
+    <nav aria-label="Public resources"><strong>Explore</strong><a href="/ebooks/">Reading</a><a href="/music/">Music</a><a href="/withlovefmb/#volunteer">Get Involved</a><a href="/gethelp/">Get Help</a><a href="https://yoni.francinemariebautista.com/">Open Yoni</a></nav>
+    <nav aria-label="Ecosystem links"><strong>Ecosystem</strong><a href="/fmbandco/">FMB&amp;CO.</a><a href="https://senzpr.com/">SENZ</a><a href="https://thecognitainstitute.com/">Cognita</a><a href="/withlovefmb/">With Love, FMB</a><a href="/mabayani/">Mabayani</a></nav>
+  </div>
+  <div class="fmb-unified-footer-bottom"><span>© 2026 Francine Marie Bautista. All rights reserved.</span><span><a href="/privacy-policy.html">Privacy</a> · <a href="/sitemap.xml">Sitemap</a> · <a href="mailto:withlovefmb@gmail.com?subject=Accessibility%20Support">Accessibility</a></span></div>
+</footer>
+<button class="fmb-back-to-top" type="button" aria-label="Back to top">↑</button>`;
+}
+
 function setBodyPage(html, page) {
   return html.replace(/<body\b([^>]*)>/i, (tag, attributes) => {
-    const withoutOld = attributes.replace(/\sdata-fmb-page=(?:"[^"]*"|'[^']*'|[^\s>]+)/i, '');
-    return `<body${withoutOld} data-fmb-page="${page}">`;
+    const withoutPage = attributes.replace(/\sdata-fmb-page=(?:"[^"]*"|'[^']*'|[^\s>]+)/i, '');
+    const withoutShell = withoutPage.replace(/\sdata-fmb-unified-shell=(?:"[^"]*"|'[^']*'|[^\s>]+)/i, '');
+    return `<body${withoutShell} data-fmb-page="${page}" data-fmb-unified-shell="true">`;
   });
 }
 
@@ -86,6 +142,25 @@ function addHeadAssets(html) {
     next = next.replace('</head>', `${fontLinks}${designLinks ? `\n${designLinks}` : ''}\n</head>`);
   }
   return next;
+}
+
+function addSharedChrome(html, page) {
+  let next = html;
+  if (!next.includes('class="fmb-unified-shell"')) {
+    next = next.replace(/(<body\b[^>]*>)/i, `$1\n${sharedShell(page)}`);
+  }
+  if (!next.includes('class="fmb-unified-footer"')) {
+    next = next.replace('</body>', `${sharedFooter()}\n</body>`);
+  }
+  return next;
+}
+
+function addHomeMark(html, page) {
+  if (page !== 'home' || html.includes('class="fmb-hero-mark"')) return html;
+  return html.replace(
+    /(<div\b[^>]*class=["'][^"']*\bhero-copy\b[^"']*["'][^>]*>)/i,
+    '$1\n<img class="fmb-hero-mark" src="/assets/images/fmb-approved/fmb-master-transparent.webp" width="1129" height="724" alt="FMB" fetchpriority="high">',
+  );
 }
 
 function addShellScript(html) {
@@ -129,6 +204,8 @@ for (const file of await walk(outputRoot)) {
 
   html = setBodyPage(html, page);
   html = addHeadAssets(html);
+  html = addSharedChrome(html, page);
+  html = addHomeMark(html, page);
   html = addShellScript(html);
   await writeFile(file, html, 'utf8');
   publicPages.push({ file, relative, page });
@@ -146,8 +223,11 @@ for (const { file, relative, page } of publicPages) {
   if (count(html, contentHref) !== 1) errors.push(`${relative}: content stylesheet must appear exactly once`);
   if (count(html, cleanupHref) !== 1) errors.push(`${relative}: cleanup stylesheet must appear exactly once`);
   if (count(html, scriptSrc) !== 1) errors.push(`${relative}: unified shell script must appear exactly once`);
-  if (!new RegExp(`<body\\b[^>]*data-fmb-page=["']${page}["']`, 'i').test(html)) {
-    errors.push(`${relative}: missing route design marker ${page}`);
+  if (count(html, 'class="fmb-unified-shell"') !== 1) errors.push(`${relative}: shared header shell must appear exactly once`);
+  if (count(html, 'class="fmb-unified-footer"') !== 1) errors.push(`${relative}: shared footer must appear exactly once`);
+  if (count(html, 'class="fmb-back-to-top"') !== 1) errors.push(`${relative}: back-to-top control must appear exactly once`);
+  if (!new RegExp(`<body\\b[^>]*data-fmb-page=["']${page}["'][^>]*data-fmb-unified-shell=["']true["']`, 'i').test(html)) {
+    errors.push(`${relative}: missing route and unified-shell body markers`);
   }
 }
 
@@ -155,4 +235,4 @@ if (errors.length) {
   throw new Error(`Unified FMB redesign validation failed:\n- ${errors.join('\n- ')}`);
 }
 
-console.log(`Applied the unified FMB public-site design system to ${publicPages.length} HTML pages without removing their original content.`);
+console.log(`Rendered the unified FMB public-site design system into ${publicPages.length} HTML pages without removing their original content.`);
