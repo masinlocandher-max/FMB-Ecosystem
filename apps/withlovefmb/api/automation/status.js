@@ -1,8 +1,6 @@
-'use strict';
+import {json} from './_automation-lib.js';
 
-const {json} = require('./_automation-lib');
-
-module.exports = function handler(req, res) {
+export default function handler(req, res) {
   if (req.method !== 'GET') {
     res.setHeader('Allow', 'GET');
     json(res, 405, {ok: false, error: 'Method not allowed.'});
@@ -24,4 +22,4 @@ module.exports = function handler(req, res) {
     components: state,
     storageBoundary: 'General inquiries remain in the external automation register. Supabase is reserved for authenticated members and paying clients.'
   });
-};
+}
