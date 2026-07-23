@@ -42,6 +42,28 @@ for(const [relative,markers] of Object.entries(pages)){
   if(/<(?:audio|video)\b[^>]*\bautoplay\b/i.test(html))fail(`${relative} contains autoplay media`);
 }
 
+const canonicalNavigation=[
+  '<a href="/">Home</a>',
+  'About FMB</a>',
+  '<a href="/news/">News</a>',
+  '<a href="/projects/">Projects</a>',
+  '<a href="/ebooks/">Reading</a>',
+  '<a href="/music/">Music</a>',
+  '<a href="/withlovefmb/#volunteer">Get Involved</a>',
+  '<a href="/gethelp/">Get Help</a>',
+  'FMB&amp;CO.</a>',
+  'Work with FMB</a>',
+  'Open Yoni</a>',
+];
+for(const relative of ['aboutfmb/index.html','fmbandco/index.html','fmbandco/senz/index.html','fmbandco/cognita/index.html']){
+  const html=await read(relative);
+  for(const marker of canonicalNavigation)if(!html.includes(marker))fail(`${relative} canonical navigation is missing ${marker}`);
+}
+for(const relative of ['assets/js/aboutfmb-corporate.js','assets/js/fmbandco-motion.js']){
+  const script=await read(relative);
+  if(script.includes('navigation.innerHTML'))fail(`${relative} still replaces canonical navigation at runtime`);
+}
+
 const home=await read('index.html');
 if((home.match(/fetchpriority=["']high["']/g)||[]).length>1)fail('homepage has more than one high-priority image');
 if(!/<img\b(?=[^>]*src=["']\/app\/assets\/yoni\/yoni-hero\.webp["'])(?=[^>]*loading=["']lazy["'])[^>]*>/i.test(home))fail('Yoni homepage art is not lazy-loaded');

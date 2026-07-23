@@ -2,25 +2,6 @@
   const page = document.querySelector('.fco-home');
   if (!page) return;
 
-  const navigation = page.querySelector('.fco-nav-links');
-  if (navigation) {
-    const menu = [
-      ['/', 'Home'],
-      ['/aboutfmb/', 'About FMB'],
-      ['/withlovefmb/', 'With love, FMB'],
-      ['/music/', 'Music'],
-      ['/ebooks/', 'eBook'],
-      ['/news/', 'News'],
-      ['/fmb&co/', 'FMB&CO.'],
-      ['/aboutfmb/#work-with-fmb', 'Reception Desk', 'fco-nav-cta']
-    ];
-    navigation.setAttribute('aria-label', 'Main website navigation');
-    navigation.innerHTML = menu.map(([href, label, className]) => {
-      const current = href === '/fmb&co/' || href === '/fmbandco/';
-      return `<a${className ? ` class="${className}"` : ''} href="${href}"${current ? ' aria-current="page"' : ''}>${label}</a>`;
-    }).join('');
-  }
-
   const root = document.documentElement;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const revealTargets = [...page.querySelectorAll([
