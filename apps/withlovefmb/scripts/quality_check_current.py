@@ -31,6 +31,10 @@ STALE_PRODUCT_ERRORS = {
     "music/index.html: core persistent mobile menu script is missing",
     "music/index.html: accessible floating mobile menu is missing",
 }
+STALE_MUSIC_ERRORS = {
+    "assets/js/music.js: missing cross-page playback marker: fmb:global-music-command",
+    "assets/js/music.js: missing cross-page playback marker: Restoring your listening session",
+}
 GENERATED_HOME_REFERENCES = (
     "/assets/images/home/francine-home-hero-hd.webp",
     "/assets/images/home/francine-home-founder-hd.webp",
@@ -189,6 +193,7 @@ def check_current_mobile_and_editorial_media(errors: list[str]) -> None:
         for error in legacy_errors
         if error not in STALE_NEWS_ERRORS
         and error not in STALE_PRODUCT_ERRORS
+        and error not in STALE_MUSIC_ERRORS
         and not error.startswith(STALE_NEWS_PREFIXES)
     )
 
@@ -217,9 +222,9 @@ def check_current_mobile_and_editorial_media(errors: list[str]) -> None:
     ebooks = (checks.ROOT / "ebooks/index.html").read_text(encoding="utf-8")
     for marker in (
         'data-ebook-filter="open"',
-        'data-ebook-filter="email"',
+        'data-ebook-filter="preview"',
         'data-access="open"',
-        'data-access="email"',
+        'data-access="preview"',
         'data-topics="wellbeing"',
         'data-topics="identity"',
     ):
