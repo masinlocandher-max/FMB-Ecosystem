@@ -58,9 +58,9 @@ const routeGroups=[
   ['news',true,[['news/index.html','/news/']]],
   ['music',true,[['music/index.html','/music/']]],
   ['ebooks',true,[['ebooks/index.html','/ebooks/']]],
-  ['fmbandco',true,[['fmb&co/index.html','/fmb&co/'],['fmbandco/index.html','/fmbandco/']]],
-  ['senz-gateway',true,[['fmb&co/senz/index.html','/fmb&co/senz/']]],
-  ['cognita-gateway',true,[['fmb&co/cognita/index.html','/fmb&co/cognita/']]],
+  ['fmbandco',true,[['fmbandco/index.html','/fmbandco/'],['fmb&co/index.html','/fmb&co/']]],
+  ['senz-gateway',true,[['fmbandco/senz/index.html','/fmbandco/senz/'],['fmb&co/senz/index.html','/fmb&co/senz/']]],
+  ['cognita-gateway',true,[['fmbandco/cognita/index.html','/fmbandco/cognita/'],['fmb&co/cognita/index.html','/fmb&co/cognita/']]],
   ['projects',true,[['projects/index.html','/projects/']]],
   ['get-help',true,[['gethelp/index.html','/gethelp/'],['get-help/index.html','/get-help/']]],
   ['community',true,[['communityengagements/index.html','/communityengagements/']]],
@@ -137,6 +137,14 @@ async function exercise(page,item,profile){
   if(item.name==='data-center'){
     const email=await firstVisible(page,'input[type="email"],input[name="email"]');const submit=await firstVisible(page,'button[type="submit"],.primary-button');
     return {name:'data-center-login',status:email&&submit?'passed':'failed',proof:`email=${Boolean(email)}; submit=${Boolean(submit)}`};
+  }
+  if(['fmbandco','senz-gateway','cognita-gateway'].includes(item.name)){
+    const header=await firstVisible(page,'.fco-header');
+    const logo=await firstVisible(page,'.fco-header-logo img');
+    const links=await page.locator('.fco-nav-links a').count();
+    const headerHeight=header?await header.evaluate(element=>Math.round(element.getBoundingClientRect().height)):0;
+    const valid=Boolean(header&&logo)&&headerHeight>=60&&(profile.isMobile||links>=11);
+    return {name:'company-navigation',status:valid?'passed':'failed',proof:`header=${Boolean(header)}; logo=${Boolean(logo)}; height=${headerHeight}; links=${links}`};
   }
   return {name:'route-smoke',status:'passed',proof:'First meaningful screen rendered.'};
 }
