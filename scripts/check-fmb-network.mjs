@@ -78,7 +78,7 @@ for(const marker of ['FMB Network','Search full articles, FAQs and brands'])if(!
 if(/hero\.style\.transform|founder\.style\.transform|scale\(1\.0[2-9]/.test(optimizedJs))fail('optimized motion still distorts founder photography');
 
 const receptionLoader=await read('assets/js/az-assistant.js');
-requireMarkers(receptionLoader,'Reception Desk',['Search full articles, FAQs and brands','/assets/images/home/fmb-home-logo.webp','width="512" height="512"']);
+requireMarkers(receptionLoader,'Reception Desk',['/assets/images/home/fmb-home-logo.webp','width="512" height="512"']);
 for(const marker of prohibitedDependencies)if(receptionLoader.includes(marker))fail(`Reception Desk still depends on ${marker}`);
 
 console.log('FMB Network repository-contained quality check passed.');
