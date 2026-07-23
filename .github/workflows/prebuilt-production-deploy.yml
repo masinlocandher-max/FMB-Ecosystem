@@ -1,5 +1,7 @@
 name: Prebuilt production deploy
 
+# Same-repository deployment PRs make the production upload observable while
+# forked pull requests remain unable to access deployment credentials.
 on:
   push:
     branches: [main]
