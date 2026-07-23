@@ -3,6 +3,13 @@ name: Image asset review
 on:
   push:
     branches: [fix/hd-image-integrity]
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/image-asset-review.yml'
+      - 'scripts/audit-fmb-image-integrity.mjs'
+      - 'scripts/post-build-repository-assets.mjs'
+      - 'package.json'
   workflow_dispatch:
 
 permissions:
