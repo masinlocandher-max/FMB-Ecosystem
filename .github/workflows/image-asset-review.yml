@@ -1,5 +1,6 @@
 name: Image asset integrity
 
+# This gate imports the Automation Hub ESM handlers before auditing the final production image output.
 on:
   push:
     branches: [main]
@@ -7,8 +8,12 @@ on:
       - '.github/workflows/image-asset-review.yml'
       - 'apps/withlovefmb/**'
       - 'scripts/audit-fmb-image-integrity.mjs'
+      - 'scripts/audit-fmb-image-integrity-exact.mjs'
       - 'scripts/post-build-repository-assets.mjs'
       - 'scripts/post-build-release-hardening.mjs'
+      - 'scripts/check-automation-hub.mjs'
+      - 'automation/**'
+      - 'docs/FMB_AUTOMATION_HUB.md'
       - 'package.json'
   pull_request:
     branches: [main]
@@ -16,8 +21,12 @@ on:
       - '.github/workflows/image-asset-review.yml'
       - 'apps/withlovefmb/**'
       - 'scripts/audit-fmb-image-integrity.mjs'
+      - 'scripts/audit-fmb-image-integrity-exact.mjs'
       - 'scripts/post-build-repository-assets.mjs'
       - 'scripts/post-build-release-hardening.mjs'
+      - 'scripts/check-automation-hub.mjs'
+      - 'automation/**'
+      - 'docs/FMB_AUTOMATION_HUB.md'
       - 'package.json'
   workflow_dispatch:
 
@@ -40,13 +49,17 @@ jobs:
       - name: Install dependencies
         run: npm install --ignore-scripts
       - name: Build and audit production assets
-        run: npm run build
-      - name: Preserve image sources for failed-run review
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run build 2>&1 | tee fmb-full-build.log
+      - name: Preserve failed-run evidence
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: fmb-image-review-${{ github.run_id }}
           path: |
+            fmb-full-build.log
             apps/withlovefmb/assets/images
             apps/withlovefmb/app/assets/yoni
             /tmp/fmb-ecosystem-build.log
