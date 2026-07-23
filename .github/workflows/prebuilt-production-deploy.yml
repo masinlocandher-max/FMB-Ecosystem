@@ -17,8 +17,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: fmb-production-deploy
-  cancel-in-progress: false
+  group: fmb-production-deploy-${{ github.event_name }}
+  cancel-in-progress: true
 
 jobs:
   deploy-prebuilt:
