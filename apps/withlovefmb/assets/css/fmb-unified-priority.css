@@ -1,0 +1,295 @@
+/* Unlayered priority rules for the legacy public pages. The full design system lives in fmb-unified-redesign.css. */
+
+body[data-fmb-unified-shell] {
+  background: #f8f5fb !important;
+  color: #14091f !important;
+  font-family: Montserrat, Arial, sans-serif !important;
+}
+
+body[data-fmb-unified-shell] :where(h1, h2, h3) {
+  font-family: Cinzel, Georgia, serif !important;
+  letter-spacing: -0.025em;
+}
+
+body[data-fmb-unified-shell] :where(p, li, a, button, input, textarea, select, label, small, span) {
+  font-family: Montserrat, Arial, sans-serif;
+}
+
+body[data-fmb-unified-shell] :where(main section) {
+  scroll-margin-top: 112px;
+}
+
+body[data-fmb-unified-shell] :where(.wrap, .fco-wrap, .wlf-wrap) {
+  width: min(1240px, calc(100vw - 48px));
+  max-width: 1240px;
+  margin-inline: auto;
+}
+
+body[data-fmb-unified-shell] :where(.site-header, .bulletin-header, .top-shell, .fco-topline, .fco-header, .nc-site-header, .fmb-product-header),
+body[data-fmb-unified-shell] :where(.site-footer, .bulletin-footer, .wlf-footer, .fmb-product-footer, .fco-footer),
+body[data-fmb-unified-shell] .mobile-dock {
+  display: none !important;
+}
+
+body[data-fmb-unified-shell] img[src*="francine-"] {
+  image-rendering: auto !important;
+  filter: none !important;
+  transform: none !important;
+}
+
+body[data-fmb-page="home"] {
+  background: #08020d !important;
+  color: #ffffff !important;
+}
+
+body[data-fmb-page="home"] .hero {
+  min-height: min(900px, calc(100svh - 109px)) !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 0.95fr) minmax(420px, 1.05fr) !important;
+  align-items: center !important;
+  gap: 42px !important;
+  padding: clamp(72px, 8vw, 118px) max(28px, calc((100vw - 1240px) / 2)) 60px !important;
+  background: radial-gradient(circle at 72% 34%, rgba(122,63,228,.24), transparent 28%), radial-gradient(circle at 26% 64%, rgba(59,10,93,.24), transparent 34%), linear-gradient(135deg, #0b0211 0%, #1b0828 54%, #08020d 100%) !important;
+}
+
+body[data-fmb-page="home"] .hero-copy {
+  position: relative !important;
+  z-index: 2 !important;
+  max-width: 650px !important;
+}
+
+body[data-fmb-page="home"] .hero h1 {
+  margin: 0 !important;
+  color: #ffffff !important;
+  font-size: clamp(48px, 6vw, 90px) !important;
+  line-height: .98 !important;
+  letter-spacing: -.035em !important;
+}
+
+body[data-fmb-page="home"] .hero-portrait {
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  height: min(700px, calc(100svh - 170px)) !important;
+  display: grid !important;
+  place-items: end center !important;
+  align-self: end !important;
+  overflow: visible !important;
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
+}
+
+body[data-fmb-page="home"] .hero-portrait img {
+  width: min(100%, 820px) !important;
+  height: 100% !important;
+  max-width: 1364px !important;
+  object-fit: contain !important;
+  object-position: center bottom !important;
+}
+
+body[data-fmb-page="home"] .bulletin,
+body[data-fmb-page="home"] .latest-work,
+body[data-fmb-page="home"] .bottom-grid {
+  color: #14091f !important;
+}
+
+body[data-fmb-page="home"] .bulletin {
+  background: radial-gradient(circle at 10% 0%, rgba(199,146,255,.25), transparent 28%), #f8f5fb !important;
+}
+
+body[data-fmb-page="home"] .ecosystem {
+  background: #170821 !important;
+  color: #ffffff !important;
+}
+
+body[data-fmb-page="home"] .ecosystem :where(h2, p, a, strong, small) {
+  color: #ffffff !important;
+}
+
+body[data-fmb-page="home"] .brand-rail {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 16px !important;
+}
+
+body[data-fmb-page="home"] .brand-card {
+  min-height: 210px !important;
+  aspect-ratio: auto !important;
+  display: grid !important;
+  place-items: center !important;
+  padding: 28px !important;
+  border: 1px solid rgba(235,215,255,.15) !important;
+  border-radius: 24px !important;
+  background: rgba(255,255,255,.055) !important;
+}
+
+body[data-fmb-page="home"] .brand-card img {
+  max-width: 78% !important;
+  max-height: 92px !important;
+  object-fit: contain !important;
+}
+
+body[data-fmb-page="home"] .latest-work {
+  background: #ffffff !important;
+}
+
+body[data-fmb-page="home"] .work-rail {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: 16px !important;
+}
+
+body[data-fmb-page="home"] :where(.bulletin-feature, .bulletin-list > a, .work-card, .founder-card, .advocacy-card, .contact-card) {
+  border: 1px solid rgba(59,10,93,.14) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 28px 80px rgba(36,13,53,.12) !important;
+}
+
+body[data-fmb-page="about"],
+body[data-fmb-page="company"] {
+  background: #f8f5fb !important;
+}
+
+body[data-fmb-page="about"] .fmb-about-hero,
+body[data-fmb-page="company"] .fco-hero {
+  background: radial-gradient(circle at 75% 28%, rgba(122,63,228,.28), transparent 28%), linear-gradient(145deg, #100319, #240c35) !important;
+  color: #ffffff !important;
+}
+
+body[data-fmb-page="about"] .fco-hero-grid,
+body[data-fmb-page="company"] .fco-hero-grid {
+  width: min(1240px, calc(100vw - 48px)) !important;
+  min-height: 710px !important;
+  margin-inline: auto !important;
+  gap: clamp(36px, 5vw, 76px) !important;
+}
+
+body[data-fmb-page="about"] :where(.fmb-about-expertise-card, .fmb-about-timeline-item, blockquote),
+body[data-fmb-page="company"] :where(.fco-purpose-card, .fco-company-card, .fco-pillar),
+body[data-fmb-page="projects"] :where(.project-rule, .project-feature, .catalog-card, .project-cta),
+body[data-fmb-page="withlove"] :where(.wlf-card, .wlf-yoni, .wlf-future, .wlf-volunteer-band, .wlf-help-note),
+body[data-fmb-page="help"] :where(.help-urgent-panel, .help-card, .process-card) {
+  border-radius: 24px !important;
+  box-shadow: 0 28px 80px rgba(36,13,53,.12) !important;
+}
+
+body[data-fmb-page="projects"] {
+  background: #f8f5fb !important;
+}
+
+body[data-fmb-page="projects"] .bulletin-wire {
+  display: none !important;
+}
+
+body[data-fmb-page="projects"] :where(.projects-hero, .project-feature, .projects-catalog, .project-cta) {
+  width: min(1240px, calc(100vw - 48px)) !important;
+  margin-inline: auto !important;
+}
+
+body[data-fmb-page="news"] {
+  background: #f4f0f7 !important;
+  color: #14091f !important;
+}
+
+body[data-fmb-page="news"] .nc-broadcast-identity {
+  background: radial-gradient(circle at 86% 18%, rgba(122,63,228,.26), transparent 30%), linear-gradient(145deg, #14061e, #08020d) !important;
+  color: #ffffff !important;
+}
+
+body[data-fmb-page="news"] :where(.nc-lead-broadcast, .nc-rundown-panel, .nc-rundown-story, .nc-standard-card) {
+  border-radius: 24px !important;
+}
+
+body[data-fmb-page="music"],
+body[data-fmb-page="ebooks"] {
+  background: #09040e !important;
+  color: #ffffff !important;
+}
+
+body[data-fmb-page="music"] :where(.music-hero, .music-collection-card, .playlist-list, .music-credits-modern),
+body[data-fmb-page="ebooks"] :where(.ebook-hero, .ebook-card, .ebook-feature, .ebook-library) {
+  border-radius: 24px !important;
+}
+
+body[data-fmb-page="withlove"] {
+  background: #fbf8fd !important;
+}
+
+body[data-fmb-page="withlove"] .wlf-hero {
+  min-height: 760px !important;
+  background: radial-gradient(circle at 77% 26%, rgba(196,143,224,.28), transparent 29%), linear-gradient(145deg, #fbf8fd, #eee1f4) !important;
+}
+
+body[data-fmb-page="help"] {
+  background: #f8f5fb !important;
+}
+
+body[data-fmb-page="help"] .help-hero {
+  background: radial-gradient(circle at 78% 16%, rgba(199,146,255,.22), transparent 28%), linear-gradient(145deg, #f9f6fb, #ece1f4) !important;
+}
+
+@media (max-width: 960px) {
+  body[data-fmb-page="home"] .hero {
+    min-height: auto !important;
+    grid-template-columns: 1fr !important;
+    text-align: center !important;
+  }
+
+  body[data-fmb-page="home"] .hero-copy {
+    max-width: 760px !important;
+    margin-inline: auto !important;
+  }
+
+  body[data-fmb-page="home"] .hero-actions {
+    justify-content: center !important;
+  }
+
+  body[data-fmb-page="home"] .hero-portrait {
+    height: min(600px, 66svh) !important;
+  }
+
+  body[data-fmb-page="home"] .brand-rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 700px) {
+  body[data-fmb-unified-shell] :where(.wrap, .fco-wrap, .wlf-wrap) {
+    width: min(100% - 32px, 1240px) !important;
+  }
+
+  body[data-fmb-page="home"] .hero {
+    padding: 62px 20px 24px !important;
+  }
+
+  body[data-fmb-page="home"] .hero h1 {
+    font-size: clamp(44px, 13vw, 66px) !important;
+  }
+
+  body[data-fmb-page="home"] .hero-portrait {
+    height: 470px !important;
+  }
+
+  body[data-fmb-page="home"] .brand-rail {
+    display: flex !important;
+    gap: 14px !important;
+    margin-inline: -20px !important;
+    padding: 0 20px 18px !important;
+    overflow-x: auto !important;
+  }
+
+  body[data-fmb-page="home"] .brand-card {
+    min-width: min(76vw, 300px) !important;
+  }
+
+  body[data-fmb-page="home"] .work-rail {
+    display: flex !important;
+    margin-inline: -20px !important;
+    padding-inline: 20px !important;
+    overflow-x: auto !important;
+  }
+
+  body[data-fmb-page="home"] .work-card {
+    flex: 0 0 min(78vw, 310px) !important;
+  }
+}
