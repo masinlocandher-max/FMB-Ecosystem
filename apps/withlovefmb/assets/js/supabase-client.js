@@ -75,11 +75,68 @@
     cleanText,
     usernameFrom,
     showToast,
-    getActiveProfile
+    getActiveProfile,
+    registrationOpen:false
   };
 
   const isYoni=isDedicatedYoniHost||/^\/app(?:\/|$)/.test(pathname);
   if(!isYoni)return;
+
+  function installYoniRegistrationGuard(){
+    const form=document.getElementById('signupForm');
+    const button=form?.querySelector('button[type="submit"]');
+    const status=document.getElementById('signupStatus');
+    if(!form||!button)return;
+
+    let registrationOpen=false;
+
+    function showStatus(message,type=''){
+      if(!status)return;
+      status.textContent=message;
+      status.dataset.type=type;
+      status.classList.toggle('visible',Boolean(message));
+    }
+
+    function setAvailability(open,message){
+      registrationOpen=Boolean(open);
+      window.FMB.registrationOpen=registrationOpen;
+      button.disabled=!registrationOpen;
+      button.textContent=registrationOpen?'Create my Yoni profile':'Membership opening soon';
+      form.dataset.registration=registrationOpen?'open':'closed';
+      showStatus(message,registrationOpen?'success':'');
+    }
+
+    // Registration is closed first and opens only after the protected readiness
+    // function explicitly confirms it. This capture listener runs before the
+    // inline sign-up handler and prevents accidental or stale-form submissions.
+    setAvailability(false,'Checking membership availability. Existing members may still sign in.');
+    form.addEventListener('submit',event=>{
+      if(registrationOpen)return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      showStatus('Membership registration is not open yet. Existing members may still sign in.','error');
+    },true);
+
+    (async()=>{
+      if(!configured){
+        setAvailability(false,'Membership setup is still being completed. Existing members may sign in.');
+        return;
+      }
+      try{
+        const client=createClient('local');
+        const {data,error}=await client.rpc('get_membership_status');
+        if(error||data?.ready!==true||data?.registration_open!==true){
+          setAvailability(false,'Membership profiles are being prepared for public opening. Existing members may sign in.');
+          return;
+        }
+        setAvailability(true,'Membership is open. Complete the form to create a verified profile.');
+      }catch{
+        setAvailability(false,'Membership availability could not be confirmed. Registration remains safely closed.');
+      }
+    })();
+  }
+
+  installYoniRegistrationGuard();
 
   const YONI_ROOT='/app/assets/yoni/';
   const officialHero=YONI_ROOT+'yoni-hero.webp';
