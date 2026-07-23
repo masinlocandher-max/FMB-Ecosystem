@@ -7,15 +7,26 @@ const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 const allowedOrigins = new Set([
   "https://www.francinemariebautista.com",
   "https://francinemariebautista.com",
+  "https://data.francinemariebautista.com",
   "https://yoni.francinemariebautista.com",
+  "https://app.francinemariebautista.com",
   "http://localhost:3000",
   "http://localhost:4173",
 ]);
 
+function isAllowedOrigin(origin: string | null) {
+  return !origin ||
+    allowedOrigins.has(origin) ||
+    /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin);
+}
+
 function corsHeaders(origin: string | null) {
-  const allowed = Boolean(origin && (allowedOrigins.has(origin) || /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin)));
+  const responseOrigin = origin && isAllowedOrigin(origin)
+    ? origin
+    : "https://www.francinemariebautista.com";
+
   return {
-    "Access-Control-Allow-Origin": allowed && origin ? origin : "https://www.francinemariebautista.com",
+    "Access-Control-Allow-Origin": responseOrigin,
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Max-Age": "86400",
@@ -26,7 +37,11 @@ function corsHeaders(origin: string | null) {
 function json(body: unknown, status: number, origin: string | null) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders(origin), "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" },
+    headers: {
+      ...corsHeaders(origin),
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "no-store",
+    },
   });
 }
 
@@ -42,43 +57,60 @@ function startOfDayIso(daysAgo = 0) {
 }
 
 function dateRange(days: number) {
-  const dates: string[] = [];
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
-  for (let offset = days - 1; offset >= 0; offset -= 1) {
+
+  return Array.from({ length: days }, (_, index) => {
     const date = new Date(today);
-    date.setUTCDate(today.getUTCDate() - offset);
-    dates.push(isoDate(date));
-  }
-  return dates;
+    date.setUTCDate(today.getUTCDate() - (days - 1 - index));
+    return isoDate(date);
+  });
 }
 
 function countByDate(rows: Array<Record<string, unknown>>, field: string) {
-  return rows.reduce<Record<string, number>>((accumulator, row) => {
+  return rows.reduce<Record<string, number>>((counts, row) => {
     const raw = row[field];
-    if (!raw) return accumulator;
+    if (!raw) return counts;
     const key = String(raw).slice(0, 10);
-    accumulator[key] = (accumulator[key] || 0) + 1;
-    return accumulator;
+    counts[key] = (counts[key] || 0) + 1;
+    return counts;
   }, {});
 }
 
 Deno.serve(async (req: Request) => {
   const origin = req.headers.get("Origin");
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders(origin) });
-  if (req.method !== "POST") return json({ error: "Method not allowed." }, 405, origin);
-  if (!SUPABASE_URL || !SERVICE_ROLE_KEY) return json({ error: "Dashboard service configuration is incomplete." }, 500, origin);
 
-  const authorization = req.headers.get("Authorization");
-  const token = authorization?.replace(/^Bearer\s+/i, "");
+  if (origin && !isAllowedOrigin(origin)) {
+    return json({ error: "Origin not allowed." }, 403, null);
+  }
+
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders(origin) });
+  }
+
+  if (req.method !== "POST") {
+    return json({ error: "Method not allowed." }, 405, origin);
+  }
+
+  if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
+    return json({ error: "Dashboard service configuration is incomplete." }, 500, origin);
+  }
+
+  const token = req.headers.get("Authorization")?.replace(/^Bearer\s+/i, "");
   if (!token) return json({ error: "Unauthorized." }, 401, origin);
 
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
-    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+    },
   });
 
   const { data: userData, error: userError } = await admin.auth.getUser(token);
-  if (userError || !userData.user) return json({ error: "Unauthorized." }, 401, origin);
+  if (userError || !userData.user) {
+    return json({ error: "Unauthorized." }, 401, origin);
+  }
 
   const { data: profile, error: profileError } = await admin
     .from("profiles")
@@ -86,7 +118,12 @@ Deno.serve(async (req: Request) => {
     .eq("id", userData.user.id)
     .maybeSingle();
 
-  if (profileError || !profile || profile.role !== "admin" || profile.status !== "active") {
+  if (
+    profileError ||
+    !profile ||
+    profile.role !== "admin" ||
+    profile.status !== "active"
+  ) {
     return json({ error: "Administrator access is required." }, 403, origin);
   }
 
@@ -148,16 +185,34 @@ Deno.serve(async (req: Request) => {
     ]);
 
     const results = [
-      membersTotalResult, membersActiveResult, membersNew7dResult, membersNew30dResult,
-      contentPublishedResult, contentDraftResult, musicPublishedResult, musicDraftResult,
-      messagesNewResult, messagesResolvedResult, messagesArchivedResult,
-      moderationPendingResult, moderationPublishedResult, moderationOtherResult,
-      checkinsTodayResult, checkins7dResult, mediaResult, savedContentResult,
-      settingsResult, memberTrendResult, checkinTrendResult, recentMembersResult,
-      recentMessagesResult, activityResult,
+      membersTotalResult,
+      membersActiveResult,
+      membersNew7dResult,
+      membersNew30dResult,
+      contentPublishedResult,
+      contentDraftResult,
+      musicPublishedResult,
+      musicDraftResult,
+      messagesNewResult,
+      messagesResolvedResult,
+      messagesArchivedResult,
+      moderationPendingResult,
+      moderationPublishedResult,
+      moderationOtherResult,
+      checkinsTodayResult,
+      checkins7dResult,
+      mediaResult,
+      savedContentResult,
+      settingsResult,
+      memberTrendResult,
+      checkinTrendResult,
+      recentMembersResult,
+      recentMessagesResult,
+      activityResult,
     ];
-    const failure = results.find((result) => result.error);
-    if (failure?.error) throw failure.error;
+
+    const failed = results.find((result) => result.error);
+    if (failed?.error) throw failed.error;
 
     const memberCounts = countByDate(memberTrendResult.data || [], "joined_at");
     const checkinCounts = countByDate(checkinTrendResult.data || [], "checkin_date");
@@ -167,7 +222,10 @@ Deno.serve(async (req: Request) => {
       checkins: checkinCounts[date] || 0,
     }));
 
-    const mediaBytes = (mediaResult.data || []).reduce((sum, row) => sum + Number(row.size_bytes || 0), 0);
+    const mediaBytes = (mediaResult.data || []).reduce(
+      (sum, row) => sum + Number(row.size_bytes || 0),
+      0,
+    );
     const contentPublished = contentPublishedResult.count || 0;
     const contentDraft = contentDraftResult.count || 0;
     const musicPublished = musicPublishedResult.count || 0;
