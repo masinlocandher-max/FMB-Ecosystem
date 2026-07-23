@@ -17,8 +17,16 @@ const FALLBACK_IMAGES = {
   'good-news': '/assets/images/news/good-news-briefing.png'
 };
 
-function first(value) {
-  return Array.isArray(value) ? value[0] : value;
+function decodeHtml(value = '') {
+  return String(value)
+    .replace(/&#x([0-9a-f]+);/gi, (_, code) => String.fromCodePoint(Number.parseInt(code, 16)))
+    .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number.parseInt(code, 10)))
+    .replaceAll('&quot;', '"')
+    .replaceAll('&#39;', "'")
+    .replaceAll('&apos;', "'")
+    .replaceAll('&lt;', '<')
+    .replaceAll('&gt;', '>')
+    .replaceAll('&amp;', '&');
 }
 
 function escapeHtml(value = '') {
@@ -76,7 +84,8 @@ function imageMime(imageUrl) {
 }
 
 module.exports = function handler(req, res) {
-  const slug = String(first(req.query?.slug) || '').trim().toLowerCase();
+  const requestUrl = new URL(req.url || '/api/news-share', SITE);
+  const slug = String(requestUrl.searchParams.get('slug') || '').trim().toLowerCase();
   if (!SLUG_PATTERN.test(slug)) {
     res.statusCode = 400;
     res.end('Invalid article');
@@ -92,13 +101,13 @@ module.exports = function handler(req, res) {
 
   const article = fs.readFileSync(articlePath, 'utf8');
   const articleUrl = canonical(article, slug);
-  const title = meta(article, 'og:title') || article.match(/<title>([^<]+)<\/title>/i)?.[1] || 'FMB&CO. News';
-  const description = meta(article, 'og:description') || meta(article, 'description') || 'Read the latest report from FMB&CO. News.';
+  const title = decodeHtml(meta(article, 'og:title') || article.match(/<title>([^<]+)<\/title>/i)?.[1] || 'FMB&CO. News');
+  const description = decodeHtml(meta(article, 'og:description') || meta(article, 'description') || 'Read the latest report from FMB&CO. News.');
   const declaredImage = meta(article, 'og:image');
   const image = absoluteUrl(RASTER_PATTERN.test(declaredImage) ? declaredImage : FALLBACK_IMAGES[slug]);
   const width = meta(article, 'og:image:width') || (slug === 'ai-water-consumption-responsible-ai-philippines' ? '923' : '1200');
   const height = meta(article, 'og:image:height') || (slug === 'ai-water-consumption-responsible-ai-philippines' ? '1353' : '630');
-  const alt = meta(article, 'og:image:alt') || title;
+  const alt = decodeHtml(meta(article, 'og:image:alt') || title);
   const shareUrl = `${SITE}/api/news-share?slug=${encodeURIComponent(slug)}`;
 
   if (!image || !RASTER_PATTERN.test(image)) {

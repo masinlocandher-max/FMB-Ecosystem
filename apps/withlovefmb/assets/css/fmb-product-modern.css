@@ -1,2 +1,6 @@
 @import url('/assets/css/fmb-product-core-music.css?v=20260723-modern-v1');
 @import url('/assets/css/fmb-product-ebooks-responsive.css?v=20260723-modern-v1');
+
+.fmb-product-founder-note{display:flex;align-items:center;gap:12px;margin:22px 0 0}
+.fmb-product-founder-note img{width:72px;height:90px;object-fit:contain;object-position:center;border-radius:14px;background:rgba(255,255,255,.05)}
+.fmb-product-founder-note figcaption{font:650 10px/1.45 Montserrat,Arial,sans-serif;letter-spacing:.05em;text-transform:uppercase;color:inherit;opacity:.72}

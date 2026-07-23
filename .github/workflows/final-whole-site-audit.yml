@@ -1,0 +1,72 @@
+name: Final Whole-Site QA
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: final-whole-site-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Prepare evidence
+        run: mkdir -p final-whole-site-audit
+      - name: Build final ecosystem
+        id: build
+        continue-on-error: true
+        run: npm run build > final-whole-site-audit/build.log 2>&1
+      - name: Preserve build diagnostics
+        if: always()
+        run: |
+          test ! -f /tmp/fmb-ecosystem-build.log || cp /tmp/fmb-ecosystem-build.log final-whole-site-audit/ecosystem-build.log
+          tail -n 300 final-whole-site-audit/build.log > final-whole-site-audit/build-tail.txt || true
+      - name: Install Chromium
+        if: steps.build.outcome == 'success'
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Serve final applications at their real roots
+        if: steps.build.outcome == 'success'
+        run: |
+          python3 -m http.server 4173 --directory dist > /tmp/fmb-final-server.log 2>&1 &
+          python3 -m http.server 4174 --directory dist/_sites/cognita > /tmp/cognita-final-server.log 2>&1 &
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null && curl -fsS http://127.0.0.1:4174/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/fmb-final-server.log
+          cat /tmp/cognita-final-server.log
+          exit 1
+      - name: Audit final pages and interactions
+        id: qa
+        continue-on-error: true
+        if: steps.build.outcome == 'success'
+        run: node scripts/final-whole-site-audit-v2.mjs > final-whole-site-audit/audit.log 2>&1
+      - name: Upload final evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: final-whole-site-audit
+          path: final-whole-site-audit
+          if-no-files-found: error
+          retention-days: 14
+      - name: Enforce build
+        if: steps.build.outcome != 'success'
+        run: exit 1
+      - name: Enforce browser QA
+        if: steps.build.outcome == 'success' && steps.qa.outcome != 'success'
+        run: exit 1

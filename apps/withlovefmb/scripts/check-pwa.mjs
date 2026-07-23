@@ -30,7 +30,7 @@ const finalBuild=fs.existsSync(finalBuildPath)?fs.readFileSync(finalBuildPath,'u
 const sourceHasManifest=/rel=["']manifest["'][^>]+manifest\.webmanifest/i.test(index);
 const buildsInjectManifest=workspaceBuild.includes('/manifest.webmanifest')&&finalBuild.includes('/manifest.webmanifest');
 if(!sourceHasManifest&&!buildsInjectManifest)fail('Home page build is missing its manifest connection.');
-if(!index.includes('/assets/images/home/fmb-home-logo.webp'))fail('Home page is missing the current FMB icon.');
+if(!index.includes('/assets/images/fmb-approved/fmb-master-transparent.webp'))fail('Home page is missing the exact approved FMB master.');
 
 const appManifest=readJson('app/manifest.webmanifest');
 if(appManifest.display!=='standalone')fail('Yoni manifest must use standalone display mode.');

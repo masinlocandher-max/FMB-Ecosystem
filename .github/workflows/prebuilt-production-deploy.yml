@@ -1,0 +1,60 @@
+name: Prebuilt production deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/prebuilt-production-deploy.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/prebuilt-production-deploy.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fmb-production-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy-prebuilt:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify deployment credentials are present
+        shell: bash
+        run: |
+          test -n "$VERCEL_ORG_ID"
+          test -n "$VERCEL_PROJECT_ID"
+          test -n "$VERCEL_TOKEN"
+      - name: Install dependencies
+        run: npm install --ignore-scripts
+      - name: Link production project
+        run: npx --yes vercel@56.5.0 pull --yes --environment=production --token="$VERCEL_TOKEN"
+      - name: Build audited production output locally
+        run: npx --yes vercel@56.5.0 build --prod --token="$VERCEL_TOKEN"
+      - name: Upload prebuilt production release
+        shell: bash
+        run: |
+          npx --yes vercel@56.5.0 deploy --prebuilt --prod --token="$VERCEL_TOKEN" | tee deployment-url.txt
+          grep -E '^https://[^ ]+' deployment-url.txt | tail -n 1 > production-url.txt
+      - name: Preserve deployment reference
+        uses: actions/upload-artifact@v4
+        with:
+          name: fmb-production-deployment-${{ github.run_id }}
+          path: |
+            deployment-url.txt
+            production-url.txt
+          if-no-files-found: error
+          retention-days: 7

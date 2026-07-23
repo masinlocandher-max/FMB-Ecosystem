@@ -312,7 +312,7 @@ def check_navigation_experience(errors: list[str]) -> None:
         "/projects/",
         "/withlovefmb/#volunteer",
         "/gethelp/",
-        "/assets/images/home/fmb-home-logo.webp",
+        "/assets/images/fmb-approved/fmb-master-transparent.webp",
         "/assets/js/fmb-bulletin-home.js",
     ):
         if marker not in index:
@@ -322,14 +322,6 @@ def check_navigation_experience(errors: list[str]) -> None:
             errors.append(f"assets/js/site.js: missing navigation UX marker: {marker}")
     if ".entry-benefits" not in site_css:
         errors.append("assets/css/site.css: first-visit benefit styles are missing")
-    home_logo = "/assets/images/home/fmb-home-logo.webp"
-    for page in ROOT.rglob("*.html"):
-        if page == ROOT / "index.html" or "build" in page.parts:
-            continue
-        if home_logo in page.read_text(encoding="utf-8"):
-            errors.append(f"{page.relative_to(ROOT)}: homepage-only FMB logo must not appear here")
-
-
 def check_az_assistant(errors: list[str]) -> None:
     site_js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
     app_html = (ROOT / "app/index.html").read_text(encoding="utf-8")
@@ -571,28 +563,25 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         if len(png) < 26 or png[:8] != b"\x89PNG\r\n\x1a\n" or png[25] not in {4, 6}:
             errors.append(f"{name}: brand mark must remain a PNG with transparency")
 
-    for name in ("francine-founder-hero-640.webp", "francine-founder-hero-923.webp"):
-        webp_path = ROOT / "assets/images/fmbandco" / name
+    for name in (
+        "fmb-master-purple-square.webp",
+        "fmb-master-transparent.webp",
+        "fmb-news-official-transparent.webp",
+        "fmb-music-official-transparent.webp",
+        "fmb-ebook-official-transparent.webp",
+        "francine-standing-landscape.webp",
+        "francine-seated-landscape.webp",
+        "francine-portrait-angle-left.webp",
+        "francine-portrait-angle-right.webp",
+        "francine-portrait-front.webp",
+    ):
+        webp_path = ROOT / "assets/images/fmb-approved" / name
         if not webp_path.exists():
-            errors.append(f"assets/images/fmbandco/{name}: optimized responsive founder portrait is missing")
+            errors.append(f"assets/images/fmb-approved/{name}: exact approved FMB asset is missing")
             continue
         webp = webp_path.read_bytes()
         if len(webp) < 16 or webp[:4] != b"RIFF" or webp[8:12] != b"WEBP":
-            errors.append(f"assets/images/fmbandco/{name}: responsive founder portrait must remain WebP")
-
-    for name in (
-        "francine-founder-front-cutout-640-v1.webp",
-        "francine-founder-front-cutout-900-v1.webp",
-        "francine-founder-side-cutout-640-v1.webp",
-        "francine-founder-side-cutout-900-v1.webp",
-    ):
-        webp_path = ROOT / "assets/images/fmb" / name
-        if not webp_path.exists():
-            errors.append(f"assets/images/fmb/{name}: transparent responsive founder portrait is missing")
-            continue
-        webp = webp_path.read_bytes()
-        if len(webp) < 16 or webp[:4] != b"RIFF" or webp[8:12] != b"WEBP" or b"ALPH" not in webp:
-            errors.append(f"assets/images/fmb/{name}: founder portrait must remain an alpha-channel WebP")
+            errors.append(f"assets/images/fmb-approved/{name}: exact approved asset must remain WebP")
 
     fmbandco_css_path = ROOT / "assets/css/fmbandco-brand.css"
     if not fmbandco_css_path.exists():
@@ -718,7 +707,7 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
                 errors.append(f"{name}: generic decorative ampersand remains: {marker}")
 
     fmbandco_home = (ROOT / "fmbandco/index.html").read_text(encoding="utf-8")
-    for marker in ("francine-founder-hero-640.webp", "francine-founder-hero-923.webp", "francine-founder-front-cutout-640-v1.webp", "francine-founder-front-cutout-900-v1.webp", "francine-founder-side-cutout-640-v1.webp", "francine-founder-side-cutout-900-v1.webp", "francine-marie-bautista-wordmark-white-v2.png", 'class="fco-hero-visual"', 'fetchpriority="high"', "fco-founder-nameplate", "fco-founder-signature", "fco-founder-title", "fco-founder-portrait-card is-front", "fco-founder-portrait-card is-side", "Founder", "Francine Marie Bautista"):
+    for marker in ("francine-standing-landscape.webp", "francine-portrait-front.webp", "francine-marie-bautista-wordmark-white-v2.png", 'class="fco-hero-visual"', 'fetchpriority="high"', "fco-founder-nameplate", "fco-founder-signature", "fco-founder-title", "fco-founder-portrait-card is-front", "fco-founder-portrait-card is-side", "Founder", "Francine Marie Bautista"):
         if marker not in fmbandco_home:
             errors.append(f"fmbandco/index.html: responsive founder hero marker is missing: {marker}")
     if "fmbandco-motion.js?v=20260718-motion-v1" not in fmbandco_home:
@@ -737,10 +726,8 @@ def check_mobile_and_editorial_media(errors: list[str]) -> None:
         "fmbandco-brand.css?v=20260719-portrait-placement-v9",
         "aboutfmb-corporate.css?v=20260719-portrait-placement-v3",
         "aboutfmb-corporate.js?v=20260718-about-corporate-v1",
-        "francine-founder-hero-640.webp",
-        "francine-founder-hero-923.webp",
-        "francine-founder-front-cutout-640-v1.webp",
-        "francine-founder-front-cutout-900-v1.webp",
+        "francine-standing-landscape.webp",
+        "francine-portrait-front.webp",
         "francine-marie-bautista-wordmark-white-v2.png",
         "fco-founder-nameplate",
         "fco-founder-signature",

@@ -248,7 +248,7 @@ def check_current_mobile_and_editorial_media(errors: list[str]) -> None:
         'id="rundown"',
         'id="editorial-standard"',
         'class="nc-site-header"',
-        "/assets/images/news/fmb-news-official.svg",
+        "/assets/images/fmb-approved/fmb-news-official-transparent.webp",
         "/news/subic-aeta-landfill/",
         "/news/remembering-amor-deloso/",
         "/news/filipinos-monkey-insult-racism/",
