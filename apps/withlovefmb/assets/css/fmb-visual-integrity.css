@@ -19,6 +19,27 @@ img[src*="/assets/images/fmb-approved/"]{
 .nc-footer-brand{
   background-color:transparent!important;
 }
+
+/* Preserve the exact supplied brand visuals while presenting these four ecosystem cards in a consistent square format. */
+#ecosystem .brand-card:is(.senz-card,.cognita-card,.wlf-card,.yoni-card){
+  aspect-ratio:1/1!important;
+  min-height:0!important;
+  overflow:hidden!important;
+  display:grid!important;
+  place-items:center!important;
+}
+#ecosystem .brand-card:is(.senz-card,.cognita-card,.wlf-card,.yoni-card)>img{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  transform:none!important;
+  filter:none!important;
+}
+
 body.news-channel-route :is(.nc-publication-brand,.nc-channel-lockup,.nc-footer-brand)::before{
   content:none!important;
   display:none!important;
@@ -36,6 +57,9 @@ body.news-channel-route :is(.nc-publication-brand,.nc-channel-lockup,.nc-footer-
 }
 body.news-channel-route .nc-channel-lockup>img{max-height:210px!important}
 @media(max-width:680px){
+  #ecosystem .brand-card:is(.senz-card,.cognita-card,.wlf-card,.yoni-card){
+    width:min(82vw,340px)!important;
+  }
   body.news-channel-route{padding-bottom:calc(82px + env(safe-area-inset-bottom))!important}
   body.news-channel-route .nc-mobile-dock{
     position:fixed!important;
