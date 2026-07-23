@@ -9,26 +9,58 @@
   }
 
   const page = body.dataset.fmbPage || 'public';
+  const brand = shell.querySelector('.fmb-unified-brand');
+  const navigation = shell.querySelector('.fmb-unified-nav');
   const menuButton = shell.querySelector('.fmb-unified-menu-button');
   const backToTop = document.querySelector('.fmb-back-to-top');
 
-  const closeMenu = () => {
-    body.classList.remove('fmb-menu-open');
-    menuButton?.setAttribute('aria-expanded', 'false');
-    menuButton?.setAttribute('aria-label', 'Open navigation');
+  if (page === 'company') {
+    shell.classList.add('fco-header');
+    brand?.classList.add('fco-header-logo');
+    navigation?.classList.add('fco-nav-links');
+
+    const companyLinks = [
+      { key: 'senz', label: 'SENZ', href: '/fmbandco/senz/' },
+      { key: 'cognita', label: 'Cognita', href: '/fmbandco/cognita/' },
+    ];
+
+    companyLinks.forEach(({ key, label, href }) => {
+      if (!navigation || navigation.querySelector(`[data-fmb-company-link="${key}"]`)) return;
+      const link = document.createElement('a');
+      link.href = href;
+      link.textContent = label;
+      link.dataset.fmbCompanyLink = key;
+      navigation.append(link);
+    });
+  }
+
+  if (page === 'news') {
+    menuButton?.setAttribute('data-news-menu', 'true');
+  }
+
+  const syncMenu = (open) => {
+    body.classList.toggle('fmb-menu-open', open);
+    body.setAttribute('data-fmb-menu-state', open ? 'open' : 'closed');
+    menuButton?.setAttribute('aria-expanded', String(open));
+    menuButton?.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
   };
 
-  menuButton?.addEventListener('click', () => {
-    const open = !body.classList.contains('fmb-menu-open');
-    body.classList.toggle('fmb-menu-open', open);
-    menuButton.setAttribute('aria-expanded', String(open));
-    menuButton.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
-  });
+  const closeMenu = () => syncMenu(false);
+
+  menuButton?.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    syncMenu(!body.classList.contains('fmb-menu-open'));
+  }, { capture: true });
 
   shell.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') closeMenu();
   });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 1024) closeMenu();
+  }, { passive: true });
+  syncMenu(false);
 
   if (page === 'home') {
     const heroCopy = document.querySelector('.hero-copy');
