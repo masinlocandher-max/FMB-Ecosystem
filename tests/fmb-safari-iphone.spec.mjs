@@ -162,7 +162,7 @@ test.describe('Safari-engine iPhone release gate', () => {
     await expect(menu).toHaveAttribute('aria-expanded', 'false');
 
     await page.evaluate(() => window.scrollTo(0, 0));
-    await page.screenshot({ path: `${artifactDirectory}/safari-iphone-home.png`, fullPage: true, animations: 'disabled' });
+    await page.screenshot({ path: `${artifactDirectory}/safari-iphone-home.png`, animations: 'disabled' });
     expect(errors).toEqual([]);
   });
 
