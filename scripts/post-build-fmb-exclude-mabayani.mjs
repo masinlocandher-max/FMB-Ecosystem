@@ -54,7 +54,7 @@ function removeMatchingElements(html,tagName,predicate){
 
 function removeMabayaniSurfaces(html){
   html=removeMatchingElements(html,'section',block=>/mabayani/i.test(block)&&(/class=["'][^"']*\bfeatured\b/i.test(block)||/id=["']featuredTitle["']/i.test(block)));
-  html=removeMatchingElements(html,'article',block=><boolean>(/<h[1-6][^>]*>\s*Mabayani\s*<\/h[1-6]>/i.test(block)));
+  html=removeMatchingElements(html,'article',block=>(/<h[1-6][^>]*>\s*Mabayani\s*<\/h[1-6]>/i.test(block)));
   html=removeMatchingElements(html,'a',(block,opening)=>/href=["']\/mabayani\/?["']/i.test(opening));
   return html;
 }
