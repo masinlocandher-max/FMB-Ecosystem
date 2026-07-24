@@ -3,6 +3,17 @@ import { mkdir } from 'node:fs/promises';
 
 const baseURL = 'http://127.0.0.1:4173';
 const artifactDirectory = 'qa-artifacts';
+const fullPageEvidenceStyle = `
+  main, main *, main *::before, main *::after { content-visibility: visible !important; }
+  .fmb-reveal, .reveal, .network-reveal, .about-reveal, .nc-reveal {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .fmb-shell-rail, .fmb-shell-header, .fmb-mobile-dock,
+  .pearly-lazy-trigger, .az-help-trigger, .az-help-layer { display: none !important; }
+`;
 
 await mkdir(artifactDirectory, { recursive: true });
 
@@ -97,6 +108,18 @@ async function openReady(page, route) {
   await expect(page.locator('.fmb-announcement-track')).toHaveCount(1);
 }
 
+async function captureEvidence(page, name) {
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(120);
+  await page.screenshot({ path: `${artifactDirectory}/${name}-viewport.png`, animations: 'disabled' });
+  await page.screenshot({
+    path: `${artifactDirectory}/${name}.png`,
+    fullPage: true,
+    animations: 'disabled',
+    style: fullPageEvidenceStyle,
+  });
+}
+
 test.describe('FMB approved desktop makeover', () => {
   test.use({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'no-preference' });
 
@@ -118,7 +141,7 @@ test.describe('FMB approved desktop makeover', () => {
     }));
     expect(new Set(sectionTreatments).size).toBeGreaterThan(1);
 
-    await page.screenshot({ path: `${artifactDirectory}/home-desktop.png`, fullPage: true });
+    await captureEvidence(page, 'home-desktop');
     expect(errors).toEqual([]);
   });
 
@@ -132,7 +155,7 @@ test.describe('FMB approved desktop makeover', () => {
     await hydratePage(page);
     await hydrateImages(page, 'main .news-visual img');
     await assertImagesLoaded(page, 'main .news-visual img');
-    await page.screenshot({ path: `${artifactDirectory}/news-desktop.png`, fullPage: true });
+    await captureEvidence(page, 'news-desktop');
     expect(errors).toEqual([]);
   });
 
@@ -172,7 +195,7 @@ test.describe('FMB approved iPhone experience', () => {
     await page.keyboard.press('Escape');
     await expect(menuButton).toHaveAttribute('aria-expanded', 'false');
 
-    await page.screenshot({ path: `${artifactDirectory}/home-iphone.png`, fullPage: true });
+    await captureEvidence(page, 'home-iphone');
     expect(errors).toEqual([]);
   });
 
@@ -184,7 +207,7 @@ test.describe('FMB approved iPhone experience', () => {
     await expect(page.locator('[data-fmb-pst]')).toContainText('PST');
     await assertAnimated(page, '.fmb-news-ticker-track', 'fmb-headline-motion');
     await hydratePage(page);
-    await page.screenshot({ path: `${artifactDirectory}/news-iphone.png`, fullPage: true });
+    await captureEvidence(page, 'news-iphone');
     expect(errors).toEqual([]);
   });
 
@@ -195,7 +218,7 @@ test.describe('FMB approved iPhone experience', () => {
     await expect(page.locator('.fmb-mobile-dock')).toBeVisible();
     await hydratePage(page);
     await expect(page.locator('main img').first()).toBeVisible();
-    await page.screenshot({ path: `${artifactDirectory}/about-iphone.png`, fullPage: true });
+    await captureEvidence(page, 'about-iphone');
     expect(errors).toEqual([]);
   });
 });
