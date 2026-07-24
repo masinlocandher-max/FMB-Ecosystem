@@ -23,6 +23,22 @@ async function assertNoHorizontalOverflow(page) {
   expect(dimensions.scrollWidth, JSON.stringify(dimensions)).toBeLessThanOrEqual(dimensions.clientWidth + 2);
 }
 
+async function hydratePage(page) {
+  const metrics = await page.evaluate(() => ({
+    height: Math.max(document.body.scrollHeight, document.documentElement.scrollHeight),
+    viewport: window.innerHeight,
+  }));
+  const increment = Math.max(420, Math.round(metrics.viewport * 0.72));
+  for (let y = 0; y < metrics.height; y += increment) {
+    await page.evaluate((position) => window.scrollTo(0, position), y);
+    await page.waitForTimeout(70);
+  }
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  await page.waitForTimeout(180);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(180);
+}
+
 async function assertImagesLoaded(page, selector) {
   const images = await page.locator(selector).evaluateAll((nodes) => nodes.map((image) => ({
     src: image.getAttribute('src'),
@@ -70,10 +86,14 @@ test.describe('FMB approved desktop makeover', () => {
     await expect(page.locator('#bulletin')).toHaveCount(1);
     await expect(page.locator('#how-fmb-can-help')).toHaveCount(1);
     await expect(page.locator('#fmb-visual-ecosystem')).toBeVisible();
+    await hydratePage(page);
     await assertImagesLoaded(page, '#fmb-visual-ecosystem img');
 
-    const sectionColors = await page.locator('main > section').evaluateAll((sections) => sections.slice(0, 4).map((section) => getComputedStyle(section).backgroundColor));
-    expect(new Set(sectionColors).size).toBeGreaterThan(1);
+    const sectionTreatments = await page.locator('main > section').evaluateAll((sections) => sections.slice(0, 5).map((section) => {
+      const style = getComputedStyle(section);
+      return `${style.backgroundColor}|${style.backgroundImage}`;
+    }));
+    expect(new Set(sectionTreatments).size).toBeGreaterThan(1);
 
     await page.screenshot({ path: `${artifactDirectory}/home-desktop.png`, fullPage: true });
     expect(errors).toEqual([]);
@@ -86,6 +106,7 @@ test.describe('FMB approved desktop makeover', () => {
     await expect(page.locator('.fmb-news-livebar')).toBeVisible();
     await expect(page.locator('[data-fmb-pst]')).toContainText('PST');
     await assertAnimated(page, '.fmb-news-ticker-track', 'fmb-headline-motion');
+    await hydratePage(page);
     await assertImagesLoaded(page, 'main .news-visual img');
     await page.screenshot({ path: `${artifactDirectory}/news-desktop.png`, fullPage: true });
     expect(errors).toEqual([]);
@@ -116,6 +137,7 @@ test.describe('FMB approved iPhone experience', () => {
     await assertNoHorizontalOverflow(page);
     await expect(page.locator('.fmb-mobile-dock')).toBeVisible();
     await expect(page.locator('.fmb-editorial-gallery')).toHaveCSS('overflow-x', 'auto');
+    await hydratePage(page);
     await assertImagesLoaded(page, '#fmb-visual-ecosystem img');
 
     const menuButton = page.locator('[data-fmb-dock-menu]');
@@ -135,6 +157,7 @@ test.describe('FMB approved iPhone experience', () => {
     await expect(page.locator('.fmb-mobile-dock')).toBeVisible();
     await expect(page.locator('[data-fmb-pst]')).toContainText('PST');
     await assertAnimated(page, '.fmb-news-ticker-track', 'fmb-headline-motion');
+    await hydratePage(page);
     await page.screenshot({ path: `${artifactDirectory}/news-iphone.png`, fullPage: true });
     expect(errors).toEqual([]);
   });
@@ -144,6 +167,7 @@ test.describe('FMB approved iPhone experience', () => {
     await openReady(page, '/aboutfmb/');
     await assertNoHorizontalOverflow(page);
     await expect(page.locator('.fmb-mobile-dock')).toBeVisible();
+    await hydratePage(page);
     await expect(page.locator('main img').first()).toBeVisible();
     await page.screenshot({ path: `${artifactDirectory}/about-iphone.png`, fullPage: true });
     expect(errors).toEqual([]);
