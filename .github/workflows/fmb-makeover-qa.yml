@@ -32,11 +32,10 @@ jobs:
       - name: Check out makeover branch
         uses: actions/checkout@v4
 
-      - name: Use Node 20
+      - name: Use Node 24
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: npm
+          node-version: 24
 
       - name: Install repository dependencies
         run: npm ci
