@@ -25,11 +25,12 @@ for(const icon of manifest.icons){
 
 const index=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const workspaceBuild=fs.readFileSync(path.join(root,'build.mjs'),'utf8');
-const finalBuildPath=path.resolve(root,'../../scripts/restore-approved-fmb-home.mjs');
-const finalBuild=fs.existsSync(finalBuildPath)?fs.readFileSync(finalBuildPath,'utf8'):'';
+const releaseCompilerPath=path.resolve(root,'../../scripts/post-build-fmb-approved-launch.mjs');
+const releaseCompiler=fs.existsSync(releaseCompilerPath)?fs.readFileSync(releaseCompilerPath,'utf8'):'';
 const sourceHasManifest=/rel=["']manifest["'][^>]+manifest\.webmanifest/i.test(index);
-const buildsInjectManifest=workspaceBuild.includes('/manifest.webmanifest')&&finalBuild.includes('/manifest.webmanifest');
-if(!sourceHasManifest&&!buildsInjectManifest)fail('Home page build is missing its manifest connection.');
+const workspaceInjectsManifest=workspaceBuild.includes('/manifest.webmanifest');
+const releaseInjectsManifest=releaseCompiler.includes('/manifest.webmanifest')&&releaseCompiler.includes('manifestLink');
+if(!sourceHasManifest&&!workspaceInjectsManifest&&!releaseInjectsManifest)fail('Home page build is missing its manifest connection.');
 if(!index.includes('/assets/images/fmb-approved/fmb-master-transparent.webp'))fail('Home page is missing the exact approved FMB master.');
 
 const appManifest=readJson('app/manifest.webmanifest');
