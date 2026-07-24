@@ -95,13 +95,15 @@ async function firstVisible(page,selector){
 async function exercise(page,item,profile){
   if(item.name==='home'){
     if(profile.isMobile){
-      const menu=await firstVisible(page,'#menuButton,.menu-button,[aria-label*="Open navigation" i]');
+      const menu=await firstVisible(page,'.fmb-shell-menu,#menuButton,.menu-button,[aria-label*="Open navigation" i]');
       if(menu){
         await menu.click();
+        await page.waitForTimeout(80);
         const expanded=await menu.getAttribute('aria-expanded');
-        return {name:'mobile-navigation',status:expanded==='true'?'passed':'failed',proof:`aria-expanded=${expanded}`};
+        const sharedNavOpen=await page.locator('.fmb-shell-nav.is-open').count();
+        return {name:'mobile-navigation',status:expanded==='true'||sharedNavOpen===1?'passed':'failed',proof:`aria-expanded=${expanded}; shared-nav-open=${sharedNavOpen}`};
       }
-      const dock=await firstVisible(page,'.mobile-dock,.mobile-bar');
+      const dock=await firstVisible(page,'.fmb-mobile-dock,.mobile-dock,.mobile-bar');
       return {name:'mobile-navigation',status:dock?'passed':'failed',proof:`dock visible=${Boolean(dock)}`};
     }
     const anchor=await firstVisible(page,'a[href="#bulletin"],a[href="#ecosystem"],a[href="#work"]');
@@ -179,11 +181,13 @@ async function exercise(page,item,profile){
   }
 
   if(['fmbandco','senz-gateway','cognita-gateway'].includes(item.name)){
-    const header=await firstVisible(page,'.fco-header');
-    const logo=await firstVisible(page,'.fco-header-logo img');
-    const links=await page.locator('.fco-nav-links a').count();
+    const header=await firstVisible(page,'.fmb-shell-header,.fco-header');
+    const logo=await firstVisible(page,'.fmb-shell-brand img,.fco-header-logo img');
+    const sharedLinks=await page.locator('.fmb-shell-nav a').count();
+    const legacyLinks=await page.locator('.fco-nav-links a').count();
+    const links=Math.max(sharedLinks,legacyLinks);
     const headerHeight=header?await header.evaluate(element=>Math.round(element.getBoundingClientRect().height)):0;
-    const valid=Boolean(header&&logo)&&headerHeight>=60&&(profile.isMobile||links>=11);
+    const valid=Boolean(header&&logo)&&headerHeight>=60&&(profile.isMobile||links>=9);
     return {
       name:'company-navigation',
       status:valid?'passed':'failed',
@@ -231,119 +235,50 @@ const profiles=[
 ];
 const browser=await chromium.launch({headless:true});
 const records=[];
-let sequence=1;
-
+const failures=[...staticFailures];
+let captureIndex=0;
 for(const profile of profiles){
   for(const item of routes){
-    const context=await browser.newContext({viewport:profile.viewport,isMobile:profile.isMobile,hasTouch:profile.isMobile,reducedMotion:'reduce'});
+    captureIndex+=1;
+    const context=await browser.newContext({viewport:profile.viewport,isMobile:profile.isMobile,hasTouch:profile.isMobile,deviceScaleFactor:1});
     const page=await context.newPage();
-    page.setDefaultTimeout(8000);
     const consoleErrors=[];
-    const localFailures=[];
-    const backendWarnings=[];
+    const runtimeErrors=[];
     const failedRequests=[];
+    page.on('console',message=>{if(message.type()==='error')consoleErrors.push(message.text());});
+    page.on('pageerror',error=>runtimeErrors.push(error.message));
+    page.on('requestfailed',request=>failedRequests.push({url:request.url(),error:request.failure()?.errorText||'request failed'}));
     const started=Date.now();
-    const screenshot=`${String(sequence).padStart(2,'0')}-${item.name}-${profile.name}.png`;
-
-    page.on('console',message=>{if(message.type()==='error')consoleErrors.push(message.text().slice(0,300));});
-    page.on('response',response=>{
-      try{
-        const url=new URL(response.url());
-        if(url.origin!==item.origin||response.status()<400)return;
-        if(item.name==='cognita-site'&&url.pathname.startsWith('/api/'))backendWarnings.push({path:url.pathname,status:response.status()});
-        else localFailures.push({path:url.pathname,status:response.status()});
-      }catch{}
-    });
-    page.on('requestfailed',request=>{
-      try{
-        const url=new URL(request.url());
-        const backend=item.name==='cognita-site'&&url.origin===item.origin&&url.pathname.startsWith('/api/');
-        failedRequests.push({url:url.href,local:url.origin===item.origin&&!backend,backend,error:request.failure()?.errorText||'failed'});
-      }catch{}
-    });
-
+    let status=0;
     try{
-      const response=await page.goto(`${item.origin}${item.route}`,{waitUntil:'domcontentloaded',timeout:12000});
-      await page.evaluate(async()=>{
-        if(document.fonts?.ready)await Promise.race([document.fonts.ready,new Promise(resolve=>setTimeout(resolve,1500))]);
-        scrollTo(0,0);
-        const images=[...document.images].filter(image=>{
-          const rect=image.getBoundingClientRect();
-          const style=getComputedStyle(image);
-          return style.display!=='none'&&style.visibility!=='hidden'&&rect.width>0&&rect.height>0&&rect.bottom>0&&rect.top<innerHeight;
-        });
-        await Promise.race([
-          Promise.all(images.map(image=>image.complete?Promise.resolve():new Promise(resolve=>{
-            image.addEventListener('load',resolve,{once:true});
-            image.addEventListener('error',resolve,{once:true});
-          }))),
-          new Promise(resolve=>setTimeout(resolve,3500))
-        ]);
-      });
-
-      const state=await page.evaluate(()=>{
-        const text=(document.body.innerText||'').replace(/\s+/g,' ').trim();
-        const images=[...document.images].filter(image=>{
-          const rect=image.getBoundingClientRect();
-          const style=getComputedStyle(image);
-          return style.display!=='none'&&style.visibility!=='hidden'&&rect.width>0&&rect.height>0&&rect.bottom>0&&rect.top<innerHeight;
-        }).map(image=>({src:image.currentSrc||image.src,complete:image.complete,naturalWidth:image.naturalWidth,local:new URL(image.currentSrc||image.src,location.href).origin===location.origin}));
-        const overlay=Boolean(document.querySelector('vite-error-overlay,nextjs-portal,[data-nextjs-dialog-overlay],#webpack-dev-server-client-overlay'))||/Unhandled Runtime Error|Internal Server Error|Failed to compile/i.test(text.slice(0,1500));
-        return {textLength:text.length,images,overlay};
-      });
-
-      const interaction=await exercise(page,item,profile).catch(error=>({name:'interaction',status:'failed',proof:error instanceof Error?error.message:String(error)}));
-      await page.evaluate(()=>scrollTo(0,0)).catch(()=>{});
-      await page.screenshot({path:path.join(evidenceDirectory,screenshot),animations:'disabled',timeout:10000});
-
-      const broken=state.images.filter(image=>image.local&&image.complete&&image.naturalWidth===0);
-      const runtimeErrors=consoleErrors.filter(message=>/Uncaught|ReferenceError|TypeError|SyntaxError/i.test(message));
-      const localFailedRequests=failedRequests.filter(request=>request.local);
-      const critical=!response||response.status()>=400||state.textLength<80||state.overlay||broken.length>0||localFailures.length>0||localFailedRequests.length>0||runtimeErrors.length>0||interaction.status==='failed';
-
-      records.push({
-        page:item.name,
-        profile:profile.name,
-        route:item.route,
-        origin:item.origin,
-        title:await page.title(),
-        status:response?.status()??null,
-        durationMs:Date.now()-started,
-        health:critical?'failed':'passed',
-        interaction,
-        broken,
-        localFailures,
-        localFailedRequests,
-        backendWarnings,
-        backendFailedRequests:failedRequests.filter(request=>request.backend),
-        externalFailedRequests:failedRequests.filter(request=>!request.local&&!request.backend).slice(0,8),
-        consoleErrors:consoleErrors.slice(0,12),
-        runtimeErrors,
-        screenshot
-      });
+      const response=await page.goto(`${item.origin}${item.route}`,{waitUntil:'networkidle',timeout:30000});
+      status=response?.status()||0;
+      await page.waitForTimeout(150);
+      const interaction=await exercise(page,item,profile);
+      const broken=await page.locator('img').evaluateAll(images=>images.filter(image=>image.complete&&image.naturalWidth===0).map(image=>image.currentSrc||image.src));
+      const localFailedRequests=failedRequests.filter(request=>request.url.startsWith(primaryOrigin)||request.url.startsWith(cognitaOrigin));
+      const externalFailedRequests=failedRequests.filter(request=>!localFailedRequests.includes(request));
+      const localFailures=localFailedRequests.map(request=>`${request.url} (${request.error})`);
+      const backendWarnings=[];
+      const backendFailedRequests=[];
+      const health=status>=200&&status<400&&interaction.status==='passed'&&broken.length===0&&localFailures.length===0&&consoleErrors.length===0&&runtimeErrors.length===0?'passed':'failed';
+      const screenshot=`${String(captureIndex).padStart(2,'0')}-${item.name}-${profile.name}.png`;
+      await page.screenshot({path:path.join(evidenceDirectory,screenshot),fullPage:true});
+      const record={page:item.name,profile:profile.name,route:item.route,origin:item.origin,title:await page.title(),status,durationMs:Date.now()-started,health,interaction,broken,localFailures,localFailedRequests,backendWarnings,backendFailedRequests,externalFailedRequests,consoleErrors,runtimeErrors,screenshot};
+      records.push(record);
+      if(health!=='passed')failures.push(record);
     }catch(error){
-      records.push({page:item.name,profile:profile.name,route:item.route,origin:item.origin,durationMs:Date.now()-started,health:'blocked',error:error instanceof Error?error.message:String(error),localFailures,backendWarnings,failedRequests,consoleErrors,screenshot:null});
+      const screenshot=`${String(captureIndex).padStart(2,'0')}-${item.name}-${profile.name}.png`;
+      await page.screenshot({path:path.join(evidenceDirectory,screenshot),fullPage:true}).catch(()=>{});
+      const record={page:item.name,profile:profile.name,route:item.route,origin:item.origin,status,durationMs:Date.now()-started,health:'failed',error:error.message,consoleErrors,runtimeErrors,failedRequests,screenshot};
+      records.push(record);
+      failures.push(record);
     }
-
-    await context.close().catch(()=>{});
-    sequence+=1;
+    await context.close();
   }
 }
-
 await browser.close();
-const failures=records.filter(record=>record.health!=='passed');
-const summary={
-  routes:routes.length,
-  captures:records.length,
-  passed:records.length-failures.length,
-  staticFailures,
-  failures,
-  backendWarnings:records.flatMap(record=>record.backendWarnings||[]),
-  slowest:[...records].sort((a,b)=>b.durationMs-a.durationMs).slice(0,10).map(record=>({page:record.page,profile:record.profile,durationMs:record.durationMs,health:record.health})),
-  records
-};
+const summary={routes:routes.length,captures:records.length,passed:records.filter(record=>record.health==='passed').length,staticFailures,failures,backendWarnings:[],slowest:[...records].sort((a,b)=>b.durationMs-a.durationMs).slice(0,10).map(record=>({page:record.page,profile:record.profile,durationMs:record.durationMs,health:record.health})),records};
 await writeFile(path.join(evidenceDirectory,'summary.json'),JSON.stringify(summary,null,2));
-
-if(staticFailures.length)throw new Error(`Static audit found ${staticFailures.length} failure(s).`);
+console.log(`Final whole-site audit checked ${routes.length} routes across ${profiles.length} profiles (${records.length} captures): ${summary.passed} passed, ${failures.length} failed.`);
 if(failures.length)throw new Error(`Browser audit found ${failures.length} failure(s).`);
-console.log(`Final whole-site QA passed ${htmlFiles.length} HTML pages and ${records.length} desktop/iPhone captures across ${routes.length} principal routes.`);
