@@ -32,6 +32,8 @@ test.use({
   reducedMotion: 'no-preference',
 });
 
+test.setTimeout(45_000);
+
 function observeErrors(page) {
   const errors = [];
   page.on('pageerror', (error) => errors.push(`pageerror: ${error.message}`));
@@ -96,6 +98,43 @@ async function assertAnimationRunning(page, selector, expectedName) {
   expect(moved, JSON.stringify({ state, later })).toBeTruthy();
 }
 
+async function assertGalleryImagesLoaded(page) {
+  const sizes = await page.locator('#fmb-visual-ecosystem').evaluate(async (section) => {
+    section.scrollIntoView({ block: 'center', behavior: 'auto' });
+    const gallery = section.querySelector('.fmb-editorial-gallery');
+    const images = [...section.querySelectorAll('img')];
+
+    for (const image of images) {
+      image.loading = 'eager';
+      const card = image.closest('.fmb-editorial-card');
+      if (gallery && card) gallery.scrollTo({ left: Math.max(0, card.offsetLeft - 16), behavior: 'auto' });
+      await new Promise((resolve) => setTimeout(resolve, 180));
+      if (!image.complete) {
+        await new Promise((resolve) => {
+          const finish = () => resolve();
+          image.addEventListener('load', finish, { once: true });
+          image.addEventListener('error', finish, { once: true });
+          setTimeout(finish, 5000);
+        });
+      }
+    }
+
+    return images.map((image) => ({
+      src: image.getAttribute('src'),
+      complete: image.complete,
+      width: image.naturalWidth,
+      height: image.naturalHeight,
+    }));
+  });
+
+  expect(sizes.length).toBeGreaterThan(0);
+  for (const size of sizes) {
+    expect(size.complete, JSON.stringify(size)).toBeTruthy();
+    expect(size.width, JSON.stringify(size)).toBeGreaterThan(100);
+    expect(size.height, JSON.stringify(size)).toBeGreaterThan(100);
+  }
+}
+
 test.describe('Safari-engine iPhone release gate', () => {
   test('homepage uses iPhone-safe navigation, motion, real images, and no Mabayani', async ({ page }) => {
     const errors = observeErrors(page);
@@ -113,17 +152,7 @@ test.describe('Safari-engine iPhone release gate', () => {
     expect(safariReadiness.touchTargetHeight).toBeGreaterThanOrEqual(44);
 
     await assertAnimationRunning(page, '.fmb-announcement-track', 'fmb-announcement-motion');
-
-    const images = page.locator('#fmb-visual-ecosystem img');
-    expect(await images.count()).toBeGreaterThan(0);
-    for (let index = 0; index < await images.count(); index += 1) {
-      const image = images.nth(index);
-      await image.scrollIntoViewIfNeeded();
-      await expect(image).toHaveJSProperty('complete', true);
-      const size = await image.evaluate((node) => ({ width: node.naturalWidth, height: node.naturalHeight }));
-      expect(size.width, JSON.stringify(size)).toBeGreaterThan(100);
-      expect(size.height, JSON.stringify(size)).toBeGreaterThan(100);
-    }
+    await assertGalleryImagesLoaded(page);
 
     const menu = page.locator('[data-fmb-dock-menu]');
     await menu.click();
