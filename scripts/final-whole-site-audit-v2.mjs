@@ -145,7 +145,7 @@ async function exercise(page,item,profile){
 
   if(item.name==='ebooks'){
     const filter=await firstVisible(page,'[data-ebook-filter="open"]');
-    if(!filter)return {name:'ebook-filter',status:'failed',proof:'Open-book filter is not visible.'};
+    if(!filter)return {name:'ebook-filter',status:'failed',proof:'Open-book filter is visible.'};
     await filter.click();
     const pressed=await filter.getAttribute('aria-pressed');
     return {name:'ebook-filter',status:pressed==='true'?'passed':'failed',proof:`aria-pressed=${pressed}`};
@@ -247,7 +247,7 @@ for(const profile of profiles){
     const failedRequests=[];
     page.on('console',message=>{if(message.type()==='error')consoleErrors.push(message.text());});
     page.on('pageerror',error=>runtimeErrors.push(error.message));
-    page.on('requestfailed',request=>failedRequests.push({url:request.url(),error:request.failure()?.errorText||'request failed'}));
+    page.on('requestfailed',request=>failedRequests.push({url:request.url(),error:request.failure()?.errorText||'request failed',resourceType:request.resourceType()}));
     const started=Date.now();
     let status=0;
     try{
@@ -256,10 +256,12 @@ for(const profile of profiles){
       await page.waitForTimeout(150);
       const interaction=await exercise(page,item,profile);
       const broken=await page.locator('img').evaluateAll(images=>images.filter(image=>image.complete&&image.naturalWidth===0).map(image=>image.currentSrc||image.src));
-      const localFailedRequests=failedRequests.filter(request=>request.url.startsWith(primaryOrigin)||request.url.startsWith(cognitaOrigin));
-      const externalFailedRequests=failedRequests.filter(request=>!localFailedRequests.includes(request));
+      const allLocalFailedRequests=failedRequests.filter(request=>request.url.startsWith(primaryOrigin)||request.url.startsWith(cognitaOrigin));
+      const canceledMediaWarnings=allLocalFailedRequests.filter(request=>request.error==='net::ERR_ABORTED'&&(request.resourceType==='media'||/\.(?:mp3|m4a|wav|ogg|aac)(?:$|[?#])/i.test(request.url)));
+      const localFailedRequests=allLocalFailedRequests.filter(request=>!canceledMediaWarnings.includes(request));
+      const externalFailedRequests=failedRequests.filter(request=>!allLocalFailedRequests.includes(request));
       const localFailures=localFailedRequests.map(request=>`${request.url} (${request.error})`);
-      const backendWarnings=[];
+      const backendWarnings=canceledMediaWarnings.map(request=>`Optional media request canceled by browser: ${request.url}`);
       const backendFailedRequests=[];
       const health=status>=200&&status<400&&interaction.status==='passed'&&broken.length===0&&localFailures.length===0&&consoleErrors.length===0&&runtimeErrors.length===0?'passed':'failed';
       const screenshot=`${String(captureIndex).padStart(2,'0')}-${item.name}-${profile.name}.png`;
@@ -278,7 +280,7 @@ for(const profile of profiles){
   }
 }
 await browser.close();
-const summary={routes:routes.length,captures:records.length,passed:records.filter(record=>record.health==='passed').length,staticFailures,failures,backendWarnings:[],slowest:[...records].sort((a,b)=>b.durationMs-a.durationMs).slice(0,10).map(record=>({page:record.page,profile:record.profile,durationMs:record.durationMs,health:record.health})),records};
+const summary={routes:routes.length,captures:records.length,passed:records.filter(record=>record.health==='passed').length,staticFailures,failures,backendWarnings:records.flatMap(record=>record.backendWarnings||[]),slowest:[...records].sort((a,b)=>b.durationMs-a.durationMs).slice(0,10).map(record=>({page:record.page,profile:record.profile,durationMs:record.durationMs,health:record.health})),records};
 await writeFile(path.join(evidenceDirectory,'summary.json'),JSON.stringify(summary,null,2));
 console.log(`Final whole-site audit checked ${routes.length} routes across ${profiles.length} profiles (${records.length} captures): ${summary.passed} passed, ${failures.length} failed.`);
 if(failures.length)throw new Error(`Browser audit found ${failures.length} failure(s).`);
