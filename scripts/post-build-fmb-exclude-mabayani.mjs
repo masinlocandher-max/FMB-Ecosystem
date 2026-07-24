@@ -5,6 +5,11 @@ const repositoryRoot=path.resolve(new URL('..',import.meta.url).pathname);
 const dist=path.join(repositoryRoot,'dist');
 const excludedPrefixes=['_sites/','app/','api/','auth/','admin/','data/','data-center/','yoni/'];
 const excludedFiles=new Set(['admin.html','admin-activate.html','admin-login.html','login.html','signup.html','reset-password.html','confirm-email.html','auth.html','member.html','profile/index.html']);
+const publicSearchScripts=new Set([
+  'assets/js/fmb-reception-search.js',
+  'assets/js/live-hotfix.js',
+  'assets/js/site.js',
+]);
 
 async function walk(directory){
   const files=[];
@@ -63,9 +68,13 @@ function rewritePublicCopy(text){
   return text
     .replaceAll('Yoni, Mabayani, and With Love, FMB','Yoni and With Love, FMB')
     .replaceAll('Yoni, Mabayani and With Love, FMB','Yoni and With Love, FMB')
+    .replaceAll('With Love, FMB, Yoni, and Mabayani','With Love, FMB and Yoni')
+    .replaceAll('With Love, FMB, Yoni and Mabayani','With Love, FMB and Yoni')
     .replaceAll('Yoni and Mabayani are separate FMB projects.','Yoni is a separate FMB project.')
     .replaceAll('Yoni and Mabayani','Yoni')
+    .replaceAll('research support for Mabayani and Sambal projects','research support for Sambal cultural and language projects')
     .replaceAll('Mabayani and Sambal projects','Sambal cultural and language projects')
+    .replaceAll('Mabayani%20or%20culture%20support','Sambal%20culture%20support')
     .replaceAll('Mabayani or culture support','Sambal culture support')
     .replaceAll('Mabayani, heritage research','heritage research')
     .replaceAll('Mabayani, and future projects','future projects')
@@ -89,32 +98,38 @@ function rewritePublicCopy(text){
 await rm(path.join(dist,'mabayani'),{recursive:true,force:true});
 
 const allFiles=await walk(dist);
-const publicFiles=allFiles.filter(isPublicFile);
+const publicHtml=allFiles.filter(file=>isPublicFile(file)&&relative(file).endsWith('.html'));
 let changed=0;
 
-for(const file of publicFiles){
+for(const file of publicHtml){
   const name=relative(file);
-  if(name.endsWith('.html')){
-    let html=await readFile(file,'utf8');
-    const before=html;
-    html=removeMabayaniSurfaces(html);
-    html=rewritePublicCopy(html);
-    html=html.replace(/<li[^>]*>\s*Mabayani\s*<\/li>/gi,'');
-    html=html.replace(/<option[^>]*>\s*Mabayani\s*<\/option>/gi,'');
-    if(name==='projects/index.html')html=html.replace(/(<a class="catalog-card[^>]*href="\/withlovefmb\/"[^>]*><span>)03(<\/span>)/i,'$102$2');
-    if(html!==before){await writeFile(file,html,'utf8');changed+=1;}
-    continue;
-  }
+  let html=await readFile(file,'utf8');
+  const before=html;
+  html=removeMabayaniSurfaces(html);
+  html=rewritePublicCopy(html);
+  html=html.replace(/<li[^>]*>\s*Mabayani\s*<\/li>/gi,'');
+  html=html.replace(/<option[^>]*>\s*Mabayani\s*<\/option>/gi,'');
+  if(name==='projects/index.html')html=html.replace(/(<a class="catalog-card[^>]*href="\/withlovefmb\/"[^>]*><span>)03(<\/span>)/i,'$102$2');
+  if(html!==before){await writeFile(file,html,'utf8');changed+=1;}
+}
 
-  if(name.endsWith('.js')||name.endsWith('.json')||name.endsWith('.xml')){
+const sitemap=path.join(dist,'sitemap.xml');
+try{
+  let xml=await readFile(sitemap,'utf8');
+  const before=xml;
+  xml=xml.replace(/\s*<url>[^<]*<loc>[^<]*\/mabayani\/?<\/loc>[\s\S]*?<\/url>/gi,'');
+  if(xml!==before){await writeFile(sitemap,xml,'utf8');changed+=1;}
+}catch{}
+
+for(const name of publicSearchScripts){
+  const file=path.join(dist,name);
+  try{
     let text=await readFile(file,'utf8');
     const before=text;
-    if(name==='sitemap.xml')text=text.replace(/\s*<url>[^<]*<loc>[^<]*\/mabayani\/?<\/loc>[\s\S]*?<\/url>/gi,'');
     text=rewritePublicCopy(text)
-      .replace(/\{section:'Projects',title:'FMB Projects',href:'\/projects\/',summary:'[^']*',terms:'[^']*mabayani[^']*'\},?/gi,"{section:'Projects',title:'FMB Projects',href:'/projects/',summary:'Yoni and With Love, FMB.',terms:'projects yoni with love fmb'},")
-      .replace(/mabayani\s*/gi,'');
+      .replace(/\{section:'Projects',title:'FMB Projects',href:'\/projects\/',summary:'[^']*',terms:'[^']*mabayani[^']*'\},?/gi,"{section:'Projects',title:'FMB Projects',href:'/projects/',summary:'Yoni and With Love, FMB.',terms:'projects yoni with love fmb'},");
     if(text!==before){await writeFile(file,text,'utf8');changed+=1;}
-  }
+  }catch{}
 }
 
 for(const cssFile of allFiles.filter(file=>isPublicFile(file)&&relative(file).endsWith('.css'))){
@@ -128,12 +143,16 @@ for(const cssFile of allFiles.filter(file=>isPublicFile(file)&&relative(file).en
 }
 
 const remaining=[];
-for(const file of (await walk(dist)).filter(isPublicFile)){
-  const name=relative(file);
-  if(!/\.(?:html|js|json|xml)$/i.test(name))continue;
+for(const file of publicHtml){
   const text=await readFile(file,'utf8');
-  if(/mabayani|\/mabayani\//i.test(text))remaining.push(name);
+  if(/mabayani|\/mabayani\//i.test(text))remaining.push(relative(file));
+}
+for(const name of ['sitemap.xml',...publicSearchScripts]){
+  try{
+    const text=await readFile(path.join(dist,name),'utf8');
+    if(/mabayani|\/mabayani\//i.test(text))remaining.push(name);
+  }catch{}
 }
 if(remaining.length)throw new Error(`Mabayani remains in current public launch output: ${remaining.join(', ')}`);
 
-console.log(`Excluded Mabayani from the current public launch, removed its public route, and cleaned ${changed} generated file(s). Archived source files remain intact for a future release.`);
+console.log(`Excluded Mabayani from the current public launch, removed its public route, and cleaned ${changed} generated file(s). Archived source and private-tool references remain intact for a future release.`);
