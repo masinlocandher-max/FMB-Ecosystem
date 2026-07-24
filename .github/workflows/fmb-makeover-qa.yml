@@ -1,0 +1,83 @@
+name: FMB Makeover QA
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "apps/withlovefmb/**"
+      - "scripts/**"
+      - "tests/fmb-approved-launch.spec.mjs"
+      - "package.json"
+      - "package-lock.json"
+      - "vercel.json"
+      - ".github/workflows/fmb-makeover-qa.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fmb-makeover-qa-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-browser-qa:
+    name: Build, desktop, and iPhone QA
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      CI: "true"
+
+    steps:
+      - name: Check out makeover branch
+        uses: actions/checkout@v4
+
+      - name: Use Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install repository dependencies
+        run: npm ci
+
+      - name: Install temporary browser QA dependency
+        run: npm install --no-save --no-package-lock @playwright/test@1.55.0
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Build and run every release gate
+        run: npm run build
+
+      - name: Start the generated site locally
+        run: |
+          python3 -m http.server 4173 --directory dist > /tmp/fmb-http-server.log 2>&1 &
+          echo $! > /tmp/fmb-http-server.pid
+          for attempt in {1..30}; do
+            if curl --silent --fail http://127.0.0.1:4173/ > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/fmb-http-server.log
+          exit 1
+
+      - name: Test desktop and iPhone experiences in Chromium
+        run: npx playwright test tests/fmb-approved-launch.spec.mjs --reporter=line --workers=1
+
+      - name: Collect server log
+        if: always()
+        run: cp /tmp/fmb-http-server.log qa-artifacts/http-server.log 2>/dev/null || true
+
+      - name: Upload visual and audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fmb-makeover-qa-evidence
+          if-no-files-found: warn
+          retention-days: 7
+          path: |
+            qa-artifacts/
+            dist/enterprise-audit.json
+            dist/performance-audit.json
