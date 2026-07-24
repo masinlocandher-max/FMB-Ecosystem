@@ -1,4 +1,4 @@
-import { readFile, readdir, stat, writeFile } from 'node:fs/promises';
+import { readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
@@ -48,6 +48,11 @@ if (!unifiedJs.includes('fmbApprovedLaunchReady')) {
   unifiedJs = `${unifiedJs.trim()}\n\n${launchJs.trim()}\n`;
   await writeFile(jsTarget, unifiedJs, 'utf8');
 }
+
+await Promise.all([
+  rm(path.join(dist, 'assets', 'css', 'fmb-approved-launch.css'), { force: true }),
+  rm(path.join(dist, 'assets', 'js', 'fmb-approved-launch.js'), { force: true }),
+]);
 
 const announcements = [
   ['Official Bulletin', '/news/'],
@@ -196,4 +201,4 @@ for (const file of publicHtml) {
   }
 }
 
-console.log(`Compiled the approved FMB launch layer into the single public CSS and JS bundles and updated ${updatedPages} public pages.`);
+console.log(`Compiled the approved FMB launch layer into the single public CSS and JS bundles, removed duplicate compiled sources, and updated ${updatedPages} public pages.`);
