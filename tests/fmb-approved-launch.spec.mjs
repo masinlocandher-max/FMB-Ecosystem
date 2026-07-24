@@ -39,6 +39,19 @@ async function hydratePage(page) {
   await page.waitForTimeout(180);
 }
 
+async function hydrateImages(page, selector) {
+  const images = page.locator(selector);
+  const count = await images.count();
+  for (let index = 0; index < count; index += 1) {
+    const image = images.nth(index);
+    await image.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(160);
+    await expect(image).toHaveJSProperty('complete', true);
+  }
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(150);
+}
+
 async function assertImagesLoaded(page, selector) {
   const images = await page.locator(selector).evaluateAll((nodes) => nodes.map((image) => ({
     src: image.getAttribute('src'),
@@ -87,6 +100,7 @@ test.describe('FMB approved desktop makeover', () => {
     await expect(page.locator('#how-fmb-can-help')).toHaveCount(1);
     await expect(page.locator('#fmb-visual-ecosystem')).toBeVisible();
     await hydratePage(page);
+    await hydrateImages(page, '#fmb-visual-ecosystem img');
     await assertImagesLoaded(page, '#fmb-visual-ecosystem img');
 
     const sectionTreatments = await page.locator('main > section').evaluateAll((sections) => sections.slice(0, 5).map((section) => {
@@ -107,6 +121,7 @@ test.describe('FMB approved desktop makeover', () => {
     await expect(page.locator('[data-fmb-pst]')).toContainText('PST');
     await assertAnimated(page, '.fmb-news-ticker-track', 'fmb-headline-motion');
     await hydratePage(page);
+    await hydrateImages(page, 'main .news-visual img');
     await assertImagesLoaded(page, 'main .news-visual img');
     await page.screenshot({ path: `${artifactDirectory}/news-desktop.png`, fullPage: true });
     expect(errors).toEqual([]);
@@ -138,6 +153,7 @@ test.describe('FMB approved iPhone experience', () => {
     await expect(page.locator('.fmb-mobile-dock')).toBeVisible();
     await expect(page.locator('.fmb-editorial-gallery')).toHaveCSS('overflow-x', 'auto');
     await hydratePage(page);
+    await hydrateImages(page, '#fmb-visual-ecosystem img');
     await assertImagesLoaded(page, '#fmb-visual-ecosystem img');
 
     const menuButton = page.locator('[data-fmb-dock-menu]');
