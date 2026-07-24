@@ -53,8 +53,8 @@ function removeMatchingElements(html,tagName,predicate){
 }
 
 function removeMabayaniSurfaces(html){
-  html=removeMatchingElements(html,'section',block=>/mabayani/i.test(block)&&(/class=["'][^"']*\\bfeatured\\b/i.test(block)||/id=["']featuredTitle["']/i.test(block)));
-  html=removeMatchingElements(html,'article',block=>/<h[1-6][^>]*>\\s*Mabayani\\s*<\\/h[1-6]>/i.test(block));
+  html=removeMatchingElements(html,'section',block=>/mabayani/i.test(block)&&(/class=["'][^"']*\bfeatured\b/i.test(block)||/id=["']featuredTitle["']/i.test(block)));
+  html=removeMatchingElements(html,'article',block=><boolean>(/<h[1-6][^>]*>\s*Mabayani\s*<\/h[1-6]>/i.test(block)));
   html=removeMatchingElements(html,'a',(block,opening)=>/href=["']\/mabayani\/?["']/i.test(opening));
   return html;
 }
@@ -99,9 +99,9 @@ for(const file of publicFiles){
     const before=html;
     html=removeMabayaniSurfaces(html);
     html=rewritePublicCopy(html);
-    html=html.replace(/<li[^>]*>\\s*Mabayani\\s*<\\/li>/gi,'');
-    html=html.replace(/<option[^>]*>\\s*Mabayani\\s*<\\/option>/gi,'');
-    if(name==='projects/index.html')html=html.replace(/(<a class="catalog-card[^>]*href="\/withlovefmb\/"[^>]*><span>)03(<\\/span>)/i,'$102$2');
+    html=html.replace(/<li[^>]*>\s*Mabayani\s*<\/li>/gi,'');
+    html=html.replace(/<option[^>]*>\s*Mabayani\s*<\/option>/gi,'');
+    if(name==='projects/index.html')html=html.replace(/(<a class="catalog-card[^>]*href="\/withlovefmb\/"[^>]*><span>)03(<\/span>)/i,'$102$2');
     if(html!==before){await writeFile(file,html,'utf8');changed+=1;}
     continue;
   }
@@ -109,7 +109,7 @@ for(const file of publicFiles){
   if(name.endsWith('.js')||name.endsWith('.json')||name.endsWith('.xml')){
     let text=await readFile(file,'utf8');
     const before=text;
-    if(name==='sitemap.xml')text=text.replace(/\s*<url>[^<]*<loc>[^<]*\/mabayani\/?<\/loc>[\\s\\S]*?<\/url>/gi,'');
+    if(name==='sitemap.xml')text=text.replace(/\s*<url>[^<]*<loc>[^<]*\/mabayani\/?<\/loc>[\s\S]*?<\/url>/gi,'');
     text=rewritePublicCopy(text)
       .replace(/\{section:'Projects',title:'FMB Projects',href:'\/projects\/',summary:'[^']*',terms:'[^']*mabayani[^']*'\},?/gi,"{section:'Projects',title:'FMB Projects',href:'/projects/',summary:'Yoni and With Love, FMB.',terms:'projects yoni with love fmb'},")
       .replace(/mabayani\s*/gi,'');
