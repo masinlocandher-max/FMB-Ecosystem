@@ -98,10 +98,11 @@ function rewritePublicCopy(text){
 await rm(path.join(dist,'mabayani'),{recursive:true,force:true});
 
 const allFiles=await walk(dist);
-const publicHtml=allFiles.filter(file=>isPublicFile(file)&&relative(file).endsWith('.html'));
+const allHtml=allFiles.filter(file=>relative(file).endsWith('.html'));
+const publicHtml=allHtml.filter(isPublicFile);
 let changed=0;
 
-for(const file of publicHtml){
+for(const file of allHtml){
   const name=relative(file);
   let html=await readFile(file,'utf8');
   const before=html;
@@ -155,4 +156,4 @@ for(const name of ['sitemap.xml',...publicSearchScripts]){
 }
 if(remaining.length)throw new Error(`Mabayani remains in current public launch output: ${remaining.join(', ')}`);
 
-console.log(`Excluded Mabayani from the current public launch, removed its public route, and cleaned ${changed} generated file(s). Archived source and private-tool references remain intact for a future release.`);
+console.log(`Excluded Mabayani from every current UI shell, removed its public route, and cleaned ${changed} generated file(s). Archived source and private-tool knowledge remain intact for a future release.`);
