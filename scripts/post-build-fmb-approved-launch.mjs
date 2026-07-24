@@ -173,9 +173,9 @@ for (const file of publicHtml) {
   }
 
   if (name === 'index.html' && !html.includes('id="fmb-visual-ecosystem"')) {
-    const insertionPoint = /<section\b[^>]*id="how-fmb-can-help"/i;
+    const insertionPoint = /(<section\b[^>]*id="how-fmb-can-help"[^>]*>)/i;
     html = insertionPoint.test(html)
-      ? html.replace(insertionPoint, `${editorialVisuals}\n<section id="how-fmb-can-help"`)
+      ? html.replace(insertionPoint, `${editorialVisuals}\n$1`)
       : html.replace('</main>', `${editorialVisuals}\n</main>`);
   }
 
