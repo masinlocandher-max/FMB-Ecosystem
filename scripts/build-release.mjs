@@ -5,6 +5,7 @@ const steps = [
   './post-build-fmb-unified-design.mjs',
   './post-build-image-dimensions.mjs',
   './post-build-release-hardening.mjs',
+  './post-build-fmb-performance-cleanup.mjs',
   './check-fmb-unified-design.mjs',
   './check-fmb-public-brand-routes.mjs',
   './audit-fmb-enterprise.mjs',
