@@ -8,6 +8,7 @@ on:
       - "apps/withlovefmb/**"
       - "scripts/**"
       - "tests/fmb-approved-launch.spec.mjs"
+      - "tests/fmb-safari-iphone.spec.mjs"
       - "package.json"
       - "package-lock.json"
       - "vercel.json"
@@ -22,9 +23,9 @@ concurrency:
 
 jobs:
   build-and-browser-qa:
-    name: Build, desktop, and iPhone QA
+    name: Build, Chromium, and Safari-engine iPhone QA
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 45
     env:
       CI: "true"
 
@@ -43,8 +44,8 @@ jobs:
       - name: Install temporary browser QA dependency
         run: npm install --no-save --no-package-lock @playwright/test@1.55.0
 
-      - name: Install Chromium
-        run: npx playwright install --with-deps chromium
+      - name: Install Chromium and WebKit
+        run: npx playwright install --with-deps chromium webkit
 
       - name: Build and run every release gate
         run: npm run build
@@ -67,7 +68,13 @@ jobs:
         run: |
           mkdir -p qa-artifacts
           set -o pipefail
-          npx playwright test tests/fmb-approved-launch.spec.mjs --reporter=line --workers=1 2>&1 | tee qa-artifacts/playwright-output.log
+          npx playwright test tests/fmb-approved-launch.spec.mjs --reporter=line --workers=1 2>&1 | tee qa-artifacts/playwright-chromium-output.log
+
+      - name: Test Safari-engine iPhone experience and Mabayani exclusion
+        shell: bash
+        run: |
+          set -o pipefail
+          npx playwright test tests/fmb-safari-iphone.spec.mjs --reporter=line --workers=1 2>&1 | tee qa-artifacts/playwright-webkit-output.log
 
       - name: Collect server log
         if: always()
