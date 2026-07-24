@@ -47,7 +47,9 @@ async function openReady(page, route) {
   expect(response?.status(), route).toBeLessThan(400);
   await expect(page.locator('body')).toHaveAttribute('data-fmb-approved-launch-ready', 'true');
   await expect(page.locator('.fmb-shell-header')).toHaveCount(1);
-  await expect(page.locator('.fmb-mobile-dock')).toBeVisible();
+  const docks = page.locator('.fmb-mobile-dock');
+  await expect(docks).toHaveCount(1);
+  await expect(docks.first()).toBeVisible();
 }
 
 async function assertNoHorizontalOverflow(page) {
@@ -72,20 +74,26 @@ async function assertNoMabayani(page) {
 async function assertAnimationRunning(page, selector, expectedName) {
   const locator = page.locator(selector).first();
   await expect(locator).toBeVisible();
+  await page.mouse.move(195, 842);
+  await page.waitForTimeout(120);
   const state = await locator.evaluate((node) => {
     const style = getComputedStyle(node);
-    const animation = node.getAnimations()[0];
     return {
       animationName: style.animationName,
-      playState: animation?.playState || style.animationPlayState,
-      currentTime: Number(animation?.currentTime || 0),
+      playState: style.animationPlayState,
+      transform: style.transform,
+      x: node.getBoundingClientRect().x,
     };
   });
   expect(state.animationName).toContain(expectedName);
   expect(state.playState).toBe('running');
-  await page.waitForTimeout(350);
-  const later = await locator.evaluate((node) => Number(node.getAnimations()[0]?.currentTime || 0));
-  expect(later).toBeGreaterThan(state.currentTime + 40);
+  await page.waitForTimeout(700);
+  const later = await locator.evaluate((node) => ({
+    transform: getComputedStyle(node).transform,
+    x: node.getBoundingClientRect().x,
+  }));
+  const moved = Math.abs(later.x - state.x) > 0.5 || later.transform !== state.transform;
+  expect(moved, JSON.stringify({ state, later })).toBeTruthy();
 }
 
 test.describe('Safari-engine iPhone release gate', () => {
