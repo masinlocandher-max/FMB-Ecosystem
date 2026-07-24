@@ -133,6 +133,7 @@ const editorialVisuals = `<section class="fmb-editorial-visuals" id="fmb-visual-
 </section>`;
 
 const premiumFonts = '<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600;6..96,700&family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">';
+const manifestLink = '<link rel="manifest" href="/manifest.webmanifest">';
 
 function addBodyClass(html) {
   return html.replace(/<body([^>]*)>/i, (match, attributes = '') => {
@@ -172,6 +173,9 @@ for (const file of publicHtml) {
   html = addBodyClass(html);
   html = replaceAnnouncementRail(html);
   html = addPremiumFonts(html);
+  if (name === 'index.html' && !/rel=["']manifest["']/i.test(html)) {
+    html = html.replace('</head>', `${manifestLink}\n</head>`);
+  }
 
   if (!html.includes('data-fmb-mobile-dock')) {
     html = html.replace('</body>', `${mobileDock}\n</body>`);
@@ -201,4 +205,4 @@ for (const file of publicHtml) {
   }
 }
 
-console.log(`Compiled the approved FMB launch layer into the single public CSS and JS bundles, removed duplicate compiled sources, and updated ${updatedPages} public pages.`);
+console.log(`Compiled the approved FMB launch layer into the single public CSS and JS bundles, connected the web manifest, removed duplicate compiled sources, and updated ${updatedPages} public pages.`);
