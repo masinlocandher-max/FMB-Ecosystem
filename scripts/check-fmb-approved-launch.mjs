@@ -31,6 +31,18 @@ for (const file of [cssPath, jsPath]) {
   if (!info.isFile() || info.size < 1000) fail(`${relative(file)} is missing or incomplete`);
 }
 
+for (const duplicate of [
+  path.join(dist, 'assets', 'css', 'fmb-approved-launch.css'),
+  path.join(dist, 'assets', 'js', 'fmb-approved-launch.js'),
+]) {
+  try {
+    await stat(duplicate);
+    fail(`${relative(duplicate)} must not ship as a duplicate compiled file`);
+  } catch (error) {
+    if (error?.code !== 'ENOENT') throw error;
+  }
+}
+
 const css = await readFile(cssPath, 'utf8');
 for (const marker of [
   'Approved FMB&CO. launch layer',
@@ -122,4 +134,4 @@ for (const privateRoute of ['app/index.html', 'admin.html']) {
   }
 }
 
-console.log(`FMB approved launch gate passed ${checkedPages} public pages with moving announcements, iPhone-safe UI, real assets, PST, and moving newsroom headlines.`);
+console.log(`FMB approved launch gate passed ${checkedPages} public pages with moving announcements, iPhone-safe UI, real assets, PST, moving newsroom headlines, and no duplicate launch bundles.`);
