@@ -46,36 +46,10 @@ body.fmb-approved-launch .brand-card.wlf-card{
 body.fmb-approved-launch .brand-card.yoni-card{
   background:linear-gradient(145deg,#fffdf8,#fff0ca)!important;
 }
-body.fmb-approved-launch .brand-card.mabayani-card{
-  background:linear-gradient(145deg,#1d0d12,#45201e)!important;
-  color:#f4dcc1!important;
-}
 body.fmb-approved-launch .brand-card img{
   max-width:82%!important;
   max-height:68%!important;
   object-fit:contain!important;
-}
-body.fmb-approved-launch .featured{
-  background:
-    radial-gradient(circle at 78% 35%,rgba(226,170,85,.22),transparent 24rem),
-    radial-gradient(circle at 12% 82%,rgba(125,72,206,.25),transparent 28rem),
-    linear-gradient(145deg,#150027,#2d0a4f 58%,#11001f)!important;
-  color:#fff!important;
-}
-body.fmb-approved-launch .featured :is(h2,h3,p,a){
-  color:#fff!important;
-}
-body.fmb-approved-launch .featured .kicker{
-  color:#e0ad54!important;
-}
-body.fmb-approved-launch .featured-art{
-  background:
-    radial-gradient(circle at 50% 50%,rgba(224,173,84,.2),transparent 35%),
-    radial-gradient(circle at 50% 50%,rgba(130,80,223,.22),transparent 62%)!important;
-}
-body.fmb-approved-launch .featured .heritage-line{
-  border-color:rgba(224,173,84,.55)!important;
-  box-shadow:0 0 45px rgba(224,173,84,.16);
 }
 body.fmb-approved-launch .work-card img{
   object-fit:cover!important;
@@ -168,4 +142,4 @@ for(const required of [
 ]){
   if(!finalHome.includes(required))throw new Error(`Homepage final visual polish is missing ${required}`);
 }
-console.log('Applied the compact FMB gallery, real work imagery, brand-specific logo surfaces, and a dark Mabayani feature.');
+console.log('Applied the compact FMB gallery, real work imagery, and brand-specific logo surfaces.');
