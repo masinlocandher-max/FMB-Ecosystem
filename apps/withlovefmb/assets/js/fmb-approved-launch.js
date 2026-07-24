@@ -36,16 +36,30 @@
 
   const syncDockMenu = () => {
     if (!dockMenu || !headerMenu) return;
-    dockMenu.setAttribute('aria-expanded', headerMenu.getAttribute('aria-expanded') || 'false');
+    const expanded = headerMenu.getAttribute('aria-expanded') || 'false';
+    dockMenu.setAttribute('aria-expanded', expanded);
+    dockMenu.setAttribute('aria-label', expanded === 'true' ? 'Close navigation' : 'Open navigation');
   };
 
-  dockMenu?.addEventListener('click', () => {
+  dockMenu?.addEventListener('click', (event) => {
+    event.stopPropagation();
     headerMenu?.click();
+    syncDockMenu();
     window.requestAnimationFrame(syncDockMenu);
   });
 
+  if (headerMenu) {
+    const menuStateObserver = new MutationObserver(syncDockMenu);
+    menuStateObserver.observe(headerMenu, { attributes: true, attributeFilter: ['aria-expanded'] });
+    window.addEventListener('pagehide', () => menuStateObserver.disconnect(), { once: true });
+  }
+
   headerMenu?.addEventListener('click', () => window.requestAnimationFrame(syncDockMenu));
   nav?.addEventListener('click', () => window.requestAnimationFrame(syncDockMenu));
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') window.requestAnimationFrame(syncDockMenu);
+  });
+  syncDockMenu();
 
   const currentPath = window.location.pathname.replace(/index\.html$/i, '') || '/';
   document.querySelectorAll('.fmb-mobile-dock a[href]').forEach((link) => {
