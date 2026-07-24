@@ -70,14 +70,23 @@ async function assertImagesLoaded(page, selector) {
 async function assertAnimated(page, selector, animationName) {
   const locator = page.locator(selector).first();
   await expect(locator).toBeVisible();
-  const before = await locator.evaluate((node) => ({
-    animation: getComputedStyle(node).animationName,
-    transform: getComputedStyle(node).transform,
-  }));
-  expect(before.animation).toContain(animationName);
+  const viewport = page.viewportSize();
+  await page.mouse.move(Math.round((viewport?.width || 800) / 2), Math.max(1, (viewport?.height || 600) - 2));
+  await page.waitForTimeout(100);
+  const before = await locator.evaluate((node) => {
+    const style = getComputedStyle(node);
+    const animation = node.getAnimations().find((item) => item.animationName === style.animationName) || node.getAnimations()[0];
+    return {
+      animationName: style.animationName,
+      playState: animation?.playState || style.animationPlayState,
+      currentTime: Number(animation?.currentTime || 0),
+    };
+  });
+  expect(before.animationName).toContain(animationName);
+  expect(before.playState).toBe('running');
   await page.waitForTimeout(350);
-  const after = await locator.evaluate((node) => getComputedStyle(node).transform);
-  expect(after).not.toBe(before.transform);
+  const after = await locator.evaluate((node) => Number(node.getAnimations()[0]?.currentTime || 0));
+  expect(after).toBeGreaterThan(before.currentTime + 50);
 }
 
 async function openReady(page, route) {
@@ -161,6 +170,7 @@ test.describe('FMB approved iPhone experience', () => {
     await expect(menuButton).toHaveAttribute('aria-expanded', 'true');
     await expect(page.locator('.fmb-shell-nav')).toHaveClass(/is-open/);
     await page.keyboard.press('Escape');
+    await expect(menuButton).toHaveAttribute('aria-expanded', 'false');
 
     await page.screenshot({ path: `${artifactDirectory}/home-iphone.png`, fullPage: true });
     expect(errors).toEqual([]);
