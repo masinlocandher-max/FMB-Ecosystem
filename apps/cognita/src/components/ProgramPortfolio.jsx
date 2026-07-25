@@ -4,6 +4,8 @@ import { ArrowUpRight, Check } from "lucide-react";
 import ProgramIcon from "@/components/ProgramIcon";
 import { PROGRAM_PORTFOLIO } from "@/lib/program-portfolio";
 
+const EDITORIAL_FALLBACK = `${import.meta.env.BASE_URL}images/cognita-editorial-fallback.svg`;
+
 export default function ProgramPortfolio({ detailed = false }) {
   return (
     <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:gap-6">
@@ -18,7 +20,9 @@ export default function ProgramPortfolio({ detailed = false }) {
               referrerPolicy="no-referrer"
               className="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.025]"
               onError={(event) => {
-                event.currentTarget.style.display = "none";
+                if (event.currentTarget.dataset.fallbackApplied === "true") return;
+                event.currentTarget.dataset.fallbackApplied = "true";
+                event.currentTarget.src = EDITORIAL_FALLBACK;
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#07101f] via-transparent to-black/10" aria-hidden="true" />
