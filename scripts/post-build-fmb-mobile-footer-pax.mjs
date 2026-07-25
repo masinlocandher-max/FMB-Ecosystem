@@ -37,26 +37,14 @@ async function update(relative, transform) {
   if (next !== html) await writeFile(file, next, 'utf8');
 }
 
-const fmbMessage = `<section class="nc-reflection" aria-labelledby="fmb-message-title"><p class="nc-kicker">A message from FMB</p><h2 id="fmb-message-title">Transparency must come before consent.</h2><p>As a Filipino, I believe we have the right to understand any agreement that may affect our economy, natural resources, communities, workers, and future.</p><p>Pax Silica may bring opportunities, but opportunity alone should never silence questions. We must know what is being promised, what is being exchanged, who will benefit, who will carry the risks, and what protections are written for the Filipino people.</p><p>Until the full terms, agreements, safeguards, incentives, environmental commitments, legal arrangements, and accountability mechanisms are made public, we should not be expected to offer unconditional support.</p><p>Through our voice and platforms, we will continue to explain developments, ask difficult questions, and make information easier for ordinary Filipinos to understand. This is not rejecting progress. It is making sure progress does not happen without public knowledge, scrutiny, and respect for Philippine sovereignty.</p><p>We welcome investment that creates dignified jobs, strengthens Filipino capability, protects communities, supports local businesses, and keeps our laws intact. But we must not agree simply because the promise sounds impressive. The Filipino people deserve to see the terms first.</p><p><strong>With love,<br>FMB</strong></p></section>`;
-
-await update('news/pax-silica/index.html', html => {
-  html = html
-    .replaceAll('Pax Silica, Without the Jargon', 'Pax Silica and the Philippines: What It Means for Filipinos')
-    .replace('A technology supply-chain alliance with consequences beyond technology, from chips and energy to skills, investment, and national resilience.', 'What Pax Silica is, why it exists, and how its promises and risks could affect Filipino jobs, education, resources, communities, and national sovereignty.')
-    .replace('/assets/images/news/pax-silica-briefing.png', '/assets/images/projects/cognita-logo-clean.png')
-    .replace('Editorial illustration of a semiconductor and connected supply-chain nodes', 'Cognita Institute of AI, Learn, Innovate, Transform');
-  if (!html.includes('id="fmb-message-title"')) html = html.replace('<section class="nc-sources"', `${fmbMessage}\n<section class="nc-sources"`);
-  return html;
-});
-
 await update('news/index.html', html => {
-  const card = '<article class="nc-rundown-story"><a href="/news/pax-silica/"><span class="nc-rundown-number">PS</span><figure class="news-visual"><img src="/assets/images/projects/cognita-logo-clean.png" width="1200" height="630" loading="lazy" decoding="async" alt="Cognita Institute of AI"><figcaption>Cognita Institute of AI. Full sources and FMB perspective appear in the article.</figcaption></figure><div><p>Philippines · Technology and sovereignty</p><h3>Pax Silica and the Philippines: What it means for Filipinos</h3><span>10 min read</span></div></a></article>';
-  if (!html.includes('href="/news/pax-silica/"')) html = html.replace('<article class="nc-rundown-story" id="world">', `${card}\n<article class="nc-rundown-story" id="world">`);
+  const card = '<article class="nc-rundown-story"><a href="/news/pax-silica-philippines/"><span class="nc-rundown-number">PS</span><figure class="news-visual"><img src="/assets/images/projects/cognita-logo-clean.png" width="1200" height="630" loading="lazy" decoding="async" alt="Cognita Institute of AI"><figcaption>Cognita Institute of AI. Full sources and FMB perspective appear in the article.</figcaption></figure><div><p>Philippines · Technology and sovereignty</p><h3>Pax Silica and the Philippines: What it means for Filipinos</h3><span>12 min read</span></div></a></article>';
+  if (!html.includes('href="/news/pax-silica-philippines/"')) html = html.replace('<article class="nc-rundown-story" id="world">', `${card}\n<article class="nc-rundown-story" id="world">`);
   return html;
 });
 
-for (const relative of ['index.html','aboutfmb/index.html','news/index.html','news/pax-silica/index.html','projects/index.html','ebooks/index.html','music/index.html','withlovefmb/index.html','get-involved/index.html','gethelp/index.html','fmbandco/index.html','work-with-fmb/index.html']) {
+for (const relative of ['index.html','aboutfmb/index.html','news/index.html','news/pax-silica/index.html','news/pax-silica-philippines/index.html','projects/index.html','ebooks/index.html','music/index.html','withlovefmb/index.html','get-involved/index.html','gethelp/index.html','fmbandco/index.html','work-with-fmb/index.html']) {
   await update(relative, html => html.replace(/<nav class="fmb-mobile-dock"[\s\S]*?<\/nav>\s*/i, ''));
 }
 
-console.log('Published the Pax Silica update, moved mobile navigation into the hamburger menu, removed the bottom dock, and enhanced the shared footer.');
+console.log('Published the separate Pax Silica Philippines article, moved mobile navigation into the hamburger menu, removed the bottom dock, and enhanced the shared footer.');
