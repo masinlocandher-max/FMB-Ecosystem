@@ -10,7 +10,7 @@ const sourceArticle = path.join(dist, 'news', 'pax-silica', 'index.html');
 const cssFile = path.join(dist, 'assets', 'css', 'fmb-unified-system.css');
 const marker = 'SENZ managed website space 20260725';
 
-const main = `<main class="senz-website-article">
+const main = `<main id="story" class="senz-website-article">
 <section class="senz-article-hero" aria-labelledby="senzArticleTitle">
   <div class="senz-article-wrap">
     <p class="nc-kicker">SENZ Strategic Communications and Digital Solutions</p>
@@ -21,19 +21,15 @@ const main = `<main class="senz-website-article">
 </section>
 <article class="senz-article-body">
   <p class="senz-article-lead">Social media can help people discover a business. A website gives them a stable place to understand it, explore its services, see its work, and make contact.</p>
-
   <h2>The benefits of having a website</h2>
   <p>A website gives your brand an official digital address that you control. It can make a small business look more established, help customers find accurate information, support search visibility, and keep your services accessible even when you are not actively posting on social media.</p>
   <p>Unlike a social media profile, a website can organize your story, services, portfolio, contact details, articles, and calls to action around your own goals. It also gives your brand room to grow without depending entirely on the rules, reach, or layout of another platform.</p>
-
   <h2>Why professional websites can be expensive</h2>
   <p>A website is not only a page with text and pictures. A professional build may require planning, writing, visual direction, responsive design, coding, hosting, security, domain management, search optimization, testing, maintenance, and ongoing updates.</p>
   <p>The cost increases when a project needs more pages, custom features, stronger branding, content production, integrations, or long-term technical support. Good website work is expensive because it combines strategy, design, communication, and technology into one functioning business asset.</p>
-
   <h2>Cannot afford a full website yet? Start with SENZ.</h2>
   <p>Through SENZ Managed Website Space, entrepreneurs, professionals, organizations, and growing businesses can secure a professionally presented digital presence without paying the full upfront cost of developing and maintaining a completely independent website.</p>
   <p>You start with the space your business needs now, while SENZ handles the digital structure, presentation, and continuing management. As your brand grows, your website space can grow with it.</p>
-
   <section id="packages" class="senz-package-section" aria-labelledby="senzPackagesTitle">
     <p class="nc-kicker">Managed website space</p>
     <h2 id="senzPackagesTitle">Start small. Build strategically. Grow with SENZ.</h2>
@@ -44,10 +40,8 @@ const main = `<main class="senz-website-article">
       <article><span>Executive</span><h3>15 custom pages beyond the dashboard</h3><p>About, services, portfolio, blog, team or careers, FAQ, contact, and basic SEO.</p><strong>₱20,000 setup</strong><small>₱10,000 monthly</small></article>
     </div>
   </section>
-
   <h2>More than website space</h2>
   <p>SENZ is a strategic communications and digital solutions partner. Website work can be supported by brand strategy, messaging, marketing, public relations, social media systems, content direction, creative production, and digital products. The goal is not merely to place a business online. It is to make the business clearer, sharper, more visible, and harder to ignore.</p>
-
   <section class="nc-reflection" aria-labelledby="fmbSenzMessage"><p class="nc-kicker">A message from FMB</p><h2 id="fmbSenzMessage">A strong digital presence should not be reserved for businesses with the biggest budgets.</h2><p>Through SENZ, we want to give growing businesses a practical way to begin professionally, communicate clearly, and build trust online. You do not always need to start with the largest website. You need to start with the right structure, the right message, and a digital space that can grow with you.</p><p><strong>With love,<br>FMB</strong></p></section>
 </article>
 </main>`;
