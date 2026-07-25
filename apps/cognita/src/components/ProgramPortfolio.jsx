@@ -2,9 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight, Check } from "lucide-react";
 import ProgramIcon from "@/components/ProgramIcon";
-import { PROGRAM_PORTFOLIO } from "@/lib/program-portfolio";
-
-const EDITORIAL_FALLBACK = `${import.meta.env.BASE_URL}images/cognita-editorial-fallback.svg`;
+import { EDITORIAL_FALLBACK, PROGRAM_PORTFOLIO } from "@/lib/program-portfolio";
 
 export default function ProgramPortfolio({ detailed = false }) {
   return (
