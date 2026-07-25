@@ -6,6 +6,7 @@ async function open(page,route){
   await page.goto(`${baseURL}${route}`,{waitUntil:'networkidle'});
   await expect(page.locator('body')).toHaveClass(/fmb-corporate-luxury-v2/);
   await expect(page.locator('link[href*="fmb-corporate-luxury-v2.css"]')).toHaveCount(1);
+  await expect(page.locator('link[href*="fmb-corporate-luxury-approved.css"]')).toHaveCount(1);
 }
 
 async function noOverflow(page){
@@ -13,31 +14,40 @@ async function noOverflow(page){
   expect(width.scroll).toBeLessThanOrEqual(width.client+2);
 }
 
-async function assertImage(page,selector){
+async function assertImage(page,selector,minWidth=400,minHeight=400){
   const image=page.locator(selector).first();
   await image.scrollIntoViewIfNeeded();
   await expect(image).toBeVisible();
   const result=await image.evaluate(node=>({complete:node.complete,width:node.naturalWidth,height:node.naturalHeight}));
   expect(result.complete).toBeTruthy();
-  expect(result.width).toBeGreaterThan(400);
-  expect(result.height).toBeGreaterThan(400);
+  expect(result.width).toBeGreaterThanOrEqual(minWidth);
+  expect(result.height).toBeGreaterThanOrEqual(minHeight);
 }
 
 for(const project of ['chromium','webkit']){
-  test.describe(`${project} corporate luxury experience`,()=>{
+  test.describe(`${project} approved corporate luxury experience`,()=>{
     test.use(project==='webkit'?{browserName:'webkit',viewport:{width:390,height:844},isMobile:true,hasTouch:true}:{browserName:'chromium',viewport:{width:1440,height:1000}});
 
-    test('homepage answers why FMB and presents three proof stories',async({page})=>{
+    test('homepage matches the approved headquarters dashboard',async({page})=>{
       await open(page,'/');
       await noOverflow(page);
-      await expect(page.locator('#why-fmb')).toBeVisible();
-      await expect(page.locator('#whyFmbTitle')).toContainText('You do not need more noise');
-      await expect(page.locator('#signature-projects')).toBeVisible();
-      await expect(page.locator('.fmb-v2-project.yoni')).toBeVisible();
-      await expect(page.locator('.fmb-v2-project.mabayani')).toBeVisible();
-      await expect(page.locator('.fmb-v2-project.volunteer')).toBeVisible();
-      await assertImage(page,'.fmb-v2-why-portrait img');
-      await assertImage(page,'.fmb-v2-project.volunteer img');
+      await expect(page.locator('body')).toHaveClass(/fmb-approved-dashboard/);
+      await expect(page.locator('#heroTitle')).toContainText('Direction');
+      await expect(page.locator('#heroTitle')).toContainText('noise');
+      await assertImage(page,'.hero-portrait img',900,1100);
+      await expect(page.locator('.fmb-approved-hero-stack')).toBeVisible();
+      await expect(page.locator('[data-fmb-pst]')).toContainText('PST');
+      await expect(page.locator('.fmb-approved-brand-row img')).toHaveCount(3);
+      await assertImage(page,'.fmb-approved-quote img',500,700);
+      await expect(page.locator('.fmb-approved-capability')).toHaveCount(6);
+      await expect(page.locator('.fmb-approved-project')).toHaveCount(3);
+      await expect(page.locator('.fmb-approved-project.yoni')).toBeVisible();
+      await expect(page.locator('.fmb-approved-project.mabayani')).toBeVisible();
+      await expect(page.locator('.fmb-approved-project.volunteer')).toBeVisible();
+      await assertImage(page,'.fmb-approved-project.volunteer img');
+      await expect(page.locator('.fmb-approved-library-panel')).toHaveCount(3);
+      await expect(page.locator('.fmb-approved-album')).toHaveCount(4);
+      await expect(page.locator('.fmb-approved-book')).toHaveCount(4);
       await page.locator('[data-fmb-v2-open="yoni"]').first().click();
       await expect(page.locator('[data-fmb-v2-modal]')).toHaveClass(/is-open/);
       await expect(page.locator('[data-fmb-v2-modal-title]')).toHaveText('Yoni');
@@ -45,7 +55,7 @@ for(const project of ['chromium','webkit']){
       await expect(page.locator('[data-fmb-v2-modal]')).not.toHaveClass(/is-open/);
     });
 
-    test('news reads as a live news center',async({page})=>{
+    test('news reads as a live corporate news center',async({page})=>{
       await open(page,'/news/');
       await noOverflow(page);
       await expect(page.locator('.fmb-v2-news-command')).toContainText('FMB News Center');
@@ -53,9 +63,10 @@ for(const project of ['chromium','webkit']){
       await expect(page.locator('[data-fmb-pst]')).toContainText('PST');
       await expect(page.locator('.fmb-news-ticker-track')).toBeVisible();
       await expect(page.locator('.nc-rundown-panel')).toBeVisible();
+      await expect(page.locator('.nc-index-list li')).toHaveCount(7);
     });
 
-    test('music uses a Spotify-inspired library layout without losing playback controls',async({page})=>{
+    test('music uses a Spotify-inspired real library with playback controls',async({page})=>{
       await open(page,'/music/');
       await noOverflow(page);
       await expect(page.locator('.music-sidebar')).toBeVisible();
@@ -64,9 +75,10 @@ for(const project of ['chromium','webkit']){
       await expect(page.locator('#mainPlayButton')).toBeVisible();
       await expect(page.locator('.music-mini-player')).toBeAttached();
       await expect(page.locator('.music-collection-card')).toHaveCount(4);
+      await expect(page.locator('[data-music-filter]')).toHaveCount(5);
     });
 
-    test('eBooks have visible subject and access categories',async({page})=>{
+    test('eBooks have subject and access categories without inventing books',async({page})=>{
       await open(page,'/ebooks/');
       await noOverflow(page);
       await expect(page.locator('.fmb-v2-book-categories')).toBeVisible();
@@ -79,7 +91,7 @@ for(const project of ['chromium','webkit']){
       expect(visible).toBeLessThan(6);
     });
 
-    test('Mabayani and the original volunteer record remain separate truthful destinations',async({page})=>{
+    test('Mabayani and original volunteer photographs remain truthful destinations',async({page})=>{
       await open(page,'/mabayani/');
       await expect(page.locator('main')).toContainText('No invented history');
       await open(page,'/communityengagements/');
