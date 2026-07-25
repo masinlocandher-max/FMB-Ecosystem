@@ -1,0 +1,108 @@
+name: FMB Corporate Luxury Release QA
+
+on:
+  push:
+    branches:
+      - release/fmb-corporate-luxury-live
+    paths:
+      - "apps/withlovefmb/**"
+      - "scripts/**"
+      - "tests/fmb-corporate-luxury-v2.spec.mjs"
+      - "package.json"
+      - ".github/workflows/fmb-corporate-luxury-v2-qa.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "apps/withlovefmb/**"
+      - "scripts/**"
+      - "tests/fmb-corporate-luxury-v2.spec.mjs"
+      - "package.json"
+      - ".github/workflows/fmb-corporate-luxury-v2-qa.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fmb-corporate-luxury-release-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-browser-qa:
+    name: Build, Chromium, and Safari-engine QA
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      CI: "true"
+
+    steps:
+      - name: Check out release candidate
+        uses: actions/checkout@v4
+
+      - name: Use Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install repository dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Install browser QA dependency
+        run: npm install --no-save --no-package-lock @playwright/test@1.55.0
+
+      - name: Install Chromium and WebKit
+        run: npx playwright install --with-deps chromium webkit
+
+      - name: Build and run repository release gates
+        run: npm run build
+
+      - name: Start generated site locally
+        run: |
+          mkdir -p qa-artifacts
+          python3 -m http.server 4173 --directory dist > qa-artifacts/http-server.log 2>&1 &
+          for attempt in {1..30}; do
+            if curl --silent --fail http://127.0.0.1:4173/ > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat qa-artifacts/http-server.log
+          exit 1
+
+      - name: Run corporate luxury browser tests
+        shell: bash
+        run: |
+          set -o pipefail
+          npx playwright test tests/fmb-corporate-luxury-v2.spec.mjs --reporter=line --workers=1 2>&1 | tee qa-artifacts/playwright-output.log
+
+      - name: Capture desktop and iPhone screenshots
+        if: success()
+        run: |
+          cat > qa-artifacts/capture.mjs <<'EOF'
+          import { chromium, webkit } from '@playwright/test';
+          const pages=[['home','/'],['news','/news/'],['music','/music/'],['ebooks','/ebooks/']];
+          for(const [engine,name,viewport] of [[chromium,'desktop',{width:1440,height:1000}],[webkit,'iphone',{width:390,height:844}]]){
+            const browser=await engine.launch({headless:true});
+            for(const [label,route] of pages){
+              const context=await browser.newContext({viewport,isMobile:name==='iphone',hasTouch:name==='iphone'});
+              const page=await context.newPage();
+              await page.goto(`http://127.0.0.1:4173${route}`,{waitUntil:'networkidle'});
+              await page.screenshot({path:`qa-artifacts/${label}-${name}.png`,fullPage:false,animations:'disabled'});
+              await context.close();
+            }
+            await browser.close();
+          }
+          EOF
+          node qa-artifacts/capture.mjs
+
+      - name: Upload release evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fmb-corporate-luxury-release-evidence
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            qa-artifacts/
+            dist/enterprise-audit.json
+            dist/performance-audit.json
