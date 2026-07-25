@@ -52,7 +52,7 @@ for (const marker of [
   '@keyframes fmb-announcement-motion',
   '.fmb-news-livebar',
   '@keyframes fmb-headline-motion',
-  '.fmb-mobile-dock',
+  'FMB mobile menu and footer refinement 20260725',
   'env(safe-area-inset-bottom',
   'mix-blend-mode: screen',
 ]) {
@@ -64,7 +64,7 @@ for (const marker of [
   "timeZone: 'Asia/Manila'",
   'data-fmb-pst',
   'fmbApprovedLaunchReady',
-  'data-fmb-dock-menu',
+  'fmb-shell-menu',
   'prefers-reduced-motion',
 ]) {
   if (!js.includes(marker)) fail(`unified interaction script is missing ${marker}`);
@@ -80,13 +80,14 @@ for (const file of publicHtml) {
     'fmb-unified-public',
     'fmb-approved-launch',
     'fmb-announcement-track',
-    'data-fmb-mobile-dock',
+    'class="fmb-shell-menu"',
     '/assets/css/fmb-unified-system.css',
     '/assets/js/fmb-unified-system.js',
   ]) {
     if (!html.includes(marker)) fail(`${name} is missing ${marker}`);
   }
 
+  if (html.includes('data-fmb-mobile-dock')) fail(`${name} still contains the retired sticky mobile dock`);
   if ((html.match(/fmb-unified-system\.css/g) || []).length !== 1) fail(`${name} must load exactly one unified stylesheet`);
   if ((html.match(/fmb-unified-system\.js/g) || []).length !== 1) fail(`${name} must load exactly one unified interaction script`);
   if ((html.match(/class="fmb-shell-header"/g) || []).length !== 1) fail(`${name} must contain exactly one unified header`);
@@ -116,6 +117,11 @@ for (const marker of [
 if ((home.match(/id="how-fmb-can-help"/g) || []).length !== 1) fail('homepage must preserve exactly one How FMB can help section');
 if ((home.match(/id="bulletin"/g) || []).length !== 1) fail('homepage must preserve exactly one bulletin');
 
+const pax = await readFile(path.join(dist, 'news', 'pax-silica', 'index.html'), 'utf8');
+for (const marker of ['Pax Silica and the Philippines', 'id="fmb-message-title"', 'Transparency must come before consent']) {
+  if (!pax.includes(marker)) fail(`Pax Silica article is missing ${marker}`);
+}
+
 for (const route of ['index.html', 'withlovefmb/index.html', 'get-involved/index.html']) {
   const html = await readFile(path.join(dist, route), 'utf8');
   if (/\baccept(?:s|ing)? donations?\b/i.test(html)) fail(`${route} conflicts with the no-donation policy`);
@@ -134,4 +140,4 @@ for (const privateRoute of ['app/index.html', 'admin.html']) {
   }
 }
 
-console.log(`FMB approved launch gate passed ${checkedPages} public pages with moving announcements, iPhone-safe UI, real assets, PST, moving newsroom headlines, and no duplicate launch bundles.`);
+console.log(`FMB approved launch gate passed ${checkedPages} public pages with hamburger-only mobile navigation, enhanced footer, Pax Silica coverage, moving announcements, real assets, PST, and moving newsroom headlines.`);
