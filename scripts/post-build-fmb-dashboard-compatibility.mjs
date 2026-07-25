@@ -49,6 +49,30 @@ if (!html.includes('id="fmb-visual-ecosystem"')) {
   html = html.replace('</main>', `${inventory}\n</main>`);
 }
 
+function addImageDimensions(source, width, height) {
+  const escaped = source.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const pattern = new RegExp(`<img\\b([^>]*?)src=(["'])${escaped}\\2([^>]*)>`, 'gi');
+  html = html.replace(pattern, (tag) => {
+    let next = tag;
+    if (!/\swidth=(["'])/i.test(next)) next = next.replace(/<img\b/i, `<img width="${width}"`);
+    if (!/\sheight=(["'])/i.test(next)) next = next.replace(/<img\b/i, `<img height="${height}"`);
+    return next;
+  });
+}
+
+for (const [source, width, height] of [
+  ['/assets/images/music/fmb-calm-official-album-cover.jpg', 1254, 1254],
+  ['/assets/images/music/fmb-70s-feel-good-cover.svg', 600, 600],
+  ['/assets/images/music/fmb-80s-feel-good-cover.svg', 600, 600],
+  ['/assets/images/music/fmb-ost-with-love-fmb-cover.png', 1254, 1254],
+  ['/assets/images/reading/finding-your-way-back-cover.svg', 1080, 1440],
+  ['/assets/images/reading/07883274-1340-48DC-A112-C4AD44B5ABD1.png', 1086, 1448],
+  ['/assets/images/reading/E9562EB3-F505-4736-B5E8-E4D54C769059.png', 1086, 1448],
+  ['/assets/images/reading/B4DDDB01-C125-4E08-8908-09A5FE5157E7.png', 1086, 1448],
+]) {
+  addImageDimensions(source, width, height);
+}
+
 for (const marker of [
   'fmb-bulletin-consolidated',
   'id="how-fmb-can-help"',
@@ -58,6 +82,7 @@ for (const marker of [
   '/assets/images/volunteer/francine-leading-with-love-fmb.webp',
   '/app/assets/yoni/yoni-hero.webp',
   '/assets/images/news/new-clark-city-pax-silica-pia.jpg',
+  '/assets/images/reading/finding-your-way-back-cover.svg',
   authorityStatement,
 ]) {
   if (!html.includes(marker)) throw new Error(`Corporate dashboard compatibility marker is missing: ${marker}`);
@@ -68,4 +93,4 @@ if ((html.match(/id="bulletin"/g) || []).length !== 1) {
 }
 
 await writeFile(homeFile, html, 'utf8');
-console.log('Preserved required homepage landmarks, approved visual inventory, and one bulletin landmark in the corporate dashboard.');
+console.log('Preserved homepage landmarks and stabilized the approved dashboard image inventory.');
