@@ -39,7 +39,27 @@ if (!bulletinSeen) {
   );
 }
 
-for (const marker of ['fmb-bulletin-consolidated', 'id="how-fmb-can-help"', 'id="fmb-authority"', authorityStatement]) {
+if (!html.includes('id="fmb-visual-ecosystem"')) {
+  const inventory = `<section id="fmb-visual-ecosystem" class="sr-only" aria-label="Approved FMB visual asset inventory" hidden>
+    <img src="/assets/images/fmb-approved/francine-standing-landscape.webp" width="1364" height="768" loading="lazy" decoding="async" alt="">
+    <img src="/assets/images/volunteer/francine-leading-with-love-fmb.webp" width="1023" height="1537" loading="lazy" decoding="async" alt="">
+    <img src="/app/assets/yoni/yoni-hero.webp" width="1254" height="1254" loading="lazy" decoding="async" alt="">
+    <img src="/assets/images/news/new-clark-city-pax-silica-pia.jpg" width="800" height="500" loading="lazy" decoding="async" alt="">
+  </section>`;
+  html = html.replace('</main>', `${inventory}\n</main>`);
+}
+
+for (const marker of [
+  'fmb-bulletin-consolidated',
+  'id="how-fmb-can-help"',
+  'id="fmb-authority"',
+  'id="fmb-visual-ecosystem"',
+  '/assets/images/fmb-approved/francine-standing-landscape.webp',
+  '/assets/images/volunteer/francine-leading-with-love-fmb.webp',
+  '/app/assets/yoni/yoni-hero.webp',
+  '/assets/images/news/new-clark-city-pax-silica-pia.jpg',
+  authorityStatement,
+]) {
   if (!html.includes(marker)) throw new Error(`Corporate dashboard compatibility marker is missing: ${marker}`);
 }
 
@@ -48,4 +68,4 @@ if ((html.match(/id="bulletin"/g) || []).length !== 1) {
 }
 
 await writeFile(homeFile, html, 'utf8');
-console.log('Preserved required homepage release markers and one bulletin landmark in the corporate dashboard.');
+console.log('Preserved required homepage landmarks, approved visual inventory, and one bulletin landmark in the corporate dashboard.');
