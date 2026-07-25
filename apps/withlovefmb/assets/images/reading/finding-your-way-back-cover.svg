@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1440" viewBox="0 0 1080 1440" role="img" aria-labelledby="title description">
+  <title id="title">Finding Your Way Back to Yourself</title>
+  <desc id="description">An original FMB eBook cover about life, identity, courage, and becoming.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#12071f"/>
+      <stop offset="0.55" stop-color="#3f1765"/>
+      <stop offset="1" stop-color="#8a42bf"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="70%" cy="18%" r="70%">
+      <stop offset="0" stop-color="#ead8ff" stop-opacity="0.48"/>
+      <stop offset="1" stop-color="#ead8ff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1080" height="1440" fill="url(#background)"/>
+  <rect width="1080" height="1440" fill="url(#glow)"/>
+  <circle cx="820" cy="238" r="260" fill="none" stroke="#ffffff" stroke-opacity="0.14" stroke-width="2"/>
+  <circle cx="820" cy="238" r="190" fill="none" stroke="#ffffff" stroke-opacity="0.1" stroke-width="2"/>
+  <path d="M130 1090 C350 940 585 980 930 760" fill="none" stroke="#e5c4ff" stroke-opacity="0.5" stroke-width="3"/>
+  <text x="112" y="170" fill="#e8ccff" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700" letter-spacing="8">FMB READING</text>
+  <text x="110" y="430" fill="#ffffff" font-family="Georgia, 'Times New Roman', serif" font-size="100" font-weight="400">
+    <tspan x="110" dy="0">Finding</tspan>
+    <tspan x="110" dy="112">Your Way</tspan>
+    <tspan x="110" dy="112">Back to</tspan>
+    <tspan x="110" dy="112">Yourself</tspan>
+  </text>
+  <text x="114" y="930" fill="#dfc8ef" font-family="Arial, Helvetica, sans-serif" font-size="29" letter-spacing="2">LIFE · IDENTITY · COURAGE · BECOMING</text>
+  <line x1="112" y1="1210" x2="968" y2="1210" stroke="#ffffff" stroke-opacity="0.24"/>
+  <text x="112" y="1285" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="30" font-weight="600">FRANCINE MARIE BAUTISTA</text>
+  <text x="112" y="1335" fill="#d9b5ef" font-family="Arial, Helvetica, sans-serif" font-size="22" letter-spacing="5">WITH LOVE, FMB</text>
+</svg>
