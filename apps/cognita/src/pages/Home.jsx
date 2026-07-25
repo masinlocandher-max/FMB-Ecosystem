@@ -14,7 +14,7 @@ import FounderPreview from "@/components/FounderPreview";
 import ProgramPortfolio from "@/components/ProgramPortfolio";
 import SchoolExperienceSection from "@/components/SchoolExperienceSection";
 import { OFFICIAL_EMAILS } from "@/lib/governance";
-import { EDITORIAL_ASSETS, FLAGSHIP_PROGRAM } from "@/lib/program-portfolio";
+import { EDITORIAL_ASSETS, EDITORIAL_FALLBACK, FLAGSHIP_PROGRAM } from "@/lib/program-portfolio";
 
 const WAITLIST_EMAIL = OFFICIAL_EMAILS.admissions;
 
@@ -96,21 +96,23 @@ export default function Home() {
           <div className="relative min-h-[30rem] overflow-hidden rounded-[2.4rem] border border-white/10 bg-slate-950 shadow-[0_48px_120px_rgba(0,0,0,0.42)] md:min-h-[38rem]">
             <img
               src={EDITORIAL_ASSETS.hero}
-              alt="Cognita self-paced learner studying artificial intelligence on an HP laptop in a focused home learning environment."
+              alt="Editorial stock photograph representing collaborative professional learning with laptops."
               loading="eager"
               decoding="async"
               fetchPriority="high"
               referrerPolicy="no-referrer"
               className="absolute inset-0 h-full w-full object-cover"
               onError={(event) => {
-                event.currentTarget.style.display = "none";
+                if (event.currentTarget.dataset.fallbackApplied === "true") return;
+                event.currentTarget.dataset.fallbackApplied = "true";
+                event.currentTarget.src = EDITORIAL_FALLBACK;
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-r from-[#050914]/20 via-transparent to-black/10" aria-hidden="true" />
             <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-[#050914] via-[#050914]/30 to-transparent" aria-hidden="true" />
 
             <div className="absolute left-6 top-6 rounded-full border border-white/15 bg-[#050914]/66 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.17em] text-sky-100/85 backdrop-blur-xl md:left-8 md:top-8">
-              Official Self-Paced Learning visual
+              Editorial learning visual
             </div>
 
             <div className="absolute inset-x-5 bottom-5 rounded-[1.5rem] border border-white/12 bg-[#07101f]/82 p-5 shadow-2xl backdrop-blur-2xl md:inset-x-7 md:bottom-7 md:p-6">

@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRight, Check } from "lucide-react";
 import ProgramIcon from "@/components/ProgramIcon";
-import { PROGRAM_PORTFOLIO } from "@/lib/program-portfolio";
+import { EDITORIAL_FALLBACK, PROGRAM_PORTFOLIO } from "@/lib/program-portfolio";
 
 export default function ProgramPortfolio({ detailed = false }) {
   return (
@@ -18,7 +18,9 @@ export default function ProgramPortfolio({ detailed = false }) {
               referrerPolicy="no-referrer"
               className="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.025]"
               onError={(event) => {
-                event.currentTarget.style.display = "none";
+                if (event.currentTarget.dataset.fallbackApplied === "true") return;
+                event.currentTarget.dataset.fallbackApplied = "true";
+                event.currentTarget.src = EDITORIAL_FALLBACK;
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#07101f] via-transparent to-black/10" aria-hidden="true" />

@@ -195,27 +195,17 @@ async function exercise(page,item,profile){
     };
   }
 
-  if(item.name==='senz-site'||item.name==='cognita-site'){
+  if(item.name==='senz-site'){
     const text=((await page.locator('body').innerText())||'').replace(/\s+/g,' ').trim();
-    const required=item.name==='senz-site'
-      ? [
-          'SENZ is the marketing and digital solutions business of FMB&CO.',
-          'No service package, price, division, product, client result, or availability claim is published'
-        ]
-      : [
-          'Cognita is the knowledge and learning arm of FMB&CO.',
-          'No public registration, paid enrollment, course, credential, or accreditation claim is active'
-        ];
-    const forbidden=item.name==='senz-site'
-      ? [
-          'Six specialist divisions',
-          'Strategic communications, PR, and brand strategy for people and organizations that need to be understood.',
-          'Explore SENZ Strategic Communications, six specialist divisions, and digital products'
-        ]
-      : [
-          'Cognita Institute is currently under maintenance',
-          'Join the waitlist'
-        ];
+    const required=[
+      'SENZ is the marketing and digital solutions business of FMB&CO.',
+      'No service package, price, division, product, client result, or availability claim is published'
+    ];
+    const forbidden=[
+      'Six specialist divisions',
+      'Strategic communications, PR, and brand strategy for people and organizations that need to be understood.',
+      'Explore SENZ Strategic Communications, six specialist divisions, and digital products'
+    ];
     const missing=required.filter(marker=>!text.includes(marker));
     const normalized=text.toLowerCase();
     const found=forbidden.filter(marker=>normalized.includes(marker.toLowerCase()));
@@ -223,6 +213,36 @@ async function exercise(page,item,profile){
       name:'standalone-publication-status',
       status:missing.length===0&&found.length===0?'passed':'failed',
       proof:`missing=${missing.length?missing.join(' | '):'none'}; forbidden=${found.length?found.join(' | '):'none'}`
+    };
+  }
+
+  if(item.name==='cognita-site'){
+    const text=((await page.locator('body').innerText())||'').replace(/\s+/g,' ').trim();
+    const required=[
+      'Cognita Institute is currently under maintenance.',
+      'No automatic enrollment or payment is being processed',
+      'Join the waitlist',
+      'Cognita Open Learning',
+      'Cognita Professional Programs',
+      'Cognita Admissions'
+    ];
+    const forbidden=[
+      'Enrollment is now open',
+      'Guaranteed certification',
+      'Government-accredited degree',
+      'CHED-accredited',
+      'TESDA-accredited'
+    ];
+    const missing=required.filter(marker=>!text.includes(marker));
+    const normalized=text.toLowerCase();
+    const found=forbidden.filter(marker=>normalized.includes(marker.toLowerCase()));
+    const visibleImages=await page.locator('img:visible').count();
+    const navigationLinks=await page.locator('header a, nav a').count();
+    const complete=missing.length===0&&found.length===0&&visibleImages>=5&&(profile.isMobile||navigationLinks>=6);
+    return {
+      name:'cognita-public-site',
+      status:complete?'passed':'failed',
+      proof:`missing=${missing.length?missing.join(' | '):'none'}; forbidden=${found.length?found.join(' | '):'none'}; images=${visibleImages}; navigationLinks=${navigationLinks}`
     };
   }
 

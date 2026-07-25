@@ -1,9 +1,11 @@
+export const EDITORIAL_FALLBACK = `${import.meta.env.BASE_URL}images/cognita-editorial-fallback.svg`;
+
 export const EDITORIAL_ASSETS = {
-  hero: "https://platform-cs-jpn3.adobe.io/rendition/id/urn:aaid:sc:AP:a1a702e3-e43a-4327-af47-8185842cbdf4?size=1800",
-  openLearning: "https://platform-cs-jpn3.adobe.io/rendition/id/urn:aaid:sc:AP:a1a702e3-e43a-4327-af47-8185842cbdf4?size=1400",
-  professionalPrograms: "https://platform-cs-jpn3.adobe.io/rendition/id/urn:aaid:sc:AP:5d8bdc43-a95c-4b11-b340-1d443c0638b9?size=1200",
-  assessmentCredentialing: "https://platform-cs-jpn3.adobe.io/rendition/id/urn:aaid:sc:AP:5a63e66f-67fa-4900-bc62-61dacb5b78d1?size=1200",
-  institutionalTraining: "https://platform-cs-jpn3.adobe.io/rendition/id/urn:aaid:sc:AP:a6e3ae8f-7d88-40a4-ac25-533de9dba49c?size=1200",
+  hero: "https://images.pexels.com/photos/34046709/pexels-photo-34046709.jpeg?auto=compress&cs=tinysrgb&w=1800",
+  openLearning: "https://images.pexels.com/photos/34046709/pexels-photo-34046709.jpeg?auto=compress&cs=tinysrgb&w=1400",
+  professionalPrograms: "https://images.pexels.com/photos/19895774/pexels-photo-19895774.jpeg?auto=compress&cs=tinysrgb&w=1400",
+  assessmentCredentialing: "https://images.pexels.com/photos/7983552/pexels-photo-7983552.jpeg?auto=compress&cs=tinysrgb&w=1400",
+  institutionalTraining: "https://images.pexels.com/photos/34774357/pexels-photo-34774357.jpeg?auto=compress&cs=tinysrgb&w=1400",
 };
 
 export const PROGRAM_PORTFOLIO = [
@@ -28,7 +30,7 @@ export const PROGRAM_PORTFOLIO = [
     availability: "Phased launch",
     icon: "open-learning",
     image: EDITORIAL_ASSETS.openLearning,
-    imageAlt: "Cognita Open Learning student completing self-paced AI study on an HP laptop in a home learning environment.",
+    imageAlt: "Editorial stock photograph of adults participating in a laptop-based professional learning workshop.",
   },
   {
     id: "professional-programs",
@@ -51,7 +53,7 @@ export const PROGRAM_PORTFOLIO = [
     availability: "Flagship program",
     icon: "professional-programs",
     image: EDITORIAL_ASSETS.professionalPrograms,
-    imageAlt: "Facilitator leading a Cognita professional cohort using silver MacBook laptops.",
+    imageAlt: "Editorial stock photograph of adult learners discussing a technical project around laptops.",
   },
   {
     id: "assessment-credentialing",
@@ -74,7 +76,7 @@ export const PROGRAM_PORTFOLIO = [
     availability: "Review-based service",
     icon: "assessment-credentialing",
     image: EDITORIAL_ASSETS.assessmentCredentialing,
-    imageAlt: "Professional reviewer assessing learner evidence using a silver MacBook.",
+    imageAlt: "Editorial stock photograph of adults receiving guided support during a computer learning session.",
   },
   {
     id: "institutional-training",
@@ -97,7 +99,7 @@ export const PROGRAM_PORTFOLIO = [
     availability: "By consultation",
     icon: "institutional-training",
     image: EDITORIAL_ASSETS.institutionalTraining,
-    imageAlt: "Corporate team participating in a Cognita institutional workshop with silver MacBook laptops.",
+    imageAlt: "Editorial stock photograph of a professional concentrating on laptop-based training in a shared learning space.",
   },
 ];
 

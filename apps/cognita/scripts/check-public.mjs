@@ -14,31 +14,38 @@ async function walk(directory) {
 
 await walk(root);
 const output = (await Promise.all(files.map(file => readFile(file, 'utf8')))).join('\n');
+
 const required = [
-  'Cognita is the knowledge and learning arm of FMB',
-  'Registration',
-  'Closed',
-  'None published',
+  'Cognita Institute is currently',
+  'Join the waitlist',
+  'No automatic enrollment or payment is being processed',
+  'Cognita Open Learning',
+  'Professional Programs',
+  'Admissions and Registrar',
+  'Official portraits are now assigned',
+  'Student and staff access is temporarily closed',
 ];
+
 const prohibited = [
-  'Certificate of Completion',
-  'Student Dashboard',
-  'Admissions',
-  'Apply Now',
-  'Register',
-  'Tuition',
-  'Program fee',
-  'Accredited',
-  'Facilitator',
-  'Open Learning',
+  'Enrollment is now open',
+  'Enroll now and pay',
+  'Guaranteed certification',
+  'Government-accredited degree',
+  'CHED-accredited',
+  'TESDA-accredited',
+  'Automatic credential issuance',
 ];
 
 for (const marker of required) {
-  if (!output.includes(marker)) throw new Error(`Cognita public build is missing: ${marker}`);
+  if (!output.includes(marker)) {
+    throw new Error(`Cognita public build is missing an expected page or safety marker: ${marker}`);
+  }
 }
 
 for (const marker of prohibited) {
-  if (output.includes(marker)) throw new Error(`Cognita public build exposes an unverified claim or workflow: ${marker}`);
+  if (output.includes(marker)) {
+    throw new Error(`Cognita public build exposes an unapproved claim or workflow: ${marker}`);
+  }
 }
 
-console.log(`Cognita public build verified across ${files.length} generated files.`);
+console.log(`Cognita public pages and publication safeguards verified across ${files.length} generated files.`);
