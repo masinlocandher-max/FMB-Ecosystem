@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const root = path.resolve(new URL('..', import.meta.url).pathname);
@@ -8,7 +8,7 @@ const marker = 'FMB mobile menu and footer refinement 20260725';
 
 const cssPatch = `
 /* ${marker} */
-.fmb-mobile-dock{display:none!important}
+.fmb-mobile-dock,.nc-mobile-dock{display:none!important}
 @media(max-width:960px){
   body.fmb-approved-launch{padding-bottom:env(safe-area-inset-bottom,0px)!important}
   .fmb-shell-nav{top:calc(38px + max(68px, env(safe-area-inset-top,0px) + 58px))!important;right:12px!important;bottom:auto!important;left:12px!important;max-height:calc(100svh - 124px)!important;grid-template-columns:1fr!important;padding:14px!important;border-radius:24px!important;transform:translateY(-14px)!important}
@@ -37,14 +37,45 @@ async function update(relative, transform) {
   if (next !== html) await writeFile(file, next, 'utf8');
 }
 
+async function walk(directory) {
+  const files = [];
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    const full = path.join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...await walk(full));
+    else files.push(full);
+  }
+  return files;
+}
+
 await update('news/index.html', html => {
   const card = '<article class="nc-rundown-story"><a href="/news/pax-silica-philippines/"><span class="nc-rundown-number">PS</span><figure class="news-visual"><img src="/assets/images/projects/cognita-logo-clean.png" width="1200" height="630" loading="lazy" decoding="async" alt="Cognita Institute of AI"><figcaption>Cognita Institute of AI. Full sources and FMB perspective appear in the article.</figcaption></figure><div><p>Philippines · Technology and sovereignty</p><h3>Pax Silica and the Philippines: What it means for Filipinos</h3><span>12 min read</span></div></a></article>';
   if (!html.includes('href="/news/pax-silica-philippines/"')) html = html.replace('<article class="nc-rundown-story" id="world">', `${card}\n<article class="nc-rundown-story" id="world">`);
   return html;
 });
 
-for (const relative of ['index.html','aboutfmb/index.html','news/index.html','news/pax-silica/index.html','news/pax-silica-philippines/index.html','projects/index.html','ebooks/index.html','music/index.html','withlovefmb/index.html','get-involved/index.html','gethelp/index.html','fmbandco/index.html','work-with-fmb/index.html']) {
-  await update(relative, html => html.replace(/<nav class="fmb-mobile-dock"[\s\S]*?<\/nav>\s*/i, ''));
+const publicHtml = (await walk(dist)).filter(file => file.endsWith('.html') && !file.includes(`${path.sep}app${path.sep}`) && !file.includes(`${path.sep}admin${path.sep}`) && !file.includes(`${path.sep}data${path.sep}`) && !file.includes(`${path.sep}yoni${path.sep}`));
+let dockRemovals = 0;
+for (const file of publicHtml) {
+  const html = await readFile(file, 'utf8');
+  const next = html
+    .replace(/<nav\b[^>]*class=["'][^"']*\bfmb-mobile-dock\b[^"']*["'][^>]*>[\s\S]*?<\/nav>\s*/gi, '')
+    .replace(/<nav\b[^>]*class=["'][^"']*\bnc-mobile-dock\b[^"']*["'][^>]*>[\s\S]*?<\/nav>\s*/gi, '');
+  if (next !== html) {
+    await writeFile(file, next, 'utf8');
+    dockRemovals += 1;
+  }
 }
 
-console.log('Published the separate Pax Silica Philippines article, moved mobile navigation into the hamburger menu, removed the bottom dock, and enhanced the shared footer.');
+const sitemapFile = path.join(dist, 'sitemap.xml');
+try {
+  let sitemap = await readFile(sitemapFile, 'utf8');
+  const route = 'https://www.francinemariebautista.com/news/pax-silica-philippines/';
+  if (!sitemap.includes(route)) {
+    sitemap = sitemap.replace('</urlset>', `  <url><loc>${route}</loc></url>\n</urlset>`);
+    await writeFile(sitemapFile, sitemap, 'utf8');
+  }
+} catch {
+  // The route remains available even if a deployment does not include a sitemap file.
+}
+
+console.log(`Published the separate Pax Silica Philippines article, removed sticky mobile docks from ${dockRemovals} public page(s), kept navigation in the hamburger menu, and enhanced the shared footer.`);
