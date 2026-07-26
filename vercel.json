@@ -11,7 +11,7 @@
     "thecognitainstitute.com",
     "www.thecognitainstitute.com"
   ],
-  "ignoreCommand": "if [ \"$VERCEL_ENV\" = \"production\" ] || [ \"$VERCEL_GIT_COMMIT_REF\" = \"main\" ]; then exit 1; else echo \"Skipping non-production Vercel build for ${VERCEL_GIT_COMMIT_REF:-unknown}\"; exit 0; fi",
+  "ignoreCommand": "exit 1",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "cleanUrls": false,
