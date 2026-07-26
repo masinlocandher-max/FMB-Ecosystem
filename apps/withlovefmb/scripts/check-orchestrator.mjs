@@ -8,13 +8,15 @@ const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const siteRoot = path.resolve(scriptDirectory, '..');
 const repoRoot = path.resolve(siteRoot, '..', '..');
 
-const [adminHtml, orchestratorSource, adminSource, authSource, vercelSource, migrationSource] = await Promise.all([
+const [adminHtml, orchestratorSource, commandCenterSource, adminSource, authSource, vercelSource, migrationSource, operationsMigrationSource] = await Promise.all([
   readFile(path.join(siteRoot, 'admin.html'), 'utf8'),
   readFile(path.join(siteRoot, 'assets/js/orchestrator.js'), 'utf8'),
+  readFile(path.join(siteRoot, 'assets/js/command-center.js'), 'utf8'),
   readFile(path.join(siteRoot, 'assets/js/admin.js'), 'utf8'),
   readFile(path.join(siteRoot, 'assets/js/auth.js'), 'utf8'),
   readFile(path.join(repoRoot, 'vercel.json'), 'utf8'),
   readFile(path.join(siteRoot, 'supabase/migrations/20260723120000_add_orchestrator_workspace.sql'), 'utf8'),
+  readFile(path.join(siteRoot, 'supabase/migrations/20260726120000_add_operations_command_center.sql'), 'utf8'),
 ]);
 
 const requiredPanels = [
@@ -22,7 +24,9 @@ const requiredPanels = [
   'inboxPanel',
   'knowledgePanel',
   'replyPanel',
+  'workQueuePanel',
   'plannerPanel',
+  'evidencePanel',
   'analyticsPanel',
   'automationPanel',
   'qaPanel',
@@ -40,6 +44,9 @@ const ids = [...adminHtml.matchAll(/\bid=["']([^"']+)["']/g)].map((match) => mat
 assert.equal(new Set(ids).size, ids.length, 'admin.html contains duplicate element IDs');
 assert.match(adminHtml, /Human approval is the final step\./);
 assert.match(adminHtml, /Nothing is sent automatically\./);
+assert.match(adminHtml, /Instructions & Work Queue/);
+assert.match(adminHtml, /Evidence & Approvals/);
+assert.match(adminHtml, /No secrets here/);
 assert.doesNotMatch(adminHtml, /assets\/js\/(site|live-hotfix)\.js/);
 
 const publicFiles = [
@@ -117,6 +124,17 @@ assert.match(orchestratorSource, /It has no send control/);
 assert.match(orchestratorSource, /from\('orchestrator_workspaces'\)/);
 assert.doesNotMatch(orchestratorSource, /fetch\(\s*["']https?:\/\//i, 'Orchestrator must not send records to an external API');
 assert.match(adminSource, /auth\.html\?next=%2Fadmin\.html#signin/);
+assert.match(adminSource, /\['admin','moderator'\]\.includes\(profile\.role\)/);
+assert.match(commandCenterSource, /from\('work_orders'\)/);
+assert.match(commandCenterSource, /from\('work_evidence'\)/);
+assert.match(commandCenterSource, /from\('automation_connections'\)/);
+assert.match(commandCenterSource, /rpc\('transition_work_order'/);
+assert.match(commandCenterSource, /rpc\('review_work_evidence'/);
+assert.match(commandCenterSource, /rpc\('review_work_order'/);
+assert.match(commandCenterSource, /storage\.from\('work-evidence'\)/);
+assert.match(commandCenterSource, /postgres_changes/);
+assert.match(commandCenterSource, /Never paste a password, access token, API secret, or recovery code here\./);
+assert.doesNotMatch(commandCenterSource, /fetch\(\s*["']https?:\/\//i, 'Command Center must not transmit records to an undeclared external API');
 assert.match(authSource, /target\.origin===location\.origin/);
 
 const vercel = JSON.parse(vercelSource);
@@ -125,5 +143,12 @@ assert.ok(vercel.headers.some((rule) => rule.has?.some((condition) => condition.
 assert.match(migrationSource, /enable row level security/i);
 assert.match(migrationSource, /private\.is_fmb_admin\(\)/);
 assert.doesNotMatch(migrationSource, /grant\s+delete/i);
+assert.match(operationsMigrationSource, /create table if not exists public\.work_orders/i);
+assert.match(operationsMigrationSource, /create table if not exists public\.work_evidence/i);
+assert.match(operationsMigrationSource, /create table if not exists public\.automation_connections/i);
+assert.match(operationsMigrationSource, /private\.is_fmb_staff\(\)/i);
+assert.match(operationsMigrationSource, /Evidence is required before this work can be submitted/i);
+assert.match(operationsMigrationSource, /Accept at least one evidence item before approving the work/i);
+assert.doesNotMatch(operationsMigrationSource, /insert into public\.work_orders\s*\(/i, 'The command center must not seed fake work orders');
 
 console.log(`FMB&CO. Orchestrator check passed: ${requiredPanels.length} panels and ${publicFiles.length} protected public routes.`);
