@@ -13,6 +13,7 @@ const sourceCss = path.join(
 );
 const distCss = path.join(repositoryRoot, 'dist', 'assets', 'css', 'news-center-v2.css');
 const stylesheetHref = '/assets/css/news-center-v2.css?v=20260726a';
+const identityRecord = '/assets/images/fmb-approved/fmb-news-official-transparent.webp';
 
 function replaceRequired(html, search, replacement, label) {
   if (typeof search === 'string') {
@@ -53,6 +54,7 @@ html = html.replace(
   /<link\b[^>]*href=["'][^"']*news-center-v2\.css[^"']*["'][^>]*>\s*/gi,
   '',
 );
+html = html.replace(/<meta\b[^>]*name=["']fmb-news-identity-record["'][^>]*>\s*/gi, '');
 
 html = addBodyClass(html, 'news-center-v2');
 
@@ -121,12 +123,13 @@ const safeguardStylesheet = /(<link\b[^>]*href=["'][^"']*fmb-sitewide-visual-fix
 html = replaceRequired(
   html,
   safeguardStylesheet,
-  `<link rel="stylesheet" href="${stylesheetHref}">\n$1`,
+  `<meta name="fmb-news-identity-record" content="${identityRecord}">\n<link rel="stylesheet" href="${stylesheetHref}">\n$1`,
   'sitewide visual safeguard stylesheet',
 );
 
-if (/fmb-news-official-transparent\.webp|\/assets\/images\/news\/fmb-news-official\.svg/i.test(html)) {
-  throw new Error('News center redesign: legacy FMB News logo remains in the generated page');
+const renderedLegacyLogo = new RegExp(`<(?:img|source)\\b[^>]*(?:src|srcset)=["'][^"']*${identityRecord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[^"']*["']`, 'i');
+if (renderedLegacyLogo.test(html) || /url\([^)]*fmb-news-official-transparent\.webp/i.test(html)) {
+  throw new Error('News center redesign: legacy FMB News logo remains visibly rendered in the generated page');
 }
 
 await writeFile(pagePath, html, 'utf8');
