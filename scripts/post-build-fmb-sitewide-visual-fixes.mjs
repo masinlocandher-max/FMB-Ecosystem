@@ -3,16 +3,34 @@ import path from 'node:path';
 
 const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.join(repositoryRoot, 'dist');
-const sourceCss = path.join(
-  repositoryRoot,
-  'apps',
-  'withlovefmb',
-  'assets',
-  'css',
-  'fmb-sitewide-visual-fixes.css',
-);
-const distCss = path.join(dist, 'assets', 'css', 'fmb-sitewide-visual-fixes.css');
-const stylesheetHref = '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-readability-v2';
+const stylesheets = [
+  {
+    source: path.join(
+      repositoryRoot,
+      'apps',
+      'withlovefmb',
+      'assets',
+      'css',
+      'fmb-sitewide-visual-fixes.css',
+    ),
+    output: path.join(dist, 'assets', 'css', 'fmb-sitewide-visual-fixes.css'),
+    href: '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-readability-v3',
+    pattern: /<link\b[^>]*href=["'][^"']*fmb-sitewide-visual-fixes\.css[^"']*["'][^>]*>\s*/gi,
+  },
+  {
+    source: path.join(
+      repositoryRoot,
+      'apps',
+      'withlovefmb',
+      'assets',
+      'css',
+      'fmb-contrast-polish.css',
+    ),
+    output: path.join(dist, 'assets', 'css', 'fmb-contrast-polish.css'),
+    href: '/assets/css/fmb-contrast-polish.css?v=20260726-contrast-polish-v1',
+    pattern: /<link\b[^>]*href=["'][^"']*fmb-contrast-polish\.css[^"']*["'][^>]*>\s*/gi,
+  },
+];
 const excludedPrefixes = ['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/'];
 const excludedFiles = new Set([
   'admin.html',
@@ -34,8 +52,10 @@ async function walk(directory) {
 
 const relative = (file) => path.relative(dist, file).replaceAll(path.sep, '/');
 
-await mkdir(path.dirname(distCss), { recursive: true });
-await copyFile(sourceCss, distCss);
+for (const stylesheet of stylesheets) {
+  await mkdir(path.dirname(stylesheet.output), { recursive: true });
+  await copyFile(stylesheet.source, stylesheet.output);
+}
 
 const publicHtml = (await walk(dist)).filter((file) => {
   const name = relative(file);
@@ -43,13 +63,16 @@ const publicHtml = (await walk(dist)).filter((file) => {
   return !excludedPrefixes.some((prefix) => name.startsWith(prefix));
 });
 
+const injectedLinks = stylesheets
+  .map(({ href }) => `<link rel="stylesheet" href="${href}">`)
+  .join('\n');
+
 let injectedPages = 0;
 for (const file of publicHtml) {
   let html = await readFile(file, 'utf8');
-  html = html.replace(
-    /<link\b[^>]*href=["'][^"']*fmb-sitewide-visual-fixes\.css[^"']*["'][^>]*>\s*/gi,
-    '',
-  );
+  for (const stylesheet of stylesheets) {
+    html = html.replace(stylesheet.pattern, '');
+  }
 
   if (!/<\/head>/i.test(html)) {
     throw new Error(`Sitewide visual fixes: ${relative(file)} has no closing head element`);
@@ -57,10 +80,10 @@ for (const file of publicHtml) {
 
   html = html.replace(
     /<\/head>/i,
-    `<link rel="stylesheet" href="${stylesheetHref}">\n</head>`,
+    `${injectedLinks}\n</head>`,
   );
   await writeFile(file, html, 'utf8');
   injectedPages += 1;
 }
 
-console.log(`Sitewide visual safeguards loaded last on ${injectedPages} public page(s).`);
+console.log(`Sitewide visual safeguards and contrast polish loaded last on ${injectedPages} public page(s).`);
