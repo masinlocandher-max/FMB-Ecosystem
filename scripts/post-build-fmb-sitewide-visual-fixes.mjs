@@ -31,6 +31,8 @@ const stylesheets = [
     pattern: /<link\b[^>]*href=["'][^"']*fmb-contrast-polish\.css[^"']*["'][^>]*>\s*/gi,
   },
 ];
+const lowResolutionCognitaArtwork = '/assets/images/news/cognita-filipino-centered-education.svg';
+const hdCognitaArtwork = '/assets/images/news/cognita-filipino-centered-education-hd.webp';
 const excludedPrefixes = ['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/'];
 const excludedFiles = new Set([
   'admin.html',
@@ -73,6 +75,7 @@ for (const file of publicHtml) {
   for (const stylesheet of stylesheets) {
     html = html.replace(stylesheet.pattern, '');
   }
+  html = html.replaceAll(lowResolutionCognitaArtwork, hdCognitaArtwork);
 
   if (!/<\/head>/i.test(html)) {
     throw new Error(`Sitewide visual fixes: ${relative(file)} has no closing head element`);
