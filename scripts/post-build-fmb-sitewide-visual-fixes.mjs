@@ -14,7 +14,7 @@ const stylesheets = [
       'fmb-sitewide-visual-fixes.css',
     ),
     output: path.join(dist, 'assets', 'css', 'fmb-sitewide-visual-fixes.css'),
-    href: '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-readability-v3',
+    href: '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-readability-v2',
     pattern: /<link\b[^>]*href=["'][^"']*fmb-sitewide-visual-fixes\.css[^"']*["'][^>]*>\s*/gi,
   },
   {
