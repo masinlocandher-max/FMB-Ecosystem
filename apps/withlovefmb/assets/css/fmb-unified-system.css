@@ -351,34 +351,6 @@ body.fmb-unified-public > .fco-skip:focus {
   border: 0 !important;
 }
 
-.fmb-unified-public main > section:nth-of-type(odd) {
-  background-color: rgba(252, 249, 254, 0.94);
-}
-
-.fmb-unified-public main > section:nth-of-type(even) {
-  background-color: rgba(243, 232, 248, 0.68);
-}
-
-.fmb-unified-public main > section:first-child {
-  isolation: isolate;
-  background:
-    radial-gradient(circle at 78% 24%, rgba(169, 122, 240, 0.34), transparent 24rem),
-    linear-gradient(145deg, #130132 0%, #250756 58%, #100129 100%) !important;
-  color: var(--fmb-white) !important;
-}
-
-.fmb-unified-public main > section:first-child::before {
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  content: "";
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 11% 12%, transparent 0 12rem, rgba(236, 175, 71, 0.28) 12.08rem 12.16rem, transparent 12.24rem),
-    radial-gradient(circle at 92% 90%, transparent 0 22rem, rgba(169, 122, 240, 0.24) 22.08rem 22.16rem, transparent 22.24rem);
-  opacity: 0.9;
-}
-
 .fmb-unified-public .wrap,
 .fmb-unified-public .fco-wrap,
 .fmb-unified-public .wlf-wrap,
@@ -454,9 +426,6 @@ body.fmb-unified-public > .fco-skip:focus {
   text-transform: uppercase !important;
 }
 
-.fmb-unified-public main > section:first-child .kicker,
-.fmb-unified-public main > section:first-child .fco-eyebrow,
-.fmb-unified-public main > section:first-child [class*="eyebrow"],
 .fmb-unified-public .dark .fmb-strategy-kicker {
   color: var(--fmb-gold-bright) !important;
 }
@@ -469,11 +438,6 @@ body.fmb-unified-public > .fco-skip:focus {
   max-width: 720px;
   font-size: clamp(16px, 1.45vw, 20px) !important;
   line-height: 1.72 !important;
-}
-
-.fmb-unified-public main > section:first-child p,
-.fmb-unified-public main > section:first-child li {
-  color: rgba(255, 255, 255, 0.74) !important;
 }
 
 /* Unified buttons and text links */
@@ -523,13 +487,6 @@ body.fmb-unified-public > .fco-skip:focus {
   border-color: rgba(63, 21, 127, 0.24) !important;
   background: transparent !important;
   color: var(--fmb-royal) !important;
-}
-
-.fmb-unified-public main > section:first-child .button.secondary,
-.fmb-unified-public main > section:first-child .fco-btn.secondary,
-.fmb-unified-public main > section:first-child [class*="secondary"] {
-  border-color: rgba(255, 255, 255, 0.3) !important;
-  color: var(--fmb-white) !important;
 }
 
 .fmb-unified-public .button.gold,

@@ -80,7 +80,7 @@ for (const file of publicHtml) {
     'fmb-approved-launch',
     'fmb-announcement-track',
     '/assets/css/fmb-unified-system.css',
-    '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-all-pages-v1',
+    '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-readability-v2',
     '/assets/js/fmb-unified-system.js',
   ]) {
     if (!html.includes(marker)) fail(`${name} is missing ${marker}`);
@@ -98,7 +98,7 @@ for (const file of publicHtml) {
     .filter((tag) => /\brel=["'][^"']*\bstylesheet\b[^"']*["']/i.test(tag))
     .map((tag) => tag.match(/\bhref=["']([^"']+)["']/i)?.[1])
     .filter(Boolean);
-  if (stylesheetHrefs.at(-1) !== '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-all-pages-v1') {
+  if (stylesheetHrefs.at(-1) !== '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-readability-v2') {
     fail(`${name} must load the sitewide visual safeguards after every other stylesheet`);
   }
 
