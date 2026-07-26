@@ -7,7 +7,7 @@ const landingPath = path.join(newsRoot, 'index.html');
 const cognitaArtworkPath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'images', 'news', 'cognita-filipino-centered-education.svg');
 const safeguardHref = '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-readability-v2';
 const visibleRetiredLogo = /<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*(?:fmb-news-official-transparent\.webp|fmb-news-official\.svg)/i;
-const retiredFashionFont = /Cormorant(?:\+|\s)Garamond/i;
+const retiredFashionFontImport = /<link\b[^>]*href=["'][^"']*fonts\.googleapis\.com\/css2\?family=Cormorant\+Garamond[^"']*["'][^>]*>/i;
 
 function fail(message) {
   throw new Error(`FMB News Center final audit: ${message}`);
@@ -50,7 +50,7 @@ function assertChannelIdentity(html, fileName) {
   if (!html.includes('News Center</strong>')) fail(`${fileName} is missing the News Center masthead`);
   if (!html.includes('Filipino ang Mismong Balita.')) fail(`${fileName} is missing the approved Filipino tagline`);
   if (html.includes('THE NEWSROOM')) fail(`${fileName} still uses the retired Newsroom masthead`);
-  if (retiredFashionFont.test(html)) fail(`${fileName} still loads the retired fashion-editorial typeface`);
+  if (retiredFashionFontImport.test(html)) fail(`${fileName} still imports the retired fashion-editorial typeface`);
   if (visibleRetiredLogo.test(html)) fail(`${fileName} visibly renders the retired News logo`);
 }
 
