@@ -7,9 +7,10 @@ const landingPath = path.join(newsRoot, 'index.html');
 const cognitaArtworkPath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'images', 'news', 'cognita-filipino-centered-education.svg');
 const safeguardHref = '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-readability-v2';
 const visibleRetiredLogo = /<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*(?:fmb-news-official-transparent\.webp|fmb-news-official\.svg)/i;
+const retiredFashionFont = /Cormorant(?:\+|\s)Garamond/i;
 
 function fail(message) {
-  throw new Error(`FMB Newsroom final audit: ${message}`);
+  throw new Error(`FMB News Center final audit: ${message}`);
 }
 
 async function walk(directory) {
@@ -29,11 +30,11 @@ function assertFinalStyleContract(html, fileName, markers) {
     .map(tag => tag.match(/\bhref=["']([^"']+)["']/i)?.[1])
     .filter(Boolean);
   if (stylesheetHrefs.at(-1) !== safeguardHref) fail(`${fileName} no longer preserves the global safeguard as the final stylesheet link`);
-  if ((html.match(/data-fmb-news-final-styles/g) || []).length !== 1) fail(`${fileName} must contain exactly one compiled Newsroom style layer`);
+  if ((html.match(/data-fmb-news-final-styles/g) || []).length !== 1) fail(`${fileName} must contain exactly one compiled News Center style layer`);
 
   let previous = html.indexOf(safeguardHref);
   const inlinePosition = html.indexOf('data-fmb-news-final-styles');
-  if (inlinePosition <= previous) fail(`${fileName} compiles Newsroom styles before the global safeguard`);
+  if (inlinePosition <= previous) fail(`${fileName} compiles News Center styles before the global safeguard`);
   previous = inlinePosition;
   for (const marker of markers) {
     const position = html.indexOf(marker, previous);
@@ -43,14 +44,25 @@ function assertFinalStyleContract(html, fileName, markers) {
   }
 }
 
+function assertChannelIdentity(html, fileName) {
+  if (!html.includes('news-channel-v4')) fail(`${fileName} is missing the channel redesign body class`);
+  if (!html.includes('FMB</span>')) fail(`${fileName} is missing the FMB masthead monogram`);
+  if (!html.includes('News Center</strong>')) fail(`${fileName} is missing the News Center masthead`);
+  if (!html.includes('Filipino ang Mismong Balita.')) fail(`${fileName} is missing the approved Filipino tagline`);
+  if (html.includes('THE NEWSROOM')) fail(`${fileName} still uses the retired Newsroom masthead`);
+  if (retiredFashionFont.test(html)) fail(`${fileName} still loads the retired fashion-editorial typeface`);
+  if (visibleRetiredLogo.test(html)) fail(`${fileName} visibly renders the retired News logo`);
+}
+
 const landing = await readFile(landingPath, 'utf8');
-if (!landing.includes('THE NEWSROOM')) fail('landing page is missing the text masthead');
+assertChannelIdentity(landing, 'news/index.html');
+if (!landing.includes('Live News Desk')) fail('landing page is missing the live desk status');
+if (!landing.includes('Headlines.<br>Context.<br>Accountability.')) fail('landing page is missing the channel promise');
 if (!landing.includes('data-news-edition')) fail('landing page is missing its live edition date hook');
 if (!landing.includes('data-news-updated')) fail('landing page is missing its live update date hook');
 if (landing.includes('Sunday edition · 26 July 2026')) fail('landing page still hardcodes the edition date');
 if (landing.includes('<time>Updated 26 July 2026</time>')) fail('landing page still hardcodes the update date');
 if (!landing.includes('fmb-news-identity-record')) fail('landing page is missing the non-rendered identity record');
-if (visibleRetiredLogo.test(landing)) fail('landing page visibly renders the retired News logo');
 if (!landing.includes('og:image:width" content="800"') || !landing.includes('og:image:height" content="533"')) fail('landing page social image dimensions are incomplete');
 assertFinalStyleContract(landing, 'news/index.html', [
   'body.news-channel-route.news-center-v2',
@@ -58,6 +70,7 @@ assertFinalStyleContract(landing, 'news/index.html', [
   'Text-led Newsroom masthead',
   'Final visual-approval correction',
   'Professional Newsroom type system',
+  'FMB News Center channel redesign v4',
 ]);
 
 const artwork = await readFile(cognitaArtworkPath, 'utf8');
@@ -72,10 +85,14 @@ for (const filePath of await walk(newsRoot)) {
   if (!/\bnews-story-route\b/.test(html)) continue;
   const relative = path.relative(path.join(repositoryRoot, 'dist'), filePath).replaceAll('\\', '/');
   articleCount += 1;
-  if (!html.includes('newsroom-polish-v3')) fail(`${relative} is missing the final Newsroom body class`);
-  if (!html.includes('THE NEWSROOM')) fail(`${relative} is missing the text-led masthead`);
-  if (visibleRetiredLogo.test(html)) fail(`${relative} visibly renders the retired News logo`);
-  assertFinalStyleContract(html, relative, ['Final FMB Newsroom polish', 'Text-led Newsroom masthead', 'Professional Newsroom type system']);
+  assertChannelIdentity(html, relative);
+  if (!html.includes('newsroom-polish-v3')) fail(`${relative} is missing the final News Center polish class`);
+  assertFinalStyleContract(html, relative, [
+    'Final FMB Newsroom polish',
+    'Text-led Newsroom masthead',
+    'Professional Newsroom type system',
+    'FMB News Center channel redesign v4',
+  ]);
 
   if (relative.includes('filipino-centered-training-institution-cognita-vision')) {
     if (!html.includes('og:image:width" content="1536"') || !html.includes('og:image:height" content="864"')) fail('Cognita article metadata is not 1536×864');
@@ -83,5 +100,5 @@ for (const filePath of await walk(newsRoot)) {
   }
 }
 
-if (articleCount < 1) fail('no News article pages were audited');
-console.log(`FMB Newsroom final audit verified the landing page, ${articleCount} article pages, live date hooks, global safeguard preservation, professional typography, visual-approval contrast, retired-logo removal, and HD Cognita artwork.`);
+if (articleCount < 1) fail('no News report pages were audited');
+console.log(`FMB News Center final audit verified the landing page, ${articleCount} report pages, the approved Filipino tagline, live desk identity, responsive broadcast layout, professional typography, source visibility, retired-logo removal, and HD Cognita artwork.`);
