@@ -3,7 +3,14 @@ import path from 'node:path';
 
 const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
 const newsRoot = path.join(repositoryRoot, 'dist', 'news');
-const stylesheetHref = '/assets/css/fmb-news-masthead-v3.css?v=20260726a';
+const landingPath = path.join(newsRoot, 'index.html');
+const cssRoot = path.join(repositoryRoot, 'dist', 'assets', 'css');
+
+const [landingCss, polishCss, mastheadCss] = await Promise.all([
+  readFile(path.join(cssRoot, 'news-center-v2.css'), 'utf8'),
+  readFile(path.join(cssRoot, 'fmb-news-polish-v3.css'), 'utf8'),
+  readFile(path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmb-news-masthead-v3.css'), 'utf8'),
+]);
 
 async function walk(directory) {
   const files = [];
@@ -18,11 +25,18 @@ async function walk(directory) {
 let count = 0;
 for (const filePath of await walk(newsRoot)) {
   let html = await readFile(filePath, 'utf8');
-  html = html.replace(/<link\b[^>]*href=["'][^"']*fmb-news-masthead-v3\.css[^"']*["'][^>]*>\s*/gi, '');
-  if (!html.includes('</head>')) throw new Error(`Newsroom masthead: missing closing head in ${filePath}`);
-  html = html.replace('</head>', `<link rel="stylesheet" href="${stylesheetHref}">\n</head>`);
+  html = html
+    .replace(/<link\b[^>]*href=["'][^"']*(?:news-center-v2|fmb-news-polish-v3|fmb-news-masthead-v3)\.css[^"']*["'][^>]*>\s*/gi, '')
+    .replace(/<style\b[^>]*data-fmb-news-final-styles[^>]*>[\s\S]*?<\/style>\s*/gi, '');
+
+  const css = filePath === landingPath
+    ? `${landingCss}\n${polishCss}\n${mastheadCss}`
+    : `${polishCss}\n${mastheadCss}`;
+  const safeguard = /(<link\b[^>]*href=["'][^"']*fmb-sitewide-visual-fixes\.css[^"']*["'][^>]*>)/i;
+  if (!safeguard.test(html)) throw new Error(`Newsroom masthead: missing sitewide safeguard in ${filePath}`);
+  html = html.replace(safeguard, `$1\n<style data-fmb-news-final-styles>\n${css}\n</style>`);
   await writeFile(filePath, html, 'utf8');
   count += 1;
 }
 
-console.log(`Loaded the text-led Newsroom masthead last on ${count} News pages.`);
+console.log(`Compiled final Newsroom styles inline after the global safeguard on ${count} News pages while preserving the approved stylesheet-link order.`);
