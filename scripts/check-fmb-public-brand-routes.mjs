@@ -45,7 +45,14 @@ for(const [relative,marker] of Object.entries(required)){
 }
 
 const newsIndex=await readFile(path.join(root,'news/index.html'),'utf8');
-if(newsIndex.includes('news-center-v2')){
+if(newsIndex.includes('news-center-v3')){
+  for(const marker of ['nc3-masthead-title','FMB News Center','nc3-front-grid','nc3-desk-grid','data-news-search','news-center-v3.css']){
+    if(!newsIndex.includes(marker))fail(`news/index.html is missing the News Center v3 requirement ${marker}`);
+  }
+  if(!newsIndex.includes(`<meta name="fmb-news-identity-record" content="${legacyNewsLogo}">`))fail('news/index.html is missing its non-rendered identity record');
+  const renderedLogo=/<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*fmb-news-official-transparent\.webp[^"']*["']/i.test(newsIndex)||/url\([^)]*fmb-news-official-transparent\.webp/i.test(newsIndex);
+  if(renderedLogo)fail('news/index.html still visibly renders the removed FMB News graphic logo');
+}else if(newsIndex.includes('news-center-v2')){
   if(!newsIndex.includes('nc-text-masthead')||!newsIndex.includes('THE NEWSROOM'))fail('news/index.html is missing the text-led newsroom masthead');
   if(!newsIndex.includes(`<meta name="fmb-news-identity-record" content="${legacyNewsLogo}">`))fail('news/index.html is missing its non-rendered identity record');
   const renderedLogo=/<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*fmb-news-official-transparent\.webp[^"']*["']/i.test(newsIndex)||/url\([^)]*fmb-news-official-transparent\.webp/i.test(newsIndex);

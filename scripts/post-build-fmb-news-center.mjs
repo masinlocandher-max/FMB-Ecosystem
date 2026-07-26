@@ -3,25 +3,21 @@ import path from 'node:path';
 
 const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
 const pagePath = path.join(repositoryRoot, 'dist', 'news', 'index.html');
-const sourceCss = path.join(
-  repositoryRoot,
-  'apps',
-  'withlovefmb',
-  'assets',
-  'css',
-  'news-center-v2.css',
-);
-const distCss = path.join(repositoryRoot, 'dist', 'assets', 'css', 'news-center-v2.css');
-const stylesheetHref = '/assets/css/news-center-v2.css?v=20260726a';
+const sourceCss = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'news-center-v3.css');
+const distCss = path.join(repositoryRoot, 'dist', 'assets', 'css', 'news-center-v3.css');
+const sourceJs = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'js', 'news-center-v3.js');
+const distJs = path.join(repositoryRoot, 'dist', 'assets', 'js', 'news-center-v3.js');
+const stylesheetHref = '/assets/css/news-center-v3.css?v=20260726-newscenter-v3';
+const scriptSrc = '/assets/js/news-center-v3.js?v=20260726-newscenter-v3';
 const identityRecord = '/assets/images/fmb-approved/fmb-news-official-transparent.webp';
 
 function replaceRequired(html, search, replacement, label) {
   if (typeof search === 'string') {
-    if (!html.includes(search)) throw new Error(`News center redesign: missing ${label}`);
+    if (!html.includes(search)) throw new Error(`News Center v3: missing ${label}`);
     return html.replace(search, replacement);
   }
 
-  if (!search.test(html)) throw new Error(`News center redesign: missing ${label}`);
+  if (!search.test(html)) throw new Error(`News Center v3: missing ${label}`);
   return html.replace(search, replacement);
 }
 
@@ -29,108 +25,103 @@ function addBodyClass(html, className) {
   return replaceRequired(
     html,
     /<body\b([^>]*)>/i,
-    (match, attrs = '') => {
-      if (/\bclass=(['"])([^'"]*)\1/i.test(attrs)) {
-        attrs = attrs.replace(/\bclass=(['"])([^'"]*)\1/i, (whole, quote, value) => {
+    (match, attributes = '') => {
+      let next = attributes;
+      if (/\bclass=(['"])([^'"]*)\1/i.test(next)) {
+        next = next.replace(/\bclass=(['"])([^'"]*)\1/i, (whole, quote, value) => {
           const classes = new Set(value.split(/\s+/).filter(Boolean));
+          classes.delete('news-center-v2');
           classes.add(className);
           return `class=${quote}${[...classes].join(' ')}${quote}`;
         });
       } else {
-        attrs += ` class="${className}"`;
+        next += ` class="${className}"`;
       }
-      return `<body${attrs}>`;
+      return `<body${next}>`;
     },
     'news page body',
   );
 }
 
-await mkdir(path.dirname(distCss), { recursive: true });
-await copyFile(sourceCss, distCss);
+await Promise.all([
+  mkdir(path.dirname(distCss), { recursive: true }),
+  mkdir(path.dirname(distJs), { recursive: true }),
+]);
+await Promise.all([
+  copyFile(sourceCss, distCss),
+  copyFile(sourceJs, distJs),
+]);
 
 let html = await readFile(pagePath, 'utf8');
 
-html = html.replace(
-  /<link\b[^>]*href=["'][^"']*news-center-v2\.css[^"']*["'][^>]*>\s*/gi,
-  '',
-);
-html = html.replace(/<meta\b[^>]*name=["']fmb-news-identity-record["'][^>]*>\s*/gi, '');
+html = html
+  .replace(/<link\b[^>]*href=["'][^"']*news-center-v[23]\.css[^"']*["'][^>]*>\s*/gi, '')
+  .replace(/<script\b[^>]*src=["'][^"']*news-center-v3\.js[^"']*["'][^>]*><\/script>\s*/gi, '')
+  .replace(/<meta\b[^>]*name=["']fmb-news-identity-record["'][^>]*>\s*/gi, '')
+  .replace(/<section\b[^>]*class=["'][^"']*\bfmb-v2-news-command\b[^"']*["'][^>]*>[\s\S]*?<\/section>\s*/gi, '');
 
-html = addBodyClass(html, 'news-center-v2');
+html = addBodyClass(html, 'news-center-v3');
 
 html = html
+  .replace(/<meta\s+name=["']theme-color["'][^>]*>/i, '<meta name="theme-color" content="#071126">')
   .replace(
-    '<title>FMB News | Public-Interest Reporting and Analysis</title>',
-    '<title>FMB Newsroom | Philippines, Zambales and Public-Interest Reporting</title>',
-  )
-  .replace(
-    '<meta name="description" content="FMB News publishes public-interest reporting, source-backed context, constructive reporting and clearly labeled perspective from Francine Marie Bautista and the FMB ecosystem.">',
-    '<meta name="description" content="The FMB Newsroom publishes public-interest reporting, verified context, constructive journalism and clearly labeled analysis from the Philippines and Zambales.">',
-  )
-  .replace(
-    '<meta property="og:title" content="FMB News | Public-Interest Reporting and Analysis">',
-    '<meta property="og:title" content="FMB Newsroom | Public-Interest Reporting and Analysis">',
-  )
-  .replace(
-    '<meta property="og:description" content="The official newsroom of the FMB ecosystem, built around sourced reporting, context, constructive journalism and clearly labeled perspective.">',
-    '<meta property="og:description" content="A public-interest news center for Philippine, Zambales, culture, environment, technology and community reporting.">',
-  )
-  .replaceAll(
-    'https://www.francinemariebautista.com/assets/images/fmb-approved/fmb-news-official-transparent.webp',
-    'https://www.francinemariebautista.com/assets/images/news/subic-aeta-dumpsite-iwitness.jpg',
-  )
-  .replace('<meta property="og:site_name" content="FMB News">', '<meta property="og:site_name" content="FMB Newsroom">')
-  .replace('<meta name="twitter:title" content="FMB News">', '<meta name="twitter:title" content="FMB Newsroom">')
-  .replace(
-    '<meta name="twitter:description" content="Public-interest reporting, source-backed context and clearly labeled perspective.">',
-    '<meta name="twitter:description" content="Philippine public-interest reporting, verified context and clearly labeled perspective.">',
-  )
-  .replace('FMB News Network', 'Public Interest News Center')
-  .replace('Original FMB News conceptual illustration.', 'Original newsroom conceptual illustration.')
-  .replace('FMB News is designed to slow down', 'The newsroom is designed to slow down');
+    /<title>[\s\S]*?<\/title>/i,
+    '<title>FMB News Center | Philippines, Zambales and Public-Interest Reporting</title>',
+  );
+
+const parentHeader = `<header class="fmb-shell-header" data-fmb-unified-shell>
+  <a class="fmb-shell-brand" href="/" aria-label="FMB and Company home">
+    <img src="/assets/images/fmbandco/fmbandco-primary-reversed.png" width="1414" height="405" alt="FMB&CO. Francine Marie Bautista">
+  </a>
+  <nav class="fmb-shell-nav" id="fmbUnifiedNav" aria-label="FMB and Company navigation">
+    <a href="/fmbandco/">About FMB&amp;CO.</a>
+    <a href="/projects/">Our Work</a>
+    <a href="/ebooks/">Publications</a>
+    <a href="/mabayani/">Research</a>
+    <a href="/work-with-fmb/">Contact</a>
+  </nav>
+  <a class="fmb-shell-cta" href="/work-with-fmb/">Work with FMB</a>
+  <a class="fmb-shell-yoni" href="https://yoni.francinemariebautista.com/">Open Yoni</a>
+  <button class="fmb-shell-menu" type="button" aria-label="Open FMB and Company navigation" aria-expanded="false" aria-controls="fmbUnifiedNav">Menu</button>
+</header>`;
 
 html = replaceRequired(
   html,
-  /<a\b(?=[^>]*\bclass=["'][^"']*\bnc-publication-brand\b[^"']*["'])(?=[^>]*\bhref=["']\/news\/["'])[^>]*>[\s\S]*?<\/a>/i,
-  `<a class="nc-publication-brand nc-text-masthead" href="/news/" aria-label="Newsroom home">
-      <span class="nc-masthead-kicker">Francine Marie Bautista</span>
-      <strong class="nc-masthead-title">THE NEWSROOM</strong>
-      <span class="nc-masthead-edition">Philippines · Zambales · World</span>
-    </a>`,
-  'header masthead',
+  /<header\b(?=[^>]*\bclass=["']fmb-shell-header["'])[^>]*>[\s\S]*?<\/header>/i,
+  parentHeader,
+  'parent company header',
 );
 
+const sitewideStylesheet = /(<link\b[^>]*href=["'][^"']*fmb-sitewide-visual-fixes\.css[^"']*["'][^>]*>)/i;
 html = replaceRequired(
   html,
-  /<div\b(?=[^>]*\bclass=["'][^"']*\bnc-channel-lockup\b[^"']*["'])[^>]*>[\s\S]*?<\/div>/i,
-  `<div class="nc-channel-lockup nc-newsroom-title">
-        <span class="nc-hero-kicker">Sunday edition · 26 July 2026</span>
-        <h1 id="newsroomTitle">The News Center</h1>
-        <p class="nc-hero-summary">Public-interest reporting, verified context and analysis on the Philippines, Zambales, culture, environment, technology and community life.</p>
-        <div class="nc-hero-dateline"><span>Masinloc, Zambales</span><span>Philippine Standard Time</span></div>
-      </div>`,
-  'newsroom hero',
-);
-
-html = replaceRequired(
-  html,
-  /<a\b(?=[^>]*\bclass=["'][^"']*\bnc-footer-brand\b[^"']*["'])(?=[^>]*\bhref=["']\/news\/["'])[^>]*>[\s\S]*?<\/a>/i,
-  `<a class="nc-footer-brand nc-footer-masthead" href="/news/" aria-label="Newsroom home"><span class="nc-footer-kicker">Francine Marie Bautista</span><strong>THE NEWSROOM</strong><span>Public interest · Clear sources · Visible perspective</span></a>`,
-  'footer masthead',
-);
-
-const safeguardStylesheet = /(<link\b[^>]*href=["'][^"']*fmb-sitewide-visual-fixes\.css[^"']*["'][^>]*>)/i;
-html = replaceRequired(
-  html,
-  safeguardStylesheet,
+  sitewideStylesheet,
   `<meta name="fmb-news-identity-record" content="${identityRecord}">\n<link rel="stylesheet" href="${stylesheetHref}">\n$1`,
   'sitewide visual safeguard stylesheet',
 );
 
-const renderedLegacyLogo = new RegExp(`<(?:img|source)\\b[^>]*(?:src|srcset)=["'][^"']*${identityRecord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[^"']*["']`, 'i');
+html = replaceRequired(
+  html,
+  /<\/body>/i,
+  `<script defer src="${scriptSrc}"></script>\n</body>`,
+  'closing body element',
+);
+
+const renderedLegacyLogo = /<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*fmb-news-official-transparent\.webp[^"']*["']/i;
 if (renderedLegacyLogo.test(html) || /url\([^)]*fmb-news-official-transparent\.webp/i.test(html)) {
-  throw new Error('News center redesign: legacy FMB News logo remains visibly rendered in the generated page');
+  throw new Error('News Center v3: removed FMB News graphic logo is still visibly rendered');
+}
+
+for (const marker of [
+  'news-center-v3',
+  'FMB News Center',
+  'class="nc3-front-grid"',
+  'class="nc3-desk-grid"',
+  'data-news-search',
+  'href="/news/pax-silica-philippines/"',
+]) {
+  if (!html.includes(marker)) throw new Error(`News Center v3: generated page is missing ${marker}`);
 }
 
 await writeFile(pagePath, html, 'utf8');
-console.log('Rebuilt the news landing page as a text-led editorial news center and removed the legacy FMB News logo.');
+console.log('Published the strict navy-purple FMB News Center v3 with a responsive digital-broadsheet layout and functional story search.');
