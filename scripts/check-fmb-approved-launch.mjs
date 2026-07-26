@@ -143,8 +143,8 @@ if (!home.includes('fmb-corporate-luxury-approved.css?v=20260726-visual-fix-v3')
 if (/main[\s\S]*?<section\b[^>]*class=["'][^"']*\bfeatured\b[^"']*["']/i.test(home)) {
   fail('homepage still contains the retired full-width featured band');
 }
-const heroIndex = home.indexOf('<section class="hero"');
-const controlCenterIndex = home.indexOf('<section class="fmb-approved-control-center"');
+const heroIndex = home.indexOf('id="heroTitle"');
+const controlCenterIndex = home.indexOf('class="fmb-approved-control-center"');
 if (heroIndex < 0 || controlCenterIndex <= heroIndex) {
   fail('homepage must place the approved control center after the hero');
 }
