@@ -27,7 +27,8 @@ const publicHtml = (await walk(dist)).filter((file) => {
 const cssPath = path.join(dist, 'assets', 'css', 'fmb-unified-system.css');
 const jsPath = path.join(dist, 'assets', 'js', 'fmb-unified-system.js');
 const sitewideVisualCssPath = path.join(dist, 'assets', 'css', 'fmb-sitewide-visual-fixes.css');
-for (const file of [cssPath, jsPath, sitewideVisualCssPath]) {
+const homepageRepairCssPath = path.join(dist, 'assets', 'css', 'fmb-homepage-repair.css');
+for (const file of [cssPath, jsPath, sitewideVisualCssPath, homepageRepairCssPath]) {
   const info = await stat(file);
   if (!info.isFile() || info.size < 1000) fail(`${relative(file)} is missing or incomplete`);
 }
@@ -98,8 +99,19 @@ for (const file of publicHtml) {
     .filter((tag) => /\brel=["'][^"']*\bstylesheet\b[^"']*["']/i.test(tag))
     .map((tag) => tag.match(/\bhref=["']([^"']+)["']/i)?.[1])
     .filter(Boolean);
-  if (stylesheetHrefs.at(-1) !== '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-readability-v2') {
-    fail(`${name} must load the sitewide visual safeguards after every other stylesheet`);
+
+  const sitewideHref = '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-readability-v2';
+  const homepageRepairHref = '/assets/css/fmb-homepage-repair.css?v=20260726-landing-repair-v1';
+  if (name === 'index.html') {
+    if ((html.match(/fmb-homepage-repair\.css/g) || []).length !== 1) fail('index.html must load exactly one homepage repair stylesheet');
+    if (stylesheetHrefs.at(-2) !== sitewideHref || stylesheetHrefs.at(-1) !== homepageRepairHref) {
+      fail('index.html must load the sitewide safeguards followed immediately by the homepage repair stylesheet');
+    }
+  } else {
+    if (html.includes('fmb-homepage-repair.css')) fail(`${name} must not load the homepage-only repair stylesheet`);
+    if (stylesheetHrefs.at(-1) !== sitewideHref) {
+      fail(`${name} must load the sitewide visual safeguards after every other stylesheet`);
+    }
   }
 
   for (const forbidden of ['fmb-coded-visual', 'shots-v2', 'final-showcase', 'localhost:', '127.0.0.1:', 'TODO:', 'PLACEHOLDER']) {
@@ -125,8 +137,14 @@ for (const marker of [
 }
 if ((home.match(/id="how-fmb-can-help"/g) || []).length !== 1) fail('homepage must preserve exactly one How FMB can help section');
 if ((home.match(/id="bulletin"/g) || []).length !== 1) fail('homepage must preserve exactly one bulletin');
-if (!home.includes('fmb-corporate-luxury-approved.css?v=20260726-visual-fix-v2')) {
+if (!home.includes('fmb-corporate-luxury-approved.css?v=20260726-visual-fix-v3')) {
   fail('homepage is missing the cache-busted approved dashboard stylesheet');
+}
+if (/main[\s\S]*?<section\b[^>]*class=["'][^"']*\bfeatured\b[^"']*["']/i.test(home)) {
+  fail('homepage still contains the retired full-width featured band');
+}
+if (!home.includes('fmb-approved-control-center')) {
+  fail('homepage is missing the approved control center');
 }
 
 const approvedCss = await readFile(path.join(dist, 'assets', 'css', 'fmb-corporate-luxury-approved.css'), 'utf8');
@@ -151,6 +169,16 @@ for (const marker of [
   '@media (max-width: 520px)',
 ]) {
   if (!sitewideVisualCss.includes(marker)) fail(`sitewide visual safeguards are missing ${marker}`);
+}
+
+const homepageRepairCss = await readFile(homepageRepairCssPath, 'utf8');
+for (const marker of [
+  'main > .featured',
+  'main > .hero + .fmb-approved-control-center',
+  '.fmb-approved-quote blockquote',
+  '.fmb-approved-quote img',
+]) {
+  if (!homepageRepairCss.includes(marker)) fail(`homepage repair stylesheet is missing ${marker}`);
 }
 
 const originalPax = await readFile(path.join(dist, 'news', 'pax-silica', 'index.html'), 'utf8');
@@ -184,4 +212,4 @@ for (const privateRoute of ['app/index.html', 'admin.html']) {
   }
 }
 
-console.log(`FMB approved launch gate passed ${checkedPages} public pages with hamburger-only mobile navigation, live news routes, PST headlines, and no duplicate launch bundles.`);
+console.log(`FMB approved launch gate passed ${checkedPages} public pages with hamburger-only mobile navigation, live news routes, PST headlines, and a verified homepage repair layer.`);

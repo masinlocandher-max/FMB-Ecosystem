@@ -6,16 +6,16 @@ const dist=path.join(repositoryRoot,'dist');
 const source=path.join(repositoryRoot,'apps','withlovefmb');
 const cssSource=path.join(source,'assets','css','fmb-corporate-luxury-approved.css');
 const cssTarget=path.join(dist,'assets','css','fmb-corporate-luxury-approved.css');
-const purplePortrait='/assets/images/fmb-approved/fmb-purple-identity.svg';
+const quotePortrait='/assets/images/fmb-approved/francine-portrait-front.webp';
 
-for(const file of [cssSource,path.join(source,purplePortrait.replace(/^\/assets\//,'assets/'))]){
+for(const file of [cssSource,path.join(source,quotePortrait.replace(/^\/assets\//,'assets/'))]){
   const info=await stat(file);
   if(!info.isFile()||info.size<500)throw new Error(`Approved dashboard dependency is missing: ${file}`);
 }
 await copyFile(cssSource,cssTarget);
 
 const fontLinks='<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">';
-const cssLink='<link rel="stylesheet" href="/assets/css/fmb-corporate-luxury-approved.css?v=20260726-visual-fix-v2">';
+const cssLink='<link rel="stylesheet" href="/assets/css/fmb-corporate-luxury-approved.css?v=20260726-visual-fix-v3">';
 
 function addBodyClass(html,className){
   return html.replace(/<body([^>]*)>/i,(match,attrs='')=>{
@@ -70,6 +70,7 @@ function removeHomeDuplicates(html){
     /<section\b[^>]*id=["']fmb-authority["'][^>]*>/i,
     /<section\b[^>]*id=["']ecosystem["'][^>]*>/i,
     /<section\b[^>]*id=["']work["'][^>]*>/i,
+    /<section\b[^>]*class=["'][^"']*\bfeatured\b[^"']*["'][^>]*>/i,
   ];
   for(const pattern of patterns)html=removeSectionByMarker(html,pattern);
   return html;
@@ -125,7 +126,7 @@ const dashboard=`<section class="fmb-approved-control-center" aria-label="FMB co
 const heroStack=`<aside class="fmb-approved-hero-stack" aria-label="Live FMB headquarters information">
   <section class="fmb-approved-time fmb-approved-glass"><small>Philippine Standard Time · Live</small><time data-fmb-pst>Philippine Standard Time</time><span>Asia/Manila</span></section>
   <section class="fmb-approved-ecosystem fmb-approved-glass"><div class="fmb-approved-panel-head"><small>FMB&CO. Ecosystem</small><a href="/fmbandco/">All brands →</a></div><div class="fmb-approved-brand-row"><img src="/assets/images/projects/senz-logo-clean.png" width="1080" height="416" alt="SENZ"><img src="/assets/images/projects/cognita-logo-clean.png" width="1359" height="491" alt="Cognita"><img src="/assets/images/signature-transparent.png" width="981" height="441" alt="With Love, FMB"></div></section>
-  <section class="fmb-approved-quote fmb-approved-glass"><blockquote>“Giving back is not separate from the business. It is the reason we build.”</blockquote><img src="${purplePortrait}" width="600" height="750" alt="Francine Marie Bautista purple identity portrait"></section>
+  <section class="fmb-approved-quote fmb-approved-glass"><blockquote>“Giving back is not separate from the business. It is the reason we build.”</blockquote><img src="${quotePortrait}" width="922" height="1152" alt="Francine Marie Bautista"></section>
 </aside>`;
 
 const homeFile=path.join(dist,'index.html');
@@ -138,7 +139,7 @@ home=home.replace(/<p class="hero-lede">[\s\S]*?<\/p>/i,'<p class="hero-lede">I 
 home=home.replace(/<picture class="hero-portrait">[\s\S]*?<\/picture>/i,'<picture class="hero-portrait"><img id="homeHeroImage" src="/assets/images/fmb-approved/francine-portrait-front.webp" width="922" height="1152" alt="Francine Marie Bautista in the approved corporate portrait"></picture>');
 home=home.replace(/(<\/section>\s*)(?=\s*<section[^>]*class="fmb-approved-control-center")/i,'$1');
 if(!home.includes('class="fmb-approved-hero-stack"'))home=home.replace(/(<\/picture>)/i,`$1\n${heroStack}`);
-if(!home.includes('class="fmb-approved-control-center"'))home=home.replace(/(<\/section>\s*)(?=\s*<section[^>]*class="bottom-grid)/i,`${dashboard}\n$1`);
+if(!home.includes('class="fmb-approved-control-center"'))home=home.replace(/(<\/section>\s*)(?=\s*<section[^>]*class="bottom-grid)/i,`$1\n${dashboard}\n`);
 if(!home.includes('class="fmb-approved-control-center"'))home=home.replace('</main>',`${dashboard}\n</main>`);
 await writeFile(homeFile,home,'utf8');
 
@@ -149,7 +150,7 @@ for(const page of ['news/index.html','music/index.html','ebooks/index.html']){
   await writeFile(file,html,'utf8');
 }
 
-for(const required of ['fmb-approved-dashboard','fmb-approved-control-center','fmb-approved-hero-stack','Direction<br>before <em>noise.</em>',purplePortrait]){
+for(const required of ['fmb-approved-dashboard','fmb-approved-control-center','fmb-approved-hero-stack','Direction<br>before <em>noise.</em>',quotePortrait]){
   if(!home.includes(required))throw new Error(`Approved homepage is missing ${required}`);
 }
-console.log('Built the approved FMB corporate luxury dashboard, project stories, News Center, Music Library, categorized eBook Library, and uploaded portrait placement.');
+console.log('Built the approved FMB corporate luxury dashboard, project stories, News Center, Music Library, categorized eBook Library, and repaired homepage portrait placement.');
