@@ -28,7 +28,7 @@ for(const file of await walk(root)){
   for(const marker of retired)if(html.includes(marker))fail(`${name} still renders retired identity ${marker}`);
   if(/\/assets\/images\/fmb\/francine-founder-[^"'\s)]+\.(?:webp|png|jpe?g)/i.test(html))fail(`${name} still renders a generic founder cutout`);
   if(name.startsWith('news/')){
-    if(!/(?:FMB(?:&amp;|&)CO\. News|FMB News|Francine Marie Bautista)/i.test(html))fail(`${name} has no visible publisher identity`);
+    if(!/(?:FMB News Center|FMB(?:&amp;|&)CO\. News|FMB News|Francine Marie Bautista)/i.test(html))fail(`${name} has no visible publisher identity`);
     newsPages+=1;
   }
   if(controlledReadingRoutes.includes(name)&&!html.includes('membership-gate.js'))fail(`${name} is missing its controlled reading gate`);
@@ -46,7 +46,8 @@ for(const [relative,marker] of Object.entries(required)){
 
 const newsIndex=await readFile(path.join(root,'news/index.html'),'utf8');
 if(newsIndex.includes('news-center-v2')){
-  if(!newsIndex.includes('nc-text-masthead')||!newsIndex.includes('THE NEWSROOM'))fail('news/index.html is missing the text-led newsroom masthead');
+  if(!newsIndex.includes('nc-text-masthead')||!newsIndex.includes('News Center</strong>')||!newsIndex.includes('Filipino ang Mismong Balita.'))fail('news/index.html is missing the approved FMB News Center masthead and tagline');
+  if(!newsIndex.includes('news-channel-v4')||!newsIndex.includes('Live News Desk'))fail('news/index.html is missing the broadcast-channel redesign');
   if(!newsIndex.includes(`<meta name="fmb-news-identity-record" content="${legacyNewsLogo}">`))fail('news/index.html is missing its non-rendered identity record');
   const renderedLogo=/<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*fmb-news-official-transparent\.webp[^"']*["']/i.test(newsIndex)||/url\([^)]*fmb-news-official-transparent\.webp/i.test(newsIndex);
   if(renderedLogo)fail('news/index.html still visibly renders the removed FMB News graphic logo');
