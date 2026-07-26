@@ -26,7 +26,8 @@ const publicHtml = (await walk(dist)).filter((file) => {
 
 const cssPath = path.join(dist, 'assets', 'css', 'fmb-unified-system.css');
 const jsPath = path.join(dist, 'assets', 'js', 'fmb-unified-system.js');
-for (const file of [cssPath, jsPath]) {
+const sitewideVisualCssPath = path.join(dist, 'assets', 'css', 'fmb-sitewide-visual-fixes.css');
+for (const file of [cssPath, jsPath, sitewideVisualCssPath]) {
   const info = await stat(file);
   if (!info.isFile() || info.size < 1000) fail(`${relative(file)} is missing or incomplete`);
 }
@@ -79,6 +80,7 @@ for (const file of publicHtml) {
     'fmb-approved-launch',
     'fmb-announcement-track',
     '/assets/css/fmb-unified-system.css',
+    '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-all-pages-v1',
     '/assets/js/fmb-unified-system.js',
   ]) {
     if (!html.includes(marker)) fail(`${name} is missing ${marker}`);
@@ -86,9 +88,19 @@ for (const file of publicHtml) {
 
   if (/class=["'][^"']*\b(?:fmb-mobile-dock|nc-mobile-dock)\b/i.test(html)) fail(`${name} still contains a retired sticky mobile dock`);
   if ((html.match(/fmb-unified-system\.css/g) || []).length !== 1) fail(`${name} must load exactly one unified stylesheet`);
+  if ((html.match(/fmb-sitewide-visual-fixes\.css/g) || []).length !== 1) fail(`${name} must load exactly one sitewide visual safeguards stylesheet`);
   if ((html.match(/fmb-unified-system\.js/g) || []).length !== 1) fail(`${name} must load exactly one unified interaction script`);
   if ((html.match(/class="fmb-shell-header"/g) || []).length !== 1) fail(`${name} must contain exactly one unified header`);
   if ((html.match(/class="fmb-shell-footer"/g) || []).length !== 1) fail(`${name} must contain exactly one unified footer`);
+
+  const stylesheetHrefs = [...html.matchAll(/<link\b[^>]*>/gi)]
+    .map((match) => match[0])
+    .filter((tag) => /\brel=["'][^"']*\bstylesheet\b[^"']*["']/i.test(tag))
+    .map((tag) => tag.match(/\bhref=["']([^"']+)["']/i)?.[1])
+    .filter(Boolean);
+  if (stylesheetHrefs.at(-1) !== '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-all-pages-v1') {
+    fail(`${name} must load the sitewide visual safeguards after every other stylesheet`);
+  }
 
   for (const forbidden of ['fmb-coded-visual', 'shots-v2', 'final-showcase', 'localhost:', '127.0.0.1:', 'TODO:', 'PLACEHOLDER']) {
     if (html.includes(forbidden)) fail(`${name} contains preview or temporary marker ${forbidden}`);
@@ -113,6 +125,33 @@ for (const marker of [
 }
 if ((home.match(/id="how-fmb-can-help"/g) || []).length !== 1) fail('homepage must preserve exactly one How FMB can help section');
 if ((home.match(/id="bulletin"/g) || []).length !== 1) fail('homepage must preserve exactly one bulletin');
+if (!home.includes('fmb-corporate-luxury-approved.css?v=20260726-visual-fix-v2')) {
+  fail('homepage is missing the cache-busted approved dashboard stylesheet');
+}
+
+const approvedCss = await readFile(path.join(dist, 'assets', 'css', 'fmb-corporate-luxury-approved.css'), 'utf8');
+for (const marker of [
+  'body.fmb-corporate-luxury-v2.fmb-approved-dashboard .hero{',
+  'grid-template-columns:minmax(340px,.86fr) minmax(320px,.72fr) minmax(260px,.52fr)!important',
+  'mask-composite:add!important',
+  '-webkit-mask-composite:source-over!important',
+]) {
+  if (!approvedCss.includes(marker)) fail(`approved dashboard stylesheet is missing visual regression guard ${marker}`);
+}
+
+const sitewideVisualCss = await readFile(sitewideVisualCssPath, 'utf8');
+for (const marker of [
+  'body.fmb-unified-public > .top-shell',
+  'body.fmb-corporate-luxury-v2.fmb-unified-news .nc-broadcast-identity',
+  'body.fmb-reader-modern :is(.reader-cover, .reading-hero)',
+  'body.fmb-unified-about .fmb-about-hero h1',
+  'body.fmb-unified-withlove .wlf-hero h1',
+  'body.fmb-unified-fmbandco .fco-hero h1',
+  'body:is(.fmb-unified-participate, .fmb-unified-work) .fmb-journey-main > h1',
+  '@media (max-width: 520px)',
+]) {
+  if (!sitewideVisualCss.includes(marker)) fail(`sitewide visual safeguards are missing ${marker}`);
+}
 
 const originalPax = await readFile(path.join(dist, 'news', 'pax-silica', 'index.html'), 'utf8');
 for (const marker of ['Pax Silica, Without the Jargon', '/news/pax-silica/']) {
