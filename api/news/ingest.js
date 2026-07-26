@@ -1,10 +1,14 @@
 'use strict';
 
 const crypto = require('node:crypto');
+const dns = require('node:dns').promises;
+const net = require('node:net');
 
 const MAX_SOURCES_PER_RUN = 20;
 const MAX_ITEMS_PER_SOURCE = 15;
-const HIGH_RISK_PATTERN = /\b(alleged|accused|arrest|charged|crime|criminal|corrupt|corruption|court|dead|death|election|fraud|health|hospital|killed|lawsuit|medical|murder|politic|president|rape|sexual|suicide|violence|weapon)\b/i;
+const MAX_FEED_BYTES = 2 * 1024 * 1024;
+const MAX_REDIRECTS = 3;
+const HIGH_RISK_PATTERN = /\b(alleg(?:ed|ation|ations)|accus(?:ed|ation|ations)|arrest(?:ed|s)?|charg(?:ed|es)|crime|criminal|corrupt(?:ion)?|court|dead|death|disease|drug|election|fraud|government|governor|health|hospital|killed|lawsuit|legal|mayor|medical|military|murder|police|politic(?:s|al)?|president|rape|senate|sexual|suicide|violence|weapon)\b/i;
 
 function send(res, status, payload) {
   res.statusCode = status;
@@ -87,6 +91,68 @@ async function authorize(req) {
   return { ok: false, trigger: 'manual' };
 }
 
+function isPrivateIp(address) {
+  const value = String(address || '').toLowerCase().split('%')[0];
+  if (net.isIP(value) === 4) {
+    const parts = value.split('.').map(Number);
+    const [a, b] = parts;
+    return a === 0 || a === 10 || a === 127 ||
+      (a === 100 && b >= 64 && b <= 127) ||
+      (a === 169 && b === 254) ||
+      (a === 172 && b >= 16 && b <= 31) ||
+      (a === 192 && b === 168) ||
+      (a === 198 && (b === 18 || b === 19)) ||
+      a >= 224;
+  }
+  if (net.isIP(value) === 6) {
+    if (value === '::' || value === '::1') return true;
+    if (value.startsWith('fc') || value.startsWith('fd') || value.startsWith('fe8') || value.startsWith('fe9') || value.startsWith('fea') || value.startsWith('feb')) return true;
+    const mapped = value.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/);
+    return mapped ? isPrivateIp(mapped[1]) : false;
+  }
+  return true;
+}
+
+function externalUrl(value, base = undefined) {
+  try {
+    const parsed = new URL(String(value || '').trim(), base);
+    if (!['http:', 'https:'].includes(parsed.protocol) || parsed.username || parsed.password) return '';
+    return parsed.toString();
+  } catch {
+    return '';
+  }
+}
+
+async function assertPublicFeedUrl(value) {
+  let parsed;
+  try { parsed = new URL(String(value || '').trim()); }
+  catch { throw new Error('Feed URL is invalid.'); }
+  if (parsed.protocol !== 'https:' || parsed.username || parsed.password) throw new Error('Feed URL must use public HTTPS without embedded credentials.');
+  const hostname = parsed.hostname.toLowerCase();
+  if (!hostname || hostname === 'localhost' || hostname.endsWith('.localhost') || hostname.endsWith('.local') || hostname.endsWith('.internal')) {
+    throw new Error('Private or local feed hosts are not allowed.');
+  }
+  if (net.isIP(hostname) && isPrivateIp(hostname)) throw new Error('Private network feed addresses are not allowed.');
+  if (!net.isIP(hostname)) {
+    const records = await dns.lookup(hostname, { all: true, verbatim: true });
+    if (!records.length || records.some((record) => isPrivateIp(record.address))) throw new Error('Feed host does not resolve to a public network address.');
+  }
+  return parsed;
+}
+
+async function fetchPublicFeed(initialUrl, options) {
+  let current = String(initialUrl || '');
+  for (let redirects = 0; redirects <= MAX_REDIRECTS; redirects += 1) {
+    const safeUrl = await assertPublicFeedUrl(current);
+    const response = await fetch(safeUrl, { ...options, redirect: 'manual' });
+    if (![301, 302, 303, 307, 308].includes(response.status)) return response;
+    const location = response.headers.get('location');
+    if (!location) throw new Error('Feed redirect did not include a destination.');
+    current = new URL(location, safeUrl).toString();
+  }
+  throw new Error('Feed redirected too many times.');
+}
+
 function decodeEntities(value = '') {
   const map = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' };
   return String(value)
@@ -135,7 +201,7 @@ function parseFeed(xml, source) {
     const title = stripHtml(firstMatch(block, [/<title[^>]*>([\s\S]*?)<\/title>/i]));
     const rssLink = firstMatch(block, [/<link[^>]*>([\s\S]*?)<\/link>/i]);
     const atomLink = attr(block, /<link\b[^>]*>/i, 'href');
-    const url = (isAtom ? atomLink || rssLink : rssLink || atomLink).trim();
+    const url = externalUrl((isAtom ? atomLink || rssLink : rssLink || atomLink).trim(), source.feed_url);
     const guid = firstMatch(block, [/<guid[^>]*>([\s\S]*?)<\/guid>/i, /<id[^>]*>([\s\S]*?)<\/id>/i]) || url;
     const rawExcerpt = firstMatch(block, [
       /<content:encoded[^>]*>([\s\S]*?)<\/content:encoded>/i,
@@ -165,7 +231,7 @@ function parseFeed(xml, source) {
       excerpt: truncate(stripHtml(rawExcerpt), 1200),
       publishedAt: parseDate(published),
       author: truncate(author, 160),
-      imageUrl: truncate(mediaUrl || enclosureUrl, 1200)
+      imageUrl: truncate(externalUrl(mediaUrl || enclosureUrl, source.feed_url), 1200)
     };
   }).filter((item) => item.title && /^https?:\/\//i.test(item.url));
 }
@@ -228,22 +294,25 @@ async function fetchSource(source) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 12000);
   try {
-    const response = await fetch(source.feed_url, { headers, signal: controller.signal, redirect: 'follow' });
+    const response = await fetchPublicFeed(source.feed_url, { headers, signal: controller.signal });
     if (response.status === 304) return { items: [], notModified: true, etag: source.etag, lastModified: source.last_modified };
     if (!response.ok) throw new Error(`Feed returned ${response.status}.`);
     const contentType = response.headers.get('content-type') || '';
+    const contentLength = Number(response.headers.get('content-length') || 0);
+    if (contentLength > MAX_FEED_BYTES) throw new Error('Feed exceeds the 2 MB safety limit.');
     const text = await response.text();
+    if (Buffer.byteLength(text, 'utf8') > MAX_FEED_BYTES) throw new Error('Feed exceeds the 2 MB safety limit.');
     let items;
     if (source.source_type === 'json_feed' || /json/i.test(contentType)) {
       const json = JSON.parse(text);
       items = (json.items || []).slice(0, MAX_ITEMS_PER_SOURCE).map((entry) => ({
         title: truncate(stripHtml(entry.title), 240),
-        url: entry.url || entry.external_url || '',
+        url: externalUrl(entry.url || entry.external_url || '', source.feed_url),
         guid: truncate(entry.id || entry.url || '', 500),
         excerpt: truncate(stripHtml(entry.summary || entry.content_text || entry.content_html), 1200),
         publishedAt: parseDate(entry.date_published || entry.date_modified),
         author: truncate(stripHtml(entry.author?.name || entry.authors?.[0]?.name), 160),
-        imageUrl: truncate(entry.image || entry.banner_image || '', 1200)
+        imageUrl: truncate(externalUrl(entry.image || entry.banner_image || '', source.feed_url), 1200)
       })).filter((item) => item.title && /^https?:\/\//i.test(item.url));
     } else {
       items = parseFeed(text, source);
@@ -285,44 +354,48 @@ async function ingest(trigger) {
         const feed = await fetchSource(source);
         totals.items_seen += feed.items.length;
         for (const item of feed.items) {
-          const risk = inferRisk(source, item);
-          let summary;
-          try { summary = await createSummary(item, source); }
-          catch (error) {
-            summary = { summary: truncate(item.excerpt, 420), ai: false };
-            errors.push(`${source.name}: ${error.message}`);
-          }
-          const canAutoPublish = Boolean(source.auto_publish && risk === 'low');
-          const article = {
-            source_id: source.id,
-            source_item_id: item.guid || item.url,
-            source_url: item.url,
-            source_name: source.name,
-            title: item.title,
-            slug: slugify(item.title, item.url),
-            source_excerpt: item.excerpt || null,
-            summary: summary.summary || null,
-            category: source.category || 'Philippines',
-            region: source.region || null,
-            author_line: item.author || null,
-            image_url: item.imageUrl || null,
-            status: canAutoPublish ? 'published' : 'pending_review',
-            risk_level: risk,
-            verification_status: canAutoPublish ? 'verified' : 'imported',
-            is_ai_assisted: Boolean(summary.ai),
-            seo_title: truncate(item.title, 70),
-            seo_description: summary.seoDescription || truncate(summary.summary || item.excerpt, 155) || null,
-            source_published_at: item.publishedAt,
-            published_at: canAutoPublish ? new Date().toISOString() : null
-          };
-          const inserted = await supabase('news_articles?on_conflict=source_url', {
-            method: 'POST',
-            headers: { Prefer: 'resolution=ignore-duplicates,return=representation' },
-            body: JSON.stringify(article)
-          });
-          if (inserted?.length) {
-            totals.items_imported += 1;
-            if (canAutoPublish) totals.items_published += 1;
+          try {
+            const risk = inferRisk(source, item);
+            let summary;
+            try { summary = await createSummary(item, source); }
+            catch (error) {
+              summary = { summary: truncate(item.excerpt, 420), ai: false };
+              errors.push(`${source.name}: ${error.message}`);
+            }
+            const canAutoPublish = Boolean(source.auto_publish && risk === 'low');
+            const article = {
+              source_id: source.id,
+              source_item_id: item.guid || item.url,
+              source_url: item.url,
+              source_name: source.name,
+              title: item.title,
+              slug: slugify(item.title, item.url),
+              source_excerpt: item.excerpt || null,
+              summary: summary.summary || null,
+              category: source.category || 'Philippines',
+              region: source.region || null,
+              author_line: item.author || null,
+              image_url: item.imageUrl || null,
+              status: canAutoPublish ? 'published' : 'pending_review',
+              risk_level: risk,
+              verification_status: canAutoPublish ? 'verified' : 'imported',
+              is_ai_assisted: Boolean(summary.ai),
+              seo_title: truncate(item.title, 70),
+              seo_description: summary.seoDescription || truncate(summary.summary || item.excerpt, 155) || null,
+              source_published_at: item.publishedAt,
+              published_at: canAutoPublish ? new Date().toISOString() : null
+            };
+            const inserted = await supabase('news_articles?on_conflict=source_url', {
+              method: 'POST',
+              headers: { Prefer: 'resolution=ignore-duplicates,return=representation' },
+              body: JSON.stringify(article)
+            });
+            if (inserted?.length) {
+              totals.items_imported += 1;
+              if (canAutoPublish) totals.items_published += 1;
+            }
+          } catch (error) {
+            errors.push(`${source.name} / ${truncate(item.title, 80)}: ${error.message}`);
           }
         }
         await supabase(`news_sources?id=eq.${encodeURIComponent(source.id)}`, {
