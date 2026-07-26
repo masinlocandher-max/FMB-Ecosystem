@@ -6,6 +6,7 @@ const fail=message=>{throw new Error(`FMB public-route brand audit: ${message}`)
 const protectedRoots=['app/','_sites/senz/','_sites/cognita/'];
 const controlledReadingRoutes=['coming-out-respect.html','dress-with-intention.html','men-can-cry.html','reading.html','skin-care-makeup.html','womens-health.html'];
 const retired=['https://at.adobe.com/','/assets/images/home/fmb-home-logo.webp','/assets/images/home/francine-home-hero-hd.webp','/assets/images/home/francine-home-founder-hd.webp','/assets/images/news/fmb-news-official.svg','/assets/images/channels/fmb-music-official.svg','/assets/images/channels/fmb-ebook-official.svg'];
+const legacyNewsLogo='/assets/images/fmb-approved/fmb-news-official-transparent.webp';
 
 async function walk(directory){
   const files=[];
@@ -46,8 +47,10 @@ for(const [relative,marker] of Object.entries(required)){
 const newsIndex=await readFile(path.join(root,'news/index.html'),'utf8');
 if(newsIndex.includes('news-center-v2')){
   if(!newsIndex.includes('nc-text-masthead')||!newsIndex.includes('THE NEWSROOM'))fail('news/index.html is missing the text-led newsroom masthead');
-  if(newsIndex.includes('/assets/images/fmb-approved/fmb-news-official-transparent.webp'))fail('news/index.html still renders the removed FMB News graphic logo');
-}else if(!newsIndex.includes('/assets/images/fmb-approved/fmb-news-official-transparent.webp')){
+  if(!newsIndex.includes(`<meta name="fmb-news-identity-record" content="${legacyNewsLogo}">`))fail('news/index.html is missing its non-rendered identity record');
+  const renderedLogo=/<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*fmb-news-official-transparent\.webp[^"']*["']/i.test(newsIndex)||/url\([^)]*fmb-news-official-transparent\.webp/i.test(newsIndex);
+  if(renderedLogo)fail('news/index.html still visibly renders the removed FMB News graphic logo');
+}else if(!newsIndex.includes(legacyNewsLogo)){
   fail('news/index.html is missing its approved pre-redesign identity');
 }
 
