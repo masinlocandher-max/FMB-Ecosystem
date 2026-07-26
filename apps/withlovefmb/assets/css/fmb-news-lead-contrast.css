@@ -1,0 +1,38 @@
+/* FMB News lead-story contrast lock.
+ * The lead story sits over a dark photographic gradient, so every text layer
+ * must be assigned explicitly instead of inheriting light-section colors.
+ */
+
+body.news-channel-route .nc-lead-broadcast,
+body.news-channel-route .nc-lead-broadcast > a,
+body.news-channel-route .nc-lead-overlay {
+  color: #fffdf8 !important;
+}
+
+body.news-channel-route .nc-lead-overlay h2 {
+  color: #fffdf8 !important;
+  text-shadow: 0 2px 22px rgba(16, 8, 14, 0.72);
+}
+
+body.news-channel-route .nc-lead-overlay .nc-lead-meta,
+body.news-channel-route .nc-lead-overlay .nc-lead-deck {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+body.news-channel-route .nc-lead-overlay .nc-signal-tag,
+body.news-channel-route .nc-lead-overlay .nc-broadcast-action,
+body.news-channel-route .nc-lead-overlay .nc-lead-meta span {
+  color: #f3d58c !important;
+}
+
+body.news-channel-route .nc-lead-broadcast .news-visual::after {
+  background: linear-gradient(
+    180deg,
+    rgba(17, 11, 16, 0.08) 10%,
+    rgba(17, 11, 16, 0.94) 100%
+  ) !important;
+}
+
+body.news-channel-route .nc-lead-broadcast .news-visual figcaption {
+  color: rgba(255, 255, 255, 0.68) !important;
+}

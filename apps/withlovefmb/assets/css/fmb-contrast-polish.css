@@ -1,0 +1,515 @@
+/*
+ * FMB final contrast polish
+ * Explicit page-family contracts loaded after every legacy stylesheet.
+ * Dark surfaces receive light copy; light surfaces receive dark copy.
+ */
+
+:root {
+  --fmb-contrast-on-dark: #fffdf8;
+  --fmb-contrast-on-dark-body: rgba(255, 255, 255, 0.86);
+  --fmb-contrast-on-dark-muted: rgba(255, 255, 255, 0.68);
+  --fmb-contrast-on-dark-link: #f3d58c;
+  --fmb-contrast-on-light: #211526;
+  --fmb-contrast-on-light-body: #51475a;
+  --fmb-contrast-on-light-muted: #6b606f;
+  --fmb-contrast-on-light-link: #602786;
+}
+
+/* Core safeguard: text on known dark surfaces. */
+body :is(
+  .hero,
+  #fmb-authority,
+  .fmb-strategy-section.dark,
+  .fmb-about-hero,
+  .fmb-about-section.purple,
+  .fmb-about-quotes,
+  .fmb-about-work,
+  .wlf-hero,
+  .wlf-card.featured,
+  .wlf-volunteer-band,
+  .wlf-footer,
+  .fco-hero,
+  .fco-section.purple,
+  .fco-gateway-hero,
+  .fco-footer,
+  .projects-hero,
+  .project-rule,
+  .project-cta,
+  .catalog-card.news,
+  .nc-broadcast-identity,
+  .nc-index,
+  .nc-story-media,
+  .nc-reflection,
+  .nc-next,
+  .music-sidebar,
+  .music-hero,
+  .music-section,
+  .music-credits-modern,
+  .music-mini-player,
+  .fmb-music-modern .fmb-product-footer,
+  .ebook-reading-principles,
+  .fmb-ebooks-modern .fmb-product-header,
+  .fmb-ebooks-modern .fmb-product-footer,
+  .reader-callout,
+  [data-theme="dark"]
+) {
+  color: var(--fmb-contrast-on-dark) !important;
+  color-scheme: dark;
+}
+
+body :is(
+  .hero,
+  #fmb-authority,
+  .fmb-strategy-section.dark,
+  .fmb-about-hero,
+  .fmb-about-section.purple,
+  .fmb-about-quotes,
+  .fmb-about-work,
+  .wlf-hero,
+  .wlf-card.featured,
+  .wlf-volunteer-band,
+  .wlf-footer,
+  .fco-hero,
+  .fco-section.purple,
+  .fco-gateway-hero,
+  .fco-footer,
+  .projects-hero,
+  .project-rule,
+  .project-cta,
+  .catalog-card.news,
+  .nc-broadcast-identity,
+  .nc-index,
+  .nc-reflection,
+  .nc-next,
+  .music-sidebar,
+  .music-hero,
+  .music-section,
+  .music-credits-modern,
+  .music-mini-player,
+  .fmb-music-modern .fmb-product-footer,
+  .ebook-reading-principles,
+  .fmb-ebooks-modern .fmb-product-header,
+  .fmb-ebooks-modern .fmb-product-footer,
+  .reader-callout,
+  [data-theme="dark"]
+) :is(h1, h2, h3, h4, h5, h6, blockquote, strong) {
+  color: var(--fmb-contrast-on-dark) !important;
+}
+
+body :is(
+  .hero,
+  #fmb-authority,
+  .fmb-strategy-section.dark,
+  .fmb-about-hero,
+  .fmb-about-section.purple,
+  .fmb-about-quotes,
+  .fmb-about-work,
+  .wlf-hero,
+  .wlf-card.featured,
+  .wlf-volunteer-band,
+  .wlf-footer,
+  .fco-hero,
+  .fco-section.purple,
+  .fco-gateway-hero,
+  .fco-footer,
+  .projects-hero,
+  .project-rule,
+  .project-cta,
+  .catalog-card.news,
+  .nc-broadcast-identity,
+  .nc-index,
+  .nc-reflection,
+  .nc-next,
+  .music-sidebar,
+  .music-hero,
+  .music-section,
+  .music-credits-modern,
+  .music-mini-player,
+  .fmb-music-modern .fmb-product-footer,
+  .ebook-reading-principles,
+  .fmb-ebooks-modern .fmb-product-header,
+  .fmb-ebooks-modern .fmb-product-footer,
+  .reader-callout,
+  [data-theme="dark"]
+) :is(p, li, dd, figcaption, small) {
+  color: var(--fmb-contrast-on-dark-body) !important;
+}
+
+body :is(
+  .hero,
+  #fmb-authority,
+  .fmb-strategy-section.dark,
+  .fmb-about-hero,
+  .fmb-about-section.purple,
+  .fmb-about-quotes,
+  .fmb-about-work,
+  .wlf-hero,
+  .wlf-card.featured,
+  .wlf-volunteer-band,
+  .wlf-footer,
+  .fco-hero,
+  .fco-section.purple,
+  .fco-gateway-hero,
+  .fco-footer,
+  .projects-hero,
+  .project-rule,
+  .project-cta,
+  .catalog-card.news,
+  .nc-broadcast-identity,
+  .nc-index,
+  .nc-reflection,
+  .nc-next,
+  .music-sidebar,
+  .music-hero,
+  .music-section,
+  .music-credits-modern,
+  .music-mini-player,
+  .fmb-music-modern .fmb-product-footer,
+  .ebook-reading-principles,
+  .fmb-ebooks-modern .fmb-product-header,
+  .fmb-ebooks-modern .fmb-product-footer,
+  .reader-callout,
+  [data-theme="dark"]
+) :is(
+  .kicker,
+  .eyebrow,
+  .fco-eyebrow,
+  .wlf-kicker,
+  .wlf-overline,
+  .nc-kicker,
+  .fmb-section-kicker,
+  [class*="overline"],
+  [class*="label"],
+  [class*="meta"]
+) {
+  color: var(--fmb-contrast-on-dark-link) !important;
+}
+
+/* Core safeguard: text on known light surfaces. */
+body :is(
+  .fmb-about-mandate,
+  .fmb-about-section:not(.purple),
+  .wlf-manifesto,
+  .wlf-section,
+  .wlf-card:not(.featured),
+  .wlf-yoni,
+  .wlf-future,
+  .fco-section:not(.purple),
+  .fco-purpose-card,
+  .fco-company-card,
+  .fco-founder-copy,
+  .fco-gateway-main,
+  .fco-gateway-card,
+  .project-feature,
+  .projects-catalog,
+  .catalog-card:not(.news),
+  .nc-story-masthead,
+  .nc-article-hero,
+  .nc-article,
+  .nc-factbox,
+  .nc-broadcast-lead,
+  .nc-rundown-panel,
+  .nc-context-feature,
+  .nc-standard,
+  .nc-editor-note,
+  .nc-editor-card,
+  .ebook-hero,
+  .ebook-continue,
+  .ebook-library,
+  .ebook-card,
+  .ebook-disclaimer,
+  .reader-cover,
+  .reading-hero,
+  .chapter,
+  .reading-chapter,
+  [data-theme="light"]
+) {
+  color: var(--fmb-contrast-on-light) !important;
+  color-scheme: light;
+}
+
+body :is(
+  .fmb-about-mandate,
+  .fmb-about-section:not(.purple),
+  .wlf-manifesto,
+  .wlf-section,
+  .wlf-card:not(.featured),
+  .wlf-yoni,
+  .wlf-future,
+  .fco-section:not(.purple),
+  .fco-purpose-card,
+  .fco-company-card,
+  .fco-founder-copy,
+  .fco-gateway-main,
+  .fco-gateway-card,
+  .project-feature,
+  .projects-catalog,
+  .catalog-card:not(.news),
+  .nc-story-masthead,
+  .nc-article-hero,
+  .nc-article,
+  .nc-factbox,
+  .nc-broadcast-lead,
+  .nc-rundown-panel,
+  .nc-context-feature,
+  .nc-standard,
+  .nc-editor-note,
+  .nc-editor-card,
+  .ebook-hero,
+  .ebook-continue,
+  .ebook-library,
+  .ebook-card,
+  .ebook-disclaimer,
+  .reader-cover,
+  .reading-hero,
+  .chapter,
+  .reading-chapter,
+  [data-theme="light"]
+) :is(h1, h2, h3, h4, h5, h6, blockquote, strong) {
+  color: var(--fmb-contrast-on-light) !important;
+}
+
+body :is(
+  .fmb-about-mandate,
+  .fmb-about-section:not(.purple),
+  .wlf-manifesto,
+  .wlf-section,
+  .wlf-card:not(.featured),
+  .wlf-yoni,
+  .wlf-future,
+  .fco-section:not(.purple),
+  .fco-purpose-card,
+  .fco-company-card,
+  .fco-founder-copy,
+  .fco-gateway-main,
+  .fco-gateway-card,
+  .project-feature,
+  .projects-catalog,
+  .catalog-card:not(.news),
+  .nc-story-masthead,
+  .nc-article-hero,
+  .nc-article,
+  .nc-factbox,
+  .nc-broadcast-lead,
+  .nc-rundown-panel,
+  .nc-context-feature,
+  .nc-standard,
+  .nc-editor-note,
+  .nc-editor-card,
+  .ebook-hero,
+  .ebook-continue,
+  .ebook-library,
+  .ebook-card,
+  .ebook-disclaimer,
+  .reader-cover,
+  .reading-hero,
+  .chapter,
+  .reading-chapter,
+  [data-theme="light"]
+) :is(p, li, dd, figcaption, small) {
+  color: var(--fmb-contrast-on-light-body) !important;
+}
+
+/* Links remain visible without repainting button components. */
+body :is(
+  .wlf-hero,
+  .wlf-card.featured,
+  .wlf-volunteer-band,
+  .fco-section.purple,
+  .projects-hero,
+  .project-cta,
+  .catalog-card.news,
+  .nc-index,
+  .nc-reflection,
+  .nc-next,
+  .music-section,
+  .fmb-product-footer,
+  .ebook-reading-principles,
+  .reader-callout
+) a:not([class*="button"]):not([class*="btn"]):not([class*="pill"]) {
+  color: var(--fmb-contrast-on-dark-link) !important;
+}
+
+body :is(
+  .wlf-manifesto,
+  .wlf-section,
+  .fco-section:not(.purple),
+  .project-feature,
+  .projects-catalog,
+  .nc-article,
+  .nc-rundown-panel,
+  .nc-context-feature,
+  .nc-standard,
+  .nc-editor-card,
+  .ebook-library,
+  .ebook-card,
+  .ebook-disclaimer,
+  .chapter,
+  .reading-chapter
+) a:not([class*="button"]):not([class*="btn"]):not([class*="pill"]) {
+  color: var(--fmb-contrast-on-light-link) !important;
+}
+
+/* Fix the late global form-label override that caused dark-on-dark labels. */
+body :is(
+  .fmb-about-work,
+  .fco-section.purple,
+  .wlf-hero,
+  .projects-hero,
+  .project-cta,
+  .nc-reflection,
+  .music-hero,
+  .music-section,
+  .ebook-reading-principles,
+  [data-theme="dark"]
+) form :is(label, legend),
+body form.dark :is(label, legend) {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+body :is(
+  .fmb-about-work,
+  .fco-section.purple,
+  .wlf-hero,
+  .projects-hero,
+  .project-cta,
+  .nc-reflection,
+  .music-hero,
+  .music-section,
+  .ebook-reading-principles,
+  [data-theme="dark"]
+) form :is(
+  input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+  select,
+  textarea
+),
+body form.dark :is(
+  input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+  select,
+  textarea
+) {
+  border-color: rgba(255, 255, 255, 0.24) !important;
+  background: #fff !important;
+  color: #1d1820 !important;
+}
+
+/* Preserve the intended foreground of primary controls. */
+body .wlf-button.primary,
+body .fco-btn:not(.secondary) {
+  color: #211526 !important;
+}
+
+body .music-play-primary,
+body .fmb-ebooks-modern .ebook-hero .fmb-pill.primary,
+body :is(.fco-hero, .fco-section.purple, .fco-gateway-hero) .fco-btn.secondary,
+body :is(.wlf-hero, .wlf-volunteer-band) .wlf-button:not(.primary),
+body :is(.projects-hero, .project-cta) .button.secondary,
+body .music-access-button {
+  color: #fff !important;
+}
+
+/* FMB News article image must render the source at full fidelity. */
+body.news-story-route .nc-story-media .news-visual img,
+body.fmb-unified-news-article .nc-story-media .news-visual img {
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  aspect-ratio: 16 / 9 !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  filter: none !important;
+  image-rendering: auto;
+}
+
+/* Captions on the dark media band are intentionally light. */
+body.news-story-route .nc-story-media .news-visual figcaption,
+body.fmb-unified-news-article .nc-story-media .news-visual figcaption {
+  background: #211c20 !important;
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+
+/* Mobile menus use dark glass and therefore require light navigation text. */
+@media (max-width: 900px) {
+  body :is(.fmb-product-nav, .nc-site-links.is-open, .fco-nav-links.is-open) a {
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
+}
+
+/* Dark components can sit inside otherwise light sections; dark always wins last. */
+body :is(
+  #fmb-authority,
+  .fmb-strategy-section.dark,
+  .fmb-about-hero,
+  .fmb-about-section.purple,
+  .fmb-about-quotes,
+  .fmb-about-work,
+  .wlf-hero,
+  .wlf-card.featured,
+  .wlf-volunteer-band,
+  .wlf-footer,
+  .fco-hero,
+  .fco-section.purple,
+  .fco-gateway-hero,
+  .fco-footer,
+  .projects-hero,
+  .project-rule,
+  .project-cta,
+  .catalog-card.news,
+  .nc-broadcast-identity,
+  .nc-index,
+  .nc-story-media,
+  .nc-reflection,
+  .nc-next,
+  .music-sidebar,
+  .music-hero,
+  .music-section,
+  .music-credits-modern,
+  .music-mini-player,
+  .fmb-music-modern .fmb-product-footer,
+  .ebook-reading-principles,
+  .fmb-ebooks-modern .fmb-product-header,
+  .fmb-ebooks-modern .fmb-product-footer,
+  .reader-callout,
+  [data-theme="dark"]
+) :is(h1, h2, h3, h4, h5, h6, blockquote, strong) {
+  color: var(--fmb-contrast-on-dark) !important;
+}
+
+body :is(
+  #fmb-authority,
+  .fmb-strategy-section.dark,
+  .fmb-about-hero,
+  .fmb-about-section.purple,
+  .fmb-about-quotes,
+  .fmb-about-work,
+  .wlf-hero,
+  .wlf-card.featured,
+  .wlf-volunteer-band,
+  .wlf-footer,
+  .fco-hero,
+  .fco-section.purple,
+  .fco-gateway-hero,
+  .fco-footer,
+  .projects-hero,
+  .project-rule,
+  .project-cta,
+  .catalog-card.news,
+  .nc-broadcast-identity,
+  .nc-index,
+  .nc-story-media,
+  .nc-reflection,
+  .nc-next,
+  .music-sidebar,
+  .music-hero,
+  .music-section,
+  .music-credits-modern,
+  .music-mini-player,
+  .fmb-music-modern .fmb-product-footer,
+  .ebook-reading-principles,
+  .fmb-ebooks-modern .fmb-product-header,
+  .fmb-ebooks-modern .fmb-product-footer,
+  .reader-callout,
+  [data-theme="dark"]
+) :is(p, li, dd, figcaption, small) {
+  color: var(--fmb-contrast-on-dark-body) !important;
+}

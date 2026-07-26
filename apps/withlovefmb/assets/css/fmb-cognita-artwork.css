@@ -1,0 +1,73 @@
+/* Cognita founder artwork reinforcement.
+ * The institutional text and symbols remain vector-sharp while the approved
+ * high-resolution founder portrait is layered by the page for reliable browser rendering.
+ */
+
+.nc-cognita-visual,
+.nc-story-media[aria-label*="Cognita"] .news-visual {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  contain: paint;
+  background: linear-gradient(135deg, #f9fbff 0%, #edf5ff 56%, #cfe5ff 100%);
+}
+
+.nc-cognita-visual > img,
+.nc-story-media[aria-label*="Cognita"] .news-visual > img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center;
+}
+
+.nc-cognita-visual::after,
+.nc-story-media[aria-label*="Cognita"] .news-visual::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 1.5%;
+  right: 1.5%;
+  width: 49%;
+  height: 91%;
+  pointer-events: none;
+  background: url('/assets/images/fmb-approved/francine-portrait-front.webp') right bottom / contain no-repeat;
+  filter: drop-shadow(0 24px 28px rgba(22, 52, 93, 0.18));
+}
+
+.nc-cognita-visual::before,
+.nc-story-media[aria-label*="Cognita"] .news-visual::before {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  right: 43%;
+  bottom: 0;
+  width: 13%;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(237, 245, 255, 0.96), rgba(237, 245, 255, 0));
+}
+
+.nc-cognita-visual .nc-cognita-credit,
+.nc-story-media[aria-label*="Cognita"] .news-visual figcaption {
+  position: relative;
+  z-index: 5;
+}
+
+@media (max-width: 720px) {
+  .nc-cognita-visual::after,
+  .nc-story-media[aria-label*="Cognita"] .news-visual::after {
+    right: -3%;
+    width: 54%;
+    height: 88%;
+  }
+
+  .nc-cognita-visual::before,
+  .nc-story-media[aria-label*="Cognita"] .news-visual::before {
+    right: 42%;
+    width: 16%;
+  }
+}
