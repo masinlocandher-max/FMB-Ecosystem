@@ -6,19 +6,28 @@
   const BRANDS=['FMB&CO.','SENZ','With Love, FMB','Yoni','Cognita','Mabayani'];
   const ACTIVE_STATUSES=new Set(['draft','assigned','acknowledged','in_progress','blocked','submitted','changes_requested']);
   const CONNECTION_CATALOG=[
-    {key:'main_website',name:'Official FMB website',group:'Owned platforms',type:'native',capabilities:['Public route checks','Website task targets','Publication evidence']},
-    {key:'supabase_workspace',name:'Supabase operations database',group:'Owned platforms',type:'native',capabilities:['Authentication','Instructions','Assignments','Evidence','Approvals','Realtime']},
-    {key:'facebook_page',name:'Facebook Page',group:'Meta',type:'oauth',capabilities:['Posts','Comments','Page insights']},
-    {key:'instagram_business',name:'Instagram Business',group:'Meta',type:'oauth',capabilities:['Posts','Reels','Comments','Insights']},
-    {key:'messenger',name:'Messenger',group:'Meta',type:'webhook',capabilities:['Message intake','Question routing','Human handoff']},
-    {key:'linkedin_page',name:'LinkedIn Page',group:'Social publishing',type:'oauth',capabilities:['Company posts','Performance evidence']},
-    {key:'youtube_channel',name:'YouTube Channel',group:'Social publishing',type:'oauth',capabilities:['Videos','Comments','Analytics']},
-    {key:'canva',name:'Canva',group:'Creative production',type:'oauth',capabilities:['Design handoff','Creative links','Approval evidence']},
-    {key:'google_drive',name:'Google Drive',group:'Creative production',type:'oauth',capabilities:['Source files','Deliverables','Evidence files']},
-    {key:'gmail',name:'Gmail',group:'Communications',type:'oauth',capabilities:['Approved email handoff','Inquiry routing']},
-    {key:'github',name:'GitHub',group:'Technology',type:'oauth',capabilities:['Repository work','Issue handoff','Release evidence']},
-    {key:'chatgpt_handoff',name:'ChatGPT and Codex handoff',group:'Technology',type:'webhook',capabilities:['Instruction intake','Research handoff','Human approval queue']}
+    {key:'main_website',integration:'native',name:'Official FMB website',group:'Owned platforms',type:'native',capabilities:['Public route checks','Website task targets','Publication evidence']},
+    {key:'supabase_workspace',integration:'native',name:'Supabase operations database',group:'Owned platforms',type:'native',capabilities:['Authentication','Instructions','Assignments','Evidence','Approvals','Realtime']},
+    {key:'facebook_page',integration:'meta',name:'Facebook Page',group:'Meta',type:'oauth',capabilities:['Posts','Comments','Page insights']},
+    {key:'instagram_business',integration:'meta',name:'Instagram Business',group:'Meta',type:'oauth',capabilities:['Posts','Reels','Comments','Insights']},
+    {key:'messenger',integration:'meta',name:'Messenger',group:'Meta',type:'webhook',capabilities:['Message intake','Question routing','Human handoff']},
+    {key:'linkedin_page',integration:'linkedin',name:'LinkedIn Page',group:'Social publishing',type:'oauth',capabilities:['Company posts','Performance evidence']},
+    {key:'youtube_channel',integration:'google',name:'YouTube Channel',group:'Social publishing',type:'oauth',capabilities:['Videos','Comments','Analytics']},
+    {key:'canva',integration:'canva',name:'Canva',group:'Creative production',type:'oauth',capabilities:['Design handoff','Creative links','Approval evidence']},
+    {key:'google_drive',integration:'google',name:'Google Drive',group:'Creative production',type:'oauth',capabilities:['Source files','Deliverables','Evidence files']},
+    {key:'gmail',integration:'google',name:'Gmail',group:'Communications',type:'oauth',capabilities:['Approved email handoff','Inquiry routing']},
+    {key:'github',integration:'github',name:'GitHub',group:'Technology',type:'oauth',capabilities:['Repository work','Issue handoff','Release evidence']},
+    {key:'chatgpt_handoff',integration:'openai',name:'OpenAI API for ChatGPT and Codex',group:'Technology',type:'api',capabilities:['Instruction intake','Research handoff','Human approval queue']}
   ];
+  const INTEGRATION_SETUP={
+    meta:{name:'Meta developer app',developerUrl:'https://developers.facebook.com/apps/',description:'One Meta app can authorize the Facebook Page, linked Instagram professional account, and Messenger webhook.'},
+    google:{name:'Google Cloud OAuth client',developerUrl:'https://console.cloud.google.com/apis/credentials',description:'Use a Web application OAuth client. Drive, Gmail, and YouTube request separate least-privilege consent.'},
+    linkedin:{name:'LinkedIn developer app',developerUrl:'https://www.linkedin.com/developers/apps',description:'LinkedIn Page publishing requires the Community Management API permissions approved for the app.'},
+    canva:{name:'Canva Connect integration',developerUrl:'https://www.canva.com/developers/integrations',description:'Enable the requested Connect API scopes and add the exact callback URL shown here.'},
+    github:{name:'GitHub OAuth app',developerUrl:'https://github.com/settings/developers',description:'The OAuth app verifies the owner and grants repository access without storing a GitHub password.'},
+    openai:{name:'OpenAI API project',developerUrl:'https://platform.openai.com/settings/organization/api-keys',description:'Use a project-scoped API key. The key is verified server-side and is never returned to this page.'}
+  };
+  const INTEGRATION_API=`${window.FMB_CONFIG?.SUPABASE_URL||'https://wjnavdpppnhxbuydkrkd.supabase.co'}/functions/v1/automation-integrations`;
   const STATUS_LABELS={
     draft:'Draft',
     assigned:'Assigned',
@@ -49,6 +58,8 @@
   let workOrders=[];
   let evidence=[];
   let connections=[];
+  let integrationReadiness={};
+  let integrationGatewayOnline=false;
   let staff=[];
   let signedEvidenceUrls=new Map();
   let realtimeChannel=null;
@@ -244,24 +255,67 @@
   function connectionStatus(record){
     return record?.status||'setup_required';
   }
+  function integrationState(catalog){
+    return catalog.integration==='native'
+      ?{ready:true,hasClientId:true,hasClientSecret:true,hasApiKey:false,config:{}}
+      :(integrationReadiness[catalog.integration]||{ready:false,hasClientId:false,hasClientSecret:false,hasApiKey:false,config:{}});
+  }
+  function providerSetupReady(catalog,setup=integrationState(catalog)){
+    return catalog.key==='messenger'?Boolean(setup.ready&&setup.hasApiKey):Boolean(setup.ready);
+  }
+  function connectionActions(catalog,record,status){
+    if(!isAdmin)return '<span>Visible to operations staff</span>';
+    if(catalog.integration==='native')return '<span>Owned infrastructure</span>';
+    const setup=integrationState(catalog);
+    const ready=providerSetupReady(catalog,setup);
+    if(catalog.integration==='openai'){
+      if(status==='connected_api'){
+        return `<button class="primary" type="button" data-connection-verify="${escapeHtml(catalog.key)}">Verify now</button><button type="button" data-connection-configure="${escapeHtml(catalog.key)}">Replace key</button><button type="button" data-connection-disconnect="${escapeHtml(catalog.key)}">Disconnect</button>`;
+      }
+      if(ready){
+        return `<button class="primary" type="button" data-connection-verify="${escapeHtml(catalog.key)}">Verify stored key</button><button type="button" data-connection-configure="${escapeHtml(catalog.key)}">Replace key</button>`;
+      }
+      return `<button class="primary" type="button" data-connection-configure="${escapeHtml(catalog.key)}">Configure secure key</button>`;
+    }
+    if(status==='connected_api'){
+      return `<button type="button" data-connection-verify="${escapeHtml(catalog.key)}">Verify now</button><button type="button" data-connection-connect="${escapeHtml(catalog.key)}">Reconnect</button><button type="button" data-connection-configure="${escapeHtml(catalog.key)}">App setup</button><button type="button" data-connection-disconnect="${escapeHtml(catalog.key)}">Disconnect</button>`;
+    }
+    if(ready){
+      return `<button class="primary" type="button" data-connection-connect="${escapeHtml(catalog.key)}">${status==='authorizing'?'Restart authorization':'Connect account'}</button><button type="button" data-connection-configure="${escapeHtml(catalog.key)}">App setup</button>`;
+    }
+    return `<button class="primary" type="button" data-connection-configure="${escapeHtml(catalog.key)}">Configure secure app</button>`;
+  }
   function connectionCard(catalog){
     const record=connections.find(item=>item.provider_key===catalog.key);
     const status=connectionStatus(record);
     const capabilities=record?.capabilities?.length?record.capabilities:catalog.capabilities;
-    const systemVerified=status==='connected_api';
+    const setup=integrationState(catalog);
+    const ready=providerSetupReady(catalog,setup);
     const detail=status==='connected_api'
       ?`Verified ${formatDate(record?.last_checked_at||record?.verified_at,true)}`
-      :status==='verified_manual'
-        ?`Human verification recorded ${formatDate(record?.verified_at,true)}`
-        :status==='error'
+      :status==='error'
           ?(record?.last_error||'Connection needs attention')
-          :'No verified connection has been recorded.';
+          :status==='authorizing'
+            ?'Authorization started but no live provider check has completed.'
+            :ready
+              ?'The provider app is stored securely. Account authorization is still required.'
+              :'No live provider authorization has passed yet.';
+    const setupLabel=catalog.integration==='native'
+      ?'Owned and verified'
+      :!integrationGatewayOnline
+        ?'Secure gateway unavailable'
+        :catalog.key==='messenger'&&setup.ready&&!setup.hasApiKey
+          ?'Webhook token required'
+          :ready
+          ?'Secure app setup stored'
+          :'Developer app setup required';
     return `<article class="ops-connection-card ${escapeHtml(status)}" data-provider-key="${escapeHtml(catalog.key)}">
       <header><div><span>${escapeHtml(catalog.group)}</span><h3>${escapeHtml(record?.display_name||catalog.name)}</h3></div><i aria-hidden="true"></i></header>
       <div class="ops-connection-state">${statusBadge(status)}<small>${escapeHtml(record?.account_label||'No account selected')}</small></div>
       <p>${escapeHtml(detail)}</p>
+      <div class="ops-credential-state ${ready?'ready':'required'}"><span>${escapeHtml(setupLabel)}</span></div>
       <ul>${capabilities.map(item=>`<li>${escapeHtml(item)}</li>`).join('')}</ul>
-      <footer>${isAdmin&&!systemVerified?`<button type="button" data-connection-manage="${escapeHtml(catalog.key)}">${record?'Manage connection':'Configure connection'}</button>`:`<span>${systemVerified?'System verified':'Visible to staff'}</span>`}</footer>
+      <footer>${connectionActions(catalog,record,status)}</footer>
     </article>`;
   }
   function renderConnections(){
@@ -323,9 +377,45 @@
       if(!error&&data?.signedUrl)signedEvidenceUrls.set(item.id,data.signedUrl);
     }));
   }
+  async function integrationRequest(path,options={}){
+    if(!client||preview)throw new Error('The secure connection gateway is unavailable in preview.');
+    const {data,error}=await client.auth.getSession();
+    const session=data?.session;
+    if(error||!session?.access_token)throw new Error('Sign in again before changing provider connections.');
+    const response=await fetch(`${INTEGRATION_API}${path}`,{
+      method:options.method||'GET',
+      headers:{
+        Authorization:`Bearer ${session.access_token}`,
+        apikey:window.FMB_CONFIG?.SUPABASE_ANON_KEY||'',
+        ...(options.body?{'Content-Type':'application/json'}:{}),
+        ...(options.headers||{})
+      },
+      body:options.body?JSON.stringify(options.body):undefined
+    });
+    const payload=await response.json().catch(()=>({}));
+    if(!response.ok)throw new Error(cleanText(payload.error||'The provider connection request failed.',500));
+    return payload;
+  }
+  async function loadIntegrationStatus(showError=false){
+    if(!isAdmin||preview)return;
+    try{
+      const payload=await integrationRequest('/status');
+      integrationReadiness=payload.readiness||{};
+      integrationGatewayOnline=true;
+    }catch(error){
+      integrationGatewayOnline=false;
+      if(showError)notify(error.message||'The secure connection gateway could not be reached.','error');
+    }
+  }
+  async function refreshConnections(){
+    await loadOperations();
+    if(!integrationGatewayOnline)await loadIntegrationStatus(true);
+    renderAll();
+  }
   async function loadOperations(){
     if(preview){renderAll();return}
     if(!client)return;
+    const statusPromise=loadIntegrationStatus(false);
     const [workResult,evidenceResult,connectionResult,staffResult]=await Promise.all([
       client.from('work_orders').select('*').order('created_at',{ascending:false}).limit(500),
       client.from('work_evidence').select('*').order('created_at',{ascending:false}).limit(500),
@@ -340,7 +430,7 @@
     evidence=evidenceResult.data||[];
     connections=connectionResult.data||[];
     staff=staffResult.data||[];
-    await createSignedEvidenceUrls();
+    await Promise.all([createSignedEvidenceUrls(),statusPromise]);
     renderAll();
   }
   function scheduleRefresh(){
@@ -564,53 +654,117 @@
     });
   }
 
-  function connectionForm(catalog,record=null){
-    if(!isAdmin)return;
-    const current=record||{connection_type:catalog.type,status:'setup_required',display_name:catalog.name,account_label:'',management_url:'',verification_note:'',last_error:'',capabilities:catalog.capabilities};
-    openDialog('Connection registry',`Configure ${catalog.name}`,`<form class="ops-form-grid">
-      <div class="ops-form-warning full"><strong>Never paste a password, access token, API secret, or recovery code here.</strong><p>This record documents connection state and ownership. OAuth credentials and webhook secrets belong in the provider or secure server environment.</p></div>
-      <label class="ops-field"><span>Display name</span><input name="display_name" required maxlength="120" value="${escapeHtml(current.display_name||catalog.name)}"></label>
-      <label class="ops-field"><span>Connection method</span><select name="connection_type">${['manual','oauth','webhook','api','native'].map(value=>`<option value="${value}"${value===current.connection_type?' selected':''}>${escapeHtml(value)}</option>`).join('')}</select></label>
-      <label class="ops-field"><span>Honest connection state</span><select name="status"><option value="setup_required"${current.status==='setup_required'?' selected':''}>Setup required</option><option value="authorizing"${current.status==='authorizing'?' selected':''}>Authorizing</option><option value="verified_manual"${current.status==='verified_manual'?' selected':''}>Verified manually</option><option value="paused"${current.status==='paused'?' selected':''}>Paused</option><option value="error"${current.status==='error'?' selected':''}>Connection error</option></select></label>
-      <label class="ops-field"><span>Account or workspace label</span><input name="account_label" maxlength="180" value="${escapeHtml(current.account_label||'')}" placeholder="The exact Page, account, or workspace"></label>
-      <label class="ops-field full"><span>Provider management URL</span><input name="management_url" type="url" maxlength="1000" value="${escapeHtml(current.management_url||'')}" placeholder="https://"></label>
-      <label class="ops-field full"><span>Capabilities, comma separated</span><input name="capabilities" maxlength="1000" value="${escapeHtml((current.capabilities||catalog.capabilities).join(', '))}"></label>
-      <label class="ops-field full"><span>Verification note</span><textarea name="verification_note" maxlength="2000" placeholder="What was tested, by whom, and what succeeded?">${escapeHtml(current.verification_note||'')}</textarea><small>Required when the state is Verified manually.</small></label>
-      <label class="ops-field full"><span>Connection error</span><textarea name="last_error" maxlength="2000">${escapeHtml(current.last_error||'')}</textarea></label>
-      <div class="ops-form-actions"><span></span><div><button class="ops-button secondary" type="button" data-workflow-cancel>Cancel</button><button class="ops-button" type="submit">Save connection record</button></div></div>
+  function credentialFields(catalog){
+    const setup=integrationState(catalog);
+    const config=setup.config||{};
+    const stored=value=>value?'Stored securely. Leave blank to keep it.':'';
+    if(catalog.integration==='openai'){
+      return `<label class="ops-field full"><span>OpenAI project API key</span><input name="api_key" type="password" autocomplete="off" maxlength="4000" placeholder="${escapeHtml(stored(setup.hasApiKey)||'Paste a project-scoped API key')}"><small>The key is sent once to the server, encrypted in Vault, verified against the OpenAI API, and never returned.</small></label>`;
+    }
+    const common=`<label class="ops-field"><span>Client ID</span><input name="client_id" autocomplete="off" maxlength="500" placeholder="${escapeHtml(stored(setup.hasClientId)||'Provider client ID')}"></label>
+      <label class="ops-field"><span>Client secret</span><input name="client_secret" type="password" autocomplete="off" maxlength="2000" placeholder="${escapeHtml(stored(setup.hasClientSecret)||'Provider client secret')}"></label>`;
+    if(catalog.integration==='meta'){
+      return `${common}
+        <label class="ops-field"><span>Facebook Page ID, optional</span><input name="page_id" inputmode="numeric" maxlength="100" value="${escapeHtml(config.pageId||'')}" placeholder="Used when the account manages more than one Page"></label>
+        <label class="ops-field"><span>Meta Graph API version</span><input name="api_version" maxlength="20" value="${escapeHtml(config.apiVersion||'v24.0')}"></label>
+        <label class="ops-field full"><span>Private Messenger webhook verification token</span><input name="api_key" type="password" autocomplete="off" maxlength="4000" placeholder="${escapeHtml(stored(setup.hasApiKey)||'Choose a long random token and enter the same value in Meta')}"><small>Required for Messenger webhook verification. It is encrypted and is never returned.</small></label>`;
+    }
+    if(catalog.integration==='linkedin'){
+      return `${common}
+        <label class="ops-field"><span>LinkedIn organization ID, optional</span><input name="organization_id" inputmode="numeric" maxlength="100" value="${escapeHtml(config.organizationId||'')}" placeholder="Used when the account administers more than one Page"></label>
+        <label class="ops-field"><span>LinkedIn API version</span><input name="api_version" maxlength="10" value="${escapeHtml(config.apiVersion||'202606')}"></label>`;
+    }
+    return common;
+  }
+  function credentialForm(catalog){
+    if(!isAdmin||catalog.integration==='native')return;
+    const definition=INTEGRATION_SETUP[catalog.integration];
+    const setup=integrationState(catalog);
+    const callback=setup.callbackUrl||'The callback URL will appear after the secure gateway responds.';
+    const webhook=setup.webhookUrl||'';
+    openDialog('Secure provider setup',definition.name,`<form class="ops-form-grid">
+      <div class="ops-form-context full"><strong>Owner-controlled server connection</strong><p>${escapeHtml(definition.description)} Secrets are encrypted in Supabase Vault and can only be read by the server-side integration gateway.</p></div>
+      <div class="ops-provider-links full"><a href="${escapeHtml(definition.developerUrl)}" target="_blank" rel="noopener noreferrer">Open provider developer portal</a><span>Set the provider app to production only after its own permission review is complete.</span></div>
+      ${catalog.integration!=='openai'?`<label class="ops-field full"><span>Exact OAuth callback URL</span><div class="ops-copy-field"><input name="callback_url" readonly value="${escapeHtml(callback)}"><button type="button" data-copy-connection-value="${escapeHtml(callback)}">Copy</button></div><small>Add this exact HTTPS URL to the provider app before authorizing.</small></label>`:''}
+      ${webhook?`<label class="ops-field full"><span>Meta Messenger webhook URL</span><div class="ops-copy-field"><input readonly value="${escapeHtml(webhook)}"><button type="button" data-copy-connection-value="${escapeHtml(webhook)}">Copy</button></div><small>Subscribe the Page to messages, messaging_postbacks, message_deliveries, and message_reads.</small></label>`:''}
+      ${credentialFields(catalog)}
+      <div class="ops-form-warning full"><strong>Passwords and recovery codes do not belong here.</strong><p>Enter only credentials created for the provider developer app. Blank secret fields preserve values already stored in Vault.</p></div>
+      <div class="ops-form-actions"><span></span><div><button class="ops-button secondary" type="button" data-workflow-cancel>Cancel</button><button class="ops-button" type="submit">${catalog.integration==='openai'?'Save and verify key':'Save and authorize'}</button></div></div>
     </form>`,async data=>{
-      const status=cleanText(data.get('status'),40);
-      const accountLabel=cleanText(data.get('account_label'),180)||null;
-      const verificationNote=cleanText(data.get('verification_note'),2000)||null;
-      const managementRaw=cleanText(data.get('management_url'),1000);
-      const managementUrl=managementRaw?safeUrl(managementRaw):null;
-      if(managementRaw&&!managementUrl)throw new Error('Use a valid HTTPS or HTTP provider management URL.');
-      if(status==='verified_manual'&&(!accountLabel||!verificationNote||verificationNote.length<8))throw new Error('Manual verification requires the exact account label and a specific verification note.');
-      const payload={
-        provider_key:catalog.key,
-        display_name:cleanText(data.get('display_name'),120),
-        connection_type:cleanText(data.get('connection_type'),30),
-        status,
-        account_label:accountLabel,
-        management_url:managementUrl,
-        capabilities:String(data.get('capabilities')||'').split(',').map(value=>cleanText(value,100)).filter(Boolean).slice(0,20),
-        verification_note:verificationNote,
-        verified_at:status==='verified_manual'?new Date().toISOString():null,
-        verified_by:status==='verified_manual'?user.id:null,
-        last_checked_at:status==='verified_manual'?new Date().toISOString():null,
-        last_error:status==='error'?cleanText(data.get('last_error'),2000)||'Connection requires review.':null,
-        created_by:record?.created_by||user.id
-      };
-      if(preview){
-        const index=connections.findIndex(item=>item.provider_key===catalog.key);
-        if(index>=0)connections[index]={...connections[index],...payload};else connections.push(payload);
-        renderAll();notify('Preview connection record saved locally.');return true;
+      const config=catalog.integration==='meta'
+        ?{pageId:cleanText(data.get('page_id'),100),apiVersion:cleanText(data.get('api_version'),20)}
+        :catalog.integration==='linkedin'
+          ?{organizationId:cleanText(data.get('organization_id'),100),apiVersion:cleanText(data.get('api_version'),10)}
+          :{};
+      const payload=await integrationRequest('/credentials',{
+        method:'POST',
+        body:{
+          integrationKey:catalog.integration,
+          clientId:cleanText(data.get('client_id'),500),
+          clientSecret:cleanText(data.get('client_secret'),2000),
+          apiKey:cleanText(data.get('api_key'),4000),
+          config
+        }
+      });
+      integrationReadiness=payload.readiness||integrationReadiness;
+      integrationGatewayOnline=true;
+      if(catalog.integration==='openai'){
+        await loadOperations();
+        notify('OpenAI API key stored and verified.','success');
+        return true;
       }
-      const result=await client.from('automation_connections').upsert(payload,{onConflict:'provider_key'}).select().single();
-      if(result.error)throw result.error;
-      await loadOperations();notify('Connection record saved.');return true;
+      notify('Provider app credentials stored. Opening account authorization.','success');
+      await startProviderAuthorization(catalog.key);
+      return false;
     });
     $('#opsWorkflowDialogBody [data-workflow-cancel]')?.addEventListener('click',closeDialog);
+    $$('#opsWorkflowDialogBody [data-copy-connection-value]').forEach(button=>button.addEventListener('click',async()=>{
+      const value=button.dataset.copyConnectionValue||'';
+      try{await navigator.clipboard.writeText(value);button.textContent='Copied'}
+      catch{notify('Copy the URL from the read-only field.','error')}
+    }));
+  }
+  async function startProviderAuthorization(providerKey,button=null){
+    setBusy(button,true,'Opening provider');
+    try{
+      const payload=await integrationRequest(`/connect/${encodeURIComponent(providerKey)}`,{method:'POST'});
+      const url=safeUrl(payload.authorizationUrl);
+      if(!url)throw new Error('The provider did not return a safe authorization URL.');
+      window.location.assign(url);
+    }finally{
+      setBusy(button,false);
+    }
+  }
+  async function verifyProviderConnection(providerKey,button){
+    setBusy(button,true,'Verifying');
+    try{
+      const payload=await integrationRequest(`/verify/${encodeURIComponent(providerKey)}`,{method:'POST'});
+      await loadOperations();
+      notify(`${payload.accountLabel||'Provider account'} is connected and verified.`,'success');
+    }catch(error){notify(error.message||'Provider verification failed.','error')}
+    finally{setBusy(button,false)}
+  }
+  async function disconnectProviderConnection(providerKey,button){
+    const catalog=CONNECTION_CATALOG.find(item=>item.key===providerKey);
+    if(!catalog)return;
+    if(!window.confirm(`Disconnect ${catalog.name}? The encrypted provider tokens will be deleted and the connection will stop working.`))return;
+    setBusy(button,true,'Disconnecting');
+    try{
+      await integrationRequest(`/disconnect/${encodeURIComponent(providerKey)}`,{method:'POST'});
+      await loadOperations();
+      notify(`${catalog.name} disconnected. Provider app setup remains stored for a future authorization.`,'success');
+    }catch(error){notify(error.message||'The provider could not be disconnected.','error')}
+    finally{setBusy(button,false)}
+  }
+  function handleConnectionReturn(){
+    const params=new URLSearchParams(location.search);
+    if(params.get('panel')!=='automation')return;
+    openPanel('automationPanel');
+    const message=cleanText(params.get('message'),180)||'Provider authorization returned.';
+    notify(message,params.get('result')==='success'?'success':'error');
+    params.delete('panel');params.delete('connection');params.delete('result');params.delete('message');
+    const query=params.toString();
+    history.replaceState({},'',`${location.pathname}${query?`?${query}`:''}${location.hash}`);
   }
 
   function bindEvents(){
@@ -618,7 +772,7 @@
     $('#opsCreateInstructionTop')?.addEventListener('click',()=>workOrderForm());
     $('#refreshWorkOrders')?.addEventListener('click',loadOperations);
     $('#refreshEvidence')?.addEventListener('click',loadOperations);
-    $('#refreshConnections')?.addEventListener('click',loadOperations);
+    $('#refreshConnections')?.addEventListener('click',refreshConnections);
     ['workAssigneeFilter','workStatusFilter','workBrandFilter','workSearch'].forEach(id=>document.getElementById(id)?.addEventListener('input',renderWorkOrders));
     ['evidenceStatusFilter','evidenceTypeFilter','evidenceSearch'].forEach(id=>document.getElementById(id)?.addEventListener('input',renderEvidence));
     $('#workOrderList')?.addEventListener('click',event=>{
@@ -635,7 +789,20 @@
     });
     $('#opsOverviewWork')?.addEventListener('click',event=>{const button=event.target.closest('[data-work-open]');if(!button)return;openPanel('workQueuePanel');$('#workSearch').value=workOrders.find(item=>item.id===button.dataset.workOpen)?.title||'';renderWorkOrders()});
     $('#evidenceList')?.addEventListener('click',event=>{const button=event.target.closest('[data-evidence-review]');if(!button)return;const item=evidence.find(entry=>entry.id===button.dataset.evidenceId);if(item)reviewEvidence(item,button.dataset.evidenceReview)});
-    $('#connectionGrid')?.addEventListener('click',event=>{const button=event.target.closest('[data-connection-manage]');if(!button)return;const catalog=CONNECTION_CATALOG.find(item=>item.key===button.dataset.connectionManage);if(catalog)connectionForm(catalog,connections.find(item=>item.provider_key===catalog.key)||null)});
+    $('#connectionGrid')?.addEventListener('click',event=>{
+      const configure=event.target.closest('[data-connection-configure]');
+      const connect=event.target.closest('[data-connection-connect]');
+      const verify=event.target.closest('[data-connection-verify]');
+      const disconnect=event.target.closest('[data-connection-disconnect]');
+      if(configure){
+        const catalog=CONNECTION_CATALOG.find(item=>item.key===configure.dataset.connectionConfigure);
+        if(catalog)credentialForm(catalog);
+        return;
+      }
+      if(connect){startProviderAuthorization(connect.dataset.connectionConnect,connect).catch(error=>notify(error.message||'Authorization could not start.','error'));return}
+      if(verify){verifyProviderConnection(verify.dataset.connectionVerify,verify);return}
+      if(disconnect)disconnectProviderConnection(disconnect.dataset.connectionDisconnect,disconnect);
+    });
     $('[data-workflow-dialog-close]')?.addEventListener('click',closeDialog);
     window.addEventListener('fmb:ops-create-from-plan',event=>workOrderForm(null,event.detail||{}));
   }
@@ -656,6 +823,15 @@
     }
     staff=[{id:user.id,full_name:profile.full_name,username:profile.username,role:profile.role,status:profile.status}];
     if(preview){
+      integrationGatewayOnline=true;
+      integrationReadiness={
+        meta:{ready:false,hasClientId:false,hasClientSecret:false,hasApiKey:false,config:{apiVersion:'v24.0'},callbackUrl:'https://example.supabase.co/functions/v1/automation-integrations/oauth/callback/meta',webhookUrl:'https://example.supabase.co/functions/v1/automation-integrations/webhooks/meta'},
+        google:{ready:false,hasClientId:false,hasClientSecret:false,hasApiKey:false,config:{},callbackUrl:'https://example.supabase.co/functions/v1/automation-integrations/oauth/callback/google'},
+        linkedin:{ready:false,hasClientId:false,hasClientSecret:false,hasApiKey:false,config:{apiVersion:'202606'},callbackUrl:'https://example.supabase.co/functions/v1/automation-integrations/oauth/callback/linkedin'},
+        canva:{ready:false,hasClientId:false,hasClientSecret:false,hasApiKey:false,config:{},callbackUrl:'https://example.supabase.co/functions/v1/automation-integrations/oauth/callback/canva'},
+        github:{ready:false,hasClientId:false,hasClientSecret:false,hasApiKey:false,config:{},callbackUrl:'https://example.supabase.co/functions/v1/automation-integrations/oauth/callback/github'},
+        openai:{ready:false,hasClientId:false,hasClientSecret:false,hasApiKey:false,config:{}}
+      };
       connections=[
         {provider_key:'main_website',display_name:'Official FMB website',connection_type:'native',status:'connected_api',account_label:'www.francinemariebautista.com',capabilities:CONNECTION_CATALOG[0].capabilities,verification_note:'Production domain verified.',verified_at:new Date().toISOString(),last_checked_at:new Date().toISOString()},
         {provider_key:'supabase_workspace',display_name:'Supabase operations database',connection_type:'native',status:'connected_api',account_label:'withlovefmb',capabilities:CONNECTION_CATALOG[1].capabilities,verification_note:'Operations database verified.',verified_at:new Date().toISOString(),last_checked_at:new Date().toISOString()}
@@ -664,6 +840,7 @@
     bindEvents();
     await loadOperations();
     subscribeRealtime();
+    handleConnectionReturn();
   }
 
   window.addEventListener('fmb:admin-ready',event=>start(event.detail||{}),{once:true});
