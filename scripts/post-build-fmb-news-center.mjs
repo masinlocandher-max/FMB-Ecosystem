@@ -12,14 +12,10 @@ const stylesheets = [
   {
     source: path.join(assetsRoot, 'news-center-v2.css'),
     destination: path.join(distCssRoot, 'news-center-v2.css'),
-    href: '/assets/css/news-center-v2.css?v=20260726b',
-    landingOnly: true,
   },
   {
     source: path.join(assetsRoot, 'fmb-news-polish-v3.css'),
     destination: path.join(distCssRoot, 'fmb-news-polish-v3.css'),
-    href: '/assets/css/fmb-news-polish-v3.css?v=20260726a',
-    landingOnly: false,
   },
 ];
 
@@ -49,19 +45,6 @@ function addBodyClass(html, className) {
       return `<body${attrs}>`;
     },
     'page body',
-  );
-}
-
-function injectStylesheetsLast(html, hrefs) {
-  for (const href of hrefs) {
-    const escaped = href.split('?')[0].replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    html = html.replace(new RegExp(`<link\\b[^>]*href=["'][^"']*${escaped}[^"']*["'][^>]*>\\s*`, 'gi'), '');
-  }
-  return replaceRequired(
-    html,
-    '</head>',
-    `${hrefs.map(href => `<link rel="stylesheet" href="${href}">`).join('\n')}\n</head>`,
-    'closing head',
   );
 }
 
@@ -155,7 +138,6 @@ landing = replaceRequired(
   `<meta name="fmb-news-identity-record" content="${identityRecord}">\n</head>`,
   'landing closing head',
 );
-landing = injectStylesheetsLast(landing, stylesheets.map(item => item.href));
 
 const renderedLegacyLogo = new RegExp(`<(?:img|source)\\b[^>]*(?:src|srcset)=["'][^"']*${identityRecord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[^"']*["']`, 'i');
 if (renderedLegacyLogo.test(landing) || /url\([^)]*fmb-news-official-transparent\.webp/i.test(landing)) {
@@ -175,7 +157,6 @@ for (const filePath of allNewsPages) {
     /<a\b(?=[^>]*\bclass=["'][^"']*\bnc-publication-brand\b[^"']*["'])(?=[^>]*\bhref=["']\/news\/["'])[^>]*>[\s\S]*?<\/a>/i,
     textMasthead('Newsroom front page'),
   );
-  article = injectStylesheetsLast(article, [stylesheets.find(item => !item.landingOnly).href]);
 
   if (filePath.includes('filipino-centered-training-institution-cognita-vision')) {
     article = article
