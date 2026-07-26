@@ -8,16 +8,21 @@
   const dock=document.querySelector('.nc-mobile-dock');
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if(!document.querySelector('link[href*="fmb-news-luxury.css"]')){
+  const ensureStylesheet=(fragment,href)=>{
+    if(document.querySelector(`link[href*="${fragment}"]`))return;
     const stylesheet=document.createElement('link');
     stylesheet.rel='stylesheet';
-    stylesheet.href='/assets/css/fmb-news-luxury.css?v=20260722-luxury-v3';
+    stylesheet.href=href;
     document.head.appendChild(stylesheet);
-  }
+  };
+  ensureStylesheet('fmb-news-luxury.css','/assets/css/fmb-news-luxury.css?v=20260722-luxury-v3');
+  ensureStylesheet('fmb-news-polish-v3.css','/assets/css/fmb-news-polish-v3.css?v=20260726a');
+  ensureStylesheet('fmb-news-masthead-v3.css','/assets/css/fmb-news-masthead-v3.css?v=20260726a');
 
   const supportStyle=document.createElement('style');
   supportStyle.textContent=`
     body.news-channel-route .nc-channel-lockup>h1{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;display:block!important}
+    body.news-channel-route.news-center-v2 .nc-channel-lockup>h1{position:static!important;width:auto!important;height:auto!important;padding:0!important;margin:12px 0 14px!important;overflow:visible!important;clip:auto!important;white-space:normal!important;border:0!important;display:block!important}
     body.news-channel-route .nc-context-feature{padding:clamp(88px,9vw,136px) 0;background:#f5f1e9;color:#171218}
     body.news-channel-route .nc-context-feature-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(370px,.92fr);gap:clamp(44px,8vw,110px);align-items:center}
     body.news-channel-route .nc-text-visual{position:relative;min-height:480px;margin:0;overflow:hidden;border-radius:30px;background:radial-gradient(circle at 20% 18%,rgba(197,164,93,.18),transparent 24rem),linear-gradient(145deg,#171218,#3d1724);box-shadow:0 28px 76px rgba(23,18,24,.18);color:#fff}
@@ -46,17 +51,31 @@
   Object.assign(progress.firstElementChild.style,{display:'block',width:'0',height:'100%',background:'linear-gradient(90deg,#7d243b,#c5a45d,#f5e4ba)',boxShadow:'0 0 14px rgba(197,164,93,.45)'});
   document.body.appendChild(progress);
 
-  const updateClock=()=>{
-    const value=new Intl.DateTimeFormat('en-PH',{
+  const updateDateAndClock=()=>{
+    const now=new Date();
+    const time=new Intl.DateTimeFormat('en-PH',{
       timeZone:'Asia/Manila',
       hour:'2-digit',
       minute:'2-digit',
       hour12:true
-    }).format(new Date());
-    document.querySelectorAll('[data-news-clock]').forEach(clock=>clock.textContent=`${value} Philippine Standard Time`);
+    }).format(now);
+    const weekday=new Intl.DateTimeFormat('en-PH',{
+      timeZone:'Asia/Manila',
+      weekday:'long'
+    }).format(now);
+    const date=new Intl.DateTimeFormat('en-PH',{
+      timeZone:'Asia/Manila',
+      day:'numeric',
+      month:'long',
+      year:'numeric'
+    }).format(now);
+    document.querySelectorAll('[data-news-clock]').forEach(clock=>clock.textContent=`${time} Philippine Standard Time`);
+    document.querySelectorAll('[data-news-edition]').forEach(item=>item.textContent=`${weekday} edition · ${date}`);
+    document.querySelectorAll('[data-news-date]').forEach(item=>item.textContent=`${date} · Philippine Standard Time`);
+    document.querySelectorAll('[data-news-updated]').forEach(item=>item.textContent=`Updated ${date}`);
   };
-  updateClock();
-  setInterval(updateClock,30000);
+  updateDateAndClock();
+  setInterval(updateDateAndClock,30000);
 
   const closeMenu=()=>{
     if(!menu||!nav)return;
