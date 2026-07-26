@@ -5,11 +5,13 @@ const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
 const newsRoot = path.join(repositoryRoot, 'dist', 'news');
 const landingPath = path.join(newsRoot, 'index.html');
 const cssRoot = path.join(repositoryRoot, 'dist', 'assets', 'css');
+const sourceCssRoot = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css');
 
-const [landingCss, polishCss, mastheadCss] = await Promise.all([
+const [landingCss, polishCss, mastheadCss, approvalCss] = await Promise.all([
   readFile(path.join(cssRoot, 'news-center-v2.css'), 'utf8'),
   readFile(path.join(cssRoot, 'fmb-news-polish-v3.css'), 'utf8'),
-  readFile(path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmb-news-masthead-v3.css'), 'utf8'),
+  readFile(path.join(sourceCssRoot, 'fmb-news-masthead-v3.css'), 'utf8'),
+  readFile(path.join(sourceCssRoot, 'fmb-news-visual-approval.css'), 'utf8'),
 ]);
 
 async function walk(directory) {
@@ -26,11 +28,11 @@ let count = 0;
 for (const filePath of await walk(newsRoot)) {
   let html = await readFile(filePath, 'utf8');
   html = html
-    .replace(/<link\b[^>]*href=["'][^"']*(?:news-center-v2|fmb-news-polish-v3|fmb-news-masthead-v3)\.css[^"']*["'][^>]*>\s*/gi, '')
+    .replace(/<link\b[^>]*href=["'][^"']*(?:news-center-v2|fmb-news-polish-v3|fmb-news-masthead-v3|fmb-news-visual-approval)\.css[^"']*["'][^>]*>\s*/gi, '')
     .replace(/<style\b[^>]*data-fmb-news-final-styles[^>]*>[\s\S]*?<\/style>\s*/gi, '');
 
   const css = filePath === landingPath
-    ? `${landingCss}\n${polishCss}\n${mastheadCss}`
+    ? `${landingCss}\n${polishCss}\n${mastheadCss}\n${approvalCss}`
     : `${polishCss}\n${mastheadCss}`;
   const safeguard = /(<link\b[^>]*href=["'][^"']*fmb-sitewide-visual-fixes\.css[^"']*["'][^>]*>)/i;
   if (!safeguard.test(html)) throw new Error(`Newsroom masthead: missing sitewide safeguard in ${filePath}`);
