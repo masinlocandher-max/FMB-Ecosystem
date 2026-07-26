@@ -12,7 +12,7 @@
     "www.thecognitainstitute.com"
   ],
   "ignoreCommand": "if [ \"$VERCEL_ENV\" = \"production\" ] || [ \"$VERCEL_GIT_COMMIT_REF\" = \"main\" ]; then exit 1; else echo \"Skipping non-production Vercel build for ${VERCEL_GIT_COMMIT_REF:-unknown}\"; exit 0; fi",
-  "buildCommand": "npm run build",
+  "buildCommand": "npm run build && node scripts/post-build-fmb-news-automation.mjs",
   "outputDirectory": "dist",
   "cleanUrls": false,
   "trailingSlash": false,
