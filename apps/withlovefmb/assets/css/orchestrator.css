@@ -294,6 +294,16 @@ body.orchestrator-page:before{content:"";position:fixed;inset:0;pointer-events:n
 .ops-credential-state{margin:12px 18px 0;padding:8px 10px;border:1px solid rgba(229,189,115,.16);border-radius:8px;background:rgba(229,189,115,.04);color:var(--ops-amber);font-size:7px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
 .ops-credential-state.ready{border-color:rgba(103,205,159,.18);background:rgba(103,205,159,.05);color:var(--ops-green)}
 .ops-security-note{color:var(--ops-green);font-size:8px;font-weight:850;letter-spacing:.08em;text-transform:uppercase}
+.ops-revenue-path{border-color:rgba(103,205,159,.18);background:linear-gradient(145deg,rgba(103,205,159,.045),rgba(122,63,228,.035))}
+.ops-revenue-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;padding:18px}
+.ops-revenue-grid article{display:flex;min-height:210px;flex-direction:column;padding:16px;border:1px solid var(--ops-line);border-radius:11px;background:rgba(255,255,255,.025)}
+.ops-revenue-grid article>span{color:var(--ops-green);font-size:8px;font-weight:850;letter-spacing:.1em}
+.ops-revenue-grid strong{display:block;margin-top:14px;color:#eee6f0;font-size:10px;line-height:1.35}
+.ops-revenue-grid p{margin:8px 0 16px;color:var(--ops-muted);font-size:8px;line-height:1.6}
+.ops-revenue-grid a,.ops-revenue-grid button{display:flex;align-items:center;justify-content:center;min-height:36px;margin-top:auto;padding:8px 10px;border:1px solid rgba(103,205,159,.2);border-radius:8px;background:rgba(103,205,159,.07);color:var(--ops-green);font:800 8px/1 Montserrat,sans-serif;text-align:center;text-decoration:none}
+.ops-revenue-grid a:hover,.ops-revenue-grid button:hover{border-color:rgba(103,205,159,.5);background:rgba(103,205,159,.13)}
+.ops-revenue-truth{margin:0 18px 18px;padding:12px 14px;border-left:3px solid var(--ops-green);border-radius:3px 9px 9px 3px;background:rgba(103,205,159,.055);color:var(--ops-muted);font-size:8px;line-height:1.65}
+.ops-revenue-truth strong{color:var(--ops-green)}
 .ops-manual-api-guide{background:linear-gradient(145deg,rgba(255,255,255,.025),rgba(122,63,228,.045))}
 .ops-manual-api-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:18px}
 .ops-manual-api-steps article{padding:15px;border:1px solid var(--ops-line);border-radius:11px;background:rgba(255,255,255,.025)}
@@ -314,6 +324,7 @@ body.orchestrator-page:before{content:"";position:fixed;inset:0;pointer-events:n
 body[data-ops-role="moderator"] .orchestrator-page-head h1{max-width:900px}
 
 @media(max-width:1240px){
+  .ops-revenue-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
   .ops-connection-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .ops-work-card>dl{grid-template-columns:repeat(3,minmax(0,1fr))}
   .ops-work-card>dl>div:nth-child(3){border-right:0}
@@ -327,6 +338,8 @@ body[data-ops-role="moderator"] .orchestrator-page-head h1{max-width:900px}
   .ops-evidence-list{grid-template-columns:1fr}
 }
 @media(max-width:700px){
+  .ops-revenue-grid{grid-template-columns:1fr}
+  .ops-revenue-grid article{min-height:0}
   #opsWorkflowDialogBody{padding:17px}
   .ops-work-brief{grid-template-columns:1fr}
   .ops-work-brief>div+div{border-top:1px solid var(--ops-line);border-left:0}

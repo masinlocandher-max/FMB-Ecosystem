@@ -477,15 +477,15 @@
     const current=item||{
       title:seed?.title||'',
       instruction:seed?.notes||'',
-      success_definition:'',
+      success_definition:seed?.successDefinition||'',
       brand:seed?.brand||'FMB&CO.',
-      channels:seed?.channel?[seed.channel]:[],
-      task_type:'content',
-      priority:'normal',
+      channels:Array.isArray(seed?.channels)?seed.channels:(seed?.channel?[seed.channel]:[]),
+      task_type:seed?.taskType||'content',
+      priority:seed?.priority||'normal',
       assigned_to:'',
       due_at:seed?.publishDate?`${seed.publishDate}T09:00:00`:'',
       evidence_required:true,
-      target_url:'',
+      target_url:seed?.targetUrl||'',
       source_plan_ref:seed?.id||''
     };
     openDialog('Founder instruction',item?'Edit instruction':'Give an instruction',`<form class="ops-form-grid">
@@ -803,6 +803,27 @@
       if(verify){verifyProviderConnection(verify.dataset.connectionVerify,verify);return}
       if(disconnect)disconnectProviderConnection(disconnect.dataset.connectionDisconnect,disconnect);
     });
+    $$('[data-revenue-action]').forEach(button=>button.addEventListener('click',()=>{
+      if(button.dataset.revenueAction==='connections'){
+        const grid=$('#connectionGrid');
+        grid?.scrollIntoView({behavior:'smooth',block:'start'});
+        setTimeout(()=>grid?.querySelector('button')?.focus(),450);
+        return;
+      }
+      if(button.dataset.revenueAction==='sales-instruction'){
+        workOrderForm(null,{
+          id:'revenue-activation',
+          title:'Prepare a seven-day SENZ client acquisition sprint',
+          notes:'Research 20 qualified prospects that match current SENZ services. Prepare 10 personalized outreach drafts based on each prospect’s visible business need. Do not spam, make false promises, or send any outreach before FMB approves the prospect list and wording. After approval, record the channel used, date sent, response, next action, and any blocker.',
+          successDefinition:'A reviewed list of 20 qualified prospects, 10 personalized outreach drafts, approval evidence, and a final activity record showing approved messages sent, replies received, follow-ups required, and consultation opportunities.',
+          brand:'SENZ',
+          channels:['Email','LinkedIn','Facebook','Instagram'],
+          taskType:'campaign',
+          priority:'high',
+          targetUrl:'https://www.senzpr.com/services.html'
+        });
+      }
+    }));
     $('[data-workflow-dialog-close]')?.addEventListener('click',closeDialog);
     window.addEventListener('fmb:ops-create-from-plan',event=>workOrderForm(null,event.detail||{}));
   }
