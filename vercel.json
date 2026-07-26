@@ -16,6 +16,12 @@
   "outputDirectory": "dist",
   "cleanUrls": false,
   "trailingSlash": false,
+  "crons": [
+    {
+      "path": "/api/news/ingest",
+      "schedule": "15 0 * * *"
+    }
+  ],
   "redirects": [
     {
       "source": "/data-center",
