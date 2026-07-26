@@ -28,6 +28,10 @@
     const values = valuesFrom(form);
     const submittedAt = now();
     const fullName = values.name || values.fullName || "Website Visitor";
+    const antiSpam = {
+      senzWebsite: values.senzWebsite || "",
+      formStartedAt: Number(form.dataset.formStartedAt || 0)
+    };
 
     if (formKind === "consultation") {
       const schedule = [values.date, values.time].filter(Boolean).join(" ");
@@ -45,6 +49,7 @@
         timeline: schedule,
         message: values.notes || `Consultation request for ${values.service || "SENZ services"}.`,
         calendarRule: "Pending request only. Do not confirm or add to calendar until SENZ approves.",
+        ...antiSpam,
         fields: {
           preferredDate: values.date || "",
           preferredTime: values.time || "",
@@ -69,6 +74,7 @@
         contact: values.phone || "",
         projectType: values.role || "Creative Network",
         message: values.introduction || values.experience || values.portfolio || "Creative network submission.",
+        ...antiSpam,
         fields: {
           fullName,
           email: values.email || "",
@@ -91,6 +97,7 @@
       brand: values.organization || "",
       projectType: values.inquiryType || "General inquiry",
       message: values.message || "General website inquiry.",
+      ...antiSpam,
       fields: {
         fullName,
         email: values.email || "",
@@ -164,6 +171,20 @@
   }
 
   function bind(form) {
+    form.dataset.formStartedAt = String(Date.now());
+    if (!form.elements.senzWebsite) {
+      const honeypot = document.createElement("input");
+      honeypot.type = "text";
+      honeypot.name = "senzWebsite";
+      honeypot.tabIndex = -1;
+      honeypot.autocomplete = "off";
+      honeypot.setAttribute("aria-hidden", "true");
+      honeypot.style.position = "absolute";
+      honeypot.style.left = "-10000px";
+      honeypot.style.width = "1px";
+      honeypot.style.height = "1px";
+      form.append(honeypot);
+    }
     form.addEventListener("submit", (event) => {
       event.preventDefault();
       const status = form.querySelector(".status, .consult-status, .form-status");
