@@ -1,0 +1,85 @@
+/*
+ * Homepage repair layer.
+ * Loaded after the sitewide visual safeguards so the approved landing page
+ * keeps a compact section flow and the live-information cards stay readable.
+ */
+
+body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home main > .featured {
+  display: none !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home main > .hero + .fmb-approved-control-center {
+  margin-top: 0 !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home .fmb-approved-quote {
+  display: flex !important;
+  align-items: center !important;
+  min-height: 126px !important;
+  padding: 22px 132px 22px 24px !important;
+  overflow: hidden !important;
+  background:
+    radial-gradient(circle at 92% 22%, rgba(213, 166, 255, 0.2), transparent 9rem),
+    linear-gradient(145deg, rgba(35, 17, 51, 0.96), rgba(19, 10, 30, 0.92)) !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home .fmb-approved-quote blockquote {
+  position: relative !important;
+  z-index: 2 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #fff !important;
+  font-family: var(--fmb-approved-display) !important;
+  font-size: clamp(17px, 1.2vw, 21px) !important;
+  font-style: normal !important;
+  font-weight: 500 !important;
+  line-height: 1.42 !important;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.3) !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home .fmb-approved-quote img {
+  position: absolute !important;
+  right: -4px !important;
+  bottom: -48px !important;
+  width: 136px !important;
+  height: 184px !important;
+  max-width: none !important;
+  object-fit: cover !important;
+  object-position: center 12% !important;
+  opacity: 0.9 !important;
+  filter: none !important;
+  mask-image: linear-gradient(to left, #000 64%, transparent) !important;
+  -webkit-mask-image: linear-gradient(to left, #000 64%, transparent) !important;
+}
+
+@media (max-width: 1180px) {
+  body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home .fmb-approved-quote {
+    padding-right: 116px !important;
+  }
+
+  body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home .fmb-approved-quote img {
+    width: 122px !important;
+    height: 172px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home .fmb-approved-quote {
+    min-height: 118px !important;
+    padding: 20px 112px 20px 20px !important;
+  }
+
+  body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home .fmb-approved-quote blockquote {
+    font-size: 17px !important;
+  }
+
+  body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home .fmb-approved-quote img {
+    right: -8px !important;
+    bottom: -42px !important;
+    width: 116px !important;
+    height: 164px !important;
+  }
+}
