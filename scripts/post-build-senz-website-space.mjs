@@ -56,7 +56,7 @@ html = html
 await mkdir(articleDir, { recursive: true });
 await writeFile(articleFile, html, 'utf8');
 
-const card = `<article class="nc-rundown-story"><a href="/news/${slug}/"><span class="nc-rundown-number">SENZ</span><figure class="news-visual"><img src="/assets/images/projects/senz-logo-clean.png" width="1200" height="630" loading="lazy" decoding="async" alt="SENZ Strategic Communications and Digital Solutions"><figcaption>Managed website space and strategic digital solutions from SENZ.</figcaption></figure><div><p>Business · Websites · Digital solutions</p><h3>Website benefits, costs, and a smarter way to start online</h3><span>8 min read</span></div></a></article>`;
+const card = `<article class="nc-rundown-story nc3-searchable" data-search="senz website benefits costs digital solutions business"><a href="/news/${slug}/"><span>Business</span><div><p>Digital Solutions</p><h3>Website Benefits, Website Costs, and a Smarter Way to Start Online</h3></div></a></article>`;
 const newsFile = path.join(dist, 'news', 'index.html');
 let news = await readFile(newsFile, 'utf8');
 if (!news.includes(`/news/${slug}/`)) news = news.replace('<article class="nc-rundown-story"', `${card}\n<article class="nc-rundown-story"`);
