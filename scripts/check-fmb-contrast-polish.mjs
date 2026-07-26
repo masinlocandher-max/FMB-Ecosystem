@@ -5,6 +5,7 @@ const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.join(repositoryRoot, 'dist');
 const contrastHref = '/assets/css/fmb-contrast-polish.css';
 const sitewideHref = '/assets/css/fmb-sitewide-visual-fixes.css';
+const artworkCssHref = '/assets/css/fmb-cognita-artwork.css';
 const cognitaArtwork = '/assets/images/news/cognita-filipino-centered-education.svg';
 const approvedPortrait = '/assets/images/fmb-approved/francine-portrait-front.webp';
 const excludedPrefixes = ['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/'];
@@ -51,11 +52,16 @@ for (const file of publicHtml) {
   const html = await readFile(file, 'utf8');
   const sitewideIndex = html.lastIndexOf(sitewideHref);
   const contrastIndex = html.lastIndexOf(contrastHref);
+  const artworkCssIndex = html.lastIndexOf(artworkCssHref);
 
   if (sitewideIndex < 0) failures.push(`${name}: missing sitewide visual safeguards`);
   if (contrastIndex < 0) failures.push(`${name}: missing final contrast polish`);
+  if (artworkCssIndex < 0) failures.push(`${name}: missing Cognita HD artwork support`);
   if (contrastIndex >= 0 && sitewideIndex >= 0 && contrastIndex < sitewideIndex) {
     failures.push(`${name}: contrast polish is not loaded after the legacy safeguards`);
+  }
+  if (artworkCssIndex >= 0 && contrastIndex >= 0 && artworkCssIndex < contrastIndex) {
+    failures.push(`${name}: Cognita artwork support is not loaded after contrast polish`);
   }
 }
 
@@ -117,13 +123,21 @@ if (dimensions.width < 1536 || dimensions.height < 864) {
   failures.push(`Cognita lead visual is only ${dimensions.width || 0}×${dimensions.height || 0}; expected at least 1536×864`);
 }
 if (!artwork.includes(approvedPortrait)) {
-  failures.push('Cognita lead visual does not use the approved high-resolution Francine portrait.');
+  failures.push('Cognita lead visual does not reference the approved high-resolution Francine portrait.');
 }
 if (/data:image\//i.test(artwork)) {
   failures.push('Cognita lead visual still embeds a low-resolution raster data URI.');
 }
 if (!artwork.includes('COGNITA') || !artwork.includes('INSTITUTE OF AI')) {
   failures.push('Cognita lead visual is missing its code-native institutional identity.');
+}
+
+const artworkCss = await readFile(path.join(dist, 'assets', 'css', 'fmb-cognita-artwork.css'), 'utf8');
+if (!artworkCss.includes(approvedPortrait)) {
+  failures.push('Cognita artwork support does not reinforce the approved portrait in the browser layer.');
+}
+if (!artworkCss.includes('.nc-cognita-visual::after')) {
+  failures.push('Cognita artwork support is missing the newsroom founder-portrait layer.');
 }
 
 if (failures.length > 0) {
