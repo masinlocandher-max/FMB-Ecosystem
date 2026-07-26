@@ -7,6 +7,8 @@
   let members=[];
   let contentItems=[];
   let musicItems=[];
+  let currentRole='';
+  const staffPanels=new Set(['overviewPanel','workQueuePanel','evidencePanel','automationPanel']);
 
   function setStatus(message,type=''){
     const element=$('#adminStatus');
@@ -28,6 +30,7 @@
     return `${(number/1048576).toFixed(1)} MB`;
   }
   function showPanel(id){
+    if(currentRole==='moderator'&&!staffPanels.has(id))id='workQueuePanel';
     $$('.admin-nav button').forEach(button=>button.classList.toggle('active',button.dataset.adminPanel===id));
     $$('.admin-panel').forEach(panel=>panel.hidden=panel.id!==id);
     $$('[data-admin-open]').forEach(button=>button.classList.toggle('active',button.dataset.adminOpen===id));
@@ -270,13 +273,14 @@
   async function init(){
     const localPreview=/^(localhost|127\.0\.0\.1)$/i.test(location.hostname)&&new URLSearchParams(location.search).get('preview')==='1';
     if(localPreview){
+      currentRole='admin';
       $('#adminIdentity').textContent='Local design preview · live member data is paused';
       ['membersCommunityPanel','membersPanel','moderationPanel','contentPanel','musicPanel','mediaPanel','messagesPanel'].forEach(id=>{
         const panel=document.getElementById(id);if(!panel)return;
         panel.querySelectorAll('button,input,textarea,select').forEach(control=>control.disabled=true);
       });
       document.body.classList.add('orchestrator-ready');
-      window.dispatchEvent(new CustomEvent('fmb:admin-ready',{detail:{client:null,user:null,profile:null,preview:true}}));
+      window.dispatchEvent(new CustomEvent('fmb:admin-ready',{detail:{client:null,user:{id:'preview-admin'},profile:{full_name:'Francine Marie Bautista',username:'fmb',role:'admin',status:'active'},preview:true}}));
       const initial=location.hash.slice(1);if(document.getElementById(initial)?.classList.contains('admin-panel'))showPanel(initial);else showPanel('overviewPanel');
       return;
     }
@@ -290,17 +294,19 @@
     const {data:{user:verifiedUser},error:userError}=await client.auth.getUser();
     if(userError||!verifiedUser){location.replace('auth.html?next=%2Fadmin.html#signin');return}
     user=verifiedUser;
-    const {data:profile,error:profileError}=await client.from('profiles').select('full_name,role,status').eq('id',user.id).maybeSingle();
-    if(profileError||!profile||profile.role!=='admin'||profile.status!=='active'){
-      setStatus('Administrator access is required.','error');
+    const {data:profile,error:profileError}=await client.from('profiles').select('full_name,username,role,status').eq('id',user.id).maybeSingle();
+    if(profileError||!profile||!['admin','moderator'].includes(profile.role)||profile.status!=='active'){
+      setStatus('Active FMB operations access is required.','error');
       setTimeout(()=>location.replace('/profile/'),900);
       return;
     }
-    $('#adminIdentity').textContent=`Signed in as ${profile.full_name} · administrator`;
+    currentRole=profile.role;
+    if(currentRole==='moderator')$$('[data-admin-only]').forEach(element=>element.hidden=true);
+    $('#adminIdentity').textContent=`Signed in as ${profile.full_name} · ${currentRole==='admin'?'administrator':'operations staff'}`;
     document.body.classList.add('orchestrator-ready');
     window.dispatchEvent(new CustomEvent('fmb:admin-ready',{detail:{client,user,profile,preview:false}}));
-    await Promise.all([loadOverview(),loadMembers(),loadModeration(),loadContent(),loadMusic(),loadMedia(),loadMessages()]);
-    const initial=location.hash.slice(1);if(document.getElementById(initial)?.classList.contains('admin-panel'))showPanel(initial);else showPanel('overviewPanel');
+    if(currentRole==='admin')await Promise.all([loadOverview(),loadMembers(),loadModeration(),loadContent(),loadMusic(),loadMedia(),loadMessages()]);
+    const initial=location.hash.slice(1);if(document.getElementById(initial)?.classList.contains('admin-panel'))showPanel(initial);else showPanel(currentRole==='moderator'?'workQueuePanel':'overviewPanel');
   }
   init();
 })();
