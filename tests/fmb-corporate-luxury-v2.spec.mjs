@@ -16,6 +16,7 @@ async function assertImage(page,selector,minWidth=400,minHeight=400){
   const image=page.locator(selector).first();
   await image.scrollIntoViewIfNeeded();
   await expect(image).toBeVisible();
+  await expect(image).toHaveJSProperty('complete',true);
   const result=await image.evaluate(node=>({complete:node.complete,width:node.naturalWidth,height:node.naturalHeight}));
   expect(result.complete).toBeTruthy();
   expect(result.width).toBeGreaterThanOrEqual(minWidth);

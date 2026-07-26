@@ -55,6 +55,7 @@ async function hydrateImages(page, selector) {
   const count = await images.count();
   for (let index = 0; index < count; index += 1) {
     const image = images.nth(index);
+    if (!(await image.isVisible())) continue;
     await image.scrollIntoViewIfNeeded();
     await page.waitForTimeout(160);
     await expect(image).toHaveJSProperty('complete', true);
@@ -132,8 +133,8 @@ test.describe('FMB approved desktop makeover', () => {
     await expect(page.locator('#how-fmb-can-help')).toHaveCount(1);
     await expect(page.locator('#fmb-visual-ecosystem')).toHaveCount(1);
     await hydratePage(page);
-    await hydrateImages(page, '#fmb-visual-ecosystem img');
-    await assertImagesLoaded(page, '#fmb-visual-ecosystem img');
+    await hydrateImages(page, 'main img:visible');
+    await assertImagesLoaded(page, 'main img:visible');
 
     const sectionTreatments = await page.locator('main > section').evaluateAll((sections) => sections.slice(0, 5).map((section) => {
       const style = getComputedStyle(section);
@@ -183,10 +184,10 @@ test.describe('FMB approved iPhone experience', () => {
     await openReady(page, '/');
     await assertNoHorizontalOverflow(page);
     await expect(page.locator('.fmb-mobile-dock')).toHaveCount(0);
-    await expect(page.locator('.fmb-editorial-gallery')).toHaveCSS('overflow-x', 'auto');
+    await expect(page.locator('.fmb-approved-project-grid')).toBeVisible();
     await hydratePage(page);
-    await hydrateImages(page, '#fmb-visual-ecosystem img');
-    await assertImagesLoaded(page, '#fmb-visual-ecosystem img');
+    await hydrateImages(page, 'main img:visible');
+    await assertImagesLoaded(page, 'main img:visible');
 
     const menuButton = page.locator('.fmb-shell-menu');
     await menuButton.click();
