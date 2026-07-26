@@ -1,48 +1,15 @@
-import { copyFile, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.join(repositoryRoot, 'dist');
-const stylesheets = [
-  {
-    source: path.join(
-      repositoryRoot,
-      'apps',
-      'withlovefmb',
-      'assets',
-      'css',
-      'fmb-sitewide-visual-fixes.css',
-    ),
-    output: path.join(dist, 'assets', 'css', 'fmb-sitewide-visual-fixes.css'),
-    href: '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-readability-v2',
-    pattern: /<link\b[^>]*href=["'][^"']*fmb-sitewide-visual-fixes\.css[^"']*["'][^>]*>\s*/gi,
-  },
-  {
-    source: path.join(
-      repositoryRoot,
-      'apps',
-      'withlovefmb',
-      'assets',
-      'css',
-      'fmb-contrast-polish.css',
-    ),
-    output: path.join(dist, 'assets', 'css', 'fmb-contrast-polish.css'),
-    href: '/assets/css/fmb-contrast-polish.css?v=20260726-contrast-polish-v1',
-    pattern: /<link\b[^>]*href=["'][^"']*fmb-contrast-polish\.css[^"']*["'][^>]*>\s*/gi,
-  },
-  {
-    source: path.join(
-      repositoryRoot,
-      'apps',
-      'withlovefmb',
-      'assets',
-      'css',
-      'fmb-cognita-artwork.css',
-    ),
-    output: path.join(dist, 'assets', 'css', 'fmb-cognita-artwork.css'),
-    href: '/assets/css/fmb-cognita-artwork.css?v=20260726-cognita-hd-v1',
-    pattern: /<link\b[^>]*href=["'][^"']*fmb-cognita-artwork\.css[^"']*["'][^>]*>\s*/gi,
-  },
+const cssRoot = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css');
+const outputStylesheet = path.join(dist, 'assets', 'css', 'fmb-sitewide-visual-fixes.css');
+const sitewideHref = '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-readability-v2';
+const removableStylesheetPatterns = [
+  /<link\b[^>]*href=["'][^"']*fmb-sitewide-visual-fixes\.css[^"']*["'][^>]*>\s*/gi,
+  /<link\b[^>]*href=["'][^"']*fmb-contrast-polish\.css[^"']*["'][^>]*>\s*/gi,
+  /<link\b[^>]*href=["'][^"']*fmb-cognita-artwork\.css[^"']*["'][^>]*>\s*/gi,
 ];
 const excludedPrefixes = ['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/'];
 const excludedFiles = new Set([
@@ -65,10 +32,18 @@ async function walk(directory) {
 
 const relative = (file) => path.relative(dist, file).replaceAll(path.sep, '/');
 
-for (const stylesheet of stylesheets) {
-  await mkdir(path.dirname(stylesheet.output), { recursive: true });
-  await copyFile(stylesheet.source, stylesheet.output);
-}
+const [sitewideCss, contrastCss, cognitaArtworkCss] = await Promise.all([
+  readFile(path.join(cssRoot, 'fmb-sitewide-visual-fixes.css'), 'utf8'),
+  readFile(path.join(cssRoot, 'fmb-contrast-polish.css'), 'utf8'),
+  readFile(path.join(cssRoot, 'fmb-cognita-artwork.css'), 'utf8'),
+]);
+
+await mkdir(path.dirname(outputStylesheet), { recursive: true });
+await writeFile(
+  outputStylesheet,
+  `${sitewideCss.trim()}\n\n/* Final contrast contracts appended by the release build. */\n${contrastCss.trim()}\n\n/* Cognita HD artwork support appended by the release build. */\n${cognitaArtworkCss.trim()}\n`,
+  'utf8',
+);
 
 const publicHtml = (await walk(dist)).filter((file) => {
   const name = relative(file);
@@ -76,15 +51,11 @@ const publicHtml = (await walk(dist)).filter((file) => {
   return !excludedPrefixes.some((prefix) => name.startsWith(prefix));
 });
 
-const injectedLinks = stylesheets
-  .map(({ href }) => `<link rel="stylesheet" href="${href}">`)
-  .join('\n');
-
 let injectedPages = 0;
 for (const file of publicHtml) {
   let html = await readFile(file, 'utf8');
-  for (const stylesheet of stylesheets) {
-    html = html.replace(stylesheet.pattern, '');
+  for (const pattern of removableStylesheetPatterns) {
+    html = html.replace(pattern, '');
   }
 
   if (!/<\/head>/i.test(html)) {
@@ -93,10 +64,10 @@ for (const file of publicHtml) {
 
   html = html.replace(
     /<\/head>/i,
-    `${injectedLinks}\n</head>`,
+    `<link rel="stylesheet" href="${sitewideHref}">\n</head>`,
   );
   await writeFile(file, html, 'utf8');
   injectedPages += 1;
 }
 
-console.log(`Sitewide visual safeguards, contrast polish, and Cognita artwork support loaded last on ${injectedPages} public page(s).`);
+console.log(`Combined sitewide safeguards, contrast polish, and Cognita artwork support into the final stylesheet on ${injectedPages} public page(s).`);
