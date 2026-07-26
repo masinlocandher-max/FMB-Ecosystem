@@ -61,6 +61,9 @@ for (const file of publicHtml) {
   if (html.includes('/assets/css/fmb-cognita-artwork.css')) {
     failures.push(`${name}: Cognita artwork support was linked separately instead of bundled into the approved final stylesheet`);
   }
+  if (html.includes('/assets/css/fmb-news-lead-contrast.css')) {
+    failures.push(`${name}: FMB News lead contrast was linked separately instead of bundled into the approved final stylesheet`);
+  }
 }
 
 const requiredRoutes = [
@@ -112,6 +115,9 @@ for (const contract of [
   'Cognita HD artwork support appended by the release build',
   '.nc-cognita-visual::after',
   approvedPortrait,
+  'FMB News lead-story contrast appended by the release build',
+  '.nc-lead-overlay h2',
+  '.nc-lead-broadcast .news-visual::after',
 ]) {
   if (!finalCss.includes(contract)) {
     failures.push(`fmb-sitewide-visual-fixes.css: missing final contract for ${contract}`);
