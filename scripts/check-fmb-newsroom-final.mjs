@@ -57,6 +57,7 @@ assertFinalStyleContract(landing, 'news/index.html', [
   'Final FMB Newsroom polish',
   'Text-led Newsroom masthead',
   'Final visual-approval correction',
+  'Professional Newsroom type system',
 ]);
 
 const artwork = await readFile(cognitaArtworkPath, 'utf8');
@@ -74,7 +75,7 @@ for (const filePath of await walk(newsRoot)) {
   if (!html.includes('newsroom-polish-v3')) fail(`${relative} is missing the final Newsroom body class`);
   if (!html.includes('THE NEWSROOM')) fail(`${relative} is missing the text-led masthead`);
   if (visibleRetiredLogo.test(html)) fail(`${relative} visibly renders the retired News logo`);
-  assertFinalStyleContract(html, relative, ['Final FMB Newsroom polish', 'Text-led Newsroom masthead']);
+  assertFinalStyleContract(html, relative, ['Final FMB Newsroom polish', 'Text-led Newsroom masthead', 'Professional Newsroom type system']);
 
   if (relative.includes('filipino-centered-training-institution-cognita-vision')) {
     if (!html.includes('og:image:width" content="1536"') || !html.includes('og:image:height" content="864"')) fail('Cognita article metadata is not 1536×864');
@@ -83,4 +84,4 @@ for (const filePath of await walk(newsRoot)) {
 }
 
 if (articleCount < 1) fail('no News article pages were audited');
-console.log(`FMB Newsroom final audit verified the landing page, ${articleCount} article pages, live date hooks, global safeguard preservation, compiled News polish, visual-approval contrast, retired-logo removal, and HD Cognita artwork.`);
+console.log(`FMB Newsroom final audit verified the landing page, ${articleCount} article pages, live date hooks, global safeguard preservation, professional typography, visual-approval contrast, retired-logo removal, and HD Cognita artwork.`);
