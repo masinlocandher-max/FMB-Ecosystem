@@ -117,13 +117,12 @@ html = replaceRequired(
   'footer masthead',
 );
 
-if (!/<\/head>/i.test(html)) {
-  throw new Error('News center redesign: news page has no closing head element');
-}
-
-html = html.replace(
-  /<\/head>/i,
-  `<link rel="stylesheet" href="${stylesheetHref}">\n</head>`,
+const safeguardStylesheet = /(<link\b[^>]*href=["'][^"']*fmb-sitewide-visual-fixes\.css[^"']*["'][^>]*>)/i;
+html = replaceRequired(
+  html,
+  safeguardStylesheet,
+  `<link rel="stylesheet" href="${stylesheetHref}">\n$1`,
+  'sitewide visual safeguard stylesheet',
 );
 
 if (/fmb-news-official-transparent\.webp|\/assets\/images\/news\/fmb-news-official\.svg/i.test(html)) {
