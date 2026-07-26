@@ -7,14 +7,15 @@ const { URL } = require("node:url");
 const { agents, recommendAgent } = require("./agents");
 
 const rootDir = __dirname;
-const dataDir = path.join(rootDir, "data");
-const inquiryFile = path.join(dataDir, "inquiries.jsonl");
 const port = Number(process.env.PORT || 4177);
 const siteOrigins = String(process.env.SITE_ORIGIN || "")
   .split(",")
   .map((origin) => origin.trim())
   .filter(Boolean);
-const adminToken = process.env.ADMIN_TOKEN || "";
+const inquiryDeliveryEndpoint =
+  process.env.SENZ_FORM_DELIVERY_ENDPOINT ||
+  "https://formsubmit.co/ajax/info.senz.pr@gmail.com";
+const deliveryTimeoutMs = Number(process.env.SENZ_FORM_DELIVERY_TIMEOUT_MS || 15000);
 const canonicalHost = process.env.CANONICAL_HOST || "www.senzpr.com";
 const redirectHosts = new Set(
   String(process.env.REDIRECT_HOSTS || "senzpr.com")
@@ -22,9 +23,6 @@ const redirectHosts = new Set(
     .map((host) => host.trim().toLowerCase())
     .filter(Boolean)
 );
-const supabaseUrl = String(process.env.SUPABASE_URL || "").replace(/\/$/, "");
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
-
 const mimeTypes = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
@@ -41,70 +39,30 @@ const mimeTypes = {
   ".txt": "text/plain; charset=utf-8"
 };
 
-function sendJson(res, statusCode, payload) {
+function sendJson(req, res, statusCode, payload) {
   res.writeHead(statusCode, {
     "Content-Type": "application/json; charset=utf-8",
     "Cache-Control": "no-store",
-    ...corsHeaders()
+    ...corsHeaders(req)
   });
   res.end(JSON.stringify(payload));
 }
 
-function corsHeaders() {
+function corsHeaders(req) {
   if (!siteOrigins.length) return {};
+  const origin = String(req.headers.origin || "").trim();
+  if (!siteOrigins.includes(origin)) return {};
   return {
-    "Access-Control-Allow-Origin": siteOrigins.length === 1 ? siteOrigins[0] : "*",
+    "Access-Control-Allow-Origin": origin,
     "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type,Authorization"
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Vary": "Origin"
   };
 }
 
-function hasSupabase() {
-  return Boolean(supabaseUrl && supabaseServiceRoleKey);
-}
-
-function supabaseHeaders(extra = {}) {
-  return {
-    apikey: supabaseServiceRoleKey,
-    Authorization: `Bearer ${supabaseServiceRoleKey}`,
-    "Content-Type": "application/json",
-    ...extra
-  };
-}
-
-async function supabaseRequest(pathname, options = {}) {
-  if (!hasSupabase()) throw new Error("Supabase is not configured.");
-  const response = await fetch(`${supabaseUrl}/rest/v1/${pathname}`, {
-    ...options,
-    headers: supabaseHeaders(options.headers || {})
-  });
-  const text = await response.text();
-  const payload = text ? JSON.parse(text) : null;
-  if (!response.ok) {
-    const message = payload?.message || payload?.hint || `Supabase request failed with ${response.status}.`;
-    throw new Error(message);
-  }
-  return payload;
-}
-
-function inquiryToRow(inquiry) {
-  return {
-    id: inquiry.id,
-    created_at: inquiry.createdAt,
-    name: inquiry.name,
-    brand: inquiry.brand,
-    email: inquiry.email,
-    contact: inquiry.contact,
-    preferred_contact: inquiry.preferredContact,
-    project_type: inquiry.projectType,
-    timeline: inquiry.timeline,
-    budget: inquiry.budget,
-    message: inquiry.message,
-    source: inquiry.source,
-    user_agent: inquiry.userAgent,
-    ip: inquiry.ip,
-    assigned_agent: inquiry.assignedAgent
-  };
+function isAllowedOrigin(req) {
+  const origin = String(req.headers.origin || "").trim();
+  return !siteOrigins.length || !origin || siteOrigins.includes(origin);
 }
 
 function clean(value, maxLength = 500) {
@@ -124,14 +82,6 @@ function cleanLong(value, maxLength = 3000) {
 
 function isEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
-
-function clientIp(req) {
-  const forwarded = req.headers["x-forwarded-for"];
-  if (typeof forwarded === "string" && forwarded.length) {
-    return forwarded.split(",")[0].trim();
-  }
-  return req.socket.remoteAddress || "";
 }
 
 async function readJsonBody(req) {
@@ -159,9 +109,20 @@ async function readJsonBody(req) {
   }
 }
 
-function buildInquiry(input, req) {
+function cleanFields(fields) {
+  if (!fields || typeof fields !== "object" || Array.isArray(fields)) return {};
+  return Object.fromEntries(
+    Object.entries(fields)
+      .slice(0, 24)
+      .map(([key, value]) => [clean(key, 80), cleanLong(value, 1000)])
+      .filter(([key, value]) => key && value)
+  );
+}
+
+function buildInquiry(input) {
   const contact = clean(input.contact || input.phone || input.contactNumber, 180);
   const timeline = clean(input.timeline || input.date || input.availability, 120);
+  const formType = clean(input.formType || "general", 40).toLowerCase();
   const messageParts = [
     cleanLong(input.message, 3000),
     input.date ? `Preferred date or callback time: ${clean(input.date, 120)}` : "",
@@ -173,6 +134,7 @@ function buildInquiry(input, req) {
   const inquiry = {
     id: crypto.randomUUID(),
     createdAt: new Date().toISOString(),
+    formType,
     name: clean(input.name, 120),
     brand: clean(input.brand, 160),
     email: clean(input.email, 180).toLowerCase(),
@@ -183,8 +145,7 @@ function buildInquiry(input, req) {
     budget: clean(input.budget, 120),
     message: messageParts.join("\n\n").slice(0, 3000),
     source: "website-intake",
-    userAgent: clean(req.headers["user-agent"], 300),
-    ip: clientIp(req)
+    details: cleanFields(input.fields)
   };
   const assignedAgent = recommendAgent(inquiry);
   inquiry.assignedAgent = {
@@ -201,43 +162,132 @@ function buildInquiry(input, req) {
   if (!inquiry.projectType) errors.push("Project type is required.");
   if (!inquiry.message) errors.push("Project goal is required.");
 
-  return { inquiry, errors };
+  return {
+    inquiry,
+    errors,
+    spamTrap: clean(input.senzWebsite, 180),
+    formStartedAt: Number(input.formStartedAt || 0)
+  };
 }
 
-async function saveInquiry(inquiry) {
-  if (hasSupabase()) {
-    await supabaseRequest("inquiries", {
-      method: "POST",
-      headers: { Prefer: "return=minimal" },
-      body: JSON.stringify(inquiryToRow(inquiry))
-    });
-    return;
+function inquirySubject(inquiry) {
+  if (inquiry.formType === "consultation") {
+    return `New SENZ consultation request — ${inquiry.name}`;
   }
-  await fsp.mkdir(dataDir, { recursive: true });
-  await fsp.appendFile(inquiryFile, `${JSON.stringify(inquiry)}\n`, "utf8");
+  if (inquiry.formType === "creative-pool") {
+    return `New SENZ creative network submission — ${inquiry.name}`;
+  }
+  return `New SENZ website inquiry — ${inquiry.name}`;
+}
+
+async function deliverInquiry(inquiry) {
+  if (!inquiryDeliveryEndpoint) {
+    const error = new Error("Inquiry email delivery is not configured.");
+    error.statusCode = 503;
+    throw error;
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), deliveryTimeoutMs);
+  const details = Object.fromEntries(
+    Object.entries(inquiry.details).map(([key, value]) => [`Detail — ${key}`, value])
+  );
+
+  try {
+    const response = await fetch(inquiryDeliveryEndpoint, {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        _subject: inquirySubject(inquiry),
+        _template: "table",
+        _captcha: "false",
+        _replyto: inquiry.email,
+        "Submission ID": inquiry.id,
+        "Submission type": inquiry.formType,
+        "Received at": inquiry.createdAt,
+        "Name": inquiry.name,
+        "Email": inquiry.email,
+        "Phone or Messenger": inquiry.contact,
+        "Business or organization": inquiry.brand,
+        "Project type": inquiry.projectType,
+        "Preferred schedule or timeline": inquiry.timeline,
+        "Budget": inquiry.budget,
+        "Message": inquiry.message,
+        "Recommended SENZ route": inquiry.assignedAgent.label,
+        ...details
+      }),
+      signal: controller.signal
+    });
+
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || result.success === false || result.success === "false") {
+      const error = new Error("The inquiry email provider did not accept the submission.");
+      error.statusCode = 502;
+      throw error;
+    }
+  } catch (reason) {
+    if (reason?.name === "AbortError") {
+      const error = new Error("Inquiry email delivery timed out.");
+      error.statusCode = 504;
+      throw error;
+    }
+    throw reason;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function wasSubmittedTooQuickly(formStartedAt) {
+  if (!Number.isFinite(formStartedAt) || formStartedAt <= 0) return false;
+  const elapsed = Date.now() - formStartedAt;
+  return elapsed >= 0 && elapsed < 1200;
 }
 
 async function handleInquiry(req, res) {
   try {
-    const input = await readJsonBody(req);
-    const { inquiry, errors } = buildInquiry(input, req);
-
-    if (errors.length) {
-      sendJson(res, 422, { ok: false, errors });
+    if (!isAllowedOrigin(req)) {
+      sendJson(req, res, 403, { ok: false, errors: ["Origin is not allowed."] });
       return;
     }
 
-    await saveInquiry(inquiry);
-    sendJson(res, 201, {
+    const input = await readJsonBody(req);
+    const { inquiry, errors, spamTrap, formStartedAt } = buildInquiry(input);
+
+    if (errors.length) {
+      sendJson(req, res, 422, { ok: false, errors });
+      return;
+    }
+
+    if (spamTrap) {
+      sendJson(req, res, 201, {
+        ok: true,
+        message: "Inquiry received. SENZ Strategic Communications will review your brief and respond soon."
+      });
+      return;
+    }
+
+    if (wasSubmittedTooQuickly(formStartedAt)) {
+      sendJson(req, res, 429, {
+        ok: false,
+        errors: ["Please wait a moment, then submit the form again."]
+      });
+      return;
+    }
+
+    await deliverInquiry(inquiry);
+    sendJson(req, res, 201, {
       ok: true,
       id: inquiry.id,
       assignedAgent: inquiry.assignedAgent,
       message: "Inquiry received. SENZ Strategic Communications will review your brief and respond soon."
     });
   } catch (error) {
-    sendJson(res, error.statusCode || 500, {
+    sendJson(req, res, error.statusCode || 500, {
       ok: false,
-      errors: [error.message || "Unable to submit inquiry."]
+      errors: ["Unable to deliver the inquiry. Please email info.senz.pr@gmail.com directly."]
     });
   }
 }
@@ -246,7 +296,7 @@ async function handleAgentRecommendation(req, res) {
   try {
     const input = await readJsonBody(req);
     const agent = recommendAgent(input);
-    sendJson(res, 200, {
+    sendJson(req, res, 200, {
       ok: true,
       agent: {
         id: agent.id,
@@ -256,34 +306,10 @@ async function handleAgentRecommendation(req, res) {
       }
     });
   } catch (error) {
-    sendJson(res, error.statusCode || 500, {
+    sendJson(req, res, error.statusCode || 500, {
       ok: false,
       errors: [error.message || "Unable to recommend an agent."]
     });
-  }
-}
-
-async function handleInquiryList(req, res) {
-  if (!adminToken || req.headers.authorization !== `Bearer ${adminToken}`) {
-    sendJson(res, 401, { ok: false, errors: ["Unauthorized."] });
-    return;
-  }
-
-  try {
-    if (hasSupabase()) {
-      const inquiries = await supabaseRequest("inquiries?select=*&order=created_at.desc");
-      sendJson(res, 200, { ok: true, inquiries });
-      return;
-    }
-    const raw = await fsp.readFile(inquiryFile, "utf8").catch(() => "");
-    const inquiries = raw
-      .split("\n")
-      .filter(Boolean)
-      .map((line) => JSON.parse(line))
-      .reverse();
-    sendJson(res, 200, { ok: true, inquiries });
-  } catch {
-    sendJson(res, 500, { ok: false, errors: ["Unable to read inquiries."] });
   }
 }
 
@@ -337,18 +363,27 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (req.method === "OPTIONS") {
-    res.writeHead(204, corsHeaders());
+    if (!isAllowedOrigin(req)) {
+      sendJson(req, res, 403, { ok: false, errors: ["Origin is not allowed."] });
+      return;
+    }
+    res.writeHead(204, corsHeaders(req));
     res.end();
     return;
   }
 
   if (req.method === "GET" && url.pathname === "/api/health") {
-    sendJson(res, 200, { ok: true, service: "senz-backend", time: new Date().toISOString() });
+    sendJson(req, res, 200, {
+      ok: true,
+      service: "senz-inquiry-email",
+      storage: "none",
+      time: new Date().toISOString()
+    });
     return;
   }
 
   if (req.method === "GET" && url.pathname === "/api/agents") {
-    sendJson(res, 200, {
+    sendJson(req, res, 200, {
       ok: true,
       agents: agents.map(({ id, name, label, focus }) => ({ id, name, label, focus }))
     });
@@ -365,19 +400,24 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  if (req.method === "GET" && url.pathname === "/api/inquiries") {
-    await handleInquiryList(req, res);
-    return;
-  }
-
   if (req.method === "GET" || req.method === "HEAD") {
     await serveStatic(req, res, url.pathname);
     return;
   }
 
-  sendJson(res, 405, { ok: false, errors: ["Method not allowed."] });
+  sendJson(req, res, 405, { ok: false, errors: ["Method not allowed."] });
 });
 
-server.listen(port, () => {
-  console.log(`SENZ Strategic Communications website backend running at http://127.0.0.1:${port}`);
-});
+if (require.main === module) {
+  server.listen(port, () => {
+    console.log(`SENZ Strategic Communications website backend running at http://127.0.0.1:${port}`);
+  });
+}
+
+module.exports = {
+  buildInquiry,
+  deliverInquiry,
+  inquirySubject,
+  server,
+  wasSubmittedTooQuickly
+};
