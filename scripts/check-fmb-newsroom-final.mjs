@@ -49,6 +49,8 @@ function assertChannelIdentity(html, fileName) {
   if (!html.includes('FMB</span>')) fail(`${fileName} is missing the FMB masthead monogram`);
   if (!html.includes('News Center</strong>')) fail(`${fileName} is missing the News Center masthead`);
   if (!html.includes('Filipino ang Mismong Balita.')) fail(`${fileName} is missing the approved Filipino tagline`);
+  if (!html.includes('fmb-news-channel-command')) fail(`${fileName} is missing the visible channel command bar`);
+  if ((html.match(/fmb-news-channel-command-inner/g) || []).length !== 1) fail(`${fileName} must contain exactly one visible channel masthead`);
   if (html.includes('THE NEWSROOM')) fail(`${fileName} still uses the retired Newsroom masthead`);
   if (retiredFashionFontImport.test(html)) fail(`${fileName} still imports the retired fashion-editorial typeface`);
   if (visibleRetiredLogo.test(html)) fail(`${fileName} visibly renders the retired News logo`);
@@ -71,6 +73,7 @@ assertFinalStyleContract(landing, 'news/index.html', [
   'Final visual-approval correction',
   'Professional Newsroom type system',
   'FMB News Center channel redesign v4',
+  'FMB News Center v4 final channel fixes',
 ]);
 
 const artwork = await readFile(cognitaArtworkPath, 'utf8');
@@ -87,11 +90,13 @@ for (const filePath of await walk(newsRoot)) {
   articleCount += 1;
   assertChannelIdentity(html, relative);
   if (!html.includes('newsroom-polish-v3')) fail(`${relative} is missing the final News Center polish class`);
+  if (!html.includes('font-family: Georgia, "Times New Roman", Times, serif !important')) fail(`${relative} is missing the protected editorial report type contract`);
   assertFinalStyleContract(html, relative, [
     'Final FMB Newsroom polish',
     'Text-led Newsroom masthead',
     'Professional Newsroom type system',
     'FMB News Center channel redesign v4',
+    'FMB News Center v4 final channel fixes',
   ]);
 
   if (relative.includes('filipino-centered-training-institution-cognita-vision')) {
@@ -101,4 +106,4 @@ for (const filePath of await walk(newsRoot)) {
 }
 
 if (articleCount < 1) fail('no News report pages were audited');
-console.log(`FMB News Center final audit verified the landing page, ${articleCount} report pages, the approved Filipino tagline, live desk identity, responsive broadcast layout, professional typography, source visibility, retired-logo removal, and HD Cognita artwork.`);
+console.log(`FMB News Center final audit verified the landing page, ${articleCount} report pages, the approved Filipino tagline, visible channel masthead, live desk identity, responsive broadcast layout, protected editorial typography, source visibility, retired-logo removal, and HD Cognita artwork.`);
