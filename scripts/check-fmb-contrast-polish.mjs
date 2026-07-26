@@ -5,8 +5,8 @@ const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.join(repositoryRoot, 'dist');
 const contrastHref = '/assets/css/fmb-contrast-polish.css';
 const sitewideHref = '/assets/css/fmb-sitewide-visual-fixes.css';
-const oldCognitaArtwork = '/assets/images/news/cognita-filipino-centered-education.svg';
-const hdCognitaArtwork = '/assets/images/news/cognita-filipino-centered-education-hd.webp';
+const cognitaArtwork = '/assets/images/news/cognita-filipino-centered-education.svg';
+const approvedPortrait = '/assets/images/fmb-approved/francine-portrait-front.webp';
 const excludedPrefixes = ['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/'];
 const excludedFiles = new Set([
   'admin.html',
@@ -26,42 +26,12 @@ async function walk(directory) {
   return files;
 }
 
-function readWebpDimensions(buffer) {
-  if (
-    buffer.length < 30
-    || buffer.toString('ascii', 0, 4) !== 'RIFF'
-    || buffer.toString('ascii', 8, 12) !== 'WEBP'
-  ) {
-    throw new Error('HD Cognita artwork is not a valid WebP container.');
-  }
-
-  let offset = 12;
-  while (offset + 8 <= buffer.length) {
-    const type = buffer.toString('ascii', offset, offset + 4);
-    const size = buffer.readUInt32LE(offset + 4);
-    const data = offset + 8;
-
-    if (type === 'VP8X' && data + 10 <= buffer.length) {
-      return {
-        width: 1 + buffer.readUIntLE(data + 4, 3),
-        height: 1 + buffer.readUIntLE(data + 7, 3),
-      };
-    }
-
-    if (type === 'VP8 ' && data + 10 <= buffer.length) {
-      if (buffer[data + 3] !== 0x9d || buffer[data + 4] !== 0x01 || buffer[data + 5] !== 0x2a) {
-        throw new Error('HD Cognita artwork has an invalid VP8 frame header.');
-      }
-      return {
-        width: buffer.readUInt16LE(data + 6) & 0x3fff,
-        height: buffer.readUInt16LE(data + 8) & 0x3fff,
-      };
-    }
-
-    offset = data + size + (size % 2);
-  }
-
-  throw new Error('Unable to read dimensions from the HD Cognita artwork.');
+function readSvgDimensions(svg) {
+  const viewBox = svg.match(/\bviewBox=["']\s*[-\d.]+\s+[-\d.]+\s+([\d.]+)\s+([\d.]+)/i);
+  if (viewBox) return { width: Number(viewBox[1]), height: Number(viewBox[2]) };
+  const width = Number(svg.match(/\bwidth=["']([\d.]+)/i)?.[1]);
+  const height = Number(svg.match(/\bheight=["']([\d.]+)/i)?.[1]);
+  return { width, height };
 }
 
 const relative = (file) => path.relative(dist, file).replaceAll(path.sep, '/');
@@ -87,9 +57,6 @@ for (const file of publicHtml) {
   if (contrastIndex >= 0 && sitewideIndex >= 0 && contrastIndex < sitewideIndex) {
     failures.push(`${name}: contrast polish is not loaded after the legacy safeguards`);
   }
-  if (html.includes(oldCognitaArtwork)) {
-    failures.push(`${name}: still references the low-resolution Cognita wrapper`);
-  }
 }
 
 const requiredRoutes = [
@@ -112,6 +79,20 @@ for (const route of requiredRoutes) {
   }
 }
 
+for (const route of [
+  'news/index.html',
+  'news/filipino-centered-training-institution-cognita-vision/index.html',
+]) {
+  try {
+    const html = await readFile(path.join(dist, route), 'utf8');
+    if (!html.includes(cognitaArtwork)) {
+      failures.push(`${route}: does not reference the rebuilt Cognita lead visual`);
+    }
+  } catch {
+    // The missing route is already reported above.
+  }
+}
+
 const contrastCssPath = path.join(dist, 'assets', 'css', 'fmb-contrast-polish.css');
 const contrastCss = await readFile(contrastCssPath, 'utf8');
 for (const contract of [
@@ -129,14 +110,20 @@ for (const contract of [
   }
 }
 
-const hdImagePath = path.join(dist, hdCognitaArtwork);
-const hdImage = await readFile(hdImagePath);
-const dimensions = readWebpDimensions(hdImage);
+const artworkPath = path.join(dist, cognitaArtwork);
+const artwork = await readFile(artworkPath, 'utf8');
+const dimensions = readSvgDimensions(artwork);
 if (dimensions.width < 1536 || dimensions.height < 864) {
-  failures.push(`HD Cognita artwork is only ${dimensions.width}×${dimensions.height}; expected at least 1536×864`);
+  failures.push(`Cognita lead visual is only ${dimensions.width || 0}×${dimensions.height || 0}; expected at least 1536×864`);
 }
-if (hdImage.length < 50_000) {
-  failures.push(`HD Cognita artwork is unexpectedly small at ${hdImage.length} bytes`);
+if (!artwork.includes(approvedPortrait)) {
+  failures.push('Cognita lead visual does not use the approved high-resolution Francine portrait.');
+}
+if (/data:image\//i.test(artwork)) {
+  failures.push('Cognita lead visual still embeds a low-resolution raster data URI.');
+}
+if (!artwork.includes('COGNITA') || !artwork.includes('INSTITUTE OF AI')) {
+  failures.push('Cognita lead visual is missing its code-native institutional identity.');
 }
 
 if (failures.length > 0) {
@@ -146,5 +133,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `FMB contrast and HD artwork audit passed for ${publicHtml.length} public page(s); Cognita artwork is ${dimensions.width}×${dimensions.height}.`,
+  `FMB contrast and HD artwork audit passed for ${publicHtml.length} public page(s); Cognita visual is ${dimensions.width}×${dimensions.height} and uses the approved portrait.`,
 );
