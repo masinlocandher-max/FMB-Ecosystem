@@ -22,7 +22,7 @@ async function walk(directory) {
 }
 
 function footerMasthead() {
-  return '<a class="nc-footer-brand nc-footer-masthead" href="/news/" aria-label="Newsroom front page"><span class="nc-footer-kicker">Francine Marie Bautista</span><strong>THE NEWSROOM</strong><span>Public interest · Clear sources · Visible perspective</span></a>';
+  return '<a class="nc-footer-brand nc-text-masthead nc-footer-masthead" href="/news/" aria-label="FMB News Center home"><span class="nc-masthead-monogram" aria-hidden="true">FMB</span><span class="nc-masthead-copy"><strong class="nc-masthead-title">News Center</strong><span class="nc-masthead-tagline">Filipino ang Mismong Balita.</span></span></a>';
 }
 
 let cleanedPages = 0;
@@ -44,10 +44,10 @@ for (const filePath of await walk(newsRoot)) {
     html = html
       .replace(/<meta property="og:image:width" content="[^"]*">/i, '<meta property="og:image:width" content="1536">')
       .replace(/<meta property="og:image:height" content="[^"]*">/i, '<meta property="og:image:height" content="864">')
-      .replace(/<meta property="og:image:alt" content="[^"]*">/i, '<meta property="og:image:alt" content="FMB Newsroom editorial report title card">')
+      .replace(/<meta property="og:image:alt" content="[^"]*">/i, '<meta property="og:image:alt" content="FMB News Center editorial report title card">')
       .replace(/<meta name="twitter:card" content="summary">/i, '<meta name="twitter:card" content="summary_large_image">')
-      .replace(/FMB News identity\.?/gi, 'Original FMB Newsroom editorial title card.')
-      .replace(/Official FMB News identity/gi, 'FMB Newsroom editorial report title card');
+      .replace(/FMB News identity\.?/gi, 'Original FMB News Center editorial title card.')
+      .replace(/Official FMB News identity/gi, 'FMB News Center editorial report title card');
 
     html = html.replace(
       /<img\b[^>]*\bsrc=["']\/assets\/images\/news\/newsroom-editorial-fallback\.svg["'][^>]*>/gi,
@@ -55,10 +55,10 @@ for (const filePath of await walk(newsRoot)) {
         let next = tag
           .replace(/\bwidth=["'][^"']*["']/i, 'width="1536"')
           .replace(/\bheight=["'][^"']*["']/i, 'height="864"')
-          .replace(/\balt=["'][^"']*["']/i, 'alt="FMB Newsroom editorial report title card"');
+          .replace(/\balt=["'][^"']*["']/i, 'alt="FMB News Center editorial report title card"');
         if (!/\bwidth=/i.test(next)) next = next.replace('<img', '<img width="1536"');
         if (!/\bheight=/i.test(next)) next = next.replace('<img', '<img height="864"');
-        if (!/\balt=/i.test(next)) next = next.replace('<img', '<img alt="FMB Newsroom editorial report title card"');
+        if (!/\balt=/i.test(next)) next = next.replace('<img', '<img alt="FMB News Center editorial report title card"');
         return next;
       },
     );
@@ -66,10 +66,10 @@ for (const filePath of await walk(newsRoot)) {
   }
 
   if (/<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*(?:fmb-news-official-transparent\.webp|fmb-news-official\.svg)/i.test(html)) {
-    throw new Error(`Newsroom logo cleanup: retired News identity still renders in ${filePath}`);
+    throw new Error(`News Center logo cleanup: retired News identity still renders in ${filePath}`);
   }
   await writeFile(filePath, html, 'utf8');
   cleanedPages += 1;
 }
 
-console.log(`Normalized ${cleanedPages} News article footers and replaced retired-logo media with an editorial fallback on ${fallbackPages} page(s).`);
+console.log(`Normalized ${cleanedPages} FMB News Center report footers and replaced retired-logo media with an editorial fallback on ${fallbackPages} page(s).`);
