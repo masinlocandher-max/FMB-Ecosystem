@@ -143,8 +143,10 @@ if (!home.includes('fmb-corporate-luxury-approved.css?v=20260726-visual-fix-v3')
 if (/main[\s\S]*?<section\b[^>]*class=["'][^"']*\bfeatured\b[^"']*["']/i.test(home)) {
   fail('homepage still contains the retired full-width featured band');
 }
-if (!/class=["'][^"']*\bhero\b[^"']*["'][\s\S]*?<section class="fmb-approved-control-center"/i.test(home)) {
-  fail('homepage must flow directly from the hero into the approved control center');
+const heroIndex = home.indexOf('<section class="hero"');
+const controlCenterIndex = home.indexOf('<section class="fmb-approved-control-center"');
+if (heroIndex < 0 || controlCenterIndex <= heroIndex) {
+  fail('homepage must place the approved control center after the hero');
 }
 
 const approvedCss = await readFile(path.join(dist, 'assets', 'css', 'fmb-corporate-luxury-approved.css'), 'utf8');
