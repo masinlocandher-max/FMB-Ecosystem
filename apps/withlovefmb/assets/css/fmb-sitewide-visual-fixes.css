@@ -147,7 +147,7 @@ body.fmb-unified-public .fmb-shell-nav a {
 }
 
 @media (min-width: 961px) {
-  body.fmb-unified-public .fmb-shell-nav a[href$="/work-with-fmb/"] {
+  body.fmb-unified-public .fmb-shell-nav a[href="/work-with-fmb/"] {
     display: none !important;
   }
 }
@@ -452,13 +452,13 @@ body.fmb-corporate-luxury-v2.fmb-unified-news .nc-rundown-panel :is(h2, h3) {
   color: #23141e !important;
 }
 
-body.fmb-corporate-luxury-v2.fmb-unified-news .nc-rundown-panel :is(
-  a,
-  a:visited,
-  div,
-  .nc-rundown-number
-) {
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-rundown-story > a,
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-rundown-story > a > div {
   color: #20151c !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-rundown-number {
+  color: #7d243b !important;
 }
 
 body.fmb-corporate-luxury-v2.fmb-unified-news .nc-rundown-story p {
@@ -642,7 +642,8 @@ body.fmb-unified-withlove .wlf-hero h1 {
 body.fmb-unified-fmbandco .fco-hero :is(
   .fco-hero-copy,
   .fco-hero-copy > *,
-  .fco-hero-visual
+  .fco-hero-visual,
+  .fco-hero-visual > *
 ) {
   opacity: 1 !important;
   visibility: visible !important;
@@ -685,21 +686,21 @@ body.fmb-unified-mabayani .hero h1 {
 
 body.fmb-unified-music :is(.music-hero, .nc-broadcast-identity) h1 {
   font-family: "DM Serif Display", "Cormorant Garamond", Georgia, serif !important;
-  font-size: clamp(54px, 6.4vw, 88px) !important;
   font-weight: 400 !important;
+  font-size: clamp(54px, 6.4vw, 88px) !important;
 }
 
 body.fmb-unified-ebooks .ebook-hero h1 {
   font-size: clamp(56px, 6.6vw, 92px) !important;
 }
 
-body.fmb-corporate-luxury-v2.fmb-unified-news-article .nc-article-hero h1 {
+body.fmb-unified-news-article .nc-article-hero h1 {
   max-width: 920px;
   font-size: clamp(52px, 6.2vw, 86px) !important;
   line-height: 1 !important;
 }
 
-body.fmb-corporate-luxury-v2.fmb-unified-news-article .senz-article-hero h1 {
+body.fmb-unified-news-article .senz-article-hero h1 {
   max-width: 980px;
   font-size: clamp(48px, 5.5vw, 76px) !important;
   line-height: 1.02 !important;
@@ -824,8 +825,8 @@ body.fmb-unified-public form :is(
   body.fmb-unified-help .help-hero h1,
   body.fmb-unified-community .volunteer-hero-copy h1,
   body.fmb-unified-mabayani .hero h1,
-  body.fmb-corporate-luxury-v2.fmb-unified-news-article .nc-article-hero h1,
-  body.fmb-corporate-luxury-v2.fmb-unified-news-article .senz-article-hero h1,
+  body.fmb-unified-news-article .nc-article-hero h1,
+  body.fmb-unified-news-article .senz-article-hero h1,
   body.fmb-unified-public:not(.fmb-reader-modern) .reading-hero h1 {
     font-size: clamp(46px, 12.5vw, 60px) !important;
   }
@@ -863,7 +864,7 @@ body.fmb-unified-public form :is(
   body.fmb-unified-withlove .wlf-hero h1,
   body.fmb-unified-fmbandco .fco-hero h1,
   body:is(.fmb-unified-participate, .fmb-unified-work) .fmb-journey-main > h1,
-  body.fmb-corporate-luxury-v2.fmb-unified-news-article :is(.nc-article-hero, .senz-article-hero) h1 {
+  body.fmb-unified-news-article :is(.nc-article-hero, .senz-article-hero) h1 {
     font-size: clamp(42px, 13vw, 56px) !important;
   }
 
