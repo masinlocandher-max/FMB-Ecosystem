@@ -8,7 +8,8 @@
     "build": "node build.mjs && node scripts/check-public.mjs",
     "start": "node server.js",
     "dev": "node server.js",
-    "check": "node --check server.js && node --check api/handler.js"
+    "check": "node --check server.js && node --check api/handler.js && node --check components/form-router.js",
+    "test": "node --test test/server.test.js"
   },
   "engines": {
     "node": ">=20"

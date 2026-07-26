@@ -1,15 +1,15 @@
 # BACKEND AND ENDPOINT AUDIT
 
 PAGE: Contact Us
-ISSUE: Send Us A Message form has no production email endpoint.
-CURRENT STATUS: `CONTACT_FORM_ENDPOINT` exists in `components/site-config.js` and may remain blank because the form now falls back to `SENZ_API_BASE_URL + /api/inquiries`. The Google Apps Script endpoint is optional only when routing outside the SENZ API.
-NEEDED FIX: Keep the deployed SENZ API healthy, or add a deployed Google Apps Script Web App URL if email-only routing is preferred.
+ISSUE: Send Us A Message must reach the official inbox without creating a paid database dependency.
+CURRENT STATUS: Blank custom form endpoints route through `SENZ_API_BASE_URL + /api/inquiries`. The SENZ API validates the request and delivers it to `info.senz.pr@gmail.com` through FormSubmit. It does not write casual inquiries to Supabase or the Render filesystem.
+NEEDED FIX: Confirm the one-time FormSubmit activation email for `info.senz.pr@gmail.com`, then keep the deployed SENZ API health check passing.
 PRIORITY: High
 
 PAGE: Home, About, Services
-ISSUE: Book a Consultation modal has no production appointment request endpoint.
-CURRENT STATUS: `CONSULTATION_FORM_ENDPOINT` exists in `components/site-config.js` and may remain blank because the modal now falls back to `SENZ_API_BASE_URL + /api/inquiries`. The Google Apps Script endpoint is optional only when routing outside the SENZ API.
-NEEDED FIX: Keep the deployed SENZ API healthy, or add a deployed Google Apps Script Web App URL if email-only routing is preferred.
+ISSUE: Book a Consultation must collect a preferred schedule without falsely confirming an appointment.
+CURRENT STATUS: Consultation requests use the same email-only inquiry endpoint. The visitor receives a pending-request message, and SENZ reviews and confirms the schedule manually by email.
+NEEDED FIX: No database or calendar write is needed before paid demand justifies it.
 PRIORITY: High
 
 PAGE: Home, About, Services
@@ -19,9 +19,9 @@ NEEDED FIX: Add a pending appointment workflow later: submit request, SENZ revie
 PRIORITY: High
 
 PAGE: Careers
-ISSUE: Creative Pool / Submit Portfolio form has no production email endpoint.
-CURRENT STATUS: `CAREERS_FORM_ENDPOINT` exists in `components/site-config.js` and may remain blank because the form now falls back to `SENZ_API_BASE_URL + /api/inquiries`. The Google Apps Script endpoint is optional only when routing outside the SENZ API.
-NEEDED FIX: Keep the deployed SENZ API healthy, or add a deployed Google Apps Script Web App URL if email-only routing is preferred.
+ISSUE: Creative Pool / Submit Portfolio must reach the official inbox.
+CURRENT STATUS: Creative-network submissions use the same validated email-only endpoint and do not require Supabase.
+NEEDED FIX: Review and retain relevant profiles in the official email workflow until a paid operational database is justified.
 PRIORITY: High
 
 PAGE: All Approved Pages
@@ -32,8 +32,8 @@ PRIORITY: High
 
 PAGE: All Approved Pages
 ISSUE: Existing `/api/inquiries` backend is present but not wired to send email.
-CURRENT STATUS: `server.js` exposes `/api/inquiries` for saving inquiry records, and approved forms now submit there by default when custom form endpoints are blank. No email service credentials are connected.
-NEEDED FIX: Keep `/api/inquiries` deployed for record capture, and intentionally wire email notifications later if required.
+CURRENT STATUS: `server.js` now validates, anti-spam checks, and emails accepted submissions. It has no Supabase or local-file persistence path for casual inquiries.
+NEEDED FIX: Keep the free FormSubmit delivery endpoint active and test it after deployment.
 PRIORITY: Medium
 
 PAGE: FAQ

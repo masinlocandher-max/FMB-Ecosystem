@@ -1417,6 +1417,14 @@ body.fmb-unified-public > .fco-skip:focus {
   padding: 32px !important;
 }
 
+.fmb-unified-public .fmb-journey-options article h2 {
+  color: var(--fmb-royal) !important;
+}
+
+.fmb-unified-public .fmb-journey-options article p {
+  color: var(--fmb-muted) !important;
+}
+
 .fmb-unified-public form,
 .fmb-unified-public .form-shell,
 .fmb-unified-public [class*="form-card"] {

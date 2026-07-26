@@ -1,6 +1,9 @@
 # SENZ Strategic Communications Backend
 
-This folder now includes a small Node backend for the website.
+This folder includes a small Node backend for the website. It validates
+inquiries and forwards accepted submissions to the official SENZ inbox. It
+does not store casual website inquiries in Supabase or on the Render
+filesystem.
 
 ## Run locally
 
@@ -20,46 +23,48 @@ http://127.0.0.1:4177
 - `GET /api/health` checks the backend status.
 - `GET /api/agents` lists the SENZ Strategic Communications routing agents.
 - `POST /api/agents/recommend` recommends an agent for a draft inquiry.
-- `POST /api/inquiries` receives inquiry records when a production form endpoint is connected.
-- `GET /api/inquiries` lists saved inquiries only when `ADMIN_TOKEN` is set and sent as `Authorization: Bearer <token>`.
+- `POST /api/inquiries` validates, anti-spam checks, and emails an inquiry.
 
 ## Agents
 
-Every inquiry is automatically routed to a SENZ Strategic Communications agent profile such as Brand Direction, Public Relations, Creative Production, Digital Products, Events Platform, or Founder Review. The assigned agent is stored with the inquiry and returned to the form after submission.
+Every accepted inquiry is automatically routed to a SENZ Strategic
+Communications agent profile such as Brand Direction, Public Relations,
+Creative Production, Digital Products, Events Platform, or Founder Review.
+The assigned route is included in the email and returned to the form after
+submission.
 
-## Storage
+## Delivery and storage
 
-Without Supabase credentials, inquiries and ebook orders are saved locally to:
+The default delivery endpoint is:
 
 ```text
-data/inquiries.jsonl
+https://formsubmit.co/ajax/info.senz.pr@gmail.com
 ```
 
-Those files are intentionally ignored by Git so private client leads are not uploaded publicly.
+FormSubmit requires a one-time activation from the receiving inbox after the
+first deployed test submission. The endpoint can be replaced without a code
+change by setting `SENZ_FORM_DELIVERY_ENDPOINT`.
 
-## Production Data Setup
+No inquiry database is required before SENZ has paid operational demand.
+Appointment forms collect a preferred schedule as a pending request; SENZ
+confirms the appointment manually by email.
 
-Use Supabase for launch data.
+## Production setup
 
-1. Create a Supabase project.
-2. Open Supabase SQL Editor.
-3. Run `supabase/schema.sql`.
-4. Deploy `server.js` to a Node host such as Render.
-5. Add these server environment variables:
+1. Deploy `server.js` to the existing Render service.
+2. Add these server environment variables:
 
 ```text
 SITE_ORIGIN=https://senzpr.com,https://www.senzpr.com
-ADMIN_TOKEN=make-a-long-private-token
-SUPABASE_URL=https://your-project-ref.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+SENZ_FORM_DELIVERY_ENDPOINT=https://formsubmit.co/ajax/info.senz.pr@gmail.com
 ```
-
-Keep `SUPABASE_SERVICE_ROLE_KEY` only on the backend host. Never place it in HTML, public JavaScript, GitHub Pages, or `components/site-config.js`.
 
 After the backend is deployed, update `components/site-config.js`:
 
 ```js
-window.SENZ_API_BASE_URL = "https://your-backend-host.example.com";
+window.SENZ_API_BASE_URL = "https://senz-api-8vt4.onrender.com";
 ```
 
-Then publish the static site again. The Get Started form and ebook checkout will send data to the backend, and the backend will save to Supabase.
+Then publish the static site, send one real inquiry, and approve FormSubmit's
+activation email in `info.senz.pr@gmail.com`. Subsequent inquiries will be
+delivered by email without a SENZ Supabase dependency.

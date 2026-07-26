@@ -15,7 +15,7 @@ for(const file of [cssSource,path.join(source,purplePortrait.replace(/^\/assets\
 await copyFile(cssSource,cssTarget);
 
 const fontLinks='<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">';
-const cssLink='<link rel="stylesheet" href="/assets/css/fmb-corporate-luxury-approved.css?v=20260725-approved-v1">';
+const cssLink='<link rel="stylesheet" href="/assets/css/fmb-corporate-luxury-approved.css?v=20260726-visual-fix-v2">';
 
 function addBodyClass(html,className){
   return html.replace(/<body([^>]*)>/i,(match,attrs='')=>{
@@ -31,6 +31,8 @@ function addBodyClass(html,className){
 }
 
 function injectAssets(html){
+  const approvedCssLink=/<link\b[^>]*href=["'][^"']*fmb-corporate-luxury-approved\.css[^"']*["'][^>]*>/i;
+  if(approvedCssLink.test(html))return html.replace(approvedCssLink,cssLink);
   if(!html.includes('family=Bodoni+Moda'))html=html.replace('</head>',`${fontLinks}\n${cssLink}\n</head>`);
   else if(!html.includes('fmb-corporate-luxury-approved.css'))html=html.replace('</head>',`${cssLink}\n</head>`);
   return html;
