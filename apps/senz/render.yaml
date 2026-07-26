@@ -15,9 +15,5 @@ services:
         value: www.senzpr.com
       - key: REDIRECT_HOSTS
         value: senzpr.com
-      - key: ADMIN_TOKEN
-        generateValue: true
-      - key: SUPABASE_URL
-        sync: false
-      - key: SUPABASE_SERVICE_ROLE_KEY
-        sync: false
+      - key: SENZ_FORM_DELIVERY_ENDPOINT
+        value: https://formsubmit.co/ajax/info.senz.pr@gmail.com
