@@ -1,0 +1,57 @@
+/* Final visual-approval correction for the dark Newsroom identity hero. */
+body.fmb-corporate-luxury-v2.fmb-unified-news.news-channel-route.news-center-v2 .nc-broadcast-identity {
+  color: #fffdf8 !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news.news-channel-route.news-center-v2 .nc-newsroom-title h1 {
+  max-width: 6.2ch;
+  color: #fffdf8 !important;
+  text-shadow: 0 14px 48px rgba(0, 0, 0, 0.34) !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news.news-channel-route.news-center-v2 .nc-newsroom-title .nc-hero-summary {
+  max-width: 610px;
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news.news-channel-route.news-center-v2 .nc-newsroom-title .nc-hero-kicker {
+  color: #f1d690 !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news.news-channel-route.news-center-v2 .nc-newsroom-title .nc-hero-dateline {
+  border-top-color: rgba(255, 255, 255, 0.28) !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news.news-channel-route.news-center-v2 .nc-newsroom-title .nc-hero-dateline span {
+  color: rgba(255, 255, 255, 0.64) !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news.news-channel-route.news-center-v2 .nc-channel-promise {
+  border-left-color: rgba(255, 255, 255, 0.34) !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news.news-channel-route.news-center-v2 .nc-channel-service span {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+@media (max-width: 960px) {
+  body.fmb-corporate-luxury-v2.fmb-unified-news.news-channel-route.news-center-v2 .nc-channel-promise {
+    border-top-color: rgba(255, 255, 255, 0.3) !important;
+    border-left: 0 !important;
+  }
+}
+
+@media (max-width: 640px) {
+  body.fmb-corporate-luxury-v2.fmb-unified-news.news-channel-route.news-center-v2 .nc-newsroom-title h1 {
+    max-width: 6.4ch;
+    font-size: clamp(58px, 19vw, 82px) !important;
+    line-height: 0.84 !important;
+  }
+
+  body.fmb-corporate-luxury-v2.fmb-unified-news.news-channel-route.news-center-v2 .nc-newsroom-title .nc-hero-summary {
+    font-size: 16px !important;
+    line-height: 1.55 !important;
+  }
+}
