@@ -8,6 +8,7 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
+  contain: paint;
   background: linear-gradient(135deg, #f9fbff 0%, #edf5ff 56%, #cfe5ff 100%);
 }
 
@@ -18,6 +19,9 @@
   display: block;
   width: 100%;
   height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center;
 }
 
 .nc-cognita-visual::after,
