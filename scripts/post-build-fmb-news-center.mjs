@@ -24,6 +24,26 @@ function replaceRequired(html, search, replacement, label) {
   return html.replace(search, replacement);
 }
 
+function addBodyClass(html, className) {
+  return replaceRequired(
+    html,
+    /<body\b([^>]*)>/i,
+    (match, attrs = '') => {
+      if (/\bclass=(['"])([^'"]*)\1/i.test(attrs)) {
+        attrs = attrs.replace(/\bclass=(['"])([^'"]*)\1/i, (whole, quote, value) => {
+          const classes = new Set(value.split(/\s+/).filter(Boolean));
+          classes.add(className);
+          return `class=${quote}${[...classes].join(' ')}${quote}`;
+        });
+      } else {
+        attrs += ` class="${className}"`;
+      }
+      return `<body${attrs}>`;
+    },
+    'news page body',
+  );
+}
+
 await mkdir(path.dirname(distCss), { recursive: true });
 await copyFile(sourceCss, distCss);
 
@@ -34,12 +54,7 @@ html = html.replace(
   '',
 );
 
-html = replaceRequired(
-  html,
-  /<body class="([^"]*)">/i,
-  (_, classes) => `<body class="${classes} news-center-v2">`,
-  'news page body',
-);
+html = addBodyClass(html, 'news-center-v2');
 
 html = html
   .replace(
@@ -74,7 +89,7 @@ html = html
 
 html = replaceRequired(
   html,
-  /<a class="nc-publication-brand" href="\/news\/" aria-label="FMB News home">[\s\S]*?<\/a>/i,
+  /<a\b(?=[^>]*\bclass=["'][^"']*\bnc-publication-brand\b[^"']*["'])(?=[^>]*\bhref=["']\/news\/["'])[^>]*>[\s\S]*?<\/a>/i,
   `<a class="nc-publication-brand nc-text-masthead" href="/news/" aria-label="Newsroom home">
       <span class="nc-masthead-kicker">Francine Marie Bautista</span>
       <strong class="nc-masthead-title">THE NEWSROOM</strong>
@@ -85,7 +100,7 @@ html = replaceRequired(
 
 html = replaceRequired(
   html,
-  /<div class="nc-channel-lockup" role="img" aria-label="FMB News">[\s\S]*?<\/div>/i,
+  /<div\b(?=[^>]*\bclass=["'][^"']*\bnc-channel-lockup\b[^"']*["'])[^>]*>[\s\S]*?<\/div>/i,
   `<div class="nc-channel-lockup nc-newsroom-title">
         <span class="nc-hero-kicker">Sunday edition · 26 July 2026</span>
         <h1 id="newsroomTitle">The News Center</h1>
@@ -97,7 +112,7 @@ html = replaceRequired(
 
 html = replaceRequired(
   html,
-  /<a class="nc-footer-brand" href="\/news\/" aria-label="FMB News home">[\s\S]*?<\/a>/i,
+  /<a\b(?=[^>]*\bclass=["'][^"']*\bnc-footer-brand\b[^"']*["'])(?=[^>]*\bhref=["']\/news\/["'])[^>]*>[\s\S]*?<\/a>/i,
   `<a class="nc-footer-brand nc-footer-masthead" href="/news/" aria-label="Newsroom home"><span class="nc-footer-kicker">Francine Marie Bautista</span><strong>THE NEWSROOM</strong><span>Public interest · Clear sources · Visible perspective</span></a>`,
   'footer masthead',
 );
@@ -111,7 +126,7 @@ html = html.replace(
   `<link rel="stylesheet" href="${stylesheetHref}">\n</head>`,
 );
 
-if (/fmb-news-official-(?:transparent\.webp|official\.svg)/i.test(html)) {
+if (/fmb-news-official-transparent\.webp|\/assets\/images\/news\/fmb-news-official\.svg/i.test(html)) {
   throw new Error('News center redesign: legacy FMB News logo remains in the generated page');
 }
 
