@@ -48,7 +48,9 @@ for(const project of [
       await expect(page.locator('.fmb-approved-hero-stack')).toBeVisible();
       await expect(page.locator('[data-fmb-pst]')).toContainText('PST');
       await expect(page.locator('.fmb-approved-brand-row img')).toHaveCount(3);
-      await assertImage(page,'.fmb-approved-quote img',100,100);
+      await assertImage(page,'.fmb-approved-quote img',900,1100);
+      await expect(page.locator('main > .featured')).toHaveCount(0);
+      await expect(page.locator('main > .hero + .fmb-approved-control-center')).toHaveCount(1);
       await expect(page.locator('.fmb-approved-capability')).toHaveCount(6);
       await expect(page.locator('.fmb-approved-project')).toHaveCount(3);
       await expect(page.locator('.fmb-approved-project.yoni')).toBeVisible();
