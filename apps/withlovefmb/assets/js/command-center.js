@@ -275,15 +275,15 @@
       if(ready){
         return `<button class="primary" type="button" data-connection-verify="${escapeHtml(catalog.key)}">Verify stored key</button><button type="button" data-connection-configure="${escapeHtml(catalog.key)}">Replace key</button>`;
       }
-      return `<button class="primary" type="button" data-connection-configure="${escapeHtml(catalog.key)}">Configure secure key</button>`;
+      return `<button class="primary" type="button" data-connection-configure="${escapeHtml(catalog.key)}">Enter API key manually</button>`;
     }
     if(status==='connected_api'){
-      return `<button type="button" data-connection-verify="${escapeHtml(catalog.key)}">Verify now</button><button type="button" data-connection-connect="${escapeHtml(catalog.key)}">Reconnect</button><button type="button" data-connection-configure="${escapeHtml(catalog.key)}">App setup</button><button type="button" data-connection-disconnect="${escapeHtml(catalog.key)}">Disconnect</button>`;
+      return `<button type="button" data-connection-verify="${escapeHtml(catalog.key)}">Verify now</button><button type="button" data-connection-connect="${escapeHtml(catalog.key)}">Reconnect</button><button type="button" data-connection-configure="${escapeHtml(catalog.key)}">Edit app credentials</button><button type="button" data-connection-disconnect="${escapeHtml(catalog.key)}">Disconnect</button>`;
     }
     if(ready){
-      return `<button class="primary" type="button" data-connection-connect="${escapeHtml(catalog.key)}">${status==='authorizing'?'Restart authorization':'Connect account'}</button><button type="button" data-connection-configure="${escapeHtml(catalog.key)}">App setup</button>`;
+      return `<button class="primary" type="button" data-connection-connect="${escapeHtml(catalog.key)}">${status==='authorizing'?'Restart authorization':'Connect account'}</button><button type="button" data-connection-configure="${escapeHtml(catalog.key)}">Edit app credentials</button>`;
     }
-    return `<button class="primary" type="button" data-connection-configure="${escapeHtml(catalog.key)}">Configure secure app</button>`;
+    return `<button class="primary" type="button" data-connection-configure="${escapeHtml(catalog.key)}">Enter app credentials</button>`;
   }
   function connectionCard(catalog){
     const record=connections.find(item=>item.provider_key===catalog.key);

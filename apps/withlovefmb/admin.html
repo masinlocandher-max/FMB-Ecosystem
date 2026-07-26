@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="assets/css/experience-refresh.css?v=20260716-public-care">
 <link rel="stylesheet" href="assets/css/dashboard.css?v=20260714a">
 <link rel="stylesheet" href="/assets/css/fmb-mobile-luxury.css?v=20260716-mobile-first-v6">
-    <link rel="stylesheet" href="assets/css/orchestrator.css?v=20260726b">
+    <link rel="stylesheet" href="assets/css/orchestrator.css?v=20260726c">
 </head>
 <body class="dashboard-page admin-dashboard-page orchestrator-page">
 <div class="orchestrator-auth-splash" aria-live="polite"><img src="assets/images/fmbandco/fmbandco-primary-reversed.png" alt="FMB&CO."><span>Verifying private access</span></div>
@@ -96,6 +96,7 @@
 <section class="admin-panel orchestrator-panel" id="automationPanel" hidden>
   <header class="orchestrator-page-head"><div><h1>Automation Center</h1><p>Connect the owner’s provider apps and accounts here. A service is labeled API connected only after its OAuth or API credential passes a live provider check.</p></div><button class="ops-button secondary" id="refreshConnections" type="button">Refresh connections</button></header>
   <div class="ops-command-metrics" id="connectionMetrics"></div>
+  <section class="ops-surface ops-manual-api-guide"><div class="ops-section-head"><div><h2>Manual API connection</h2><p>Select a provider card below, enter credentials created in that provider’s developer portal, then complete its official authorization or verification step.</p></div><span class="ops-security-note">Owner access only</span></div><div class="ops-manual-api-steps"><article><strong>OAuth providers</strong><p>Meta, Google, LinkedIn, Canva, and GitHub accept a client ID and client secret. The exact callback URL is displayed for copying into the provider app.</p></article><article><strong>Direct API keys</strong><p>OpenAI accepts a project API key directly. The server stores it in Vault and verifies it before showing API connected.</p></article><article><strong>Webhook intake</strong><p>Messenger displays the exact webhook URL and accepts a private verification token created by you.</p></article></div><p class="ops-manual-api-warning">Never enter your account password, recovery code, browser cookie, or personal access token unless the provider card specifically requests that credential type.</p></section>
   <section class="ops-surface"><div class="ops-section-head"><div><h2>Live provider connections</h2><p>OAuth app credentials and refresh tokens are encrypted in Supabase Vault and used only by the server-side gateway. Passwords and recovery codes are never accepted.</p></div><span class="ops-security-note">Vault encrypted</span></div><div class="ops-connection-grid" id="connectionGrid"></div></section>
   <section class="ops-surface" data-admin-only><div class="ops-section-head"><div><h2>Launch controls</h2><p>Use the checklist after the actual accounts and workflow endpoints are connected.</p></div><button type="button" id="resetAutomationChecklist">Reset checklist</button></div><div class="ops-automation-summary"><div><strong id="automationPercent">0%</strong><span>ready</span></div><p id="automationSummaryText">Complete the checklist from access and consent through routing, review, reporting, and launch.</p></div><div class="ops-checklist-groups" id="automationChecklist"></div></section>
 </section>
@@ -156,7 +157,7 @@
 <script src="assets/js/config.js?v=20260715-member-launch"></script>
 <script src="assets/js/supabase-client.js"></script>
     <script src="assets/js/orchestrator.js?v=20260726a"></script>
-<script src="assets/js/command-center.js?v=20260726b"></script>
+<script src="assets/js/command-center.js?v=20260726c"></script>
 <script src="assets/js/admin.js?v=20260726a"></script>
 <script src="assets/js/membership-admin.js"></script>
 </body>
