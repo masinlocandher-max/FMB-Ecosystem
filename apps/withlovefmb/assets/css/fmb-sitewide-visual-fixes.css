@@ -32,6 +32,341 @@ body.fmb-unified-public main img {
   max-width: 100%;
 }
 
+/* A calmer, more legible type and contrast system for every public route. */
+body.fmb-unified-public {
+  --fmb-readable-ink: #1d1028;
+  --fmb-readable-heading: #281039;
+  --fmb-readable-body: #51475a;
+  --fmb-readable-muted: #665b6c;
+  --fmb-readable-accent: #66309a;
+  --fmb-readable-gold: #f0cf82;
+  font-family:
+    "Plus Jakarta Sans",
+    "Manrope",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif !important;
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body.fmb-unified-public main :is(h1, h2, h3, blockquote p) {
+  font-family:
+    "DM Serif Display",
+    "Cormorant Garamond",
+    Georgia,
+    serif !important;
+  font-weight: 400;
+  font-optical-sizing: auto;
+  text-wrap: balance;
+}
+
+body.fmb-unified-public main h1 {
+  line-height: 0.98 !important;
+  letter-spacing: -0.035em !important;
+}
+
+body.fmb-unified-public main h2 {
+  line-height: 1.02 !important;
+  letter-spacing: -0.025em !important;
+}
+
+body.fmb-unified-public main h3 {
+  line-height: 1.12 !important;
+  letter-spacing: -0.015em !important;
+}
+
+body.fmb-unified-public main :is(p, li) {
+  line-height: 1.72;
+}
+
+body.fmb-unified-public main p:not(
+  .kicker,
+  .eyebrow,
+  .nc-kicker,
+  .fco-eyebrow,
+  .fmb-strategy-kicker,
+  [class*="kicker"],
+  [class*="overline"],
+  [class*="meta"],
+  [class*="label"],
+  [class*="status"]
+) {
+  font-size: 17px !important;
+}
+
+body.fmb-unified-public main li {
+  font-size: 17px;
+}
+
+body.fmb-unified-public main :is(
+  .kicker,
+  .eyebrow,
+  .nc-kicker,
+  .fco-eyebrow,
+  .fmb-strategy-kicker,
+  [class*="kicker"],
+  [class*="overline"]
+) {
+  font-size: 11px !important;
+  line-height: 1.5 !important;
+}
+
+/* Public copy must never depend on an observer or animation to become readable. */
+body.fmb-unified-public :is(
+  .reveal,
+  .nc-reveal,
+  .about-reveal,
+  .fco-reveal-target,
+  .fmb-reveal,
+  .network-reveal,
+  .network-media-reveal
+) {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  clip-path: none !important;
+  transition: none !important;
+}
+
+/* Shared navigation and labels stay small but no longer microscopic. */
+body.fmb-unified-public :is(
+  .fmb-shell-nav a,
+  .fmb-announcement-item,
+  .fmb-shell-cta,
+  .fmb-shell-yoni
+) {
+  font-size: 11px !important;
+}
+
+body.fmb-unified-public .fmb-shell-nav a {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+@media (min-width: 961px) {
+  body.fmb-unified-public .fmb-shell-nav a[href$="/work-with-fmb/"] {
+    display: none !important;
+  }
+}
+
+/* Only confirmed dark heroes receive light labels and outline buttons. */
+body.fmb-unified-public :is(
+  .hero,
+  .fmb-about-hero,
+  .fco-hero,
+  .fco-gateway-hero,
+  .wlf-hero,
+  .projects-hero,
+  .music-hero,
+  .ebook-hero,
+  .nc-broadcast-identity
+) :is(
+  .kicker,
+  .eyebrow,
+  .fco-eyebrow,
+  [class*="eyebrow"],
+  [class*="kicker"],
+  [class*="overline"]
+) {
+  color: var(--fmb-readable-gold) !important;
+}
+
+body.fmb-unified-public :is(
+  .hero,
+  .fmb-about-hero,
+  .fco-hero,
+  .fco-gateway-hero,
+  .wlf-hero,
+  .projects-hero,
+  .music-hero,
+  .ebook-hero,
+  .nc-broadcast-identity
+) :is(.button.secondary, .fco-btn.secondary) {
+  border-color: rgba(255, 255, 255, 0.34) !important;
+  color: #fff !important;
+}
+
+/* Homepage: retain the executive composition with a friendlier headline face. */
+body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home .hero-copy h1 {
+  max-width: 720px !important;
+  font-size: clamp(62px, 6.5vw, 98px) !important;
+  line-height: 0.94 !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home .hero-copy .role-line {
+  color: #e8c8ff !important;
+  font-size: clamp(12px, 1vw, 15px) !important;
+  line-height: 1.55 !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home .hero-lede {
+  color: rgba(255, 255, 255, 0.88) !important;
+  font-size: clamp(17px, 1.25vw, 19px) !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home .featured-copy h2 {
+  font-size: clamp(52px, 5.8vw, 78px) !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home .featured-copy h3 {
+  font-size: clamp(25px, 2.6vw, 36px) !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home .featured-copy > p:not(.kicker) {
+  max-width: 62ch;
+  color: rgba(255, 255, 255, 0.86) !important;
+  font-size: clamp(16px, 1.2vw, 18px) !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home #fmb-authority :is(
+  .fmb-approved-capability p,
+  .fmb-approved-project-copy p
+) {
+  color: rgba(255, 255, 255, 0.82) !important;
+  font-size: 14px !important;
+  line-height: 1.65 !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home #fmb-authority .fmb-approved-capability h3 {
+  font-size: 18px !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home #fmb-authority :is(
+  .fmb-approved-project-copy small,
+  .fmb-approved-section-head a,
+  .fmb-approved-tags span,
+  .fmb-approved-album span,
+  .fmb-approved-book span
+) {
+  font-size: 10px !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home #fmb-authority :is(
+  .fmb-approved-news-list a,
+  .fmb-approved-album strong,
+  .fmb-approved-book strong,
+  .fmb-approved-player strong
+) {
+  font-size: 12px !important;
+  line-height: 1.45 !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home #fmb-authority :is(
+  .fmb-approved-news-list time,
+  .fmb-approved-player span
+) {
+  color: rgba(255, 255, 255, 0.68) !important;
+  font-size: 10px !important;
+}
+
+/* About FMB: explicit light and dark surfaces prevent inherited white-on-white text. */
+body.fmb-unified-about .fmb-about-hero {
+  background:
+    radial-gradient(circle at 82% 14%, rgba(120, 82, 158, 0.38), transparent 28rem),
+    radial-gradient(circle at 12% 84%, rgba(200, 169, 107, 0.16), transparent 24rem),
+    linear-gradient(145deg, #0b0711, #1b0e2c 56%, #321b4d) !important;
+  color: #fff !important;
+}
+
+body.fmb-unified-about .fmb-about-hero :is(
+  .fco-hero-copy,
+  .fco-hero-copy > *,
+  .fmb-about-hero-visual
+) {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+body.fmb-unified-about .fmb-about-hero h1 {
+  color: #fffdf8 !important;
+  text-shadow: 0 10px 40px rgba(0, 0, 0, 0.28);
+}
+
+body.fmb-unified-about .fmb-about-hero-deck {
+  color: #fff4d9 !important;
+  font-size: clamp(18px, 1.45vw, 22px) !important;
+  line-height: 1.52 !important;
+}
+
+body.fmb-unified-about .fmb-about-hero .fco-lead {
+  color: rgba(255, 255, 255, 0.86) !important;
+  font-size: clamp(16px, 1.2vw, 18px) !important;
+  line-height: 1.72 !important;
+}
+
+body.fmb-unified-about .fmb-about-hero :is(.fco-eyebrow, .fmb-about-roles span) {
+  color: #f1d690 !important;
+}
+
+body.fmb-unified-about :is(
+  .fmb-about-mandate,
+  .fmb-about-section:not(.purple)
+) {
+  color: var(--fmb-readable-ink) !important;
+}
+
+body.fmb-unified-about .fmb-about-section:not(.purple) :is(
+  .fmb-about-section-head h2,
+  .fmb-about-story h3,
+  .fmb-about-timeline-item h3,
+  .fmb-about-portfolio-card h3
+) {
+  color: var(--fmb-readable-heading) !important;
+}
+
+body.fmb-unified-about :is(
+  .fmb-about-mandate p,
+  .fmb-about-section:not(.purple) .fco-lead,
+  .fmb-about-story > p:not(.fco-eyebrow),
+  .fmb-about-timeline-item div > p:last-child,
+  .fmb-about-portfolio-card p
+) {
+  color: var(--fmb-readable-body) !important;
+  font-size: clamp(15px, 1vw, 17px) !important;
+  line-height: 1.72 !important;
+}
+
+body.fmb-unified-about .fmb-about-section-head h2 {
+  font-size: clamp(42px, 4.4vw, 66px) !important;
+}
+
+body.fmb-unified-about :is(
+  .fmb-about-section.purple,
+  .fmb-about-quotes,
+  .fmb-about-work
+) :is(h2, h3, blockquote p) {
+  color: #fffdf8 !important;
+}
+
+body.fmb-unified-about :is(
+  .fmb-about-section.purple,
+  .fmb-about-quotes,
+  .fmb-about-work
+) :is(.fco-lead, article p, .calendar-note p, .form-note) {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+body.fmb-unified-about .fmb-about-section.purple .fmb-about-expertise-card {
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  background: rgba(255, 255, 255, 0.065) !important;
+  color: #fff !important;
+}
+
+body.fmb-unified-about .fmb-about-expertise-card p {
+  font-size: 15px !important;
+  line-height: 1.68 !important;
+}
+
+body.fmb-unified-about .fmb-about-work form :is(label, legend) {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 13px !important;
+}
+
 /* News Center: keep the broadcast identity dark and its promise readable. */
 body.fmb-corporate-luxury-v2.fmb-unified-news .nc-broadcast-identity {
   background:
@@ -41,7 +376,10 @@ body.fmb-corporate-luxury-v2.fmb-unified-news .nc-broadcast-identity {
 }
 
 body.fmb-corporate-luxury-v2.fmb-unified-news .nc-channel-promise > p {
-  color: rgba(255, 255, 255, 0.92) !important;
+  color: #fffdf8 !important;
+  font-size: clamp(42px, 5vw, 68px) !important;
+  line-height: 1 !important;
+  text-shadow: 0 10px 36px rgba(0, 0, 0, 0.26);
 }
 
 body.fmb-corporate-luxury-v2.fmb-unified-news :is(
@@ -61,6 +399,169 @@ body.fmb-corporate-luxury-v2.fmb-unified-news :is(
   background-color: #09060d !important;
 }
 
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-broadcast-identity :is(
+  .nc-channel-lockup,
+  .nc-channel-promise,
+  .nc-channel-service,
+  .nc-reveal
+) {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-channel-promise > span {
+  color: rgba(255, 255, 255, 0.78) !important;
+  font-size: 11px !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-channel-service span {
+  border-color: rgba(255, 255, 255, 0.24) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+  font-size: 10px !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-topic-rail a {
+  color: rgba(255, 255, 255, 0.86) !important;
+  font-size: 11px !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news :is(
+  .nc-network-label,
+  .nc-network-clock,
+  .nc-wire-label,
+  .nc-wire-track span
+) {
+  font-size: 10px !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-broadcast-lead {
+  background: #f7f2ed !important;
+  color: #20151c !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-rundown-panel {
+  border-color: #d8cec4 !important;
+  background: #f4eee8 !important;
+  color: #20151c !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-rundown-panel :is(h2, h3) {
+  color: #23141e !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-rundown-panel :is(
+  a,
+  a:visited,
+  div,
+  .nc-rundown-number
+) {
+  color: #20151c !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-rundown-story p {
+  color: #7d243b !important;
+  font-size: 10px !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-rundown-story div > span,
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-rundown-head time {
+  color: #6e6369 !important;
+  font-size: 10px !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-rundown-story h3 {
+  font-size: clamp(18px, 1.55vw, 22px) !important;
+  line-height: 1.15 !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-lead-broadcast .news-visual figcaption {
+  color: rgba(255, 255, 255, 0.76) !important;
+  font-size: 10px !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-lead-meta,
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-signal-tag {
+  color: rgba(255, 255, 255, 0.82) !important;
+  font-size: 10px !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-lead-deck {
+  color: rgba(255, 255, 255, 0.86) !important;
+  font-size: clamp(15px, 1.15vw, 17px) !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-context-feature {
+  background: #fff !important;
+  color: #20151c !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-context-copy :is(h2, p) {
+  color: #281721 !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-context-copy > p:not(.nc-kicker) {
+  font-size: clamp(15px, 1.15vw, 17px) !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-index {
+  background: #171218 !important;
+  color: #fff !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-index :is(h2, strong) {
+  color: #fffdf8 !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-index :is(.nc-section-heading > p, .nc-index-action) {
+  color: rgba(255, 255, 255, 0.76) !important;
+  font-size: 13px !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-index-category {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 10px !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-standard {
+  background: #eee7dd !important;
+  color: #20151c !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-standard :is(h2, h3) {
+  color: #24141d !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-standard-points p {
+  color: #554b51 !important;
+  font-size: 15px !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-editor-note {
+  background: #f5f1e9 !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-editor-card {
+  background: #fff !important;
+  color: #20151c !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-editor-card h2 {
+  color: #24141d !important;
+  font-size: clamp(42px, 4.8vw, 64px) !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-editor-card > div:last-child > p:not(.nc-kicker) {
+  color: #554b51 !important;
+  font-size: 16px !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-editor-actions a {
+  font-size: 11px !important;
+}
+
 /* Restore the light reader surface that was being repainted by the global hero rule. */
 body.fmb-reader-modern :is(.reader-cover, .reading-hero) {
   border-color: var(--reader-line) !important;
@@ -78,29 +579,75 @@ body.fmb-reader-modern :is(.reader-cover, .reading-hero)::before {
 body.fmb-reader-modern :is(.reader-cover, .reading-hero) h1 {
   max-width: 800px;
   color: var(--reader-ink) !important;
+  font-family: "DM Serif Display", "Cormorant Garamond", Georgia, serif !important;
   font-size: clamp(42px, 6vw, 78px) !important;
-  line-height: 0.96 !important;
+  line-height: 1.02 !important;
+  letter-spacing: -0.025em !important;
 }
 
 body.fmb-reader-modern :is(.reader-cover, .reading-hero) > p {
   color: var(--reader-muted) !important;
+  font-size: clamp(16px, 1.25vw, 18px) !important;
+  line-height: 1.78 !important;
 }
 
 body.fmb-reader-modern :is(.reader-cover, .reading-hero) .eyebrow {
   color: var(--reader-accent) !important;
 }
 
+body.fmb-reader-modern :is(.chapter, .reading-chapter) h2 {
+  color: var(--reader-ink) !important;
+  font-family: "DM Serif Display", "Cormorant Garamond", Georgia, serif !important;
+  font-size: clamp(38px, 4.4vw, 58px) !important;
+  line-height: 1.08 !important;
+  letter-spacing: -0.02em !important;
+}
+
+body.fmb-reader-modern :is(.chapter, .reading-chapter) h3 {
+  color: var(--reader-ink) !important;
+  font-family: "DM Serif Display", "Cormorant Garamond", Georgia, serif !important;
+  font-size: clamp(26px, 2.4vw, 34px) !important;
+  line-height: 1.16 !important;
+}
+
+body.fmb-reader-modern :is(.chapter, .reading-chapter) :is(p, li) {
+  color: #35283d !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: max(17px, calc(1.08rem * var(--reader-font-scale))) !important;
+  line-height: 1.86 !important;
+}
+
+body.fmb-reader-modern .reader-callout {
+  background: linear-gradient(145deg, #250936, #5a1e78) !important;
+  color: #fff !important;
+}
+
+body.fmb-reader-modern .reader-callout :is(h3, p, li) {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
 /* Restore each page family's intended headline scale. */
 body.fmb-unified-about .fmb-about-hero h1 {
   max-width: 700px;
   font-size: clamp(50px, 5.3vw, 76px) !important;
-  line-height: 0.93 !important;
+  line-height: 0.98 !important;
 }
 
 body.fmb-unified-withlove .wlf-hero h1 {
   max-width: 700px;
   font-size: clamp(54px, 5.7vw, 80px) !important;
-  line-height: 0.9 !important;
+  line-height: 0.96 !important;
+}
+
+body.fmb-unified-fmbandco .fco-hero :is(
+  .fco-hero-copy,
+  .fco-hero-copy > *,
+  .fco-hero-visual
+) {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+  animation: none !important;
 }
 
 body.fmb-unified-fmbandco .fco-hero h1 {
@@ -111,13 +658,13 @@ body.fmb-unified-fmbandco .fco-hero h1 {
 
 body.fmb-unified-company-gateway .fco-gateway-hero h1 {
   font-size: clamp(50px, 5vw, 76px) !important;
-  line-height: 0.96 !important;
+  line-height: 1 !important;
 }
 
 body:is(.fmb-unified-participate, .fmb-unified-work) .fmb-journey-main > h1 {
   max-width: 900px;
   font-size: clamp(50px, 6vw, 82px) !important;
-  line-height: 0.94 !important;
+  line-height: 1 !important;
 }
 
 body.fmb-unified-help .help-hero h1 {
@@ -137,23 +684,25 @@ body.fmb-unified-mabayani .hero h1 {
 }
 
 body.fmb-unified-music :is(.music-hero, .nc-broadcast-identity) h1 {
+  font-family: "DM Serif Display", "Cormorant Garamond", Georgia, serif !important;
   font-size: clamp(54px, 6.4vw, 88px) !important;
+  font-weight: 400 !important;
 }
 
 body.fmb-unified-ebooks .ebook-hero h1 {
   font-size: clamp(56px, 6.6vw, 92px) !important;
 }
 
-body.fmb-unified-news-article .nc-article-hero h1 {
+body.fmb-corporate-luxury-v2.fmb-unified-news-article .nc-article-hero h1 {
   max-width: 920px;
   font-size: clamp(52px, 6.2vw, 86px) !important;
-  line-height: 0.96 !important;
+  line-height: 1 !important;
 }
 
-body.fmb-unified-news-article .senz-article-hero h1 {
+body.fmb-corporate-luxury-v2.fmb-unified-news-article .senz-article-hero h1 {
   max-width: 980px;
   font-size: clamp(48px, 5.5vw, 76px) !important;
-  line-height: 0.98 !important;
+  line-height: 1.02 !important;
 }
 
 body.fmb-unified-policy :is(.policy-head, .title) h1,
@@ -164,7 +713,7 @@ body.fmb-unified-policy main > h1 {
 
 body.fmb-unified-public:not(.fmb-reader-modern) .reading-hero h1 {
   font-size: clamp(46px, 6vw, 78px) !important;
-  line-height: 0.98 !important;
+  line-height: 1.02 !important;
 }
 
 body.freedom-wall-page .freedom-hero h1,
@@ -275,8 +824,8 @@ body.fmb-unified-public form :is(
   body.fmb-unified-help .help-hero h1,
   body.fmb-unified-community .volunteer-hero-copy h1,
   body.fmb-unified-mabayani .hero h1,
-  body.fmb-unified-news-article .nc-article-hero h1,
-  body.fmb-unified-news-article .senz-article-hero h1,
+  body.fmb-corporate-luxury-v2.fmb-unified-news-article .nc-article-hero h1,
+  body.fmb-corporate-luxury-v2.fmb-unified-news-article .senz-article-hero h1,
   body.fmb-unified-public:not(.fmb-reader-modern) .reading-hero h1 {
     font-size: clamp(46px, 12.5vw, 60px) !important;
   }
@@ -314,7 +863,7 @@ body.fmb-unified-public form :is(
   body.fmb-unified-withlove .wlf-hero h1,
   body.fmb-unified-fmbandco .fco-hero h1,
   body:is(.fmb-unified-participate, .fmb-unified-work) .fmb-journey-main > h1,
-  body.fmb-unified-news-article :is(.nc-article-hero, .senz-article-hero) h1 {
+  body.fmb-corporate-luxury-v2.fmb-unified-news-article :is(.nc-article-hero, .senz-article-hero) h1 {
     font-size: clamp(42px, 13vw, 56px) !important;
   }
 

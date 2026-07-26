@@ -12,7 +12,7 @@ const sourceCss = path.join(
   'fmb-sitewide-visual-fixes.css',
 );
 const distCss = path.join(dist, 'assets', 'css', 'fmb-sitewide-visual-fixes.css');
-const stylesheetHref = '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-all-pages-v1';
+const stylesheetHref = '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-readability-v2';
 const excludedPrefixes = ['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/'];
 const excludedFiles = new Set([
   'admin.html',
