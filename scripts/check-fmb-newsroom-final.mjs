@@ -5,6 +5,7 @@ const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
 const newsRoot = path.join(repositoryRoot, 'dist', 'news');
 const landingPath = path.join(newsRoot, 'index.html');
 const cognitaArtworkPath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'images', 'news', 'cognita-filipino-centered-education.svg');
+const safeguardHref = '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-readability-v2';
 
 function fail(message) {
   throw new Error(`FMB Newsroom final audit: ${message}`);
@@ -20,12 +21,23 @@ async function walk(directory) {
   return files;
 }
 
-function assertStylesheetOrder(html, fileName, required) {
-  let previous = -1;
-  for (const marker of required) {
-    const position = html.indexOf(marker);
-    if (position < 0) fail(`${fileName} is missing ${marker}`);
-    if (position <= previous) fail(`${fileName} loads ${marker} out of order`);
+function assertFinalStyleContract(html, fileName, markers) {
+  const stylesheetHrefs = [...html.matchAll(/<link\b[^>]*>/gi)]
+    .map(match => match[0])
+    .filter(tag => /\brel=["'][^"']*\bstylesheet\b[^"']*["']/i.test(tag))
+    .map(tag => tag.match(/\bhref=["']([^"']+)["']/i)?.[1])
+    .filter(Boolean);
+  if (stylesheetHrefs.at(-1) !== safeguardHref) fail(`${fileName} no longer preserves the global safeguard as the final stylesheet link`);
+  if ((html.match(/data-fmb-news-final-styles/g) || []).length !== 1) fail(`${fileName} must contain exactly one compiled Newsroom style layer`);
+
+  let previous = html.indexOf(safeguardHref);
+  const inlinePosition = html.indexOf('data-fmb-news-final-styles');
+  if (inlinePosition <= previous) fail(`${fileName} compiles Newsroom styles before the global safeguard`);
+  previous = inlinePosition;
+  for (const marker of markers) {
+    const position = html.indexOf(marker, previous);
+    if (position < 0) fail(`${fileName} is missing final style marker ${marker}`);
+    if (position <= previous) fail(`${fileName} loads final style marker ${marker} out of order`);
     previous = position;
   }
 }
@@ -39,7 +51,7 @@ if (landing.includes('<time>Updated 26 July 2026</time>')) fail('landing page st
 if (!landing.includes('fmb-news-identity-record')) fail('landing page is missing the non-rendered identity record');
 if (/<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*fmb-news-official-transparent\.webp/i.test(landing)) fail('landing page visibly renders the retired News logo');
 if (!landing.includes('og:image:width" content="800"') || !landing.includes('og:image:height" content="533"')) fail('landing page social image dimensions are incomplete');
-assertStylesheetOrder(landing, 'news/index.html', ['fmb-sitewide-visual-fixes.css', 'news-center-v2.css', 'fmb-news-polish-v3.css', 'fmb-news-masthead-v3.css']);
+assertFinalStyleContract(landing, 'news/index.html', ['body.news-channel-route.news-center-v2', 'Final FMB Newsroom polish', 'Text-led Newsroom masthead']);
 
 const artwork = await readFile(cognitaArtworkPath, 'utf8');
 if (!artwork.includes('width="1536" height="864"')) fail('Cognita artwork is not 1536×864');
@@ -56,7 +68,7 @@ for (const filePath of await walk(newsRoot)) {
   if (!html.includes('newsroom-polish-v3')) fail(`${relative} is missing the final Newsroom body class`);
   if (!html.includes('THE NEWSROOM')) fail(`${relative} is missing the text-led masthead`);
   if (/<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*fmb-news-official-transparent\.webp/i.test(html)) fail(`${relative} visibly renders the retired News logo`);
-  assertStylesheetOrder(html, relative, ['fmb-sitewide-visual-fixes.css', 'fmb-news-polish-v3.css', 'fmb-news-masthead-v3.css']);
+  assertFinalStyleContract(html, relative, ['Final FMB Newsroom polish', 'Text-led Newsroom masthead']);
 
   if (relative.includes('filipino-centered-training-institution-cognita-vision')) {
     if (!html.includes('og:image:width" content="1536"') || !html.includes('og:image:height" content="864"')) fail('Cognita article metadata is not 1536×864');
@@ -65,4 +77,4 @@ for (const filePath of await walk(newsRoot)) {
 }
 
 if (articleCount < 1) fail('no News article pages were audited');
-console.log(`FMB Newsroom final audit verified the landing page, ${articleCount} article pages, live date hooks, stylesheet order, retired-logo removal, and HD Cognita artwork.`);
+console.log(`FMB Newsroom final audit verified the landing page, ${articleCount} article pages, live date hooks, global safeguard preservation, compiled News polish, retired-logo removal, and HD Cognita artwork.`);
