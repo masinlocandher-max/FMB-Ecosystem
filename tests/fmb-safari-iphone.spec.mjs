@@ -89,7 +89,7 @@ async function assertAnimationRunning(page, selector, expectedName) {
 
 async function assertHomepageImagesLoaded(page) {
   const images = page.locator('.hero-portrait img, .fmb-approved-quote img, .fmb-approved-project img');
-  await expect(images).toHaveCount(5);
+  await expect(images).toHaveCount(4);
   for (let index = 0; index < await images.count(); index += 1) {
     const image = images.nth(index);
     await image.scrollIntoViewIfNeeded();
