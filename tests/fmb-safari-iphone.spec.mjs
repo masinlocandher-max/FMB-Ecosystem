@@ -10,6 +10,7 @@ const publicRoutes = [
   '/projects/',
   '/ebooks/',
   '/music/',
+  '/mabayani/',
   '/withlovefmb/',
   '/get-involved/',
   '/gethelp/',
@@ -49,9 +50,8 @@ async function openReady(page, route) {
   expect(response?.status(), route).toBeLessThan(400);
   await expect(page.locator('body')).toHaveAttribute('data-fmb-approved-launch-ready', 'true');
   await expect(page.locator('.fmb-shell-header')).toHaveCount(1);
-  const docks = page.locator('.fmb-mobile-dock');
-  await expect(docks).toHaveCount(1);
-  await expect(docks.first()).toBeVisible();
+  await expect(page.locator('.fmb-mobile-dock')).toHaveCount(0);
+  await expect(page.locator('.fmb-shell-menu')).toBeVisible();
 }
 
 async function assertNoHorizontalOverflow(page) {
@@ -60,17 +60,6 @@ async function assertNoHorizontalOverflow(page) {
     scrollWidth: document.documentElement.scrollWidth,
   }));
   expect(dimensions.scrollWidth, JSON.stringify(dimensions)).toBeLessThanOrEqual(dimensions.clientWidth + 2);
-}
-
-async function assertNoMabayani(page) {
-  const result = await page.evaluate(() => ({
-    bodyText: document.body.innerText,
-    matchingLinks: [...document.querySelectorAll('a[href]')]
-      .map((link) => link.getAttribute('href') || '')
-      .filter((href) => /mabayani/i.test(href)),
-  }));
-  expect(result.bodyText).not.toMatch(/mabayani/i);
-  expect(result.matchingLinks).toEqual([]);
 }
 
 async function assertAnimationRunning(page, selector, expectedName) {
@@ -98,63 +87,47 @@ async function assertAnimationRunning(page, selector, expectedName) {
   expect(moved, JSON.stringify({ state, later })).toBeTruthy();
 }
 
-async function assertGalleryImagesLoaded(page) {
-  const sizes = await page.locator('#fmb-visual-ecosystem').evaluate(async (section) => {
-    section.scrollIntoView({ block: 'center', behavior: 'auto' });
-    const gallery = section.querySelector('.fmb-editorial-gallery');
-    const images = [...section.querySelectorAll('img')];
-
-    for (const image of images) {
-      image.loading = 'eager';
-      const card = image.closest('.fmb-editorial-card');
-      if (gallery && card) gallery.scrollTo({ left: Math.max(0, card.offsetLeft - 16), behavior: 'auto' });
-      await new Promise((resolve) => setTimeout(resolve, 180));
-      if (!image.complete) {
-        await new Promise((resolve) => {
-          const finish = () => resolve();
-          image.addEventListener('load', finish, { once: true });
-          image.addEventListener('error', finish, { once: true });
-          setTimeout(finish, 5000);
-        });
-      }
-    }
-
-    return images.map((image) => ({
-      src: image.getAttribute('src'),
-      complete: image.complete,
-      width: image.naturalWidth,
-      height: image.naturalHeight,
+async function assertHomepageImagesLoaded(page) {
+  const images = page.locator('.hero-portrait img, .fmb-approved-quote img, .fmb-approved-project img');
+  await expect(images).toHaveCount(5);
+  for (let index = 0; index < await images.count(); index += 1) {
+    const image = images.nth(index);
+    await image.scrollIntoViewIfNeeded();
+    await expect(image).toBeVisible();
+    await expect(image).toHaveJSProperty('complete', true);
+    const size = await image.evaluate((node) => ({
+      src: node.getAttribute('src'),
+      complete: node.complete,
+      width: node.naturalWidth,
+      height: node.naturalHeight,
     }));
-  });
-
-  expect(sizes.length).toBeGreaterThan(0);
-  for (const size of sizes) {
     expect(size.complete, JSON.stringify(size)).toBeTruthy();
     expect(size.width, JSON.stringify(size)).toBeGreaterThan(100);
     expect(size.height, JSON.stringify(size)).toBeGreaterThan(100);
   }
+  await page.evaluate(() => window.scrollTo(0, 0));
 }
 
 test.describe('Safari-engine iPhone release gate', () => {
-  test('homepage uses iPhone-safe navigation, motion, real images, and no Mabayani', async ({ page }) => {
+  test('homepage uses iPhone-safe navigation, motion, real images, and restored Mabayani', async ({ page }) => {
     const errors = observeErrors(page);
     await openReady(page, '/');
     await assertNoHorizontalOverflow(page);
-    await assertNoMabayani(page);
+    await expect(page.locator('.fmb-approved-project.mabayani')).toBeVisible();
 
     const safariReadiness = await page.evaluate(() => ({
       viewportFitCover: document.querySelector('meta[name="viewport"]')?.content.includes('viewport-fit=cover') || false,
       safeAreaSupported: CSS.supports('padding-bottom: env(safe-area-inset-bottom)'),
-      touchTargetHeight: Math.round(document.querySelector('[data-fmb-dock-menu]')?.getBoundingClientRect().height || 0),
+      touchTargetHeight: Math.round(document.querySelector('.fmb-shell-menu')?.getBoundingClientRect().height || 0),
     }));
     expect(safariReadiness.viewportFitCover).toBeTruthy();
     expect(safariReadiness.safeAreaSupported).toBeTruthy();
     expect(safariReadiness.touchTargetHeight).toBeGreaterThanOrEqual(44);
 
     await assertAnimationRunning(page, '.fmb-announcement-track', 'fmb-announcement-motion');
-    await assertGalleryImagesLoaded(page);
+    await assertHomepageImagesLoaded(page);
 
-    const menu = page.locator('[data-fmb-dock-menu]');
+    const menu = page.locator('.fmb-shell-menu');
     await menu.click();
     await expect(menu).toHaveAttribute('aria-expanded', 'true');
     await expect(page.locator('.fmb-shell-nav')).toHaveClass(/is-open/);
@@ -170,7 +143,6 @@ test.describe('Safari-engine iPhone release gate', () => {
     const errors = observeErrors(page);
     await openReady(page, '/news/');
     await assertNoHorizontalOverflow(page);
-    await assertNoMabayani(page);
 
     const clock = page.locator('[data-fmb-pst]').first();
     await expect(clock).toContainText('PST');
@@ -184,18 +156,17 @@ test.describe('Safari-engine iPhone release gate', () => {
     expect(errors).toEqual([]);
   });
 
-  test('every current public route is Mabayani-free and responsive in WebKit', async ({ page }) => {
+  test('every current public route is reachable and responsive in WebKit', async ({ page }) => {
     const errors = observeErrors(page);
     for (const route of publicRoutes) {
       await openReady(page, route);
       await assertNoHorizontalOverflow(page);
-      await assertNoMabayani(page);
     }
     expect(errors).toEqual([]);
   });
 
-  test('the retired Mabayani public route is absent from the generated launch', async ({ page }) => {
-    const response = await page.goto(`${baseURL}/mabayani/`, { waitUntil: 'domcontentloaded' });
-    expect(response?.status()).toBe(404);
+  test('the restored Mabayani public route states its truthful scope', async ({ page }) => {
+    await openReady(page, '/mabayani/');
+    await expect(page.locator('main')).toContainText('No invented history');
   });
 });
