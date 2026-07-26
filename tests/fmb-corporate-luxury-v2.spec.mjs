@@ -50,7 +50,14 @@ for(const project of [
       await expect(page.locator('.fmb-approved-brand-row img')).toHaveCount(3);
       await assertImage(page,'.fmb-approved-quote img',900,1100);
       await expect(page.locator('main > .featured')).toHaveCount(0);
-      await expect(page.locator('main > .hero + .fmb-approved-control-center')).toHaveCount(1);
+      await expect(page.locator('.fmb-approved-control-center')).toBeVisible();
+      const landingGap=await page.evaluate(()=>{
+        const hero=document.querySelector('main > .hero');
+        const controlCenter=document.querySelector('main > .fmb-approved-control-center');
+        if(!(hero instanceof HTMLElement)||!(controlCenter instanceof HTMLElement))return Number.POSITIVE_INFINITY;
+        return Math.max(0,controlCenter.getBoundingClientRect().top-hero.getBoundingClientRect().bottom);
+      });
+      expect(landingGap).toBeLessThanOrEqual(96);
       await expect(page.locator('.fmb-approved-capability')).toHaveCount(6);
       await expect(page.locator('.fmb-approved-project')).toHaveCount(3);
       await expect(page.locator('.fmb-approved-project.yoni')).toBeVisible();
