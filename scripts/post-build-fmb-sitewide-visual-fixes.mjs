@@ -30,6 +30,19 @@ const stylesheets = [
     href: '/assets/css/fmb-contrast-polish.css?v=20260726-contrast-polish-v1',
     pattern: /<link\b[^>]*href=["'][^"']*fmb-contrast-polish\.css[^"']*["'][^>]*>\s*/gi,
   },
+  {
+    source: path.join(
+      repositoryRoot,
+      'apps',
+      'withlovefmb',
+      'assets',
+      'css',
+      'fmb-cognita-artwork.css',
+    ),
+    output: path.join(dist, 'assets', 'css', 'fmb-cognita-artwork.css'),
+    href: '/assets/css/fmb-cognita-artwork.css?v=20260726-cognita-hd-v1',
+    pattern: /<link\b[^>]*href=["'][^"']*fmb-cognita-artwork\.css[^"']*["'][^>]*>\s*/gi,
+  },
 ];
 const excludedPrefixes = ['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/'];
 const excludedFiles = new Set([
@@ -86,4 +99,4 @@ for (const file of publicHtml) {
   injectedPages += 1;
 }
 
-console.log(`Sitewide visual safeguards and contrast polish loaded last on ${injectedPages} public page(s).`);
+console.log(`Sitewide visual safeguards, contrast polish, and Cognita artwork support loaded last on ${injectedPages} public page(s).`);
