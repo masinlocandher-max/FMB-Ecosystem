@@ -49,9 +49,8 @@ async function openReady(page, route) {
   expect(response?.status(), route).toBeLessThan(400);
   await expect(page.locator('body')).toHaveAttribute('data-fmb-approved-launch-ready', 'true');
   await expect(page.locator('.fmb-shell-header')).toHaveCount(1);
-  const docks = page.locator('.fmb-mobile-dock');
-  await expect(docks).toHaveCount(1);
-  await expect(docks.first()).toBeVisible();
+  await expect(page.locator('.fmb-mobile-dock, .nc-mobile-dock')).toHaveCount(0);
+  await expect(page.locator('.fmb-shell-menu')).toBeVisible();
 }
 
 async function assertNoHorizontalOverflow(page) {
@@ -145,7 +144,7 @@ test.describe('Safari-engine iPhone release gate', () => {
     const safariReadiness = await page.evaluate(() => ({
       viewportFitCover: document.querySelector('meta[name="viewport"]')?.content.includes('viewport-fit=cover') || false,
       safeAreaSupported: CSS.supports('padding-bottom: env(safe-area-inset-bottom)'),
-      touchTargetHeight: Math.round(document.querySelector('[data-fmb-dock-menu]')?.getBoundingClientRect().height || 0),
+      touchTargetHeight: Math.round(document.querySelector('.fmb-shell-menu')?.getBoundingClientRect().height || 0),
     }));
     expect(safariReadiness.viewportFitCover).toBeTruthy();
     expect(safariReadiness.safeAreaSupported).toBeTruthy();
@@ -154,7 +153,7 @@ test.describe('Safari-engine iPhone release gate', () => {
     await assertAnimationRunning(page, '.fmb-announcement-track', 'fmb-announcement-motion');
     await assertGalleryImagesLoaded(page);
 
-    const menu = page.locator('[data-fmb-dock-menu]');
+    const menu = page.locator('.fmb-shell-menu');
     await menu.click();
     await expect(menu).toHaveAttribute('aria-expanded', 'true');
     await expect(page.locator('.fmb-shell-nav')).toHaveClass(/is-open/);
