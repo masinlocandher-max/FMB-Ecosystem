@@ -24,11 +24,28 @@ async function assertImage(page,selector,minWidth=400,minHeight=400){
   expect(result.height).toBeGreaterThanOrEqual(minHeight);
 }
 
-for(const project of ['chromium','webkit']){
-  test.describe(`${project} approved corporate luxury experience`,()=>{
-    test.use(project==='webkit'?{browserName:'webkit',viewport:{width:390,height:844},isMobile:true,hasTouch:true}:{browserName:'chromium',viewport:{width:1440,height:1000}});
+const browserProjects=[
+  {
+    name:'chromium',
+    runner:test.extend({
+      browserName:'chromium',
+      viewport:{width:1440,height:1000},
+    }),
+  },
+  {
+    name:'webkit',
+    runner:test.extend({
+      browserName:'webkit',
+      viewport:{width:390,height:844},
+      isMobile:true,
+      hasTouch:true,
+    }),
+  },
+];
 
-    test('homepage matches the approved headquarters dashboard',async({page})=>{
+for(const {name,runner} of browserProjects){
+  runner.describe(`${name} approved corporate luxury experience`,()=>{
+    runner('homepage matches the approved headquarters dashboard',async({page})=>{
       await open(page,'/');
       await noOverflow(page);
       await expect(page.locator('body')).toHaveClass(/fmb-approved-dashboard/);
@@ -55,7 +72,7 @@ for(const project of ['chromium','webkit']){
       await expect(page.locator('[data-fmb-v2-modal]')).not.toHaveClass(/is-open/);
     });
 
-    test('news reads as a live corporate news center',async({page})=>{
+    runner('news reads as a live corporate news center',async({page})=>{
       await open(page,'/news/');
       await noOverflow(page);
       await expect(page.locator('.fmb-v2-news-command')).toContainText('FMB News Center');
@@ -66,7 +83,7 @@ for(const project of ['chromium','webkit']){
       await expect(page.locator('.nc-index-list li')).toHaveCount(7);
     });
 
-    test('music uses a Spotify-inspired real library with playback controls',async({page})=>{
+    runner('music uses a Spotify-inspired real library with playback controls',async({page})=>{
       await open(page,'/music/');
       await noOverflow(page);
       await expect(page.locator('.music-sidebar')).toBeVisible();
@@ -78,7 +95,7 @@ for(const project of ['chromium','webkit']){
       await expect(page.locator('[data-music-filter]')).toHaveCount(5);
     });
 
-    test('eBooks have subject and access categories without inventing books',async({page})=>{
+    runner('eBooks have subject and access categories without inventing books',async({page})=>{
       await open(page,'/ebooks/');
       await noOverflow(page);
       await expect(page.locator('.fmb-v2-book-categories')).toBeVisible();
@@ -91,7 +108,7 @@ for(const project of ['chromium','webkit']){
       expect(visible).toBeLessThan(6);
     });
 
-    test('Mabayani and original volunteer photographs remain truthful destinations',async({page})=>{
+    runner('Mabayani and original volunteer photographs remain truthful destinations',async({page})=>{
       await open(page,'/mabayani/');
       await expect(page.locator('main')).toContainText('No invented history');
       await open(page,'/communityengagements/');
