@@ -6,6 +6,7 @@ const newsRoot = path.join(repositoryRoot, 'dist', 'news');
 const landingPath = path.join(newsRoot, 'index.html');
 const cognitaArtworkPath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'images', 'news', 'cognita-filipino-centered-education.svg');
 const safeguardHref = '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-readability-v2';
+const visibleRetiredLogo = /<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*(?:fmb-news-official-transparent\.webp|fmb-news-official\.svg)/i;
 
 function fail(message) {
   throw new Error(`FMB Newsroom final audit: ${message}`);
@@ -49,9 +50,14 @@ if (!landing.includes('data-news-updated')) fail('landing page is missing its li
 if (landing.includes('Sunday edition · 26 July 2026')) fail('landing page still hardcodes the edition date');
 if (landing.includes('<time>Updated 26 July 2026</time>')) fail('landing page still hardcodes the update date');
 if (!landing.includes('fmb-news-identity-record')) fail('landing page is missing the non-rendered identity record');
-if (/<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*fmb-news-official-transparent\.webp/i.test(landing)) fail('landing page visibly renders the retired News logo');
+if (visibleRetiredLogo.test(landing)) fail('landing page visibly renders the retired News logo');
 if (!landing.includes('og:image:width" content="800"') || !landing.includes('og:image:height" content="533"')) fail('landing page social image dimensions are incomplete');
-assertFinalStyleContract(landing, 'news/index.html', ['body.news-channel-route.news-center-v2', 'Final FMB Newsroom polish', 'Text-led Newsroom masthead']);
+assertFinalStyleContract(landing, 'news/index.html', [
+  'body.news-channel-route.news-center-v2',
+  'Final FMB Newsroom polish',
+  'Text-led Newsroom masthead',
+  'Final visual-approval correction',
+]);
 
 const artwork = await readFile(cognitaArtworkPath, 'utf8');
 if (!artwork.includes('width="1536" height="864"')) fail('Cognita artwork is not 1536×864');
@@ -67,7 +73,7 @@ for (const filePath of await walk(newsRoot)) {
   articleCount += 1;
   if (!html.includes('newsroom-polish-v3')) fail(`${relative} is missing the final Newsroom body class`);
   if (!html.includes('THE NEWSROOM')) fail(`${relative} is missing the text-led masthead`);
-  if (/<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*fmb-news-official-transparent\.webp/i.test(html)) fail(`${relative} visibly renders the retired News logo`);
+  if (visibleRetiredLogo.test(html)) fail(`${relative} visibly renders the retired News logo`);
   assertFinalStyleContract(html, relative, ['Final FMB Newsroom polish', 'Text-led Newsroom masthead']);
 
   if (relative.includes('filipino-centered-training-institution-cognita-vision')) {
@@ -77,4 +83,4 @@ for (const filePath of await walk(newsRoot)) {
 }
 
 if (articleCount < 1) fail('no News article pages were audited');
-console.log(`FMB Newsroom final audit verified the landing page, ${articleCount} article pages, live date hooks, global safeguard preservation, compiled News polish, retired-logo removal, and HD Cognita artwork.`);
+console.log(`FMB Newsroom final audit verified the landing page, ${articleCount} article pages, live date hooks, global safeguard preservation, compiled News polish, visual-approval contrast, retired-logo removal, and HD Cognita artwork.`);
