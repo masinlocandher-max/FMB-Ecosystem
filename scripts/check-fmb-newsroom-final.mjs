@@ -8,6 +8,7 @@ const cognitaArtworkPath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'ass
 const safeguardHref = '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-readability-v2';
 const visibleRetiredLogo = /<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*(?:fmb-news-official-transparent\.webp|fmb-news-official\.svg)/i;
 const retiredFashionFontImport = /<link\b[^>]*href=["'][^"']*fonts\.googleapis\.com\/css2\?family=Cormorant\+Garamond[^"']*["'][^>]*>/i;
+const visibleChannelMasthead = /<div\b[^>]*class=["'][^"']*\bfmb-news-channel-command-inner\b[^"']*["'][^>]*>/gi;
 
 function fail(message) {
   throw new Error(`FMB News Center final audit: ${message}`);
@@ -50,7 +51,7 @@ function assertChannelIdentity(html, fileName) {
   if (!html.includes('News Center</strong>')) fail(`${fileName} is missing the News Center masthead`);
   if (!html.includes('Filipino ang Mismong Balita.')) fail(`${fileName} is missing the approved Filipino tagline`);
   if (!html.includes('fmb-news-channel-command')) fail(`${fileName} is missing the visible channel command bar`);
-  if ((html.match(/fmb-news-channel-command-inner/g) || []).length !== 1) fail(`${fileName} must contain exactly one visible channel masthead`);
+  if ((html.match(visibleChannelMasthead) || []).length !== 1) fail(`${fileName} must contain exactly one visible channel masthead element`);
   if (html.includes('THE NEWSROOM')) fail(`${fileName} still uses the retired Newsroom masthead`);
   if (retiredFashionFontImport.test(html)) fail(`${fileName} still imports the retired fashion-editorial typeface`);
   if (visibleRetiredLogo.test(html)) fail(`${fileName} visibly renders the retired News logo`);
