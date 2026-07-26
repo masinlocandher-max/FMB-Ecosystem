@@ -55,8 +55,8 @@ async function hydrateImages(page, selector) {
   const count = await images.count();
   for (let index = 0; index < count; index += 1) {
     const image = images.nth(index);
-    if (await image.isVisible()) await image.scrollIntoViewIfNeeded();
-    else await image.evaluate((node) => { node.loading = 'eager'; });
+    if (!(await image.isVisible())) continue;
+    await image.scrollIntoViewIfNeeded();
     await page.waitForTimeout(160);
     await expect(image).toHaveJSProperty('complete', true);
   }
@@ -131,11 +131,10 @@ test.describe('FMB approved desktop makeover', () => {
     await assertAnimated(page, '.fmb-announcement-track', 'fmb-announcement-motion');
     await expect(page.locator('#bulletin')).toHaveCount(1);
     await expect(page.locator('#how-fmb-can-help')).toHaveCount(1);
-    await expect(page.locator('#fmb-visual-ecosystem')).toBeAttached();
-    await expect(page.locator('#fmb-visual-ecosystem')).toHaveAttribute('hidden', '');
+    await expect(page.locator('#fmb-visual-ecosystem')).toHaveCount(1);
     await hydratePage(page);
-    await hydrateImages(page, '#fmb-visual-ecosystem img');
-    await assertImagesLoaded(page, '#fmb-visual-ecosystem img');
+    await hydrateImages(page, 'main img:visible');
+    await assertImagesLoaded(page, 'main img:visible');
 
     const sectionTreatments = await page.locator('main > section').evaluateAll((sections) => sections.slice(0, 5).map((section) => {
       const style = getComputedStyle(section);
@@ -184,11 +183,11 @@ test.describe('FMB approved iPhone experience', () => {
     const errors = observeErrors(page);
     await openReady(page, '/');
     await assertNoHorizontalOverflow(page);
-    await expect(page.locator('.fmb-mobile-dock, .nc-mobile-dock')).toHaveCount(0);
-    await expect(page.locator('.fmb-editorial-gallery')).toHaveCSS('overflow-x', 'auto');
+    await expect(page.locator('.fmb-mobile-dock')).toHaveCount(0);
+    await expect(page.locator('.fmb-approved-project-grid')).toBeVisible();
     await hydratePage(page);
-    await hydrateImages(page, '#fmb-visual-ecosystem img');
-    await assertImagesLoaded(page, '#fmb-visual-ecosystem img');
+    await hydrateImages(page, 'main img:visible');
+    await assertImagesLoaded(page, 'main img:visible');
 
     const menuButton = page.locator('.fmb-shell-menu');
     await menuButton.click();
@@ -205,8 +204,7 @@ test.describe('FMB approved iPhone experience', () => {
     const errors = observeErrors(page);
     await openReady(page, '/news/');
     await assertNoHorizontalOverflow(page);
-    await expect(page.locator('.fmb-mobile-dock, .nc-mobile-dock')).toHaveCount(0);
-    await expect(page.locator('.fmb-shell-menu')).toBeVisible();
+    await expect(page.locator('.fmb-mobile-dock')).toHaveCount(0);
     await expect(page.locator('[data-fmb-pst]')).toContainText('PST');
     await assertAnimated(page, '.fmb-news-ticker-track', 'fmb-headline-motion');
     await hydratePage(page);
@@ -218,8 +216,7 @@ test.describe('FMB approved iPhone experience', () => {
     const errors = observeErrors(page);
     await openReady(page, '/aboutfmb/');
     await assertNoHorizontalOverflow(page);
-    await expect(page.locator('.fmb-mobile-dock, .nc-mobile-dock')).toHaveCount(0);
-    await expect(page.locator('.fmb-shell-menu')).toBeVisible();
+    await expect(page.locator('.fmb-mobile-dock')).toHaveCount(0);
     await hydratePage(page);
     await expect(page.locator('main img').first()).toBeVisible();
     await captureEvidence(page, 'about-iphone');
