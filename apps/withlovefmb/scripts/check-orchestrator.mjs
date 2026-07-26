@@ -8,7 +8,19 @@ const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const siteRoot = path.resolve(scriptDirectory, '..');
 const repoRoot = path.resolve(siteRoot, '..', '..');
 
-const [adminHtml, orchestratorSource, commandCenterSource, adminSource, authSource, vercelSource, migrationSource, operationsMigrationSource] = await Promise.all([
+const [
+  adminHtml,
+  orchestratorSource,
+  commandCenterSource,
+  adminSource,
+  authSource,
+  vercelSource,
+  migrationSource,
+  operationsMigrationSource,
+  secureConnectionsMigrationSource,
+  connectionLockMigrationSource,
+  integrationFunctionSource,
+] = await Promise.all([
   readFile(path.join(siteRoot, 'admin.html'), 'utf8'),
   readFile(path.join(siteRoot, 'assets/js/orchestrator.js'), 'utf8'),
   readFile(path.join(siteRoot, 'assets/js/command-center.js'), 'utf8'),
@@ -17,6 +29,9 @@ const [adminHtml, orchestratorSource, commandCenterSource, adminSource, authSour
   readFile(path.join(repoRoot, 'vercel.json'), 'utf8'),
   readFile(path.join(siteRoot, 'supabase/migrations/20260723120000_add_orchestrator_workspace.sql'), 'utf8'),
   readFile(path.join(siteRoot, 'supabase/migrations/20260726120000_add_operations_command_center.sql'), 'utf8'),
+  readFile(path.join(siteRoot, 'supabase/migrations/20260726160000_add_secure_api_connections.sql'), 'utf8'),
+  readFile(path.join(siteRoot, 'supabase/migrations/20260726162000_lock_api_connection_registry.sql'), 'utf8'),
+  readFile(path.join(repoRoot, 'supabase/functions/automation-integrations/index.ts'), 'utf8'),
 ]);
 
 const requiredPanels = [
@@ -46,7 +61,7 @@ assert.match(adminHtml, /Human approval is the final step\./);
 assert.match(adminHtml, /Nothing is sent automatically\./);
 assert.match(adminHtml, /Instructions & Work Queue/);
 assert.match(adminHtml, /Evidence & Approvals/);
-assert.match(adminHtml, /No secrets here/);
+assert.match(adminHtml, /Passwords and recovery codes are never accepted\./);
 assert.doesNotMatch(adminHtml, /assets\/js\/(site|live-hotfix)\.js/);
 
 const publicFiles = [
@@ -133,7 +148,12 @@ assert.match(commandCenterSource, /rpc\('review_work_evidence'/);
 assert.match(commandCenterSource, /rpc\('review_work_order'/);
 assert.match(commandCenterSource, /storage\.from\('work-evidence'\)/);
 assert.match(commandCenterSource, /postgres_changes/);
-assert.match(commandCenterSource, /Never paste a password, access token, API secret, or recovery code here\./);
+assert.match(commandCenterSource, /Passwords and recovery codes do not belong here\./);
+assert.match(commandCenterSource, /functions\/v1\/automation-integrations/);
+assert.match(commandCenterSource, /Configure secure app/);
+assert.match(commandCenterSource, /Connect account/);
+assert.match(commandCenterSource, /Verify now/);
+assert.doesNotMatch(commandCenterSource, /data-connection-manage/);
 assert.doesNotMatch(commandCenterSource, /fetch\(\s*["']https?:\/\//i, 'Command Center must not transmit records to an undeclared external API');
 assert.match(authSource, /target\.origin===location\.origin/);
 
@@ -150,5 +170,24 @@ assert.match(operationsMigrationSource, /private\.is_fmb_staff\(\)/i);
 assert.match(operationsMigrationSource, /Evidence is required before this work can be submitted/i);
 assert.match(operationsMigrationSource, /Accept at least one evidence item before approving the work/i);
 assert.doesNotMatch(operationsMigrationSource, /insert into public\.work_orders\s*\(/i, 'The command center must not seed fake work orders');
+assert.match(secureConnectionsMigrationSource, /private\.automation_integration_credentials/i);
+assert.match(secureConnectionsMigrationSource, /private\.automation_provider_tokens/i);
+assert.match(secureConnectionsMigrationSource, /private\.automation_oauth_states/i);
+assert.match(secureConnectionsMigrationSource, /vault\.decrypted_secrets/i);
+assert.match(secureConnectionsMigrationSource, /create or replace function public\.ops_store_provider_token/i);
+assert.match(secureConnectionsMigrationSource, /set status = 'connected_api'/i);
+assert.match(secureConnectionsMigrationSource, /grant execute on function public\.ops_store_provider_token[\s\S]+to service_role/i);
+assert.doesNotMatch(secureConnectionsMigrationSource, /grant execute on function public\.ops_store_provider_token[\s\S]+to authenticated/i);
+assert.doesNotMatch(secureConnectionsMigrationSource, /insert into private\.automation_provider_tokens[\s\S]+sk-/i, 'The secure migration must not contain provider credentials');
+assert.match(connectionLockMigrationSource, /revoke insert,update on table public\.automation_connections\s+from authenticated/i);
+assert.match(connectionLockMigrationSource, /grant update\(processing_status,processed_at\)/i);
+assert.match(integrationFunctionSource, /admin\.auth\.getUser\(token\)/);
+assert.match(integrationFunctionSource, /ops_issue_oauth_state/);
+assert.match(integrationFunctionSource, /ops_consume_oauth_state/);
+assert.match(integrationFunctionSource, /ops_store_provider_token/);
+assert.match(integrationFunctionSource, /verifyOpenAI/);
+assert.match(integrationFunctionSource, /X-Hub-Signature-256/);
+assert.match(integrationFunctionSource, /timingSafeEqual/);
+assert.doesNotMatch(integrationFunctionSource, /console\.(?:log|debug)\(/, 'The integration gateway must not log tokens or payloads');
 
 console.log(`FMB&CO. Orchestrator check passed: ${requiredPanels.length} panels and ${publicFiles.length} protected public routes.`);
