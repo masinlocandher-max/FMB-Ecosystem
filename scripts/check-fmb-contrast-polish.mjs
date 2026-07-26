@@ -3,9 +3,7 @@ import path from 'node:path';
 
 const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.join(repositoryRoot, 'dist');
-const contrastHref = '/assets/css/fmb-contrast-polish.css';
 const sitewideHref = '/assets/css/fmb-sitewide-visual-fixes.css';
-const artworkCssHref = '/assets/css/fmb-cognita-artwork.css';
 const cognitaArtwork = '/assets/images/news/cognita-filipino-centered-education.svg';
 const approvedPortrait = '/assets/images/fmb-approved/francine-portrait-front.webp';
 const excludedPrefixes = ['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/'];
@@ -51,17 +49,17 @@ for (const file of publicHtml) {
   const name = relative(file);
   const html = await readFile(file, 'utf8');
   const sitewideIndex = html.lastIndexOf(sitewideHref);
-  const contrastIndex = html.lastIndexOf(contrastHref);
-  const artworkCssIndex = html.lastIndexOf(artworkCssHref);
+  const lastStylesheetIndex = html.lastIndexOf('<link rel="stylesheet"');
 
-  if (sitewideIndex < 0) failures.push(`${name}: missing sitewide visual safeguards`);
-  if (contrastIndex < 0) failures.push(`${name}: missing final contrast polish`);
-  if (artworkCssIndex < 0) failures.push(`${name}: missing Cognita HD artwork support`);
-  if (contrastIndex >= 0 && sitewideIndex >= 0 && contrastIndex < sitewideIndex) {
-    failures.push(`${name}: contrast polish is not loaded after the legacy safeguards`);
+  if (sitewideIndex < 0) failures.push(`${name}: missing final sitewide visual safeguards`);
+  if (sitewideIndex >= 0 && lastStylesheetIndex >= 0 && sitewideIndex < lastStylesheetIndex) {
+    failures.push(`${name}: final sitewide visual safeguards are not the last stylesheet`);
   }
-  if (artworkCssIndex >= 0 && contrastIndex >= 0 && artworkCssIndex < contrastIndex) {
-    failures.push(`${name}: Cognita artwork support is not loaded after contrast polish`);
+  if (html.includes('/assets/css/fmb-contrast-polish.css')) {
+    failures.push(`${name}: contrast polish was linked separately instead of bundled into the approved final stylesheet`);
+  }
+  if (html.includes('/assets/css/fmb-cognita-artwork.css')) {
+    failures.push(`${name}: Cognita artwork support was linked separately instead of bundled into the approved final stylesheet`);
   }
 }
 
@@ -99,9 +97,10 @@ for (const route of [
   }
 }
 
-const contrastCssPath = path.join(dist, 'assets', 'css', 'fmb-contrast-polish.css');
-const contrastCss = await readFile(contrastCssPath, 'utf8');
+const finalCssPath = path.join(dist, 'assets', 'css', 'fmb-sitewide-visual-fixes.css');
+const finalCss = await readFile(finalCssPath, 'utf8');
 for (const contract of [
+  'Final contrast contracts appended by the release build',
   '.fmb-about-work',
   '.wlf-hero',
   '.fco-section.purple',
@@ -110,9 +109,12 @@ for (const contract of [
   '.music-section',
   '.ebook-reading-principles',
   'form :is(label, legend)',
+  'Cognita HD artwork support appended by the release build',
+  '.nc-cognita-visual::after',
+  approvedPortrait,
 ]) {
-  if (!contrastCss.includes(contract)) {
-    failures.push(`fmb-contrast-polish.css: missing contrast contract for ${contract}`);
+  if (!finalCss.includes(contract)) {
+    failures.push(`fmb-sitewide-visual-fixes.css: missing final contract for ${contract}`);
   }
 }
 
@@ -132,14 +134,6 @@ if (!artwork.includes('COGNITA') || !artwork.includes('INSTITUTE OF AI')) {
   failures.push('Cognita lead visual is missing its code-native institutional identity.');
 }
 
-const artworkCss = await readFile(path.join(dist, 'assets', 'css', 'fmb-cognita-artwork.css'), 'utf8');
-if (!artworkCss.includes(approvedPortrait)) {
-  failures.push('Cognita artwork support does not reinforce the approved portrait in the browser layer.');
-}
-if (!artworkCss.includes('.nc-cognita-visual::after')) {
-  failures.push('Cognita artwork support is missing the newsroom founder-portrait layer.');
-}
-
 if (failures.length > 0) {
   console.error('FMB contrast and HD artwork audit failed:');
   failures.forEach((failure) => console.error(`- ${failure}`));
@@ -147,5 +141,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `FMB contrast and HD artwork audit passed for ${publicHtml.length} public page(s); Cognita visual is ${dimensions.width}×${dimensions.height} and uses the approved portrait.`,
+  `FMB contrast and HD artwork audit passed for ${publicHtml.length} public page(s); the final stylesheet owns all contrast contracts and the Cognita visual is ${dimensions.width}×${dimensions.height}.`,
 );
