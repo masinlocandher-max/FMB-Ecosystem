@@ -1,0 +1,324 @@
+/*
+ * FMB sitewide visual safeguards
+ * Loaded last so the approved public design wins over legacy page bundles.
+ */
+
+/* Retire legacy shells after the unified FMB header and footer are installed. */
+body.fmb-unified-public > .top-shell {
+  display: none !important;
+}
+
+/* Prevent long copy, media, and grid children from creating collapsed columns. */
+body.fmb-unified-public main,
+body.fmb-unified-public main > *,
+body.fmb-unified-public :is(
+  .wrap,
+  .fco-wrap,
+  .wlf-wrap,
+  .fmb-wrap,
+  .container,
+  [class*="grid"],
+  [class*="copy"]
+) > * {
+  min-width: 0;
+}
+
+body.fmb-unified-public :is(h1, h2, h3, h4, p, li, a, button, label) {
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+body.fmb-unified-public main img {
+  max-width: 100%;
+}
+
+/* News Center: keep the broadcast identity dark and its promise readable. */
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-broadcast-identity {
+  background:
+    radial-gradient(circle at 84% 12%, rgba(139, 21, 56, 0.34), transparent 30rem),
+    linear-gradient(125deg, #09060d 0%, #1c0a14 58%, #35101d 100%) !important;
+  color: #fff !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news .nc-channel-promise > p {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news :is(
+  .nc-channel-id,
+  .nc-channel-lockup,
+  .nc-channel-promise,
+  .nc-channel-service
+) {
+  color: #fff !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-unified-news :is(
+  .nc-site-header,
+  .nc-wire,
+  .nc-topic-rail
+) {
+  background-color: #09060d !important;
+}
+
+/* Restore the light reader surface that was being repainted by the global hero rule. */
+body.fmb-reader-modern :is(.reader-cover, .reading-hero) {
+  border-color: var(--reader-line) !important;
+  background: var(--reader-surface) !important;
+  color: var(--reader-ink) !important;
+}
+
+body.fmb-reader-modern :is(.reader-cover, .reading-hero)::before {
+  inset: -220px -180px auto auto !important;
+  width: 420px !important;
+  height: 420px !important;
+  background: radial-gradient(circle, rgba(199, 146, 255, 0.28), transparent 66%) !important;
+}
+
+body.fmb-reader-modern :is(.reader-cover, .reading-hero) h1 {
+  max-width: 800px;
+  color: var(--reader-ink) !important;
+  font-size: clamp(42px, 6vw, 78px) !important;
+  line-height: 0.96 !important;
+}
+
+body.fmb-reader-modern :is(.reader-cover, .reading-hero) > p {
+  color: var(--reader-muted) !important;
+}
+
+body.fmb-reader-modern :is(.reader-cover, .reading-hero) .eyebrow {
+  color: var(--reader-accent) !important;
+}
+
+/* Restore each page family's intended headline scale. */
+body.fmb-unified-about .fmb-about-hero h1 {
+  max-width: 700px;
+  font-size: clamp(50px, 5.3vw, 76px) !important;
+  line-height: 0.93 !important;
+}
+
+body.fmb-unified-withlove .wlf-hero h1 {
+  max-width: 700px;
+  font-size: clamp(54px, 5.7vw, 80px) !important;
+  line-height: 0.9 !important;
+}
+
+body.fmb-unified-fmbandco .fco-hero h1 {
+  max-width: 720px;
+  font-size: clamp(50px, 4.8vw, 72px) !important;
+  line-height: 0.98 !important;
+}
+
+body.fmb-unified-company-gateway .fco-gateway-hero h1 {
+  font-size: clamp(50px, 5vw, 76px) !important;
+  line-height: 0.96 !important;
+}
+
+body:is(.fmb-unified-participate, .fmb-unified-work) .fmb-journey-main > h1 {
+  max-width: 900px;
+  font-size: clamp(50px, 6vw, 82px) !important;
+  line-height: 0.94 !important;
+}
+
+body.fmb-unified-help .help-hero h1 {
+  font-size: clamp(54px, 6.5vw, 88px) !important;
+}
+
+body.fmb-unified-community .volunteer-hero-copy h1 {
+  font-size: clamp(54px, 6.4vw, 88px) !important;
+}
+
+body.fmb-unified-projects .projects-hero h1 {
+  font-size: clamp(62px, 7vw, 96px) !important;
+}
+
+body.fmb-unified-mabayani .hero h1 {
+  font-size: clamp(54px, 6.4vw, 88px) !important;
+}
+
+body.fmb-unified-music :is(.music-hero, .nc-broadcast-identity) h1 {
+  font-size: clamp(54px, 6.4vw, 88px) !important;
+}
+
+body.fmb-unified-ebooks .ebook-hero h1 {
+  font-size: clamp(56px, 6.6vw, 92px) !important;
+}
+
+body.fmb-unified-news-article .nc-article-hero h1 {
+  max-width: 920px;
+  font-size: clamp(52px, 6.2vw, 86px) !important;
+  line-height: 0.96 !important;
+}
+
+body.fmb-unified-news-article .senz-article-hero h1 {
+  max-width: 980px;
+  font-size: clamp(48px, 5.5vw, 76px) !important;
+  line-height: 0.98 !important;
+}
+
+body.fmb-unified-policy :is(.policy-head, .title) h1,
+body.fmb-unified-policy main > h1 {
+  font-size: clamp(44px, 5.4vw, 72px) !important;
+  line-height: 1 !important;
+}
+
+body.fmb-unified-public:not(.fmb-reader-modern) .reading-hero h1 {
+  font-size: clamp(46px, 6vw, 78px) !important;
+  line-height: 0.98 !important;
+}
+
+body.freedom-wall-page .freedom-hero h1,
+body.fmb-unified-public .statement h1 {
+  font-size: clamp(48px, 6vw, 82px) !important;
+}
+
+body.fmb-unified-public .auth-shell h1 {
+  font-size: clamp(42px, 5vw, 64px) !important;
+  line-height: 1 !important;
+}
+
+/* Keep the long narrative heroes balanced with their approved portrait media. */
+body:is(.fmb-unified-participate, .fmb-unified-work) .fmb-journey-main {
+  padding-top: clamp(82px, 8vw, 112px) !important;
+}
+
+body:is(.fmb-unified-participate, .fmb-unified-work) .fmb-journey-main > .lead {
+  margin: 22px 0 50px !important;
+}
+
+body:is(.fmb-unified-participate, .fmb-unified-work) .fmb-journey-options article {
+  border-color: rgba(59, 25, 78, 0.13) !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  color: #29173a !important;
+}
+
+body:is(.fmb-unified-participate, .fmb-unified-work) .fmb-journey-options :is(h2, h3) {
+  color: #321044 !important;
+}
+
+body:is(.fmb-unified-participate, .fmb-unified-work) .fmb-journey-options p {
+  color: #665b6c !important;
+}
+
+/* Form controls stay readable on every inquiry, help, and policy surface. */
+body.fmb-unified-public form :is(label, legend) {
+  color: #2c2031 !important;
+}
+
+body.fmb-unified-public form :is(
+  input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+  select,
+  textarea
+) {
+  color: #1d1820 !important;
+  background-color: #fff !important;
+}
+
+body.fmb-unified-public form :is(
+  input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+  textarea
+)::placeholder {
+  color: #766d79 !important;
+  opacity: 1;
+}
+
+@media (min-width: 861px) {
+  body.fmb-unified-about .fmb-about-hero {
+    padding: 70px 0 42px !important;
+  }
+
+  body.fmb-unified-about .fmb-about-hero .fco-hero-grid {
+    grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.78fr) !important;
+    gap: clamp(30px, 4vw, 54px) !important;
+  }
+
+  body.fmb-unified-about .fmb-about-hero-visual {
+    min-height: 560px !important;
+  }
+
+  body.fmb-unified-withlove .wlf-hero {
+    min-height: 0 !important;
+    padding-top: 68px !important;
+  }
+
+  body.fmb-unified-withlove .wlf-hero-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(400px, 0.88fr) !important;
+    gap: clamp(34px, 4vw, 52px) !important;
+    min-height: 610px !important;
+    padding-bottom: 60px !important;
+  }
+
+  body.fmb-unified-withlove .wlf-portrait-stage {
+    min-height: 610px !important;
+  }
+
+  body.fmb-unified-fmbandco .fco-hero {
+    padding: 76px 0 !important;
+  }
+
+  body.fmb-unified-fmbandco .fco-hero-grid {
+    grid-template-columns: minmax(0, 1.08fr) minmax(390px, 0.92fr) !important;
+    gap: clamp(34px, 4vw, 54px) !important;
+  }
+
+  body.fmb-unified-fmbandco .fco-hero-visual {
+    min-height: 610px !important;
+  }
+}
+
+@media (max-width: 860px) {
+  body.fmb-unified-about .fmb-about-hero h1,
+  body.fmb-unified-withlove .wlf-hero h1,
+  body.fmb-unified-fmbandco .fco-hero h1,
+  body.fmb-unified-company-gateway .fco-gateway-hero h1,
+  body:is(.fmb-unified-participate, .fmb-unified-work) .fmb-journey-main > h1,
+  body.fmb-unified-help .help-hero h1,
+  body.fmb-unified-community .volunteer-hero-copy h1,
+  body.fmb-unified-mabayani .hero h1,
+  body.fmb-unified-news-article .nc-article-hero h1,
+  body.fmb-unified-news-article .senz-article-hero h1,
+  body.fmb-unified-public:not(.fmb-reader-modern) .reading-hero h1 {
+    font-size: clamp(46px, 12.5vw, 60px) !important;
+  }
+
+  body.fmb-unified-projects .projects-hero h1,
+  body.fmb-unified-ebooks .ebook-hero h1,
+  body.fmb-unified-music :is(.music-hero, .nc-broadcast-identity) h1,
+  body.freedom-wall-page .freedom-hero h1 {
+    font-size: clamp(48px, 13vw, 68px) !important;
+  }
+
+  body.fmb-reader-modern :is(.reader-cover, .reading-hero) h1 {
+    font-size: clamp(40px, 12vw, 58px) !important;
+  }
+
+  body.fmb-corporate-luxury-v2.fmb-unified-news .nc-channel-promise > p {
+    font-size: clamp(32px, 8vw, 46px) !important;
+  }
+
+  body:is(.fmb-unified-participate, .fmb-unified-work) .fmb-journey-main {
+    padding-top: 72px !important;
+  }
+
+  body:is(.fmb-unified-participate, .fmb-unified-work) .fmb-journey-main > .lead {
+    margin-bottom: 38px !important;
+  }
+}
+
+@media (max-width: 520px) {
+  body.fmb-unified-withlove .wlf-hero {
+    padding-top: 48px !important;
+  }
+
+  body.fmb-unified-about .fmb-about-hero h1,
+  body.fmb-unified-withlove .wlf-hero h1,
+  body.fmb-unified-fmbandco .fco-hero h1,
+  body:is(.fmb-unified-participate, .fmb-unified-work) .fmb-journey-main > h1,
+  body.fmb-unified-news-article :is(.nc-article-hero, .senz-article-hero) h1 {
+    font-size: clamp(42px, 13vw, 56px) !important;
+  }
+
+  body.fmb-unified-public form {
+    padding: 24px 18px !important;
+  }
+}
