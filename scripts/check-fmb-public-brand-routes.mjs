@@ -27,14 +27,13 @@ for(const file of await walk(root)){
   for(const marker of retired)if(html.includes(marker))fail(`${name} still renders retired identity ${marker}`);
   if(/\/assets\/images\/fmb\/francine-founder-[^"'\s)]+\.(?:webp|png|jpe?g)/i.test(html))fail(`${name} still renders a generic founder cutout`);
   if(name.startsWith('news/')){
-    if(!/(?:FMB(?:&amp;|&)CO\. News|FMB News)/i.test(html))fail(`${name} has no visible FMB News identity`);
+    if(!/(?:FMB(?:&amp;|&)CO\. News|FMB News|Francine Marie Bautista)/i.test(html))fail(`${name} has no visible publisher identity`);
     newsPages+=1;
   }
   if(controlledReadingRoutes.includes(name)&&!html.includes('membership-gate.js'))fail(`${name} is missing its controlled reading gate`);
 }
 const required={
   'index.html':'/assets/images/fmb-approved/fmb-master-transparent.webp',
-  'news/index.html':'/assets/images/fmb-approved/fmb-news-official-transparent.webp',
   'music/index.html':'/assets/images/fmb-approved/fmb-music-official-transparent.webp',
   'ebooks/index.html':'/assets/images/fmb-approved/fmb-ebook-official-transparent.webp',
   'womens-health.html':'membership-gate.js'
@@ -43,4 +42,13 @@ for(const [relative,marker] of Object.entries(required)){
   const html=await readFile(path.join(root,relative),'utf8');
   if(!html.includes(marker))fail(`${relative} is missing ${marker}`);
 }
+
+const newsIndex=await readFile(path.join(root,'news/index.html'),'utf8');
+if(newsIndex.includes('news-center-v2')){
+  if(!newsIndex.includes('nc-text-masthead')||!newsIndex.includes('THE NEWSROOM'))fail('news/index.html is missing the text-led newsroom masthead');
+  if(newsIndex.includes('/assets/images/fmb-approved/fmb-news-official-transparent.webp'))fail('news/index.html still renders the removed FMB News graphic logo');
+}else if(!newsIndex.includes('/assets/images/fmb-approved/fmb-news-official-transparent.webp')){
+  fail('news/index.html is missing its approved pre-redesign identity');
+}
+
 console.log(`FMB public-route audit verified ${publicPages} public pages, ${newsPages} News routes, and ${controlledReadingRoutes.length} controlled reading routes with exact GitHub-owned identities.`);
