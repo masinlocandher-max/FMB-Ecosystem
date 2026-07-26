@@ -4,8 +4,14 @@ body.fmb-corporate-luxury-v2.fmb-unified-news.news-channel-route.news-center-v2 
 }
 
 body.fmb-corporate-luxury-v2.fmb-unified-news.news-channel-route.news-center-v2 .nc-newsroom-title h1 {
-  max-width: 6.2ch;
+  width: 100%;
+  max-width: none !important;
   color: #fffdf8 !important;
+  font-size: clamp(70px, 8.4vw, 122px) !important;
+  line-height: 0.8 !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
+  hyphens: none !important;
   text-shadow: 0 14px 48px rgba(0, 0, 0, 0.34) !important;
 }
 
@@ -45,8 +51,8 @@ body.fmb-corporate-luxury-v2.fmb-unified-news.news-channel-route.news-center-v2 
 
 @media (max-width: 640px) {
   body.fmb-corporate-luxury-v2.fmb-unified-news.news-channel-route.news-center-v2 .nc-newsroom-title h1 {
-    max-width: 6.4ch;
-    font-size: clamp(58px, 19vw, 82px) !important;
+    width: min(100%, 350px);
+    font-size: clamp(54px, 17vw, 72px) !important;
     line-height: 0.84 !important;
   }
 
