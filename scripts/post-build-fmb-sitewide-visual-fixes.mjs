@@ -10,6 +10,7 @@ const removableStylesheetPatterns = [
   /<link\b[^>]*href=["'][^"']*fmb-sitewide-visual-fixes\.css[^"']*["'][^>]*>\s*/gi,
   /<link\b[^>]*href=["'][^"']*fmb-contrast-polish\.css[^"']*["'][^>]*>\s*/gi,
   /<link\b[^>]*href=["'][^"']*fmb-cognita-artwork\.css[^"']*["'][^>]*>\s*/gi,
+  /<link\b[^>]*href=["'][^"']*fmb-news-lead-contrast\.css[^"']*["'][^>]*>\s*/gi,
 ];
 const excludedPrefixes = ['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/'];
 const excludedFiles = new Set([
@@ -32,16 +33,17 @@ async function walk(directory) {
 
 const relative = (file) => path.relative(dist, file).replaceAll(path.sep, '/');
 
-const [sitewideCss, contrastCss, cognitaArtworkCss] = await Promise.all([
+const [sitewideCss, contrastCss, cognitaArtworkCss, newsLeadContrastCss] = await Promise.all([
   readFile(path.join(cssRoot, 'fmb-sitewide-visual-fixes.css'), 'utf8'),
   readFile(path.join(cssRoot, 'fmb-contrast-polish.css'), 'utf8'),
   readFile(path.join(cssRoot, 'fmb-cognita-artwork.css'), 'utf8'),
+  readFile(path.join(cssRoot, 'fmb-news-lead-contrast.css'), 'utf8'),
 ]);
 
 await mkdir(path.dirname(outputStylesheet), { recursive: true });
 await writeFile(
   outputStylesheet,
-  `${sitewideCss.trim()}\n\n/* Final contrast contracts appended by the release build. */\n${contrastCss.trim()}\n\n/* Cognita HD artwork support appended by the release build. */\n${cognitaArtworkCss.trim()}\n`,
+  `${sitewideCss.trim()}\n\n/* Final contrast contracts appended by the release build. */\n${contrastCss.trim()}\n\n/* Cognita HD artwork support appended by the release build. */\n${cognitaArtworkCss.trim()}\n\n/* FMB News lead-story contrast appended by the release build. */\n${newsLeadContrastCss.trim()}\n`,
   'utf8',
 );
 
@@ -70,4 +72,4 @@ for (const file of publicHtml) {
   injectedPages += 1;
 }
 
-console.log(`Combined sitewide safeguards, contrast polish, and Cognita artwork support into the final stylesheet on ${injectedPages} public page(s).`);
+console.log(`Combined sitewide safeguards, contrast polish, Cognita artwork support, and FMB News lead contrast into the final stylesheet on ${injectedPages} public page(s).`);
