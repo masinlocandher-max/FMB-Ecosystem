@@ -2,6 +2,7 @@
  * Homepage repair layer.
  * Loaded after the sitewide visual safeguards so the approved landing page
  * keeps a compact section flow and the live-information cards stay readable.
+ * Production release marker: 2026-07-26 landing-page repair.
  */
 
 body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home main > .featured {
