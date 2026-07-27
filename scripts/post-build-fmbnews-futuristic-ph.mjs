@@ -7,7 +7,7 @@ const newsLandingPath = path.join(distRoot, 'news', 'index.html');
 const fmbNewsRoot = path.join(distRoot, 'fmbnews');
 const fmbNewsLandingPath = path.join(fmbNewsRoot, 'index.html');
 const sitemapPath = path.join(distRoot, 'sitemap.xml');
-const cssHref = '/assets/css/fmbnews-futuristic-ph.css?v=20260728-ph-future-v1';
+const cssSourcePath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-futuristic-ph.css');
 const canonicalUrl = 'https://www.francinemariebautista.com/fmbnews/';
 
 const orbitMarkup = `
@@ -30,7 +30,7 @@ function addBodyClass(html, className) {
   return html.replace(/<body\b([^>]*)>/i, `<body$1 class="${className}">`);
 }
 
-function makeCanonicalLanding(html) {
+function makeCanonicalLanding(html, futuristicCss) {
   let next = html
     .replace(/<meta name="theme-color" content="[^"]*">/i, '<meta name="theme-color" content="#eef1f5">')
     .replace(/<link rel="canonical" href="[^"]*">/i, `<link rel="canonical" href="${canonicalUrl}">`)
@@ -39,10 +39,11 @@ function makeCanonicalLanding(html) {
     .replaceAll('https://www.francinemariebautista.com/news/#stories', 'https://www.francinemariebautista.com/fmbnews/#stories')
     .replace('"url":"https://www.francinemariebautista.com/news/"', '"url":"https://www.francinemariebautista.com/fmbnews/"')
     .replaceAll('href="/news/"', 'href="/fmbnews/"')
-    .replaceAll("href='/news/'", "href='/fmbnews/'");
+    .replaceAll("href='/news/'", "href='/fmbnews/'")
+    .replace(/<style\b[^>]*data-fmbnews-futuristic-ph[^>]*>[\s\S]*?<\/style>\s*/gi, '');
 
-  if (!next.includes(`href="${cssHref}"`)) {
-    next = next.replace('</head>', `<link rel="stylesheet" href="${cssHref}">\n</head>`);
+  if (!next.includes('data-fmbnews-futuristic-ph')) {
+    next = next.replace('</head>', `<style data-fmbnews-futuristic-ph>\n${futuristicCss}\n</style>\n</head>`);
   }
 
   if (!next.includes('class="nc-ph-orbit"')) {
@@ -65,8 +66,9 @@ async function walkPublicHtml(directory) {
   return files;
 }
 
+const futuristicCss = await readFile(cssSourcePath, 'utf8');
 let landingHtml = await readFile(newsLandingPath, 'utf8');
-landingHtml = makeCanonicalLanding(landingHtml);
+landingHtml = makeCanonicalLanding(landingHtml, futuristicCss);
 
 await mkdir(fmbNewsRoot, { recursive: true });
 await writeFile(newsLandingPath, landingHtml, 'utf8');
