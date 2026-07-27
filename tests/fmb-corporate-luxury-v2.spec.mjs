@@ -83,7 +83,7 @@ for(const project of [
       await expect(page.locator('[data-fmb-pst]')).toContainText('PST');
       await expect(page.locator('.fmb-news-ticker-track')).toBeVisible();
       await expect(page.locator('.nc-rundown-panel')).toBeVisible();
-      await expect(page.locator('.nc-index-list li')).toHaveCount(8);
+      await expect(page.locator('.nc-index-list li')).toHaveCount(10);
     });
 
     projectTest('music uses a Spotify-inspired real library with playback controls',async({page})=>{
