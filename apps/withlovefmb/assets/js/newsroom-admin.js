@@ -17,6 +17,7 @@
     if(!button)return;if(on){button.dataset.label=button.textContent;button.textContent=label;button.disabled=true}else{button.textContent=button.dataset.label||button.textContent;button.disabled=false;delete button.dataset.label}
   }
   function metric(id,value){const element=$(id);if(element)element.textContent=String(value||0)}
+  function groups(value){return String(value||'').split(',').map(item=>clean(item,100)).filter(Boolean).slice(0,6)}
 
   async function loadAll(){
     if(!client)return;
@@ -26,8 +27,7 @@
       client.from('news_ingestion_runs').select('*').order('started_at',{ascending:false}).limit(12)
     ]);
     if(sourceResult.error||articleResult.error||runResult.error){
-      setStatus(sourceResult.error?.message||articleResult.error?.message||runResult.error?.message||'The newsroom could not be loaded.','error');
-      return;
+      setStatus(sourceResult.error?.message||articleResult.error?.message||runResult.error?.message||'The newsroom could not be loaded.','error');return;
     }
     sources=sourceResult.data||[];articles=articleResult.data||[];
     renderSources();renderReviews();renderRuns(runResult.data||[]);renderMetrics();
@@ -44,7 +44,7 @@
     const host=$('#newsSourceList');if(!host)return;
     host.innerHTML=sources.length?sources.map(source=>`<article class="ops-news-source" data-news-source="${esc(source.id)}">
       <header><div><h3>${esc(source.name)}</h3><p>${esc(source.feed_url)}</p></div><button type="button" data-news-edit-source="${esc(source.id)}">Edit</button></header>
-      <div class="ops-news-badges"><span>${esc(source.category)}</span><span>${esc(source.risk_level)} risk</span><span>${source.active?'active':'paused'}</span><span>${source.auto_publish?'low-risk auto publish':'review first'}</span></div>
+      <div class="ops-news-badges"><span>${esc(source.category)}</span><span>${esc(source.risk_level)} risk</span><span>${source.active?'active':'paused'}</span><span>${source.auto_publish?'automatic with safeguards':'manual publishing'}</span></div>
       <p>Last successful check: ${esc(fmt(source.last_success_at))}${source.last_error?`<br><strong>Last error:</strong> ${esc(source.last_error)}`:''}</p>
       <div class="ops-news-actions"><button type="button" data-news-toggle-source="${esc(source.id)}">${source.active?'Pause':'Activate'}</button><button class="danger" type="button" data-news-delete-source="${esc(source.id)}">Delete</button></div>
     </article>`).join(''):'<div class="ops-news-empty">No approved feed has been added. Add an official RSS, Atom, or JSON feed to begin importing.</div>';
@@ -54,13 +54,13 @@
   }
 
   function resetSourceForm(){
-    const form=$('#newsSourceForm');form?.reset();
+    $('#newsSourceForm')?.reset();
     if($('#newsSourceId'))$('#newsSourceId').value='';
     if($('#newsSourceType'))$('#newsSourceType').value='rss';
     if($('#newsSourceCategory'))$('#newsSourceCategory').value='Philippines';
     if($('#newsSourceRisk'))$('#newsSourceRisk').value='medium';
     if($('#newsSourceActive'))$('#newsSourceActive').checked=true;
-    if($('#newsSourceAuto'))$('#newsSourceAuto').checked=false;
+    if($('#newsSourceAuto'))$('#newsSourceAuto').checked=true;
   }
   function editSource(id){
     const item=sources.find(source=>source.id===id);if(!item)return;
@@ -91,29 +91,38 @@
   });
   $('#newsNewSource')?.addEventListener('click',resetSourceForm);
 
-  function filteredArticles(){
-    const value=$('#newsReviewFilter')?.value||'pending_review';
-    return articles.filter(item=>value==='all'||item.status===value);
-  }
+  function filteredArticles(){const value=$('#newsReviewFilter')?.value||'pending_review';return articles.filter(item=>value==='all'||item.status===value)}
   function renderReviews(){
     const host=$('#newsReviewList');if(!host)return;const list=filteredArticles();
     host.innerHTML=list.length?list.map(item=>`<article class="ops-news-review" data-news-article="${esc(item.id)}">
       <header><div><h3>${esc(item.title)}</h3><p>${esc(item.source_name)} · ${esc(fmt(item.source_published_at||item.created_at))}</p></div><a href="${esc(item.source_url)}" target="_blank" rel="noopener">Source ↗</a></header>
-      <div class="ops-news-badges"><span>${esc(item.status)}</span><span>${esc(item.risk_level)} risk</span><span>${esc(item.verification_status)}</span>${item.is_ai_assisted?'<span>AI-assisted draft</span>':''}</div>
+      <div class="ops-news-badges"><span>${esc(item.status)}</span><span>${esc(item.risk_level)} risk</span><span>${esc(item.impact_confidence||'low')} impact confidence</span>${item.auto_published?'<span>auto-published</span>':''}${item.is_ai_assisted?'<span>AI-assisted draft</span>':''}</div>
+      ${item.requires_review_reason?`<p><strong>Why it stopped:</strong> ${esc(item.requires_review_reason)}</p>`:''}
       <p>${esc(item.source_excerpt||'No source excerpt was supplied by the feed.')}</p>
-      <label><span>FMB News summary</span><textarea data-news-summary maxlength="700">${esc(item.summary||'')}</textarea></label>
-      <div class="ops-news-actions">
-        <button class="primary" type="button" data-news-decision="published">Publish</button>
-        <button type="button" data-news-decision="pending_review">Keep for review</button>
-        <button type="button" data-news-decision="needs_correction">Mark correction</button>
-        <button class="danger" type="button" data-news-decision="rejected">Reject</button>
-      </div>
+      <label><span>What happened</span><textarea data-news-summary maxlength="700">${esc(item.summary||'')}</textarea></label>
+      <label><span>What this means for Filipinos</span><textarea data-news-impact maxlength="1200">${esc(item.filipino_impact||'')}</textarea></label>
+      <label><span>Who is affected, comma-separated</span><input data-news-groups maxlength="650" value="${esc((item.affected_groups||[]).join(', '))}"></label>
+      <label><span>Effect on everyday life and household realities</span><textarea data-news-household maxlength="1000">${esc(item.household_impact||'')}</textarea></label>
+      <label><span>What Filipinos should watch or do next</span><textarea data-news-action maxlength="1000">${esc(item.public_interest_action||'')}</textarea></label>
+      <label><span>FMB Filipino-first perspective</span><textarea data-news-perspective maxlength="1200">${esc(item.fmb_perspective||'')}</textarea></label>
+      <label><span>Impact confidence</span><select data-news-confidence><option value="low" ${item.impact_confidence==='low'?'selected':''}>Low</option><option value="medium" ${item.impact_confidence==='medium'?'selected':''}>Medium</option><option value="high" ${item.impact_confidence==='high'?'selected':''}>High</option></select></label>
+      <div class="ops-news-actions"><button class="primary" type="button" data-news-decision="published">Publish</button><button type="button" data-news-decision="pending_review">Keep for review</button><button type="button" data-news-decision="needs_correction">Mark correction</button><button class="danger" type="button" data-news-decision="rejected">Reject</button></div>
     </article>`).join(''):'<div class="ops-news-empty">No stories match this review state.</div>';
     $$('[data-news-decision]').forEach(button=>button.addEventListener('click',()=>saveDecision(button)));
   }
   async function saveDecision(button){
-    const card=button.closest('[data-news-article]');const id=card.dataset.newsArticle;const status=button.dataset.newsDecision;const summary=clean(card.querySelector('[data-news-summary]').value,700)||null;const now=new Date().toISOString();
-    const payload={summary,status,updated_at:now,reviewed_by:user.id,reviewed_at:now,verification_status:status==='published'?'verified':status==='needs_correction'?'corrected':'imported',published_at:status==='published'?now:null,rejection_reason:status==='rejected'?'Rejected through the FMB News editorial queue.':null};
+    const card=button.closest('[data-news-article]');const id=card.dataset.newsArticle;const status=button.dataset.newsDecision;const now=new Date().toISOString();
+    const summary=clean(card.querySelector('[data-news-summary]').value,700);
+    const filipinoImpact=clean(card.querySelector('[data-news-impact]').value,1200);
+    const affectedGroups=groups(card.querySelector('[data-news-groups]').value);
+    const householdImpact=clean(card.querySelector('[data-news-household]').value,1000);
+    const publicInterestAction=clean(card.querySelector('[data-news-action]').value,1000);
+    const fmbPerspective=clean(card.querySelector('[data-news-perspective]').value,1200);
+    const impactConfidence=card.querySelector('[data-news-confidence]').value;
+    if(status==='published'&&(filipinoImpact.length<40||!affectedGroups.length||householdImpact.length<20||publicInterestAction.length<20||fmbPerspective.length<40||impactConfidence==='low')){
+      setStatus('Publication blocked: complete the Filipino impact, affected groups, everyday-life effect, public-interest next step, FMB perspective, and use medium or high confidence.','error');return;
+    }
+    const payload={summary:summary||null,filipino_impact:filipinoImpact||null,affected_groups:affectedGroups,household_impact:householdImpact||null,public_interest_action:publicInterestAction||null,fmb_perspective:fmbPerspective||null,impact_confidence:impactConfidence,editorial_lens_version:'fmb_filipino_first_v1',status,updated_at:now,reviewed_by:user.id,reviewed_at:now,verification_status:status==='published'?'verified':status==='needs_correction'?'corrected':'imported',published_at:status==='published'?now:null,auto_published:false,requires_review_reason:status==='published'?null:'Editorial decision required.',rejection_reason:status==='rejected'?'Rejected through the FMB News editorial queue.':null};
     loading(button,true,'Saving…');const {error}=await client.from('news_articles').update(payload).eq('id',id);loading(button,false);
     if(error){setStatus(error.message||'The editorial decision could not be saved.','error');return}setStatus(`Story moved to ${status.replaceAll('_',' ')}.`,'success');loadAll();
   }
@@ -125,12 +134,12 @@
   }
 
   $('#newsRunImport')?.addEventListener('click',async event=>{
-    const button=event.currentTarget;loading(button,true,'Importing…');setStatus('Checking approved feeds now.');
+    const button=event.currentTarget;loading(button,true,'Importing…');setStatus('Checking approved feeds and building the Filipino-first story structure.');
     try{
       const {data}=await client.auth.getSession();const token=data.session?.access_token;if(!token)throw new Error('Your secure session has expired.');
       const response=await fetch('/api/news/ingest',{method:'POST',headers:{Authorization:`Bearer ${token}`}});const payload=await response.json();
       if(!response.ok)throw new Error(payload.error||payload.detail||'The import failed.');
-      setStatus(`Import complete: ${payload.items_imported} new, ${payload.items_published} published.`,'success');await loadAll();
+      setStatus(`Import complete: ${payload.items_imported} new, ${payload.items_published} automatically published.`,'success');await loadAll();
     }catch(error){setStatus(error.message||'The import could not be completed.','error')}
     finally{loading(button,false)}
   });
@@ -140,6 +149,6 @@
   window.addEventListener('fmb:admin-ready',event=>{
     if(event.detail?.preview){setStatus('Newsroom data is paused in local design preview.');return}
     if(event.detail?.profile?.role!=='admin'){panel.hidden=true;return}
-    client=event.detail.client;user=event.detail.user;loadAll();
+    client=event.detail.client;user=event.detail.user;resetSourceForm();loadAll();
   },{once:true});
 })();
