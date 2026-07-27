@@ -9,6 +9,7 @@ const MAX_ITEMS_PER_SOURCE = 15;
 const MAX_FEED_BYTES = 2 * 1024 * 1024;
 const MAX_REDIRECTS = 3;
 const HIGH_RISK_PATTERN = /\b(alleg(?:ed|ation|ations)|accus(?:ed|ation|ations)|arrest(?:ed|s)?|charg(?:ed|es)|crime|criminal|corrupt(?:ion)?|court|dead|death|disease|drug|election|fraud|government|governor|health|hospital|killed|lawsuit|legal|mayor|medical|military|murder|police|politic(?:s|al)?|president|rape|senate|sexual|suicide|violence|weapon)\b/i;
+const PUBLISHABLE_CONFIDENCE = new Set(['medium', 'high']);
 
 function send(res, status, payload) {
   res.statusCode = status;
@@ -59,11 +60,11 @@ async function verifyAdminJwt(token) {
   const baseUrl = env('SUPABASE_URL').replace(/\/$/, '');
   const key = publicKey();
   if (!token || !baseUrl || !key) return false;
-  const userResponse = await fetch(`${baseUrl}/auth/v1/user`, {
+  const response = await fetch(`${baseUrl}/auth/v1/user`, {
     headers: { apikey: key, Authorization: `Bearer ${token}` }
   });
-  if (!userResponse.ok) return false;
-  const user = await userResponse.json();
+  if (!response.ok) return false;
+  const user = await response.json();
   if (!user?.id) return false;
   const rows = await supabase(`profiles?id=eq.${encodeURIComponent(user.id)}&select=role,status&limit=1`);
   return rows?.[0]?.role === 'admin' && rows?.[0]?.status === 'active';
@@ -79,14 +80,10 @@ async function authorize(req) {
   const authorization = String(req.headers.authorization || '');
   const bearer = authorization.startsWith('Bearer ') ? authorization.slice(7).trim() : '';
   const cronSecret = env('CRON_SECRET');
-  if (cronSecret && safeEqual(bearer, cronSecret)) {
-    return { ok: true, trigger: 'cron' };
-  }
+  if (cronSecret && safeEqual(bearer, cronSecret)) return { ok: true, trigger: 'cron' };
   const manualSecret = env('NEWS_ADMIN_TOKEN');
   const providedManual = String(req.headers['x-news-admin-token'] || '');
-  if (manualSecret && safeEqual(providedManual, manualSecret)) {
-    return { ok: true, trigger: 'manual' };
-  }
+  if (manualSecret && safeEqual(providedManual, manualSecret)) return { ok: true, trigger: 'manual' };
   if (bearer && await verifyAdminJwt(bearer)) return { ok: true, trigger: 'manual' };
   return { ok: false, trigger: 'manual' };
 }
@@ -94,19 +91,17 @@ async function authorize(req) {
 function isPrivateIp(address) {
   const value = String(address || '').toLowerCase().split('%')[0];
   if (net.isIP(value) === 4) {
-    const parts = value.split('.').map(Number);
-    const [a, b] = parts;
+    const [a, b] = value.split('.').map(Number);
     return a === 0 || a === 10 || a === 127 ||
       (a === 100 && b >= 64 && b <= 127) ||
       (a === 169 && b === 254) ||
       (a === 172 && b >= 16 && b <= 31) ||
       (a === 192 && b === 168) ||
-      (a === 198 && (b === 18 || b === 19)) ||
-      a >= 224;
+      (a === 198 && (b === 18 || b === 19)) || a >= 224;
   }
   if (net.isIP(value) === 6) {
     if (value === '::' || value === '::1') return true;
-    if (value.startsWith('fc') || value.startsWith('fd') || value.startsWith('fe8') || value.startsWith('fe9') || value.startsWith('fea') || value.startsWith('feb')) return true;
+    if (/^(?:fc|fd|fe8|fe9|fea|feb)/.test(value)) return true;
     const mapped = value.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/);
     return mapped ? isPrivateIp(mapped[1]) : false;
   }
@@ -127,7 +122,9 @@ async function assertPublicFeedUrl(value) {
   let parsed;
   try { parsed = new URL(String(value || '').trim()); }
   catch { throw new Error('Feed URL is invalid.'); }
-  if (parsed.protocol !== 'https:' || parsed.username || parsed.password) throw new Error('Feed URL must use public HTTPS without embedded credentials.');
+  if (parsed.protocol !== 'https:' || parsed.username || parsed.password) {
+    throw new Error('Feed URL must use public HTTPS without embedded credentials.');
+  }
   const hostname = parsed.hostname.toLowerCase();
   if (!hostname || hostname === 'localhost' || hostname.endsWith('.localhost') || hostname.endsWith('.local') || hostname.endsWith('.internal')) {
     throw new Error('Private or local feed hosts are not allowed.');
@@ -135,7 +132,9 @@ async function assertPublicFeedUrl(value) {
   if (net.isIP(hostname) && isPrivateIp(hostname)) throw new Error('Private network feed addresses are not allowed.');
   if (!net.isIP(hostname)) {
     const records = await dns.lookup(hostname, { all: true, verbatim: true });
-    if (!records.length || records.some((record) => isPrivateIp(record.address))) throw new Error('Feed host does not resolve to a public network address.');
+    if (!records.length || records.some((record) => isPrivateIp(record.address))) {
+      throw new Error('Feed host does not resolve to a public network address.');
+    }
   }
   return parsed;
 }
@@ -254,9 +253,37 @@ function inferRisk(source, item) {
   return source.risk_level || 'medium';
 }
 
-async function createSummary(item, source) {
+function editorialPackageComplete(editorial) {
+  return String(editorial.filipinoImpact || '').trim().length >= 40 &&
+    Array.isArray(editorial.affectedGroups) && editorial.affectedGroups.length >= 1 &&
+    String(editorial.householdImpact || '').trim().length >= 20 &&
+    String(editorial.publicInterestAction || '').trim().length >= 20 &&
+    String(editorial.fmbPerspective || '').trim().length >= 40 &&
+    PUBLISHABLE_CONFIDENCE.has(editorial.impactConfidence);
+}
+
+function reviewReason({ source, risk, editorial }) {
+  if (!source.auto_publish) return 'Automatic publishing is disabled for this source.';
+  if (risk === 'high') return 'Sensitive subject requires human review.';
+  if (!editorialPackageComplete(editorial)) return 'Filipino impact analysis is incomplete or insufficiently supported.';
+  return null;
+}
+
+async function createEditorialPackage(item, source) {
   const apiKey = env('OPENAI_API_KEY');
-  if (!apiKey || !item.excerpt) return { summary: truncate(item.excerpt, 420), ai: false };
+  const fallback = {
+    summary: truncate(item.excerpt, 420),
+    filipinoImpact: '',
+    affectedGroups: [],
+    householdImpact: '',
+    publicInterestAction: '',
+    fmbPerspective: '',
+    impactConfidence: 'low',
+    seoDescription: truncate(item.excerpt, 155),
+    ai: false
+  };
+  if (!apiKey || !item.excerpt) return fallback;
+
   const response = await fetch('https://api.openai.com/v1/responses', {
     method: 'POST',
     headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
@@ -265,37 +292,62 @@ async function createSummary(item, source) {
       input: [
         {
           role: 'developer',
-          content: 'Create a neutral, concise news brief using only the supplied title and excerpt. Do not add facts, names, numbers, motives, or context not present. Return only valid JSON with keys summary and seo_description. The summary must be 2 to 3 sentences and the SEO description must be under 155 characters.'
+          content: `Create a source-bound FMB News editorial package using only the supplied title and excerpt. Never invent facts, numbers, motives, causes, outcomes, or context. Return only valid JSON with these keys: summary, filipino_impact, affected_groups, household_impact, public_interest_action, fmb_perspective, impact_confidence, seo_description.
+
+Rules:
+- summary: neutral factual brief, 2 to 3 sentences.
+- filipino_impact: directly answer “What does this mean for Filipinos?” in plain language. Focus on practical public outcomes, not personalities.
+- affected_groups: JSON array of 1 to 6 concise Filipino groups genuinely supported by the source. Consider workers, low-income households, rural communities, small businesses, students, seniors, persons with disabilities, women, LGBTQIA+ people, commuters, consumers, and overseas Filipinos only when relevant. Do not assume a group without evidence.
+- household_impact: explain likely effects on daily expenses, income, jobs, services, safety, rights, time, or opportunity. If no immediate effect is established, say that clearly and name what remains uncertain.
+- public_interest_action: explain what Filipinos should watch, verify, prepare for, ask, or demand next. No alarmism.
+- fmb_perspective: a Filipino-first, class-inclusive, non-partisan editorial view. Center ordinary Filipinos across income levels, especially poor and vulnerable communities when relevant. Evaluate policies and outcomes, never praise or attack a politician or public figure, never use campaign language, and never center the story on elite access or privilege.
+- impact_confidence: high, medium, or low based only on how strongly the source supports the impact analysis.
+- seo_description: under 155 characters.
+
+When the supplied excerpt is not enough to support a practical impact, use impact_confidence “low” and clearly state what is not yet known.`
         },
         {
           role: 'user',
-          content: `Source: ${source.name}\nTitle: ${item.title}\nExcerpt: ${item.excerpt}`
+          content: `Source: ${source.name}\nCategory: ${source.category || 'Philippines'}\nRegion: ${source.region || 'Philippines'}\nTitle: ${item.title}\nExcerpt: ${item.excerpt}`
         }
       ],
-      max_output_tokens: 260
+      max_output_tokens: 900
     })
   });
-  if (!response.ok) throw new Error(`OpenAI summarization failed with ${response.status}.`);
+  if (!response.ok) throw new Error(`OpenAI editorial package failed with ${response.status}.`);
   const payload = await response.json();
   const outputText = payload.output_text || payload.output?.flatMap((entry) => entry.content || []).find((entry) => entry.type === 'output_text')?.text || '';
   const cleaned = String(outputText).replace(/^```json\s*|\s*```$/g, '').trim();
   const parsed = JSON.parse(cleaned);
+  const groups = Array.isArray(parsed.affected_groups)
+    ? parsed.affected_groups.map((group) => truncate(stripHtml(group), 100)).filter(Boolean).slice(0, 6)
+    : [];
+  const confidence = ['low', 'medium', 'high'].includes(parsed.impact_confidence) ? parsed.impact_confidence : 'low';
   return {
-    summary: truncate(stripHtml(parsed.summary), 700) || truncate(item.excerpt, 420),
+    summary: truncate(stripHtml(parsed.summary), 700) || fallback.summary,
+    filipinoImpact: truncate(stripHtml(parsed.filipino_impact), 1200),
+    affectedGroups: groups,
+    householdImpact: truncate(stripHtml(parsed.household_impact), 1000),
+    publicInterestAction: truncate(stripHtml(parsed.public_interest_action), 1000),
+    fmbPerspective: truncate(stripHtml(parsed.fmb_perspective), 1200),
+    impactConfidence: confidence,
     seoDescription: truncate(stripHtml(parsed.seo_description), 155),
     ai: true
   };
 }
 
 async function fetchSource(source) {
-  const headers = { Accept: 'application/rss+xml, application/atom+xml, application/feed+json, application/json, text/xml;q=0.9, */*;q=0.5', 'User-Agent': 'FMB-News-Ingestion/1.0 (+https://www.francinemariebautista.com/news/)' };
+  const headers = {
+    Accept: 'application/rss+xml, application/atom+xml, application/feed+json, application/json, text/xml;q=0.9, */*;q=0.5',
+    'User-Agent': 'FMB-News-Ingestion/2.0 (+https://www.francinemariebautista.com/news/)'
+  };
   if (source.etag) headers['If-None-Match'] = source.etag;
   if (source.last_modified) headers['If-Modified-Since'] = source.last_modified;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 12000);
   try {
     const response = await fetchPublicFeed(source.feed_url, { headers, signal: controller.signal });
-    if (response.status === 304) return { items: [], notModified: true, etag: source.etag, lastModified: source.last_modified };
+    if (response.status === 304) return { items: [], etag: source.etag, lastModified: source.last_modified };
     if (!response.ok) throw new Error(`Feed returned ${response.status}.`);
     const contentType = response.headers.get('content-type') || '';
     const contentLength = Number(response.headers.get('content-length') || 0);
@@ -317,7 +369,7 @@ async function fetchSource(source) {
     } else {
       items = parseFeed(text, source);
     }
-    return { items, notModified: false, etag: response.headers.get('etag'), lastModified: response.headers.get('last-modified') };
+    return { items, etag: response.headers.get('etag'), lastModified: response.headers.get('last-modified') };
   } finally {
     clearTimeout(timeout);
   }
@@ -356,13 +408,26 @@ async function ingest(trigger) {
         for (const item of feed.items) {
           try {
             const risk = inferRisk(source, item);
-            let summary;
-            try { summary = await createSummary(item, source); }
-            catch (error) {
-              summary = { summary: truncate(item.excerpt, 420), ai: false };
+            let editorial;
+            try {
+              editorial = await createEditorialPackage(item, source);
+            } catch (error) {
+              editorial = {
+                summary: truncate(item.excerpt, 420),
+                filipinoImpact: '',
+                affectedGroups: [],
+                householdImpact: '',
+                publicInterestAction: '',
+                fmbPerspective: '',
+                impactConfidence: 'low',
+                seoDescription: truncate(item.excerpt, 155),
+                ai: false
+              };
               errors.push(`${source.name}: ${error.message}`);
             }
-            const canAutoPublish = Boolean(source.auto_publish && risk === 'low');
+            const reason = reviewReason({ source, risk, editorial });
+            const canAutoPublish = !reason;
+            const publishedAt = canAutoPublish ? new Date().toISOString() : null;
             const article = {
               source_id: source.id,
               source_item_id: item.guid || item.url,
@@ -371,7 +436,16 @@ async function ingest(trigger) {
               title: item.title,
               slug: slugify(item.title, item.url),
               source_excerpt: item.excerpt || null,
-              summary: summary.summary || null,
+              summary: editorial.summary || null,
+              filipino_impact: editorial.filipinoImpact || null,
+              affected_groups: editorial.affectedGroups,
+              household_impact: editorial.householdImpact || null,
+              public_interest_action: editorial.publicInterestAction || null,
+              fmb_perspective: editorial.fmbPerspective || null,
+              impact_confidence: editorial.impactConfidence,
+              editorial_lens_version: 'fmb_filipino_first_v1',
+              auto_published: canAutoPublish,
+              requires_review_reason: reason,
               category: source.category || 'Philippines',
               region: source.region || null,
               author_line: item.author || null,
@@ -379,11 +453,11 @@ async function ingest(trigger) {
               status: canAutoPublish ? 'published' : 'pending_review',
               risk_level: risk,
               verification_status: canAutoPublish ? 'verified' : 'imported',
-              is_ai_assisted: Boolean(summary.ai),
+              is_ai_assisted: Boolean(editorial.ai),
               seo_title: truncate(item.title, 70),
-              seo_description: summary.seoDescription || truncate(summary.summary || item.excerpt, 155) || null,
+              seo_description: editorial.seoDescription || truncate(editorial.summary || item.excerpt, 155) || null,
               source_published_at: item.publishedAt,
-              published_at: canAutoPublish ? new Date().toISOString() : null
+              published_at: publishedAt
             };
             const inserted = await supabase('news_articles?on_conflict=source_url', {
               method: 'POST',
