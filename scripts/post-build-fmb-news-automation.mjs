@@ -9,10 +9,10 @@ const publicSection=`
   <section class="news-auto-section" id="automated-desk" aria-labelledby="automatedDeskTitle">
     <div class="wrap">
       <div class="news-auto-head nc-reveal">
-        <div><p class="nc-kicker">Live automated desk</p><h2 id="automatedDeskTitle">New reports, collected with guardrails.</h2><p>Approved feeds are checked automatically. Sensitive stories wait for human review. Every published brief keeps the original source visible.</p></div>
+        <div><p class="nc-kicker">Filipino-first live desk</p><h2 id="automatedDeskTitle">Every story must answer: what is in it for Filipinos?</h2><p>Approved reports publish automatically when they pass the source, safety, and Filipino-impact rules. Sensitive or weakly supported stories stop for human review.</p></div>
         <div class="news-auto-pulse" aria-live="polite"><span id="automatedNewsStatus">Connecting to the desk</span><time id="automatedNewsUpdated">Philippine Standard Time</time></div>
       </div>
-      <div class="news-auto-grid" id="automatedNewsGrid" aria-live="polite"><div class="news-auto-empty"><strong>Loading the live desk.</strong><p>Checking published newsroom records.</p></div></div>
+      <div class="news-auto-grid" id="automatedNewsGrid" aria-live="polite"><div class="news-auto-empty"><strong>Loading the Filipino-first desk.</strong><p>Checking published newsroom records.</p></div></div>
     </div>
   </section>
   <!-- FMB_NEWS_AUTOMATION_END -->
@@ -20,16 +20,16 @@ const publicSection=`
 
 const adminPanel=`
 <section class="admin-panel orchestrator-panel" id="newsroomPanel" hidden>
-  <header class="orchestrator-page-head"><div><h1>Newsroom Automation</h1><p>Connect approved feeds, review imported briefs, publish low-risk updates, and keep a visible audit trail.</p></div><div class="orchestrator-head-actions"><button class="ops-button secondary" id="newsRefresh" type="button">Refresh</button><button class="ops-button" id="newsRunImport" type="button">Run import now</button></div></header>
+  <header class="orchestrator-page-head"><div><h1>Newsroom Automation</h1><p>Approved sources publish automatically when the story has a complete Filipino-first analysis and passes the risk rules.</p></div><div class="orchestrator-head-actions"><button class="ops-button secondary" id="newsRefresh" type="button">Refresh</button><button class="ops-button" id="newsRunImport" type="button">Run import now</button></div></header>
   <div class="ops-news-status" id="newsroomStatus" role="status" aria-live="polite"></div>
-  <div class="ops-newsroom-metrics"><article><strong id="newsMetricSources">0</strong><span>Active sources</span></article><article><strong id="newsMetricPending">0</strong><span>Awaiting review</span></article><article><strong id="newsMetricPublished">0</strong><span>Published briefs</span></article><article><strong id="newsMetricCorrections">0</strong><span>Corrections</span></article></div>
+  <div class="ops-newsroom-metrics"><article><strong id="newsMetricSources">0</strong><span>Active sources</span></article><article><strong id="newsMetricPending">0</strong><span>Stopped for review</span></article><article><strong id="newsMetricPublished">0</strong><span>Published briefs</span></article><article><strong id="newsMetricCorrections">0</strong><span>Corrections</span></article></div>
   <div class="ops-newsroom-grid">
     <div>
-      <section class="ops-surface"><div class="ops-section-head"><div><h2>Editorial queue</h2><p>Imported material remains private until it meets the selected publication rule.</p></div><label><span>View</span><select id="newsReviewFilter"><option value="pending_review">Awaiting review</option><option value="published">Published</option><option value="needs_correction">Needs correction</option><option value="rejected">Rejected</option><option value="all">All</option></select></label></div><div class="ops-news-reviews" id="newsReviewList"><div class="ops-news-empty">Loading editorial queue…</div></div></section>
+      <section class="ops-surface"><div class="ops-section-head"><div><h2>Exception queue</h2><p>Only stories that fail a safeguard, lack evidence, or involve a sensitive subject should appear here.</p></div><label><span>View</span><select id="newsReviewFilter"><option value="pending_review">Stopped for review</option><option value="published">Published</option><option value="needs_correction">Needs correction</option><option value="rejected">Rejected</option><option value="all">All</option></select></label></div><div class="ops-news-reviews" id="newsReviewList"><div class="ops-news-empty">Loading exception queue…</div></div></section>
       <section class="ops-surface"><div class="ops-section-head"><div><h2>Ingestion history</h2><p>Each scheduled or manual check records what happened.</p></div></div><div class="ops-news-runs" id="newsRunList"><div class="ops-news-empty">Loading run history…</div></div></section>
     </div>
     <aside>
-      <section class="ops-surface"><div class="ops-section-head"><div><h2>Approved source</h2><p>Use a publisher's official RSS, Atom, or JSON feed. Do not add rumor pages or scraped social posts.</p></div></div>
+      <section class="ops-surface"><div class="ops-section-head"><div><h2>Approved source</h2><p>Use a publisher's official RSS, Atom, or JSON feed. Approval applies to the source, not to every individual low-risk story.</p></div></div>
         <form class="ops-news-source-form" id="newsSourceForm" novalidate>
           <input id="newsSourceId" type="hidden">
           <label><span>Source name</span><input id="newsSourceName" maxlength="160" required></label>
@@ -40,12 +40,12 @@ const adminPanel=`
           <label><span>Region or locality</span><input id="newsSourceRegion" maxlength="120" placeholder="Zambales"></label>
           <label><span>Default risk</span><select id="newsSourceRisk"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></label>
           <label><span>Rights or usage note</span><input id="newsSourceRights" maxlength="1000" placeholder="Headlines and summaries only; link to original"></label>
-          <div class="ops-news-checks"><label><input id="newsSourceActive" type="checkbox" checked><span>Active</span></label><label><input id="newsSourceAuto" type="checkbox"><span>Auto-publish low-risk items</span></label></div>
+          <div class="ops-news-checks"><label><input id="newsSourceActive" type="checkbox" checked><span>Active</span></label><label><input id="newsSourceAuto" type="checkbox" checked><span>Publish automatically when safeguards pass</span></label></div>
           <div class="ops-news-form-actions"><button class="ops-button" id="newsSaveSource" type="submit">Save source</button><button class="ops-button secondary" id="newsNewSource" type="button">New</button></div>
         </form>
       </section>
       <section class="ops-surface"><div class="ops-section-head"><div><h2>Connected feeds</h2><p>Pause a feed immediately when its quality, ownership, or terms change.</p></div></div><div class="ops-news-sources" id="newsSourceList"><div class="ops-news-empty">Loading sources…</div></div></section>
-      <section class="ops-guardrail"><strong>Default: review first.</strong><p>Crime, politics, health, allegations, legal disputes, and stories involving private people are automatically escalated to high risk and cannot auto-publish.</p></section>
+      <section class="ops-guardrail"><strong>Base rule: publish by safeguards.</strong><p>Every public story requires a Filipino impact, affected groups, everyday-life effect, public-interest next step, and a non-partisan FMB perspective centered on ordinary Filipinos. Politics, crime, health, allegations, legal disputes, violence, deaths, and weakly supported impacts stop for review.</p></section>
     </aside>
   </div>
 </section>
@@ -56,18 +56,18 @@ function write(file,content){fs.writeFileSync(file,content,'utf8');console.log(`
 for(const relative of ['news/index.html','news.html']){
   const file=path.join(dist,relative);if(!fs.existsSync(file))continue;
   let html=fs.readFileSync(file,'utf8');
-  if(!html.includes('newsroom-automation.css'))html=html.replace('</head>','<link rel="stylesheet" href="/assets/css/newsroom-automation.css?v=20260727a">\n</head>');
+  if(!html.includes('newsroom-automation.css'))html=html.replace('</head>','<link rel="stylesheet" href="/assets/css/newsroom-automation.css?v=20260727b">\n</head>');
   if(!html.includes('FMB_NEWS_AUTOMATION_START'))html=html.replace('<section class="nc-context-feature"',`${publicSection}\n<section class="nc-context-feature"`);
-  if(!html.includes('/assets/js/news-feed.js'))html=html.replace('<script defer src="/assets/js/news-channel.js',`<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>\n<script src="/assets/js/config.js?v=20260715-member-launch"></script>\n<script src="/assets/js/supabase-client.js"></script>\n<script defer src="/assets/js/news-feed.js?v=20260727a"></script>\n<script defer src="/assets/js/news-channel.js`);
+  if(!html.includes('/assets/js/news-feed.js'))html=html.replace('<script defer src="/assets/js/news-channel.js',`<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>\n<script src="/assets/js/config.js?v=20260715-member-launch"></script>\n<script src="/assets/js/supabase-client.js"></script>\n<script defer src="/assets/js/news-feed.js?v=20260727b"></script>\n<script defer src="/assets/js/news-channel.js`);
   write(file,html);
 }
 
 const adminFile=path.join(dist,'admin.html');
 if(fs.existsSync(adminFile)){
   let html=fs.readFileSync(adminFile,'utf8');
-  if(!html.includes('newsroom-automation.css'))html=html.replace('</head>','<link rel="stylesheet" href="/assets/css/newsroom-automation.css?v=20260727a">\n</head>');
+  if(!html.includes('newsroom-automation.css'))html=html.replace('</head>','<link rel="stylesheet" href="/assets/css/newsroom-automation.css?v=20260727b">\n</head>');
   if(!html.includes('data-admin-panel="newsroomPanel"'))html=html.replace('<button data-admin-only data-admin-panel="analyticsPanel"', '<button data-admin-only data-admin-panel="newsroomPanel" data-panel-title="Newsroom Automation"><i data-icon="content"></i>Newsroom Automation <b id="navNewsPending">0</b></button><button data-admin-only data-admin-panel="analyticsPanel"');
   if(!html.includes('id="newsroomPanel"'))html=html.replace('<section class="admin-panel" id="membersPanel" hidden>',`${adminPanel}\n<section class="admin-panel" id="membersPanel" hidden>`);
-  if(!html.includes('/assets/js/newsroom-admin.js'))html=html.replace('</body>','<script src="/assets/js/newsroom-admin.js?v=20260727a"></script>\n</body>');
+  if(!html.includes('/assets/js/newsroom-admin.js'))html=html.replace('</body>','<script src="/assets/js/newsroom-admin.js?v=20260727b"></script>\n</body>');
   write(adminFile,html);
 }
