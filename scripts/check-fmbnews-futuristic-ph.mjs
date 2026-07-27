@@ -82,12 +82,15 @@ for (const marker of requiredCssMarkers) {
 }
 
 const requiredReadabilityMarkers = [
+  'single visual authority',
   '.nc-newsroom-title .nc-hero-summary',
-  'color: #46505f !important',
+  'color: var(--fmbnews-muted) !important',
   '.nc-wire-track span',
   'grid-template-rows: auto auto !important',
   'aspect-ratio: 4 / 3 !important',
   'content-visibility: visible !important',
+  '.nc-site-header',
+  'border-radius: 18px !important',
 ];
 for (const marker of requiredReadabilityMarkers) {
   if (!readabilityCss.includes(marker)) fail(`readability CSS is missing ${marker}`);
@@ -101,4 +104,4 @@ if (sitemap.includes('<loc>https://www.francinemariebautista.com/news/</loc>')) 
   fail('sitemap.xml still exposes the old landing URL as a separate canonical page');
 }
 
-console.log('Verified /fmbnews canonical routing, preserved newsroom content, Philippine sun and three stars, blue-yellow depth system, readable gray surfaces, undarkened imagery, corrected hero contrast, mobile lead sizing, responsive safeguards, and launch-gate stylesheet order.');
+console.log('Verified /fmbnews canonical routing, preserved newsroom content, restrained Philippine identity, compact masthead, simplified navigation, editorial card hierarchy, readable gray surfaces, undarkened imagery, mobile lead sizing, reduced-motion support, and launch-gate stylesheet order.');
