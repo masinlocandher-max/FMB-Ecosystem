@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { ACTIVE_TRACKS } from "@/lib/curriculum";
-import { CheckCircle, Loader2, ShieldCheck, Clock3 } from "lucide-react";
+import { CheckCircle, Clock3, Loader2, Mail, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,32 +13,58 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/lib/AuthContext";
 import { OFFICIAL_EMAILS } from "@/lib/governance";
 
+const initialForm = {
+  full_name: "",
+  email: "",
+  phone: "",
+  location: "",
+  preferred_track: "",
+  occupation: "",
+  ai_skill_level: 5,
+  tech_skill_level: 5,
+  available_hours: 10,
+  why_apply: "",
+  production_goals: "",
+  understands_no_auto_cert: false,
+  agrees_to_submit_weekly: false,
+  accepts_terms: false,
+  accepts_privacy: false,
+};
+
 export default function Apply() {
   const { backendAvailable } = useAuth();
-  const [form, setForm] = useState({
-    full_name: "", email: "", phone: "", location: "",
-    preferred_track: "", occupation: "",
-    ai_skill_level: 5, tech_skill_level: 5, available_hours: 10,
-    why_apply: "", production_goals: "",
-    understands_no_auto_cert: false, agrees_to_submit_weekly: false,
-    accepts_terms: false, accepts_privacy: false,
-  });
+  const [form, setForm] = useState(initialForm);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submissionMode, setSubmissionMode] = useState("database");
   const [error, setError] = useState("");
 
   const handleChange = (field, value) => setForm((current) => ({ ...current, [field]: value }));
 
   const buildInterestSummary = () => [
-    `Location: ${form.location}`,
-    `Occupation or student status: ${form.occupation}`,
+    `Applicant: ${form.full_name.trim()}`,
+    `Email: ${form.email.trim().toLowerCase()}`,
+    `Phone: ${form.phone.trim()}`,
+    `Location: ${form.location.trim()}`,
+    `Preferred track: ${form.preferred_track}`,
+    `Occupation or student status: ${form.occupation.trim()}`,
     `Current AI skill: ${form.ai_skill_level}/10`,
     `Current technology skill: ${form.tech_skill_level}/10`,
     `Available study time: ${form.available_hours} hours per week`,
-    `Reason for applying: ${form.why_apply}`,
-    `Expected 10-week output: ${form.production_goals}`,
+    `Reason for applying: ${form.why_apply.trim()}`,
+    `Expected 10-week output: ${form.production_goals.trim()}`,
     "Applicant understands that completion and credentialing require human-reviewed work and are not automatic.",
   ].join("\n\n");
+
+  const openEmailFallback = (interestSummary) => {
+    const subject = `Cognita Waitlist Application - ${form.full_name.trim()}`;
+    const body = `${interestSummary}\n\nSubmitted through the Cognita Institute website.`;
+    const mailto = `mailto:${OFFICIAL_EMAILS.admissions}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    setSubmissionMode("email");
+    setSubmitted(true);
+    window.location.assign(mailto);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -58,6 +84,12 @@ export default function Apply() {
     const email = form.email.trim().toLowerCase();
     const interestSummary = buildInterestSummary();
 
+    if (!backendAvailable) {
+      openEmailFallback(interestSummary);
+      setSubmitting(false);
+      return;
+    }
+
     try {
       try {
         await base44.entities.Waitlist.create({
@@ -70,8 +102,6 @@ export default function Apply() {
           status: "New",
         });
       } catch {
-        // Preserve applicant intake on installations where the existing Lead
-        // entity is available before Waitlist synchronization is completed.
         await base44.entities.Lead.create({
           full_name: form.full_name.trim(),
           email,
@@ -84,32 +114,44 @@ export default function Apply() {
         });
       }
 
+      setSubmissionMode("database");
       setSubmitted(true);
-    } catch (submissionError) {
-      setError(
-        submissionError?.message ||
-        `Applicant intake is temporarily unavailable. Please email ${OFFICIAL_EMAILS.admissions} with the subject “Cognita Waitlist Application.”`
-      );
+    } catch {
+      openEmailFallback(interestSummary);
     } finally {
       setSubmitting(false);
     }
   };
 
   if (submitted) {
+    const emailFallback = submissionMode === "email";
+
     return (
       <div className="apple-surface flex min-h-[76vh] items-center justify-center px-5 py-24 sm:px-6">
         <div className="apple-card max-w-lg p-8 text-center md:p-10">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-sky-300/15 bg-sky-300/[0.07]">
-            <CheckCircle size={30} className="text-sky-300" />
+            {emailFallback ? <Mail size={30} className="text-sky-300" /> : <CheckCircle size={30} className="text-sky-300" />}
           </div>
           <p className="apple-eyebrow mt-7">Cognita Professional Programs</p>
-          <h1 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-white">Application received</h1>
+          <h1 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-white">
+            {emailFallback ? "Your application email is ready" : "Application received"}
+          </h1>
           <p className="mt-4 text-sm leading-7 text-slate-400">
-            Your application has been recorded and placed on the Cognita launch waitlist. Admissions will contact applicants in order of program readiness, track capacity, and available cohort schedules.
+            {emailFallback
+              ? `Your email app has been opened with the complete application addressed to ${OFFICIAL_EMAILS.admissions}. Review it and press Send to complete your submission.`
+              : "Your application has been recorded and placed on the Cognita launch waitlist. Admissions will contact applicants in order of program readiness, track capacity, and available cohort schedules."}
           </p>
           <p className="mt-4 text-xs leading-6 text-slate-500">
             Being placed on the waitlist is not yet an enrollment offer, payment request, or guarantee of admission.
           </p>
+          {emailFallback && (
+            <a
+              href={`mailto:${OFFICIAL_EMAILS.admissions}?subject=${encodeURIComponent(`Cognita Waitlist Application - ${form.full_name.trim()}`)}&body=${encodeURIComponent(buildInterestSummary())}`}
+              className="apple-button-primary mt-7 inline-flex min-h-11 items-center justify-center rounded-full px-6 text-sm font-semibold text-slate-950"
+            >
+              Open the application email again
+            </a>
+          )}
         </div>
       </div>
     );
@@ -120,18 +162,16 @@ export default function Apply() {
       <div className="mx-auto max-w-3xl">
         <div className="mb-10 max-w-2xl">
           <p className="apple-eyebrow">Cognita Professional Programs</p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-[-0.05em] text-white md:text-6xl">
-            Apply for the launch waitlist
-          </h1>
+          <h1 className="mt-4 text-4xl font-semibold tracking-[-0.05em] text-white md:text-6xl">Apply for the launch waitlist</h1>
           <p className="mt-5 text-base leading-7 text-slate-400 md:text-lg">
-            Cognita is accepting applications while final learner operations are being prepared. Every complete application is placed on the waitlist for the next available 10-Week Professional AI Program cohort.
+            Cognita is accepting applications for the next available 10-Week Professional AI Program cohort. Complete applications enter the admissions review process.
           </p>
         </div>
 
         <div className="mb-6 flex items-start gap-3 rounded-2xl border border-amber-300/15 bg-amber-300/[0.045] p-5">
           <Clock3 size={19} className="mt-0.5 flex-shrink-0 text-amber-200" />
           <p className="text-sm leading-6 text-slate-300/85">
-            Applications are open, but enrollment and payment are not yet automatic. Cognita will contact waitlisted applicants only when the relevant cohort, learner support, and human-review capacity are ready.
+            Applications are open. Enrollment and payment are issued only after Cognita confirms cohort capacity and human-review support.
           </p>
         </div>
 
@@ -143,8 +183,11 @@ export default function Apply() {
         </div>
 
         {!backendAvailable && (
-          <div className="mb-6 rounded-2xl border border-orange-300/15 bg-orange-300/[0.04] p-5 text-sm leading-6 text-slate-300/85">
-            The public website is available, but the applicant database connection is still being finalized. You may complete the form; if submission fails, email <a href={`mailto:${OFFICIAL_EMAILS.admissions}?subject=Cognita%20Waitlist%20Application`} className="text-sky-300 hover:underline">{OFFICIAL_EMAILS.admissions}</a>.
+          <div className="mb-6 flex items-start gap-3 rounded-2xl border border-orange-300/15 bg-orange-300/[0.04] p-5">
+            <Mail size={19} className="mt-0.5 flex-shrink-0 text-orange-200" />
+            <p className="text-sm leading-6 text-slate-300/85">
+              The applicant database is being finalized. The form still works: after submission, your device will prepare a complete application email to {OFFICIAL_EMAILS.admissions} so no applicant is lost.
+            </p>
           </div>
         )}
 
