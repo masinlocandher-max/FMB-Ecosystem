@@ -56,6 +56,21 @@ body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home .fmb-approv
   -webkit-mask-image: linear-gradient(to left, #000 64%, transparent) !important;
 }
 
+body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home .fmb-yoni-senz-ad__senz {
+  color: #fff !important;
+  text-decoration: none !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home .fmb-yoni-senz-ad__senz :is(span, strong) {
+  color: #fff !important;
+  text-decoration: none !important;
+}
+
+body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home .fmb-yoni-senz-ad__senz small {
+  color: #8fd3ff !important;
+  text-decoration: none !important;
+}
+
 @media (max-width: 1180px) {
   body.fmb-corporate-luxury-v2.fmb-approved-dashboard.fmb-unified-home .fmb-approved-quote {
     padding-right: 116px !important;
