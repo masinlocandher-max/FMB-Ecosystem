@@ -14,6 +14,10 @@
       const {data,error}=await client.from('news_articles').select('*').eq('slug',slug).eq('status','published').maybeSingle();
       if(error)throw error;if(!data){fail('This brief is not public, or it may have been moved for correction.');return}
       document.title=`${data.title} | FMB News`;
+      const canonical=document.getElementById('newsStoryCanonical');
+      if(canonical)canonical.href=`https://www.francinemariebautista.com/news/story.html?slug=${encodeURIComponent(data.slug)}`;
+      const description=document.getElementById('newsStoryDescription');
+      if(description)description.content=String(data.seo_description||data.summary||data.source_excerpt||'A source-attributed published brief from FMB News.').slice(0,160);
       const content=data.body?paragraphs(data.body):paragraphs(data.summary||data.source_excerpt);
       const disclosure=data.is_ai_assisted?'Technology assisted with the first summary. Publication remains governed by FMB News source and correction standards.':'This brief was prepared from the credited source and reviewed under FMB News publication rules.';
       shell.innerHTML=`
