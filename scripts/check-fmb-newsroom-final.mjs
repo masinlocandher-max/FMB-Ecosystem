@@ -55,12 +55,17 @@ function assertChannelIdentity(html, fileName) {
   if (html.includes('THE NEWSROOM')) fail(`${fileName} still uses the retired Newsroom masthead`);
   if (retiredFashionFontImport.test(html)) fail(`${fileName} still imports the retired fashion-editorial typeface`);
   if (visibleRetiredLogo.test(html)) fail(`${fileName} visibly renders the retired News logo`);
+  if (!html.includes('FMB News Center approved red-white channel system')) fail(`${fileName} is missing the approved white-red visual layer`);
+  if (!html.includes('--fmb-approved-red: #d0001b')) fail(`${fileName} is missing the approved signal-red token`);
+  if (!html.includes('background: #fff !important')) fail(`${fileName} is missing the approved white newsroom canvas`);
 }
 
 const landing = await readFile(landingPath, 'utf8');
 assertChannelIdentity(landing, 'news/index.html');
 if (!landing.includes('Live News Desk')) fail('landing page is missing the live desk status');
-if (!landing.includes('Headlines.<br>Context.<br>Accountability.')) fail('landing page is missing the channel promise');
+if (!landing.includes('<span>Headlines<b>.</b></span><span>Context<b>.</b></span><span>Accountability<b>.</b></span>')) fail('landing page is missing the approved channel promise markup');
+if (!landing.includes('nc-hero-title-lead">Filipino ang</span>')) fail('landing page is missing the approved condensed hero lead');
+if (!landing.includes('nc-hero-title-accent">Mismong Balita.</span>')) fail('landing page is missing the approved red editorial hero accent');
 if (!landing.includes('data-news-edition')) fail('landing page is missing its live edition date hook');
 if (!landing.includes('data-news-updated')) fail('landing page is missing its live update date hook');
 if (landing.includes('Sunday edition · 26 July 2026')) fail('landing page still hardcodes the edition date');
@@ -75,6 +80,7 @@ assertFinalStyleContract(landing, 'news/index.html', [
   'Professional Newsroom type system',
   'FMB News Center channel redesign v4',
   'FMB News Center v4 final channel fixes',
+  'FMB News Center approved red-white channel system',
 ]);
 
 const artwork = await readFile(cognitaArtworkPath, 'utf8');
@@ -98,6 +104,7 @@ for (const filePath of await walk(newsRoot)) {
     'Professional Newsroom type system',
     'FMB News Center channel redesign v4',
     'FMB News Center v4 final channel fixes',
+    'FMB News Center approved red-white channel system',
   ]);
 
   if (relative.includes('filipino-centered-training-institution-cognita-vision')) {
@@ -107,4 +114,4 @@ for (const filePath of await walk(newsRoot)) {
 }
 
 if (articleCount < 1) fail('no News report pages were audited');
-console.log(`FMB News Center final audit verified the landing page, ${articleCount} report pages, the approved Filipino tagline, visible channel masthead, live desk identity, responsive broadcast layout, protected editorial typography, source visibility, retired-logo removal, and HD Cognita artwork.`);
+console.log(`FMB News Center final audit verified the approved white-red channel, ${articleCount} report pages, the Filipino tagline, geometric broadcast identity, visible masthead, live desk, responsive layout, protected editorial typography, source visibility, retired-logo removal, and HD Cognita artwork.`);
