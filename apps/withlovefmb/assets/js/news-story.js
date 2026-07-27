@@ -20,11 +20,13 @@
       if(description)description.content=String(data.seo_description||data.filipino_impact||data.summary||'A source-attributed published brief from FMB News.').slice(0,160);
       const content=data.body?paragraphs(data.body):paragraphs(data.summary||data.source_excerpt);
       const groups=(data.affected_groups||[]).map(group=>`<li>${escapeHtml(group)}</li>`).join('');
-      const disclosure=data.is_ai_assisted?'Technology assisted with the first structured draft. FMB News applies a Filipino-first editorial policy and keeps the source visible.':'This brief was prepared from the credited source under the FMB News Filipino-first editorial policy.';
+      const hasApprovedPerspective=['analysis','opinion'].includes(data.story_type)&&data.perspective_status==='approved'&&String(data.fmb_perspective||'').trim().length>=40;
+      const perspective=hasApprovedPerspective?`<section class="news-fmb-perspective"><p class="nc-kicker">FMB Perspective</p><h2>People first, not personalities</h2>${paragraphs(data.fmb_perspective)}<p class="news-perspective-note">This is a clearly labeled personal editorial perspective. It is separate from the factual report and evaluates public outcomes rather than promoting or attacking a politician or public figure.</p></section>`:'';
+      const disclosure=data.is_ai_assisted?'Technology assisted with the first structured factual draft. FMB News applies a Filipino-first public-interest structure and keeps the original source visible.':'This factual brief was prepared from the credited source under the FMB News Filipino-first public-interest structure.';
       shell.innerHTML=`
         <article class="news-story-article">
           <header>
-            <p class="nc-kicker">FMB News · ${escapeHtml(data.category||'News')}</p>
+            <p class="nc-kicker">FMB News · ${escapeHtml(data.story_type||'news')} · ${escapeHtml(data.category||'News')}</p>
             <h1>${escapeHtml(data.title)}</h1>
             <p class="news-story-deck">${escapeHtml(data.summary||data.source_excerpt||'')}</p>
             <div class="news-story-meta"><span>${escapeHtml(data.source_name)}</span><time>${escapeHtml(formatDate(data.published_at||data.source_published_at))}</time><span>${data.auto_published?'Published by safeguards':'Human-reviewed'}</span></div>
@@ -37,7 +39,7 @@
             <div><h2>Effect on everyday life</h2>${paragraphs(data.household_impact)}</div>
             <div><h2>What Filipinos should watch next</h2>${paragraphs(data.public_interest_action)}</div>
           </section>
-          <section class="news-fmb-perspective"><p class="nc-kicker">FMB Perspective</p><h2>People first, not personalities</h2>${paragraphs(data.fmb_perspective)}<p class="news-perspective-note">This perspective evaluates the effect on Filipinos across income levels, especially those with the least protection and access. It is not an endorsement or attack on any politician or public figure.</p></section>
+          ${perspective}
           <aside class="news-story-source"><p class="nc-kicker">Primary source</p><h2>${escapeHtml(data.source_name)}</h2><p>FMB News does not reproduce the source report in full. Read the original publication for complete context and any later updates.</p><a href="${escapeHtml(data.source_url)}" target="_blank" rel="noopener noreferrer">Open the original report →</a></aside>
           <footer class="news-story-disclosure"><strong>Transparency note</strong><p>${escapeHtml(disclosure)}</p><p>Impact confidence: <strong>${escapeHtml(data.impact_confidence||'not stated')}</strong>.</p><p>See an error? <a href="mailto:withlovefmb@gmail.com?subject=FMB%20News%20correction">Send a correction.</a></p></footer>
         </article>`;
