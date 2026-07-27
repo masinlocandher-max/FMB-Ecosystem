@@ -45,7 +45,7 @@ const adminPanel=`
         </form>
       </section>
       <section class="ops-surface"><div class="ops-section-head"><div><h2>Connected feeds</h2><p>Pause a feed immediately when its quality, ownership, or terms change.</p></div></div><div class="ops-news-sources" id="newsSourceList"><div class="ops-news-empty">Loading sources…</div></div></section>
-      <section class="ops-guardrail"><strong>Base rule: publish facts by safeguards.</strong><p>Every factual story requires a Filipino impact, affected groups, everyday-life effect, and public-interest next step. Ordinary news carries no FMB personal opinion. An FMB Perspective appears only on explicitly approved Analysis or Opinion. Politics, crime, health, allegations, legal disputes, violence, deaths, and weakly supported impacts stop for review.</p></section>
+      <section class="ops-guardrail"><strong>Base rule: publish facts by safeguards.</strong><p>Every factual story requires a Filipino impact, affected groups, everyday-life effect, and public-interest next step. Ordinary news carries no FMB personal opinion. An FMB Perspective appears only on explicitly approved Analysis or Opinion. Official public-affairs facts may publish automatically; allegations, crime, legal disputes, sensitive health claims, violence, deaths, weak sourcing, and low-confidence impacts stop for review.</p></section>
     </aside>
   </div>
 </section>
