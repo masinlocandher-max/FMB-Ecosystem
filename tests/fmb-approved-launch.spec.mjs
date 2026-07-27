@@ -109,6 +109,47 @@ async function openReady(page, route) {
   await expect(page.locator('.fmb-announcement-track')).toHaveCount(1);
 }
 
+async function assertFmbNewsVisualSystem(page, { mobile = false } = {}) {
+  await expect(page.locator('body')).toHaveClass(/news-futuristic-ph/);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://www.francinemariebautista.com/fmbnews/');
+
+  const visualMetrics = await page.evaluate(() => {
+    const summary = document.querySelector('.nc-newsroom-title .nc-hero-summary');
+    const wireStory = document.querySelector('.nc-wire-track span');
+    const lead = document.querySelector('.nc-lead-broadcast');
+    const leadLink = document.querySelector('.nc-lead-broadcast > a');
+    const leadImage = document.querySelector('.nc-lead-broadcast .news-visual img');
+    if (!summary || !wireStory || !lead || !leadLink || !leadImage) return null;
+    const summaryStyle = getComputedStyle(summary);
+    const wireStyle = getComputedStyle(wireStory);
+    const imageStyle = getComputedStyle(leadImage);
+    return {
+      summaryColor: summaryStyle.color,
+      summaryOpacity: summaryStyle.opacity,
+      wireColor: wireStyle.color,
+      wireOpacity: wireStyle.opacity,
+      leadHeight: lead.getBoundingClientRect().height,
+      leadLinkHeight: leadLink.getBoundingClientRect().height,
+      imageHeight: leadImage.getBoundingClientRect().height,
+      imageOpacity: imageStyle.opacity,
+      imageVisibility: imageStyle.visibility,
+      imageFilter: imageStyle.filter,
+    };
+  });
+
+  expect(visualMetrics).not.toBeNull();
+  expect(visualMetrics.summaryColor).toBe('rgb(70, 80, 95)');
+  expect(visualMetrics.summaryOpacity).toBe('1');
+  expect(visualMetrics.wireColor).toBe('rgb(63, 72, 86)');
+  expect(visualMetrics.wireOpacity).toBe('1');
+  expect(visualMetrics.imageOpacity).toBe('1');
+  expect(visualMetrics.imageVisibility).toBe('visible');
+  expect(visualMetrics.imageFilter).toBe('none');
+  expect(visualMetrics.imageHeight, JSON.stringify(visualMetrics)).toBeGreaterThan(mobile ? 200 : 300);
+  expect(visualMetrics.leadHeight, JSON.stringify(visualMetrics)).toBeLessThan(mobile ? 1200 : 1500);
+  expect(Math.abs(visualMetrics.leadHeight - visualMetrics.leadLinkHeight), JSON.stringify(visualMetrics)).toBeLessThan(20);
+}
+
 async function captureEvidence(page, name) {
   await page.evaluate(() => window.scrollTo(0, 0));
   await page.waitForTimeout(120);
@@ -146,16 +187,17 @@ test.describe('FMB approved desktop makeover', () => {
     expect(errors).toEqual([]);
   });
 
-  test('newsroom has PST, moving headlines, loaded news images, and channel treatment', async ({ page }) => {
+  test('FMB News has its canonical route, readable futuristic treatment, moving headlines, and loaded images', async ({ page }) => {
     const errors = observeErrors(page);
-    await openReady(page, '/news/');
+    await openReady(page, '/fmbnews/');
     await assertNoHorizontalOverflow(page);
     await expect(page.locator('.fmb-news-livebar')).toBeVisible();
     await expect(page.locator('[data-fmb-pst]')).toContainText('PST');
     await assertAnimated(page, '.fmb-news-ticker-track', 'fmb-headline-motion');
     await hydratePage(page);
-    await hydrateImages(page, 'main .news-visual img');
-    await assertImagesLoaded(page, 'main .news-visual img');
+    await hydrateImages(page, 'main .news-visual img, main .nc-cognita-visual img');
+    await assertImagesLoaded(page, 'main .news-visual img, main .nc-cognita-visual img');
+    await assertFmbNewsVisualSystem(page);
     await captureEvidence(page, 'news-desktop');
     expect(errors).toEqual([]);
   });
@@ -200,14 +242,17 @@ test.describe('FMB approved iPhone experience', () => {
     expect(errors).toEqual([]);
   });
 
-  test('newsroom keeps PST and headline motion on iPhone', async ({ page }) => {
+  test('FMB News keeps readable headlines, correctly sized imagery, PST, and headline motion on iPhone', async ({ page }) => {
     const errors = observeErrors(page);
-    await openReady(page, '/news/');
+    await openReady(page, '/fmbnews/');
     await assertNoHorizontalOverflow(page);
     await expect(page.locator('.fmb-mobile-dock')).toHaveCount(0);
     await expect(page.locator('[data-fmb-pst]')).toContainText('PST');
     await assertAnimated(page, '.fmb-news-ticker-track', 'fmb-headline-motion');
     await hydratePage(page);
+    await hydrateImages(page, 'main .news-visual img, main .nc-cognita-visual img');
+    await assertImagesLoaded(page, 'main .news-visual img, main .nc-cognita-visual img');
+    await assertFmbNewsVisualSystem(page, { mobile: true });
     await captureEvidence(page, 'news-iphone');
     expect(errors).toEqual([]);
   });
