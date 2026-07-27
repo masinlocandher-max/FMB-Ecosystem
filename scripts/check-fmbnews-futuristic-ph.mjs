@@ -4,6 +4,7 @@ import path from 'node:path';
 const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
 const distRoot = path.join(repositoryRoot, 'dist');
 const sourceCssPath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-futuristic-ph.css');
+const readabilityCssPath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-final-readability.css');
 const newsPath = path.join(distRoot, 'news', 'index.html');
 const fmbNewsPath = path.join(distRoot, 'fmbnews', 'index.html');
 const sitemapPath = path.join(distRoot, 'sitemap.xml');
@@ -14,10 +15,11 @@ function fail(message) {
 
 await stat(fmbNewsPath).catch(() => fail('dist/fmbnews/index.html was not generated'));
 
-const [newsHtml, fmbNewsHtml, css, sitemap] = await Promise.all([
+const [newsHtml, fmbNewsHtml, css, readabilityCss, sitemap] = await Promise.all([
   readFile(newsPath, 'utf8'),
   readFile(fmbNewsPath, 'utf8'),
   readFile(sourceCssPath, 'utf8'),
+  readFile(readabilityCssPath, 'utf8'),
   readFile(sitemapPath, 'utf8'),
 ]);
 
@@ -79,6 +81,19 @@ for (const marker of requiredCssMarkers) {
   if (!fmbNewsHtml.includes(marker)) fail(`/fmbnews did not inline the futuristic CSS marker ${marker}`);
 }
 
+const requiredReadabilityMarkers = [
+  '.nc-newsroom-title .nc-hero-summary',
+  'color: #46505f !important',
+  '.nc-wire-track span',
+  'grid-template-rows: auto auto !important',
+  'aspect-ratio: 4 / 3 !important',
+  'content-visibility: visible !important',
+];
+for (const marker of requiredReadabilityMarkers) {
+  if (!readabilityCss.includes(marker)) fail(`readability CSS is missing ${marker}`);
+  if (!fmbNewsHtml.includes(marker)) fail(`/fmbnews did not inline the readability marker ${marker}`);
+}
+
 if (!sitemap.includes('<loc>https://www.francinemariebautista.com/fmbnews/</loc>')) {
   fail('sitemap.xml does not expose /fmbnews');
 }
@@ -86,4 +101,4 @@ if (sitemap.includes('<loc>https://www.francinemariebautista.com/news/</loc>')) 
   fail('sitemap.xml still exposes the old landing URL as a separate canonical page');
 }
 
-console.log('Verified /fmbnews canonical routing, preserved newsroom content, Philippine sun and three stars, blue-yellow depth system, readable gray surfaces, undarkened imagery, mobile responsive safeguards, and launch-gate stylesheet order.');
+console.log('Verified /fmbnews canonical routing, preserved newsroom content, Philippine sun and three stars, blue-yellow depth system, readable gray surfaces, undarkened imagery, corrected hero contrast, mobile lead sizing, responsive safeguards, and launch-gate stylesheet order.');
