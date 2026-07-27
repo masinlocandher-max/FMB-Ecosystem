@@ -71,13 +71,13 @@ function channelHero() {
     <div class="wrap nc-channel-id">
       <div class="nc-channel-lockup nc-newsroom-title">
         <span class="nc-hero-kicker" data-news-edition>Current edition</span>
-        <h1 id="newsroomTitle">Filipino ang Mismong Balita.</h1>
+        <h1 id="newsroomTitle"><span class="nc-hero-title-lead">Filipino ang</span><span class="nc-hero-title-accent">Mismong Balita.</span></h1>
         <p class="nc-hero-summary">The Filipino is not merely the audience. The Filipino experience, voice and public interest are at the center of every report.</p>
         <div class="nc-hero-dateline"><span>Masinloc, Zambales</span><span data-news-date>Philippine Standard Time</span></div>
       </div>
       <div class="nc-channel-promise nc-reveal">
         <div class="nc-live-status"><i aria-hidden="true"></i><span>Live News Desk</span></div>
-        <p>Headlines.<br>Context.<br>Accountability.</p>
+        <p><span>Headlines<b>.</b></span><span>Context<b>.</b></span><span>Accountability<b>.</b></span></p>
         <span>Reporting for Filipinos, wherever they are</span>
         <div class="nc-channel-service" aria-label="Newsroom coverage areas"><span>Philippines</span><span>Zambales</span><span>Public affairs</span><span>Culture</span></div>
       </div>
@@ -210,4 +210,4 @@ for (const filePath of allNewsPages) {
   articleCount += 1;
 }
 
-console.log(`Applied the FMB News Center channel identity and Filipino ang Mismong Balita tagline to the landing page and ${articleCount} report pages.`);
+console.log(`Applied the approved red-white FMB News Center identity and Filipino ang Mismong Balita tagline to the landing page and ${articleCount} report pages.`);
