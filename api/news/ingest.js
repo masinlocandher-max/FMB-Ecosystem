@@ -8,8 +8,12 @@ const MAX_SOURCES_PER_RUN = 20;
 const MAX_ITEMS_PER_SOURCE = 15;
 const MAX_FEED_BYTES = 2 * 1024 * 1024;
 const MAX_REDIRECTS = 3;
-const HIGH_RISK_PATTERN = /\b(alleg(?:ed|ation|ations)|accus(?:ed|ation|ations)|arrest(?:ed|s)?|charg(?:ed|es)|crime|criminal|corrupt(?:ion)?|court|dead|death|disease|drug|election|fraud|government|governor|health|hospital|killed|lawsuit|legal|mayor|medical|military|murder|police|politic(?:s|al)?|president|rape|senate|sexual|suicide|violence|weapon)\b/i;
+const HIGH_RISK_PATTERN = /\b(alleg(?:ed|ation|ations)|accus(?:ed|ation|ations)|arrest(?:ed|s)?|charg(?:ed|es)|crime|criminal|corrupt(?:ion)?|court|dead|death|disease|drug|fraud|health|hospital|killed|lawsuit|legal dispute|medical|murder|rape|sexual|suicide|violence|weapon)\b/i;
 const PUBLISHABLE_CONFIDENCE = new Set(['medium', 'high']);
+
+function env(name, fallback = '') {
+  return String(process.env[name] || fallback).trim();
+}
 
 function send(res, status, payload) {
   res.statusCode = status;
@@ -18,11 +22,7 @@ function send(res, status, payload) {
   res.end(JSON.stringify(payload));
 }
 
-function env(name, fallback = '') {
-  return String(process.env[name] || fallback).trim();
-}
-
-function adminKey() {
+function secretKey() {
   return env('SUPABASE_SECRET_KEY') || env('SUPABASE_SERVICE_ROLE_KEY');
 }
 
@@ -37,10 +37,10 @@ function supabaseHeaders(key, extra = {}) {
 }
 
 async function supabase(path, options = {}) {
-  const baseUrl = env('SUPABASE_URL').replace(/\/$/, '');
-  const key = adminKey();
-  if (!baseUrl || !key) throw new Error('SUPABASE_URL and a server-side Supabase key are required.');
-  const response = await fetch(`${baseUrl}/rest/v1/${path}`, {
+  const base = env('SUPABASE_URL').replace(/\/$/, '');
+  const key = secretKey();
+  if (!base || !key) throw new Error('SUPABASE_URL and a server-side Supabase key are required.');
+  const response = await fetch(`${base}/rest/v1/${path}`, {
     ...options,
     headers: supabaseHeaders(key, options.headers || {})
   });
@@ -57,10 +57,10 @@ async function supabase(path, options = {}) {
 }
 
 async function verifyAdminJwt(token) {
-  const baseUrl = env('SUPABASE_URL').replace(/\/$/, '');
+  const base = env('SUPABASE_URL').replace(/\/$/, '');
   const key = publicKey();
-  if (!token || !baseUrl || !key) return false;
-  const response = await fetch(`${baseUrl}/auth/v1/user`, {
+  if (!token || !base || !key) return false;
+  const response = await fetch(`${base}/auth/v1/user`, {
     headers: { apikey: key, Authorization: `Bearer ${token}` }
   });
   if (!response.ok) return false;
@@ -77,13 +77,10 @@ function safeEqual(left, right) {
 }
 
 async function authorize(req) {
-  const authorization = String(req.headers.authorization || '');
-  const bearer = authorization.startsWith('Bearer ') ? authorization.slice(7).trim() : '';
-  const cronSecret = env('CRON_SECRET');
-  if (cronSecret && safeEqual(bearer, cronSecret)) return { ok: true, trigger: 'cron' };
-  const manualSecret = env('NEWS_ADMIN_TOKEN');
-  const providedManual = String(req.headers['x-news-admin-token'] || '');
-  if (manualSecret && safeEqual(providedManual, manualSecret)) return { ok: true, trigger: 'manual' };
+  const auth = String(req.headers.authorization || '');
+  const bearer = auth.startsWith('Bearer ') ? auth.slice(7).trim() : '';
+  if (env('CRON_SECRET') && safeEqual(bearer, env('CRON_SECRET'))) return { ok: true, trigger: 'cron' };
+  if (env('NEWS_ADMIN_TOKEN') && safeEqual(req.headers['x-news-admin-token'], env('NEWS_ADMIN_TOKEN'))) return { ok: true, trigger: 'manual' };
   if (bearer && await verifyAdminJwt(bearer)) return { ok: true, trigger: 'manual' };
   return { ok: false, trigger: 'manual' };
 }
@@ -108,7 +105,7 @@ function isPrivateIp(address) {
   return true;
 }
 
-function externalUrl(value, base = undefined) {
+function externalUrl(value, base) {
   try {
     const parsed = new URL(String(value || '').trim(), base);
     if (!['http:', 'https:'].includes(parsed.protocol) || parsed.username || parsed.password) return '';
@@ -183,26 +180,26 @@ function firstMatch(block, patterns) {
   return '';
 }
 
-function attr(block, tagPattern, attrName) {
+function attr(block, tagPattern, name) {
   const tag = block.match(tagPattern)?.[0] || '';
-  return decodeEntities(tag.match(new RegExp(`${attrName}=["']([^"']+)["']`, 'i'))?.[1] || '').trim();
+  return decodeEntities(tag.match(new RegExp(`${name}=["']([^"']+)["']`, 'i'))?.[1] || '').trim();
 }
 
 function parseDate(value) {
-  const timestamp = Date.parse(value || '');
-  return Number.isFinite(timestamp) ? new Date(timestamp).toISOString() : null;
+  const time = Date.parse(value || '');
+  return Number.isFinite(time) ? new Date(time).toISOString() : null;
 }
 
-function parseFeed(xml, source) {
-  const isAtom = /<feed[\s>]/i.test(xml) || source.source_type === 'atom';
-  const blocks = xml.match(isAtom ? /<entry\b[\s\S]*?<\/entry>/gi : /<item\b[\s\S]*?<\/item>/gi) || [];
+function parseXmlFeed(xml, source) {
+  const atom = /<feed[\s>]/i.test(xml) || source.source_type === 'atom';
+  const blocks = xml.match(atom ? /<entry\b[\s\S]*?<\/entry>/gi : /<item\b[\s\S]*?<\/item>/gi) || [];
   return blocks.slice(0, MAX_ITEMS_PER_SOURCE).map((block) => {
     const title = stripHtml(firstMatch(block, [/<title[^>]*>([\s\S]*?)<\/title>/i]));
     const rssLink = firstMatch(block, [/<link[^>]*>([\s\S]*?)<\/link>/i]);
     const atomLink = attr(block, /<link\b[^>]*>/i, 'href');
-    const url = externalUrl((isAtom ? atomLink || rssLink : rssLink || atomLink).trim(), source.feed_url);
+    const url = externalUrl(atom ? atomLink || rssLink : rssLink || atomLink, source.feed_url);
     const guid = firstMatch(block, [/<guid[^>]*>([\s\S]*?)<\/guid>/i, /<id[^>]*>([\s\S]*?)<\/id>/i]) || url;
-    const rawExcerpt = firstMatch(block, [
+    const excerpt = firstMatch(block, [
       /<content:encoded[^>]*>([\s\S]*?)<\/content:encoded>/i,
       /<description[^>]*>([\s\S]*?)<\/description>/i,
       /<summary[^>]*>([\s\S]*?)<\/summary>/i,
@@ -220,117 +217,81 @@ function parseFeed(xml, source) {
       /<author[^>]*>([\s\S]*?)<\/author>/i
     ]));
     const mediaUrl = attr(block, /<media:content\b[^>]*>/i, 'url') || attr(block, /<media:thumbnail\b[^>]*>/i, 'url');
-    const enclosureTag = block.match(/<enclosure\b[^>]*>/i)?.[0] || '';
-    const enclosureType = attr(enclosureTag, /<enclosure\b[^>]*>/i, 'type');
-    const enclosureUrl = enclosureType.startsWith('image/') ? attr(enclosureTag, /<enclosure\b[^>]*>/i, 'url') : '';
+    const enclosure = block.match(/<enclosure\b[^>]*>/i)?.[0] || '';
+    const image = attr(enclosure, /<enclosure\b[^>]*>/i, 'type').startsWith('image/') ? attr(enclosure, /<enclosure\b[^>]*>/i, 'url') : '';
     return {
       title: truncate(title, 240),
       url,
       guid: truncate(guid, 500),
-      excerpt: truncate(stripHtml(rawExcerpt), 1200),
+      excerpt: truncate(stripHtml(excerpt), 1200),
       publishedAt: parseDate(published),
       author: truncate(author, 160),
-      imageUrl: truncate(externalUrl(mediaUrl || enclosureUrl, source.feed_url), 1200)
+      imageUrl: truncate(externalUrl(mediaUrl || image, source.feed_url), 1200)
     };
   }).filter((item) => item.title && /^https?:\/\//i.test(item.url));
 }
 
 function slugify(title, url) {
-  const base = String(title || '')
-    .toLowerCase()
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 80) || 'news-brief';
+  const base = String(title || '').toLowerCase().normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '').slice(0, 80) || 'news-brief';
   const suffix = crypto.createHash('sha256').update(url).digest('hex').slice(0, 8);
   return `${base}-${suffix}`;
 }
 
 function inferRisk(source, item) {
-  const combined = `${item.title} ${item.excerpt}`;
-  if (HIGH_RISK_PATTERN.test(combined)) return 'high';
-  return source.risk_level || 'medium';
+  if (source.risk_level === 'high') return 'high';
+  return HIGH_RISK_PATTERN.test(`${item.title} ${item.excerpt}`) ? 'high' : source.risk_level || 'medium';
 }
 
-function editorialPackageComplete(editorial) {
-  return String(editorial.filipinoImpact || '').trim().length >= 40 &&
-    Array.isArray(editorial.affectedGroups) && editorial.affectedGroups.length >= 1 &&
-    String(editorial.householdImpact || '').trim().length >= 20 &&
-    String(editorial.publicInterestAction || '').trim().length >= 20 &&
-    String(editorial.fmbPerspective || '').trim().length >= 40 &&
+function completeEditorial(editorial) {
+  return editorial.filipinoImpact.length >= 40 && editorial.affectedGroups.length >= 1 &&
+    editorial.householdImpact.length >= 20 && editorial.publicInterestAction.length >= 20 &&
     PUBLISHABLE_CONFIDENCE.has(editorial.impactConfidence);
 }
 
-function reviewReason({ source, risk, editorial }) {
-  if (!source.auto_publish) return 'Automatic publishing is disabled for this source.';
-  if (risk === 'high') return 'Sensitive subject requires human review.';
-  if (!editorialPackageComplete(editorial)) return 'Filipino impact analysis is incomplete or insufficiently supported.';
-  return null;
-}
-
-async function createEditorialPackage(item, source) {
-  const apiKey = env('OPENAI_API_KEY');
+async function createEditorial(item, source) {
+  const key = env('OPENAI_API_KEY');
   const fallback = {
-    summary: truncate(item.excerpt, 420),
-    filipinoImpact: '',
-    affectedGroups: [],
-    householdImpact: '',
-    publicInterestAction: '',
-    fmbPerspective: '',
-    impactConfidence: 'low',
-    seoDescription: truncate(item.excerpt, 155),
-    ai: false
+    summary: truncate(item.excerpt, 420), filipinoImpact: '', affectedGroups: [],
+    householdImpact: '', publicInterestAction: '', impactConfidence: 'low',
+    seoDescription: truncate(item.excerpt, 155), ai: false
   };
-  if (!apiKey || !item.excerpt) return fallback;
+  if (!key || !item.excerpt) return fallback;
 
   const response = await fetch('https://api.openai.com/v1/responses', {
     method: 'POST',
-    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+    headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: env('NEWS_SUMMARY_MODEL', 'gpt-5-mini'),
       input: [
         {
           role: 'developer',
-          content: `Create a source-bound FMB News editorial package using only the supplied title and excerpt. Never invent facts, numbers, motives, causes, outcomes, or context. Return only valid JSON with these keys: summary, filipino_impact, affected_groups, household_impact, public_interest_action, fmb_perspective, impact_confidence, seo_description.
-
-Rules:
-- summary: neutral factual brief, 2 to 3 sentences.
-- filipino_impact: directly answer “What does this mean for Filipinos?” in plain language. Focus on practical public outcomes, not personalities.
-- affected_groups: JSON array of 1 to 6 concise Filipino groups genuinely supported by the source. Consider workers, low-income households, rural communities, small businesses, students, seniors, persons with disabilities, women, LGBTQIA+ people, commuters, consumers, and overseas Filipinos only when relevant. Do not assume a group without evidence.
-- household_impact: explain likely effects on daily expenses, income, jobs, services, safety, rights, time, or opportunity. If no immediate effect is established, say that clearly and name what remains uncertain.
-- public_interest_action: explain what Filipinos should watch, verify, prepare for, ask, or demand next. No alarmism.
-- fmb_perspective: a Filipino-first, class-inclusive, non-partisan editorial view. Center ordinary Filipinos across income levels, especially poor and vulnerable communities when relevant. Evaluate policies and outcomes, never praise or attack a politician or public figure, never use campaign language, and never center the story on elite access or privilege.
-- impact_confidence: high, medium, or low based only on how strongly the source supports the impact analysis.
-- seo_description: under 155 characters.
-
-When the supplied excerpt is not enough to support a practical impact, use impact_confidence “low” and clearly state what is not yet known.`
+          content: `Create a factual FMB News package using only the supplied source title and excerpt. Return only valid JSON with keys summary, filipino_impact, affected_groups, household_impact, public_interest_action, impact_confidence, seo_description. Never invent facts, context, motives, numbers, or outcomes. Keep the report non-partisan and do not write an FMB personal opinion. The Filipino impact must center practical effects on people across income levels, including poor and vulnerable communities only when supported. Treat politicians and public figures as subjects of fact, not heroes or villains. If the source cannot support an impact, say what is unknown and set impact_confidence to low.`
         },
         {
           role: 'user',
           content: `Source: ${source.name}\nCategory: ${source.category || 'Philippines'}\nRegion: ${source.region || 'Philippines'}\nTitle: ${item.title}\nExcerpt: ${item.excerpt}`
         }
       ],
-      max_output_tokens: 900
+      max_output_tokens: 700
     })
   });
   if (!response.ok) throw new Error(`OpenAI editorial package failed with ${response.status}.`);
   const payload = await response.json();
-  const outputText = payload.output_text || payload.output?.flatMap((entry) => entry.content || []).find((entry) => entry.type === 'output_text')?.text || '';
-  const cleaned = String(outputText).replace(/^```json\s*|\s*```$/g, '').trim();
-  const parsed = JSON.parse(cleaned);
-  const groups = Array.isArray(parsed.affected_groups)
+  const output = payload.output_text || payload.output?.flatMap((entry) => entry.content || []).find((entry) => entry.type === 'output_text')?.text || '';
+  const parsed = JSON.parse(String(output).replace(/^```json\s*|\s*```$/g, '').trim());
+  const affectedGroups = Array.isArray(parsed.affected_groups)
     ? parsed.affected_groups.map((group) => truncate(stripHtml(group), 100)).filter(Boolean).slice(0, 6)
     : [];
-  const confidence = ['low', 'medium', 'high'].includes(parsed.impact_confidence) ? parsed.impact_confidence : 'low';
+  const impactConfidence = ['low', 'medium', 'high'].includes(parsed.impact_confidence) ? parsed.impact_confidence : 'low';
   return {
     summary: truncate(stripHtml(parsed.summary), 700) || fallback.summary,
     filipinoImpact: truncate(stripHtml(parsed.filipino_impact), 1200),
-    affectedGroups: groups,
+    affectedGroups,
     householdImpact: truncate(stripHtml(parsed.household_impact), 1000),
     publicInterestAction: truncate(stripHtml(parsed.public_interest_action), 1000),
-    fmbPerspective: truncate(stripHtml(parsed.fmb_perspective), 1200),
-    impactConfidence: confidence,
+    impactConfidence,
     seoDescription: truncate(stripHtml(parsed.seo_description), 155),
     ai: true
   };
@@ -339,7 +300,7 @@ When the supplied excerpt is not enough to support a practical impact, use impac
 async function fetchSource(source) {
   const headers = {
     Accept: 'application/rss+xml, application/atom+xml, application/feed+json, application/json, text/xml;q=0.9, */*;q=0.5',
-    'User-Agent': 'FMB-News-Ingestion/2.0 (+https://www.francinemariebautista.com/news/)'
+    'User-Agent': 'FMB-News-Ingestion/3.0 (+https://www.francinemariebautista.com/news/)'
   };
   if (source.etag) headers['If-None-Match'] = source.etag;
   if (source.last_modified) headers['If-Modified-Since'] = source.last_modified;
@@ -349,25 +310,23 @@ async function fetchSource(source) {
     const response = await fetchPublicFeed(source.feed_url, { headers, signal: controller.signal });
     if (response.status === 304) return { items: [], etag: source.etag, lastModified: source.last_modified };
     if (!response.ok) throw new Error(`Feed returned ${response.status}.`);
-    const contentType = response.headers.get('content-type') || '';
-    const contentLength = Number(response.headers.get('content-length') || 0);
-    if (contentLength > MAX_FEED_BYTES) throw new Error('Feed exceeds the 2 MB safety limit.');
+    if (Number(response.headers.get('content-length') || 0) > MAX_FEED_BYTES) throw new Error('Feed exceeds the 2 MB safety limit.');
     const text = await response.text();
     if (Buffer.byteLength(text, 'utf8') > MAX_FEED_BYTES) throw new Error('Feed exceeds the 2 MB safety limit.');
     let items;
-    if (source.source_type === 'json_feed' || /json/i.test(contentType)) {
+    if (source.source_type === 'json_feed' || /json/i.test(response.headers.get('content-type') || '')) {
       const json = JSON.parse(text);
       items = (json.items || []).slice(0, MAX_ITEMS_PER_SOURCE).map((entry) => ({
         title: truncate(stripHtml(entry.title), 240),
-        url: externalUrl(entry.url || entry.external_url || '', source.feed_url),
+        url: externalUrl(entry.url || entry.external_url, source.feed_url),
         guid: truncate(entry.id || entry.url || '', 500),
         excerpt: truncate(stripHtml(entry.summary || entry.content_text || entry.content_html), 1200),
         publishedAt: parseDate(entry.date_published || entry.date_modified),
         author: truncate(stripHtml(entry.author?.name || entry.authors?.[0]?.name), 160),
-        imageUrl: truncate(externalUrl(entry.image || entry.banner_image || '', source.feed_url), 1200)
+        imageUrl: truncate(externalUrl(entry.image || entry.banner_image, source.feed_url), 1200)
       })).filter((item) => item.title && /^https?:\/\//i.test(item.url));
     } else {
-      items = parseFeed(text, source);
+      items = parseXmlFeed(text, source);
     }
     return { items, etag: response.headers.get('etag'), lastModified: response.headers.get('last-modified') };
   } finally {
@@ -377,8 +336,7 @@ async function fetchSource(source) {
 
 async function createRun(trigger) {
   const rows = await supabase('news_ingestion_runs', {
-    method: 'POST',
-    headers: { Prefer: 'return=representation' },
+    method: 'POST', headers: { Prefer: 'return=representation' },
     body: JSON.stringify({ trigger_type: trigger, status: 'running' })
   });
   return rows?.[0]?.id || null;
@@ -387,8 +345,7 @@ async function createRun(trigger) {
 async function finishRun(id, payload) {
   if (!id) return;
   await supabase(`news_ingestion_runs?id=eq.${encodeURIComponent(id)}`, {
-    method: 'PATCH',
-    headers: { Prefer: 'return=minimal' },
+    method: 'PATCH', headers: { Prefer: 'return=minimal' },
     body: JSON.stringify({ ...payload, finished_at: new Date().toISOString() })
   });
 }
@@ -409,25 +366,20 @@ async function ingest(trigger) {
           try {
             const risk = inferRisk(source, item);
             let editorial;
-            try {
-              editorial = await createEditorialPackage(item, source);
-            } catch (error) {
+            try { editorial = await createEditorial(item, source); }
+            catch (error) {
               editorial = {
-                summary: truncate(item.excerpt, 420),
-                filipinoImpact: '',
-                affectedGroups: [],
-                householdImpact: '',
-                publicInterestAction: '',
-                fmbPerspective: '',
-                impactConfidence: 'low',
-                seoDescription: truncate(item.excerpt, 155),
-                ai: false
+                summary: truncate(item.excerpt, 420), filipinoImpact: '', affectedGroups: [],
+                householdImpact: '', publicInterestAction: '', impactConfidence: 'low',
+                seoDescription: truncate(item.excerpt, 155), ai: false
               };
               errors.push(`${source.name}: ${error.message}`);
             }
-            const reason = reviewReason({ source, risk, editorial });
-            const canAutoPublish = !reason;
-            const publishedAt = canAutoPublish ? new Date().toISOString() : null;
+            let reviewReason = null;
+            if (!source.auto_publish) reviewReason = 'Automatic publishing is disabled for this source.';
+            else if (risk === 'high') reviewReason = 'Sensitive or legally risky subject requires human review.';
+            else if (!completeEditorial(editorial)) reviewReason = 'Filipino public-interest analysis is incomplete or insufficiently supported.';
+            const canPublish = !reviewReason;
             const article = {
               source_id: source.id,
               source_item_id: item.guid || item.url,
@@ -441,23 +393,25 @@ async function ingest(trigger) {
               affected_groups: editorial.affectedGroups,
               household_impact: editorial.householdImpact || null,
               public_interest_action: editorial.publicInterestAction || null,
-              fmb_perspective: editorial.fmbPerspective || null,
+              fmb_perspective: null,
+              story_type: 'news',
+              perspective_status: 'none',
               impact_confidence: editorial.impactConfidence,
-              editorial_lens_version: 'fmb_filipino_first_v1',
-              auto_published: canAutoPublish,
-              requires_review_reason: reason,
+              editorial_lens_version: 'fmb_filipino_first_v2',
+              auto_published: canPublish,
+              requires_review_reason: reviewReason,
               category: source.category || 'Philippines',
               region: source.region || null,
               author_line: item.author || null,
               image_url: item.imageUrl || null,
-              status: canAutoPublish ? 'published' : 'pending_review',
+              status: canPublish ? 'published' : 'pending_review',
               risk_level: risk,
-              verification_status: canAutoPublish ? 'verified' : 'imported',
+              verification_status: canPublish ? 'verified' : 'imported',
               is_ai_assisted: Boolean(editorial.ai),
               seo_title: truncate(item.title, 70),
               seo_description: editorial.seoDescription || truncate(editorial.summary || item.excerpt, 155) || null,
               source_published_at: item.publishedAt,
-              published_at: publishedAt
+              published_at: canPublish ? new Date().toISOString() : null
             };
             const inserted = await supabase('news_articles?on_conflict=source_url', {
               method: 'POST',
@@ -466,15 +420,14 @@ async function ingest(trigger) {
             });
             if (inserted?.length) {
               totals.items_imported += 1;
-              if (canAutoPublish) totals.items_published += 1;
+              if (canPublish) totals.items_published += 1;
             }
           } catch (error) {
             errors.push(`${source.name} / ${truncate(item.title, 80)}: ${error.message}`);
           }
         }
         await supabase(`news_sources?id=eq.${encodeURIComponent(source.id)}`, {
-          method: 'PATCH',
-          headers: { Prefer: 'return=minimal' },
+          method: 'PATCH', headers: { Prefer: 'return=minimal' },
           body: JSON.stringify({
             last_checked_at: checkedAt,
             last_success_at: checkedAt,
@@ -487,8 +440,7 @@ async function ingest(trigger) {
       } catch (error) {
         errors.push(`${source.name}: ${error.message}`);
         await supabase(`news_sources?id=eq.${encodeURIComponent(source.id)}`, {
-          method: 'PATCH',
-          headers: { Prefer: 'return=minimal' },
+          method: 'PATCH', headers: { Prefer: 'return=minimal' },
           body: JSON.stringify({ last_checked_at: checkedAt, last_error: truncate(error.message, 1000), updated_at: checkedAt })
         });
       }
