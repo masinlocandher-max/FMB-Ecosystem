@@ -96,15 +96,16 @@
     const host=$('#newsReviewList');if(!host)return;const list=filteredArticles();
     host.innerHTML=list.length?list.map(item=>`<article class="ops-news-review" data-news-article="${esc(item.id)}">
       <header><div><h3>${esc(item.title)}</h3><p>${esc(item.source_name)} · ${esc(fmt(item.source_published_at||item.created_at))}</p></div><a href="${esc(item.source_url)}" target="_blank" rel="noopener">Source ↗</a></header>
-      <div class="ops-news-badges"><span>${esc(item.status)}</span><span>${esc(item.risk_level)} risk</span><span>${esc(item.impact_confidence||'low')} impact confidence</span>${item.auto_published?'<span>auto-published</span>':''}${item.is_ai_assisted?'<span>AI-assisted draft</span>':''}</div>
+      <div class="ops-news-badges"><span>${esc(item.status)}</span><span>${esc(item.story_type||'news')}</span><span>${esc(item.risk_level)} risk</span><span>${esc(item.impact_confidence||'low')} impact confidence</span>${item.auto_published?'<span>auto-published</span>':''}${item.is_ai_assisted?'<span>AI-assisted draft</span>':''}</div>
       ${item.requires_review_reason?`<p><strong>Why it stopped:</strong> ${esc(item.requires_review_reason)}</p>`:''}
       <p>${esc(item.source_excerpt||'No source excerpt was supplied by the feed.')}</p>
+      <label><span>Story type</span><select data-news-story-type><option value="news" ${(item.story_type||'news')==='news'?'selected':''}>News</option><option value="advisory" ${item.story_type==='advisory'?'selected':''}>Advisory</option><option value="explainer" ${item.story_type==='explainer'?'selected':''}>Explainer</option><option value="analysis" ${item.story_type==='analysis'?'selected':''}>Analysis with FMB perspective</option><option value="opinion" ${item.story_type==='opinion'?'selected':''}>Opinion by FMB</option></select></label>
       <label><span>What happened</span><textarea data-news-summary maxlength="700">${esc(item.summary||'')}</textarea></label>
       <label><span>What this means for Filipinos</span><textarea data-news-impact maxlength="1200">${esc(item.filipino_impact||'')}</textarea></label>
       <label><span>Who is affected, comma-separated</span><input data-news-groups maxlength="650" value="${esc((item.affected_groups||[]).join(', '))}"></label>
       <label><span>Effect on everyday life and household realities</span><textarea data-news-household maxlength="1000">${esc(item.household_impact||'')}</textarea></label>
       <label><span>What Filipinos should watch or do next</span><textarea data-news-action maxlength="1000">${esc(item.public_interest_action||'')}</textarea></label>
-      <label><span>FMB Filipino-first perspective</span><textarea data-news-perspective maxlength="1200">${esc(item.fmb_perspective||'')}</textarea></label>
+      <label><span>Optional FMB perspective, only for Analysis or Opinion</span><textarea data-news-perspective maxlength="1200">${esc(['analysis','opinion'].includes(item.story_type)?item.fmb_perspective||'':'')}</textarea></label>
       <label><span>Impact confidence</span><select data-news-confidence><option value="low" ${item.impact_confidence==='low'?'selected':''}>Low</option><option value="medium" ${item.impact_confidence==='medium'?'selected':''}>Medium</option><option value="high" ${item.impact_confidence==='high'?'selected':''}>High</option></select></label>
       <div class="ops-news-actions"><button class="primary" type="button" data-news-decision="published">Publish</button><button type="button" data-news-decision="pending_review">Keep for review</button><button type="button" data-news-decision="needs_correction">Mark correction</button><button class="danger" type="button" data-news-decision="rejected">Reject</button></div>
     </article>`).join(''):'<div class="ops-news-empty">No stories match this review state.</div>';
@@ -112,17 +113,22 @@
   }
   async function saveDecision(button){
     const card=button.closest('[data-news-article]');const id=card.dataset.newsArticle;const status=button.dataset.newsDecision;const now=new Date().toISOString();
+    const storyType=card.querySelector('[data-news-story-type]').value;
     const summary=clean(card.querySelector('[data-news-summary]').value,700);
     const filipinoImpact=clean(card.querySelector('[data-news-impact]').value,1200);
     const affectedGroups=groups(card.querySelector('[data-news-groups]').value);
     const householdImpact=clean(card.querySelector('[data-news-household]').value,1000);
     const publicInterestAction=clean(card.querySelector('[data-news-action]').value,1000);
-    const fmbPerspective=clean(card.querySelector('[data-news-perspective]').value,1200);
+    const enteredPerspective=clean(card.querySelector('[data-news-perspective]').value,1200);
+    const needsPerspective=['analysis','opinion'].includes(storyType);
+    const fmbPerspective=needsPerspective?enteredPerspective:'';
     const impactConfidence=card.querySelector('[data-news-confidence]').value;
-    if(status==='published'&&(filipinoImpact.length<40||!affectedGroups.length||householdImpact.length<20||publicInterestAction.length<20||fmbPerspective.length<40||impactConfidence==='low')){
-      setStatus('Publication blocked: complete the Filipino impact, affected groups, everyday-life effect, public-interest next step, FMB perspective, and use medium or high confidence.','error');return;
+    const missingBase=filipinoImpact.length<40||!affectedGroups.length||householdImpact.length<20||publicInterestAction.length<20||impactConfidence==='low';
+    if(status==='published'&&(missingBase||(needsPerspective&&fmbPerspective.length<40))){
+      setStatus(needsPerspective?'Publication blocked: complete the Filipino public-interest fields and the approved FMB perspective.':'Publication blocked: complete the Filipino impact, affected groups, everyday-life effect, next step, and use medium or high confidence.','error');return;
     }
-    const payload={summary:summary||null,filipino_impact:filipinoImpact||null,affected_groups:affectedGroups,household_impact:householdImpact||null,public_interest_action:publicInterestAction||null,fmb_perspective:fmbPerspective||null,impact_confidence:impactConfidence,editorial_lens_version:'fmb_filipino_first_v1',status,updated_at:now,reviewed_by:user.id,reviewed_at:now,verification_status:status==='published'?'verified':status==='needs_correction'?'corrected':'imported',published_at:status==='published'?now:null,auto_published:false,requires_review_reason:status==='published'?null:'Editorial decision required.',rejection_reason:status==='rejected'?'Rejected through the FMB News editorial queue.':null};
+    const perspectiveStatus=needsPerspective?(status==='published'?'approved':fmbPerspective?'draft':'none'):'none';
+    const payload={story_type:storyType,perspective_status:perspectiveStatus,summary:summary||null,filipino_impact:filipinoImpact||null,affected_groups:affectedGroups,household_impact:householdImpact||null,public_interest_action:publicInterestAction||null,fmb_perspective:fmbPerspective||null,impact_confidence:impactConfidence,editorial_lens_version:'fmb_filipino_first_v1',status,updated_at:now,reviewed_by:user.id,reviewed_at:now,verification_status:status==='published'?'verified':status==='needs_correction'?'corrected':'imported',published_at:status==='published'?now:null,auto_published:false,requires_review_reason:status==='published'?null:'Editorial decision required.',rejection_reason:status==='rejected'?'Rejected through the FMB News editorial queue.':null};
     loading(button,true,'Saving…');const {error}=await client.from('news_articles').update(payload).eq('id',id);loading(button,false);
     if(error){setStatus(error.message||'The editorial decision could not be saved.','error');return}setStatus(`Story moved to ${status.replaceAll('_',' ')}.`,'success');loadAll();
   }
@@ -134,7 +140,7 @@
   }
 
   $('#newsRunImport')?.addEventListener('click',async event=>{
-    const button=event.currentTarget;loading(button,true,'Importing…');setStatus('Checking approved feeds and building the Filipino-first story structure.');
+    const button=event.currentTarget;loading(button,true,'Importing…');setStatus('Checking approved feeds and building the Filipino public-interest structure.');
     try{
       const {data}=await client.auth.getSession();const token=data.session?.access_token;if(!token)throw new Error('Your secure session has expired.');
       const response=await fetch('/api/news/ingest',{method:'POST',headers:{Authorization:`Bearer ${token}`}});const payload=await response.json();
