@@ -56,6 +56,7 @@ function assertChannelIdentity(html, fileName) {
   if (retiredFashionFontImport.test(html)) fail(`${fileName} still imports the retired fashion-editorial typeface`);
   if (visibleRetiredLogo.test(html)) fail(`${fileName} visibly renders the retired News logo`);
   if (!html.includes('FMB News Center approved red-white channel system')) fail(`${fileName} is missing the approved white-red visual layer`);
+  if (!html.includes('Approved red-white News Center final polish')) fail(`${fileName} is missing the final purple-surface cleanup layer`);
   if (!html.includes('--fmb-approved-red: #d0001b')) fail(`${fileName} is missing the approved signal-red token`);
   if (!html.includes('background: #fff !important')) fail(`${fileName} is missing the approved white newsroom canvas`);
 }
@@ -81,6 +82,7 @@ assertFinalStyleContract(landing, 'news/index.html', [
   'FMB News Center channel redesign v4',
   'FMB News Center v4 final channel fixes',
   'FMB News Center approved red-white channel system',
+  'Approved red-white News Center final polish',
 ]);
 
 const artwork = await readFile(cognitaArtworkPath, 'utf8');
@@ -105,6 +107,7 @@ for (const filePath of await walk(newsRoot)) {
     'FMB News Center channel redesign v4',
     'FMB News Center v4 final channel fixes',
     'FMB News Center approved red-white channel system',
+    'Approved red-white News Center final polish',
   ]);
 
   if (relative.includes('filipino-centered-training-institution-cognita-vision')) {
@@ -114,4 +117,4 @@ for (const filePath of await walk(newsRoot)) {
 }
 
 if (articleCount < 1) fail('no News report pages were audited');
-console.log(`FMB News Center final audit verified the approved white-red channel, ${articleCount} report pages, the Filipino tagline, geometric broadcast identity, visible masthead, live desk, responsive layout, protected editorial typography, source visibility, retired-logo removal, and HD Cognita artwork.`);
+console.log(`FMB News Center final audit verified the approved white-red channel, ${articleCount} report pages, the Filipino tagline, purple-surface cleanup, geometric broadcast identity, visible masthead, live desk, responsive layout, protected editorial typography, source visibility, retired-logo removal, and HD Cognita artwork.`);
