@@ -7,7 +7,7 @@ const landingPath = path.join(newsRoot, 'index.html');
 const cssRoot = path.join(repositoryRoot, 'dist', 'assets', 'css');
 const sourceCssRoot = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css');
 
-const [landingCss, polishCss, mastheadCss, approvalCss, professionalTypeCss, channelRedesignCss, channelFixesCss, articleContrastCss] = await Promise.all([
+const [landingCss, polishCss, mastheadCss, approvalCss, professionalTypeCss, channelRedesignCss, channelFixesCss, articleContrastCss, approvedRedWhiteCss] = await Promise.all([
   readFile(path.join(cssRoot, 'news-center-v2.css'), 'utf8'),
   readFile(path.join(cssRoot, 'fmb-news-polish-v3.css'), 'utf8'),
   readFile(path.join(sourceCssRoot, 'fmb-news-masthead-v3.css'), 'utf8'),
@@ -16,6 +16,7 @@ const [landingCss, polishCss, mastheadCss, approvalCss, professionalTypeCss, cha
   readFile(path.join(sourceCssRoot, 'fmb-news-channel-v4.css'), 'utf8'),
   readFile(path.join(sourceCssRoot, 'fmb-news-channel-v4-fixes.css'), 'utf8'),
   readFile(path.join(sourceCssRoot, 'fmb-news-channel-v4-article-contrast.css'), 'utf8'),
+  readFile(path.join(sourceCssRoot, 'fmb-news-approved-red-white.css'), 'utf8'),
 ]);
 
 async function walk(directory) {
@@ -32,12 +33,12 @@ let count = 0;
 for (const filePath of await walk(newsRoot)) {
   let html = await readFile(filePath, 'utf8');
   html = html
-    .replace(/<link\b[^>]*href=["'][^"']*(?:news-center-v2|fmb-news-polish-v3|fmb-news-masthead-v3|fmb-news-visual-approval|fmb-news-professional-type|fmb-news-channel-v4|fmb-news-channel-v4-fixes|fmb-news-channel-v4-article-contrast)\.css[^"']*["'][^>]*>\s*/gi, '')
+    .replace(/<link\b[^>]*href=["'][^"']*(?:news-center-v2|fmb-news-polish-v3|fmb-news-masthead-v3|fmb-news-visual-approval|fmb-news-professional-type|fmb-news-channel-v4|fmb-news-channel-v4-fixes|fmb-news-channel-v4-article-contrast|fmb-news-approved-red-white)\.css[^"']*["'][^>]*>\s*/gi, '')
     .replace(/<style\b[^>]*data-fmb-news-final-styles[^>]*>[\s\S]*?<\/style>\s*/gi, '');
 
   const css = filePath === landingPath
-    ? `${landingCss}\n${polishCss}\n${mastheadCss}\n${approvalCss}\n${professionalTypeCss}\n${channelRedesignCss}\n${channelFixesCss}\n${articleContrastCss}`
-    : `${polishCss}\n${mastheadCss}\n${professionalTypeCss}\n${channelRedesignCss}\n${channelFixesCss}\n${articleContrastCss}`;
+    ? `${landingCss}\n${polishCss}\n${mastheadCss}\n${approvalCss}\n${professionalTypeCss}\n${channelRedesignCss}\n${channelFixesCss}\n${articleContrastCss}\n${approvedRedWhiteCss}`
+    : `${polishCss}\n${mastheadCss}\n${professionalTypeCss}\n${channelRedesignCss}\n${channelFixesCss}\n${articleContrastCss}\n${approvedRedWhiteCss}`;
   const safeguard = /(<link\b[^>]*href=["'][^"']*fmb-sitewide-visual-fixes\.css[^"']*["'][^>]*>)/i;
   if (!safeguard.test(html)) throw new Error(`News Center styles: missing sitewide safeguard in ${filePath}`);
   html = html.replace(safeguard, `$1\n<style data-fmb-news-final-styles>\n${css}\n</style>`);
@@ -45,4 +46,4 @@ for (const filePath of await walk(newsRoot)) {
   count += 1;
 }
 
-console.log(`Compiled the final FMB News Center channel system, visible channel masthead and article contrast contract after the global safeguard on ${count} News pages.`);
+console.log(`Compiled the final approved red-white FMB News Center channel system after the global safeguard on ${count} News pages.`);
