@@ -8,6 +8,7 @@ const fmbNewsRoot = path.join(distRoot, 'fmbnews');
 const fmbNewsLandingPath = path.join(fmbNewsRoot, 'index.html');
 const sitemapPath = path.join(distRoot, 'sitemap.xml');
 const cssSourcePath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-futuristic-ph.css');
+const readabilityCssSourcePath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-final-readability.css');
 const canonicalUrl = 'https://www.francinemariebautista.com/fmbnews/';
 
 const orbitMarkup = `
@@ -66,9 +67,13 @@ async function walkPublicHtml(directory) {
   return files;
 }
 
-const futuristicCss = await readFile(cssSourcePath, 'utf8');
+const [futuristicCss, readabilityCss] = await Promise.all([
+  readFile(cssSourcePath, 'utf8'),
+  readFile(readabilityCssSourcePath, 'utf8'),
+]);
+const combinedNewsroomCss = `${futuristicCss}\n\n${readabilityCss}`;
 let landingHtml = await readFile(newsLandingPath, 'utf8');
-landingHtml = makeCanonicalLanding(landingHtml, futuristicCss);
+landingHtml = makeCanonicalLanding(landingHtml, combinedNewsroomCss);
 
 await mkdir(fmbNewsRoot, { recursive: true });
 await writeFile(newsLandingPath, landingHtml, 'utf8');
