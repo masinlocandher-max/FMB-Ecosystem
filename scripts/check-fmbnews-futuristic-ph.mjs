@@ -28,7 +28,7 @@ const requiredLandingMarkers = [
   'nc-ph-star-one',
   'nc-ph-star-two',
   'nc-ph-star-three',
-  '/assets/css/fmbnews-futuristic-ph.css?v=20260728-ph-future-v1',
+  'data-fmbnews-futuristic-ph',
   'https://www.francinemariebautista.com/fmbnews/',
   'Latest reports',
   'Stories that deserve more than a scroll.',
@@ -42,6 +42,9 @@ for (const marker of requiredLandingMarkers) {
 if (!newsHtml.includes('news-futuristic-ph')) fail('/news did not retain the redesigned landing content for legacy access');
 if (!newsHtml.includes('<link rel="canonical" href="https://www.francinemariebautista.com/fmbnews/">')) {
   fail('/news does not canonicalize to /fmbnews');
+}
+if (fmbNewsHtml.includes('<link rel="stylesheet" href="/assets/css/fmbnews-futuristic-ph.css')) {
+  fail('the futuristic layer must be inline so the sitewide safeguard remains the final external stylesheet');
 }
 
 const count = (source, pattern) => (source.match(pattern) || []).length;
@@ -73,6 +76,7 @@ const requiredCssMarkers = [
 ];
 for (const marker of requiredCssMarkers) {
   if (!css.includes(marker)) fail(`futuristic CSS is missing ${marker}`);
+  if (!fmbNewsHtml.includes(marker)) fail(`/fmbnews did not inline the futuristic CSS marker ${marker}`);
 }
 
 if (!sitemap.includes('<loc>https://www.francinemariebautista.com/fmbnews/</loc>')) {
@@ -82,4 +86,4 @@ if (sitemap.includes('<loc>https://www.francinemariebautista.com/news/</loc>')) 
   fail('sitemap.xml still exposes the old landing URL as a separate canonical page');
 }
 
-console.log('Verified /fmbnews canonical routing, preserved newsroom content, Philippine sun and three stars, blue-yellow depth system, readable gray surfaces, undarkened imagery, and mobile responsive safeguards.');
+console.log('Verified /fmbnews canonical routing, preserved newsroom content, Philippine sun and three stars, blue-yellow depth system, readable gray surfaces, undarkened imagery, mobile responsive safeguards, and launch-gate stylesheet order.');
