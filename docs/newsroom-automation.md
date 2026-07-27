@@ -39,11 +39,12 @@ The database automatically removes an FMB Perspective from factual `news`, `advi
    - the story is not classified as high risk;
    - all Filipino public-interest sections are complete;
    - the impact analysis has medium or high confidence.
-6. Crime, politics, elections, allegations, health, legal disputes, deaths, violence, private-person stories, weak evidence, and low-confidence impact analysis stop in the exception queue.
-7. High-risk stories cannot publish without a named administrator review.
-8. Analysis and opinion cannot publish without an explicitly approved FMB Perspective.
-9. Published rows appear on `/news/` and open as source-attributed briefs at `/news/story.html?slug=...`.
-10. FMB News links readers to the original report and does not reproduce the source article in full.
+6. Official speeches, budgets, laws, appointments, election results, agency announcements, and other factual public-affairs reports may publish automatically when the safeguards pass.
+7. Allegations, crime, fraud, legal disputes, sensitive health claims, deaths, violence, private-person stories, weak evidence, and low-confidence impact analysis stop in the exception queue.
+8. High-risk stories cannot publish without a named administrator review.
+9. Analysis and opinion cannot publish without an explicitly approved FMB Perspective.
+10. Published rows appear on `/news/` and open as source-attributed briefs at `/news/story.html?slug=...`.
+11. FMB News links readers to the original report and does not reproduce the source article in full.
 
 ## Filipino public-interest rules
 
