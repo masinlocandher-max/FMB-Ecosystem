@@ -20,7 +20,7 @@ const stories = [
       ['The trade-off Congress must examine', 'Tax relief can support consumption and help businesses retain cash, but it also reduces government revenue unless offset by stronger collection, spending discipline or broader economic growth. Lawmakers should publish clear estimates of the cost, the number of beneficiaries and the effect on education, health, infrastructure and social protection.'],
       ['What happens next', 'The House has begun listing tax-reform bills for committee consideration. The final law may combine, revise or reject parts of the administration proposal. Until a bill passes both chambers and is signed, workers and businesses should not treat the announced thresholds as final.']
     ],
-    sources: [['House committee schedule and tax bills','https://congress.gov.ph/committees/committee-meetings'],['House statement on SONA legislative priorities','https://www.congress.gov.ph/media/press-releases/9952'],['Reuters report on the 2026 SONA','https://www.reuters.com/world/asia-pacific/philippines-marcos-puts-anti-graft-campaign-centre-address-congress-2026-07-27/']
+    sources: [['House committee schedule and tax bills','https://congress.gov.ph/committees/committee-meetings'],['House statement on SONA legislative priorities','https://www.congress.gov.ph/media/press-releases/9952'],['Reuters report on the 2026 SONA','https://www.reuters.com/world/asia-pacific/philippines-marcos-puts-anti-graft-campaign-centre-address-congress-2026-07-27/']]
   },
   {
     slug: 'lower-electricity-costs-system-loss-consumer-protection',
