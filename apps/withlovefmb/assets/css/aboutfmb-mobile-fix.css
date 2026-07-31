@@ -1,0 +1,194 @@
+/* About FMB mobile layout repair: preserve the approved identity while removing overlap and dead space. */
+
+@media (max-width: 860px) {
+  .fmb-about-corporate {
+    padding-bottom: calc(108px + env(safe-area-inset-bottom));
+  }
+
+  .fmb-about-corporate .fmb-about-hero {
+    min-height: auto;
+    padding: 38px 0 34px;
+  }
+
+  .fmb-about-corporate .fmb-about-hero .fco-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  .fmb-about-corporate .fmb-about-hero-copy {
+    order: 1;
+    display: block;
+    max-width: 680px;
+    padding-inline: 2px;
+  }
+
+  .fmb-about-corporate .fmb-about-hero h1 {
+    max-width: 12ch;
+    margin-bottom: 14px;
+    font-size: clamp(2.7rem, 12vw, 4.25rem);
+    line-height: .94;
+  }
+
+  .fmb-about-corporate .fmb-about-hero-deck {
+    margin-bottom: 12px;
+    font-size: 1rem;
+    line-height: 1.42;
+  }
+
+  .fmb-about-corporate .fmb-about-hero .fco-lead {
+    max-width: 42rem;
+    font-size: .9rem;
+    line-height: 1.65;
+  }
+
+  .fmb-about-corporate .fmb-about-roles {
+    margin-top: 17px;
+  }
+
+  .fmb-about-corporate .fmb-about-hero .fco-actions {
+    margin-top: 21px;
+  }
+
+  .fmb-about-corporate .fmb-about-hero-visual {
+    order: 2;
+    width: 100%;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .fmb-about-corporate .fco-portrait-shape {
+    inset: 0;
+    border-radius: 30px;
+    background: radial-gradient(circle at 75% 12%, rgba(226,200,142,.16), transparent 30%), linear-gradient(155deg, rgba(255,255,255,.07), rgba(41,23,68,.26));
+  }
+
+  .fmb-about-corporate .fco-founder-portrait {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    min-height: 0;
+    display: block;
+    overflow: hidden;
+    border-radius: 28px;
+    background: linear-gradient(145deg, rgba(255,255,255,.07), rgba(49,28,72,.42));
+    box-shadow: 0 22px 52px rgba(10,5,18,.24);
+  }
+
+  .fmb-about-corporate .fco-founder-portrait img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    object-fit: cover;
+    object-position: center top;
+    filter: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .fmb-about-corporate .fco-founder-nameplate {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    margin-top: 12px;
+    padding: 14px 16px;
+    display: grid;
+    grid-template-columns: 38px minmax(0,1fr);
+    gap: 11px;
+    border-radius: 18px;
+    transform: none;
+    background: rgba(28,14,45,.9);
+    box-shadow: 0 14px 32px rgba(11,5,18,.18);
+  }
+
+  .fmb-about-corporate .fco-founder-signature {
+    max-width: 190px;
+  }
+
+  .fmb-about-corporate .fmb-about-mandate {
+    position: relative;
+    z-index: 1;
+  }
+
+  .fmb-about-corporate .fmb-about-mandate-grid {
+    gap: 12px;
+    padding-block: 18px;
+  }
+
+  .fmb-about-corporate .fmb-about-mandate article {
+    min-height: 0;
+    padding: 22px 20px;
+    border: 1px solid var(--fco-line);
+    border-radius: 22px;
+    background: rgba(255,255,255,.9);
+    box-shadow: 0 10px 28px rgba(30,18,42,.06);
+  }
+
+  .fmb-about-corporate .fco-mobile-dock {
+    right: 12px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    left: 12px;
+    width: auto;
+    max-width: 620px;
+    margin-inline: auto;
+    padding: 10px 8px max(10px, env(safe-area-inset-bottom));
+    border-radius: 26px;
+    background: rgba(250,248,252,.91);
+    box-shadow: 0 18px 45px rgba(25,13,39,.18);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    backdrop-filter: blur(24px) saturate(150%);
+  }
+
+  .fmb-about-corporate .fco-mobile-dock .fco-dock-link {
+    min-height: 48px;
+    padding: 7px 2px;
+  }
+
+  .fmb-about-corporate .fco-mobile-dock .fco-dock-link span:last-child {
+    font-size: 7px;
+    letter-spacing: .01em;
+  }
+
+  .fmb-about-corporate :is(.reception-desk,.reception-widget,.fco-reception-desk,.fmb-reception-desk,.az-reception,.site-reception,.concierge-widget) {
+    right: 16px !important;
+    bottom: calc(88px + env(safe-area-inset-bottom)) !important;
+    left: auto !important;
+    max-width: min(285px, calc(100vw - 32px)) !important;
+    transform: none !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .fmb-about-corporate .fmb-about-hero {
+    padding-top: 30px;
+  }
+
+  .fmb-about-corporate .fmb-about-hero .fco-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .fmb-about-corporate .fmb-about-hero .fco-actions .fco-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .fmb-about-corporate .fco-founder-portrait,
+  .fmb-about-corporate .fco-founder-portrait img {
+    border-radius: 24px;
+  }
+
+  .fmb-about-corporate .fco-founder-nameplate {
+    grid-template-columns: 34px minmax(0,1fr);
+    padding: 12px 14px;
+  }
+
+  .fmb-about-corporate .fmb-about-mandate article {
+    grid-template-columns: 34px 1fr;
+    gap: 5px 12px;
+  }
+}
