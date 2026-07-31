@@ -5,11 +5,13 @@
   const root = document.documentElement;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (!document.querySelector('link[href*="aboutfmb-seamless.css"]')) {
+  const loadStylesheet = (href, marker) => {
+    if (document.querySelector(`link[href*="${marker}"]`)) return;
+
     const preload = document.createElement('link');
     preload.rel = 'preload';
     preload.as = 'style';
-    preload.href = '/assets/css/aboutfmb-seamless.css?v=20260721-responsive-v2';
+    preload.href = href;
     document.head.appendChild(preload);
 
     const stylesheet = document.createElement('link');
@@ -17,7 +19,10 @@
     stylesheet.href = preload.href;
     stylesheet.fetchPriority = 'high';
     document.head.appendChild(stylesheet);
-  }
+  };
+
+  loadStylesheet('/assets/css/aboutfmb-seamless.css?v=20260721-responsive-v2', 'aboutfmb-seamless.css');
+  loadStylesheet('/assets/css/aboutfmb-mobile-fix.css?v=20260731-mobile-fix-v1', 'aboutfmb-mobile-fix.css');
 
   page.querySelectorAll('a[href*="/fmb&co/"]').forEach(link => {
     link.href = link.getAttribute('href').replace('/fmb&co/', '/fmbandco/');
