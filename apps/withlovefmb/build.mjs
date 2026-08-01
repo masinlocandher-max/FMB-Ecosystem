@@ -31,4 +31,13 @@ if (!/rel=["']manifest["']/i.test(homeHtml)) {
   await writeFile(homePath, homeHtml, 'utf8');
 }
 
-console.log('Built the FMB public website and Yoni application into apps/withlovefmb/dist with the public web app manifest connected.');
+const sitemapPath = path.join(output, 'sitemap.xml');
+let sitemapXml = await readFile(sitemapPath, 'utf8');
+const mediaArchiveUrl = 'https://www.francinemariebautista.com/media-archive/';
+if (!sitemapXml.includes(mediaArchiveUrl)) {
+  const mediaArchiveEntry = '  <url><loc>https://www.francinemariebautista.com/media-archive/</loc><lastmod>2026-08-02</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>\n';
+  sitemapXml = sitemapXml.replace('</urlset>', `${mediaArchiveEntry}</urlset>`);
+  await writeFile(sitemapPath, sitemapXml, 'utf8');
+}
+
+console.log('Built the FMB public website and Yoni application into apps/withlovefmb/dist with the public web app manifest and searchable media archive connected.');
