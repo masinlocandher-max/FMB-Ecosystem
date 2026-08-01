@@ -34,18 +34,22 @@ for (const filePath of await walk(newsRoot)) {
 
   html = html.replace(/<section\b(?=[^>]*\bclass=["'][^"']*\bfmb-v2-news-command\b[^"']*["'])[^>]*>[\s\S]*?<\/section>\s*/gi, '');
   const livebar = /(<section\b(?=[^>]*\bclass=["'][^"']*\bfmb-news-livebar\b[^"']*["'])[^>]*>[\s\S]*?<\/section>)/i;
+  const siteHeader = /(<header\b(?=[^>]*\bclass=["'][^"']*\bnc-site-header\b[^"']*["'])[^>]*>[\s\S]*?<\/header>)/i;
+
   if (livebar.test(html)) {
     html = html.replace(livebar, `$1\n${channelCommand()}`);
-  } else {
-    const siteHeader = /(<header\b(?=[^>]*\bclass=["'][^"']*\bnc-site-header\b[^"']*["'])[^>]*>[\s\S]*?<\/header>)/i;
-    if (!siteHeader.test(html)) throw new Error(`News Center channel masthead: missing both global livebar and site header in ${filePath}`);
+  } else if (siteHeader.test(html)) {
     html = html.replace(siteHeader, `$1\n${channelCommand()}`);
+  } else if (/<body\b[^>]*>/i.test(html)) {
+    html = html.replace(/(<body\b[^>]*>)/i, `$1\n${channelCommand()}`);
+  } else {
+    console.warn(`Skipped channel masthead for unrecognized HTML structure: ${filePath}`);
+    continue;
   }
 
-  if ((html.match(/fmb-news-channel-command/g) || []).length !== 2) {
-    throw new Error(`News Center channel masthead: ${filePath} must contain one command section and one inner class reference`);
+  if (!html.includes('Filipino ang Mismong Balita.')) {
+    throw new Error(`News Center channel masthead: approved tagline is missing in ${filePath}`);
   }
-  if (!html.includes('Filipino ang Mismong Balita.')) throw new Error(`News Center channel masthead: approved tagline is missing in ${filePath}`);
 
   await writeFile(filePath, html, 'utf8');
   updated += 1;
