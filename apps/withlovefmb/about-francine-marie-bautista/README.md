@@ -1,0 +1,1 @@
+This directory contains the strategic, indexable professional profile for Francine Marie Bautista. The visible site navigation continues to use only `/aboutfmb/` as the About menu item.
