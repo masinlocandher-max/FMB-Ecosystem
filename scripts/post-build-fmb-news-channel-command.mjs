@@ -32,6 +32,12 @@ for (const filePath of await walk(newsRoot)) {
   let html = await readFile(filePath, 'utf8');
   if (!/\bnews-(?:channel|story)-route\b/.test(html)) continue;
 
+  html = html.replace(/<body\b([^>]*)\bclass=(["'])([^"']*)\2([^>]*)>/i, (match, before, quote, classes, after) => {
+    const classList = new Set(classes.split(/\s+/).filter(Boolean));
+    classList.add('fmb-unified-public');
+    return `<body${before}class=${quote}${[...classList].join(' ')}${quote}${after}>`;
+  });
+
   html = html.replace(/<section\b(?=[^>]*\bclass=["'][^"']*\bfmb-v2-news-command\b[^"']*["'])[^>]*>[\s\S]*?<\/section>\s*/gi, '');
   const livebar = /(<section\b(?=[^>]*\bclass=["'][^"']*\bfmb-news-livebar\b[^"']*["'])[^>]*>[\s\S]*?<\/section>)/i;
   const siteHeader = /(<header\b(?=[^>]*\bclass=["'][^"']*\bnc-site-header\b[^"']*["'])[^>]*>[\s\S]*?<\/header>)/i;
@@ -50,9 +56,12 @@ for (const filePath of await walk(newsRoot)) {
   if (!html.includes('Filipino ang Mismong Balita.')) {
     throw new Error(`News Center channel masthead: approved tagline is missing in ${filePath}`);
   }
+  if (!/\bclass=["'][^"']*\bfmb-unified-public\b/.test(html)) {
+    throw new Error(`News Center compatibility: missing fmb-unified-public in ${filePath}`);
+  }
 
   await writeFile(filePath, html, 'utf8');
   updated += 1;
 }
 
-console.log(`Added the visible FMB News Center channel masthead to ${updated} landing and report pages.`);
+console.log(`Added the visible FMB News Center channel masthead and unified public class to ${updated} landing and report pages.`);
