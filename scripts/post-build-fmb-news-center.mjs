@@ -7,7 +7,7 @@ const landingPath = path.join(newsRoot, 'index.html');
 const assetsRoot = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css');
 const distCssRoot = path.join(repositoryRoot, 'dist', 'assets', 'css');
 const identityRecord = '/assets/images/fmb-approved/fmb-news-official-transparent.webp';
-const leadImageUrl = 'https://www.francinemariebautista.com/assets/images/news/subic-aeta-dumpsite-iwitness.jpg';
+const leadImageUrl = 'https://www.francinemariebautista.com/assets/images/news/todays-headlines-august-2-2026.svg';
 const stylesheets = [
   {
     source: path.join(assetsRoot, 'news-center-v2.css'),
@@ -132,7 +132,7 @@ if (!landing.includes('<meta property="og:image:width"')) {
   landing = replaceRequired(
     landing,
     `<meta property="og:image" content="${leadImageUrl}">`,
-    `<meta property="og:image" content="${leadImageUrl}">\n<meta property="og:image:width" content="800">\n<meta property="og:image:height" content="533">\n<meta property="og:image:alt" content="The current lead report from FMB News Center">`,
+    `<meta property="og:image" content="${leadImageUrl}">\n<meta property="og:image:width" content="1536">\n<meta property="og:image:height" content="864">\n<meta property="og:image:alt" content="The current lead report from FMB News Center">`,
     'News Center Open Graph image',
   );
 }
