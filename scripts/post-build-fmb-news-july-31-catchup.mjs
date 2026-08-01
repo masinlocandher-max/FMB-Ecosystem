@@ -160,17 +160,76 @@ for (const story of stories) {
 }
 
 let landing = await readFile(landingPath, 'utf8');
+const latestBriefingHref = '/news/todays-headlines-august-2-2026/';
+const hasLatestBriefing = landing.includes(latestBriefingHref);
+
 for (const story of [...stories].reverse()) {
   const href = `/news/${story.slug}/`;
   if (landing.includes(href)) continue;
-  landing = landing.replace('<div class="nc-wire-track">', `<div class="nc-wire-track"><span>${esc(story.title)}</span>`);
+
+  const wireMarker = '<div class="nc-wire-track">';
+  const wireStart = landing.indexOf(wireMarker);
+  if (wireStart < 0) throw new Error('Catch-up edition: news wire insertion point not found');
+  if (hasLatestBriefing) {
+    const firstWireItemEnd = landing.indexOf('</span>', wireStart);
+    if (firstWireItemEnd < 0) throw new Error('Catch-up edition: news wire item not found');
+    const insertionPoint = firstWireItemEnd + '</span>'.length;
+    landing = `${landing.slice(0, insertionPoint)}<span>${esc(story.title)}</span>${landing.slice(insertionPoint)}`;
+  } else {
+    landing = landing.replace(wireMarker, `${wireMarker}<span>${esc(story.title)}</span>`);
+  }
+
   const header = '<div class="nc-rundown-head">';
-  const firstArticle = landing.indexOf('<article class="nc-rundown-story"', landing.indexOf(header));
-  if (firstArticle < 0) throw new Error('Catch-up edition: rundown insertion point not found');
-  const card = `<article class="nc-rundown-story"><a href="${href}"><span class="nc-rundown-number">NEW</span><figure class="news-visual"><img src="${story.image}" width="1536" height="864" loading="lazy" decoding="async" alt="${esc(story.alt)}"><figcaption>FMB News Center editorial visual. Sources appear in the report.</figcaption></figure><div><p>${esc(story.kicker)}</p><h3>${esc(story.title)}</h3><span>${story.read}</span></div></a></article>\n        `;
-  landing = `${landing.slice(0, firstArticle)}${card}${landing.slice(firstArticle)}`;
-  landing = landing.replace('"itemListElement":[', `"itemListElement":[\n        {"@type":"ListItem","position":1,"url":"https://www.francinemariebautista.com${href}","name":${JSON.stringify(story.title)}},`);
+  const headerStart = landing.indexOf(header);
+  const latestCardHref = landing.indexOf(`href="${latestBriefingHref}"`, headerStart);
+  let cardInsertionPoint;
+  if (latestCardHref >= 0) {
+    const latestCardEnd = landing.indexOf('</article>', latestCardHref);
+    if (latestCardEnd < 0) throw new Error('Catch-up edition: latest briefing card is incomplete');
+    cardInsertionPoint = latestCardEnd + '</article>'.length;
+  } else {
+    cardInsertionPoint = landing.indexOf('<article class="nc-rundown-story"', headerStart);
+  }
+  if (cardInsertionPoint < 0) throw new Error('Catch-up edition: rundown insertion point not found');
+
+  const card = `\n        <article class="nc-rundown-story"><a href="${href}"><span class="nc-rundown-number">NEW</span><figure class="news-visual"><img src="${story.image}" width="1536" height="864" loading="lazy" decoding="async" alt="${esc(story.alt)}"><figcaption>FMB News Center editorial visual. Sources appear in the report.</figcaption></figure><div><p>${esc(story.kicker)}</p><h3>${esc(story.title)}</h3><span>${story.read}</span></div></a></article>`;
+  landing = `${landing.slice(0, cardInsertionPoint)}${card}${landing.slice(cardInsertionPoint)}`;
+
+  const listMarker = '"itemListElement":[';
+  const listStart = landing.indexOf(listMarker);
+  const latestListUrl = `"url":"https://www.francinemariebautista.com${latestBriefingHref}"`;
+  const latestListItem = landing.indexOf(latestListUrl, listStart);
+  if (latestListItem >= 0) {
+    const latestListItemEnd = landing.indexOf('},', latestListItem);
+    if (latestListItemEnd < 0) throw new Error('Catch-up edition: latest structured-data item is incomplete');
+    const insertionPoint = latestListItemEnd + 2;
+    const item = `\n        {"@type":"ListItem","position":2,"url":"https://www.francinemariebautista.com${href}","name":${JSON.stringify(story.title)}},`;
+    landing = `${landing.slice(0, insertionPoint)}${item}${landing.slice(insertionPoint)}`;
+  } else {
+    landing = landing.replace(listMarker, `${listMarker}\n        {"@type":"ListItem","position":1,"url":"https://www.francinemariebautista.com${href}","name":${JSON.stringify(story.title)}},`);
+  }
 }
-landing = landing.replace(/<time(?: data-news-updated)?>(?:Updated )?[^<]*<\/time>/, '<time data-news-updated>Updated 31 July 2026</time>');
+
+let rundownPosition = 0;
+landing = landing.replace(
+  /<span class="nc-rundown-number">(?:NEW|\d+)<\/span>/g,
+  () => `<span class="nc-rundown-number">${String(++rundownPosition).padStart(2, '0')}</span>`
+);
+
+const listStart = landing.indexOf('"itemListElement":[');
+const listEnd = listStart >= 0 ? landing.indexOf(']', listStart) : -1;
+if (listStart >= 0 && listEnd >= 0) {
+  let structuredPosition = 0;
+  const listBlock = landing
+    .slice(listStart, listEnd)
+    .replace(/"position":\d+/g, () => `"position":${++structuredPosition}`);
+  landing = `${landing.slice(0, listStart)}${listBlock}${landing.slice(listEnd)}`;
+}
+
+const editionDate = hasLatestBriefing ? '2 August 2026' : '31 July 2026';
+landing = landing.replace(
+  /<time(?: data-news-updated)?>(?:Updated )?[^<]*<\/time>/,
+  `<time data-news-updated>Updated ${editionDate}</time>`
+);
 await writeFile(landingPath, landing, 'utf8');
-console.log(`Published ${stories.length} verified FMB News catch-up reports.`);
+console.log(`Published ${stories.length} verified FMB News catch-up reports behind the latest daily briefing.`);
