@@ -72,7 +72,8 @@ if (!landing.includes('data-news-updated')) fail('landing page is missing its li
 if (landing.includes('Sunday edition · 26 July 2026')) fail('landing page still hardcodes the edition date');
 if (landing.includes('<time>Updated 26 July 2026</time>')) fail('landing page still hardcodes the update date');
 if (!landing.includes('fmb-news-identity-record')) fail('landing page is missing the non-rendered identity record');
-if (!landing.includes('og:image:width" content="800"') || !landing.includes('og:image:height" content="533"')) fail('landing page social image dimensions are incomplete');
+if (!landing.includes('og:image" content="https://www.francinemariebautista.com/assets/images/news/todays-headlines-august-2-2026.svg"')) fail('landing page social image is not the current August 2 title card');
+if (!landing.includes('og:image:width" content="1536"') || !landing.includes('og:image:height" content="864"')) fail('landing page social image dimensions are incomplete');
 assertFinalStyleContract(landing, 'news/index.html', [
   'body.news-channel-route.news-center-v2',
   'Final FMB Newsroom polish',
