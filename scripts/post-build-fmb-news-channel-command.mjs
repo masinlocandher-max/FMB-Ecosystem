@@ -35,6 +35,7 @@ for (const filePath of await walk(newsRoot)) {
   html = html.replace(/<body\b([^>]*)\bclass=(["'])([^"']*)\2([^>]*)>/i, (match, before, quote, classes, after) => {
     const classList = new Set(classes.split(/\s+/).filter(Boolean));
     classList.add('fmb-unified-public');
+    classList.add('fmb-approved-launch');
     return `<body${before}class=${quote}${[...classList].join(' ')}${quote}${after}>`;
   });
 
@@ -59,9 +60,12 @@ for (const filePath of await walk(newsRoot)) {
   if (!/\bclass=["'][^"']*\bfmb-unified-public\b/.test(html)) {
     throw new Error(`News Center compatibility: missing fmb-unified-public in ${filePath}`);
   }
+  if (!/\bclass=["'][^"']*\bfmb-approved-launch\b/.test(html)) {
+    throw new Error(`News Center compatibility: missing fmb-approved-launch in ${filePath}`);
+  }
 
   await writeFile(filePath, html, 'utf8');
   updated += 1;
 }
 
-console.log(`Added the visible FMB News Center channel masthead and unified public class to ${updated} landing and report pages.`);
+console.log(`Added the visible FMB News Center channel masthead and approved public classes to ${updated} landing and report pages.`);
