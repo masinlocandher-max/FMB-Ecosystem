@@ -40,11 +40,16 @@ for (const filePath of await walk(newsRoot)) {
   const css = filePath === landingPath
     ? `${landingCss}\n${polishCss}\n${mastheadCss}\n${approvalCss}\n${professionalTypeCss}\n${channelRedesignCss}\n${channelFixesCss}\n${articleContrastCss}\n${approvedRedWhiteCss}\n${approvedFinalPolishCss}`
     : `${polishCss}\n${mastheadCss}\n${professionalTypeCss}\n${channelRedesignCss}\n${channelFixesCss}\n${articleContrastCss}\n${approvedRedWhiteCss}\n${approvedFinalPolishCss}`;
+  const finalStyles = `<style data-fmb-news-final-styles>\n${css}\n</style>`;
   const safeguard = /(<link\b[^>]*href=["'][^"']*fmb-sitewide-visual-fixes\.css[^"']*["'][^>]*>)/i;
-  if (!safeguard.test(html)) throw new Error(`News Center styles: missing sitewide safeguard in ${filePath}`);
-  html = html.replace(safeguard, `$1\n<style data-fmb-news-final-styles>\n${css}\n</style>`);
+  if (safeguard.test(html)) {
+    html = html.replace(safeguard, `$1\n${finalStyles}`);
+  } else {
+    if (!html.includes('</head>')) throw new Error(`News Center styles: missing closing head in ${filePath}`);
+    html = html.replace('</head>', `${finalStyles}\n</head>`);
+  }
   await writeFile(filePath, html, 'utf8');
   count += 1;
 }
 
-console.log(`Compiled the final approved red-white FMB News Center channel system and purple-surface cleanup after the global safeguard on ${count} News pages.`);
+console.log(`Compiled the final approved red-white FMB News Center channel system and purple-surface cleanup on ${count} News pages.`);
