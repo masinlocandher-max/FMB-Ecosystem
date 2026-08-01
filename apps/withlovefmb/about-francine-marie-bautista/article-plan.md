@@ -1,0 +1,1 @@
+Planned expansion: early life and education, pageant journey, and advocacy work. All claims must remain factual and source-aware.
