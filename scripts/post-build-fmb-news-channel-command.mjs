@@ -3,6 +3,7 @@ import path from 'node:path';
 
 const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
 const newsRoot = path.join(repositoryRoot, 'dist', 'news');
+const requiredVisualCss = '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-readability-v2';
 
 async function walk(directory) {
   const files = [];
@@ -39,6 +40,10 @@ for (const filePath of await walk(newsRoot)) {
     return `<body${before}class=${quote}${[...classList].join(' ')}${quote}${after}>`;
   });
 
+  if (!html.includes(requiredVisualCss)) {
+    html = html.replace(/<\/head>/i, `<link rel="stylesheet" href="${requiredVisualCss}">\n</head>`);
+  }
+
   html = html.replace(/<section\b(?=[^>]*\bclass=["'][^"']*\bfmb-v2-news-command\b[^"']*["'])[^>]*>[\s\S]*?<\/section>\s*/gi, '');
   const livebar = /(<section\b(?=[^>]*\bclass=["'][^"']*\bfmb-news-livebar\b[^"']*["'])[^>]*>[\s\S]*?<\/section>)/i;
   const siteHeader = /(<header\b(?=[^>]*\bclass=["'][^"']*\bnc-site-header\b[^"']*["'])[^>]*>[\s\S]*?<\/header>)/i;
@@ -54,18 +59,13 @@ for (const filePath of await walk(newsRoot)) {
     continue;
   }
 
-  if (!html.includes('Filipino ang Mismong Balita.')) {
-    throw new Error(`News Center channel masthead: approved tagline is missing in ${filePath}`);
-  }
-  if (!/\bclass=["'][^"']*\bfmb-unified-public\b/.test(html)) {
-    throw new Error(`News Center compatibility: missing fmb-unified-public in ${filePath}`);
-  }
-  if (!/\bclass=["'][^"']*\bfmb-approved-launch\b/.test(html)) {
-    throw new Error(`News Center compatibility: missing fmb-approved-launch in ${filePath}`);
-  }
+  if (!html.includes('Filipino ang Mismong Balita.')) throw new Error(`News Center channel masthead: approved tagline is missing in ${filePath}`);
+  if (!/\bclass=["'][^"']*\bfmb-unified-public\b/.test(html)) throw new Error(`News Center compatibility: missing fmb-unified-public in ${filePath}`);
+  if (!/\bclass=["'][^"']*\bfmb-approved-launch\b/.test(html)) throw new Error(`News Center compatibility: missing fmb-approved-launch in ${filePath}`);
+  if (!html.includes(requiredVisualCss)) throw new Error(`News Center compatibility: missing required visual stylesheet in ${filePath}`);
 
   await writeFile(filePath, html, 'utf8');
   updated += 1;
 }
 
-console.log(`Added the visible FMB News Center channel masthead and approved public classes to ${updated} landing and report pages.`);
+console.log(`Added the visible FMB News Center channel masthead, launch classes, and required stylesheet to ${updated} landing and report pages.`);
