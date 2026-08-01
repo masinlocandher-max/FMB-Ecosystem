@@ -6,6 +6,7 @@ const newsRoot = path.join(repositoryRoot, 'dist', 'news');
 const landingPath = path.join(newsRoot, 'index.html');
 const cssRoot = path.join(repositoryRoot, 'dist', 'assets', 'css');
 const sourceCssRoot = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css');
+const safeguardHref = '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-readability-v2';
 
 const [landingCss, polishCss, mastheadCss, approvalCss, professionalTypeCss, channelRedesignCss, channelFixesCss, articleContrastCss, approvedRedWhiteCss, approvedFinalPolishCss] = await Promise.all([
   readFile(path.join(cssRoot, 'news-center-v2.css'), 'utf8'),
@@ -31,6 +32,7 @@ async function walk(directory) {
 }
 
 let count = 0;
+let repairedSafeguards = 0;
 for (const filePath of await walk(newsRoot)) {
   let html = await readFile(filePath, 'utf8');
   html = html
@@ -42,14 +44,15 @@ for (const filePath of await walk(newsRoot)) {
     : `${polishCss}\n${mastheadCss}\n${professionalTypeCss}\n${channelRedesignCss}\n${channelFixesCss}\n${articleContrastCss}\n${approvedRedWhiteCss}\n${approvedFinalPolishCss}`;
   const finalStyles = `<style data-fmb-news-final-styles>\n${css}\n</style>`;
   const safeguard = /(<link\b[^>]*href=["'][^"']*fmb-sitewide-visual-fixes\.css[^"']*["'][^>]*>)/i;
-  if (safeguard.test(html)) {
-    html = html.replace(safeguard, `$1\n${finalStyles}`);
-  } else {
+  if (!safeguard.test(html)) {
     if (!html.includes('</head>')) throw new Error(`News Center styles: missing closing head in ${filePath}`);
-    html = html.replace('</head>', `${finalStyles}\n</head>`);
+    html = html.replace('</head>', `<link rel="stylesheet" href="${safeguardHref}">\n</head>`);
+    repairedSafeguards += 1;
   }
+  if (!safeguard.test(html)) throw new Error(`News Center styles: could not repair sitewide safeguard in ${filePath}`);
+  html = html.replace(safeguard, `$1\n${finalStyles}`);
   await writeFile(filePath, html, 'utf8');
   count += 1;
 }
 
-console.log(`Compiled the final approved red-white FMB News Center channel system and purple-surface cleanup on ${count} News pages.`);
+console.log(`Compiled the final approved red-white FMB News Center channel system and purple-surface cleanup after the global safeguard on ${count} News pages and repaired ${repairedSafeguards} post-build safeguard link(s).`);

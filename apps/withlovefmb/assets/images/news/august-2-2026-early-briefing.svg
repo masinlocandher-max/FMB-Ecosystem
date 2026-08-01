@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1536" height="864" viewBox="0 0 1536 864" role="img" aria-labelledby="title desc">
+  <title id="title">FMB News Center early briefing for 2 August 2026</title>
+  <desc id="desc">A restrained Philippine newsroom illustration with sun, stars, weather contours, sea lines and the words Early Briefing.</desc>
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7f9fc"/>
+      <stop offset="1" stop-color="#e7edf5"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0038a8"/>
+      <stop offset="1" stop-color="#0057d9"/>
+    </linearGradient>
+    <linearGradient id="red" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ce1126"/>
+      <stop offset="1" stop-color="#9f0b1c"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#0b1f3b" flood-opacity=".16"/>
+    </filter>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#718098" stroke-opacity=".10" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1536" height="864" fill="url(#paper)"/>
+  <rect width="1536" height="864" fill="url(#grid)"/>
+  <path d="M0 0h610L0 610z" fill="url(#blue)"/>
+  <path d="M1536 864H900l636-636z" fill="url(#red)"/>
+
+  <g opacity=".22" fill="none" stroke="#0038a8" stroke-width="4">
+    <path d="M1035 42c184 52 306 189 344 358"/>
+    <path d="M987 88c158 45 262 161 294 304"/>
+    <path d="M945 136c129 38 214 133 241 251"/>
+  </g>
+  <g opacity=".18" fill="none" stroke="#ce1126" stroke-width="3">
+    <path d="M126 648c184-100 372-125 563-74 108 28 209 80 307 156"/>
+    <path d="M90 703c197-106 400-131 606-74 99 27 192 72 281 135"/>
+  </g>
+
+  <g transform="translate(118 112)" fill="#fcd116">
+    <circle cx="76" cy="76" r="35"/>
+    <g stroke="#fcd116" stroke-width="13" stroke-linecap="round">
+      <path d="M76 6v24M76 122v24M6 76h24M122 76h24M27 27l17 17M108 108l17 17M125 27l-17 17M44 108l-17 17"/>
+    </g>
+    <path d="M184 6l8 20 22 1-17 14 6 22-19-12-19 12 6-22-17-14 22-1z"/>
+    <path d="M6 184l8 20 22 1-17 14 6 22-19-12-19 12 6-22-17-14 22-1z"/>
+    <path d="M184 184l8 20 22 1-17 14 6 22-19-12-19 12 6-22-17-14 22-1z"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="318" y="170" width="900" height="524" rx="34" fill="#ffffff" fill-opacity=".94"/>
+    <rect x="318" y="170" width="18" height="524" rx="9" fill="#ce1126"/>
+  </g>
+
+  <g font-family="Arial, Helvetica, sans-serif">
+    <text x="398" y="268" font-size="28" font-weight="700" letter-spacing="8" fill="#ce1126">FMB NEWS CENTER</text>
+    <text x="398" y="390" font-size="92" font-weight="800" letter-spacing="-3" fill="#172233">EARLY</text>
+    <text x="398" y="486" font-size="92" font-weight="800" letter-spacing="-3" fill="#0038a8">BRIEFING</text>
+    <line x1="398" y1="530" x2="1110" y2="530" stroke="#d8dee8" stroke-width="3"/>
+    <text x="398" y="590" font-size="28" font-weight="700" letter-spacing="3" fill="#4d5a6d">02 AUGUST 2026 · PHILIPPINE STANDARD TIME</text>
+    <text x="398" y="640" font-size="24" fill="#657287">Weather · Bajo de Masinloc · Zambales · Filipino workers · World</text>
+  </g>
+
+  <g transform="translate(1042 250)" fill="none" stroke="#0038a8" stroke-width="11" stroke-linecap="round" opacity=".92">
+    <path d="M0 80c54-63 150-73 215-25 58 43 72 124 33 182-34 51-104 69-158 43-47-22-71-76-54-124 14-39 57-61 96-49 33 10 52 45 42 78-8 27-37 43-64 35"/>
+    <circle cx="108" cy="188" r="13" fill="#fcd116" stroke="none"/>
+  </g>
+
+  <rect y="822" width="1536" height="42" fill="#172233"/>
+  <text x="768" y="850" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700" letter-spacing="5" fill="#ffffff">FILIPINO ANG MISMONG BALITA.</text>
+</svg>
