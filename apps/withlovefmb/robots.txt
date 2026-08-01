@@ -12,3 +12,4 @@ Disallow: /admin-activate.html
 Sitemap: https://www.francinemariebautista.com/sitemap.xml
 Sitemap: https://www.francinemariebautista.com/media-sitemap.xml
 Sitemap: https://www.francinemariebautista.com/profile-sitemap.xml
+Sitemap: https://www.francinemariebautista.com/early-life-profile-sitemap.xml
