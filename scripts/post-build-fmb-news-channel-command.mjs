@@ -34,8 +34,13 @@ for (const filePath of await walk(newsRoot)) {
 
   html = html.replace(/<section\b(?=[^>]*\bclass=["'][^"']*\bfmb-v2-news-command\b[^"']*["'])[^>]*>[\s\S]*?<\/section>\s*/gi, '');
   const livebar = /(<section\b(?=[^>]*\bclass=["'][^"']*\bfmb-news-livebar\b[^"']*["'])[^>]*>[\s\S]*?<\/section>)/i;
-  if (!livebar.test(html)) throw new Error(`News Center channel masthead: missing global livebar in ${filePath}`);
-  html = html.replace(livebar, `$1\n${channelCommand()}`);
+  if (livebar.test(html)) {
+    html = html.replace(livebar, `$1\n${channelCommand()}`);
+  } else {
+    const siteHeader = /(<header\b(?=[^>]*\bclass=["'][^"']*\bnc-site-header\b[^"']*["'])[^>]*>[\s\S]*?<\/header>)/i;
+    if (!siteHeader.test(html)) throw new Error(`News Center channel masthead: missing both global livebar and site header in ${filePath}`);
+    html = html.replace(siteHeader, `$1\n${channelCommand()}`);
+  }
 
   if ((html.match(/fmb-news-channel-command/g) || []).length !== 2) {
     throw new Error(`News Center channel masthead: ${filePath} must contain one command section and one inner class reference`);
