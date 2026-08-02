@@ -95,7 +95,12 @@ let home = await readFile(homeFile, 'utf8');
 home = removeExistingGrid(removeHeroStack(home));
 
 if (!home.includes('fmb-cognita-ad-grid.css')) {
-  home = home.replace('</head>', `${stylesheet}\n</head>`);
+  const sitewideStylesheet = /<link\b[^>]*href=(["'])\/assets\/css\/fmb-sitewide-visual-fixes\.css[^"']*\1[^>]*>/i;
+  if (sitewideStylesheet.test(home)) {
+    home = home.replace(sitewideStylesheet, `${stylesheet}\n$&`);
+  } else {
+    home = home.replace('</head>', `${stylesheet}\n</head>`);
+  }
 }
 
 const heroStart = /<section\b[^>]*class=(['"])[^'"]*\bhero\b[^'"]*\1[^>]*>/i.exec(home)?.index ?? -1;
