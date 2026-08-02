@@ -10,6 +10,7 @@ const fmbNewsLandingPath = path.join(fmbNewsRoot, 'index.html');
 const sitemapPath = path.join(distRoot, 'sitemap.xml');
 const cssSourcePath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-futuristic-ph.css');
 const readabilityCssSourcePath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-final-readability.css');
+const shellCssSourcePath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-single-publication-shell.css');
 const canonicalUrl = 'https://www.francinemariebautista.com/fmbnews/';
 
 const tickerStart = '<!-- FMB_NEWS_TICKER_START -->';
@@ -187,13 +188,14 @@ async function walkPublicHtml(directory) {
   return files;
 }
 
-const [fmbEditorialCss, readabilityCss] = await Promise.all([
+const [fmbEditorialCss, readabilityCss, shellCss] = await Promise.all([
   readFile(cssSourcePath, 'utf8'),
   readFile(readabilityCssSourcePath, 'utf8'),
+  readFile(shellCssSourcePath, 'utf8'),
 ]);
 
-/* The FMB&CO. editorial layer is intentionally last so it owns the final palette. */
-const combinedNewsroomCss = `${readabilityCss}\n\n${fmbEditorialCss}`;
+/* The publication shell is deliberately last so no legacy or universal layer can reappear. */
+const combinedNewsroomCss = `${readabilityCss}\n\n${fmbEditorialCss}\n\n${shellCss}`;
 const sourceLanding = await readFile(newsLandingPath, 'utf8');
 const tickerMarkup = createTicker(extractHeadlineItems(sourceLanding));
 const landingHtml = makeCanonicalLanding(sourceLanding, combinedNewsroomCss, tickerMarkup);
