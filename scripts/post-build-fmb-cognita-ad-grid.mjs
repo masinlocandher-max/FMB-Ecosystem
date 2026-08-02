@@ -1,4 +1,4 @@
-import { copyFile, mkdir, readFile, stat, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
@@ -16,19 +16,26 @@ await mkdir(path.dirname(cssTarget), { recursive: true });
 await copyFile(cssSource, cssTarget);
 
 const encodedAssets = [
-  ['scripts/assets/cognita/cognita-brand-banner.webp.b64', 'assets/images/cognita/ads/cognita-brand-banner.webp'],
-  ['scripts/assets/cognita/cognita-enrollment-opening.webp.b64', 'assets/images/cognita/ads/cognita-enrollment-opening.webp'],
-  ['scripts/assets/cognita/cognita-course-rate.webp.b64', 'assets/images/cognita/ads/cognita-course-rate.webp'],
+  ['cognita-brand-banner', 'assets/images/cognita/ads/cognita-brand-banner.webp'],
+  ['cognita-enrollment-opening', 'assets/images/cognita/ads/cognita-enrollment-opening.webp'],
+  ['cognita-course-rate', 'assets/images/cognita/ads/cognita-course-rate.webp'],
 ];
+const encodedAssetRoot = path.join(repositoryRoot, 'scripts', 'assets', 'cognita');
+const encodedPartNames = await readdir(encodedAssetRoot);
 
-for (const [sourceRelative, targetRelative] of encodedAssets) {
-  const sourceFile = path.join(repositoryRoot, sourceRelative);
-  const targetFile = path.join(distRoot, targetRelative);
-  const encoded = (await readFile(sourceFile, 'utf8')).trim();
+for (const [prefix, targetRelative] of encodedAssets) {
+  const parts = encodedPartNames
+    .filter((name) => name.startsWith(`${prefix}.part`))
+    .sort();
+  if (!parts.length) throw new Error(`Cognita advertisement source parts are missing: ${prefix}`);
+  const encoded = (await Promise.all(parts.map((name) => readFile(path.join(encodedAssetRoot, name), 'utf8'))))
+    .join('')
+    .trim();
   const binary = Buffer.from(encoded, 'base64');
   if (binary.length < 500) {
-    throw new Error(`Cognita advertisement asset is missing or incomplete: ${sourceRelative}`);
+    throw new Error(`Cognita advertisement asset is missing or incomplete: ${prefix}`);
   }
+  const targetFile = path.join(distRoot, targetRelative);
   await mkdir(path.dirname(targetFile), { recursive: true });
   await writeFile(targetFile, binary);
 }
