@@ -1,0 +1,200 @@
+/* Cognita advertisement grid for the FMB landing page. */
+body.fmb-unified-public.fmb-corporate-luxury-v2.fmb-approved-dashboard .hero {
+  grid-template-columns: minmax(320px, .92fr) minmax(360px, .88fr) !important;
+  gap: clamp(24px, 4vw, 74px) !important;
+}
+
+body.fmb-unified-public.fmb-corporate-luxury-v2.fmb-approved-dashboard .hero-copy {
+  grid-column: 1 !important;
+}
+
+body.fmb-unified-public.fmb-corporate-luxury-v2.fmb-approved-dashboard .hero-portrait {
+  grid-column: 2 !important;
+  max-width: 620px !important;
+  justify-self: end !important;
+}
+
+.fmb-cognita-ad-showcase {
+  position: relative;
+  isolation: isolate;
+  padding: clamp(58px, 7vw, 104px) clamp(18px, 5vw, 78px) clamp(68px, 8vw, 118px) !important;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 92% 8%, rgba(43, 122, 242, .17), transparent 31rem),
+    radial-gradient(circle at 4% 92%, rgba(116, 174, 255, .18), transparent 30rem),
+    linear-gradient(180deg, #f9fbff 0%, #edf4ff 100%) !important;
+  color: #071f59 !important;
+}
+
+.fmb-cognita-ad-showcase::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: .42;
+  background-image:
+    linear-gradient(rgba(31, 99, 211, .045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(31, 99, 211, .045) 1px, transparent 1px);
+  background-size: 42px 42px;
+  content: "";
+  pointer-events: none;
+}
+
+.fmb-cognita-ad-head,
+.fmb-cognita-ad-grid {
+  width: min(1460px, 100%);
+  margin-inline: auto;
+}
+
+.fmb-cognita-ad-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: clamp(24px, 4vw, 46px);
+}
+
+.fmb-cognita-ad-head > div {
+  max-width: 760px;
+}
+
+.fmb-cognita-ad-head small {
+  display: block;
+  margin-bottom: 12px;
+  color: #176ee8 !important;
+  font: 800 11px/1.2 "Manrope", sans-serif !important;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+}
+
+.fmb-cognita-ad-head h2 {
+  margin: 0;
+  color: #071f59 !important;
+  font: 600 clamp(38px, 5vw, 72px)/.98 "Bodoni Moda", Georgia, serif !important;
+  letter-spacing: -.04em;
+}
+
+.fmb-cognita-ad-head p {
+  max-width: 650px;
+  margin: 18px 0 0;
+  color: #3d527d !important;
+  font: 500 clamp(15px, 1.5vw, 18px)/1.7 "Manrope", sans-serif !important;
+}
+
+.fmb-cognita-ad-head > a {
+  display: inline-flex;
+  min-height: 48px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  padding: 0 22px;
+  border: 1px solid rgba(17, 91, 212, .2);
+  border-radius: 999px;
+  background: #0f63df;
+  box-shadow: 0 16px 36px rgba(15, 99, 223, .2);
+  color: #fff !important;
+  font: 800 12px/1 "Manrope", sans-serif !important;
+  letter-spacing: .04em;
+  text-decoration: none;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.fmb-cognita-ad-head > a:hover,
+.fmb-cognita-ad-head > a:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 44px rgba(15, 99, 223, .28);
+}
+
+.fmb-cognita-ad-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 24px);
+}
+
+.fmb-cognita-ad {
+  position: relative;
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(17, 91, 212, .13);
+  border-radius: clamp(16px, 2vw, 24px);
+  background: #fff;
+  box-shadow: 0 24px 68px rgba(24, 70, 144, .13);
+  text-decoration: none;
+  transform: translateZ(0);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.fmb-cognita-ad-wide {
+  grid-column: 1 / -1;
+}
+
+.fmb-cognita-ad img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: none !important;
+}
+
+.fmb-cognita-ad:hover,
+.fmb-cognita-ad:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 30px 80px rgba(24, 70, 144, .2);
+}
+
+.fmb-cognita-ad:focus-visible,
+.fmb-cognita-ad-head > a:focus-visible {
+  outline: 3px solid rgba(15, 99, 223, .38);
+  outline-offset: 4px;
+}
+
+@media (max-width: 1180px) {
+  body.fmb-unified-public.fmb-corporate-luxury-v2.fmb-approved-dashboard .hero {
+    grid-template-columns: minmax(0, 1fr) minmax(330px, .78fr) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  body.fmb-unified-public.fmb-corporate-luxury-v2.fmb-approved-dashboard .hero {
+    grid-template-columns: 1fr !important;
+  }
+
+  body.fmb-unified-public.fmb-corporate-luxury-v2.fmb-approved-dashboard .hero-portrait {
+    grid-column: 1 !important;
+    max-width: none !important;
+    justify-self: stretch !important;
+  }
+
+  .fmb-cognita-ad-showcase {
+    padding-inline: 14px !important;
+  }
+
+  .fmb-cognita-ad-head {
+    display: grid;
+    align-items: start;
+  }
+
+  .fmb-cognita-ad-head h2 {
+    font-size: clamp(38px, 12vw, 58px) !important;
+  }
+
+  .fmb-cognita-ad-head > a {
+    width: fit-content;
+  }
+
+  .fmb-cognita-ad-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fmb-cognita-ad-wide {
+    grid-column: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fmb-cognita-ad,
+  .fmb-cognita-ad-head > a {
+    transition: none;
+  }
+}
