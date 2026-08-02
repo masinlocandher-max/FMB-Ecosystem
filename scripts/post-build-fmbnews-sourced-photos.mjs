@@ -94,24 +94,29 @@ function injectPhotoCss(html, css) {
   return clean.replace('</head>', `${styleStart}\n<style data-fmbnews-photo-credits>\n${css}\n</style>\n${styleEnd}\n</head>`);
 }
 
-function findArticleBounds(html, href) {
-  const doubleQuoted = html.indexOf(`href="${href}"`);
-  const singleQuoted = html.indexOf(`href='${href}'`);
-  const hrefIndex = doubleQuoted >= 0 && singleQuoted >= 0
-    ? Math.min(doubleQuoted, singleQuoted)
-    : Math.max(doubleQuoted, singleQuoted);
-  if (hrefIndex < 0) return null;
-  const start = html.lastIndexOf('<article', hrefIndex);
-  const endStart = html.indexOf('</article>', hrefIndex);
-  if (start < 0 || endStart < 0) return null;
-  return [start, endStart + '</article>'.length];
+function findArticleBounds(html, slug) {
+  const mainStart = html.indexOf('<main');
+  const searchStart = mainStart >= 0 ? mainStart : 0;
+  let slugIndex = html.indexOf(slug, searchStart);
+
+  while (slugIndex >= 0) {
+    const start = html.lastIndexOf('<article', slugIndex);
+    const endStart = html.indexOf('</article>', slugIndex);
+    const previousArticleEnd = html.lastIndexOf('</article>', slugIndex);
+    if (start >= searchStart && endStart >= 0 && previousArticleEnd < start) {
+      return [start, endStart + '</article>'.length];
+    }
+    slugIndex = html.indexOf(slug, slugIndex + slug.length);
+  }
+
+  return null;
 }
 
 function applyLandingPhotos(html) {
   let next = html;
   let count = 0;
   for (const [slug, photo] of photos) {
-    const bounds = findArticleBounds(next, `/news/${slug}/`);
+    const bounds = findArticleBounds(next, slug);
     if (!bounds) continue;
     const [start, end] = bounds;
     const block = next.slice(start, end);
