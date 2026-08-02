@@ -17,8 +17,6 @@ await copyFile(cssSource, cssTarget);
 
 const encodedAssets = [
   ['cognita-brand-banner', 'assets/images/cognita/ads/cognita-brand-banner.webp'],
-  ['cognita-enrollment-opening', 'assets/images/cognita/ads/cognita-enrollment-opening.webp'],
-  ['cognita-course-rate', 'assets/images/cognita/ads/cognita-course-rate.webp'],
 ];
 const encodedAssetRoot = path.join(repositoryRoot, 'scripts', 'assets', 'cognita');
 const encodedPartNames = await readdir(encodedAssetRoot);
@@ -80,13 +78,25 @@ const adGrid = `<section class="fmb-cognita-ad-showcase" id="cognita-advertiseme
   </header>
   <div class="fmb-cognita-ad-grid" aria-label="Cognita advertisements">
     <a class="fmb-cognita-ad fmb-cognita-ad-wide" href="https://thecognitainstitute.com/" rel="noopener" aria-label="Discover Cognita Institute of AI">
-      <img src="/assets/images/cognita/ads/cognita-brand-banner.webp" width="1200" height="600" loading="eager" decoding="async" alt="Cognita Institute of AI: Empowering minds, building the future">
+      <img class="fmb-cognita-ad-media" src="/assets/images/cognita/ads/cognita-brand-banner.webp" width="900" height="450" loading="eager" decoding="async" alt="Cognita Institute of AI: Empowering minds, building the future">
     </a>
-    <a class="fmb-cognita-ad" href="https://thecognitainstitute.com/" rel="noopener" aria-label="Cognita enrollment opening soon">
-      <img src="/assets/images/cognita/ads/cognita-enrollment-opening.webp" width="850" height="850" loading="lazy" decoding="async" alt="Cognita Institute of AI enrollment opening soon">
+    <a class="fmb-cognita-ad fmb-cognita-ad-poster enrollment" href="https://thecognitainstitute.com/" rel="noopener" aria-label="Cognita enrollment opening soon">
+      <img class="fmb-cognita-poster-logo" src="/assets/images/projects/cognita-logo-clean.png" width="1359" height="491" loading="lazy" decoding="async" alt="Cognita Institute of AI">
+      <div class="fmb-cognita-poster-copy">
+        <h3>Enrollment<br><em>Opening Soon!</em></h3>
+        <svg class="fmb-cognita-poster-icon" viewBox="0 0 64 64" aria-hidden="true"><path d="M18 8v10M46 8v10M10 24h44M14 14h36a4 4 0 0 1 4 4v34a4 4 0 0 1-4 4H14a4 4 0 0 1-4-4V18a4 4 0 0 1 4-4Z"/><path d="M20 32h8v8h-8zm16 0h8v8h-8zM20 44h8v8h-8z"/></svg>
+        <p>The future belongs to those who learn today. Prepare with future-ready skills for tomorrow’s opportunities.</p>
+        <span class="fmb-cognita-poster-cta">Stay tuned</span>
+      </div>
+      <div class="fmb-cognita-poster-features"><span>AI-Powered Learning</span><span>Practical Skills</span><span>Future-Ready Careers</span><span>Innovate Every Day</span></div>
     </a>
-    <a class="fmb-cognita-ad" href="https://thecognitainstitute.com/" rel="noopener" aria-label="Cognita courses at 1,500 pesos per course">
-      <img src="/assets/images/cognita/ads/cognita-course-rate.webp" width="850" height="850" loading="lazy" decoding="async" alt="Cognita Institute of AI rate of 1,500 pesos per course">
+    <a class="fmb-cognita-ad fmb-cognita-ad-poster course-rate" href="https://thecognitainstitute.com/" rel="noopener" aria-label="Cognita courses at 1,500 pesos per course">
+      <img class="fmb-cognita-poster-logo" src="/assets/images/projects/cognita-logo-clean.png" width="1359" height="491" loading="lazy" decoding="async" alt="Cognita Institute of AI">
+      <div class="fmb-cognita-poster-copy">
+        <h3>Quality Education.<br><em>Affordable for Every Learner.</em></h3>
+        <div class="fmb-cognita-price"><small>₱</small><strong>1,500</strong><span>Rate per course</span></div>
+      </div>
+      <div class="fmb-cognita-poster-features"><span>Expert-Led Courses</span><span>Hands-On Learning</span><span>Industry-Ready Skills</span><span>Affordable Excellence</span></div>
     </a>
   </div>
 </section>`;
@@ -118,8 +128,6 @@ for (const required of [
   'id="cognita-advertisements"',
   'class="fmb-cognita-ad-grid"',
   '/assets/images/cognita/ads/cognita-brand-banner.webp',
-  '/assets/images/cognita/ads/cognita-enrollment-opening.webp',
-  '/assets/images/cognita/ads/cognita-course-rate.webp',
 ]) {
   if (!home.includes(required)) throw new Error(`Cognita advertisement grid is missing: ${required}`);
 }
