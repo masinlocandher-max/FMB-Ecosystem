@@ -1,4 +1,4 @@
-import { copyFile, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
@@ -6,11 +6,9 @@ const distRoot = path.join(repositoryRoot, 'dist');
 const newsRoot = path.join(distRoot, 'news');
 const fmbNewsRoot = path.join(distRoot, 'fmbnews');
 const sourceCssPath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-corporate-recovery.css');
-const distCssDirectory = path.join(distRoot, 'assets', 'css');
-const distCssPath = path.join(distCssDirectory, 'fmbnews-corporate-recovery.css');
-const stylesheetHref = '/assets/css/fmbnews-corporate-recovery.css?v=20260803-corporate-recovery-v1';
-const markerStart = '<!-- FMB_NEWS_CORPORATE_RECOVERY_START -->';
-const markerEnd = '<!-- FMB_NEWS_CORPORATE_RECOVERY_END -->';
+const sitewideCssPath = path.join(distRoot, 'assets', 'css', 'fmb-sitewide-visual-fixes.css');
+const markerStart = '/* FMB_NEWS_CORPORATE_RECOVERY_START */';
+const markerEnd = '/* FMB_NEWS_CORPORATE_RECOVERY_END */';
 
 async function walkHtml(directory) {
   const files = [];
@@ -26,38 +24,39 @@ async function walkHtml(directory) {
   return files;
 }
 
-function injectCorporateStylesheet(html) {
-  const clean = html
-    .replace(new RegExp(`${markerStart}[\\s\\S]*?${markerEnd}\\s*`, 'g'), '')
-    .replace(/<link\b[^>]*href=(['"])[^'"]*fmbnews-corporate-recovery\.css[^'"]*\1[^>]*>\s*/gi, '');
+const [corporateCss, sitewideCss] = await Promise.all([
+  readFile(sourceCssPath, 'utf8'),
+  readFile(sitewideCssPath, 'utf8'),
+]);
 
-  const link = `${markerStart}\n<link rel="stylesheet" href="${stylesheetHref}">\n${markerEnd}`;
-  if (!clean.includes('</head>')) {
-    throw new Error('FMB News corporate recovery could not find a closing head tag.');
-  }
-  return clean.replace('</head>', `${link}\n</head>`);
-}
+const cleanSitewideCss = sitewideCss.replace(
+  new RegExp(`${markerStart.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[\\s\\S]*?${markerEnd.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`, 'g'),
+  '',
+);
 
-await mkdir(distCssDirectory, { recursive: true });
-await copyFile(sourceCssPath, distCssPath);
+await writeFile(
+  sitewideCssPath,
+  `${cleanSitewideCss.trimEnd()}\n\n${markerStart}\n${corporateCss.trim()}\n${markerEnd}\n`,
+  'utf8',
+);
 
-const files = [
+const newsFiles = [...new Set([
   ...await walkHtml(newsRoot),
   ...await walkHtml(fmbNewsRoot),
-];
+])];
 
-const uniqueFiles = [...new Set(files)];
-let updatedCount = 0;
-for (const filePath of uniqueFiles) {
+let verifiedCount = 0;
+for (const filePath of newsFiles) {
   const html = await readFile(filePath, 'utf8');
   if (!/\bnews-(?:route|story-route)\b/.test(html) && !/\bnews-channel-v4\b/.test(html)) continue;
-  const updated = injectCorporateStylesheet(html);
-  await writeFile(filePath, updated, 'utf8');
-  updatedCount += 1;
+  if (!/fmb-sitewide-visual-fixes\.css/i.test(html)) {
+    throw new Error(`FMB News corporate recovery requires the final sitewide stylesheet: ${filePath}`);
+  }
+  verifiedCount += 1;
 }
 
-if (!updatedCount) {
-  throw new Error('FMB News corporate recovery did not update any generated News pages.');
+if (!verifiedCount) {
+  throw new Error('FMB News corporate recovery could not find generated News pages.');
 }
 
-console.log(`Applied the final corporate FMB News channel layer to ${updatedCount} generated page(s).`);
+console.log(`Appended the corporate FMB News channel recovery to the required final sitewide stylesheet for ${verifiedCount} generated page(s).`);
