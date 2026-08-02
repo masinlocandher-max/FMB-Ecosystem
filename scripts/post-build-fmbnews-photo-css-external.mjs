@@ -24,6 +24,8 @@ async function walkHtml(directory) {
 function externalize(html) {
   let next = html.replace(new RegExp(`${styleStart}[\\s\\S]*?${styleEnd}\\s*`, 'g'), '');
   next = next.replace(/<link\b[^>]*href=(['"])\/assets\/css\/fmbnews-photo-credits\.css[^'"]*\1[^>]*>\s*/gi, '');
+  const sitewide = /<link\b[^>]*href=(['"])\/assets\/css\/fmb-sitewide-visual-fixes\.css[^'"]*\1[^>]*>/i;
+  if (sitewide.test(next)) return next.replace(sitewide, `${linkMarkup}\n$&`);
   return next.replace('</head>', `${linkMarkup}\n</head>`);
 }
 
@@ -41,4 +43,4 @@ for (const filePath of files) {
   changed += 1;
 }
 
-console.log(`Externalized FMB News sourced-photo credit styles across ${changed} page(s).`);
+console.log(`Externalized FMB News sourced-photo credit styles across ${changed} page(s) while preserving the final safeguard order.`);
