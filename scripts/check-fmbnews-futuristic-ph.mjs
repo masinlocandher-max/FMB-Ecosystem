@@ -1,40 +1,47 @@
-import { readFile, stat } from 'node:fs/promises';
+import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 
 const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
 const distRoot = path.join(repositoryRoot, 'dist');
 const sourceCssPath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-futuristic-ph.css');
-const readabilityCssPath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-final-readability.css');
-const newsPath = path.join(distRoot, 'news', 'index.html');
+const newsRoot = path.join(distRoot, 'news');
+const newsPath = path.join(newsRoot, 'index.html');
 const fmbNewsPath = path.join(distRoot, 'fmbnews', 'index.html');
 const sitemapPath = path.join(distRoot, 'sitemap.xml');
 
 function fail(message) {
-  throw new Error(`FMBNEWS FUTURISTIC CHECK: ${message}`);
+  throw new Error(`FMBNEWS EDITORIAL CHECK: ${message}`);
+}
+
+async function walk(directory) {
+  const files = [];
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    const absolute = path.join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...await walk(absolute));
+    else if (entry.isFile() && entry.name.endsWith('.html')) files.push(absolute);
+  }
+  return files;
 }
 
 await stat(fmbNewsPath).catch(() => fail('dist/fmbnews/index.html was not generated'));
 
-const [newsHtml, fmbNewsHtml, css, readabilityCss, sitemap] = await Promise.all([
+const [newsHtml, fmbNewsHtml, css, sitemap] = await Promise.all([
   readFile(newsPath, 'utf8'),
   readFile(fmbNewsPath, 'utf8'),
   readFile(sourceCssPath, 'utf8'),
-  readFile(readabilityCssPath, 'utf8'),
   readFile(sitemapPath, 'utf8'),
 ]);
 
 const requiredLandingMarkers = [
   'news-futuristic-ph',
-  'class="nc-ph-orbit"',
-  'class="nc-ph-sun"',
-  'nc-ph-star-one',
-  'nc-ph-star-two',
-  'nc-ph-star-three',
   'data-fmbnews-futuristic-ph',
+  'data-fmb-news-ticker',
+  'data-philippine-time',
+  'Asia/Manila',
+  'Philippine Standard Time',
+  'fmb-news-ticker-track',
   'https://www.francinemariebautista.com/fmbnews/',
   'Latest reports',
-  'Stories that deserve more than a scroll.',
-  'Clear sourcing. Visible perspective. No manufactured certainty.',
 ];
 
 for (const marker of requiredLandingMarkers) {
@@ -46,56 +53,53 @@ if (!newsHtml.includes('<link rel="canonical" href="https://www.francinemariebau
   fail('/news does not canonicalize to /fmbnews');
 }
 if (fmbNewsHtml.includes('<link rel="stylesheet" href="/assets/css/fmbnews-futuristic-ph.css')) {
-  fail('the futuristic layer must be inline so the sitewide safeguard remains the final external stylesheet');
-}
-
-const count = (source, pattern) => (source.match(pattern) || []).length;
-const structures = [
-  ['latest report rows', /class="nc-rundown-story"/g],
-  ['news index entries', /class="nc-index-number"/g],
-  ['editorial feature sections', /class="nc-context-feature"/g],
-];
-for (const [label, pattern] of structures) {
-  const legacyCount = count(newsHtml, pattern);
-  const canonicalCount = count(fmbNewsHtml, pattern);
-  if (legacyCount < 1 || canonicalCount !== legacyCount) {
-    fail(`${label} were not preserved (${legacyCount} legacy vs ${canonicalCount} canonical)`);
-  }
+  fail('the final editorial layer must remain inline so it loads after the shared safeguards');
 }
 
 const requiredCssMarkers = [
-  '--fmbnews-blue: #0038a8',
-  '--fmbnews-yellow: #fcd116',
-  '--fmbnews-ink: #343b48',
-  '.nc-ph-sun',
-  '.nc-ph-star-one',
-  'perspective: 1200px',
-  'box-shadow:',
-  '.news-visual img',
-  'filter: none !important',
-  '@media (max-width: 700px)',
+  '--fmbnews-purple-950: #14051f',
+  '--fmbnews-purple-800: #32144f',
+  '--fmbnews-gold: #c9a44d',
+  '--fmbnews-ivory: #fbfaf8',
+  '.fmb-news-ticker',
+  '@keyframes fmb-news-ticker-move',
+  '.nc-broadcast-grid',
+  'grid-template-columns: minmax(0, 2fr) minmax(280px, .9fr)',
+  '.news-story-route .nc-article-layout',
+  '@media (max-width: 760px)',
   '@media (prefers-reduced-motion: reduce)',
 ];
+
 for (const marker of requiredCssMarkers) {
-  if (!css.includes(marker)) fail(`futuristic CSS is missing ${marker}`);
-  if (!fmbNewsHtml.includes(marker)) fail(`/fmbnews did not inline the futuristic CSS marker ${marker}`);
+  if (!css.includes(marker)) fail(`editorial CSS is missing ${marker}`);
+  if (!fmbNewsHtml.includes(marker)) fail(`/fmbnews did not inline the editorial CSS marker ${marker}`);
 }
 
-const requiredReadabilityMarkers = [
-  'single visual authority',
-  '.nc-newsroom-title .nc-hero-summary',
-  'color: var(--fmbnews-muted) !important',
-  '.nc-wire-track span',
-  'grid-template-rows: auto auto !important',
-  'aspect-ratio: 4 / 3 !important',
-  'content-visibility: visible !important',
-  '.nc-site-header',
-  'border-radius: 18px !important',
-];
-for (const marker of requiredReadabilityMarkers) {
-  if (!readabilityCss.includes(marker)) fail(`readability CSS is missing ${marker}`);
-  if (!fmbNewsHtml.includes(marker)) fail(`/fmbnews did not inline the readability marker ${marker}`);
+const forbiddenVisualTokens = ['#0038a8', '#1266d6', '#ce1126'];
+for (const token of forbiddenVisualTokens) {
+  if (css.toLowerCase().includes(token)) fail(`editorial CSS still contains retired visual token ${token}`);
 }
+
+const tickerCount = (fmbNewsHtml.match(/data-fmb-news-ticker/g) || []).length;
+if (tickerCount !== 1) fail(`/fmbnews must render exactly one headline ticker, found ${tickerCount}`);
+if (!/class="fmb-news-ticker-group"[\s\S]*class="fmb-news-ticker-group"/i.test(fmbNewsHtml)) {
+  fail('the ticker does not contain its duplicated continuous-scroll headline group');
+}
+
+let articleCount = 0;
+for (const filePath of await walk(newsRoot)) {
+  if (filePath === newsPath) continue;
+  const html = await readFile(filePath, 'utf8');
+  if (!/\bnews-story-route\b/.test(html)) continue;
+  articleCount += 1;
+  const relative = path.relative(distRoot, filePath).replaceAll('\\', '/');
+  if (!html.includes('news-futuristic-ph')) fail(`${relative} is missing the final FMB&CO. editorial class`);
+  if (!html.includes('data-fmb-news-ticker')) fail(`${relative} is missing the moving headline ticker`);
+  if (!html.includes('data-philippine-time')) fail(`${relative} is missing Philippine time`);
+  if (!html.includes('--fmbnews-purple-950: #14051f')) fail(`${relative} did not receive the purple-gold design system`);
+}
+
+if (articleCount < 1) fail('no News report pages received the connected branch design');
 
 if (!sitemap.includes('<loc>https://www.francinemariebautista.com/fmbnews/</loc>')) {
   fail('sitemap.xml does not expose /fmbnews');
@@ -104,4 +108,4 @@ if (sitemap.includes('<loc>https://www.francinemariebautista.com/news/</loc>')) 
   fail('sitemap.xml still exposes the old landing URL as a separate canonical page');
 }
 
-console.log('Verified /fmbnews canonical routing, preserved newsroom content, restrained Philippine identity, compact masthead, simplified navigation, editorial card hierarchy, readable gray surfaces, undarkened imagery, mobile lead sizing, reduced-motion support, and launch-gate stylesheet order.');
+console.log(`Verified the FMB&CO. purple-gold News landing, moving headlines, live Philippine time, responsive editorial hierarchy and matching design across ${articleCount} report pages.`);
