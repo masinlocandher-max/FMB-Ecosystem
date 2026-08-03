@@ -1,9 +1,13 @@
 name: FMB News V9 Visual QA Artifact
 
 on:
-  push:
+  pull_request:
     branches:
-      - agent/fmbnews-v9-visual-qa
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
   workflow_dispatch:
 
 permissions:
