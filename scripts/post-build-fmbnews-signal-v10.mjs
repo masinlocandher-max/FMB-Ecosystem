@@ -6,6 +6,10 @@ const distRoot = path.join(repositoryRoot, 'dist');
 const roots = [path.join(distRoot, 'news'), path.join(distRoot, 'fmbnews')];
 const cssPath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-signal-v10.css');
 
+const presentedFontLoader = `<link rel="preconnect" href="https://fonts.googleapis.com" data-fmb-presented-font-preconnect>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin data-fmb-presented-font-preconnect>
+<link rel="stylesheet" data-fmb-presented-fonts href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&amp;family=Manrope:wght@400;500;600;650;700;750;800&amp;display=swap">`;
+
 async function walkHtml(directory) {
   const files = [];
   try {
@@ -46,6 +50,13 @@ function removeRedundantControls(html) {
   return next;
 }
 
+function injectPresentedFonts(html) {
+  return html
+    .replace(/<link\b[^>]*data-fmb-presented-font-preconnect[^>]*>\s*/gi, '')
+    .replace(/<link\b[^>]*data-fmb-presented-fonts[^>]*>\s*/gi, '')
+    .replace(/<\/head>/i, `${presentedFontLoader}</head>`);
+}
+
 function signalEmblem() {
   return '<span class="fn10-signal-emblem" aria-hidden="true"><i></i><i></i><i></i><b></b></span>';
 }
@@ -82,12 +93,13 @@ for (const filePath of files) {
 
   html = addBodyClass(html, 'news-signal-v10');
   html = removeRedundantControls(html);
+  html = injectPresentedFonts(html);
   html = replaceFooter(html);
   html = injectCss(html, css);
 
   if (isLanding) landingCount += 1;
 
-  const required = ['news-signal-v10', 'data-fmb-news-signal-v10', 'data-fmb-news-ticker', 'data-philippine-time', 'fn10-footer-grid', 'fn10-signal-emblem'];
+  const required = ['news-signal-v10', 'data-fmb-news-signal-v10', 'data-fmb-news-ticker', 'data-philippine-time', 'fn10-footer-grid', 'fn10-signal-emblem', 'data-fmb-presented-fonts', 'Cormorant+Garamond', 'family=Manrope'];
   for (const marker of required) {
     if (!html.includes(marker)) throw new Error(`FMB News Signal V10 marker ${marker} missing: ${filePath}`);
   }
@@ -104,4 +116,4 @@ if (!updated || landingCount !== 2) {
   throw new Error(`FMB News Signal V10 expected two landing routes and updated pages; found ${landingCount} landing route(s), ${updated} update(s).`);
 }
 
-console.log(`Applied the FMB News signal system, consolidated moving headlines with Philippine time, removed redundant upper labels and category navigation, and enhanced the footer across ${updated} route(s).`);
+console.log(`Applied the FMB News signal system with the presented Cormorant Garamond and Manrope typography, consolidated moving headlines with Philippine time, removed redundant upper labels and category navigation, and enhanced the footer across ${updated} route(s).`);
