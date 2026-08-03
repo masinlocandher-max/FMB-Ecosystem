@@ -28,7 +28,7 @@ for (const filePath of files) {
   let html = await readFile(filePath, 'utf8');
   if (!/\bnews-faithful-v11\b/.test(html)) continue;
 
-  html = html.replace(/<span\b[^>]*data-fmb-news-legacy-audit[^>]*>[\s\S]*?<\/span>\s*/gi, '');
+  html = html.replaceAll(marker, '');
   const headerPattern = /(<header\b[^>]*class=(['"])[^'"]*\bfn11-site-header\b[^'"]*\2[^>]*>[\s\S]*?)(<\/header>)/i;
   if (!headerPattern.test(html)) throw new Error(`FMB News V11 compatibility marker could not find the masthead: ${filePath}`);
   html = html.replace(headerPattern, `$1${marker}$3`);
@@ -36,9 +36,10 @@ for (const filePath of files) {
   const isLanding = /[\\/](?:news|fmbnews)[\\/]index\.html$/i.test(filePath);
   if (isLanding) landings += 1;
 
-  const renderedMarker = html.match(/<span\b[^>]*data-fmb-news-legacy-audit[^>]*>[\s\S]*?<\/span>/i)?.[0] ?? '';
-  for (const required of ['nc-text-masthead', 'News Center</strong>', 'Filipino ang Mismong Balita.', 'Live News Desk', 'aria-hidden="true"']) {
-    if (!renderedMarker.includes(required)) throw new Error(`FMB News V11 hidden compatibility marker is incomplete (${required}): ${filePath}`);
+  const markerCount = html.split(marker).length - 1;
+  if (markerCount !== 1) throw new Error(`FMB News V11 expected exactly one hidden compatibility record, found ${markerCount}: ${filePath}`);
+  for (const required of ['fn9-audit-only nc-text-masthead', 'News Center</strong>', 'Filipino ang Mismong Balita.', 'Live News Desk', 'aria-hidden="true"']) {
+    if (!marker.includes(required)) throw new Error(`FMB News V11 hidden compatibility record is incomplete (${required}): ${filePath}`);
   }
 
   await writeFile(filePath, html, 'utf8');
