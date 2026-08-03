@@ -37,9 +37,9 @@ jobs:
           node - <<'NODE'
           const sharp = require('sharp');
           const fs = require('fs');
-          const path = 'dist/assets/images/news/cognita-filipino-centered-education.png';
-          if (!fs.existsSync(path)) throw new Error('Exact Cognita PNG is missing');
-          sharp(path).metadata().then((meta) => {
+          const file = 'dist/assets/images/news/cognita-filipino-centered-education.png';
+          if (!fs.existsSync(file)) throw new Error('Exact Cognita PNG is missing');
+          sharp(file).metadata().then((meta) => {
             if (meta.format !== 'png' || meta.width !== 1536 || meta.height !== 864) {
               throw new Error(`Wrong Cognita raster: ${meta.format} ${meta.width}x${meta.height}`);
             }
@@ -69,9 +69,11 @@ jobs:
             for (const marker of ['fn10-share-bar','twitter:card','og:image:width','og:image:height']) {
               if (!html.includes(marker)) throw new Error(`${entry.name} missing ${marker}`);
             }
-            const image = html.match(/<(?:img)\b[^>]*src=["']([^"']+)["']/i)?.[1] || '';
+            const image = html.match(/<img\b[^>]*src=["']([^"']+)["']/i)?.[1] || '';
             if (!image || /\.svg(?:[?#]|$)/i.test(image)) throw new Error(`${entry.name} lacks raster article media`);
           }
           if (count !== 50) throw new Error(`Expected 50 report pages, found ${count}`);
           console.log(`Verified V10 landing and ${count} social-ready report pages.`);
           NODE
+
+# Rerun after exact article-route detection correction.
