@@ -1,0 +1,77 @@
+name: FMB News V10 Exact Build QA
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build exact production site
+        run: npm run build
+
+      - name: Verify exact Cognita raster
+        run: |
+          node - <<'NODE'
+          const sharp = require('sharp');
+          const fs = require('fs');
+          const path = 'dist/assets/images/news/cognita-filipino-centered-education.png';
+          if (!fs.existsSync(path)) throw new Error('Exact Cognita PNG is missing');
+          sharp(path).metadata().then((meta) => {
+            if (meta.format !== 'png' || meta.width !== 1536 || meta.height !== 864) {
+              throw new Error(`Wrong Cognita raster: ${meta.format} ${meta.width}x${meta.height}`);
+            }
+            console.log(`Verified exact Cognita raster: ${meta.format} ${meta.width}x${meta.height}`);
+          });
+          NODE
+
+      - name: Verify FMB News V10 output contracts
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const landing = fs.readFileSync('dist/fmbnews/index.html', 'utf8');
+          for (const marker of ['news-signal-v10','data-fmb-news-ticker','data-philippine-time','fn10-footer-grid']) {
+            if (!landing.includes(marker)) throw new Error(`Landing missing ${marker}`);
+          }
+          if (/class=["'][^"']*fn9-publication-bar/.test(landing)) throw new Error('Redundant publication bar remains');
+          if (/class=["'][^"']*fn9-category-nav/.test(landing)) throw new Error('Redundant upper category navigation remains');
+          let count = 0;
+          for (const entry of fs.readdirSync('dist/news', {withFileTypes:true})) {
+            if (!entry.isDirectory()) continue;
+            const file = path.join('dist/news', entry.name, 'index.html');
+            if (!fs.existsSync(file)) continue;
+            const html = fs.readFileSync(file, 'utf8');
+            if (!html.includes('news-story-route')) continue;
+            count++;
+            for (const marker of ['fn10-share-bar','twitter:card','og:image:width','og:image:height']) {
+              if (!html.includes(marker)) throw new Error(`${entry.name} missing ${marker}`);
+            }
+            const image = html.match(/<(?:img)\b[^>]*src=["']([^"']+)["']/i)?.[1] || '';
+            if (!image || /\.svg(?:[?#]|$)/i.test(image)) throw new Error(`${entry.name} lacks raster article media`);
+          }
+          if (count !== 50) throw new Error(`Expected 50 report pages, found ${count}`);
+          console.log(`Verified V10 landing and ${count} social-ready report pages.`);
+          NODE
