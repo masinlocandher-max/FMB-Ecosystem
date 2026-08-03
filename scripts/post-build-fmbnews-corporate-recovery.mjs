@@ -79,7 +79,6 @@ for (const filePath of newsFiles) {
       `fmb-sitewide-visual-fixes.css?v=${sitewideVersion}`,
     )
     .replace(/<link\b[^>]*data-fmb-news-mobile-v6[^>]*>\s*/gi, '')
-    .replace(/<script\b[^>]*src=(['"])\/assets\/js\/fmb-unified-system\.js[^'"]*\1[^>]*>\s*<\/script>\s*/gi, '')
     .replace(/<script\b[^>]*src=(['"])\/assets\/js\/az-assistant\.js[^'"]*\1[^>]*>\s*<\/script>\s*/gi, '')
     .replace(/<\/head>/i, `${mobileLink}</head>`);
 
@@ -89,8 +88,11 @@ for (const filePath of newsFiles) {
   if (!html.includes('data-fmb-news-mobile-v6')) {
     throw new Error(`FMB News mobile V6 stylesheet is missing: ${filePath}`);
   }
-  if (/\/assets\/js\/(?:fmb-unified-system|az-assistant)\.js/i.test(html)) {
-    throw new Error(`FMB News must not load the floating reception system: ${filePath}`);
+  if (!/\/assets\/js\/fmb-unified-system\.js/i.test(html)) {
+    throw new Error(`FMB News must retain the unified public-site system: ${filePath}`);
+  }
+  if (/\/assets\/js\/az-assistant\.js/i.test(html)) {
+    throw new Error(`FMB News must not directly load the Reception Desk bundle: ${filePath}`);
   }
 
   if (html !== original) {
