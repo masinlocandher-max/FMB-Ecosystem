@@ -1,4 +1,4 @@
-/* Cognita advertisement grid for the FMB landing page. */
+/* Exact-pubmat campaign showcase for the FMB landing page. */
 body.fmb-unified-public.fmb-corporate-luxury-v2.fmb-approved-dashboard .hero {
   grid-template-columns: minmax(320px, .92fr) minmax(360px, .88fr) !important;
   gap: clamp(24px, 4vw, 74px) !important;
@@ -10,387 +10,313 @@ body.fmb-unified-public.fmb-corporate-luxury-v2.fmb-approved-dashboard .hero-cop
 
 body.fmb-unified-public.fmb-corporate-luxury-v2.fmb-approved-dashboard .hero-portrait {
   grid-column: 2 !important;
+  width: min(100%, 620px) !important;
   max-width: 620px !important;
   justify-self: end !important;
 }
 
-.fmb-cognita-ad-showcase {
+body.fmb-unified-public .senz-home-promo {
+  display: none !important;
+}
+
+.fmb-brand-campaigns {
+  width: 100%;
+  overflow: clip;
+  background: #fff;
+  content-visibility: auto;
+  contain-intrinsic-size: 2600px;
+}
+
+.fmb-campaign {
   position: relative;
   isolation: isolate;
-  padding: clamp(58px, 7vw, 104px) clamp(18px, 5vw, 78px) clamp(68px, 8vw, 118px) !important;
+  padding: clamp(58px, 7vw, 104px) clamp(16px, 5vw, 78px) clamp(70px, 8vw, 120px) !important;
   overflow: hidden;
+}
+
+.fmb-campaign-cognita {
   background:
-    radial-gradient(circle at 92% 8%, rgba(43, 122, 242, .17), transparent 31rem),
-    radial-gradient(circle at 4% 92%, rgba(116, 174, 255, .18), transparent 30rem),
-    linear-gradient(180deg, #f9fbff 0%, #edf4ff 100%) !important;
+    radial-gradient(circle at 92% 7%, rgba(51, 130, 246, .17), transparent 31rem),
+    radial-gradient(circle at 3% 95%, rgba(129, 184, 255, .16), transparent 29rem),
+    linear-gradient(180deg, #fbfdff 0%, #edf5ff 100%) !important;
   color: #071f59 !important;
 }
 
-.fmb-cognita-ad-showcase::before {
+.fmb-campaign-cognita::before {
   position: absolute;
   inset: 0;
   z-index: -1;
-  opacity: .42;
+  opacity: .38;
   background-image:
     linear-gradient(rgba(31, 99, 211, .045) 1px, transparent 1px),
     linear-gradient(90deg, rgba(31, 99, 211, .045) 1px, transparent 1px);
-  background-size: 42px 42px;
+  background-size: 44px 44px;
   content: "";
   pointer-events: none;
 }
 
-.fmb-cognita-ad-head,
-.fmb-cognita-ad-grid {
+.fmb-campaign-senz {
+  background:
+    radial-gradient(circle at 88% 8%, rgba(27, 111, 255, .34), transparent 34rem),
+    radial-gradient(circle at 4% 92%, rgba(20, 86, 203, .28), transparent 32rem),
+    linear-gradient(145deg, #030a1c 0%, #071a45 48%, #020817 100%) !important;
+  color: #fff !important;
+}
+
+.fmb-campaign-senz::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: .22;
+  background-image:
+    radial-gradient(circle at center, rgba(95, 173, 255, .5) 0 1px, transparent 1.5px);
+  background-size: 34px 34px;
+  content: "";
+  pointer-events: none;
+  mask-image: linear-gradient(to bottom, #000, transparent 75%);
+  -webkit-mask-image: linear-gradient(to bottom, #000, transparent 75%);
+}
+
+.fmb-campaign-head,
+.fmb-campaign-grid {
   width: min(1460px, 100%);
   margin-inline: auto;
 }
 
-.fmb-cognita-ad-head {
+.fmb-campaign-head {
   display: flex;
   align-items: end;
   justify-content: space-between;
-  gap: 30px;
-  margin-bottom: clamp(24px, 4vw, 46px);
+  gap: clamp(26px, 4vw, 64px);
+  margin-bottom: clamp(26px, 4vw, 48px);
 }
 
-.fmb-cognita-ad-head > div {
-  max-width: 760px;
+.fmb-campaign-head > div {
+  max-width: 790px;
 }
 
-.fmb-cognita-ad-head small {
+.fmb-campaign-head small {
   display: block;
-  margin-bottom: 12px;
+  margin-bottom: 13px;
   color: #176ee8 !important;
-  font: 800 11px/1.2 "Manrope", sans-serif !important;
+  font: 800 11px/1.2 "Manrope", "Plus Jakarta Sans", sans-serif !important;
   letter-spacing: .17em;
   text-transform: uppercase;
 }
 
-.fmb-cognita-ad-head h2 {
+.fmb-campaign-senz .fmb-campaign-head small {
+  color: #77b9ff !important;
+}
+
+.fmb-campaign-head h2 {
   margin: 0;
   color: #071f59 !important;
-  font: 600 clamp(38px, 5vw, 72px)/.98 "Bodoni Moda", Georgia, serif !important;
-  letter-spacing: -.04em;
+  font: 600 clamp(42px, 5.4vw, 78px)/.94 "Bodoni Moda", Georgia, serif !important;
+  letter-spacing: -.045em;
 }
 
-.fmb-cognita-ad-head p {
-  max-width: 650px;
+.fmb-campaign-senz .fmb-campaign-head h2 {
+  color: #fff !important;
+}
+
+.fmb-campaign-head p {
+  max-width: 680px;
   margin: 18px 0 0;
-  color: #3d527d !important;
-  font: 500 clamp(15px, 1.5vw, 18px)/1.7 "Manrope", sans-serif !important;
+  color: #40567e !important;
+  font: 500 clamp(15px, 1.45vw, 19px)/1.7 "Manrope", "Plus Jakarta Sans", sans-serif !important;
 }
 
-.fmb-cognita-ad-head > a {
+.fmb-campaign-senz .fmb-campaign-head p {
+  color: rgba(255, 255, 255, .72) !important;
+}
+
+.fmb-campaign-head > a {
   display: inline-flex;
-  min-height: 48px;
+  min-height: 50px;
   flex: none;
   align-items: center;
   justify-content: center;
   gap: 11px;
-  padding: 0 22px;
+  padding: 0 23px;
   border: 1px solid rgba(17, 91, 212, .2);
   border-radius: 999px;
   background: #0f63df;
-  box-shadow: 0 16px 36px rgba(15, 99, 223, .2);
+  box-shadow: 0 16px 38px rgba(15, 99, 223, .23);
   color: #fff !important;
-  font: 800 12px/1 "Manrope", sans-serif !important;
+  font: 800 12px/1 "Manrope", "Plus Jakarta Sans", sans-serif !important;
   letter-spacing: .04em;
   text-decoration: none;
-  transition: transform 180ms ease, box-shadow 180ms ease;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
 }
 
-.fmb-cognita-ad-head > a:hover,
-.fmb-cognita-ad-head > a:focus-visible {
+.fmb-campaign-senz .fmb-campaign-head > a {
+  border-color: rgba(125, 190, 255, .28);
+  background: rgba(23, 112, 237, .94);
+  box-shadow: 0 18px 45px rgba(0, 76, 195, .32);
+}
+
+.fmb-campaign-head > a:hover,
+.fmb-campaign-head > a:focus-visible {
   transform: translateY(-2px);
-  box-shadow: 0 20px 44px rgba(15, 99, 223, .28);
+  box-shadow: 0 22px 50px rgba(15, 99, 223, .31);
 }
 
-.fmb-cognita-ad-grid {
+.fmb-campaign-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(14px, 2vw, 24px);
+  gap: clamp(14px, 2vw, 25px);
 }
 
-.fmb-cognita-ad {
+.fmb-campaign-grid-cognita {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.fmb-campaign-grid-senz {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.fmb-pubmat {
   position: relative;
   display: block;
   min-width: 0;
   overflow: hidden;
-  border: 1px solid rgba(17, 91, 212, .13);
-  border-radius: clamp(16px, 2vw, 24px);
+  border: 1px solid rgba(19, 75, 164, .14);
+  border-radius: clamp(15px, 2vw, 25px);
   background: #fff;
-  box-shadow: 0 24px 68px rgba(24, 70, 144, .13);
+  box-shadow: 0 24px 70px rgba(21, 64, 133, .14);
   text-decoration: none;
   transform: translateZ(0);
-  transition: transform 220ms ease, box-shadow 220ms ease;
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
 }
 
-.fmb-cognita-ad-wide {
+.fmb-campaign-senz .fmb-pubmat {
+  border-color: rgba(111, 178, 255, .18);
+  background: #051331;
+  box-shadow: 0 28px 78px rgba(0, 0, 0, .34);
+}
+
+.fmb-pubmat-wide {
   grid-column: 1 / -1;
 }
 
-.fmb-cognita-ad-media {
-  display: block;
-  width: 100%;
-  height: auto;
-  object-fit: contain;
-  filter: none !important;
-}
-
-.fmb-cognita-ad-poster {
-  min-height: clamp(520px, 48vw, 700px);
-  padding: clamp(28px, 4vw, 52px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #071f59 !important;
-  text-align: center;
-  background:
-    radial-gradient(circle at 50% 16%, rgba(255, 255, 255, .98) 0 23%, rgba(255, 255, 255, .64) 46%, transparent 67%),
-    radial-gradient(circle at 4% 100%, rgba(25, 105, 239, .36), transparent 45%),
-    radial-gradient(circle at 100% 100%, rgba(25, 105, 239, .45), transparent 48%),
-    linear-gradient(180deg, #edf5ff 0%, #f9fbff 54%, #d6e7ff 100%);
-}
-
-.fmb-cognita-ad-poster::before,
-.fmb-cognita-ad-poster::after {
-  position: absolute;
-  border: 1px solid rgba(67, 139, 242, .2);
-  border-radius: 50%;
-  content: "";
-  pointer-events: none;
-}
-
-.fmb-cognita-ad-poster::before {
-  inset: -18% 8% auto;
-  aspect-ratio: 1;
-  box-shadow: 0 0 0 42px rgba(74, 145, 244, .045), 0 0 0 86px rgba(74, 145, 244, .03);
-}
-
-.fmb-cognita-ad-poster::after {
-  width: 76%;
-  aspect-ratio: 1;
-  right: -34%;
-  bottom: -35%;
-  border-width: 54px;
-  border-color: rgba(35, 113, 232, .09);
-}
-
-.fmb-cognita-poster-logo,
-.fmb-cognita-poster-copy,
-.fmb-cognita-poster-features {
-  position: relative;
-  z-index: 1;
-}
-
-.fmb-cognita-poster-logo {
-  width: min(74%, 420px) !important;
-  height: 92px !important;
+.fmb-pubmat img {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  height: auto !important;
+  margin: 0 !important;
   object-fit: contain !important;
+  object-position: center !important;
   filter: none !important;
+  transform: none !important;
 }
 
-.fmb-cognita-poster-copy {
-  width: 100%;
-  margin: auto 0;
+.fmb-pubmat:hover,
+.fmb-pubmat:focus-visible {
+  z-index: 1;
+  border-color: rgba(24, 112, 235, .35);
+  transform: translateY(-5px);
+  box-shadow: 0 32px 88px rgba(21, 64, 133, .22);
 }
 
-.fmb-cognita-poster-copy h3 {
-  margin: 22px 0 16px;
-  color: #08215b !important;
-  font: 800 clamp(34px, 4.2vw, 66px)/.98 "Manrope", sans-serif !important;
-  letter-spacing: -.045em;
-  text-transform: uppercase;
+.fmb-campaign-senz .fmb-pubmat:hover,
+.fmb-campaign-senz .fmb-pubmat:focus-visible {
+  border-color: rgba(101, 176, 255, .42);
+  box-shadow: 0 34px 94px rgba(0, 0, 0, .48);
 }
 
-.fmb-cognita-poster-copy h3 em {
-  color: #1470ec;
-  font-style: normal;
-}
-
-.fmb-cognita-poster-copy p {
-  max-width: 510px;
-  margin: 18px auto 20px;
-  color: #263b68 !important;
-  font: 600 clamp(13px, 1.35vw, 17px)/1.55 "Manrope", sans-serif !important;
-}
-
-.fmb-cognita-poster-icon {
-  width: 68px;
-  height: 68px;
-  fill: none;
-  stroke: #1269e8;
-  stroke-width: 4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.fmb-cognita-poster-icon path:nth-child(2) {
-  fill: #1269e8;
-  stroke: none;
-}
-
-.fmb-cognita-poster-cta {
-  display: inline-flex;
-  min-height: 44px;
-  align-items: center;
-  justify-content: center;
-  padding: 0 28px;
-  border-radius: 999px;
-  background: #1269e8;
-  box-shadow: 0 12px 28px rgba(18, 105, 232, .22);
-  color: #fff !important;
-  font: 800 13px/1 "Manrope", sans-serif !important;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-
-.fmb-cognita-price {
-  width: min(100%, 520px);
-  margin: 24px auto 0;
-  overflow: hidden;
-  border: 2px solid rgba(105, 181, 255, .9);
-  border-radius: 24px;
-  background: linear-gradient(180deg, #08245e, #061a4a);
-  box-shadow: 0 20px 48px rgba(5, 38, 94, .24);
-  color: #fff;
-}
-
-.fmb-cognita-price small,
-.fmb-cognita-price strong {
-  display: inline-block;
-  vertical-align: baseline;
-}
-
-.fmb-cognita-price small {
-  font: 700 clamp(42px, 5vw, 70px)/1 "Manrope", sans-serif !important;
-}
-
-.fmb-cognita-price strong {
-  padding: 18px 0 8px;
-  font: 800 clamp(76px, 9vw, 132px)/.8 "Manrope", sans-serif !important;
-  letter-spacing: -.075em;
-}
-
-.fmb-cognita-price span {
-  display: block;
-  padding: 13px 20px;
-  background: linear-gradient(180deg, #1f86ff, #0963e9);
-  color: #fff !important;
-  font: 800 clamp(16px, 2vw, 26px)/1 "Manrope", sans-serif !important;
-  letter-spacing: .13em;
-  text-transform: uppercase;
-}
-
-.fmb-cognita-ad-poster.course-rate .fmb-cognita-poster-copy h3 {
-  font-size: clamp(25px, 3vw, 46px) !important;
-  line-height: 1.08 !important;
-}
-
-.fmb-cognita-poster-features {
-  width: 100%;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0;
-  margin-top: 26px;
-}
-
-.fmb-cognita-poster-features span {
-  min-width: 0;
-  padding: 16px 10px 4px;
-  border-left: 1px solid rgba(18, 105, 232, .22);
-  color: #102a60 !important;
-  font: 700 clamp(10px, 1.1vw, 14px)/1.3 "Manrope", sans-serif !important;
-}
-
-.fmb-cognita-poster-features span:first-child {
-  border-left: 0;
-}
-
-.fmb-cognita-ad:hover,
-.fmb-cognita-ad:focus-visible {
-  transform: translateY(-4px);
-  box-shadow: 0 30px 80px rgba(24, 70, 144, .2);
-}
-
-.fmb-cognita-ad:focus-visible,
-.fmb-cognita-ad-head > a:focus-visible {
-  outline: 3px solid rgba(15, 99, 223, .38);
-  outline-offset: 4px;
+.fmb-pubmat:focus-visible,
+.fmb-campaign-head > a:focus-visible {
+  outline: 3px solid rgba(33, 128, 255, .5);
+  outline-offset: 5px;
 }
 
 @media (max-width: 1180px) {
   body.fmb-unified-public.fmb-corporate-luxury-v2.fmb-approved-dashboard .hero {
     grid-template-columns: minmax(0, 1fr) minmax(330px, .78fr) !important;
   }
+
+  .fmb-campaign-grid-senz {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .fmb-campaign-grid-senz .fmb-pubmat:last-child {
+    grid-column: 1 / -1;
+    width: min(100%, 720px);
+    justify-self: center;
+  }
 }
 
 @media (max-width: 760px) {
   body.fmb-unified-public.fmb-corporate-luxury-v2.fmb-approved-dashboard .hero {
     grid-template-columns: 1fr !important;
+    gap: 18px !important;
   }
 
   body.fmb-unified-public.fmb-corporate-luxury-v2.fmb-approved-dashboard .hero-portrait {
     grid-column: 1 !important;
+    width: 100% !important;
     max-width: none !important;
     justify-self: stretch !important;
   }
 
-  .fmb-cognita-ad-showcase {
-    padding-inline: 14px !important;
+  .fmb-campaign {
+    padding: 58px 14px 72px !important;
   }
 
-  .fmb-cognita-ad-head {
+  .fmb-campaign-head {
     display: grid;
     align-items: start;
+    gap: 22px;
   }
 
-  .fmb-cognita-ad-head h2 {
-    font-size: clamp(38px, 12vw, 58px) !important;
+  .fmb-campaign-head h2 {
+    font-size: clamp(42px, 13vw, 61px) !important;
   }
 
-  .fmb-cognita-ad-head > a {
+  .fmb-campaign-head > a {
     width: fit-content;
+    min-height: 48px;
   }
 
-  .fmb-cognita-ad-grid {
+  .fmb-campaign-grid-cognita,
+  .fmb-campaign-grid-senz {
     grid-template-columns: 1fr;
   }
 
-  .fmb-cognita-ad-wide {
+  .fmb-pubmat-wide,
+  .fmb-campaign-grid-senz .fmb-pubmat:last-child {
     grid-column: auto;
+    width: 100%;
   }
 
-  .fmb-cognita-ad-poster {
-    min-height: 570px;
-    padding: 26px 18px;
+  .fmb-pubmat {
+    border-radius: 16px;
+    box-shadow: 0 18px 50px rgba(21, 64, 133, .14);
+  }
+}
+
+@media (max-width: 430px) {
+  .fmb-campaign {
+    padding-inline: 10px !important;
   }
 
-  .fmb-cognita-poster-logo {
-    width: min(82%, 360px) !important;
-    height: 76px !important;
+  .fmb-campaign-head {
+    padding-inline: 6px;
   }
 
-  .fmb-cognita-poster-copy h3 {
-    font-size: clamp(31px, 9.5vw, 48px) !important;
+  .fmb-campaign-head p {
+    font-size: 15px !important;
+    line-height: 1.62 !important;
   }
 
-  .fmb-cognita-price strong {
-    font-size: clamp(72px, 22vw, 112px) !important;
-  }
-
-  .fmb-cognita-poster-features {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .fmb-cognita-poster-features span:nth-child(3) {
-    border-left: 0;
+  .fmb-pubmat {
+    border-radius: 13px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fmb-cognita-ad,
-  .fmb-cognita-ad-head > a {
+  .fmb-pubmat,
+  .fmb-campaign-head > a {
     transition: none;
   }
 }
