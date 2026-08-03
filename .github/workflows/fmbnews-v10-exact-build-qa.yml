@@ -60,20 +60,18 @@ jobs:
           if (/class=["'][^"']*fn9-category-nav/.test(landing)) throw new Error('Redundant upper category navigation remains');
           let count = 0;
           for (const entry of fs.readdirSync('dist/news', {withFileTypes:true})) {
-            if (!entry.isDirectory()) continue;
+            if (!entry.isDirectory() || entry.name === 'about') continue;
             const file = path.join('dist/news', entry.name, 'index.html');
             if (!fs.existsSync(file)) continue;
             const html = fs.readFileSync(file, 'utf8');
-            if (!html.includes('news-story-route')) continue;
+            if (!/<body\b[^>]*class=["'][^"']*\bnews-story-route\b/i.test(html)) continue;
             count++;
             for (const marker of ['fn10-share-bar','twitter:card','og:image:width','og:image:height']) {
               if (!html.includes(marker)) throw new Error(`${entry.name} missing ${marker}`);
             }
-            const image = html.match(/<img\b[^>]*src=["']([^"']+)["']/i)?.[1] || '';
+            const image = html.match(/<section\b[^>]*class=["'][^"']*(?:nc-story-media|fn10-article-media|senz-article-hero)[^"']*["'][^>]*>[\s\S]*?<img\b[^>]*src=["']([^"']+)["']/i)?.[1] || '';
             if (!image || /\.svg(?:[?#]|$)/i.test(image)) throw new Error(`${entry.name} lacks raster article media`);
           }
           if (count !== 50) throw new Error(`Expected 50 report pages, found ${count}`);
           console.log(`Verified V10 landing and ${count} social-ready report pages.`);
           NODE
-
-# Rerun after exact article-route detection correction.
