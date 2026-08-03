@@ -130,3 +130,5 @@ for (const landingPath of landings) {
   await writeFile(landingPath, html, 'utf8');
   console.log(`Reader-visible archive ${path.relative(dist, landingPath)}: ${articles.length} published routes, ${missing.length} restored.`);
 }
+
+await import('./post-build-fmbnews-v11-finalize.mjs');
