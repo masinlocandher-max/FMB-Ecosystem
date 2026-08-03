@@ -50,6 +50,11 @@ function stripNestedCaptionLinks(html) {
   });
 }
 
+function containsCaptionLink(html) {
+  const captions = [...html.matchAll(/<figcaption\b[^>]*>([\s\S]*?)<\/figcaption>/gi)];
+  return captions.some((match) => /<a\b/i.test(match[1]));
+}
+
 function placeLandingCategoryNavigation(html) {
   const nav = categoryNavigation();
   let next = html.replace(/<nav\b[^>]*class=(['"])[^'"]*\bfn9-category-nav\b[^'"]*\1[^>]*>[\s\S]*?<\/nav>\s*/gi, '');
@@ -93,8 +98,8 @@ for (const filePath of files) {
       throw new Error(`FMB News V9 category navigation is missing on ${filePath}`);
     }
 
-    if (/<article\b[^>]*>[\s\S]*?<a\b[^>]*>[\s\S]*?<figcaption\b[^>]*>[\s\S]*?<a\b/i.test(html)) {
-      throw new Error(`FMB News V9 landing page still contains nested caption links on ${filePath}`);
+    if (containsCaptionLink(html)) {
+      throw new Error(`FMB News V9 landing page still contains a link inside a card caption on ${filePath}`);
     }
   }
 
