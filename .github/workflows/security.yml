@@ -30,17 +30,16 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: npm
-
-      - name: Install locked dependencies without lifecycle scripts
-        run: npm ci --ignore-scripts
+          node-version: "24"
 
       - name: Scan for exposed secrets and unsafe deployment configuration
         run: npm run security:audit
 
-      - name: Audit production dependencies
-        run: npm audit --omit=dev --audit-level=high
+      - name: Audit SENZ locked production dependencies
+        run: npm audit --prefix apps/senz --omit=dev --audit-level=high
+
+      - name: Audit Cognita locked production dependencies
+        run: npm audit --prefix apps/cognita --omit=dev --audit-level=high
 
       - name: Validate monorepo boundaries
         run: npm run check
