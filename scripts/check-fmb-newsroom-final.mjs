@@ -64,7 +64,7 @@ for (const [html, fileName] of [[landing, 'news/index.html'], [fmbNews, 'fmbnews
 const cssMarkers = [
   '--fn-purple-950: #14051f',
   '--fn-gold: #c8a354',
-  'One corporate publication masthead',
+  '.nc-site-header',
   'content-visibility: auto',
   '.nc-lead-broadcast',
   '.nc-rundown-panel',
