@@ -4,6 +4,7 @@ import path from 'node:path';
 const root = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.join(root, 'dist');
 const newsRoots = [path.join(dist, 'news'), path.join(dist, 'fmbnews')];
+const finalCssPath = path.join(root, 'apps/withlovefmb/assets/css/fmbnews-faithful-v11-final.css');
 const retiredBodyClasses = ['news-futuristic-ph', 'news-channel-v4', 'news-editorial-v5'];
 const retiredClassRecord = `<span class="fn9-audit-only" data-fmb-news-retired-class-audit="${retiredBodyClasses.join(' ')}" aria-hidden="true"></span>`;
 
@@ -38,6 +39,14 @@ function injectRetiredClassRecord(html) {
   return `${html.slice(0, headerClose)}${retiredClassRecord}${html.slice(headerClose)}`;
 }
 
+function injectFinalComponentCss(html, css) {
+  const style = `<style data-fmb-news-faithful-v11-final>${css}</style>`;
+  return html
+    .replace(/<style\b[^>]*data-fmb-news-faithful-v11-final[^>]*>[\s\S]*?<\/style>\s*/gi, '')
+    .replace(/<\/head>/i, `${style}</head>`);
+}
+
+const finalCss = (await readFile(finalCssPath, 'utf8')).trim();
 const files = [...new Set((await Promise.all(newsRoots.map(walk))).flat())];
 let processed = 0;
 let updated = 0;
@@ -53,10 +62,11 @@ for (const filePath of files) {
   removedLinks += retiredLinks.length;
   html = html.replace(/<link\b[^>]*href=(["'])[^"']*fmb-news-channel-v4\.css[^"']*\1[^>]*>\s*/gi, '');
 
-  const v11Style = html.match(/<style\b[^>]*data-fmb-news-faithful-v11[^>]*>[\s\S]*?<\/style>/i)?.[0];
-  if (!v11Style) throw new Error(`FMB News V11 final style is missing: ${filePath}`);
-  html = html.replace(/<style\b[^>]*data-fmb-news-faithful-v11[^>]*>[\s\S]*?<\/style>\s*/gi, '');
+  const v11Style = html.match(/<style\b[^>]*data-fmb-news-faithful-v11(?!-final)[^>]*>[\s\S]*?<\/style>/i)?.[0];
+  if (!v11Style) throw new Error(`FMB News V11 primary style is missing: ${filePath}`);
+  html = html.replace(/<style\b[^>]*data-fmb-news-faithful-v11(?!-final)[^>]*>[\s\S]*?<\/style>\s*/gi, '');
   html = html.replace(/<\/head>/i, `${v11Style}</head>`);
+  html = injectFinalComponentCss(html, finalCss);
 
   html = retireVisualBodyClasses(html);
   html = injectRetiredClassRecord(html);
@@ -72,11 +82,11 @@ for (const filePath of files) {
     }
   }
 
-  const styleMatch = html.match(/<style\b[^>]*data-fmb-news-faithful-v11[^>]*>/i);
-  const stylePosition = styleMatch?.index ?? -1;
+  const primaryStylePosition = html.match(/<style\b[^>]*data-fmb-news-faithful-v11(?!-final)[^>]*>/i)?.index ?? -1;
+  const finalStylePosition = html.match(/<style\b[^>]*data-fmb-news-faithful-v11-final[^>]*>/i)?.index ?? -1;
   const headClose = html.indexOf('</head>');
-  if (stylePosition < 0 || headClose < 0 || stylePosition > headClose) {
-    throw new Error(`FMB News V11 final head style order is invalid: ${filePath}`);
+  if (primaryStylePosition < 0 || finalStylePosition < 0 || primaryStylePosition >= finalStylePosition || finalStylePosition > headClose) {
+    throw new Error(`FMB News V11 final style order is invalid: ${filePath}`);
   }
 
   if (html !== before) {
@@ -89,4 +99,4 @@ if (processed !== 54) {
   throw new Error(`FMB News V11 finalizer expected 54 routes; processed ${processed}.`);
 }
 
-console.log(`Verified the faithful V11 final visual state across ${processed} route(s), retired obsolete News body classes, removed ${removedLinks} stylesheet link(s), and rewrote ${updated} route(s).`);
+console.log(`Verified the faithful V11 final visual state across ${processed} route(s), restored complete footer and hero states, retired obsolete News body classes, removed ${removedLinks} stylesheet link(s), and rewrote ${updated} route(s).`);
