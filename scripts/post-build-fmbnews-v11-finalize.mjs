@@ -20,12 +20,14 @@ async function walk(directory) {
 }
 
 const files = [...new Set((await Promise.all(newsRoots.map(walk))).flat())];
+let processed = 0;
 let updated = 0;
 let removedLinks = 0;
 
 for (const filePath of files) {
   let html = await readFile(filePath, 'utf8');
   if (!/\bnews-faithful-v11\b/.test(html)) continue;
+  processed += 1;
   const before = html;
 
   const retiredLinks = html.match(/<link\b[^>]*href=(["'])[^"']*fmb-news-channel-v4\.css[^"']*\1[^>]*>\s*/gi) ?? [];
@@ -38,9 +40,12 @@ for (const filePath of files) {
   html = html.replace(/<\/head>/i, `${v11Style}</head>`);
 
   if (/fmb-news-channel-v4\.css/i.test(html)) throw new Error(`Retired FMB News channel stylesheet remains: ${filePath}`);
-  const stylePosition = html.lastIndexOf('data-fmb-news-faithful-v11');
+  const styleMatch = html.match(/<style\b[^>]*data-fmb-news-faithful-v11[^>]*>/i);
+  const stylePosition = styleMatch?.index ?? -1;
   const headClose = html.indexOf('</head>');
-  if (stylePosition < 0 || headClose < 0 || stylePosition > headClose) throw new Error(`FMB News V11 final style order is invalid: ${filePath}`);
+  if (stylePosition < 0 || headClose < 0 || stylePosition > headClose) {
+    throw new Error(`FMB News V11 final head style order is invalid: ${filePath}`);
+  }
 
   if (html !== before) {
     await writeFile(filePath, html, 'utf8');
@@ -48,8 +53,8 @@ for (const filePath of files) {
   }
 }
 
-if (!updated || removedLinks !== updated) {
-  throw new Error(`FMB News V11 finalizer expected one retired stylesheet per route; updated ${updated}, removed ${removedLinks}.`);
+if (!processed || removedLinks !== processed || updated !== processed) {
+  throw new Error(`FMB News V11 finalizer expected one retired stylesheet per processed route; processed ${processed}, updated ${updated}, removed ${removedLinks}.`);
 }
 
-console.log(`Removed the retired FMB News Channel V4 stylesheet from ${updated} V11 route(s) and restored the faithful V11 layer as the final head style.`);
+console.log(`Removed the retired FMB News Channel V4 stylesheet from ${processed} V11 route(s) and restored the faithful V11 layer as the final head style.`);
