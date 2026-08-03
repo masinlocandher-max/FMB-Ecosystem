@@ -92,6 +92,7 @@ if (artwork.includes('data:image/')) fail('Cognita artwork still embeds a low-re
 if (!artwork.includes('/assets/images/fmb-approved/francine-portrait-front.webp')) fail('Cognita artwork does not use the approved portrait');
 
 let articleCount = 0;
+let promotionalArticleCount = 0;
 for (const filePath of await walk(newsRoot)) {
   if (filePath === landingPath) continue;
   const html = await readFile(filePath, 'utf8');
@@ -99,9 +100,17 @@ for (const filePath of await walk(newsRoot)) {
   const relative = path.relative(distRoot, filePath).replaceAll('\\', '/');
   articleCount += 1;
   assertOptimizedPage(html, relative);
-  if (!html.includes('nc-article-hero')) fail(`${relative} is missing the article headline surface`);
-  if (!html.includes('nc-story-body')) fail(`${relative} is missing the readable article body`);
-  if (!html.includes('nc-sources') && !html.includes('nc-source-box')) fail(`${relative} is missing visible sourcing`);
+
+  const isSenzPromotionalArticle = html.includes('senz-website-article');
+  if (isSenzPromotionalArticle) {
+    promotionalArticleCount += 1;
+    if (!html.includes('senz-article-hero')) fail(`${relative} is missing its SENZ article headline surface`);
+    if (!html.includes('senz-article-body')) fail(`${relative} is missing its SENZ article body`);
+  } else {
+    if (!html.includes('nc-article-hero')) fail(`${relative} is missing the article headline surface`);
+    if (!html.includes('nc-story-body')) fail(`${relative} is missing the readable article body`);
+    if (!html.includes('nc-sources') && !html.includes('nc-source-box')) fail(`${relative} is missing visible sourcing`);
+  }
 
   if (relative.includes('filipino-centered-training-institution-cognita-vision')) {
     if (!html.includes('og:image:width" content="1536"') || !html.includes('og:image:height" content="864"')) {
@@ -112,4 +121,4 @@ for (const filePath of await walk(newsRoot)) {
 }
 
 if (articleCount < 1) fail('no News report pages were audited');
-console.log(`FMB News Center final audit verified one optimized corporate shell, purple-gold visual authority, ${articleCount} report pages, responsive layouts, source visibility, live Philippine time, retired-layer removal and HD Cognita artwork.`);
+console.log(`FMB News Center final audit verified one optimized corporate shell, purple-gold visual authority, ${articleCount} report pages (${promotionalArticleCount} labeled SENZ feature), responsive layouts, source visibility, live Philippine time, retired-layer removal and HD Cognita artwork.`);
