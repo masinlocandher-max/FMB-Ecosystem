@@ -59,14 +59,33 @@ function categoryLinks() {
 
 function replaceCategoryNavigation(html) {
   const links = categoryLinks();
-  let next = html.replace(
-    /<nav\b[^>]*class=(['"])[^'"]*\bnc-site-links\b[^'"]*\1[^>]*>[\s\S]*?<\/nav>/i,
-    `<nav class="nc-site-links" id="newsNav" aria-label="News categories">${links}</nav>`,
-  );
-  next = next.replace(
-    /<nav\b[^>]*class=(['"])[^'"]*\bnc-topic-rail\b[^'"]*\1[^>]*>[\s\S]*?<\/nav>/i,
-    `<nav class="nc-topic-rail" aria-label="News categories"><div class="wrap">${links}</div></nav>`,
-  );
+  const siteNav = `<nav class="nc-site-links" id="newsNav" aria-label="News categories">${links}</nav>`;
+  const topicRail = `<nav class="nc-topic-rail" aria-label="News categories"><div class="wrap">${links}</div></nav>`;
+  const menuButton = '<button class="nc-menu-toggle" type="button" data-news-menu aria-label="Open news menu" aria-expanded="false" aria-controls="newsNav"><span></span><span></span></button>';
+  const headerPattern = /<header\b[^>]*class=(['"])[^'"]*\bnc-site-header\b[^'"]*\1[^>]*>[\s\S]*?<\/header>/i;
+
+  let next = html.replace(headerPattern, (header) => {
+    if (/\bnc-site-links\b/i.test(header)) {
+      return header.replace(
+        /<nav\b[^>]*class=(['"])[^'"]*\bnc-site-links\b[^'"]*\1[^>]*>[\s\S]*?<\/nav>/i,
+        siteNav,
+      );
+    }
+
+    const addition = `${siteNav}${/\bnc-menu-toggle\b/i.test(header) ? '' : menuButton}`;
+    const injected = header.replace(/<\/div>\s*<\/header>\s*$/i, `${addition}</div></header>`);
+    return injected === header ? header.replace(/<\/header>\s*$/i, `${addition}</header>`) : injected;
+  });
+
+  if (/<nav\b[^>]*class=(['"])[^'"]*\bnc-topic-rail\b[^'"]*\1/i.test(next)) {
+    next = next.replace(
+      /<nav\b[^>]*class=(['"])[^'"]*\bnc-topic-rail\b[^'"]*\1[^>]*>[\s\S]*?<\/nav>/i,
+      topicRail,
+    );
+  } else {
+    next = next.replace(headerPattern, (header) => `${header}${topicRail}`);
+  }
+
   return next;
 }
 
