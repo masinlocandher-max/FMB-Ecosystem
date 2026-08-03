@@ -5,7 +5,9 @@ on:
     branches: [main]
     paths:
       - 'apps/withlovefmb/assets/css/fmbnews-faithful-v11.css'
+      - 'apps/withlovefmb/assets/js/news-channel.js'
       - 'scripts/post-build-fmbnews-faithful-v11.mjs'
+      - 'scripts/post-build-fmbnews-v11-finalize.mjs'
       - 'scripts/qa-fmbnews-v11-playwright.mjs'
       - 'scripts/debug-fmbnews-v11-font.mjs'
       - 'scripts/post-build-fmbnews-preserve-archive.mjs'
