@@ -1,0 +1,4 @@
+Contact: mailto:withlovefmb@gmail.com
+Expires: 2027-08-03T00:00:00Z
+Canonical: https://www.francinemariebautista.com/.well-known/security.txt
+Preferred-Languages: en, tl
