@@ -1,6 +1,7 @@
 (function(){
   'use strict';
   if(location.hostname.toLowerCase()==='yoni.francinemariebautista.com')return;
+  if(document.body?.classList.contains('news-route'))return;
 
   const CORE_SRC='/assets/js/az-assistant-core.js?v=20260722-pearly-search-v2';
   const STYLE_HREF='/assets/css/az-assistant.css?v=20260720-az-website-only-v1';

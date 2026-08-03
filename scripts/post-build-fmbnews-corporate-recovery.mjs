@@ -5,16 +5,32 @@ const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
 const distRoot = path.join(repositoryRoot, 'dist');
 const newsRoot = path.join(distRoot, 'news');
 const fmbNewsRoot = path.join(distRoot, 'fmbnews');
-const sourceCssPath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-corporate-recovery.css');
-const editorialCssPath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-editorial-v5.css');
-const editorialPolishCssPath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-editorial-v5-polish.css');
-const mobileCssPath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-mobile-v6.css');
+const cssSourceRoot = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css');
+const jsSourceRoot = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'js');
+const sourceCssPath = path.join(cssSourceRoot, 'fmbnews-corporate-recovery.css');
+const editorialCssPath = path.join(cssSourceRoot, 'fmbnews-editorial-v5.css');
+const editorialPolishCssPath = path.join(cssSourceRoot, 'fmbnews-editorial-v5-polish.css');
+const mobileCssPath = path.join(cssSourceRoot, 'fmbnews-mobile-v6.css');
+const categoriesCssPath = path.join(cssSourceRoot, 'fmbnews-categories-v1.css');
+const categoriesJsPath = path.join(jsSourceRoot, 'fmbnews-categories-v1.js');
 const sitewideCssPath = path.join(distRoot, 'assets', 'css', 'fmb-sitewide-visual-fixes.css');
 const distMobileCssPath = path.join(distRoot, 'assets', 'css', 'fmbnews-mobile-v6.css');
+const distCategoriesCssPath = path.join(distRoot, 'assets', 'css', 'fmbnews-categories-v1.css');
+const distCategoriesJsPath = path.join(distRoot, 'assets', 'js', 'fmbnews-categories-v1.js');
 const markerStart = '/* FMB_NEWS_CORPORATE_RECOVERY_START */';
 const markerEnd = '/* FMB_NEWS_CORPORATE_RECOVERY_END */';
 const sitewideVersion = '20260803-news-editorial-v6';
 const mobileVersion = '20260803-mobile-v6';
+const categoriesVersion = '20260803-categories-v1';
+const categories = [
+  ['money', 'Money'],
+  ['tech', 'Tech'],
+  ['lifestyle', 'Lifestyle'],
+  ['politics', 'Politics'],
+  ['culture', 'Culture'],
+  ['environment', 'Environment'],
+  ['health', 'Health'],
+];
 
 async function walkHtml(directory) {
   const files = [];
@@ -30,11 +46,32 @@ async function walkHtml(directory) {
   return files;
 }
 
-const [corporateCss, editorialCss, editorialPolishCss, mobileCss, sitewideCss] = await Promise.all([
+function categoryLinks() {
+  return categories
+    .map(([slug, label]) => `<a href="/news/?category=${slug}#rundown" data-news-category-link="${slug}">${label}</a>`)
+    .join('');
+}
+
+function replaceCategoryNavigation(html) {
+  const links = categoryLinks();
+  let next = html.replace(
+    /<nav\b[^>]*class=(['"])[^'"]*\bnc-site-links\b[^'"]*\1[^>]*>[\s\S]*?<\/nav>/i,
+    `<nav class="nc-site-links" id="newsNav" aria-label="News categories">${links}</nav>`,
+  );
+  next = next.replace(
+    /<nav\b[^>]*class=(['"])[^'"]*\bnc-topic-rail\b[^'"]*\1[^>]*>[\s\S]*?<\/nav>/i,
+    `<nav class="nc-topic-rail" aria-label="News categories"><div class="wrap">${links}</div></nav>`,
+  );
+  return next;
+}
+
+const [corporateCss, editorialCss, editorialPolishCss, mobileCss, categoriesCss, categoriesJs, sitewideCss] = await Promise.all([
   readFile(sourceCssPath, 'utf8'),
   readFile(editorialCssPath, 'utf8'),
   readFile(editorialPolishCssPath, 'utf8'),
   readFile(mobileCssPath, 'utf8'),
+  readFile(categoriesCssPath, 'utf8'),
+  readFile(categoriesJsPath, 'utf8'),
   readFile(sitewideCssPath, 'utf8'),
 ]);
 
@@ -43,7 +80,10 @@ const cleanSitewideCss = sitewideCss.replace(
   '',
 );
 
-await mkdir(path.dirname(distMobileCssPath), { recursive: true });
+await Promise.all([
+  mkdir(path.dirname(distMobileCssPath), { recursive: true }),
+  mkdir(path.dirname(distCategoriesJsPath), { recursive: true }),
+]);
 await Promise.all([
   writeFile(
     sitewideCssPath,
@@ -51,6 +91,8 @@ await Promise.all([
     'utf8',
   ),
   writeFile(distMobileCssPath, `${mobileCss.trim()}\n`, 'utf8'),
+  writeFile(distCategoriesCssPath, `${categoriesCss.trim()}\n`, 'utf8'),
+  writeFile(distCategoriesJsPath, `${categoriesJs.trim()}\n`, 'utf8'),
 ]);
 
 const newsFiles = [...new Set([
@@ -59,6 +101,8 @@ const newsFiles = [...new Set([
 ])];
 
 const mobileLink = `<link rel="stylesheet" href="/assets/css/fmbnews-mobile-v6.css?v=${mobileVersion}" data-fmb-news-mobile-v6>`;
+const categoriesLink = `<link rel="stylesheet" href="/assets/css/fmbnews-categories-v1.css?v=${categoriesVersion}" data-fmb-news-categories-css>`;
+const categoriesScript = `<script defer src="/assets/js/fmbnews-categories-v1.js?v=${categoriesVersion}" data-fmb-news-categories></script>`;
 let verifiedCount = 0;
 let updatedCount = 0;
 
@@ -73,15 +117,17 @@ for (const filePath of newsFiles) {
   }
 
   const original = html;
-  html = html
+  html = replaceCategoryNavigation(html)
     .replace(
       /fmb-sitewide-visual-fixes\.css(?:\?v=[^"'<>\s]*)?/gi,
       `fmb-sitewide-visual-fixes.css?v=${sitewideVersion}`,
     )
     .replace(/<link\b[^>]*data-fmb-news-mobile-v6[^>]*>\s*/gi, '')
-    .replace(/<script\b[^>]*src=(['"])\/assets\/js\/fmb-unified-system\.js[^'"]*\1[^>]*>\s*<\/script>\s*/gi, '')
+    .replace(/<link\b[^>]*data-fmb-news-categories-css[^>]*>\s*/gi, '')
+    .replace(/<script\b[^>]*data-fmb-news-categories[^>]*>\s*<\/script>\s*/gi, '')
     .replace(/<script\b[^>]*src=(['"])\/assets\/js\/az-assistant\.js[^'"]*\1[^>]*>\s*<\/script>\s*/gi, '')
-    .replace(/<\/head>/i, `${mobileLink}</head>`);
+    .replace(/<\/head>/i, `${mobileLink}${categoriesLink}</head>`)
+    .replace(/<\/body>/i, `${categoriesScript}</body>`);
 
   if (!html.includes(`fmb-sitewide-visual-fixes.css?v=${sitewideVersion}`)) {
     throw new Error(`FMB News cache-busted sitewide stylesheet is missing: ${filePath}`);
@@ -89,8 +135,17 @@ for (const filePath of newsFiles) {
   if (!html.includes('data-fmb-news-mobile-v6')) {
     throw new Error(`FMB News mobile V6 stylesheet is missing: ${filePath}`);
   }
-  if (/\/assets\/js\/(?:fmb-unified-system|az-assistant)\.js/i.test(html)) {
-    throw new Error(`FMB News must not load the floating reception system: ${filePath}`);
+  if (!html.includes('data-fmb-news-categories-css') || !html.includes('data-fmb-news-categories')) {
+    throw new Error(`FMB News category system is missing: ${filePath}`);
+  }
+  if (!/data-news-category-link="money"/.test(html) || !/data-news-category-link="health"/.test(html)) {
+    throw new Error(`FMB News category navigation is incomplete: ${filePath}`);
+  }
+  if (!/\/assets\/js\/fmb-unified-system\.js/i.test(html)) {
+    throw new Error(`FMB News must retain the unified public-site system: ${filePath}`);
+  }
+  if (/\/assets\/js\/az-assistant\.js/i.test(html)) {
+    throw new Error(`FMB News must not directly load the Reception Desk bundle: ${filePath}`);
   }
 
   if (html !== original) {
@@ -104,4 +159,4 @@ if (!verifiedCount) {
   throw new Error('FMB News corporate recovery could not find generated News pages.');
 }
 
-console.log(`Appended the corporate base, Editorial V5 design and final decluttering layer to the sitewide stylesheet for ${verifiedCount} generated page(s); cache-busted and mobile-hardened ${updatedCount} route(s).`);
+console.log(`Appended the corporate base, Editorial V5 design and final decluttering layer to the sitewide stylesheet for ${verifiedCount} generated page(s); added seven functional categories and mobile-hardened ${updatedCount} route(s).`);
