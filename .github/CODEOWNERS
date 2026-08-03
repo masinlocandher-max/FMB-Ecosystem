@@ -1,0 +1,11 @@
+# Default ownership
+* @masinlocandher-max
+
+# Security-sensitive configuration
+/.github/ @masinlocandher-max
+/vercel.json @masinlocandher-max
+/apps/withlovefmb/vercel.json @masinlocandher-max
+/apps/withlovefmb/assets/js/config.js @masinlocandher-max
+/apps/withlovefmb/assets/js/supabase-client.js @masinlocandher-max
+/apps/withlovefmb/assets/js/admin.js @masinlocandher-max
+/tooling/security-audit.mjs @masinlocandher-max
