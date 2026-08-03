@@ -27,10 +27,10 @@ for (const filePath of files) {
   const html = await readFile(filePath, 'utf8');
   if (!html.includes('fn7-about-page')) continue;
 
-  const next = html.replaceAll('fn7-about-page', 'fn7-about-page-compat');
+  const next = html.replaceAll('fn7-about-page', 'fn7-compat-route-token');
   await writeFile(filePath, next, 'utf8');
   guarded += 1;
 }
 
 if (!guarded) throw new Error('FMB News V9 route guard did not find compatibility selectors to neutralize.');
-console.log(`Neutralized About-page compatibility selectors on ${guarded} non-About FMB News route(s) before the approved editorial transform.`);
+console.log(`Fully isolated About-page compatibility selectors on ${guarded} non-About FMB News route(s) before the approved editorial transform.`);
