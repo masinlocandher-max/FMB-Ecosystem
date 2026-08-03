@@ -51,10 +51,15 @@ function removeRedundantControls(html) {
 }
 
 function injectPresentedFonts(html) {
-  return html
+  const cleaned = html
     .replace(/<link\b[^>]*data-fmb-presented-font-preconnect[^>]*>\s*/gi, '')
-    .replace(/<link\b[^>]*data-fmb-presented-fonts[^>]*>\s*/gi, '')
-    .replace(/<\/head>/i, `${presentedFontLoader}</head>`);
+    .replace(/<link\b[^>]*data-fmb-presented-fonts[^>]*>\s*/gi, '');
+
+  if (/<link\b[^>]*rel=(['"])stylesheet\1[^>]*>/i.test(cleaned)) {
+    return cleaned.replace(/<link\b[^>]*rel=(['"])stylesheet\1[^>]*>/i, (firstStylesheet) => `${presentedFontLoader}\n${firstStylesheet}`);
+  }
+
+  return cleaned.replace(/<\/head>/i, `${presentedFontLoader}</head>`);
 }
 
 function signalEmblem() {
