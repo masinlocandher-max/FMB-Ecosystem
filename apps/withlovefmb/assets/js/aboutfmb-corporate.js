@@ -40,16 +40,30 @@
   addEntrepreneurReference(page.querySelector('.fmb-about-footer-brand p'));
 
   const footerLinks = page.querySelector('.fco-footer-links');
-  if (footerLinks && !footerLinks.querySelector('a[href="/about-francine-marie-bautista/"]')) {
-    const founderProfile = document.createElement('a');
-    founderProfile.href = '/about-francine-marie-bautista/';
-    founderProfile.rel = 'author';
-    founderProfile.textContent = 'Founder profile';
-    founderProfile.setAttribute('aria-label', 'Detailed founder and entrepreneur profile of Francine Marie Bautista');
-
+  if (footerLinks) {
     const emailLink = footerLinks.querySelector('a[href^="mailto:"]');
-    if (emailLink) footerLinks.insertBefore(founderProfile, emailLink);
-    else footerLinks.appendChild(founderProfile);
+    const addQuietFooterLink = ({ href, label, rel = '', ariaLabel }) => {
+      if (footerLinks.querySelector(`a[href="${href}"]`)) return;
+      const link = document.createElement('a');
+      link.href = href;
+      if (rel) link.rel = rel;
+      link.textContent = label;
+      link.setAttribute('aria-label', ariaLabel);
+      if (emailLink) footerLinks.insertBefore(link, emailLink);
+      else footerLinks.appendChild(link);
+    };
+
+    addQuietFooterLink({
+      href: '/about-francine-marie-bautista/',
+      label: 'Founder profile',
+      rel: 'author',
+      ariaLabel: 'Detailed founder and entrepreneur profile of Francine Marie Bautista'
+    });
+    addQuietFooterLink({
+      href: '/transgender-woman-zambales-francine-marie-bautista/',
+      label: 'Zambales profile',
+      ariaLabel: 'Francine Marie Bautista, a transgender woman from Masinloc, Zambales'
+    });
   }
 
   const mobileDock = page.querySelector('.fco-mobile-dock');
