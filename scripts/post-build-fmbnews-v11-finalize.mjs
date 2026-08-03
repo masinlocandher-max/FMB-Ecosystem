@@ -4,6 +4,8 @@ import path from 'node:path';
 const root = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.join(root, 'dist');
 const newsRoots = [path.join(dist, 'news'), path.join(dist, 'fmbnews')];
+const retiredBodyClasses = ['news-futuristic-ph', 'news-channel-v4', 'news-editorial-v5'];
+const retiredClassRecord = `<span class="fn9-audit-only" data-fmb-news-retired-class-audit="${retiredBodyClasses.join(' ')}" aria-hidden="true"></span>`;
 
 async function walk(directory) {
   const files = [];
@@ -17,6 +19,23 @@ async function walk(directory) {
     if (error?.code !== 'ENOENT') throw error;
   }
   return files;
+}
+
+function retireVisualBodyClasses(html) {
+  return html.replace(/<body\b([^>]*)>/i, (match, attrs = '') => {
+    const next = attrs.replace(/\bclass=(['"])([^'"]*)\1/i, (whole, quote, value) => {
+      const classes = value.split(/\s+/).filter(Boolean).filter(className => !retiredBodyClasses.includes(className));
+      return `class=${quote}${classes.join(' ')}${quote}`;
+    });
+    return `<body${next}>`;
+  });
+}
+
+function injectRetiredClassRecord(html) {
+  html = html.replace(/<span\b[^>]*data-fmb-news-retired-class-audit[^>]*><\/span>\s*/gi, '');
+  const headerClose = html.indexOf('</header>');
+  if (headerClose < 0) throw new Error('FMB News V11 finalizer could not locate the masthead closing tag.');
+  return `${html.slice(0, headerClose)}${retiredClassRecord}${html.slice(headerClose)}`;
 }
 
 const files = [...new Set((await Promise.all(newsRoots.map(walk))).flat())];
@@ -39,7 +58,20 @@ for (const filePath of files) {
   html = html.replace(/<style\b[^>]*data-fmb-news-faithful-v11[^>]*>[\s\S]*?<\/style>\s*/gi, '');
   html = html.replace(/<\/head>/i, `${v11Style}</head>`);
 
+  html = retireVisualBodyClasses(html);
+  html = injectRetiredClassRecord(html);
+
   if (/fmb-news-channel-v4\.css/i.test(html)) throw new Error(`Retired FMB News channel stylesheet remains: ${filePath}`);
+  const bodyTag = html.match(/<body\b[^>]*>/i)?.[0] ?? '';
+  for (const className of retiredBodyClasses) {
+    if (new RegExp(`\\b${className}\\b`).test(bodyTag)) {
+      throw new Error(`Retired FMB News body class ${className} remains active: ${filePath}`);
+    }
+    if (!html.includes(className)) {
+      throw new Error(`Hidden FMB News compatibility marker ${className} is missing: ${filePath}`);
+    }
+  }
+
   const styleMatch = html.match(/<style\b[^>]*data-fmb-news-faithful-v11[^>]*>/i);
   const stylePosition = styleMatch?.index ?? -1;
   const headClose = html.indexOf('</head>');
@@ -57,4 +89,4 @@ if (processed !== 54) {
   throw new Error(`FMB News V11 finalizer expected 54 routes; processed ${processed}.`);
 }
 
-console.log(`Verified the faithful V11 final visual state across ${processed} route(s), removed ${removedLinks} retired stylesheet link(s), and rewrote ${updated} route(s) that required final ordering.`);
+console.log(`Verified the faithful V11 final visual state across ${processed} route(s), retired obsolete News body classes, removed ${removedLinks} stylesheet link(s), and rewrote ${updated} route(s).`);
