@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /admin.html
+Disallow: /admin/
 Disallow: /member.html
 Disallow: /daily.html
 Disallow: /profile/
@@ -8,6 +9,9 @@ Disallow: /auth.html
 Disallow: /reset-password.html
 Disallow: /admin-login.html
 Disallow: /admin-activate.html
+Disallow: /app/
+Disallow: /data-center/
+Disallow: /_sites/
 
 Sitemap: https://www.francinemariebautista.com/sitemap.xml
 Sitemap: https://www.francinemariebautista.com/media-sitemap.xml
