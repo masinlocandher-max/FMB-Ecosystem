@@ -28,6 +28,30 @@
     link.href = link.getAttribute('href').replace('/fmb&co/', '/fmbandco/');
   });
 
+  const addEntrepreneurReference = (element) => {
+    if (!element || /\bentrepreneur\b/i.test(element.textContent)) return;
+    element.innerHTML = element.innerHTML.replace(
+      'founder, strategist, creative director, and storyteller',
+      'founder, entrepreneur, strategist, creative director, and storyteller'
+    );
+  };
+
+  addEntrepreneurReference(page.querySelector('.fmb-about-story > p:not(.fco-eyebrow)'));
+  addEntrepreneurReference(page.querySelector('.fmb-about-footer-brand p'));
+
+  const footerLinks = page.querySelector('.fco-footer-links');
+  if (footerLinks && !footerLinks.querySelector('a[href="/about-francine-marie-bautista/"]')) {
+    const founderProfile = document.createElement('a');
+    founderProfile.href = '/about-francine-marie-bautista/';
+    founderProfile.rel = 'author';
+    founderProfile.textContent = 'Founder profile';
+    founderProfile.setAttribute('aria-label', 'Detailed founder and entrepreneur profile of Francine Marie Bautista');
+
+    const emailLink = footerLinks.querySelector('a[href^="mailto:"]');
+    if (emailLink) footerLinks.insertBefore(founderProfile, emailLink);
+    else footerLinks.appendChild(founderProfile);
+  }
+
   const mobileDock = page.querySelector('.fco-mobile-dock');
   if (mobileDock) {
     const dockLinks = [
