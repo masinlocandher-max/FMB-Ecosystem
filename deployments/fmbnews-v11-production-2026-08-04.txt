@@ -1,0 +1,6 @@
+FMB News V11 production release
+
+Verified implementation commit: 163a4cd78719e6b068dd78dc2292dbfd1179d03c
+Visual QA source commit: 693c0d20d797dae685b67907155b1dbb65fee0a0
+
+The production build must preserve all 50 published FMB News article routes, use the approved Francine portrait byte-for-byte, and pass the dedicated desktop/mobile Playwright suite before release.
