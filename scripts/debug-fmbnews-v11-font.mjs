@@ -15,45 +15,72 @@ await page.screenshot({ path: path.join(evidenceDir, 'fmbnews-v11-font-debug.png
 
 const diagnostics = await page.evaluate(() => {
   const element = document.querySelector('.fn9-hero h2');
-  if (!element) return { error: 'Hero heading missing' };
-  const matches = [];
+  const v11Owner = document.querySelector('style[data-fmb-news-faithful-v11]');
+  const v11Sheet = v11Owner?.sheet;
+  if (!element || !v11Owner || !v11Sheet) return { error: 'Hero heading or V11 sheet missing' };
 
-  const visitRules = (rules, sheetIndex, ancestry = []) => {
-    for (let ruleIndex = 0; ruleIndex < rules.length; ruleIndex += 1) {
-      const rule = rules[ruleIndex];
-      if (rule.cssRules) {
-        const condition = rule.conditionText || rule.media?.mediaText || rule.name || rule.constructor?.name || 'group';
-        visitRules(rule.cssRules, sheetIndex, [...ancestry, condition]);
-        continue;
+  const flattenRules = (rules, ancestry = [], output = []) => {
+    for (const rule of rules) {
+      if (rule.type === CSSRule.STYLE_RULE) {
+        output.push({
+          selector: rule.selectorText,
+          fontFamily: rule.style.fontFamily || '',
+          display: rule.style.display || '',
+          objectFit: rule.style.objectFit || '',
+          ancestry,
+          matchesHero: (() => { try { return element.matches(rule.selectorText); } catch { return false; } })(),
+        });
+      } else if (rule.cssRules) {
+        flattenRules(rule.cssRules, [...ancestry, rule.conditionText || rule.media?.mediaText || rule.name || rule.constructor?.name || 'group'], output);
       }
-      if (!rule.selectorText || !rule.style?.fontFamily) continue;
-      let matched = false;
-      try { matched = element.matches(rule.selectorText); } catch {}
-      if (!matched) continue;
-      matches.push({
-        sheetIndex,
-        ruleIndex,
-        selector: rule.selectorText,
-        fontFamily: rule.style.fontFamily,
-        priority: rule.style.getPropertyPriority('font-family'),
-        ancestry,
-      });
     }
+    return output;
   };
 
-  [...document.styleSheets].forEach((sheet, sheetIndex) => {
-    try { visitRules(sheet.cssRules, sheetIndex); }
-    catch (error) { matches.push({ sheetIndex, inaccessible: true, href: sheet.href || '', error: String(error) }); }
-  });
+  const parsedRules = flattenRules(v11Sheet.cssRules);
+  const heroRules = parsedRules.filter(rule => /fn9-hero|nc-lead|fn9-main/.test(rule.selector || ''));
+  const exactSelector = 'html body.news-faithful-v11 .fn9-hero .nc-lead-overlay h2';
+  const exactRule = parsedRules.find(rule => rule.selector?.split(',').map(value => value.trim()).includes(exactSelector));
+  const rawCss = v11Owner.textContent || '';
+  const expectedTokens = [
+    '.fn9-main',
+    '.fn9-hero .nc-lead-broadcast > a',
+    '.fn9-hero .nc-lead-overlay h2',
+    '.fn11-about-portrait',
+    '.fn11-footer',
+    '@media (max-width: 700px)',
+  ];
+
+  const testStyle = document.createElement('style');
+  testStyle.textContent = `${exactSelector}{font-family:"Cormorant Garamond",Georgia,serif!important}`;
+  document.head.appendChild(testStyle);
+  const fontAfterTestRule = getComputedStyle(element).fontFamily;
+  testStyle.remove();
 
   return {
     outerHTML: element.outerHTML,
-    ancestors: [...function* () { let node = element; while (node) { yield `${node.tagName?.toLowerCase() || ''}.${[...node.classList || []].join('.')}`; node = node.parentElement; } }()],
     computedFontFamily: getComputedStyle(element).fontFamily,
-    inlineStyle: element.getAttribute('style') || '',
-    bodyClasses: [...document.body.classList],
-    styleSheets: [...document.styleSheets].map((sheet, index) => ({ index, href: sheet.href || '', owner: sheet.ownerNode?.outerHTML?.slice(0, 180) || '' })),
-    matchingFontRules: matches,
+    fontAfterTestRule,
+    bodyFontFamily: getComputedStyle(document.body).fontFamily,
+    v11RawLength: rawCss.length,
+    v11RuleCount: v11Sheet.cssRules.length,
+    flattenedRuleCount: parsedRules.length,
+    firstTenRules: parsedRules.slice(0, 10),
+    lastTwentyRules: parsedRules.slice(-20),
+    heroRules,
+    exactSelector,
+    exactRule: exactRule || null,
+    expectedTokenPositions: Object.fromEntries(expectedTokens.map(token => [token, rawCss.indexOf(token)])),
+    rawBraceCounts: {
+      opening: (rawCss.match(/{/g) || []).length,
+      closing: (rawCss.match(/}/g) || []).length,
+    },
+    styleSheets: [...document.styleSheets].map((sheet, index) => ({
+      index,
+      href: sheet.href || '',
+      owner: sheet.ownerNode?.outerHTML?.slice(0, 160) || '',
+      ruleCount: (() => { try { return sheet.cssRules.length; } catch { return null; } })(),
+    })),
   };
 });
 
