@@ -7,6 +7,7 @@
   const header=document.querySelector('.nc-site-header');
   const dock=document.querySelector('.nc-mobile-dock');
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const faithfulV11=body.classList.contains('news-faithful-v11');
 
   const ensureStylesheet=(fragment,href)=>{
     if(document.querySelector(`link[href*="${fragment}"]`)||document.querySelector('style[data-fmb-news-final-styles]'))return;
@@ -15,7 +16,9 @@
     stylesheet.href=href;
     document.head.appendChild(stylesheet);
   };
-  ensureStylesheet('fmb-news-channel-v4.css','/assets/css/fmb-news-channel-v4.css?v=20260727-channel-v4');
+  if(!faithfulV11){
+    ensureStylesheet('fmb-news-channel-v4.css','/assets/css/fmb-news-channel-v4.css?v=20260727-channel-v4');
+  }
 
   const supportStyle=document.createElement('style');
   supportStyle.textContent=`
@@ -32,7 +35,7 @@
   progress.setAttribute('aria-hidden','true');
   progress.innerHTML='<span></span>';
   Object.assign(progress.style,{position:'fixed',inset:'0 0 auto',height:'3px',zIndex:'999',pointerEvents:'none'});
-  Object.assign(progress.firstElementChild.style,{display:'block',width:'0',height:'100%',background:'#a10d2f'});
+  Object.assign(progress.firstElementChild.style,{display:'block',width:'0',height:'100%',background:faithfulV11?'#c99a3f':'#a10d2f'});
   document.body.appendChild(progress);
 
   const updateDateAndClock=()=>{
