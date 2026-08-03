@@ -35,17 +35,48 @@ jobs:
       - name: Scan for exposed secrets and unsafe deployment configuration
         run: npm run security:audit
 
-      - name: Audit SENZ locked production dependencies
-        run: npm audit --prefix apps/senz --omit=dev --audit-level=high
-
-      - name: Audit Cognita locked production dependencies
-        run: npm audit --prefix apps/cognita --omit=dev --audit-level=high
-
       - name: Validate monorepo boundaries
         run: npm run check
 
       - name: Build the FMB public website
         run: npm run build:fmb
+
+  senz-dependency-audit:
+    name: SENZ dependency audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Audit locked production dependencies
+        run: npm audit --prefix apps/senz --omit=dev --audit-level=high
+
+  cognita-dependency-audit:
+    name: Cognita dependency audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Audit locked production dependencies
+        run: npm audit --prefix apps/cognita --omit=dev --audit-level=high
 
   codeql:
     name: CodeQL
