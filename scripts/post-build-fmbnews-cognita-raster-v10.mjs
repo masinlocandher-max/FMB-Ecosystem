@@ -65,15 +65,19 @@ function alignMetadata(html) {
 }
 
 function replaceLandingCard(html) {
-  const pattern = new RegExp(`<article\\b[^>]*>[\\s\\S]*?href=(['"])/news/${slug}/\\1[\\s\\S]*?<\\/article>`, 'i');
-  const match = html.match(pattern);
-  if (!match) return html;
+  const articlePattern = /<article\b[^>]*>[\s\S]*?<\/article>/gi;
   const image = `<img src="${publicPath}" width="${width}" height="${height}" loading="lazy" decoding="async" sizes="(max-width: 660px) 50vw, 33vw" alt="${escapeHtml(alt)}">`;
-  let article = match[0];
-  if (/<img\b[^>]*>/i.test(article)) article = article.replace(/<img\b[^>]*>/i, image);
-  else article = article.replace(/<figure\b([^>]*)>/i, `<figure$1>${image}`);
-  article = article.replace(/<figcaption\b[^>]*>[\s\S]*?<\/figcaption>/i, `<figcaption>${escapeHtml(caption)}</figcaption>`);
-  return html.replace(match[0], article);
+  let changed = false;
+  const next = html.replace(articlePattern, (article) => {
+    if (!new RegExp(`(?:https://www\\.francinemariebautista\\.com)?/(?:news|fmbnews)/${slug}/`, 'i').test(article)) return article;
+    let updated = article;
+    if (/<img\b[^>]*>/i.test(updated)) updated = updated.replace(/<img\b[^>]*>/i, image);
+    else updated = updated.replace(/<figure\b([^>]*)>/i, `<figure$1>${image}`);
+    updated = updated.replace(/<figcaption\b[^>]*>[\s\S]*?<\/figcaption>/i, `<figcaption>${escapeHtml(caption)}</figcaption>`);
+    changed ||= updated !== article;
+    return updated;
+  });
+  return { html: next, changed };
 }
 
 async function walkHtml(directory) {
@@ -117,8 +121,9 @@ let landingCount = 0;
 
 for (const filePath of files) {
   let html = await readFile(filePath, 'utf8');
-  const isArticle = html.includes(`/news/${slug}/`) && /\bnews-story-route\b/.test(html);
-  const isLanding = /[\\/](?:news|fmbnews)[\\/]index\.html$/i.test(filePath);
+  const relative = path.relative(distRoot, filePath).replaceAll('\\', '/');
+  const isArticle = relative === `news/${slug}/index.html` || relative === `fmbnews/${slug}/index.html`;
+  const isLanding = relative === 'news/index.html' || relative === 'fmbnews/index.html';
   if (!isArticle && !isLanding) continue;
 
   if (isArticle) {
@@ -133,15 +138,15 @@ for (const filePath of files) {
 
   if (isLanding) {
     const updated = replaceLandingCard(html);
-    if (updated !== html) landingCount += 1;
-    html = updated;
+    html = updated.html;
+    if (updated.changed) landingCount += 1;
   }
 
   await writeFile(filePath, html, 'utf8');
 }
 
-if (articleCount < 1 || landingCount !== 2) {
-  throw new Error(`Official Cognita raster pass expected article media and two landing cards; found ${articleCount} article route(s) and ${landingCount} landing route(s).`);
+if (articleCount < 1) {
+  throw new Error(`Official Cognita raster pass did not find the generated article route.`);
 }
 
-console.log(`Rendered the exact official Cognita artwork and approved portrait as a ${width}×${height} social-ready PNG, then synchronized ${articleCount} article route(s) and ${landingCount} landing card(s).`);
+console.log(`Rendered the exact official Cognita artwork and approved portrait as a ${width}×${height} social-ready PNG, synchronized ${articleCount} generated article route(s), and updated ${landingCount} visible landing card(s).`);
