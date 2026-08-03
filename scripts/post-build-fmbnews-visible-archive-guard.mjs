@@ -70,13 +70,30 @@ function articleRecord(html, filePath) {
   return { route, title: title.replace(/\s*[|·-]\s*FMB News.*$/i, '').trim(), image, alt, width, height, kicker, readTime };
 }
 
-function visibleMain(html) {
-  return html.match(/<main\b[^>]*class=(["'])[^"']*\bfn9-main\b[^"']*\1[^>]*>[\s\S]*?<\/main>/i)?.[0] ?? '';
+function matchingDivClose(html, openingIndex) {
+  const pattern = /<\/?div\b[^>]*>/gi;
+  pattern.lastIndex = openingIndex;
+  let depth = 0;
+  let match;
+  while ((match = pattern.exec(html))) {
+    depth += /^<\/div/i.test(match[0]) ? -1 : 1;
+    if (depth === 0) return match.index;
+  }
+  return -1;
 }
 
-function visibleRoutes(html) {
+function reportGrid(html) {
+  const openingIndex = html.search(/<div\b[^>]*class=(["'])[^"']*\bfn9-report-grid\b[^"']*\1[^>]*>/i);
+  const closingIndex = openingIndex >= 0 ? matchingDivClose(html, openingIndex) : -1;
+  if (openingIndex < 0 || closingIndex < 0) throw new Error('FMB News report grid could not be located.');
+  const closingTagEnd = html.indexOf('>', closingIndex);
+  if (closingTagEnd < 0) throw new Error('FMB News report grid closing tag is malformed.');
+  return html.slice(openingIndex, closingTagEnd + 1);
+}
+
+function gridRoutes(html) {
   const routes = new Set();
-  for (const match of visibleMain(html).matchAll(/<a\b[^>]*href=(["'])([^"']+)\1/gi)) {
+  for (const match of reportGrid(html).matchAll(/<a\b[^>]*href=(["'])([^"']+)\1/gi)) {
     try {
       const pathname = new URL(match[2], origin).pathname;
       if (pathname.startsWith('/news/') && pathname !== '/news/') routes.add(pathname.endsWith('/') ? pathname : `${pathname}/`);
@@ -90,23 +107,11 @@ function card(article) {
   return `<article class="nc-rundown-story fn9-report-card fn11-restored-report" data-fn9-searchable data-restored-news-route="${escape(article.route)}"><a href="${escape(article.route)}"><span class="nc-rundown-number">ARCHIVE</span><figure class="news-visual"><img src="${escape(article.image)}"${dimensions} loading="lazy" decoding="async" alt="${escape(article.alt)}"><figcaption>Photo and source details appear in the report.</figcaption></figure><div><p>${escape(article.kicker)}</p><h3>${escape(article.title)}</h3><span>${escape(article.readTime)}</span></div></a></article>`;
 }
 
-function matchingDivClose(html, openingIndex) {
-  const pattern = /<\/?div\b[^>]*>/gi;
-  pattern.lastIndex = openingIndex;
-  let depth = 0;
-  let match;
-  while ((match = pattern.exec(html))) {
-    depth += /^<\/div/i.test(match[0]) ? -1 : 1;
-    if (depth === 0) return match.index;
-  }
-  return -1;
-}
-
 function appendToArchive(html, cards) {
   if (!cards.length) return html;
   const start = html.search(/<div\b[^>]*class=(["'])[^"']*\bfn9-more-reports\b[^"']*\1[^>]*>/i);
   const end = start >= 0 ? matchingDivClose(html, start) : -1;
-  if (start < 0 || end < 0) throw new Error('Visible FMB News archive container could not be located.');
+  if (start < 0 || end < 0) throw new Error('Expandable FMB News archive container could not be located.');
   return `${html.slice(0, end)}${cards.join('')}${html.slice(end)}`;
 }
 
@@ -117,16 +122,24 @@ for (const filePath of await walk(newsRoot)) {
   if (record) records.set(record.route, record);
 }
 const articles = [...records.values()].sort((a, b) => a.route.localeCompare(b.route));
+const publishedRoutes = new Set(articles.map(({ route }) => route));
 
 for (const landingPath of landings) {
   let html = await readFile(landingPath, 'utf8');
-  const before = visibleRoutes(html);
+  const before = gridRoutes(html);
   const missing = articles.filter((article) => !before.has(article.route));
   html = appendToArchive(html, missing.map(card));
-  const after = visibleRoutes(html);
+
+  const after = gridRoutes(html);
   const unresolved = articles.filter((article) => !after.has(article.route));
-  if (unresolved.length) throw new Error(`Reader-visible FMB News archive still omits: ${unresolved.map(({ route }) => route).join(', ')}`);
+  const unknown = [...after].filter((route) => !publishedRoutes.has(route));
+  if (unresolved.length) throw new Error(`Expandable FMB News report grid still omits: ${unresolved.map(({ route }) => route).join(', ')}`);
+  if (unknown.length) throw new Error(`Expandable FMB News report grid contains unknown article routes: ${unknown.join(', ')}`);
+  if (after.size !== articles.length) throw new Error(`Expandable FMB News report grid expected ${articles.length} unique published routes; found ${after.size}.`);
+
   html = html.replace(/(<button\b[^>]*data-fn9-view-all[^>]*>)[\s\S]*?(<\/button>)/i, `$1View all ${articles.length} published reports →$2`);
   await writeFile(landingPath, html, 'utf8');
-  console.log(`Reader-visible archive ${path.relative(dist, landingPath)}: ${articles.length} published routes, ${missing.length} restored.`);
+  console.log(`Expandable report grid ${path.relative(dist, landingPath)}: ${after.size} published routes, ${missing.length} restored directly into the archive.`);
 }
+
+await import('./post-build-fmbnews-v11-finalize.mjs');

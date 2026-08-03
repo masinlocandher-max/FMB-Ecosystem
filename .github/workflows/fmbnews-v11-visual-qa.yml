@@ -1,0 +1,72 @@
+name: FMB News V11 Visual QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'apps/withlovefmb/assets/css/fmbnews-faithful-v11.css'
+      - 'apps/withlovefmb/assets/css/fmbnews-faithful-v11-final.css'
+      - 'apps/withlovefmb/assets/js/news-channel.js'
+      - 'scripts/post-build-fmbnews-faithful-v11.mjs'
+      - 'scripts/post-build-fmbnews-v11-compat.mjs'
+      - 'scripts/post-build-fmbnews-v11-finalize.mjs'
+      - 'scripts/qa-fmbnews-v11-playwright.mjs'
+      - 'scripts/post-build-fmbnews-preserve-archive.mjs'
+      - 'scripts/post-build-fmbnews-visible-archive-guard.mjs'
+      - 'package.json'
+      - '.github/workflows/fmbnews-v11-visual-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  visual-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Check out approved implementation branch
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install production and browser dependencies
+        run: |
+          npm install
+          npm install --no-save playwright@1.54.2
+          npx playwright install --with-deps chromium
+
+      - name: Build the exact production output
+        run: npm run build
+
+      - name: Serve the generated FMB ecosystem
+        run: |
+          python3 -m http.server 4173 --directory dist > /tmp/fmbnews-v11-server.log 2>&1 &
+          echo $! > /tmp/fmbnews-v11-server.pid
+          for attempt in {1..30}; do
+            if curl --fail --silent http://127.0.0.1:4173/fmbnews/ > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/fmbnews-v11-server.log
+          exit 1
+
+      - name: Compare the real desktop and mobile interface
+        run: node scripts/qa-fmbnews-v11-playwright.mjs
+
+      - name: Upload screenshots and browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fmbnews-v11-visual-evidence
+          path: fmbnews-v11-evidence
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Stop local server
+        if: always()
+        run: test ! -f /tmp/fmbnews-v11-server.pid || kill "$(cat /tmp/fmbnews-v11-server.pid)" || true
