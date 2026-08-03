@@ -1,10 +1,10 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const root = path.resolve(new URL('..', import.meta.url).pathname);
-const targets = [
-  path.join(root, 'dist', 'news', 'index.html'),
-  path.join(root, 'dist', 'fmbnews', 'index.html')
+const newsRoots = [
+  path.join(root, 'dist', 'news'),
+  path.join(root, 'dist', 'fmbnews')
 ];
 
 const retiredInlineStyles = [
@@ -12,6 +12,24 @@ const retiredInlineStyles = [
   'data-fmb-news-final-styles',
   'data-fmbnews-futuristic-ph'
 ];
+
+async function walkHtml(directory) {
+  const files = [];
+  let entries;
+  try {
+    entries = await readdir(directory, { withFileTypes: true });
+  } catch (error) {
+    if (error?.code === 'ENOENT') return files;
+    throw error;
+  }
+
+  for (const entry of entries) {
+    const absolute = path.join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...await walkHtml(absolute));
+    else if (entry.isFile() && entry.name.endsWith('.html')) files.push(absolute);
+  }
+  return files;
+}
 
 function removeTaggedBlockByAttribute(html, tagName, attribute) {
   const expression = new RegExp(
@@ -21,23 +39,21 @@ function removeTaggedBlockByAttribute(html, tagName, attribute) {
   return html.replace(expression, '');
 }
 
+const targets = [...new Set((await Promise.all(newsRoots.map(walkHtml))).flat())];
+let totalSavedBytes = 0;
+let optimizedCount = 0;
+
 for (const file of targets) {
-  let html;
-  try {
-    html = await readFile(file, 'utf8');
-  } catch (error) {
-    if (error?.code === 'ENOENT') continue;
-    throw error;
-  }
+  let html = await readFile(file, 'utf8');
+  if (!/\bnews-(?:route|story-route)\b/.test(html) && !/\bnews-channel-v4\b/.test(html)) continue;
 
   const originalBytes = Buffer.byteLength(html, 'utf8');
-  let optimized = html;
 
   for (const attribute of retiredInlineStyles) {
-    optimized = removeTaggedBlockByAttribute(optimized, 'style', attribute);
+    html = removeTaggedBlockByAttribute(html, 'style', attribute);
   }
 
-  optimized = optimized
+  const optimized = html
     .replace(/<link\b[^>]*(?:fonts\.googleapis\.com|fonts\.gstatic\.com)[^>]*>\s*/gi, '')
     .replace(/<!--(?!\[if)[\s\S]*?-->/g, '')
     .replace(/>\s+</g, '><')
@@ -48,7 +64,18 @@ for (const file of targets) {
     throw new Error(`FMB News optimization removed the required final stylesheet from ${file}`);
   }
 
+  if (/data-fmb-news-final-styles|data-fmbnews-futuristic-ph/i.test(optimized)) {
+    throw new Error(`FMB News optimization left a retired inline design layer in ${file}`);
+  }
+
   await writeFile(file, optimized, 'utf8');
-  const savedBytes = originalBytes - Buffer.byteLength(optimized, 'utf8');
-  console.log(`Optimized ${path.relative(root, file)} and removed ${Math.max(0, savedBytes)} bytes of retired inline styling.`);
+  const savedBytes = Math.max(0, originalBytes - Buffer.byteLength(optimized, 'utf8'));
+  totalSavedBytes += savedBytes;
+  optimizedCount += 1;
 }
+
+if (!optimizedCount) {
+  throw new Error('FMB News optimization did not find generated News pages.');
+}
+
+console.log(`Optimized ${optimizedCount} FMB News page(s) and removed ${totalSavedBytes} bytes of retired inline styling.`);
