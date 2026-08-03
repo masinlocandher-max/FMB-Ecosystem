@@ -7,6 +7,7 @@ on:
       - 'apps/withlovefmb/assets/css/fmbnews-faithful-v11.css'
       - 'scripts/post-build-fmbnews-faithful-v11.mjs'
       - 'scripts/qa-fmbnews-v11-playwright.mjs'
+      - 'scripts/debug-fmbnews-v11-font.mjs'
       - 'scripts/post-build-fmbnews-preserve-archive.mjs'
       - 'scripts/post-build-fmbnews-visible-archive-guard.mjs'
       - 'package.json'
@@ -50,6 +51,9 @@ jobs:
           done
           cat /tmp/fmbnews-v11-server.log
           exit 1
+
+      - name: Trace the winning hero font rule
+        run: node scripts/debug-fmbnews-v11-font.mjs
 
       - name: Compare the real desktop and mobile interface
         run: node scripts/qa-fmbnews-v11-playwright.mjs
