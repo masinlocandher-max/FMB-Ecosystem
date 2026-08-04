@@ -60,6 +60,9 @@ const visibleState = () => {
   const dark = document.querySelector('[data-fmb-news-logo-dark]');
   const footer = dark?.closest('footer') || document.querySelector('.fn11-footer');
   const submit = document.querySelector('[data-fmb-story-submission]');
+  const submitIcon = submit?.querySelector('svg');
+  const submitIconRect = submitIcon?.getBoundingClientRect();
+  const submitIconStyle = submitIcon ? getComputedStyle(submitIcon) : null;
 
   return {
     lightCount: document.querySelectorAll('[data-fmb-news-logo-light]').length,
@@ -76,10 +79,21 @@ const visibleState = () => {
     footerBackground: footer ? getComputedStyle(footer).backgroundColor : '',
     submitHref: submit?.getAttribute('href') || '',
     submitText: submit?.textContent?.replace(/\s+/g, ' ').trim() || '',
+    submitIconWidth: submitIconRect?.width || 0,
+    submitIconHeight: submitIconRect?.height || 0,
+    submitIconFill: submitIconStyle?.fill || '',
+    submitIconStroke: submitIconStyle?.stroke || '',
     watchLiveVisible: [...document.querySelectorAll('a,button')].some(element => isVisible(element) && /watch\s+live/i.test(element.textContent || '')),
     overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
   };
 };
+
+const validSubmitIcon = state => state.submitIconWidth >= 14
+  && state.submitIconWidth <= 24
+  && state.submitIconHeight >= 14
+  && state.submitIconHeight <= 24
+  && state.submitIconFill === 'none'
+  && state.submitIconStroke !== 'none';
 
 try {
   const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 1 });
@@ -93,6 +107,7 @@ try {
   requireCheck('desktop light logo uses exact color asset', desktopHeader.lightSrc === colorLogo && desktopHeader.lightFilter === 'none', desktopHeader);
   requireCheck('desktop masthead has no duplicate visible mark', desktopHeader.visibleMastheadChildren === 1, desktopHeader.visibleMastheadChildren);
   requireCheck('desktop story submission email is present', desktopHeader.submitHref.startsWith(`mailto:${expectedEmail}`) && /submit your story/i.test(desktopHeader.submitText), desktopHeader);
+  requireCheck('desktop submission icon is a small stroked envelope', validSubmitIcon(desktopHeader), desktopHeader);
   requireCheck('desktop has no Watch Live control', !desktopHeader.watchLiveVisible, desktopHeader.watchLiveVisible);
   requireCheck('desktop has no horizontal overflow', desktopHeader.overflow <= 1, desktopHeader.overflow);
   await takeScreenshot(desktop, 'fmbnews-logo-desktop-first-view.png');
@@ -148,14 +163,22 @@ try {
   const menuState = await mobile.evaluate(email => {
     const panel = document.querySelector('[data-fn11-menu-panel]');
     const submission = panel?.querySelector('[data-fmb-story-submission]');
+    const icon = submission?.querySelector('svg');
+    const iconRect = icon?.getBoundingClientRect();
+    const iconStyle = icon ? getComputedStyle(icon) : null;
     return {
       open: panel?.hidden === false,
       expanded: document.querySelector('[data-fn11-menu-toggle]')?.getAttribute('aria-expanded'),
       submissionHref: submission?.getAttribute('href') || '',
+      submitIconWidth: iconRect?.width || 0,
+      submitIconHeight: iconRect?.height || 0,
+      submitIconFill: iconStyle?.fill || '',
+      submitIconStroke: iconStyle?.stroke || '',
     };
   }, expectedEmail);
   requireCheck('mobile menu opens', menuState.open && menuState.expanded === 'true', menuState);
   requireCheck('mobile menu contains story submission email', menuState.submissionHref.startsWith(`mailto:${expectedEmail}`), menuState);
+  requireCheck('mobile menu submission icon is a small stroked envelope', validSubmitIcon(menuState), menuState);
   await takeScreenshot(mobile, 'fmbnews-logo-mobile-menu.png');
   await mobile.keyboard.press('Escape');
 
@@ -183,7 +206,7 @@ try {
   });
   requireCheck('article uses supplied color masthead logo', articleState.lightLoaded && articleState.lightSrc === colorLogo, articleState);
   requireCheck('article retains a working photo', articleState.imageLoaded, articleState);
-  requireCheck('article retains icon-based sharing', articleState.shareIcons >= 1, articleState.shareIcons);
+  requireCheck('article retains icon-based sharing', articleState.shareIcons >= 4, articleState.shareIcons);
   requireCheck('article has no horizontal overflow', articleState.overflow <= 1, articleState.overflow);
   await takeScreenshot(article, 'fmbnews-logo-mobile-article.png');
 
