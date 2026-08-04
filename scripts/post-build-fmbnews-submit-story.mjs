@@ -142,7 +142,9 @@ let changed = 0;
 let articleShareBars = 0;
 for (const file of files) {
   const relativeFile = path.relative(root, file);
-  const routeSlug = path.basename(path.dirname(file));
+  const pathFromDist = path.relative(dist, file).replaceAll(path.sep, '/');
+  const routeSegments = pathFromDist.split('/');
+  const routeSlug = routeSegments.length === 3 ? routeSegments[1] : '';
   const original = await readFile(file, 'utf8');
   let next = convertLiveLinks(original);
   next = applyShareIcons(next);
@@ -172,9 +174,13 @@ for (const file of files) {
     throw new Error(`FMB News final pass used the wrong footer logo in ${relativeFile}`);
   }
 
-  const isPublishedArticle = /\bnews-story-route\b/.test(next)
-    && /\bnc-story-body\b/.test(next)
+  const isReportRoute = routeSegments.length === 3
+    && (routeSegments[0] === 'news' || routeSegments[0] === 'fmbnews')
+    && routeSegments[2] === 'index.html'
     && !reservedNonReportSlugs.has(routeSlug);
+  const isPublishedArticle = isReportRoute
+    && /\bnews-story-route\b/.test(next)
+    && (/\bnc-story-body\b/.test(next) || /\bsenz-article-body\b/.test(next));
   if (isPublishedArticle) {
     const shareBar = next.match(/<aside\b[^>]*\bdata-fmb-share-ready\b[^>]*>[\s\S]*?<\/aside>/i)?.[0] || '';
     const iconCount = count(shareBar, /<svg\b[^>]*\bfn15-share-icon\b[^>]*>/gi);
