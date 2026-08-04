@@ -56,6 +56,11 @@ jobs:
         continue-on-error: true
         if: steps.build.outcome == 'success'
         run: node scripts/final-whole-site-audit-v2.mjs > final-whole-site-audit/audit.log 2>&1
+      - name: Audit FMB News desktop, mobile, segments and articles
+        id: fmbnews_qa
+        continue-on-error: true
+        if: steps.build.outcome == 'success'
+        run: node scripts/fmbnews-browser-qa.mjs > final-whole-site-audit/fmbnews-browser-qa.log 2>&1
       - name: Upload final evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -68,5 +73,5 @@ jobs:
         if: steps.build.outcome != 'success'
         run: exit 1
       - name: Enforce browser QA
-        if: steps.build.outcome == 'success' && steps.qa.outcome != 'success'
+        if: steps.build.outcome == 'success' && (steps.qa.outcome != 'success' || steps.fmbnews_qa.outcome != 'success')
         run: exit 1
