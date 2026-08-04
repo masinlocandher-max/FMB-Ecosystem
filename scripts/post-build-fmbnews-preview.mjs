@@ -177,8 +177,8 @@ async function localImageDimensions(imageUrl) {
     return null;
   }
 }
-function isHd({ width, height }) {
-  return Number(width) >= 1 && Number(height) >= 1 && Math.max(width, height) >= 1080 && Math.min(width, height) >= 600;
+function isHd({ imageWidth, imageHeight }) {
+  return Number(imageWidth) >= 1 && Number(imageHeight) >= 1 && Math.max(imageWidth, imageHeight) >= 1080 && Math.min(imageWidth, imageHeight) >= 600;
 }
 
 const previewIndex = path.join(previewRoot, 'index.html');
