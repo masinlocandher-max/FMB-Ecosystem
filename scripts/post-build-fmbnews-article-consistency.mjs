@@ -6,8 +6,8 @@ const dist = path.resolve(process.env.FMB_DIST_DIR || path.join(root, 'dist'));
 const newsRoot = path.join(dist, 'news');
 const colorLogo = '/assets/images/fmb-approved/fmb-news-logo-color-supplied.webp';
 const whiteLogo = '/assets/images/fmb-approved/fmb-news-logo-white-supplied.webp';
-const cssHref = '/assets/css/fmbnews-article-consistency.css?v=20260805a';
-const jsSrc = '/assets/js/fmbnews-article-consistency.js?v=20260805a';
+const cssHref = '/assets/css/fmbnews-article-consistency.css?v=20260805b';
+const jsSrc = '/assets/js/fmbnews-article-consistency.js?v=20260805b';
 
 async function walk(directory) {
   const files = [];
@@ -45,7 +45,7 @@ const header = `<header class="fmbn-story-shell" data-fmbnews-article-shell>
   </div>
 </header>
 <div class="fmbn-story-scrim" data-fmbn-scrim aria-hidden="true"></div>
-<aside class="fmbn-story-drawer" id="fmbnStoryDrawer" data-fmbn-drawer aria-label="FMB News menu">
+<aside class="fmbn-story-drawer" id="fmbnStoryDrawer" data-fmbn-drawer aria-label="FMB News menu" aria-hidden="true" inert>
   <div class="fmbn-drawer-head">
     <a href="/fmbnews/" aria-label="FMB News home" data-fmb-news-logo-dark><img src="${whiteLogo}" width="575" height="203" alt="FMB News"></a>
     <button class="fmbn-drawer-close" type="button" data-fmbn-menu-close aria-label="Close menu"></button>
@@ -72,9 +72,11 @@ for (const filePath of await walk(newsRoot)) {
   html = html.replace(/<header\b[^>]*data-fmbnews-article-shell[^>]*>[\s\S]*?<\/header>\s*<div\b[^>]*data-fmbn-scrim[^>]*><\/div>\s*<aside\b[^>]*data-fmbn-drawer[^>]*>[\s\S]*?<\/aside>/i, '');
   html = html.replace(/<footer\b[^>]*data-fmbnews-article-footer[^>]*>[\s\S]*?<\/footer>/i, '');
   html = html.replace(/<nav\b[^>]*class=(["'])[^"']*(?:mobile[^"']*dock|dock[^"']*mobile)[^"']*\1[^>]*>[\s\S]*?<\/nav>/gi, '');
+  html = html.replace(/<link\b[^>]*href=(["'])\/assets\/css\/fmbnews-article-consistency\.css(?:\?[^"']*)?\1[^>]*>\s*/gi, '');
+  html = html.replace(/<script\b[^>]*src=(["'])\/assets\/js\/fmbnews-article-consistency\.js(?:\?[^"']*)?\1[^>]*>\s*<\/script>\s*/gi, '');
 
-  if (!html.includes(cssHref)) html = html.replace('</head>', `<link rel="stylesheet" href="${cssHref}">\n</head>`);
-  if (!html.includes(jsSrc)) html = html.replace('</body>', `<script src="${jsSrc}" defer></script>\n</body>`);
+  html = html.replace('</head>', `<link rel="stylesheet" href="${cssHref}">\n</head>`);
+  html = html.replace('</body>', `<script src="${jsSrc}" defer></script>\n</body>`);
   html = html.replace(/<body\b([^>]*)>/i, (match, attributes) => `<body${attributes}>\n${header}`);
   html = html.replace('</body>', `${footer}\n</body>`);
 
