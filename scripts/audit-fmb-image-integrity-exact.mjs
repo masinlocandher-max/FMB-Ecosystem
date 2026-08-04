@@ -2,6 +2,8 @@ import { createHash } from 'node:crypto';
 import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 
+await import('./post-build-fmbnews-renovation-live.mjs');
+
 const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
 const sourceRoot=path.resolve(new URL('..',import.meta.url).pathname);
 const manifest=JSON.parse(await readFile(path.join(sourceRoot,'config/fmb-approved-assets.json'),'utf8'));
