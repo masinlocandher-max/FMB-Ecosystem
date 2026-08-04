@@ -26,9 +26,24 @@ function overlay(category, lines, credit) {
 }
 
 async function remote(url) {
-  const r = await fetch(url, { headers: { 'user-agent': 'FMB-News-Cover-Builder/1.0' }, redirect: 'follow' });
-  if (!r.ok) throw new Error(`Cover source returned ${r.status}: ${url}`);
-  return Buffer.from(await r.arrayBuffer());
+  const response = await fetch(url, { headers: { 'user-agent': 'FMB-News-Cover-Builder/1.0' }, redirect: 'follow' });
+  if (!response.ok) throw new Error(`Cover source returned ${response.status}: ${url}`);
+  const buffer = Buffer.from(await response.arrayBuffer());
+  if (buffer.length < 1000) throw new Error(`Cover source returned an empty image: ${url}`);
+  return buffer;
+}
+
+async function sourceImage(primary, backup, name) {
+  const candidates = [...new Set([primary, backup].filter(Boolean))];
+  for (const url of candidates) {
+    try {
+      return await remote(url);
+    } catch (error) {
+      console.warn(`Remote cover unavailable for ${name}; trying the next repository-safe option. ${error.message}`);
+    }
+  }
+  console.warn(`Using the local FMB News editorial fallback for ${name}.`);
+  return fallback();
 }
 
 async function files(dir) {
@@ -42,8 +57,8 @@ async function files(dir) {
 }
 
 await mkdir(out,{recursive:true});
-for (const [name,source,,category,lines,credit] of stories) {
-  const bg=source?await remote(source):fallback();
+for (const [name,source,backup,category,lines,credit] of stories) {
+  const bg = source || backup ? await sourceImage(source, backup, name) : fallback();
   const dest=path.join(out,name);
   await sharp(bg).resize(1080,1080,{fit:'cover',position:'centre'}).composite([{input:overlay(category,lines,credit)}]).jpeg({quality:92,chromaSubsampling:'4:4:4'}).toFile(dest);
   if((await stat(dest)).size<15000) throw new Error(`Invalid cover ${name}`);
