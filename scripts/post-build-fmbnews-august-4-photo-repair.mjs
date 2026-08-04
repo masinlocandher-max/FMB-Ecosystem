@@ -10,7 +10,7 @@ const stories = [
   ['fmb-news-luis-lpa-habagat-august-4-2026.jpg', null, null, 'WEATHER UPDATE', ['LUIS WEAKENS,','BUT HABAGAT','HAZARDS REMAIN'], 'EDITORIAL ILLUSTRATION: FMB NEWS'],
   ['fmb-news-alex-eala-wta-title-august-4-2026.jpg', 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Alex_Eala.jpg/1280px-Alex_Eala.jpg', 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Alex_Eala.jpg/1280px-Alex_Eala.jpg', 'FILIPINO ACHIEVEMENT', ['ALEX EALA WINS','FIRST FILIPINO','WTA SINGLES TITLE'], 'PHOTO: PHILIPPINE SPORTS COMMISSION VIA WIKIMEDIA COMMONS'],
   ['fmb-news-markets-oil-fall-august-4-2026.jpg', 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Strait_of_Hormuz_%28MODIS_2020-12-04%29.jpg/1280px-Strait_of_Hormuz_%28MODIS_2020-12-04%29.jpg', 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/New_York_Stock_Exchange_Interior_2014.jpg/1280px-New_York_Stock_Exchange_Interior_2014.jpg', 'MONEY · GLOBAL MARKETS', ['IRAN PAUSE LIFTS','GLOBAL MARKETS','AS OIL FALLS'], 'PHOTO: NASA AQUA/MODIS VIA WIKIMEDIA COMMONS'],
-  ['fmb-news-europe-wildfires-drought-august-4-2026.jpg', 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Europe_satellite_orthographic.jpg/1280px-Europe_satellite_orthographic.jpg', 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Europe_satellite_orthographic.jpg/1280px-Europe_satellite_orthographic.jpg', 'ENVIRONMENT · CLIMATE', ['WILDFIRES AND','DROUGHT DEEPEN','EUROPE EMERGENCY'], 'PHOTO: NASA IMAGERY VIA WIKIMEDIA COMMONS'],
+  ['fmb-news-europe-wildfires-drought-august-4-2026.jpg', 'https://commons.wikimedia.org/wiki/Special:Redirect/file/East_Attica_Wildfire%2C_Greece_%28MODIS_2024-08-15%29.jpg?width=1600', 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Europe_satellite_orthographic.jpg/1280px-Europe_satellite_orthographic.jpg', 'ENVIRONMENT · CLIMATE', ['WILDFIRES AND','DROUGHT DEEPEN','EUROPE EMERGENCY'], 'PHOTO: NASA MODIS LAND RAPID RESPONSE TEAM VIA WIKIMEDIA COMMONS'],
 ];
 
 const esc = (s) => String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
@@ -26,7 +26,7 @@ function overlay(category, lines, credit) {
 }
 
 async function remote(url) {
-  const r = await fetch(url, { headers: { 'user-agent': 'FMB-News-Cover-Builder/1.0' } });
+  const r = await fetch(url, { headers: { 'user-agent': 'FMB-News-Cover-Builder/1.0' }, redirect: 'follow' });
   if (!r.ok) throw new Error(`Cover source returned ${r.status}: ${url}`);
   return Buffer.from(await r.arrayBuffer());
 }
