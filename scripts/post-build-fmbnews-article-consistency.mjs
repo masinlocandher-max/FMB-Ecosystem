@@ -6,8 +6,8 @@ const dist = path.resolve(process.env.FMB_DIST_DIR || path.join(root, 'dist'));
 const newsRoot = path.join(dist, 'news');
 const colorLogo = '/assets/images/fmb-approved/fmb-news-logo-color-supplied.webp';
 const whiteLogo = '/assets/images/fmb-approved/fmb-news-logo-white-supplied.webp';
-const cssHref = '/assets/css/fmbnews-article-consistency.css?v=20260805c';
-const jsSrc = '/assets/js/fmbnews-article-consistency.js?v=20260805c';
+const cssHref = '/assets/css/fmbnews-article-consistency.css?v=20260805d';
+const jsSrc = '/assets/js/fmbnews-article-consistency.js?v=20260805d';
 
 async function walk(directory) {
   const files = [];
@@ -63,15 +63,25 @@ const footer = `<footer class="fmbn-story-footer" data-fmbnews-article-footer>
   <nav aria-label="FMB News footer navigation"><a href="/fmbnews/">Home</a><a href="/fmbnews/?archive=all">Archives</a><a href="/fmbnews/?view=about">About</a><a href="/fmbnews/?view=submit">Submit a Story</a></nav>
 </footer>`;
 
+function stripClassToken(attributes, token) {
+  return attributes.replace(/\bclass=(["'])([^"']*)\1/i, (match, quote, value) => {
+    const next = value.split(/\s+/).filter(Boolean).filter((entry) => entry !== token).join(' ');
+    return next ? `class=${quote}${next}${quote}` : '';
+  });
+}
+
 function removePreviousShells(html) {
   let next = html;
+  next = next.replace(/<(?:div|header|footer)\b[^>]*data-fmb-unified-shell[^>]*>[\s\S]*?<\/(?:div|header|footer)>\s*/gi, '');
+  next = next.replace(/<(?:div|aside|nav)\b[^>]*class=(["'])[^"']*(?:fmb-network-contact|network-reveal|fco-topline|mobile-dock)[^"']*\1[^>]*>[\s\S]*?<\/(?:div|aside|nav)>\s*/gi, '');
   next = next.replace(/<header\b[^>]*data-fmbnews-article-shell[^>]*>[\s\S]*?<\/header>\s*/gi, '');
   next = next.replace(/<div\b[^>]*data-fmbn-scrim[^>]*>[\s\S]*?<\/div>\s*/gi, '');
   next = next.replace(/<aside\b[^>]*data-fmbn-drawer[^>]*>[\s\S]*?<\/aside>\s*/gi, '');
   next = next.replace(/<footer\b[^>]*data-fmbnews-article-footer[^>]*>[\s\S]*?<\/footer>\s*/gi, '');
   next = next.replace(/<nav\b[^>]*class=(["'])[^"']*(?:mobile[^"']*dock|dock[^"']*mobile)[^"']*\1[^>]*>[\s\S]*?<\/nav>\s*/gi, '');
-  next = next.replace(/<link\b[^>]*href=(["'])\/assets\/css\/fmbnews-article-consistency\.css(?:\?[^"']*)?\1[^>]*>\s*/gi, '');
-  next = next.replace(/<script\b[^>]*src=(["'])\/assets\/js\/fmbnews-article-consistency\.js(?:\?[^"']*)?\1[^>]*>\s*<\/script>\s*/gi, '');
+  next = next.replace(/<link\b[^>]*href=(["'])\/assets\/css\/(?:fmb-unified-system|fmbnews-article-consistency)\.css(?:\?[^"']*)?\1[^>]*>\s*/gi, '');
+  next = next.replace(/<script\b[^>]*src=(["'])\/assets\/js\/(?:fmb-unified-system|fmbnews-article-consistency)\.js(?:\?[^"']*)?\1[^>]*>\s*<\/script>\s*/gi, '');
+  next = next.replace(/<body\b([^>]*)>/i, (match, attributes) => `<body${stripClassToken(attributes, 'fmb-unified-public')}>`);
   return next;
 }
 
@@ -89,12 +99,13 @@ for (const filePath of await walk(newsRoot)) {
   const drawerIds = (html.match(/id="fmbnStoryDrawer"/g) || []).length;
   const shellCount = (html.match(/data-fmbnews-article-shell/g) || []).length;
   const footerCount = (html.match(/data-fmbnews-article-footer/g) || []).length;
-  if (drawerIds !== 1 || shellCount !== 1 || footerCount !== 1) {
-    throw new Error(`FMB News article shell is not idempotent for ${path.relative(dist, filePath)}: drawer=${drawerIds}, header=${shellCount}, footer=${footerCount}`);
+  const unifiedShells = (html.match(/data-fmb-unified-shell|fmb-unified-system\.(?:css|js)|fmbandco-primary-reversed/gi) || []).length;
+  if (drawerIds !== 1 || shellCount !== 1 || footerCount !== 1 || unifiedShells !== 0) {
+    throw new Error(`FMB News article shell is not isolated for ${path.relative(dist, filePath)}: drawer=${drawerIds}, header=${shellCount}, footer=${footerCount}, widerShell=${unifiedShells}`);
   }
 
   await writeFile(filePath, html, 'utf8');
   updated += 1;
 }
 
-console.log(`Applied exactly one supplied-logo FMB News article shell, Philippine clock, moving headline wire, premium mobile drawer and dark footer to ${updated} preserved report page(s).`);
+console.log(`Applied exactly one isolated supplied-logo FMB News article shell, Philippine clock, moving headline wire, premium mobile drawer and dark footer to ${updated} preserved report page(s).`);
