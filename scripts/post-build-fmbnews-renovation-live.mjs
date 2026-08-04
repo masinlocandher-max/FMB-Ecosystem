@@ -36,10 +36,11 @@ function liveHtml(source, canonical) {
   let html = source
     .replace(/<meta name="robots" content="[^"]*">/i, '<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">')
     .replace(/<body\b([^>]*)>/i, '<body$1 data-fmbnews-live>')
+    .replace('data-drawer-open aria-label="Open menu"', 'data-drawer-open data-news-menu aria-label="Open menu"')
     .replace(/<link rel="canonical"[^>]*>\s*/i, '')
     .replace(/<meta property="og:url"[^>]*>\s*/i, '');
 
-  const headInsert = `<link rel="canonical" href="${canonical}">\n  <meta property="og:type" content="website">\n  <meta property="og:site_name" content="FMB News">\n  <meta property="og:title" content="FMB News | Clearer, Sharper, Made for Filipinos">\n  <meta property="og:description" content="Clear, responsible reporting and original daily segments centered on why important stories matter to Filipinos.">\n  <meta property="og:url" content="${canonical}">\n  <meta property="og:image" content="https://www.francinemariebautista.com/assets/images/fmb-approved/fmb-master-purple-square.webp">\n  <meta property="og:image:width" content="1080">\n  <meta property="og:image:height" content="1080">\n  `;
+  const headInsert = `<link rel="canonical" href="${canonical}">\n  <meta name="fmb-news-legacy-identity-record" content="/assets/images/fmb-approved/fmb-news-official-transparent.webp">\n  <meta property="og:type" content="website">\n  <meta property="og:site_name" content="FMB News">\n  <meta property="og:title" content="FMB News | Clearer, Sharper, Made for Filipinos">\n  <meta property="og:description" content="Clear, responsible reporting and original daily segments centered on why important stories matter to Filipinos.">\n  <meta property="og:url" content="${canonical}">\n  <meta property="og:image" content="https://www.francinemariebautista.com/assets/images/fmb-approved/fmb-master-purple-square.webp">\n  <meta property="og:image:width" content="1080">\n  <meta property="og:image:height" content="1080">\n  `;
   html = html.replace(/(<meta name="theme-color"[^>]*>\s*)/i, `$1  ${headInsert}`);
   return html;
 }
