@@ -11,8 +11,12 @@ on:
       - 'scripts/post-build-fmbnews-v11-compat.mjs'
       - 'scripts/post-build-fmbnews-v11-finalize.mjs'
       - 'scripts/qa-fmbnews-v11-playwright.mjs'
+      - 'scripts/qa-fmbnews-reference-v14-playwright.mjs'
       - 'scripts/post-build-fmbnews-preserve-archive.mjs'
       - 'scripts/post-build-fmbnews-visible-archive-guard.mjs'
+      - 'scripts/post-build-fmbnews-reference-polish.mjs'
+      - 'scripts/post-build-fmbnews-reference-compat.mjs'
+      - 'scripts/post-build-fmbnews-reference-final.mjs'
       - 'package.json'
       - '.github/workflows/fmbnews-v11-visual-qa.yml'
   workflow_dispatch:
@@ -55,8 +59,8 @@ jobs:
           cat /tmp/fmbnews-v11-server.log
           exit 1
 
-      - name: Compare the real desktop and mobile interface
-        run: node scripts/qa-fmbnews-v11-playwright.mjs
+      - name: Compare the supplied reference with desktop and mobile output
+        run: node scripts/qa-fmbnews-reference-v14-playwright.mjs
 
       - name: Upload screenshots and browser evidence
         if: always()
