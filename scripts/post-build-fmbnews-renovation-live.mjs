@@ -34,7 +34,7 @@ async function walkArticles(directory) {
 function liveHtml(source, canonical) {
   let html = source
     .replace(/<meta name="robots" content="[^"]*">/i, '<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">')
-    .replace('<body>', '<body data-fmbnews-live>')
+    .replace(/<body\b([^>]*)>/i, '<body$1 data-fmbnews-live>')
     .replace(/<link rel="canonical"[^>]*>\s*/i, '')
     .replace(/<meta property="og:url"[^>]*>\s*/i, '');
 
