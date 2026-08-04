@@ -5,7 +5,8 @@ import path from 'node:path';
 const root = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.resolve(process.env.FMB_DIST_DIR || path.join(root, 'dist'));
 const newsRoot = path.join(dist, 'news');
-const previewPath = path.join(dist, 'fmbnews-preview', 'index.html');
+const sourcePreviewPath = path.join(root, 'apps', 'withlovefmb', 'fmbnews-preview', 'index.html');
+const distPreviewPath = path.join(dist, 'fmbnews-preview', 'index.html');
 const fmbNewsPath = path.join(dist, 'fmbnews', 'index.html');
 const newsLandingPath = path.join(newsRoot, 'index.html');
 
@@ -48,17 +49,29 @@ function liveHtml(source, canonical) {
 
 const before = await walkArticles(newsRoot);
 if (!before.length) throw new Error('FMB News live renovation found no preserved report pages.');
-const source = await readFile(previewPath, 'utf8');
-if (!source.includes('data-fmb-news-logo-light') || !source.includes('data-fmb-news-logo-dark')) {
+const pristineSource = await readFile(sourcePreviewPath, 'utf8');
+if (!pristineSource.includes('data-fmb-news-logo-light') || !pristineSource.includes('data-fmb-news-logo-dark')) {
   throw new Error('FMB News live renovation source is missing the approved supplied logo pair.');
 }
+if (/data-fmb-unified-shell|fmb-shell-header|fmbandco-primary-reversed/i.test(pristineSource)) {
+  throw new Error('FMB News pristine shell is contaminated by the wider FMB&CO. website chrome.');
+}
+
+await mkdir(path.dirname(distPreviewPath), { recursive: true });
 await mkdir(path.dirname(fmbNewsPath), { recursive: true });
-await writeFile(fmbNewsPath, liveHtml(source, 'https://www.francinemariebautista.com/fmbnews/'), 'utf8');
-await writeFile(newsLandingPath, liveHtml(source, 'https://www.francinemariebautista.com/fmbnews/'), 'utf8');
+await writeFile(distPreviewPath, pristineSource, 'utf8');
+await writeFile(fmbNewsPath, liveHtml(pristineSource, 'https://www.francinemariebautista.com/fmbnews/'), 'utf8');
+await writeFile(newsLandingPath, liveHtml(pristineSource, 'https://www.francinemariebautista.com/fmbnews/'), 'utf8');
 
 const after = await walkArticles(newsRoot);
 if (JSON.stringify(before) !== JSON.stringify(after)) {
   throw new Error('FMB News live renovation changed, deleted, or added a published report page. The cutover was stopped.');
 }
-console.log(`Applied the final FMB News Apple-style newsroom shell to /fmbnews/ and /news/ while preserving ${after.length} upgraded article files byte-for-byte through the live cutover.`);
+for (const [label, filePath] of [['preview', distPreviewPath], ['fmbnews', fmbNewsPath], ['news', newsLandingPath]]) {
+  const html = await readFile(filePath, 'utf8');
+  if (/data-fmb-unified-shell|fmb-shell-header|fmbandco-primary-reversed|fmb-network-contact/i.test(html)) {
+    throw new Error(`The final ${label} newsroom still contains the wider FMB&CO. shell.`);
+  }
+}
+console.log(`Applied the isolated FMB News publication shell to /fmbnews/, /news/, and the protected preview while preserving ${after.length} upgraded article files byte-for-byte through the live cutover.`);
 await import('./check-fmbnews-live-renovation.mjs');
