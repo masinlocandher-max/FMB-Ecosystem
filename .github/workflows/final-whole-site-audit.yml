@@ -63,6 +63,7 @@ jobs:
         run: |
           node scripts/fmbnews-browser-qa.mjs > final-whole-site-audit/fmbnews-browser-qa.log 2>&1
           node scripts/fmbnews-completeness-qa.mjs > final-whole-site-audit/fmbnews-completeness-qa.log 2>&1
+          node scripts/fmbnews-fidelity-qa.mjs > final-whole-site-audit/fmbnews-fidelity-qa.log 2>&1
       - name: Upload final evidence
         if: always()
         uses: actions/upload-artifact@v4
