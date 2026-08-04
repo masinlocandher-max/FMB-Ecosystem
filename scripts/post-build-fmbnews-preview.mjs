@@ -22,15 +22,12 @@ async function walk(directory) {
 function attr(tag, name) {
   return tag.match(new RegExp(`\\b${name}\\s*=\\s*(["'])([\\s\\S]*?)\\1`, 'i'))?.[2] ?? '';
 }
-
 function decode(value = '') {
   return value.replace(/&amp;/gi, '&').replace(/&quot;/gi, '"').replace(/&#39;|&apos;/gi, "'").replace(/&lt;/gi, '<').replace(/&gt;/gi, '>');
 }
-
 function text(value = '') {
   return decode(value.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim());
 }
-
 function meta(html, key) {
   for (const match of html.matchAll(/<meta\b[^>]*>/gi)) {
     const tag = match[0];
@@ -39,7 +36,6 @@ function meta(html, key) {
   }
   return '';
 }
-
 function canonicalRoute(html, filePath) {
   const canonical = [...html.matchAll(/<link\b[^>]*>/gi)].map((match) => match[0]).find((tag) => attr(tag, 'rel').toLowerCase() === 'canonical');
   const fallback = `${origin}/${path.relative(dist, path.dirname(filePath)).split(path.sep).join('/')}/`;
@@ -52,24 +48,25 @@ function canonicalRoute(html, filePath) {
     return '';
   }
 }
-
 function firstImage(html) {
   const preferred = html.match(/<(?:figure|picture)\b[^>]*(?:nc-story-media|news-visual)[^>]*>[\s\S]*?<\/\s*(?:figure|picture)>/i)?.[0] ?? html;
   const tag = preferred.match(/<img\b[^>]*>/i)?.[0] ?? '';
-  return { src: attr(tag, 'src'), alt: decode(attr(tag, 'alt')) };
+  return {
+    src: attr(tag, 'src'),
+    alt: decode(attr(tag, 'alt')),
+    width: Number(attr(tag, 'width')) || 0,
+    height: Number(attr(tag, 'height')) || 0,
+  };
 }
-
 function jsonLdDate(html, key) {
   const pattern = new RegExp(`"${key}"\\s*:\\s*"([^"]+)"`, 'i');
   return decode(html.match(pattern)?.[1] ?? '');
 }
-
 function normalizeCategory(value = '') {
   const key = value.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   const aliases = { national: 'philippines', local: 'philippines', politics: 'politics-government', government: 'politics-government', money: 'business', finance: 'business', economy: 'business', tech: 'technology', entertainment: 'culture', arts: 'culture' };
   return aliases[key] || key;
 }
-
 function inferCategory(source = '') {
   const value = source.toLowerCase();
   if (/\b(world|global|international|united states|u\.s\.|china|japan|korea|iran|israel|gaza|ukraine|russia|europe|united nations|\bun\b)\b/.test(value)) return 'world';
@@ -85,7 +82,6 @@ function inferCategory(source = '') {
   if (/\b(lifestyle|travel|food|relationship|fashion|home|beauty)\b/.test(value)) return 'lifestyle';
   return 'philippines';
 }
-
 function inferSegment(source = '') {
   const value = source.toLowerCase();
   if (/alam[-\s]?mo[-\s]?ba|did you know/.test(value)) return 'alam-mo-ba';
@@ -94,22 +90,22 @@ function inferSegment(source = '') {
   if (/fmb[-\s]?message|publisher[-\s]?message/.test(value)) return 'fmb-message';
   return '';
 }
-
 async function readOverrides() {
   try {
     const parsed = JSON.parse(await readFile(overridesPath, 'utf8'));
-    return { categories: parsed.categories && typeof parsed.categories === 'object' ? parsed.categories : {}, segments: parsed.segments && typeof parsed.segments === 'object' ? parsed.segments : {} };
+    return {
+      categories: parsed.categories && typeof parsed.categories === 'object' ? parsed.categories : {},
+      segments: parsed.segments && typeof parsed.segments === 'object' ? parsed.segments : {},
+    };
   } catch (error) {
     if (error?.code === 'ENOENT') return { categories: {}, segments: {} };
     throw error;
   }
 }
-
 function categoryLabel(slug) {
-  const labels = { philippines: 'Philippines', world: 'World', business: 'Business', lifestyle: 'Lifestyle', technology: 'Technology', 'politics-government': 'Politics & Government', environment: 'Environment', health: 'Health', education: 'Education', science: 'Science', sports: 'Sports', culture: 'Culture', other: 'More Categories' };
+  const labels = { philippines: 'Philippines', world: 'World', business: 'Business', lifestyle: 'Lifestyle', technology: 'Technology', 'politics-government': 'Politics & Government', environment: 'Environment', health: 'Health', education: 'Education', science: 'Science', sports: 'Sports', culture: 'Culture' };
   return labels[slug] || slug.replace(/-/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
-
 function extractArticle(html, filePath, overrides) {
   if (!/\bnews-story-route\b/i.test(html)) return null;
   const route = canonicalRoute(html, filePath);
@@ -127,8 +123,62 @@ function extractArticle(html, filePath, overrides) {
   const explicitCategory = overrides.categories[route] || meta(html, 'article:section');
   const category = normalizeCategory(explicitCategory) || inferCategory(sourceText);
   const segment = overrides.segments[route] || inferSegment(sourceText);
+  const imageWidth = Number(meta(html, 'og:image:width')) || image.width || 0;
+  const imageHeight = Number(meta(html, 'og:image:height')) || image.height || 0;
   if (!title || !imageUrl) throw new Error(`Published article is missing a title or image: ${filePath}`);
-  return { route, canonical: `${origin}${route}`, title: title.replace(/\s*[|·-]\s*FMB News.*$/i, '').trim(), description, image: imageUrl, imageAlt, label, category, categoryLabel: categoryLabel(category), segment, publishedAt, updatedAt, readTime };
+  return { route, canonical: `${origin}${route}`, title: title.replace(/\s*[|·-]\s*FMB News.*$/i, '').trim(), description, image: imageUrl, imageAlt, imageWidth, imageHeight, label, category, categoryLabel: categoryLabel(category), segment, publishedAt, updatedAt, readTime };
+}
+
+function pngDimensions(buffer) {
+  if (buffer.length >= 24 && buffer.subarray(1, 4).toString() === 'PNG') return { width: buffer.readUInt32BE(16), height: buffer.readUInt32BE(20) };
+}
+function jpegDimensions(buffer) {
+  if (buffer.length < 4 || buffer[0] !== 0xff || buffer[1] !== 0xd8) return;
+  let offset = 2;
+  while (offset + 9 < buffer.length) {
+    if (buffer[offset] !== 0xff) { offset += 1; continue; }
+    const marker = buffer[offset + 1];
+    const length = buffer.readUInt16BE(offset + 2);
+    if ([0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7, 0xc9, 0xca, 0xcb, 0xcd, 0xce, 0xcf].includes(marker)) {
+      return { height: buffer.readUInt16BE(offset + 5), width: buffer.readUInt16BE(offset + 7) };
+    }
+    if (!length) break;
+    offset += 2 + length;
+  }
+}
+function webpDimensions(buffer) {
+  if (buffer.length < 30 || buffer.subarray(0, 4).toString() !== 'RIFF' || buffer.subarray(8, 12).toString() !== 'WEBP') return;
+  const type = buffer.subarray(12, 16).toString();
+  if (type === 'VP8X') return { width: 1 + buffer.readUIntLE(24, 3), height: 1 + buffer.readUIntLE(27, 3) };
+  if (type === 'VP8 ' && buffer.length >= 30) return { width: buffer.readUInt16LE(26) & 0x3fff, height: buffer.readUInt16LE(28) & 0x3fff };
+  if (type === 'VP8L' && buffer.length >= 25) {
+    const bits = buffer.readUInt32LE(21);
+    return { width: (bits & 0x3fff) + 1, height: ((bits >> 14) & 0x3fff) + 1 };
+  }
+}
+function svgDimensions(buffer) {
+  const source = buffer.toString('utf8', 0, Math.min(buffer.length, 4096));
+  if (!/<svg\b/i.test(source)) return;
+  const width = Number(source.match(/\bwidth=["'](\d+(?:\.\d+)?)/i)?.[1]);
+  const height = Number(source.match(/\bheight=["'](\d+(?:\.\d+)?)/i)?.[1]);
+  if (width && height) return { width, height };
+  const viewBox = source.match(/\bviewBox=["'][^"']*?(\d+(?:\.\d+)?)\s+(\d+(?:\.\d+)?)["']/i);
+  if (viewBox) return { width: Number(viewBox[1]), height: Number(viewBox[2]) };
+}
+async function localImageDimensions(imageUrl) {
+  let parsed;
+  try { parsed = new URL(imageUrl, origin); } catch { return null; }
+  if (parsed.origin !== origin || !parsed.pathname.startsWith('/assets/')) return null;
+  const filePath = path.join(dist, parsed.pathname.replace(/^\/+/, ''));
+  try {
+    const buffer = await readFile(filePath);
+    return pngDimensions(buffer) || jpegDimensions(buffer) || webpDimensions(buffer) || svgDimensions(buffer) || null;
+  } catch {
+    return null;
+  }
+}
+function isHd({ width, height }) {
+  return Number(width) >= 1 && Number(height) >= 1 && Math.max(width, height) >= 1080 && Math.min(width, height) >= 600;
 }
 
 const previewIndex = path.join(previewRoot, 'index.html');
@@ -138,7 +188,16 @@ const files = (await walk(newsRoot)).filter((filePath) => filePath !== path.join
 const records = [];
 for (const filePath of files) {
   const record = extractArticle(await readFile(filePath, 'utf8'), filePath, overrides);
-  if (record) records.push(record);
+  if (!record) continue;
+  const measured = await localImageDimensions(record.image);
+  if (measured) {
+    record.imageWidth = measured.width;
+    record.imageHeight = measured.height;
+  }
+  if (!isHd(record)) {
+    throw new Error(`Published article image is not verifiably HD (${record.imageWidth || '?'}x${record.imageHeight || '?'}): ${record.route} -> ${record.image}`);
+  }
+  records.push(record);
 }
 const unique = new Map();
 for (const record of records) {
@@ -149,8 +208,16 @@ const articles = [...unique.values()].sort((left, right) => (Date.parse(right.pu
 if (!articles.length) throw new Error('Protected FMB News preview found no published article routes.');
 const categories = {};
 for (const article of articles) categories[article.category] = (categories[article.category] || 0) + 1;
-const manifest = { version: 1, generatedAt: new Date().toISOString(), timezone: 'Asia/Manila', total: articles.length, preservation: { source: '/news/', articleRoutesChanged: false, articleContentChanged: false, imagesChanged: false }, categories, articles };
+const manifest = {
+  version: 2,
+  generatedAt: new Date().toISOString(),
+  timezone: 'Asia/Manila',
+  total: articles.length,
+  preservation: { source: '/news/', articleRoutesChanged: false, articleContentChanged: false, imagesChanged: false, hdImagesVerified: true },
+  categories,
+  articles,
+};
 await mkdir(path.dirname(outputPath), { recursive: true });
 await writeFile(outputPath, `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
-console.log(`Built protected FMB News preview manifest with ${articles.length} preserved article route(s) at ${path.relative(root, outputPath)}.`);
+console.log(`Built FMB News manifest with ${articles.length} preserved article route(s) and verified HD editorial images at ${path.relative(root, outputPath)}.`);
 await import('./check-fmbnews-preview.mjs');
