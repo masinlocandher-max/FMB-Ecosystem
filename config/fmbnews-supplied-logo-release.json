@@ -1,0 +1,20 @@
+{
+  "release": "fmbnews-supplied-logo-pair",
+  "approvedAt": "2026-08-05",
+  "masthead": {
+    "surface": "light",
+    "asset": "/assets/images/fmb-approved/fmb-news-logo-color-supplied.webp"
+  },
+  "footer": {
+    "surface": "dark-purple",
+    "asset": "/assets/images/fmb-approved/fmb-news-logo-white-supplied.webp"
+  },
+  "storySubmissionEmail": "withlovefmb@gmail.com",
+  "validation": {
+    "desktopAndMobileChromium": true,
+    "publishedReportsPreserved": 53,
+    "articleShareIcons": 4,
+    "horizontalOverflow": false,
+    "consoleErrors": 0
+  }
+}
