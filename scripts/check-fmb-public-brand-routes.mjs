@@ -7,6 +7,8 @@ const protectedRoots=['app/','_sites/senz/','_sites/cognita/'];
 const controlledReadingRoutes=['coming-out-respect.html','dress-with-intention.html','men-can-cry.html','reading.html','skin-care-makeup.html','womens-health.html'];
 const retired=['https://at.adobe.com/','/assets/images/home/fmb-home-logo.webp','/assets/images/home/francine-home-hero-hd.webp','/assets/images/home/francine-home-founder-hd.webp','/assets/images/news/fmb-news-official.svg','/assets/images/channels/fmb-music-official.svg','/assets/images/channels/fmb-ebook-official.svg'];
 const legacyNewsLogo='/assets/images/fmb-approved/fmb-news-official-transparent.webp';
+const suppliedColorNewsLogo='/assets/images/fmb-approved/fmb-news-logo-color-supplied.webp';
+const suppliedWhiteNewsLogo='/assets/images/fmb-approved/fmb-news-logo-white-supplied.webp';
 
 async function walk(directory){
   const files=[];
@@ -46,15 +48,19 @@ for(const [relative,marker] of Object.entries(required)){
 
 const newsIndex=await readFile(path.join(root,'news/index.html'),'utf8');
 if(newsIndex.includes('news-center-v2')){
-  if(!newsIndex.includes('nc-text-masthead')||!newsIndex.includes('News Center</strong>')||!newsIndex.includes('Filipino ang Mismong Balita.'))fail('news/index.html is missing the approved FMB News Center masthead and tagline');
-  if(!newsIndex.includes('news-channel-v4')||!newsIndex.includes('Live News Desk'))fail('news/index.html is missing the broadcast-channel redesign');
+  if(!newsIndex.includes('nc-text-masthead')||!newsIndex.includes('News Center</strong>')||!newsIndex.includes('Filipino ang Mismong Balita.'))fail('news/index.html is missing the approved FMB News Center compatibility masthead and tagline');
+  if(!newsIndex.includes('news-channel-v4')||!newsIndex.includes('Live News Desk'))fail('news/index.html is missing the broadcast-channel compatibility record');
   if(!newsIndex.includes(`<meta name="fmb-news-identity-record" content="${legacyNewsLogo}">`))fail('news/index.html is missing its non-rendered identity record');
-  const renderedLogo=/<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*fmb-news-official-transparent\.webp[^"']*["']/i.test(newsIndex)||/url\([^)]*fmb-news-official-transparent\.webp/i.test(newsIndex);
-  const approvedLogoLockup=newsIndex.includes('data-fmb-news-logo')&&newsIndex.includes(`src="${legacyNewsLogo}"`);
-  if(renderedLogo&&!approvedLogoLockup)fail('news/index.html renders the FMB News graphic logo outside the approved masthead lockup');
-  if(!approvedLogoLockup)fail('news/index.html is missing the approved official FMB News masthead logo');
-}else if(!newsIndex.includes(legacyNewsLogo)){
-  fail('news/index.html is missing its approved pre-redesign identity');
+
+  const masthead=newsIndex.match(/<a\b[^>]*\bdata-fmb-news-logo\b[^>]*>[\s\S]*?<\/a>/i)?.[0]||'';
+  const footer=newsIndex.match(/<footer\b[^>]*>[\s\S]*?<\/footer>/i)?.[0]||'';
+  const suppliedColorLockup=masthead.includes('data-fmb-news-logo-light')&&masthead.includes(`src="${suppliedColorNewsLogo}"`);
+  const suppliedWhiteFooter=footer.includes('data-fmb-news-logo-dark')&&footer.includes(`src="${suppliedWhiteNewsLogo}"`);
+  if(!suppliedColorLockup)fail('news/index.html is missing the exact supplied purple-and-gold FMB News masthead logo');
+  if(!suppliedWhiteFooter)fail('news/index.html is missing the exact supplied white FMB News footer logo');
+  if(/fn14-reference-logo|fmb-news-official-transparent\.webp/i.test(masthead))fail('news/index.html still renders a recreated or retired masthead logo');
+}else if(!newsIndex.includes(legacyNewsLogo)&&!newsIndex.includes(suppliedColorNewsLogo)){
+  fail('news/index.html is missing its approved FMB News identity');
 }
 
-console.log(`FMB public-route audit verified ${publicPages} public pages, ${newsPages} News routes, and ${controlledReadingRoutes.length} controlled reading routes with exact GitHub-owned identities.`);
+console.log(`FMB public-route audit verified ${publicPages} public pages, ${newsPages} News routes, ${controlledReadingRoutes.length} controlled reading routes, and the exact supplied FMB News light/dark logo pair.`);
