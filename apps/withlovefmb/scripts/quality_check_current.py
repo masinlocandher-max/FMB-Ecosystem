@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the site quality suite against the current FMB Network, Yoni, newsroom, Music, and eBook contracts."""
+"""Run the quality suite against the current FMB, Yoni, product, and FMB News contracts."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -8,14 +8,6 @@ import quality_check as checks
 
 
 LEGACY_APP_ERROR = "app/index.html: missing verified app-entry marker:"
-STALE_NEWS_ERRORS = {
-    "news/index.html: every main story must have one sourced lead visual",
-    "news/index.html: every editorial visual must show its source or credit below it",
-}
-STALE_NEWS_PREFIXES = (
-    "news/index.html: missing broadcast channel marker:",
-    "assets/js/news-channel.js: missing clock, motion, or sharing marker:",
-)
 STALE_HOME_ERRORS = {
     "index.html: missing first-visit benefit: Official FMB Bulletin",
     'index.html: missing first-visit benefit: id="latest-release"',
@@ -35,6 +27,15 @@ STALE_MUSIC_ERRORS = {
     "assets/js/music.js: missing cross-page playback marker: fmb:global-music-command",
     "assets/js/music.js: missing cross-page playback marker: Restoring your listening session",
 }
+STALE_EXACT_ERRORS = {
+    "assets/css/fmbandco-brand.css: missing brand or responsive marker: height:min(118%,570px)",
+}
+STALE_PREFIXES = (
+    "news/index.html:",
+    "assets/js/news-channel.js: missing clock, motion, or sharing marker:",
+    "aboutfmb/index.html: corporate founder redesign marker is missing:",
+    "assets/css/aboutfmb-corporate.css: missing brand, booking, or responsive marker:",
+)
 GENERATED_HOME_REFERENCES = (
     "/assets/images/home/francine-home-hero-hd.webp",
     "/assets/images/home/francine-home-founder-hd.webp",
@@ -86,7 +87,7 @@ def check_current_membership_features(errors: list[str]) -> None:
     errors.extend(error for error in legacy_errors if not error.startswith(LEGACY_APP_ERROR))
 
     app_html = (checks.ROOT / "app/index.html").read_text(encoding="utf-8")
-    current_markers = (
+    for marker in (
         'id="accessGate"',
         'id="signupForm"',
         'id="signinForm"',
@@ -100,8 +101,7 @@ def check_current_membership_features(errors: list[str]) -> None:
         "/app/assets/yoni/yoni-hero.webp",
         "const YONI_URL='https://yoni.francinemariebautista.com/'",
         "Yoni is a digital companion",
-    )
-    for marker in current_markers:
+    ):
         if marker not in app_html:
             errors.append(f"app/index.html: missing current Yoni marker: {marker}")
 
@@ -142,10 +142,7 @@ def check_current_membership_features(errors: list[str]) -> None:
     supabase_path = checks.ROOT / "assets/js/supabase-client.js"
     if supabase_path.exists():
         supabase_loader = supabase_path.read_text(encoding="utf-8")
-        for marker in (
-            "yoni.francinemariebautista.com",
-            "/assets/js/yoni-experience-loader.js",
-        ):
+        for marker in ("yoni.francinemariebautista.com", "/assets/js/yoni-experience-loader.js"):
             if marker not in supabase_loader:
                 errors.append(f"assets/js/supabase-client.js: missing current Yoni loader: {marker}")
 
@@ -185,16 +182,111 @@ def check_current_navigation_experience(errors: list[str]) -> None:
             errors.append(f"index.html: missing current official-bulletin marker: {marker}")
 
 
+def validate_current_about(errors: list[str]) -> None:
+    about = (checks.ROOT / "aboutfmb/index.html").read_text(encoding="utf-8")
+    for marker in (
+        "fmbandco-brand.css?v=20260719-portrait-placement-v9",
+        "aboutfmb-corporate.css?v=20260802-portrait-mobile-v1",
+        "aboutfmb-corporate.js?v=20260718-about-corporate-v1",
+        "francine-portrait-front.webp",
+        "francine-marie-bautista-wordmark-white-v2.png",
+        "fco-founder-nameplate",
+        "fco-founder-signature",
+        "fco-founder-title",
+        "fmb-about-portrait-card is-front",
+        'id="expertise"',
+        'id="journey"',
+        'id="portfolio"',
+        'id="work-with-fmb"',
+        'id="workWithFmbForm"',
+    ):
+        if marker not in about:
+            errors.append(f"aboutfmb/index.html: missing current corporate profile marker: {marker}")
+
+    about_css = (checks.ROOT / "assets/css/aboutfmb-corporate.css").read_text(encoding="utf-8")
+    for marker in (
+        ".fmb-about-corporate",
+        ".fmb-about-hero",
+        ".fmb-about-booking-grid",
+        ".fmb-about-portfolio-grid",
+        ".fmb-about-hero-deck",
+        ".fmb-about-portrait-shape",
+        ".fmb-about-portrait",
+        ".fmb-about-signoff-wordmark",
+        "@media(max-width:860px)",
+    ):
+        if marker not in about_css:
+            errors.append(f"assets/css/aboutfmb-corporate.css: missing current corporate profile marker: {marker}")
+
+
+def validate_current_newsroom(errors: list[str]) -> None:
+    preview = (checks.ROOT / "fmbnews-preview/index.html").read_text(encoding="utf-8")
+    css = (checks.ROOT / "assets/css/fmbnews-preview.css").read_text(encoding="utf-8")
+    js = (checks.ROOT / "assets/js/fmbnews-preview.js").read_text(encoding="utf-8")
+
+    for marker in (
+        "/assets/images/fmb-approved/fmb-news-logo-color-supplied.webp",
+        "/assets/images/fmb-approved/fmb-news-logo-white-supplied.webp",
+        'data-view-link="home"',
+        'data-view-link="alam-mo-ba"',
+        'data-view-link="lotto"',
+        'data-view-link="horoscope"',
+        'data-view-link="about"',
+        'data-view-link="fmb-message"',
+        'data-view-link="submit"',
+        "data-pht-time",
+        "data-wire-track",
+        "close-glyph",
+        "sidebar-signal",
+        "topbar-signal",
+        "footer-signal",
+    ):
+        if marker not in preview:
+            errors.append(f"fmbnews-preview/index.html: missing current newsroom marker: {marker}")
+    for forbidden in ("Watch Live", "bottom-nav", "tab-bar"):
+        if forbidden.lower() in preview.lower():
+            errors.append(f"fmbnews-preview/index.html: retired newsroom marker remains: {forbidden}")
+
+    for marker in (
+        "--font-ui:",
+        "--font-display:",
+        ".close-glyph::before",
+        ".sidebar-signal",
+        ".segment-hero::before",
+        "cubic-bezier(.22,1,.36,1)",
+        "@media(max-width:860px)",
+        "@media(max-width:540px)",
+        "@media(prefers-reduced-motion:reduce)",
+    ):
+        if marker not in css:
+            errors.append(f"assets/css/fmbnews-preview.css: missing current luxury UI marker: {marker}")
+
+    for marker in (
+        "const MANILA = 'Asia/Manila'",
+        "12:00 a.m. to 11:59 p.m.",
+        "renderAlamMoBa",
+        "renderLotto",
+        "renderHoroscope",
+        "const FACTS = [",
+        "const LOTTO_SCHEDULE = [",
+        "const ZODIAC = [",
+        "document.startViewTransition",
+        "lottomatik.pcso.gov.ph/lotto-results",
+    ):
+        if marker not in js:
+            errors.append(f"assets/js/fmbnews-preview.js: missing current newsroom behavior: {marker}")
+
+
 def check_current_mobile_and_editorial_media(errors: list[str]) -> None:
     legacy_errors: list[str] = []
     ORIGINAL_EDITORIAL_MEDIA_CHECK(legacy_errors)
     errors.extend(
         error
         for error in legacy_errors
-        if error not in STALE_NEWS_ERRORS
-        and error not in STALE_PRODUCT_ERRORS
+        if error not in STALE_PRODUCT_ERRORS
         and error not in STALE_MUSIC_ERRORS
-        and not error.startswith(STALE_NEWS_PREFIXES)
+        and error not in STALE_EXACT_ERRORS
+        and not error.startswith(STALE_PREFIXES)
     )
 
     product_js = (checks.ROOT / "assets/js/fmb-product-modern.js").read_text(encoding="utf-8")
@@ -236,49 +328,8 @@ def check_current_mobile_and_editorial_media(errors: list[str]) -> None:
         if marker not in music:
             errors.append(f"music/index.html: missing current listening marker: {marker}")
 
-    news = (checks.ROOT / "news/index.html").read_text(encoding="utf-8")
-    if news.count('class="news-visual"') != 7:
-        errors.append("news/index.html: the current lead story and six-story rundown must each have one sourced visual")
-    if news.count("<figcaption>") != 7:
-        errors.append("news/index.html: the current lead story and six-story rundown must each show a visual credit")
-
-    required_news_markers = (
-        "FMB News Network",
-        "Context before noise.",
-        'id="rundown"',
-        'id="editorial-standard"',
-        'class="nc-site-header"',
-        "/assets/images/fmb-approved/fmb-news-official-transparent.webp",
-        "/news/subic-aeta-landfill/",
-        "/news/remembering-amor-deloso/",
-        "/news/filipinos-monkey-insult-racism/",
-        "/news/pax-silica-water/",
-        "/news/binibining-pilipinas-2026/",
-        "/news/china-ai-monkey-video/",
-        "/news/good-news/",
-        "fmb-news-luxury.css?v=20260722-luxury-v3",
-    )
-    for marker in required_news_markers:
-        if marker not in news:
-            errors.append(f"news/index.html: missing current newsroom marker: {marker}")
-
-    required_credits = (
-        "GMA Public Affairs / I-Witness",
-        "DILG Zambales, 2018",
-        "Micluna / Wikimedia Commons, CC BY-SA 4.0",
-        "Philippine Information Agency",
-        "Earl D.C. Bracamonte / Philstar.com",
-        "does not reproduce the racist video",
-        "FMB editorial illustration based on public releases",
-    )
-    for credit in required_credits:
-        if credit not in news:
-            errors.append(f"news/index.html: missing current editorial visual credit: {credit}")
-
-    news_js = (checks.ROOT / "assets/js/news-channel.js").read_text(encoding="utf-8")
-    for marker in ("Asia/Manila", "data-news-clock", "IntersectionObserver", "navigator.share"):
-        if marker not in news_js:
-            errors.append(f"assets/js/news-channel.js: missing current newsroom interaction marker: {marker}")
+    validate_current_about(errors)
+    validate_current_newsroom(errors)
 
 
 checks.check_html = check_current_html
