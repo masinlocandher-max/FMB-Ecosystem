@@ -50,7 +50,9 @@ if(newsIndex.includes('news-center-v2')){
   if(!newsIndex.includes('news-channel-v4')||!newsIndex.includes('Live News Desk'))fail('news/index.html is missing the broadcast-channel redesign');
   if(!newsIndex.includes(`<meta name="fmb-news-identity-record" content="${legacyNewsLogo}">`))fail('news/index.html is missing its non-rendered identity record');
   const renderedLogo=/<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*fmb-news-official-transparent\.webp[^"']*["']/i.test(newsIndex)||/url\([^)]*fmb-news-official-transparent\.webp/i.test(newsIndex);
-  if(renderedLogo)fail('news/index.html still visibly renders the removed FMB News graphic logo');
+  const approvedLogoLockup=newsIndex.includes('data-fmb-news-logo')&&newsIndex.includes(`src="${legacyNewsLogo}"`);
+  if(renderedLogo&&!approvedLogoLockup)fail('news/index.html renders the FMB News graphic logo outside the approved masthead lockup');
+  if(!approvedLogoLockup)fail('news/index.html is missing the approved official FMB News masthead logo');
 }else if(!newsIndex.includes(legacyNewsLogo)){
   fail('news/index.html is missing its approved pre-redesign identity');
 }
