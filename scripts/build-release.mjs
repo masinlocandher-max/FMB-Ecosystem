@@ -33,6 +33,7 @@ const steps = [
   './post-build-fmb-performance-cleanup.mjs',
   './check-fmb-unified-design.mjs',
   './check-fmb-public-brand-routes.mjs',
+  './post-build-fmbnews-renovation-live.mjs',
   './audit-fmb-enterprise.mjs',
   './audit-fmb-performance.mjs',
   '../apps/withlovefmb/scripts/check-orchestrator.mjs',
