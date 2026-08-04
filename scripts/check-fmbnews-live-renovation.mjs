@@ -3,6 +3,8 @@ import path from 'node:path';
 
 const root = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.resolve(process.env.FMB_DIST_DIR || path.join(root, 'dist'));
+const suppliedColorLogo = '/assets/images/fmb-approved/fmb-news-logo-color-supplied.webp';
+const suppliedWhiteLogo = '/assets/images/fmb-approved/fmb-news-logo-white-supplied.webp';
 const paths = {
   news: path.join(dist, 'news', 'index.html'),
   fmbnews: path.join(dist, 'fmbnews', 'index.html'),
@@ -21,8 +23,8 @@ for (const [name, html] of [['news/index.html', news], ['fmbnews/index.html', fm
   if (!html.includes('data-pht-time') || !html.includes('data-wire-track')) fail(`${name} is missing Philippine time or moving headlines`);
   if (!html.includes('close-glyph')) fail(`${name} is missing the corrected close control`);
   if (!html.includes('sidebar-signal') || !html.includes('topbar-signal') || !html.includes('footer-signal')) fail(`${name} is missing the restrained signal motif system`);
-  if (!html.includes('/assets/images/fmb-approved/fmb-news-logo-color-supplied.webp')) fail(`${name} is missing the exact supplied color logo`);
-  if ((html.match(/\/assets\/images\/fmb-approved\/fmb-news-logo-white-supplied\.webp/g) || []).length < 2) fail(`${name} must use the supplied white logo on both dark sidebar and footer surfaces`);
+  if (!html.includes(suppliedColorLogo)) fail(`${name} is missing the exact supplied color logo`);
+  if ((html.match(new RegExp(suppliedWhiteLogo.replaceAll('/', '\\/'), 'g')) || []).length < 2) fail(`${name} must use the supplied white logo on both dark sidebar and footer surfaces`);
   if (/Watch Live|bottom-nav|tab-bar/i.test(html)) fail(`${name} contains retired navigation`);
   for (const view of ['home', 'alam-mo-ba', 'lotto', 'horoscope', 'about', 'fmb-message', 'submit']) {
     if (!html.includes(`data-view-link="${view}"`)) fail(`${name} is missing ${view}`);
@@ -72,7 +74,13 @@ const articleFiles = [];
 for (const file of await walk(path.join(dist, 'news'))) {
   if (file === paths.news) continue;
   const html = await readFile(file, 'utf8');
-  if (/\bnews-story-route\b/i.test(html)) articleFiles.push(file);
+  if (!/\bnews-story-route\b/i.test(html)) continue;
+  articleFiles.push(file);
+  const route = `news/${path.relative(path.join(dist, 'news'), file).replaceAll(path.sep, '/')}`;
+  if (!html.includes(suppliedColorLogo)) fail(`${route} is missing the exact supplied purple-and-gold logo on its light masthead surface`);
+  if (!html.includes(suppliedWhiteLogo)) fail(`${route} is missing the exact supplied white logo on its dark footer surface`);
+  if (!html.includes('data-philippine-time')) fail(`${route} is missing the live Philippine time hook`);
+  if (!/(?:data-fn9-wire|fn12-wire|fn13-wire|headline-wire|moving headlines)/i.test(html)) fail(`${route} is missing the newsroom headline wire`);
 }
 if (articleFiles.length !== manifest.articles.length) fail(`manifest has ${manifest.articles.length} reports but ${articleFiles.length} article files remain`);
 for (const article of manifest.articles) {
@@ -81,4 +89,4 @@ for (const article of manifest.articles) {
     fail(`non-HD image record remains on ${article.route}: ${article.imageWidth}x${article.imageHeight}`);
   }
 }
-console.log(`FMB News live renovation passed: both landing routes share one luxurious responsive shell, original segments work without dead ends, exact supplied logos are consistent, moving headlines and Philippine time are visible, HD images are verified, and ${articleFiles.length} report pages remain preserved.`);
+console.log(`FMB News live renovation passed: both landing routes and all ${articleFiles.length} report pages use the exact supplied logo pair, Philippine time and the headline wire; original segments work without dead ends; HD images are verified; and every report remains preserved.`);
