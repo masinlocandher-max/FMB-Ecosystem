@@ -15,6 +15,7 @@ const published = '2026-08-04T12:00:00+08:00';
 const publishedLabel = '4 August 2026, 12:00 p.m. PHT';
 const photoPage = 'https://commons.wikimedia.org/wiki/File:Iss069e056939.jpg';
 const photoDownload = 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Iss069e056939.jpg?width=1800';
+const nasaPhotoDownload = 'https://images-assets.nasa.gov/image/iss069e056939/iss069e056939~orig.jpg';
 
 const story = {
   slug: 'hormuz-ship-strike-us-iran-talks-uncertain-august-4-2026',
@@ -48,6 +49,9 @@ const esc = value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt
 const svgEsc = value => esc(value).replaceAll("'", '&apos;');
 
 function coverSvg() {
+  const sourceLabel = story.credit.startsWith('PHOTO: NASA')
+    ? 'PHOTO: NASA JOHNSON SPACE CENTER'
+    : 'EDITORIAL ILLUSTRATION: FMB NEWS';
   return `<svg width="1080" height="1080" xmlns="http://www.w3.org/2000/svg">
     <defs><linearGradient id="shade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#080d2f" stop-opacity=".98"/><stop offset=".64" stop-color="#130c3f" stop-opacity=".88"/><stop offset="1" stop-color="#35106a" stop-opacity=".26"/></linearGradient></defs>
     <rect width="1080" height="1080" fill="url(#shade)"/>
@@ -61,16 +65,40 @@ function coverSvg() {
     <text x="55" y="605" fill="#fff" font-family="Georgia,serif" font-size="68" font-weight="700">UNCERTAINTY</text>
     <text x="58" y="668" fill="#eeeaf4" font-family="Arial,sans-serif" font-size="27"><tspan x="58" dy="0">Washington and Tehran give conflicting</tspan><tspan x="58" dy="36">accounts of whether direct talks are underway.</tspan></text>
     <rect x="55" y="784" width="655" height="112" rx="18" fill="#4b1c87" fill-opacity=".88" stroke="#e8ad22" stroke-width="2"/><text x="82" y="821" fill="#e8ad22" font-family="Arial,sans-serif" font-size="21" font-weight="700">WHY THIS MATTERS TO FILIPINOS</text><text x="82" y="854" fill="#fff" font-family="Arial,sans-serif" font-size="21"><tspan x="82" dy="0">Shipping danger can raise fuel, insurance and</tspan><tspan x="82" dy="27">transport costs while putting seafarers at risk.</tspan></text>
-    <text x="1030" y="924" text-anchor="end" fill="#fff" font-family="Arial,sans-serif" font-size="15">PHOTO: NASA JOHNSON SPACE CENTER</text>
+    <text x="1030" y="924" text-anchor="end" fill="#fff" font-family="Arial,sans-serif" font-size="15">${svgEsc(sourceLabel)}</text>
     <rect y="948" width="1080" height="132" fill="#080d2f"/><rect y="946" width="1080" height="3" fill="#e8ad22"/><text x="55" y="1003" fill="#fff" font-family="Georgia,serif" font-size="30" font-weight="700">FMB NEWS</text><text x="250" y="1000" fill="#fff" font-family="Arial,sans-serif" font-size="18">Clear news. Real impact. Always for Filipinos.</text><text x="1025" y="1046" text-anchor="end" fill="#e8ad22" font-family="Arial,sans-serif" font-size="18">francinemariebautista.com/fmbnews</text>
   </svg>`;
 }
 
+function editorialFallback() {
+  return Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1200"><defs><linearGradient id="ocean" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#17385f"/><stop offset=".55" stop-color="#446b89"/><stop offset="1" stop-color="#b58c59"/></linearGradient><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency=".009" numOctaves="4" seed="11"/><feColorMatrix values=".3 0 0 0 0 .3 0 0 0 0 .3 0 0 0 0 0 0 .28 0"/></filter></defs><rect width="1800" height="1200" fill="url(#ocean)"/><rect width="1800" height="1200" filter="url(#noise)" opacity=".55"/><path d="M0 770C280 630 490 650 710 740c240 98 390 65 570-35 170-95 340-75 520 30v465H0Z" fill="#c4a16d" opacity=".7"/><path d="M0 470c240-80 410-55 620 45 260 125 470 85 690-40 190-110 330-90 490-10" fill="none" stroke="#d8e5ed" stroke-opacity=".25" stroke-width="18"/></svg>`);
+}
+
+async function fetchCoverSource() {
+  for (const url of [photoDownload, nasaPhotoDownload]) {
+    try {
+      const response = await fetch(url, {
+        redirect: 'follow',
+        headers: { 'user-agent': 'FMB-News-Cover-Builder/1.0' },
+      });
+      if (!response.ok) throw new Error(`source returned ${response.status}`);
+      const bytes = Buffer.from(await response.arrayBuffer());
+      if (bytes.length < 1000) throw new Error('source returned an empty image');
+      return bytes;
+    } catch (error) {
+      console.warn(`Hormuz cover source unavailable at ${url}: ${error.message}`);
+    }
+  }
+
+  story.alt = 'FMB News editorial illustration for a report on a vessel strike and uncertainty surrounding United States-Iran talks and Strait of Hormuz security';
+  story.credit = 'EDITORIAL ILLUSTRATION: FMB News. The approved NASA source photograph was unavailable during this build; no substitute photograph was falsely attributed.';
+  console.warn('Using a clearly labeled FMB News editorial illustration for the Hormuz report.');
+  return editorialFallback();
+}
+
 async function buildCover() {
   await mkdir(imageDir, { recursive: true });
-  const response = await fetch(photoDownload, { redirect: 'follow' });
-  if (!response.ok) throw new Error(`Hormuz image download failed: ${response.status}`);
-  const background = Buffer.from(await response.arrayBuffer());
+  const background = await fetchCoverSource();
   await sharp(background).resize(1080, 1080, { fit: 'cover', position: 'centre' }).composite([{ input: Buffer.from(coverSvg()) }]).jpeg({ quality: 91, chromaSubsampling: '4:4:4' }).toFile(imagePath);
 }
 
