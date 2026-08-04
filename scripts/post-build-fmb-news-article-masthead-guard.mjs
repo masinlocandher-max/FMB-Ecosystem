@@ -1,3 +1,5 @@
+await import('./post-build-fmb-news-august-4-noon.mjs');
+
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
