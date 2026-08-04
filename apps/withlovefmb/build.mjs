@@ -44,6 +44,7 @@ const previousDist = process.env.FMB_DIST_DIR;
 process.env.FMB_DIST_DIR = output;
 await import('../../scripts/post-build-fmbnews-hd-images.mjs');
 await import('../../scripts/post-build-fmbnews-preview.mjs');
+await import('../../scripts/post-build-fmbnews-hd-manifest-status.mjs');
 if (previousDist === undefined) delete process.env.FMB_DIST_DIR;
 else process.env.FMB_DIST_DIR = previousDist;
 
