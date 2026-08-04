@@ -40,4 +40,10 @@ if (!sitemapXml.includes(mediaArchiveUrl)) {
   await writeFile(sitemapPath, sitemapXml, 'utf8');
 }
 
-console.log('Built the FMB public website and Yoni application into apps/withlovefmb/dist with the public web app manifest and searchable media archive connected.');
+const previousDist = process.env.FMB_DIST_DIR;
+process.env.FMB_DIST_DIR = output;
+await import('../../scripts/post-build-fmbnews-preview.mjs');
+if (previousDist === undefined) delete process.env.FMB_DIST_DIR;
+else process.env.FMB_DIST_DIR = previousDist;
+
+console.log('Built the FMB public website and Yoni application into apps/withlovefmb/dist with the public web app manifest, searchable media archive, and protected FMB News preview connected.');
