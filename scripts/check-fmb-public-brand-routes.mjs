@@ -3,6 +3,7 @@ import path from 'node:path';
 
 await import('./post-build-fmbnews-hd-images.mjs');
 await import('./post-build-fmbnews-preview.mjs');
+await import('./post-build-fmbnews-hd-manifest-status.mjs');
 
 const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
 const fail=message=>{throw new Error(`FMB public-route brand audit: ${message}`)};
