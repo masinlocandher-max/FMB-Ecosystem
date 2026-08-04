@@ -1,0 +1,19 @@
+/* Final FMB News publication isolation and masthead balance. */
+body > [data-fmb-unified-shell],
+body > .fmb-network-contact,
+body > .network-reveal,
+body > .fco-topline,
+body > .mobile-dock,
+body > .fmb-shell-rail,
+body > .fmb-shell-header,
+body > .fmb-shell-footer {
+  display: none !important;
+}
+
+@media (min-width: 861px) {
+  .topbar .mobile-brand {
+    display: block;
+    width: 106px;
+    flex: 0 0 auto;
+  }
+}
