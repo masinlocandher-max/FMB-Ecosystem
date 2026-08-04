@@ -170,7 +170,8 @@ for (const file of files) {
     throw new Error(`FMB News final pass used the wrong footer logo in ${relativeFile}`);
   }
 
-  if (/\bnews-story-route\b/.test(next)) {
+  const isPublishedArticle = /\bnews-story-route\b/.test(next) && /\bnc-story-body\b/.test(next);
+  if (isPublishedArticle) {
     const shareBar = next.match(/<aside\b[^>]*\bdata-fmb-share-ready\b[^>]*>[\s\S]*?<\/aside>/i)?.[0] || '';
     const iconCount = count(shareBar, /<svg\b[^>]*\bfn15-share-icon\b[^>]*>/gi);
     if (iconCount !== 4) {
