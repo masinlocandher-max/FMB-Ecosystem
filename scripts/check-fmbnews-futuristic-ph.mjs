@@ -1,6 +1,8 @@
 import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 
+await import('./post-build-fmbnews-exact-logo-share-pht.mjs');
+
 const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
 const distRoot = path.join(repositoryRoot, 'dist');
 const newsRoot = path.join(distRoot, 'news');
