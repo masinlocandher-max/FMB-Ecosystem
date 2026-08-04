@@ -11,6 +11,7 @@ const newsLandingPath = path.join(newsRoot, 'index.html');
 
 await import('./post-build-fmbnews-hd-images.mjs');
 await import('./post-build-fmbnews-preview.mjs');
+await import('./post-build-fmbnews-hd-manifest-status.mjs');
 
 async function walkArticles(directory) {
   const records = [];
