@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>FMB News Preview | Preserved Newsroom Renovation</title>
-  <meta name="description" content="Protected preview of the preserved FMB News newsroom renovation.">
+  <title>FMB News | Clearer, Sharper, Made for Filipinos</title>
+  <meta name="description" content="FMB News brings clear, responsible reporting, original daily segments, official lotto links, and a Filipino-centered explanation of why each important story matters.">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#10143d">
   <link rel="icon" href="/assets/images/fmb-approved/fmb-master-purple-square.webp" type="image/webp">
-  <link rel="stylesheet" href="/assets/css/fmbnews-preview.css?v=20260805a">
-  <script src="/assets/js/fmbnews-preview.js?v=20260805a" defer></script>
+  <link rel="stylesheet" href="/assets/css/fmbnews-preview.css?v=20260805b">
+  <script src="/assets/js/fmbnews-preview.js?v=20260805b" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#mainContent">Skip to the news</a>
@@ -17,12 +17,13 @@
     <div class="drawer-scrim" data-drawer-scrim hidden></div>
 
     <aside class="sidebar" id="newsSidebar" aria-label="FMB News navigation" data-sidebar>
+      <div class="sidebar-signal" aria-hidden="true"><i></i><i></i><i></i></div>
       <div class="sidebar-head">
         <a class="brand" href="?view=home" data-route-link aria-label="FMB News home">
-          <img src="/assets/images/fmb-approved/fmb-news-logo-white-supplied.webp" width="575" height="203" alt="FMB News">
+          <img src="/assets/images/fmb-approved/fmb-news-logo-white-supplied.webp" width="575" height="203" alt="FMB News" data-fmb-news-logo-dark>
         </a>
         <button class="icon-button close-drawer" type="button" data-drawer-close aria-label="Close menu">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+          <span class="close-glyph" aria-hidden="true"></span>
         </button>
       </div>
 
@@ -71,7 +72,7 @@
           <a href="?archive=science" data-archive-link="science" data-route-link>Science</a>
           <a href="?archive=sports" data-archive-link="sports" data-route-link>Sports</a>
           <a href="?archive=culture" data-archive-link="culture" data-route-link>Culture</a>
-          <a href="?archive=other" data-archive-link="other" data-route-link>More Categories</a>
+          <a href="?archive=all" data-archive-link="all" data-route-link>All Archives</a>
         </div>
       </div>
 
@@ -89,17 +90,21 @@
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
           </button>
           <a class="mobile-brand" href="?view=home" data-route-link aria-label="FMB News home">
-            <img src="/assets/images/fmb-approved/fmb-news-logo-color-supplied.webp" width="576" height="202" alt="FMB News">
+            <img src="/assets/images/fmb-approved/fmb-news-logo-color-supplied.webp" width="576" height="202" alt="FMB News" data-fmb-news-logo-light>
           </a>
+          <span class="topbar-signal" aria-hidden="true"><i></i><i></i></span>
           <time class="pht-time" data-pht-time>Philippine Standard Time</time>
           <form class="search-form" role="search" data-search-form>
             <label class="sr-only" for="newsSearch">Search FMB News</label>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 5 5"></path></svg>
+            <button class="search-toggle" type="button" data-search-toggle aria-label="Open search" aria-expanded="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m16 16 5 5"></path></svg>
+            </button>
             <input id="newsSearch" name="q" type="search" autocomplete="off" placeholder="Search stories" data-search-input>
+            <button class="search-submit" type="submit">Search</button>
           </form>
         </div>
         <div class="headline-wire" aria-label="Moving headlines">
-          <span class="wire-label">Latest</span>
+          <span class="wire-label"><span class="wire-dot"></span>Latest</span>
           <div class="wire-window"><div class="wire-track" data-wire-track><span>Loading the latest verified reports…</span></div></div>
           <button class="wire-control" type="button" data-wire-toggle aria-label="Pause moving headlines" aria-pressed="false">
             <svg class="pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"></path></svg>
@@ -115,11 +120,19 @@
       </main>
 
       <footer class="site-footer">
-        <p>Protected FMB News renovation preview. Existing reports remain at their current URLs.</p>
-        <a href="/news/">Open the current newsroom</a>
+        <div class="footer-brand">
+          <img src="/assets/images/fmb-approved/fmb-news-logo-white-supplied.webp" width="575" height="203" alt="FMB News" data-fmb-news-logo-dark>
+          <span class="footer-signal" aria-hidden="true"><i></i><i></i></span>
+        </div>
+        <p>Clear news, responsible context, and the Filipino meaning behind every important story.</p>
+        <nav aria-label="Footer links">
+          <a href="?view=about" data-route-link>About</a>
+          <a href="?view=submit" data-route-link>Submit a Story</a>
+          <a href="?archive=all" data-route-link>Archives</a>
+        </nav>
       </footer>
     </div>
   </div>
-  <noscript>This preview requires JavaScript to load the preserved FMB News manifest.</noscript>
+  <noscript>FMB News requires JavaScript to load the preserved newsroom archive and original daily segments.</noscript>
 </body>
 </html>
