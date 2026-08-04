@@ -4,7 +4,8 @@ import path from 'node:path';
 const root = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.join(root, 'dist');
 const newsRoots = [path.join(dist, 'news'), path.join(dist, 'fmbnews')];
-const officialLogo = '/assets/images/fmb-approved/fmb-news-official-transparent.webp';
+const colorLogo = '/assets/images/fmb-approved/fmb-news-logo-color-supplied.webp';
+const whiteLogo = '/assets/images/fmb-approved/fmb-news-logo-white-supplied.webp';
 const finalCssPath = path.join(dist, 'assets', 'css', 'fmb-sitewide-visual-fixes.css');
 const cssStart = '/* FMB_NEWS_EXACT_LOGO_SHARE_PHT_V15_START */';
 const cssEnd = '/* FMB_NEWS_EXACT_LOGO_SHARE_PHT_V15_END */';
@@ -38,14 +39,6 @@ function manilaFallback() {
   return { now, text: `${text} PHT` };
 }
 
-function useExactOfficialLogo(html) {
-  const exactImage = `<img class="fn15-official-logo" src="${officialLogo}" width="909" height="210" alt="FMB News">`;
-  return html.replace(
-    /<span class="fn14-reference-logo"[\s\S]*?<span class="fn12-compat-logo"/i,
-    `${exactImage}<span class="fn12-compat-logo"`,
-  );
-}
-
 function removeLegacyShareButton(html) {
   return html.replace(/<button\b[^>]*\bdata-news-share\b[^>]*>[\s\S]*?<\/button>\s*/gi, '');
 }
@@ -69,16 +62,22 @@ for (const file of files) {
   const original = html;
   const isArticle = /\bnews-story-route\b/.test(html) && /class="[^"]*\bnc-story-body\b/i.test(html);
 
-  html = useExactOfficialLogo(html);
   html = removeLegacyShareButton(html);
   html = setPhilippineTimeFallback(html, fallback);
 
   const header = html.match(/<header\b[^>]*class=(['"])[^'"]*\bfn14-site-header\b[^'"]*\1[^>]*>[\s\S]*?<\/header>/i)?.[0] || '';
-  if (!/<img\b[^>]*class="fn15-official-logo"[^>]*alt="FMB News"/i.test(header)) {
-    throw new Error(`Exact visible FMB News logo missing from masthead: ${file}`);
+  const footer = html.match(/<footer\b[^>]*>[\s\S]*?<\/footer>/i)?.[0] || '';
+  const headerLogo = header.match(/<img\b[^>]*\bdata-fmb-news-logo-light\b[^>]*>/i)?.[0] || '';
+  const footerLogo = footer.match(/<img\b[^>]*\bdata-fmb-news-logo-dark\b[^>]*>/i)?.[0] || '';
+
+  if (!headerLogo.includes(`src="${colorLogo}"`) || !/alt="FMB News"/i.test(headerLogo)) {
+    throw new Error(`Exact supplied color FMB News logo missing from masthead: ${file}`);
   }
-  if (/fn14-reference-logo/i.test(header)) {
-    throw new Error(`Recreated FMB News logo remained in masthead: ${file}`);
+  if (!footerLogo.includes(`src="${whiteLogo}"`) || !/alt="FMB News"/i.test(footerLogo)) {
+    throw new Error(`Exact supplied white FMB News logo missing from footer: ${file}`);
+  }
+  if (/fn14-reference-logo|fmb-news-official-transparent\.webp/i.test(header)) {
+    throw new Error(`Retired or recreated FMB News logo remained in masthead: ${file}`);
   }
   if (/Loading Philippine time/i.test(html)) {
     throw new Error(`Philippine time fallback remained unresolved: ${file}`);
@@ -106,16 +105,16 @@ if (!verified || !articleCount) {
 }
 
 const css = `
-html body.news-reference-v13 .fn14-brand-lockup[data-fmb-news-logo] {
+html body.news-reference-v13 [data-fmb-news-logo] {
   width: auto !important;
   min-width: 0 !important;
-  display: flex !important;
+  display: inline-flex !important;
   align-items: center !important;
   justify-content: flex-start !important;
 }
-html body.news-reference-v13 .fn15-official-logo {
+html body.news-reference-v13 [data-fmb-news-logo-light] {
   position: static !important;
-  width: clamp(190px, 18vw, 258px) !important;
+  width: clamp(168px, 16vw, 230px) !important;
   max-width: 100% !important;
   height: auto !important;
   display: block !important;
@@ -124,19 +123,32 @@ html body.news-reference-v13 .fn15-official-logo {
   object-fit: contain !important;
   clip: auto !important;
   clip-path: none !important;
+  filter: none !important;
   pointer-events: auto !important;
 }
-html body.news-reference-v13 .fn14-reference-logo {
+html body.news-reference-v13 [data-fmb-news-logo-dark] {
+  position: static !important;
+  width: clamp(150px, 18vw, 210px) !important;
+  max-width: 100% !important;
+  height: auto !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  object-fit: contain !important;
+  clip: auto !important;
+  clip-path: none !important;
+  filter: none !important;
+}
+html body.news-reference-v13 .fn14-reference-logo,
+html body.news-reference-v13 .fn15-official-logo {
   display: none !important;
 }
 @media (max-width: 820px) {
-  html body.news-reference-v13 .fn15-official-logo {
-    width: 178px !important;
+  html body.news-reference-v13 [data-fmb-news-logo-light] {
+    width: 158px !important;
   }
-}
-@media (max-width: 560px) {
-  html body.news-reference-v13 .fn15-official-logo {
-    width: 150px !important;
+  html body.news-reference-v13 [data-fmb-news-logo-dark] {
+    width: 152px !important;
   }
 }
 `;
@@ -149,4 +161,4 @@ const markerPattern = new RegExp(
 const cleanCss = currentCss.replace(markerPattern, '').trimEnd();
 await writeFile(finalCssPath, `${cleanCss}\n${cssStart}\n${css.trim()}\n${cssEnd}\n`, 'utf8');
 
-console.log(`Applied the exact official FMB News logo, one share section per article, and a visible Philippine time fallback across ${verified} route(s), including ${articleCount} article route(s), at ${now.toISOString()}.`);
+console.log(`Verified the exact supplied FMB News color masthead logo, white footer logo, one share section per article, and visible Philippine time across ${verified} route(s), including ${articleCount} article route(s), at ${now.toISOString()}. Updated ${updated} route(s).`);
