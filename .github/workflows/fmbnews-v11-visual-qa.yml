@@ -1,4 +1,4 @@
-name: FMB News V11 Visual QA
+name: FMB News V15 Visual QA
 
 on:
   pull_request:
@@ -12,11 +12,14 @@ on:
       - 'scripts/post-build-fmbnews-v11-finalize.mjs'
       - 'scripts/qa-fmbnews-v11-playwright.mjs'
       - 'scripts/qa-fmbnews-reference-v14-playwright.mjs'
+      - 'scripts/qa-fmbnews-exact-v15-playwright.mjs'
       - 'scripts/post-build-fmbnews-preserve-archive.mjs'
       - 'scripts/post-build-fmbnews-visible-archive-guard.mjs'
       - 'scripts/post-build-fmbnews-reference-polish.mjs'
       - 'scripts/post-build-fmbnews-reference-compat.mjs'
       - 'scripts/post-build-fmbnews-reference-final.mjs'
+      - 'scripts/post-build-fmbnews-exact-logo-share-pht.mjs'
+      - 'scripts/check-fmbnews-futuristic-ph.mjs'
       - 'package.json'
       - '.github/workflows/fmbnews-v11-visual-qa.yml'
   workflow_dispatch:
@@ -48,29 +51,29 @@ jobs:
 
       - name: Serve the generated FMB ecosystem
         run: |
-          python3 -m http.server 4173 --directory dist > /tmp/fmbnews-v11-server.log 2>&1 &
-          echo $! > /tmp/fmbnews-v11-server.pid
+          python3 -m http.server 4173 --directory dist > /tmp/fmbnews-v15-server.log 2>&1 &
+          echo $! > /tmp/fmbnews-v15-server.pid
           for attempt in {1..30}; do
             if curl --fail --silent http://127.0.0.1:4173/fmbnews/ > /dev/null; then
               exit 0
             fi
             sleep 1
           done
-          cat /tmp/fmbnews-v11-server.log
+          cat /tmp/fmbnews-v15-server.log
           exit 1
 
-      - name: Compare the supplied reference with desktop and mobile output
+      - name: Verify exact logo one share section and Philippine time
         run: node scripts/qa-fmbnews-reference-v14-playwright.mjs
 
       - name: Upload screenshots and browser evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: fmbnews-v11-visual-evidence
-          path: fmbnews-v11-evidence
+          name: fmbnews-v15-visual-evidence
+          path: fmbnews-v15-evidence
           if-no-files-found: error
           retention-days: 14
 
       - name: Stop local server
         if: always()
-        run: test ! -f /tmp/fmbnews-v11-server.pid || kill "$(cat /tmp/fmbnews-v11-server.pid)" || true
+        run: test ! -f /tmp/fmbnews-v15-server.pid || kill "$(cat /tmp/fmbnews-v15-server.pid)" || true
