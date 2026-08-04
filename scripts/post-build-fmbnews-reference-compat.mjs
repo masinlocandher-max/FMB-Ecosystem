@@ -1,10 +1,17 @@
-import { readFile, readdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const root = path.resolve(new URL('..', import.meta.url).pathname);
-const newsRoots = [path.join(root, 'dist', 'news'), path.join(root, 'dist', 'fmbnews')];
+const dist = path.join(root, 'dist');
+const newsRoots = [path.join(dist, 'news'), path.join(dist, 'fmbnews')];
 const officialLogo = '/assets/images/fmb-approved/fmb-news-official-transparent.webp';
 const visibleOfficialLogo = /<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*fmb-news-official-transparent\.webp/i;
+const stylePattern = /<style\b[^>]*data-fmb-news-reference-v13[^>]*>([\s\S]*?)<\/style>/i;
+const scriptPattern = /<script\b[^>]*data-fmb-news-reference-v13[^>]*>([\s\S]*?)<\/script>/i;
+const stylesheetTag = '<link rel="stylesheet" href="/assets/css/fmbnews-reference-v13.css" data-fmb-news-reference-v13>';
+const scriptTag = '<script src="/assets/js/fmbnews-reference-v13.js" data-fmb-news-reference-v13 defer></script>';
+const cssPath = path.join(dist, 'assets', 'css', 'fmbnews-reference-v13.css');
+const jsPath = path.join(dist, 'assets', 'js', 'fmbnews-reference-v13.js');
 
 async function walk(directory) {
   const files = [];
@@ -23,6 +30,8 @@ async function walk(directory) {
 const files = [...new Set((await Promise.all(newsRoots.map(walk))).flat())];
 let updated = 0;
 let verified = 0;
+let sharedCss = '';
+let sharedJs = '';
 
 for (const file of files) {
   let html = await readFile(file, 'utf8');
@@ -33,6 +42,25 @@ for (const file of files) {
     .replace(/<img\b[^>]*data-fmb-news-footer-logo[^>]*>\s*/gi, '')
     .replace(/html body\.news-reference-v13 \.fn13-footer-logo\{[^}]*\}\n?/g, '')
     .replace(/html body\.news-reference-v13 \.fn11-footer-brand>\.fn11-signal-mark,html body\.news-reference-v13 \.fn11-footer-brand>div>\.fn11-wordmark\{[^}]*\}\n?/g, '');
+
+  const styleMatch = html.match(stylePattern);
+  const scriptMatch = html.match(scriptPattern);
+  if (styleMatch) {
+    const css = styleMatch[1].trim();
+    if (sharedCss && sharedCss !== css) throw new Error(`FMB News reference CSS differs between generated routes: ${file}`);
+    sharedCss ||= css;
+    html = html.replace(stylePattern, stylesheetTag);
+  }
+  if (scriptMatch) {
+    const js = scriptMatch[1].trim();
+    if (sharedJs && sharedJs !== js) throw new Error(`FMB News reference JavaScript differs between generated routes: ${file}`);
+    sharedJs ||= js;
+    html = html.replace(scriptPattern, scriptTag);
+  }
+
+  if (!html.includes(stylesheetTag) || !html.includes(scriptTag)) {
+    throw new Error(`FMB News reference shared assets were not connected: ${file}`);
+  }
 
   const header = html.match(/<header\b[^>]*class=(['"])[^'"]*\bfn13-site-header\b[^'"]*\1[^>]*>[\s\S]*?<\/header>/i)?.[0] || '';
   if (!header.includes(officialLogo) || !visibleOfficialLogo.test(header)) {
@@ -52,4 +80,15 @@ for (const file of files) {
 }
 
 if (!verified) throw new Error('FMB News reference compatibility could not find generated News routes.');
-console.log(`Kept the official FMB News logo in the approved masthead-only lockup across ${verified} generated page(s); cleaned ${updated} visible footer duplicate(s).`);
+if (!sharedCss || !sharedJs) throw new Error('FMB News reference compatibility could not extract the shared CSS and JavaScript.');
+
+await Promise.all([
+  mkdir(path.dirname(cssPath), { recursive: true }),
+  mkdir(path.dirname(jsPath), { recursive: true }),
+]);
+await Promise.all([
+  writeFile(cssPath, `${sharedCss}\n`, 'utf8'),
+  writeFile(jsPath, `${sharedJs}\n`, 'utf8'),
+]);
+
+console.log(`Kept the official FMB News logo in the approved masthead-only lockup across ${verified} generated page(s), cleaned visible footer duplicates, and externalized the reference CSS and sharing/time logic from ${updated} page(s).`);
