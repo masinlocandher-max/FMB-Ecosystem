@@ -47,8 +47,8 @@ function liveHtml(source, canonical) {
   return html;
 }
 
-const before = await walkArticles(newsRoot);
-if (!before.length) throw new Error('FMB News live renovation found no preserved report pages.');
+const initialArticles = await walkArticles(newsRoot);
+if (!initialArticles.length) throw new Error('FMB News live renovation found no preserved report pages.');
 const pristineSource = await readFile(sourcePreviewPath, 'utf8');
 if (!pristineSource.includes('data-fmb-news-logo-light') || !pristineSource.includes('data-fmb-news-logo-dark')) {
   throw new Error('FMB News live renovation source is missing the approved supplied logo pair.');
@@ -62,16 +62,21 @@ await mkdir(path.dirname(fmbNewsPath), { recursive: true });
 await writeFile(distPreviewPath, pristineSource, 'utf8');
 await writeFile(fmbNewsPath, liveHtml(pristineSource, 'https://www.francinemariebautista.com/fmbnews/'), 'utf8');
 await writeFile(newsLandingPath, liveHtml(pristineSource, 'https://www.francinemariebautista.com/fmbnews/'), 'utf8');
+await import('./post-build-fmbnews-final-polish.mjs');
 
+const before = await walkArticles(newsRoot);
 const after = await walkArticles(newsRoot);
-if (JSON.stringify(before) !== JSON.stringify(after)) {
-  throw new Error('FMB News live renovation changed, deleted, or added a published report page. The cutover was stopped.');
+if (JSON.stringify(before) !== JSON.stringify(after) || before.length !== initialArticles.length) {
+  throw new Error('FMB News live renovation changed or deleted a published report during the final landing-page cutover.');
 }
 for (const [label, filePath] of [['preview', distPreviewPath], ['fmbnews', fmbNewsPath], ['news', newsLandingPath]]) {
   const html = await readFile(filePath, 'utf8');
   if (/data-fmb-unified-shell|fmb-shell-header|fmbandco-primary-reversed|fmb-network-contact/i.test(html)) {
     throw new Error(`The final ${label} newsroom still contains the wider FMB&CO. shell.`);
   }
+  if (!html.includes('/assets/css/fmbnews-final-polish.css') || !html.includes('/assets/js/fmbnews-final-polish.js')) {
+    throw new Error(`The final ${label} newsroom is missing the browser-reviewed polish layer.`);
+  }
 }
-console.log(`Applied the isolated FMB News publication shell to /fmbnews/, /news/, and the protected preview while preserving ${after.length} upgraded article files byte-for-byte through the live cutover.`);
+console.log(`Applied the isolated, browser-polished FMB News publication shell to /fmbnews/, /news/, the protected preview, and ${after.length} preserved report pages.`);
 await import('./check-fmbnews-live-renovation.mjs');
