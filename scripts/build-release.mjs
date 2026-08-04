@@ -1,3 +1,28 @@
+import { spawnSync } from 'node:child_process';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+
+async function ensureRootImageRuntime() {
+  try {
+    await import('sharp');
+    return;
+  } catch {
+    console.log('[FMB release] sharp is not installed; preparing the declared image runtime for newsroom cover builds.');
+  }
+
+  const result = spawnSync(
+    process.platform === 'win32' ? 'npm.cmd' : 'npm',
+    ['install', '--no-save', '--workspaces=false', '--no-audit', '--no-fund', 'sharp@0.35.3'],
+    { cwd: repositoryRoot, stdio: 'inherit' },
+  );
+  if (result.status !== 0) throw new Error('Unable to prepare the declared sharp image runtime.');
+  await import('sharp');
+}
+
+await ensureRootImageRuntime();
+
 const steps = [
   './build-ecosystem.mjs',
   './post-build-entity-copy.mjs',
