@@ -60,13 +60,19 @@
 
   const openDrawer = () => {
     lastFocused = document.activeElement;
+    drawer?.removeAttribute('inert');
+    drawer?.setAttribute('aria-hidden', 'false');
+    scrim?.setAttribute('aria-hidden', 'false');
     body.classList.add('fmbn-drawer-open');
     menuOpen?.setAttribute('aria-expanded', 'true');
-    menuClose?.focus({ preventScroll: true });
+    requestAnimationFrame(() => menuClose?.focus({ preventScroll: true }));
   };
   const closeDrawer = ({ restoreFocus = true } = {}) => {
     body.classList.remove('fmbn-drawer-open');
     menuOpen?.setAttribute('aria-expanded', 'false');
+    drawer?.setAttribute('aria-hidden', 'true');
+    drawer?.setAttribute('inert', '');
+    scrim?.setAttribute('aria-hidden', 'true');
     if (restoreFocus) (lastFocused || menuOpen)?.focus({ preventScroll: true });
   };
 
@@ -98,6 +104,8 @@
     if (window.innerWidth > 980 && body.classList.contains('fmbn-drawer-open')) closeDrawer({ restoreFocus: false });
   });
 
+  drawer?.setAttribute('inert', '');
+  drawer?.setAttribute('aria-hidden', 'true');
   updateClock();
   setInterval(updateClock, 15000);
   loadHeadlines();
