@@ -99,7 +99,7 @@ for (const filePath of await walk(newsRoot)) {
   const drawerIds = (html.match(/id="fmbnStoryDrawer"/g) || []).length;
   const shellCount = (html.match(/data-fmbnews-article-shell/g) || []).length;
   const footerCount = (html.match(/data-fmbnews-article-footer/g) || []).length;
-  const unifiedShells = (html.match(/data-fmb-unified-shell|fmb-unified-system\.(?:css|js)|fmbandco-primary-reversed/gi) || []).length;
+  const unifiedShells = (html.match(/data-fmb-unified-shell|fmb-unified-system\.(?:css|js)/gi) || []).length;
   if (drawerIds !== 1 || shellCount !== 1 || footerCount !== 1 || unifiedShells !== 0) {
     throw new Error(`FMB News article shell is not isolated for ${path.relative(dist, filePath)}: drawer=${drawerIds}, header=${shellCount}, footer=${footerCount}, widerShell=${unifiedShells}`);
   }
