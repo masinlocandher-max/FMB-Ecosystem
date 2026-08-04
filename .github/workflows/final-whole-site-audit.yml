@@ -60,7 +60,9 @@ jobs:
         id: fmbnews_qa
         continue-on-error: true
         if: steps.build.outcome == 'success'
-        run: node scripts/fmbnews-browser-qa.mjs > final-whole-site-audit/fmbnews-browser-qa.log 2>&1
+        run: |
+          node scripts/fmbnews-browser-qa.mjs > final-whole-site-audit/fmbnews-browser-qa.log 2>&1
+          node scripts/fmbnews-completeness-qa.mjs > final-whole-site-audit/fmbnews-completeness-qa.log 2>&1
       - name: Upload final evidence
         if: always()
         uses: actions/upload-artifact@v4
