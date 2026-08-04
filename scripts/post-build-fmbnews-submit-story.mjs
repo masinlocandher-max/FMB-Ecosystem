@@ -115,8 +115,8 @@ for (const file of files) {
     throw new Error(`FMB News final pass did not add the email CTA to ${relativeFile}`);
   }
 
-  const lightCount = count(next, /data-fmb-news-logo-light\b/g);
-  const darkCount = count(next, /data-fmb-news-logo-dark\b/g);
+  const lightCount = count(next, /<img\b[^>]*\bdata-fmb-news-logo-light\b[^>]*>/gi);
+  const darkCount = count(next, /<img\b[^>]*\bdata-fmb-news-logo-dark\b[^>]*>/gi);
   if (lightCount !== 1 || darkCount !== 1) {
     throw new Error(`FMB News final pass expected one light and one dark logo in ${relativeFile}; found ${lightCount}/${darkCount}`);
   }
