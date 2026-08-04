@@ -67,7 +67,7 @@ for (const file of files) {
   let html = await readFile(file, 'utf8');
   if (!/\bnews-reference-v13\b/.test(html)) continue;
   const original = html;
-  const isArticle = /\bnews-story-route\b/.test(html);
+  const isArticle = /\bnews-story-route\b/.test(html) && /class="[^"]*\bnc-story-body\b/i.test(html);
 
   html = useExactOfficialLogo(html);
   html = removeLegacyShareButton(html);
