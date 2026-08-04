@@ -1,0 +1,33 @@
+/* Final visual corrections after browser comparison. */
+
+@media (min-width: 861px) {
+  .sidebar .close-drawer {
+    display: none !important;
+  }
+}
+
+@media (max-width: 860px) {
+  .sidebar .close-drawer {
+    display: inline-grid !important;
+  }
+
+  .pht-time,
+  .fmbn-story-time {
+    max-width: none !important;
+    white-space: nowrap !important;
+    text-align: right;
+    line-height: 1.2;
+  }
+}
+
+.zodiac-symbol {
+  font-family: "Times New Roman", "Iowan Old Style", Georgia, serif !important;
+  font-variant-emoji: text;
+  color: var(--purple, #4a2785) !important;
+  text-shadow: none !important;
+}
+
+body.news-story-route > .fmbn-legacy-live-desk,
+body.news-story-route > [data-fmbn-legacy-live-desk] {
+  display: none !important;
+}
