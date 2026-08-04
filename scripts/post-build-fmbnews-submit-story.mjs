@@ -4,6 +4,7 @@ import path from 'node:path';
 const root = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.join(root, 'dist');
 const newsRoots = [path.join(dist, 'news'), path.join(dist, 'fmbnews')];
+const reservedNonReportSlugs = new Set(['about', 'content-refresh']);
 const submitHref = 'mailto:withlovefmb@gmail.com?subject=Story%20Submission%20for%20FMB%20News&body=Please%20include%3A%0A-%20A%20short%20description%20of%20your%20story%0A-%20Where%20and%20when%20it%20happened%0A-%20Your%20name%20or%20anonymous%20preference%0A-%20Attach%20the%20original%20photos%20or%20videos';
 const submitIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4z"></path><path d="m4 7 8 6 8-6"></path></svg>';
 const colorLogo = '/assets/images/fmb-approved/fmb-news-logo-color-supplied.webp';
@@ -141,6 +142,7 @@ let changed = 0;
 let articleShareBars = 0;
 for (const file of files) {
   const relativeFile = path.relative(root, file);
+  const routeSlug = path.basename(path.dirname(file));
   const original = await readFile(file, 'utf8');
   let next = convertLiveLinks(original);
   next = applyShareIcons(next);
@@ -170,7 +172,9 @@ for (const file of files) {
     throw new Error(`FMB News final pass used the wrong footer logo in ${relativeFile}`);
   }
 
-  const isPublishedArticle = /\bnews-story-route\b/.test(next) && /\bnc-story-body\b/.test(next);
+  const isPublishedArticle = /\bnews-story-route\b/.test(next)
+    && /\bnc-story-body\b/.test(next)
+    && !reservedNonReportSlugs.has(routeSlug);
   if (isPublishedArticle) {
     const shareBar = next.match(/<aside\b[^>]*\bdata-fmb-share-ready\b[^>]*>[\s\S]*?<\/aside>/i)?.[0] || '';
     const iconCount = count(shareBar, /<svg\b[^>]*\bfn15-share-icon\b[^>]*>/gi);
