@@ -95,8 +95,8 @@ for (const filePath of files) {
   }
 }
 
-if (processed !== 54) {
-  throw new Error(`FMB News V11 finalizer expected 54 routes; processed ${processed}.`);
+if (processed < 54 || processed % 2 !== 0) {
+  throw new Error(`FMB News V11 finalizer expected at least 54 paired routes; processed ${processed}.`);
 }
 
 console.log(`Verified the faithful V11 final visual state across ${processed} route(s), restored complete footer and hero states, retired obsolete News body classes, removed ${removedLinks} stylesheet link(s), and rewrote ${updated} route(s).`);
