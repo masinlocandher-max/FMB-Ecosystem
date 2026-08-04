@@ -5,6 +5,7 @@ import path from 'node:path';
 const baseUrl = process.env.FMBNEWS_QA_URL || 'http://127.0.0.1:4173';
 const evidenceDir = path.resolve(process.env.FMBNEWS_QA_EVIDENCE || 'fmbnews-v11-evidence');
 const minimumPublishedRoutes = 53;
+const referenceNavigation = ['Home', 'Latest', 'National', 'World', 'Business', 'Lifestyle', 'About'];
 await mkdir(evidenceDir, { recursive: true });
 
 const browser = await chromium.launch({ headless: true });
@@ -49,6 +50,7 @@ try {
     const legacyHeroHeading = legacyHero?.querySelector('h2');
     const ticker = document.querySelector('.fmb-news-ticker');
     const phTime = document.querySelector('[data-philippine-time]');
+    const watchLive = document.querySelector('.fn13-watch-live');
     return {
       bodyClass: document.body.classList.contains('news-faithful-v11'),
       v12HeaderClass: document.body.classList.contains('news-header-v12'),
@@ -61,6 +63,9 @@ try {
       officialLogoSrc: officialLogo?.getAttribute('src') || '',
       desktopNavVisible: visible(desktopNav),
       desktopNavLinks: desktopNav?.querySelectorAll('a').length || 0,
+      desktopNavLabels: [...(desktopNav?.querySelectorAll('a') || [])].map(link => link.textContent?.trim() || ''),
+      watchLiveVisible: visible(watchLive),
+      watchLiveHref: watchLive?.getAttribute('href') || '',
       powerHeroVisible: visible(powerHero),
       powerHeroHeading: powerHeading?.textContent?.trim() || '',
       powerHeroFont: powerHeading ? getComputedStyle(powerHeading).fontFamily : '',
@@ -85,9 +90,16 @@ try {
   requireCheck('official FMB News logo present and visible', desktopState.officialLogoPresent && desktopState.officialLogoVisible, desktopState);
   requireCheck('official FMB News logo loaded', desktopState.officialLogoLoaded, desktopState);
   requireCheck('official FMB News logo source', desktopState.officialLogoSrc === '/assets/images/fmb-approved/fmb-news-official-transparent.webp', desktopState.officialLogoSrc);
-  requireCheck('desktop newsroom navigation visible', desktopState.desktopNavVisible && desktopState.desktopNavLinks >= 8, desktopState);
+  requireCheck(
+    'supplied seven-branch newsroom navigation visible',
+    desktopState.desktopNavVisible
+      && desktopState.desktopNavLinks === referenceNavigation.length
+      && JSON.stringify(desktopState.desktopNavLabels) === JSON.stringify(referenceNavigation),
+    desktopState,
+  );
+  requireCheck('Watch Live button visible and linked', desktopState.watchLiveVisible && /live_videos\/?$/i.test(desktopState.watchLiveHref), desktopState);
   requireCheck('powerful landing hero visible', desktopState.powerHeroVisible, desktopState);
-  requireCheck('powerful landing hero message', /clearer and sharper/i.test(desktopState.powerHeroHeading), desktopState.powerHeroHeading);
+  requireCheck('powerful landing hero message', desktopState.powerHeroHeading === 'Making every news clearer and sharper in a world full of info.', desktopState.powerHeroHeading);
   requireCheck('powerful landing hero actions', desktopState.powerHeroCtas >= 2, desktopState.powerHeroCtas);
   requireCheck('new hero appears before existing news', desktopState.heroOrder, desktopState.heroOrder);
   requireCheck('no redundant upper category menu', desktopState.upperCategoryHidden, desktopState.upperCategoryHidden);
@@ -101,7 +113,7 @@ try {
   requireCheck('no desktop horizontal overflow', desktopState.overflow <= 1, desktopState.overflow);
   requireCheck('decorative ampersand removed', !desktopState.fakeAmpersand, desktopState.fakeAmpersand);
 
-  await screenshot(desktop, 'fmbnews-v12-desktop-full.png', { fullPage: true });
+  await screenshot(desktop, 'fmbnews-v13-desktop-full.png', { fullPage: true });
 
   await desktop.locator('[data-fn9-search-open]').click();
   await desktop.waitForTimeout(200);
@@ -127,8 +139,8 @@ try {
   requireCheck('approved exact portrait source', portraitState.src === '/assets/images/fmb-approved/francine-portrait-front.webp', portraitState);
   requireCheck('approved portrait loaded at expected dimensions', portraitState.loaded, portraitState);
   requireCheck('portrait has meaningful alt text', /Francine Marie Bautista/i.test(portraitState.alt), portraitState.alt);
-  await about.screenshot({ path: path.join(evidenceDir, 'fmbnews-v12-about-desktop.png') });
-  results.screenshots.push('fmbnews-v12-about-desktop.png');
+  await about.screenshot({ path: path.join(evidenceDir, 'fmbnews-v13-about-desktop.png') });
+  results.screenshots.push('fmbnews-v13-about-desktop.png');
 
   const footer = desktop.locator('.fn11-footer').first();
   await footer.scrollIntoViewIfNeeded();
@@ -140,8 +152,8 @@ try {
   }));
   requireCheck('footer signal logo retained', footerState.signal && footerState.wordmark, footerState);
   requireCheck('three complete footer social icons', footerState.socialIcons === 3, footerState.socialIcons);
-  await footer.screenshot({ path: path.join(evidenceDir, 'fmbnews-v12-footer-desktop.png') });
-  results.screenshots.push('fmbnews-v12-footer-desktop.png');
+  await footer.screenshot({ path: path.join(evidenceDir, 'fmbnews-v13-footer-desktop.png') });
+  results.screenshots.push('fmbnews-v13-footer-desktop.png');
 
   await desktop.locator('[data-fn9-view-all]').click();
   await desktop.waitForTimeout(300);
@@ -159,7 +171,7 @@ try {
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1 });
   await mobile.goto(`${baseUrl}/fmbnews/`, { waitUntil: 'domcontentloaded' });
   await settle(mobile);
-  await screenshot(mobile, 'fmbnews-v12-mobile-first-view.png');
+  await screenshot(mobile, 'fmbnews-v13-mobile-first-view.png');
 
   const mobileState = await mobile.evaluate(() => {
     const visible = element => {
@@ -200,20 +212,21 @@ try {
   }));
   requireCheck('mobile menu opens', menuState.hidden === false && menuState.expanded === 'true', menuState);
   requireCheck('mobile menu has real destinations', menuState.links >= 10, menuState.links);
-  await screenshot(mobile, 'fmbnews-v12-mobile-menu.png');
+  await screenshot(mobile, 'fmbnews-v13-mobile-menu.png');
   await mobile.keyboard.press('Escape');
   requireCheck('mobile menu closes with Escape', await mobile.locator('[data-fn11-menu-panel]').evaluate(element => element.hidden), true);
 
   await mobile.locator('.fn9-about-card').scrollIntoViewIfNeeded();
   await mobile.waitForTimeout(400);
-  await mobile.locator('.fn9-about-card').screenshot({ path: path.join(evidenceDir, 'fmbnews-v12-about-mobile.png') });
-  results.screenshots.push('fmbnews-v12-about-mobile.png');
+  await mobile.locator('.fn9-about-card').screenshot({ path: path.join(evidenceDir, 'fmbnews-v13-about-mobile.png') });
+  results.screenshots.push('fmbnews-v13-about-mobile.png');
 
   const article = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1 });
   await article.goto(`${baseUrl}/news/tropical-depression-luis-northern-luzon-august-3-2026/`, { waitUntil: 'domcontentloaded' });
   await settle(article);
   const articleState = await article.evaluate(() => {
     const logo = document.querySelector('[data-fmb-news-logo] .fn12-official-logo');
+    const articleTime = document.querySelector('[data-fmb-news-article-tools] [data-philippine-time]');
     return {
       v11: document.body.classList.contains('news-faithful-v11'),
       v12Header: document.body.classList.contains('news-header-v12'),
@@ -222,14 +235,20 @@ try {
       footerLogo: Boolean(document.querySelector('.fn11-footer .fn11-wordmark')),
       articleImage: Boolean(document.querySelector('.nc-story-media img')?.naturalWidth),
       powerHeroAbsent: !document.querySelector('[data-fmb-news-power-hero]'),
+      toolsPresent: Boolean(document.querySelector('[data-fmb-news-article-tools]')),
+      sharePresent: Boolean(document.querySelector('[data-fmb-share-story]')),
+      copyPresent: Boolean(document.querySelector('[data-fmb-copy-story]')),
+      articleTimeVisible: Boolean(articleTime && !/Loading/i.test(articleTime.textContent || '')),
       overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
     };
   });
   requireCheck('article pages share fixed masthead system', articleState.v11 && articleState.v12Header && articleState.controls === 2 && articleState.officialLogo && articleState.footerLogo, articleState);
   requireCheck('power hero stays landing-only', articleState.powerHeroAbsent, articleState);
+  requireCheck('article sharing controls present', articleState.toolsPresent && articleState.sharePresent && articleState.copyPresent, articleState);
+  requireCheck('article Philippine time is live', articleState.articleTimeVisible, articleState);
   requireCheck('article media loads', articleState.articleImage, articleState.articleImage);
   requireCheck('article mobile no overflow', articleState.overflow <= 1, articleState.overflow);
-  await screenshot(article, 'fmbnews-v12-article-mobile.png', { fullPage: false });
+  await screenshot(article, 'fmbnews-v13-article-mobile.png', { fullPage: false });
 
   await desktop.close();
   await mobile.close();
