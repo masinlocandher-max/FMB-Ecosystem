@@ -9,6 +9,9 @@ const previewPath = path.join(dist, 'fmbnews-preview', 'index.html');
 const fmbNewsPath = path.join(dist, 'fmbnews', 'index.html');
 const newsLandingPath = path.join(newsRoot, 'index.html');
 
+await import('./post-build-fmbnews-hd-images.mjs');
+await import('./post-build-fmbnews-preview.mjs');
+
 async function walkArticles(directory) {
   const records = [];
   for (const entry of await readdir(directory, { withFileTypes: true })) {
@@ -53,5 +56,5 @@ const after = await walkArticles(newsRoot);
 if (JSON.stringify(before) !== JSON.stringify(after)) {
   throw new Error('FMB News live renovation changed, deleted, or added a published report page. The cutover was stopped.');
 }
-console.log(`Applied the final FMB News Apple-style newsroom shell to /fmbnews/ and /news/ while preserving ${after.length} article files byte-for-byte.`);
+console.log(`Applied the final FMB News Apple-style newsroom shell to /fmbnews/ and /news/ while preserving ${after.length} upgraded article files byte-for-byte through the live cutover.`);
 await import('./check-fmbnews-live-renovation.mjs');
