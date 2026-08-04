@@ -9,6 +9,7 @@ const previewPath = path.join(dist, 'fmbnews-preview', 'index.html');
 const fmbNewsPath = path.join(dist, 'fmbnews', 'index.html');
 const newsLandingPath = path.join(newsRoot, 'index.html');
 
+await import('./post-build-fmbnews-article-consistency.mjs');
 await import('./post-build-fmbnews-hd-images.mjs');
 await import('./post-build-fmbnews-preview.mjs');
 await import('./post-build-fmbnews-hd-manifest-status.mjs');
