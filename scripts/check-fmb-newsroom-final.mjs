@@ -9,9 +9,9 @@ const fmbNewsPath = path.join(distRoot, 'fmbnews', 'index.html');
 const corporateCssPath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-corporate-recovery.css');
 const builtCssPath = path.join(distRoot, 'assets', 'css', 'fmb-sitewide-visual-fixes.css');
 const cognitaArtworkPath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'images', 'news', 'cognita-filipino-centered-education.svg');
-const officialNewsLogo = '/assets/images/fmb-approved/fmb-news-official-transparent.webp';
-const visibleOfficialLogo = /<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*fmb-news-official-transparent\.webp/i;
-const visibleRetiredLogo = /<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*fmb-news-official\.svg/i;
+const suppliedColorNewsLogo = '/assets/images/fmb-approved/fmb-news-logo-color-supplied.webp';
+const suppliedWhiteNewsLogo = '/assets/images/fmb-approved/fmb-news-logo-white-supplied.webp';
+const visibleRetiredLogo = /<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*(?:fmb-news-official\.svg|fmb-news-official-transparent\.webp)[^"']*["']/i;
 
 function fail(message) {
   throw new Error(`FMB News Center final audit: ${message}`);
@@ -27,18 +27,35 @@ async function walk(directory) {
   return files;
 }
 
-// The official supplied raster identity is permitted only inside the final masthead lockup.
-function assertApprovedMastheadLogo(html, fileName) {
-  if (visibleRetiredLogo.test(html)) fail(`${fileName} visibly renders the retired SVG News logo`);
-
+function assertApprovedLogoPair(html, fileName) {
   const masthead = html.match(/<header\b[^>]*class=(['"])[^'"]*\bfn12-site-header\b[^'"]*\1[^>]*>[\s\S]*?<\/header>/i)?.[0] || '';
-  if (!masthead.includes('data-fmb-news-logo') || !masthead.includes(`src="${officialNewsLogo}"`)) {
-    fail(`${fileName} is missing the approved official FMB News masthead logo`);
+  const footer = html.match(/<footer\b[^>]*>[\s\S]*?<\/footer>/i)?.[0] || '';
+  const mastheadLogo = masthead.match(/<img\b[^>]*\bdata-fmb-news-logo-light\b[^>]*>/i)?.[0] || '';
+  const footerLogo = footer.match(/<img\b[^>]*\bdata-fmb-news-logo-dark\b[^>]*>/i)?.[0] || '';
+
+  if (!masthead.includes('data-fmb-news-logo') || !mastheadLogo.includes(`src="${suppliedColorNewsLogo}"`)) {
+    fail(`${fileName} is missing the exact supplied purple-and-gold FMB News masthead logo`);
+  }
+  if (!footerLogo.includes(`src="${suppliedWhiteNewsLogo}"`)) {
+    fail(`${fileName} is missing the exact supplied white FMB News footer logo`);
+  }
+  if (!/alt="FMB News"/i.test(mastheadLogo) || !/alt="FMB News"/i.test(footerLogo)) {
+    fail(`${fileName} has incomplete accessible labels on the supplied logo pair`);
+  }
+  if (visibleRetiredLogo.test(masthead) || /fn14-reference-logo/i.test(masthead)) {
+    fail(`${fileName} visibly renders a retired or recreated logo in the masthead`);
+  }
+  if (masthead.includes(suppliedWhiteNewsLogo)) {
+    fail(`${fileName} uses the white logo on the light masthead`);
+  }
+  if (footer.includes(suppliedColorNewsLogo)) {
+    fail(`${fileName} uses the colored logo on the dark footer`);
   }
 
-  if (!visibleOfficialLogo.test(masthead)) fail(`${fileName} does not visibly render the official FMB News logo in its masthead`);
-  const outsideMasthead = html.replace(masthead, '');
-  if (visibleOfficialLogo.test(outsideMasthead)) fail(`${fileName} renders the official FMB News logo outside the approved masthead lockup`);
+  const outsideApprovedSurfaces = html.replace(masthead, '').replace(footer, '');
+  if (/<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*(?:fmb-news-logo-color-supplied|fmb-news-logo-white-supplied)\.webp/i.test(outsideApprovedSurfaces)) {
+    fail(`${fileName} renders a supplied logo outside the approved masthead or footer surface`);
+  }
 }
 
 function assertOptimizedPage(html, fileName) {
@@ -47,7 +64,7 @@ function assertOptimizedPage(html, fileName) {
   if (!html.includes('fmb-sitewide-visual-fixes.css')) fail(`${fileName} is missing the final external stylesheet`);
   if (html.includes('data-fmb-news-final-styles')) fail(`${fileName} still contains the retired compiled inline layer`);
   if (html.includes('data-fmbnews-futuristic-ph')) fail(`${fileName} still contains the retired futuristic inline layer`);
-  assertApprovedMastheadLogo(html, fileName);
+  assertApprovedLogoPair(html, fileName);
   if (!html.includes('data-fmb-news-ticker')) fail(`${fileName} is missing the single headline ticker`);
   if (!html.includes('data-philippine-time')) fail(`${fileName} is missing live Philippine time`);
   if (!html.includes('Filipino ang Mismong Balita.')) fail(`${fileName} is missing the approved Filipino tagline`);
@@ -137,4 +154,4 @@ for (const filePath of await walk(newsRoot)) {
 }
 
 if (articleCount < 1) fail('no News report pages were audited');
-console.log(`FMB News Center final audit verified one optimized corporate shell, the approved official masthead logo, purple-gold visual authority, ${articleCount} report pages (${promotionalArticleCount} labeled SENZ feature), responsive layouts, source visibility, live Philippine time, retired-layer removal and HD Cognita artwork.`);
+console.log(`FMB News Center final audit verified one optimized corporate shell, the exact supplied color masthead and white footer logos, purple-gold visual authority, ${articleCount} report pages (${promotionalArticleCount} labeled SENZ feature), responsive layouts, source visibility, live Philippine time, retired-layer removal and HD Cognita artwork.`);
