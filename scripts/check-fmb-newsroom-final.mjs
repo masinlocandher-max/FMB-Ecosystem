@@ -27,6 +27,7 @@ async function walk(directory) {
   return files;
 }
 
+// The official supplied raster identity is permitted only inside the final masthead lockup.
 function assertApprovedMastheadLogo(html, fileName) {
   if (visibleRetiredLogo.test(html)) fail(`${fileName} visibly renders the retired SVG News logo`);
 
