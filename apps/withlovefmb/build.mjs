@@ -42,10 +42,11 @@ if (!sitemapXml.includes(mediaArchiveUrl)) {
 
 const previousDist = process.env.FMB_DIST_DIR;
 process.env.FMB_DIST_DIR = output;
+await import('../../scripts/post-build-fmbnews-article-consistency.mjs');
 await import('../../scripts/post-build-fmbnews-hd-images.mjs');
 await import('../../scripts/post-build-fmbnews-preview.mjs');
 await import('../../scripts/post-build-fmbnews-hd-manifest-status.mjs');
 if (previousDist === undefined) delete process.env.FMB_DIST_DIR;
 else process.env.FMB_DIST_DIR = previousDist;
 
-console.log('Built the FMB public website and Yoni application into apps/withlovefmb/dist with the public web app manifest, searchable media archive, audited HD news display imagery, and protected FMB News preview connected.');
+console.log('Built the FMB public website and Yoni application into apps/withlovefmb/dist with the public web app manifest, searchable media archive, consistent supplied-logo article shell, audited HD news display imagery, and protected FMB News preview connected.');
