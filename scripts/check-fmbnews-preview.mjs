@@ -26,27 +26,32 @@ const [html, css, js, manifestText] = await Promise.all([
   readFile(manifestPath, 'utf8'),
 ]);
 const manifest = JSON.parse(manifestText);
+const fail = (message) => { throw new Error(`Protected FMB News preview: ${message}`); };
 
-const requiredViews = ['home', 'alam-mo-ba', 'lotto', 'horoscope', 'about', 'fmb-message', 'submit'];
-for (const view of requiredViews) {
-  if (!html.includes(`data-view-link="${view}"`)) throw new Error(`Protected preview is missing primary menu view: ${view}`);
+for (const view of ['home', 'alam-mo-ba', 'lotto', 'horoscope', 'about', 'fmb-message', 'submit']) {
+  if (!html.includes(`data-view-link="${view}"`)) fail(`missing primary menu view: ${view}`);
 }
 for (const forbidden of ['Watch Live', 'bottom-nav', 'bottom navigation', 'tab-bar']) {
-  if (html.toLowerCase().includes(forbidden.toLowerCase())) throw new Error(`Protected preview contains forbidden navigation/content marker: ${forbidden}`);
+  if (html.toLowerCase().includes(forbidden.toLowerCase())) fail(`contains forbidden navigation/content marker: ${forbidden}`);
 }
 const primaryNav = html.match(/<nav\b[^>]*data-primary-nav[^>]*>[\s\S]*?<\/nav>/i)?.[0] ?? '';
 for (const category of ['Philippines', 'World', 'Business', 'Lifestyle']) {
-  if (new RegExp(`>${category}<`, 'i').test(primaryNav)) throw new Error(`${category} must remain an archive category, not a primary menu item.`);
+  if (new RegExp(`>${category}<`, 'i').test(primaryNav)) fail(`${category} must remain an archive category`);
 }
-if (!/name="robots"\s+content="noindex,nofollow,noarchive"/i.test(html)) throw new Error('Protected preview must remain noindex.');
-if (!html.includes('data-sidebar') || !html.includes('data-drawer-open')) throw new Error('Protected preview sidebar or mobile drawer trigger is missing.');
-if (!css.includes('linear-gradient(180deg,#0a0d2f') || !css.includes('@media(max-width:860px)')) throw new Error('Protected preview ombré sidebar or responsive breakpoint is missing.');
-if (!js.includes("const MANIFEST_URL = '/assets/data/fmbnews-manifest.json'")) throw new Error('Protected preview manifest loader is missing.');
-if (!js.includes('timeZone: MANILA') || !js.includes('12:00 a.m. to 11:59 p.m.')) throw new Error('Protected preview Philippine-day behavior is missing.');
-if (!Array.isArray(manifest.articles) || !manifest.articles.length) throw new Error('Protected preview manifest has no articles.');
-
+if (!/name="robots"\s+content="noindex,nofollow,noarchive"/i.test(html)) fail('preview must remain noindex');
+for (const marker of ['data-sidebar', 'data-drawer-open', 'close-glyph', 'sidebar-signal', 'data-pht-time', 'data-wire-track']) {
+  if (!html.includes(marker)) fail(`HTML is missing ${marker}`);
+}
+for (const marker of ['--font-display:', '--font-ui:', '.close-glyph::before', '.sidebar-signal', '.segment-hero::before', '@media(max-width:860px)', '@media(max-width:540px)', '@media(prefers-reduced-motion:reduce)']) {
+  if (!css.includes(marker)) fail(`CSS is missing ${marker}`);
+}
+for (const marker of ["const MANIFEST_URL = '/assets/data/fmbnews-manifest.json'", 'timeZone: MANILA', '12:00 a.m. to 11:59 p.m.', 'renderAlamMoBa', 'renderLotto', 'renderHoroscope', 'document.startViewTransition']) {
+  if (!js.includes(marker)) fail(`JavaScript is missing ${marker}`);
+}
+if (!Array.isArray(manifest.articles) || !manifest.articles.length) fail('manifest has no articles');
+if (!manifest.preservation?.hdImagesVerified) fail('manifest has not verified HD images');
 const manifestRoutes = new Set(manifest.articles.map(({ route }) => route));
-if (manifestRoutes.size !== manifest.articles.length) throw new Error('Protected preview manifest contains duplicate routes.');
+if (manifestRoutes.size !== manifest.articles.length) fail('manifest contains duplicate routes');
 
 let sourceArticleCount = 0;
 for (const filePath of await walk(newsRoot)) {
@@ -54,13 +59,11 @@ for (const filePath of await walk(newsRoot)) {
   const articleHtml = await readFile(filePath, 'utf8');
   if (/\bnews-story-route\b/i.test(articleHtml)) sourceArticleCount += 1;
 }
-if (sourceArticleCount !== manifest.articles.length) {
-  throw new Error(`Protected preview manifest count ${manifest.articles.length} does not match ${sourceArticleCount} published source article route(s).`);
-}
+if (sourceArticleCount !== manifest.articles.length) fail(`manifest count ${manifest.articles.length} does not match ${sourceArticleCount} published report pages`);
 for (const article of manifest.articles) {
-  if (!article.route?.startsWith('/news/') || !article.title || !article.image) {
-    throw new Error(`Protected preview contains an incomplete preserved article record: ${JSON.stringify(article)}`);
+  if (!article.route?.startsWith('/news/') || !article.title || !article.image) fail(`incomplete preserved article record: ${JSON.stringify(article)}`);
+  if (Math.max(Number(article.imageWidth), Number(article.imageHeight)) < 1080 || Math.min(Number(article.imageWidth), Number(article.imageHeight)) < 600) {
+    fail(`non-HD article image: ${article.route} ${article.imageWidth}x${article.imageHeight}`);
   }
 }
-
-console.log(`Protected FMB News preview passed: ${manifest.articles.length} article routes preserved; Apple-style ombré sidebar installed; primary menu and archives separated; production newsroom untouched.`);
+console.log(`Protected FMB News preview passed: ${manifest.articles.length} article routes preserved, HD imagery verified, corrected mobile close control installed, luxurious type and signal motifs applied, and original segments completed without dead ends.`);
