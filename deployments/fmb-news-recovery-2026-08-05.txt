@@ -1,0 +1,5 @@
+FMB News production recovery marker
+
+Release commit: d367673c337f9330892c0548d53422c109cf794b
+Timeline: 3:00 PM PHT -> 1:00 PM PHT -> 12:00 PM PHT
+Purpose: trigger production deployment after correcting design-only build blockers and restoring the article backlog.
