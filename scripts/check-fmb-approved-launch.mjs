@@ -63,9 +63,17 @@ function releaseForBlock(block) {
 }
 
 function findRundownPanel(html, routeName) {
-  const panel = html.match(/<aside\b[^>]*class=(['"])[^'"]*\bnc-rundown-panel\b[^'"]*\1[^>]*>[\s\S]*?<\/aside>/i)?.[0];
-  if (!panel) fatal(`${routeName} is missing the Latest reports rundown panel`);
-  return panel;
+  const patterns = [
+    /<aside\b[^>]*\bid=(['"])rundown\1[^>]*>[\s\S]*?<\/aside>/i,
+    /<section\b[^>]*\bid=(['"])rundown\1[^>]*>[\s\S]*?<\/section>/i,
+    /<aside\b[^>]*\baria-labelledby=(['"])rundownTitle\1[^>]*>[\s\S]*?<\/aside>/i,
+    /<section\b[^>]*\baria-labelledby=(['"])rundownTitle\1[^>]*>[\s\S]*?<\/section>/i,
+  ];
+  for (const pattern of patterns) {
+    const panel = html.match(pattern)?.[0];
+    if (panel) return panel;
+  }
+  fatal(`${routeName} is missing the Latest reports rundown landmark`);
 }
 
 function repairTimeline(html, routeName) {
