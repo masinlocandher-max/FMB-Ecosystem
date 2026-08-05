@@ -2,7 +2,7 @@
   'use strict';
   if (!document.body.classList.contains('fmbn-editorial-article')) return;
   const supportStyle = document.createElement('style');
-  supportStyle.textContent = 'body.news-story-route.fmbn-editorial-article>.fmbn-article-header{display:block!important}body.news-story-route.fmbn-editorial-article>.fmbn-article-footer{display:grid!important}';
+  supportStyle.textContent = 'body.news-story-route.fmbn-editorial-article>.fmbn-article-header{display:block!important}body.news-story-route.fmbn-editorial-article>.fmbn-article-footer{display:grid!important}body.news-story-route.fmbn-editorial-article>div[class*="ticker"],body.news-story-route.fmbn-editorial-article>section[class*="ticker"],body.news-story-route.fmbn-editorial-article>nav[class*="ticker"],body.news-story-route.fmbn-editorial-article>div[class*="breaking"],body.news-story-route.fmbn-editorial-article>section[class*="breaking"],body.news-story-route.fmbn-editorial-article>div[class*="news-wire"],body.news-story-route.fmbn-editorial-article>section[class*="news-wire"],body.news-story-route.fmbn-editorial-article>div[class*="live-strip"]{display:none!important}';
   document.head.appendChild(supportStyle);
   const MANILA = 'Asia/Manila';
   const MANIFEST_URL = '/assets/data/fmbnews-editorial-manifest.json';
