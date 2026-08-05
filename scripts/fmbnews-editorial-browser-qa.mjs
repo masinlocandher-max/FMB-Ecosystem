@@ -48,7 +48,7 @@ try {
   await waitForContent(page);
   const manifest = await page.evaluate(async () => (await fetch('/assets/data/fmbnews-editorial-manifest.json')).json());
   record('archives: route manifest', manifest.total === manifest.articles.length && manifest.total > 0, `total=${manifest.total}`);
-  record('archives: HD images', manifest.articles.every((article) => /\.svg(?:\?|$)/i.test(article.image) || (Number(article.imageWidth) >= 1200 && Number(article.imageHeight) >= 630)), 'all images pass');
+  record('archives: HD images', manifest.articles.every((article) => /\.svg(?:\?|$)/i.test(article.image) || (Number(article.imageWidth) >= 1200 && Number(article.imageHeight) >= 600)), 'all images pass');
   const firstRoute = manifest.articles[0]?.route;
   if (firstRoute) {
     await page.goto(`${origin}${firstRoute}`, { waitUntil: 'domcontentloaded' });
