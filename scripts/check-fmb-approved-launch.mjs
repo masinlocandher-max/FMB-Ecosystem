@@ -62,8 +62,15 @@ function releaseForBlock(block) {
   return releases.find((release) => block.includes(`href="${release.href}"`) || block.includes(`href='${release.href}'`));
 }
 
+function findRundownPanel(html, routeName) {
+  const panel = html.match(/<aside\b[^>]*class=(['"])[^'"]*\bnc-rundown-panel\b[^'"]*\1[^>]*>[\s\S]*?<\/aside>/i)?.[0];
+  if (!panel) fatal(`${routeName} is missing the Latest reports rundown panel`);
+  return panel;
+}
+
 function repairTimeline(html, routeName) {
-  const blocks = articleBlocks(html);
+  const originalPanel = findRundownPanel(html, routeName);
+  const blocks = articleBlocks(originalPanel);
   const selected = releases.map((release) => ({
     ...release,
     block: blocks.find((block) => block.includes(`href="${release.href}"`) || block.includes(`href='${release.href}'`)),
@@ -71,22 +78,22 @@ function repairTimeline(html, routeName) {
 
   const missing = selected.filter(({ block }) => !block);
   if (missing.length) {
-    fatal(`${routeName} is missing timeline card(s): ${missing.map(({ name }) => name).join(', ')}`);
+    fatal(`${routeName} is missing rundown card(s): ${missing.map(({ name }) => name).join(', ')}`);
   }
 
-  let repaired = html;
+  let panel = originalPanel;
   const backlogBlocks = blocks.filter((block) => releaseForBlock(block));
-  for (const block of backlogBlocks) repaired = repaired.replace(block, '');
+  for (const block of backlogBlocks) panel = panel.replace(block, '');
 
-  const firstStory = repaired.search(/<article\b[^>]*class=(['"])[^'"]*\bnc-rundown-story\b[^'"]*\1/i);
-  if (firstStory < 0) fatal(`${routeName} has no remaining newsroom insertion point`);
+  const firstStory = panel.search(/<article\b[^>]*class=(['"])[^'"]*\bnc-rundown-story\b[^'"]*\1/i);
+  if (firstStory < 0) fatal(`${routeName} has no remaining rundown insertion point`);
 
-  repaired = `${repaired.slice(0, firstStory)}${selected.map(({ block }) => block).join('')}${repaired.slice(firstStory)}`;
-  repaired = repaired.replace(
+  panel = `${panel.slice(0, firstStory)}${selected.map(({ block }) => block).join('')}${panel.slice(firstStory)}`;
+  panel = panel.replace(
     /<time(?: data-news-updated)?>(?:Updated )?[^<]*<\/time>/i,
     '<time data-news-updated>Updated 5 August 2026, 3:00 p.m. PHT</time>',
   );
-  return repaired;
+  return html.replace(originalPanel, panel);
 }
 
 for (const relative of ['news/index.html', 'fmbnews/index.html']) {
@@ -95,7 +102,7 @@ for (const relative of ['news/index.html', 'fmbnews/index.html']) {
   const after = repairTimeline(before, `/${relative.replace('/index.html', '')}`);
   if (after !== before) {
     await writeFile(file, after, 'utf8');
-    console.log(`Deduplicated and repaired the August 5 newsroom timeline in ${relative}.`);
+    console.log(`Deduplicated and repaired the August 5 Latest reports rundown in ${relative}.`);
   }
 }
 
@@ -122,20 +129,21 @@ for (let index = 0; index < releases.length; index += 1) {
 }
 
 for (const [routeName, html] of [['/news', newsIndex], ['/fmbnews', fmbNewsIndex]]) {
-  const timeline = articleBlocks(html).map(releaseForBlock).filter(Boolean);
+  const panel = findRundownPanel(html, routeName);
+  const timeline = articleBlocks(panel).map(releaseForBlock).filter(Boolean);
   for (const release of releases) {
     const count = timeline.filter((item) => item.href === release.href).length;
-    if (count !== 1) fatal(`${routeName} must contain exactly one timeline card for ${release.name}, found ${count}`);
+    if (count !== 1) fatal(`${routeName} Latest reports must contain exactly one card for ${release.name}, found ${count}`);
   }
 
   const expectedOrder = releases.map((release) => release.href);
   const firstThree = timeline.slice(0, releases.length).map((release) => release.href);
   if (firstThree.join('|') !== expectedOrder.join('|')) {
-    fatal(`${routeName} August 5 card order is incorrect: ${timeline.map((release) => release.name).join(' -> ')}`);
+    fatal(`${routeName} Latest reports order is incorrect: ${timeline.map((release) => release.name).join(' -> ')}`);
   }
 
-  if (!/Updated 5 August 2026, 3:00 p\.m\. PHT/i.test(html)) {
-    fatal(`${routeName} updated timestamp does not reflect the 3 PM release`);
+  if (!/Updated 5 August 2026, 3:00 p\.m\. PHT/i.test(panel)) {
+    fatal(`${routeName} Latest reports timestamp does not reflect the 3 PM release`);
   }
 
   for (const visualMarker of ['fmb-unified-public', 'fmb-approved-launch', 'fmb-announcement-track', 'fmb-sitewide-visual-fixes.css']) {
@@ -153,4 +161,4 @@ for (const [route, html] of [
   }
 }
 
-console.log(`FMB publication integrity gate passed the August 5 3 PM, 1 PM and noon release timeline with ${warnings.length} non-blocking visual warning(s).`);
+console.log(`FMB publication integrity gate passed the August 5 3 PM, 1 PM and noon Latest reports timeline with ${warnings.length} non-blocking visual warning(s).`);
