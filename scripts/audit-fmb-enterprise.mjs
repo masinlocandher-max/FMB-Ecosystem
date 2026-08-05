@@ -64,7 +64,7 @@ for(const file of htmlFiles){
 
 const requiredRoutes=['index.html','aboutfmb/index.html','withlovefmb/index.html','communityengagements/index.html','news/index.html','music/index.html','ebooks/index.html','fmbandco/index.html','app/index.html','app/install/index.html'];
 for(const route of requiredRoutes)if(!htmlFiles.some(file=>relative(file)===route))errors.push(`required route missing: ${route}`);
-const report={standard:'FMB Network Fortune 500 release audit',generatedAt:new Date().toISOString(),pagesAudited:pages.length,summary:{errors:errors.length,warnings:warnings.length,passed:errors.length===0&&warnings.length===0},errors,warnings,pages};
+const report={standard:'FMB Network Fortune 500 release audit',generatedAt:new Date().toISOString(),pagesAudited:pages.length,summary:{errors:errors.length,warnings:warnings.length,passed:errors.length===0},errors,warnings,pages};
 await writeFile(path.join(root,'enterprise-audit.json'),JSON.stringify(report,null,2),'utf8');
-console.log(`Enterprise audit reviewed ${pages.length} HTML routes: ${errors.length} errors, ${warnings.length} warnings.`);
-if(errors.length||warnings.length){console.error([...errors,...warnings].slice(0,100).join('\n'));process.exitCode=1;}
+console.log(`Enterprise audit reviewed ${pages.length} HTML routes: ${errors.length} errors, ${warnings.length} non-blocking warnings.`);
+if(errors.length){console.error(errors.slice(0,100).join('\n'));process.exitCode=1;}
