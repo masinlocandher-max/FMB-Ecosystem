@@ -1,0 +1,52 @@
+name: FMB News Editorial QA
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fmbnews-editorial-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm install --ignore-scripts
+      - name: Build the ecosystem
+        run: npm run build
+      - name: Install Chromium
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Serve the built site
+        run: |
+          python3 -m http.server 4173 --directory dist > /tmp/fmbnews-editorial-server.log 2>&1 &
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:4173/fmbnews/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/fmbnews-editorial-server.log
+          exit 1
+      - name: Run desktop and mobile browser QA
+        run: node scripts/fmbnews-editorial-browser-qa.mjs
+      - name: Upload visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fmbnews-editorial-audit
+          path: fmbnews-editorial-audit
+          if-no-files-found: error
+          retention-days: 14

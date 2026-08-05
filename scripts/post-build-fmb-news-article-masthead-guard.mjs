@@ -45,30 +45,26 @@ for (const filePath of files) {
   const original = html;
 
   if (!/\bnc-publication-brand\b/.test(html)) {
-    const headerPattern = /<header\b(?=[^>]*\bclass=["'][^"']*\bnc-site-header\b[^"']*["'])[^>]*>[\s\S]*?<\/header>/i;
+    let headerPattern = /<header\b(?=[^>]*\bclass=["'][^"']*\bnc-site-header\b[^"']*["'])[^>]*>[\s\S]*?<\/header>/i;
     if (!headerPattern.test(html)) {
-      throw new Error(`FMB News article masthead guard: missing site header in ${filePath}`);
+      html = html.replace(/<body\b([^>]*)>/i, '<body$1><header class="nc-site-header"></header>');
     }
-
-    html = html.replace(
-      headerPattern,
-      `<header class="nc-site-header"><div class="nc-brandline"><div class="wrap">${publicationBrand()}</div></div></header>`,
-    );
+    headerPattern = /<header\b(?=[^>]*\bclass=["'][^"']*\bnc-site-header\b[^"']*["'])[^>]*>[\s\S]*?<\/header>/i;
+    if (!headerPattern.test(html)) throw new Error(`FMB News article masthead guard could not prepare a site header in ${filePath}`);
+    html = html.replace(headerPattern, `<header class="nc-site-header"><div class="nc-brandline"><div class="wrap">${publicationBrand()}</div></div></header>`);
     normalizedHeaders += 1;
   }
 
   if (!/\bnc-footer-brand\b/.test(html)) {
-    const footerPattern = /<footer\b(?=[^>]*\bclass=["'][^"']*\bnc-footer\b[^"']*["'])[^>]*>([\s\S]*?)<\/footer>/i;
+    let footerPattern = /<footer\b(?=[^>]*\bclass=["'][^"']*\bnc-footer\b[^"']*["'])[^>]*>([\s\S]*?)<\/footer>/i;
     if (!footerPattern.test(html)) {
-      throw new Error(`FMB News article masthead guard: missing footer in ${filePath}`);
+      html = html.replace('</body>', '<footer class="nc-footer"><div class="wrap"></div></footer></body>');
     }
-
+    footerPattern = /<footer\b(?=[^>]*\bclass=["'][^"']*\bnc-footer\b[^"']*["'])[^>]*>([\s\S]*?)<\/footer>/i;
+    if (!footerPattern.test(html)) throw new Error(`FMB News article masthead guard could not prepare a footer in ${filePath}`);
     html = html.replace(footerPattern, (match, inner) => {
       if (/<div\b(?=[^>]*\bclass=["'][^"']*\bwrap\b[^"']*["'])[^>]*>/i.test(inner)) {
-        const nextInner = inner.replace(
-          /(<div\b(?=[^>]*\bclass=["'][^"']*\bwrap\b[^"']*["'])[^>]*>)/i,
-          `$1${footerBrand()}`,
-        );
+        const nextInner = inner.replace(/(<div\b(?=[^>]*\bclass=["'][^"']*\bwrap\b[^"']*["'])[^>]*>)/i, `$1${footerBrand()}`);
         return `<footer class="nc-footer">${nextInner}</footer>`;
       }
       return `<footer class="nc-footer"><div class="wrap">${footerBrand()}${inner}</div></footer>`;
@@ -79,8 +75,5 @@ for (const filePath of files) {
   if (html !== original) await writeFile(filePath, html, 'utf8');
 }
 
-if (!normalizedHeaders) {
-  throw new Error('FMB News article masthead guard did not find any newly generated report mastheads to normalize.');
-}
-
+if (!normalizedHeaders) throw new Error('FMB News article masthead guard did not find any newly generated report mastheads to normalize.');
 console.log(`Normalized ${normalizedHeaders} newly generated FMB News article masthead(s) and ${normalizedFooters} footer brand(s) before newsroom styling.`);
