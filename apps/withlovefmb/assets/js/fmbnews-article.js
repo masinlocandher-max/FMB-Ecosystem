@@ -1,6 +1,9 @@
 (() => {
   'use strict';
   if (!document.body.classList.contains('fmbn-editorial-article')) return;
+  const supportStyle = document.createElement('style');
+  supportStyle.textContent = 'body.news-story-route.fmbn-editorial-article>.fmbn-article-header{display:block!important}body.news-story-route.fmbn-editorial-article>.fmbn-article-footer{display:grid!important}';
+  document.head.appendChild(supportStyle);
   const MANILA = 'Asia/Manila';
   const MANIFEST_URL = '/assets/data/fmbnews-editorial-manifest.json';
   const clock = document.querySelector('[data-fmbn-article-time]');
