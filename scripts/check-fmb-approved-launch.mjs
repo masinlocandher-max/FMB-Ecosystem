@@ -58,60 +58,38 @@ function articleBlocks(html) {
     .map((match) => match[0]);
 }
 
-function releaseForBlock(block) {
-  return releases.find((release) => block.includes(`href="${release.href}"`) || block.includes(`href='${release.href}'`));
+function blockForRelease(html, release) {
+  return articleBlocks(html).find((block) =>
+    block.includes(`href="${release.href}"`) || block.includes(`href='${release.href}'`));
 }
 
-function findRundownPanel(html, routeName) {
-  const patterns = [
-    /<aside\b[^>]*\bid=(['"])rundown\1[^>]*>[\s\S]*?<\/aside>/i,
-    /<section\b[^>]*\bid=(['"])rundown\1[^>]*>[\s\S]*?<\/section>/i,
-    /<aside\b[^>]*\baria-labelledby=(['"])rundownTitle\1[^>]*>[\s\S]*?<\/aside>/i,
-    /<section\b[^>]*\baria-labelledby=(['"])rundownTitle\1[^>]*>[\s\S]*?<\/section>/i,
-  ];
-  for (const pattern of patterns) {
-    const panel = html.match(pattern)?.[0];
-    if (panel) return panel;
-  }
-  fatal(`${routeName} is missing the Latest reports rundown landmark`);
-}
-
-function repairTimeline(html, routeName) {
-  const originalPanel = findRundownPanel(html, routeName);
-  const blocks = articleBlocks(originalPanel);
+function buildRecoveryTimeline(html, routeName) {
   const selected = releases.map((release) => ({
     ...release,
-    block: blocks.find((block) => block.includes(`href="${release.href}"`) || block.includes(`href='${release.href}'`)),
+    block: blockForRelease(html, release),
   }));
-
   const missing = selected.filter(({ block }) => !block);
   if (missing.length) {
-    fatal(`${routeName} is missing rundown card(s): ${missing.map(({ name }) => name).join(', ')}`);
+    fatal(`${routeName} is missing article card(s): ${missing.map(({ name }) => name).join(', ')}`);
   }
 
-  let panel = originalPanel;
-  const backlogBlocks = blocks.filter((block) => releaseForBlock(block));
-  for (const block of backlogBlocks) panel = panel.replace(block, '');
+  const timeline = `<section class="wrap nc-rundown-panel fmb-recovered-news-timeline" id="fmb-august-5-timeline" aria-labelledby="fmbAugust5TimelineTitle">
+    <div class="nc-rundown-head"><div><span>Publication recovery</span><h2 id="fmbAugust5TimelineTitle">Latest reports</h2></div><time data-news-updated>Updated 5 August 2026, 3:00 p.m. PHT</time></div>
+    ${selected.map(({ block }) => block).join('\n    ')}
+  </section>`;
 
-  const firstStory = panel.search(/<article\b[^>]*class=(['"])[^'"]*\bnc-rundown-story\b[^'"]*\1/i);
-  if (firstStory < 0) fatal(`${routeName} has no remaining rundown insertion point`);
-
-  panel = `${panel.slice(0, firstStory)}${selected.map(({ block }) => block).join('')}${panel.slice(firstStory)}`;
-  panel = panel.replace(
-    /<time(?: data-news-updated)?>(?:Updated )?[^<]*<\/time>/i,
-    '<time data-news-updated>Updated 5 August 2026, 3:00 p.m. PHT</time>',
-  );
-  return html.replace(originalPanel, panel);
+  let repaired = html.replace(/<section\b[^>]*\bid=(['"])fmb-august-5-timeline\1[^>]*>[\s\S]*?<\/section>\s*/gi, '');
+  if (!/<main\b[^>]*>/i.test(repaired)) fatal(`${routeName} is missing a main content element`);
+  repaired = repaired.replace(/(<main\b[^>]*>)/i, `$1\n${timeline}`);
+  return repaired;
 }
 
 for (const relative of ['news/index.html', 'fmbnews/index.html']) {
   const file = path.join(dist, relative);
   const before = await readFile(file, 'utf8');
-  const after = repairTimeline(before, `/${relative.replace('/index.html', '')}`);
-  if (after !== before) {
-    await writeFile(file, after, 'utf8');
-    console.log(`Deduplicated and repaired the August 5 Latest reports rundown in ${relative}.`);
-  }
+  const after = buildRecoveryTimeline(before, `/${relative.replace('/index.html', '')}`);
+  await writeFile(file, after, 'utf8');
+  console.log(`Published the restored August 5 timeline in ${relative}.`);
 }
 
 const [home, newsIndex, fmbNewsIndex, sitemap, ...releasePages] = await Promise.all([
@@ -137,21 +115,21 @@ for (let index = 0; index < releases.length; index += 1) {
 }
 
 for (const [routeName, html] of [['/news', newsIndex], ['/fmbnews', fmbNewsIndex]]) {
-  const panel = findRundownPanel(html, routeName);
-  const timeline = articleBlocks(panel).map(releaseForBlock).filter(Boolean);
-  for (const release of releases) {
-    const count = timeline.filter((item) => item.href === release.href).length;
-    if (count !== 1) fatal(`${routeName} Latest reports must contain exactly one card for ${release.name}, found ${count}`);
-  }
+  const section = html.match(/<section\b[^>]*\bid=(['"])fmb-august-5-timeline\1[^>]*>[\s\S]*?<\/section>/i)?.[0];
+  if (!section) fatal(`${routeName} is missing the restored August 5 timeline`);
 
+  const cards = articleBlocks(section);
+  if (cards.length !== releases.length) {
+    fatal(`${routeName} restored timeline must contain ${releases.length} cards, found ${cards.length}`);
+  }
+  const actualOrder = cards.map((card) => releases.find((release) =>
+    card.includes(`href="${release.href}"`) || card.includes(`href='${release.href}'`))?.href || 'unknown');
   const expectedOrder = releases.map((release) => release.href);
-  const firstThree = timeline.slice(0, releases.length).map((release) => release.href);
-  if (firstThree.join('|') !== expectedOrder.join('|')) {
-    fatal(`${routeName} Latest reports order is incorrect: ${timeline.map((release) => release.name).join(' -> ')}`);
+  if (actualOrder.join('|') !== expectedOrder.join('|')) {
+    fatal(`${routeName} restored timeline order is incorrect: ${actualOrder.join(' -> ')}`);
   }
-
-  if (!/Updated 5 August 2026, 3:00 p\.m\. PHT/i.test(panel)) {
-    fatal(`${routeName} Latest reports timestamp does not reflect the 3 PM release`);
+  if (!/Updated 5 August 2026, 3:00 p\.m\. PHT/i.test(section)) {
+    fatal(`${routeName} restored timeline timestamp does not reflect the 3 PM release`);
   }
 
   for (const visualMarker of ['fmb-unified-public', 'fmb-approved-launch', 'fmb-announcement-track', 'fmb-sitewide-visual-fixes.css']) {
@@ -169,4 +147,4 @@ for (const [route, html] of [
   }
 }
 
-console.log(`FMB publication integrity gate passed the August 5 3 PM, 1 PM and noon Latest reports timeline with ${warnings.length} non-blocking visual warning(s).`);
+console.log(`FMB publication integrity gate passed the restored August 5 3 PM, 1 PM and noon timeline with ${warnings.length} non-blocking visual warning(s).`);
