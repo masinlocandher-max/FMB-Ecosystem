@@ -75,7 +75,8 @@ function repairTimeline(html, routeName) {
   }
 
   let repaired = html;
-  for (const { block } of selected) repaired = repaired.replace(block, '');
+  const backlogBlocks = blocks.filter((block) => releaseForBlock(block));
+  for (const block of backlogBlocks) repaired = repaired.replace(block, '');
 
   const firstStory = repaired.search(/<article\b[^>]*class=(['"])[^'"]*\bnc-rundown-story\b[^'"]*\1/i);
   if (firstStory < 0) fatal(`${routeName} has no remaining newsroom insertion point`);
@@ -94,7 +95,7 @@ for (const relative of ['news/index.html', 'fmbnews/index.html']) {
   const after = repairTimeline(before, `/${relative.replace('/index.html', '')}`);
   if (after !== before) {
     await writeFile(file, after, 'utf8');
-    console.log(`Repaired the August 5 newsroom timeline in ${relative}.`);
+    console.log(`Deduplicated and repaired the August 5 newsroom timeline in ${relative}.`);
   }
 }
 
@@ -127,11 +128,10 @@ for (const [routeName, html] of [['/news', newsIndex], ['/fmbnews', fmbNewsIndex
     if (count !== 1) fatal(`${routeName} must contain exactly one timeline card for ${release.name}, found ${count}`);
   }
 
-  const actualOrder = timeline.filter((item) => releases.some((release) => release.href === item.href));
   const expectedOrder = releases.map((release) => release.href);
-  const firstThree = actualOrder.slice(0, releases.length).map((release) => release.href);
+  const firstThree = timeline.slice(0, releases.length).map((release) => release.href);
   if (firstThree.join('|') !== expectedOrder.join('|')) {
-    fatal(`${routeName} August 5 card order is incorrect: ${actualOrder.map((release) => release.name).join(' -> ')}`);
+    fatal(`${routeName} August 5 card order is incorrect: ${timeline.map((release) => release.name).join(' -> ')}`);
   }
 
   if (!/Updated 5 August 2026, 3:00 p\.m\. PHT/i.test(html)) {
