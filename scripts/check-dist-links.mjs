@@ -65,4 +65,3 @@ async function checkCss(site,relativeFile){const css=await readFile(path.join(si
 await access(distRoot);for(const site of sites){const files=await listFiles(site.root,site.excludeDirectories);for(const relativeFile of files.filter(file=>file.endsWith('.html')))await checkHtml(site,relativeFile);for(const relativeFile of files.filter(file=>file.endsWith('.css')))await checkCss(site,relativeFile)}
 if(failures.length>0){console.error(`Generated-site link audit found ${failures.length} problem${failures.length===1?'':'s'}:`);for(const failure of failures)console.error(`- ${failure}`);process.exit(1)}
 console.log(`Generated-site link audit passed: ${htmlReferenceCount} HTML references, ${cssReferenceCount} CSS references, and ${fragmentCount} fragments resolved.`);
-await import('./post-build-fmbnews-unpublished-backlog-aug5.mjs');
