@@ -130,3 +130,4 @@ for (const story of stories) {
 }
 
 console.log(`Generated ${stories.length} branded covers and updated ${changed} HTML files.`);
+await import('./post-build-fmb-news-august-5-noon.mjs');
