@@ -58,6 +58,10 @@ function articleBlocks(html) {
     .map((match) => match[0]);
 }
 
+function releaseForBlock(block) {
+  return releases.find((release) => block.includes(`href="${release.href}"`) || block.includes(`href='${release.href}'`));
+}
+
 function repairTimeline(html, routeName) {
   const blocks = articleBlocks(html);
   const selected = releases.map((release) => ({
@@ -117,11 +121,19 @@ for (let index = 0; index < releases.length; index += 1) {
 }
 
 for (const [routeName, html] of [['/news', newsIndex], ['/fmbnews', fmbNewsIndex]]) {
-  const positions = releases.map((release) => ({ name: release.name, position: html.indexOf(release.href) }));
-  if (positions.some(({ position }) => position < 0)) fatal(`${routeName} is missing one or more August 5 releases`);
-  if (!(positions[0].position < positions[1].position && positions[1].position < positions[2].position)) {
-    fatal(`${routeName} August 5 order is incorrect: ${positions.map(({ name, position }) => `${name}=${position}`).join(', ')}`);
+  const timeline = articleBlocks(html).map(releaseForBlock).filter(Boolean);
+  for (const release of releases) {
+    const count = timeline.filter((item) => item.href === release.href).length;
+    if (count !== 1) fatal(`${routeName} must contain exactly one timeline card for ${release.name}, found ${count}`);
   }
+
+  const actualOrder = timeline.filter((item) => releases.some((release) => release.href === item.href));
+  const expectedOrder = releases.map((release) => release.href);
+  const firstThree = actualOrder.slice(0, releases.length).map((release) => release.href);
+  if (firstThree.join('|') !== expectedOrder.join('|')) {
+    fatal(`${routeName} August 5 card order is incorrect: ${actualOrder.map((release) => release.name).join(' -> ')}`);
+  }
+
   if (!/Updated 5 August 2026, 3:00 p\.m\. PHT/i.test(html)) {
     fatal(`${routeName} updated timestamp does not reflect the 3 PM release`);
   }
