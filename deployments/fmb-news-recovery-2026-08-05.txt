@@ -1,6 +1,7 @@
 FMB News production recovery marker
 
-Final release base: 1b32de2e4b3607932a8e797f6d4eb5d9d43d460e
+Final release base: c08414d767bd1933213696b663f9e14cbc58046f
 Timeline: 3:00 PM -> 1:00 PM -> 12:00 PM briefing -> 12:00 PM Falcon 9 -> 11:00 AM UN -> 11:00 AM Italy heat -> 10:55 AM PSA inflation
 Purpose: publish the complete August 5 backlog after separating editorial integrity from non-blocking visual QA.
-Controlled production release: 5 August 2026, 7:58 p.m. PHT
+Performance guard: 260 KB maximum HTML payload; recovered newsroom measured 250,785 bytes.
+Controlled production release: 5 August 2026, 8:01 p.m. PHT
