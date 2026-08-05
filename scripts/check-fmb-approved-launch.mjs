@@ -90,6 +90,18 @@ const releases = [
     timestamp: '2026-08-05T11:00:00+08:00',
     file: 'news/italy-heat-alert-system-27-cities-public-health-august-2026/index.html',
   },
+  {
+    key: '1055am-psa-inflation',
+    name: '10:55 AM PSA inflation briefing',
+    badge: '10:55',
+    section: 'Business and Economy · 5 August 2026',
+    title: 'PSA Holds Briefing on July 2026 Inflation',
+    readTime: '4 min read',
+    href: '/news/psa-july-2026-inflation-briefing-august-5/',
+    canonical: 'https://www.francinemariebautista.com/news/psa-july-2026-inflation-briefing-august-5/',
+    timestamp: '2026-08-05T10:55:00+08:00',
+    file: 'news/psa-july-2026-inflation-briefing-august-5/index.html',
+  },
 ];
 
 const requiredFiles = [
@@ -204,4 +216,4 @@ for (const [route, html] of [
   }
 }
 
-console.log(`FMB publication integrity gate passed the restored six-story August 5 timeline with ${warnings.length} non-blocking visual warning(s).`);
+console.log(`FMB publication integrity gate passed the restored seven-story August 5 timeline with ${warnings.length} non-blocking visual warning(s).`);
