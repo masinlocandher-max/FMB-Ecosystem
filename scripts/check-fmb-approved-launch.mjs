@@ -11,28 +11,84 @@ const warn = (message) => {
 const fatal = (message) => {
   throw new Error(`FMB publication integrity gate: ${message}`);
 };
+const esc = (value) => String(value)
+  .replaceAll('&', '&amp;')
+  .replaceAll('<', '&lt;')
+  .replaceAll('>', '&gt;')
+  .replaceAll('"', '&quot;');
 
 const releases = [
   {
+    key: '3pm-world-bank',
     name: '3 PM World Bank report',
+    badge: '3PM',
+    section: 'Economy · 5 August 2026',
+    title: 'World Bank Holds Philippine Growth Forecast at 3.7% as Recovery Risks Persist',
+    readTime: '7 min read',
     href: '/news/world-bank-philippines-growth-forecast-2026/',
     canonical: 'https://www.francinemariebautista.com/news/world-bank-philippines-growth-forecast-2026/',
     timestamp: '2026-08-05T15:00:00+08:00',
     file: 'news/world-bank-philippines-growth-forecast-2026/index.html',
   },
   {
+    key: '1pm-vaccination',
     name: '1 PM vaccination report',
+    badge: '1PM',
+    section: 'Public Health · 5 August 2026',
+    title: 'August Measles-Rubella Vaccination Drive Targets Young Children',
+    readTime: '8 min read',
     href: '/news/measles-rubella-vaccination-august-2026-fmb-news-1pm/',
     canonical: 'https://www.francinemariebautista.com/news/measles-rubella-vaccination-august-2026-fmb-news-1pm/',
     timestamp: '2026-08-05T13:00:00+08:00',
     file: 'news/measles-rubella-vaccination-august-2026-fmb-news-1pm/index.html',
   },
   {
+    key: 'noon-briefing',
     name: 'noon newsroom briefing',
+    badge: '12PM',
+    section: 'Hourly Newsroom Cycle · 5 August 2026',
+    title: 'FMB News Hourly Briefing: Space, Technology, Markets and Sport',
+    readTime: '8 min read',
     href: '/news/fmb-news-hourly-briefing-august-5-2026-noon/',
     canonical: 'https://www.francinemariebautista.com/news/fmb-news-hourly-briefing-august-5-2026-noon/',
     timestamp: '2026-08-05T12:00:00+08:00',
     file: 'news/fmb-news-hourly-briefing-august-5-2026-noon/index.html',
+  },
+  {
+    key: 'noon-falcon',
+    name: 'noon Falcon 9 report',
+    badge: '12PM',
+    section: 'Technology and Science · 5 August 2026',
+    title: 'Spent Falcon 9 Stage Expected to Strike the Moon',
+    readTime: '5 min read',
+    href: '/news/spent-falcon-9-stage-lunar-impact-august-5-2026/',
+    canonical: 'https://www.francinemariebautista.com/news/spent-falcon-9-stage-lunar-impact-august-5-2026/',
+    timestamp: '2026-08-05T12:00:00+08:00',
+    file: 'news/spent-falcon-9-stage-lunar-impact-august-5-2026/index.html',
+  },
+  {
+    key: '11am-un-poll',
+    name: '11 AM UN poll report',
+    badge: '11AM',
+    section: 'World · 5 August 2026',
+    title: 'UN Security Council Targets August 21 for Second Secretary-General Poll',
+    readTime: '5 min read',
+    href: '/news/un-security-council-second-secretary-general-poll-august-21/',
+    canonical: 'https://www.francinemariebautista.com/news/un-security-council-second-secretary-general-poll-august-21/',
+    timestamp: '2026-08-05T11:00:00+08:00',
+    file: 'news/un-security-council-second-secretary-general-poll-august-21/index.html',
+  },
+  {
+    key: '11am-italy-heat',
+    name: '11 AM Italy heat report',
+    badge: '11AM',
+    section: 'Environment · 5 August 2026',
+    title: 'Italy’s 27-City Heat Alert System Puts Public Health at the Center',
+    readTime: '5 min read',
+    href: '/news/italy-heat-alert-system-27-cities-public-health-august-2026/',
+    canonical: 'https://www.francinemariebautista.com/news/italy-heat-alert-system-27-cities-public-health-august-2026/',
+    timestamp: '2026-08-05T11:00:00+08:00',
+    file: 'news/italy-heat-alert-system-27-cities-public-health-august-2026/index.html',
   },
 ];
 
@@ -53,29 +109,14 @@ for (const relative of requiredFiles) {
   if (!info?.isFile() || info.size < 1) fatal(`${relative} is missing or empty`);
 }
 
-function articleBlocks(html) {
-  return [...html.matchAll(/<article\b[^>]*class=(['"])[^'"]*\bnc-rundown-story\b[^'"]*\1[^>]*>[\s\S]*?<\/article>/gi)]
-    .map((match) => match[0]);
-}
-
-function blockForRelease(html, release) {
-  return articleBlocks(html).find((block) =>
-    block.includes(`href="${release.href}"`) || block.includes(`href='${release.href}'`));
+function releaseCard(release) {
+  return `<article class="nc-rundown-story fmb-recovered-release" data-fmb-release="${esc(release.key)}"><a href="${esc(release.href)}"><span class="nc-rundown-number">${esc(release.badge)}</span><div><p>${esc(release.section)}</p><h3>${esc(release.title)}</h3><span>${esc(release.readTime)}</span></div></a></article>`;
 }
 
 function buildRecoveryTimeline(html, routeName) {
-  const selected = releases.map((release) => ({
-    ...release,
-    block: blockForRelease(html, release),
-  }));
-  const missing = selected.filter(({ block }) => !block);
-  if (missing.length) {
-    fatal(`${routeName} is missing article card(s): ${missing.map(({ name }) => name).join(', ')}`);
-  }
-
   const timeline = `<section class="wrap nc-rundown-panel fmb-recovered-news-timeline" id="fmb-august-5-timeline" aria-labelledby="fmbAugust5TimelineTitle">
     <div class="nc-rundown-head"><div><span>Publication recovery</span><h2 id="fmbAugust5TimelineTitle">Latest reports</h2></div><time data-news-updated>Updated 5 August 2026, 3:00 p.m. PHT</time></div>
-    ${selected.map(({ block }) => block).join('\n    ')}
+    ${releases.map(releaseCard).join('\n    ')}
   </section>`;
 
   let repaired = html.replace(/<section\b[^>]*\bid=(['"])fmb-august-5-timeline\1[^>]*>[\s\S]*?<\/section>\s*/gi, '');
@@ -118,15 +159,17 @@ for (const [routeName, html] of [['/news', newsIndex], ['/fmbnews', fmbNewsIndex
   const section = html.match(/<section\b[^>]*\bid=(['"])fmb-august-5-timeline\1[^>]*>[\s\S]*?<\/section>/i)?.[0];
   if (!section) fatal(`${routeName} is missing the restored August 5 timeline`);
 
-  const cards = articleBlocks(section);
-  if (cards.length !== releases.length) {
-    fatal(`${routeName} restored timeline must contain ${releases.length} cards, found ${cards.length}`);
-  }
-  const actualOrder = cards.map((card) => releases.find((release) =>
-    card.includes(`href="${release.href}"`) || card.includes(`href='${release.href}'`))?.href || 'unknown');
-  const expectedOrder = releases.map((release) => release.href);
-  if (actualOrder.join('|') !== expectedOrder.join('|')) {
-    fatal(`${routeName} restored timeline order is incorrect: ${actualOrder.join(' -> ')}`);
+  const positions = releases.map((release) => {
+    const marker = `data-fmb-release="${release.key}"`;
+    const count = section.split(marker).length - 1;
+    if (count !== 1) fatal(`${routeName} restored timeline must contain exactly one ${release.name} card, found ${count}`);
+    if (!section.includes(`href="${release.href}"`)) fatal(`${routeName} ${release.name} card has the wrong link`);
+    return section.indexOf(marker);
+  });
+  for (let index = 1; index < positions.length; index += 1) {
+    if (positions[index] <= positions[index - 1]) {
+      fatal(`${routeName} restored timeline is not newest-first at ${releases[index].name}`);
+    }
   }
   if (!/Updated 5 August 2026, 3:00 p\.m\. PHT/i.test(section)) {
     fatal(`${routeName} restored timeline timestamp does not reflect the 3 PM release`);
@@ -147,4 +190,4 @@ for (const [route, html] of [
   }
 }
 
-console.log(`FMB publication integrity gate passed the restored August 5 3 PM, 1 PM and noon timeline with ${warnings.length} non-blocking visual warning(s).`);
+console.log(`FMB publication integrity gate passed the restored six-story August 5 timeline with ${warnings.length} non-blocking visual warning(s).`);
