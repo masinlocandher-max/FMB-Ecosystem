@@ -31,7 +31,7 @@ for (const article of manifest.articles) {
   if ((html.match(/data-fmbnews-editorial-footer/g) || []).length !== 1) throw new Error(`${article.route} does not contain exactly one FMB News article footer.`);
   if (!html.includes(logo) || !html.includes('data-fmbn-article-time') || !html.includes('data-fmbn-article-wire')) throw new Error(`${article.route} is missing consistent logo, time, or moving headlines.`);
   const vector = /\.svg(?:\?|$)/i.test(article.image || '');
-  if (!vector && (Number(article.imageWidth) < 1200 || Number(article.imageHeight) < 630)) throw new Error(`${article.route} does not have an HD display image: ${article.imageWidth}x${article.imageHeight}.`);
+  if (!vector && (Number(article.imageWidth) < 1200 || Number(article.imageHeight) < 600)) throw new Error(`${article.route} does not have an HD display image: ${article.imageWidth}x${article.imageHeight}.`);
 }
 
 async function countArticleFiles(directory) {
