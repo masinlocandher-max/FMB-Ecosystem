@@ -133,11 +133,25 @@ for (const relative of ['news/index.html', 'fmbnews/index.html']) {
   console.log(`Published the restored August 5 timeline in ${relative}.`);
 }
 
+const sitemapPath = path.join(dist, 'sitemap.xml');
+let sitemapRepair = await readFile(sitemapPath, 'utf8');
+let sitemapAdded = 0;
+for (const release of releases) {
+  if (sitemapRepair.includes(`<loc>${release.canonical}</loc>`)) continue;
+  sitemapRepair = sitemapRepair.replace(
+    '</urlset>',
+    `  <url><loc>${release.canonical}</loc><lastmod>2026-08-05</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>\n</urlset>`,
+  );
+  sitemapAdded += 1;
+}
+if (sitemapAdded > 0) await writeFile(sitemapPath, sitemapRepair, 'utf8');
+console.log(`Verified August 5 sitemap coverage; added ${sitemapAdded} missing recovery URL(s).`);
+
 const [home, newsIndex, fmbNewsIndex, sitemap, ...releasePages] = await Promise.all([
   readFile(path.join(dist, 'index.html'), 'utf8'),
   readFile(path.join(dist, 'news/index.html'), 'utf8'),
   readFile(path.join(dist, 'fmbnews/index.html'), 'utf8'),
-  readFile(path.join(dist, 'sitemap.xml'), 'utf8'),
+  readFile(sitemapPath, 'utf8'),
   ...releases.map((release) => readFile(path.join(dist, release.file), 'utf8')),
 ]);
 
