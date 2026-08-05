@@ -81,7 +81,58 @@ for (const article of manifest.articles) {
   article.hdSource = sourceAvailable ? 'upscaled-source' : 'branded-editorial-cover';
   upgraded += 1;
 }
+
+const incorrectVisual = '/assets/images/news/pbbm-sona-2026-analysis.svg';
+const correctedVisual = '/assets/images/news/fmbnews-impeachment-trial-neutral.svg';
+const impeachmentSlugs = new Set([
+  'john-mark-calilung-authenticates-threat-video-sara-duterte-trial',
+  'jeremy-lotoc-testimony-document-errors-sara-duterte-impeachment',
+  'melvin-matibag-final-witness-article-four-sara-duterte-trial',
+]);
+const correctedAlt = 'Neutral FMB News Impeachment Trial graphic with no person depicted';
+const patchVisual = (html) => html
+  .replaceAll(incorrectVisual, correctedVisual)
+  .replaceAll('FMB News Impeachment Trial series visual', correctedAlt)
+  .replace(/<figcaption>FMB News editorial series visual\.[\s\S]*?<\/figcaption>/gi, '<figcaption>FMB News Impeachment Trial series graphic. No person is depicted.</figcaption>');
+
+let identityCorrections = 0;
+for (const article of manifest.articles) {
+  if (!impeachmentSlugs.has(article.slug)) continue;
+  const articlePath = path.join(dist, article.route.replace(/^\//, ''), 'index.html');
+  let html = await readFile(articlePath, 'utf8');
+  const next = patchVisual(html);
+  if (next !== html) {
+    await writeFile(articlePath, next, 'utf8');
+    identityCorrections += 1;
+  }
+  article.originalImage = article.originalImage || article.image;
+  article.image = correctedVisual;
+  article.imageWidth = 1536;
+  article.imageHeight = 864;
+  article.hdSource = 'neutral-no-person-impeachment-series-visual';
+}
+
+for (const relative of ['fmbnews/index.html', 'news/index.html']) {
+  const filePath = path.join(dist, relative);
+  let html;
+  try {
+    html = await readFile(filePath, 'utf8');
+  } catch (error) {
+    if (error?.code === 'ENOENT') continue;
+    throw error;
+  }
+  let next = html;
+  for (const slug of impeachmentSlugs) {
+    const route = `/news/${slug}/`;
+    const escapedRoute = route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const blockPattern = new RegExp(`(<(?:article|a)\\b[\\s\\S]{0,6000}?href=["']${escapedRoute}["'][\\s\\S]{0,6000}?<\\/(?:article|a)>)`, 'gi');
+    next = next.replace(blockPattern, (block) => patchVisual(block));
+  }
+  if (next !== html) await writeFile(filePath, next, 'utf8');
+}
+
 manifest.preservation.remoteImagesUpgraded = upgraded;
 manifest.preservation.brandedHdFallbacks = brandedFallbacks;
+manifest.preservation.identityCorrections = identityCorrections;
 await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
-console.log(`Upgraded ${upgraded} remaining FMB News display image(s) to 1600x900, with ${brandedFallbacks} branded fallback cover(s).`);
+console.log(`Upgraded ${upgraded} remaining FMB News display image(s) to 1600x900, with ${brandedFallbacks} branded fallback cover(s), and corrected ${identityCorrections} impeachment visual(s).`);
