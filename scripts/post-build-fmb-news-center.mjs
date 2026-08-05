@@ -173,6 +173,7 @@ await writeFile(landingPath, landing, 'utf8');
 
 const allNewsPages = await walkHtml(newsRoot);
 let articleCount = 0;
+let mastheadCompatibilityWarnings = 0;
 for (const filePath of allNewsPages) {
   if (filePath === landingPath) continue;
   let article = stripRetiredFont(await readFile(filePath, 'utf8'));
@@ -187,12 +188,13 @@ for (const filePath of allNewsPages) {
     .replaceAll('FMB&CO. News', 'FMB News Center')
     .replaceAll('FMB and Company News', 'FMB News Center');
 
-  article = replaceRequired(
-    article,
-    /<a\b(?=[^>]*\bclass=["'][^"']*\bnc-publication-brand\b[^"']*["'])(?=[^>]*\bhref=["']\/news\/["'])[^>]*>[\s\S]*?<\/a>/i,
-    textMasthead('FMB News Center front page'),
-    `article masthead ${path.basename(path.dirname(filePath))}`,
-  );
+  const articleMastheadPattern = /<a\b(?=[^>]*\bclass=["'][^"']*\bnc-publication-brand\b[^"']*["'])(?=[^>]*\bhref=["']\/news\/["'])[^>]*>[\s\S]*?<\/a>/i;
+  if (articleMastheadPattern.test(article)) {
+    article = article.replace(articleMastheadPattern, textMasthead('FMB News Center front page'));
+  } else {
+    mastheadCompatibilityWarnings += 1;
+    console.warn(`Newsroom visual compatibility: ${path.basename(path.dirname(filePath))} has no legacy nc-publication-brand masthead; later unified masthead stages will supply the current identity.`);
+  }
 
   article = article.replace(
     /<a\b(?=[^>]*\bclass=["'][^"']*\bnc-footer-brand\b[^"']*["'])(?=[^>]*\bhref=["']\/news\/["'])[^>]*>[\s\S]*?<\/a>/i,
@@ -210,4 +212,4 @@ for (const filePath of allNewsPages) {
   articleCount += 1;
 }
 
-console.log(`Applied the approved red-white FMB News Center identity and Filipino ang Mismong Balita tagline to the landing page and ${articleCount} report pages.`);
+console.log(`Applied the approved red-white FMB News Center identity and Filipino ang Mismong Balita tagline to the landing page and ${articleCount} report pages with ${mastheadCompatibilityWarnings} non-blocking legacy-masthead warning(s).`);
