@@ -9,6 +9,7 @@ const whiteLogo = '/assets/images/fmb-approved/fmb-news-logo-white-supplied.webp
 const finalCssPath = path.join(dist, 'assets', 'css', 'fmb-sitewide-visual-fixes.css');
 const cssStart = '/* FMB_NEWS_EXACT_LOGO_SHARE_PHT_V15_START */';
 const cssEnd = '/* FMB_NEWS_EXACT_LOGO_SHARE_PHT_V15_END */';
+const utilityRouteNames = new Set(['about', 'submit', 'contact', 'privacy', 'terms']);
 
 async function walk(directory) {
   const files = [];
@@ -41,6 +42,11 @@ function setPhilippineTimeFallback(html, fallback) {
   return html.replace(/(<time\b[^>]*\bdata-philippine-time\b[^>]*>)[\s\S]*?(<\/time>)/gi, `$1${fallback}$2`);
 }
 
+function isUtilityRoute(file) {
+  const parent = path.basename(path.dirname(file)).toLowerCase();
+  return utilityRouteNames.has(parent);
+}
+
 const { now, text: fallback } = manilaFallback();
 const files = [...new Set((await Promise.all(newsRoots.map(walk))).flat())];
 let updated = 0;
@@ -52,7 +58,8 @@ for (const file of files) {
   let html = await readFile(file, 'utf8');
   if (!/\bnews-reference-v13\b/.test(html)) continue;
   const original = html;
-  const isArticle = /\bnews-story-route\b/.test(html) && /class="[^"]*\bnc-story-body\b/i.test(html);
+  const utilityPage = isUtilityRoute(file);
+  const isArticle = !utilityPage && /\bnews-story-route\b/.test(html) && /class="[^"]*\bnc-story-body\b/i.test(html);
 
   html = removeLegacyShareButton(html);
   html = setPhilippineTimeFallback(html, fallback);
@@ -60,11 +67,8 @@ for (const file of files) {
   const header = html.match(/<header\b[^>]*class=(['"])[^'"]*\bfn14-site-header\b[^'"]*\1[^>]*>[\s\S]*?<\/header>/i)?.[0] || '';
   const footer = html.match(/<footer\b[^>]*>[\s\S]*?<\/footer>/i)?.[0] || '';
 
-  // Utility routes such as /news/about/ may intentionally use a different shell.
-  // They are not article or newsroom landing routes, so do not fail the full release
-  // merely because they do not expose the fn14 masthead/footer hooks.
-  if (!header || !footer) {
-    if (isArticle) throw new Error(`Article route missing standard FMB News shell: ${file}`);
+  if (utilityPage || !header || !footer) {
+    if (!utilityPage && isArticle) throw new Error(`Article route missing standard FMB News shell: ${file}`);
     if (html !== original) {
       await writeFile(file, html, 'utf8');
       updated += 1;
