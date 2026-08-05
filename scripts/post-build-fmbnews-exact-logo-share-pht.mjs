@@ -10,7 +10,10 @@ const finalCssPath = path.join(dist, 'assets', 'css', 'fmb-sitewide-visual-fixes
 const cssStart = '/* FMB_NEWS_EXACT_LOGO_SHARE_PHT_V15_START */';
 const cssEnd = '/* FMB_NEWS_EXACT_LOGO_SHARE_PHT_V15_END */';
 const utilityRouteNames = new Set(['about', 'submit', 'contact', 'privacy', 'terms']);
-const legacyStandaloneRouteNames = new Set(['ai-water-consumption-responsible-ai-philippines']);
+const legacyStandaloneRouteNames = new Set([
+  'ai-water-consumption-responsible-ai-philippines',
+  'alex-eala-first-wta-500-final-washington-2026',
+]);
 
 async function walk(directory) {
   const files = [];
