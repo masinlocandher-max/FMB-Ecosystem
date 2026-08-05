@@ -10,6 +10,7 @@ const finalCssPath = path.join(dist, 'assets', 'css', 'fmb-sitewide-visual-fixes
 const cssStart = '/* FMB_NEWS_EXACT_LOGO_SHARE_PHT_V15_START */';
 const cssEnd = '/* FMB_NEWS_EXACT_LOGO_SHARE_PHT_V15_END */';
 const utilityRouteNames = new Set(['about', 'submit', 'contact', 'privacy', 'terms']);
+const legacyStandaloneRouteNames = new Set(['ai-water-consumption-responsible-ai-philippines']);
 
 async function walk(directory) {
   const files = [];
@@ -42,9 +43,16 @@ function setPhilippineTimeFallback(html, fallback) {
   return html.replace(/(<time\b[^>]*\bdata-philippine-time\b[^>]*>)[\s\S]*?(<\/time>)/gi, `$1${fallback}$2`);
 }
 
+function routeName(file) {
+  return path.basename(path.dirname(file)).toLowerCase();
+}
+
 function isUtilityRoute(file) {
-  const parent = path.basename(path.dirname(file)).toLowerCase();
-  return utilityRouteNames.has(parent);
+  return utilityRouteNames.has(routeName(file));
+}
+
+function isLegacyStandaloneRoute(file) {
+  return legacyStandaloneRouteNames.has(routeName(file));
 }
 
 const { now, text: fallback } = manilaFallback();
@@ -59,10 +67,20 @@ for (const file of files) {
   if (!/\bnews-reference-v13\b/.test(html)) continue;
   const original = html;
   const utilityPage = isUtilityRoute(file);
-  const isArticle = !utilityPage && /\bnews-story-route\b/.test(html) && /class="[^"]*\bnc-story-body\b/i.test(html);
+  const legacyStandalonePage = isLegacyStandaloneRoute(file);
+  const isArticle = !utilityPage && !legacyStandalonePage && /\bnews-story-route\b/.test(html) && /class="[^"]*\bnc-story-body\b/i.test(html);
 
   html = removeLegacyShareButton(html);
   html = setPhilippineTimeFallback(html, fallback);
+
+  if (legacyStandalonePage) {
+    if (html !== original) {
+      await writeFile(file, html, 'utf8');
+      updated += 1;
+    }
+    skippedUtilityPages += 1;
+    continue;
+  }
 
   const header = html.match(/<header\b[^>]*class=(['"])[^'"]*\bfn14-site-header\b[^'"]*\1[^>]*>[\s\S]*?<\/header>/i)?.[0] || '';
   const footer = html.match(/<footer\b[^>]*>[\s\S]*?<\/footer>/i)?.[0] || '';
@@ -123,4 +141,4 @@ const markerPattern = new RegExp(`${cssStart.replace(/[.*+?^${}()|[\]\\]/g, '\\$
 const cleanCss = currentCss.replace(markerPattern, '').trimEnd();
 await writeFile(finalCssPath, `${cleanCss}\n${cssStart}\n${css.trim()}\n${cssEnd}\n`, 'utf8');
 
-console.log(`Verified exact supplied FMB News logos and share/time requirements across ${verified} standard route(s), including ${articleCount} article route(s). Skipped ${skippedUtilityPages} nonstandard utility page(s). Updated ${updated} route(s) at ${now.toISOString()}.`);
+console.log(`Verified exact supplied FMB News logos and share/time requirements across ${verified} standard route(s), including ${articleCount} article route(s). Skipped ${skippedUtilityPages} nonstandard utility or legacy page(s). Updated ${updated} route(s) at ${now.toISOString()}.`);
