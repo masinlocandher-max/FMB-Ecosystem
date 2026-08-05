@@ -1,5 +1,6 @@
 FMB News production recovery marker
 
-Release commit: d367673c337f9330892c0548d53422c109cf794b
-Timeline: 3:00 PM PHT -> 1:00 PM PHT -> 12:00 PM PHT
-Purpose: trigger production deployment after correcting design-only build blockers and restoring the article backlog.
+Final release base: 1b32de2e4b3607932a8e797f6d4eb5d9d43d460e
+Timeline: 3:00 PM -> 1:00 PM -> 12:00 PM briefing -> 12:00 PM Falcon 9 -> 11:00 AM UN -> 11:00 AM Italy heat -> 10:55 AM PSA inflation
+Purpose: publish the complete August 5 backlog after separating editorial integrity from non-blocking visual QA.
+Controlled production release: 5 August 2026, 7:58 p.m. PHT
