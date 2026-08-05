@@ -1,5 +1,11 @@
 (() => {
   'use strict';
+  if (!document.querySelector('link[href*="fmbnews-editorial-polish.css"]')) {
+    const stylesheet = document.createElement('link');
+    stylesheet.rel = 'stylesheet';
+    stylesheet.href = '/assets/css/fmbnews-editorial-polish.css?v=20260805a';
+    document.head.appendChild(stylesheet);
+  }
   const wire = document.querySelector('[data-fmbn-wire]');
   if (!wire) return;
   const escapeHtml = (value = '') => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
