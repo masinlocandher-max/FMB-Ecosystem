@@ -4,4 +4,4 @@ Final release base: c08414d767bd1933213696b663f9e14cbc58046f
 Timeline: 3:00 PM -> 1:00 PM -> 12:00 PM briefing -> 12:00 PM Falcon 9 -> 11:00 AM UN -> 11:00 AM Italy heat -> 10:55 AM PSA inflation
 Purpose: publish the complete August 5 backlog after separating editorial integrity from non-blocking visual QA.
 Performance guard: 260 KB maximum HTML payload; recovered newsroom measured 250,785 bytes.
-Controlled production release: 5 August 2026, 8:01 p.m. PHT
+Controlled production release: 5 August 2026, 8:03 p.m. PHT
