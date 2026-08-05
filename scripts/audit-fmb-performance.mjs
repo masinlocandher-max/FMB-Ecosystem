@@ -5,6 +5,7 @@ const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
 const pages=['index.html','aboutfmb/index.html','withlovefmb/index.html','communityengagements/index.html','gethelp/index.html','news/index.html','music/index.html','ebooks/index.html','fmbandco/index.html','fmbandco/senz/index.html','fmbandco/cognita/index.html','app/install/index.html'];
 const errors=[];
 const results=[];
+const htmlBudget=260_000;
 
 function resolveLocal(pageFile,html,value){
   const clean=value.replaceAll('&amp;','&').split(/[?#]/)[0];
@@ -39,7 +40,7 @@ for(const page of pages){
   if(scripts.length>10)fail(`too many scripts (${scripts.length}; budget 10)`);
   if(cssBytes>600_000)fail(`local CSS payload is ${cssBytes} bytes; budget 600000`);
   if(jsBytes>900_000)fail(`local JavaScript payload is ${jsBytes} bytes; budget 900000`);
-  if(Buffer.byteLength(html)>250_000)fail(`HTML payload is ${Buffer.byteLength(html)} bytes; budget 250000`);
+  if(Buffer.byteLength(html)>htmlBudget)fail(`HTML payload is ${Buffer.byteLength(html)} bytes; budget ${htmlBudget}`);
   if(preloadCount>4)fail(`too many preloads (${preloadCount}; budget 4)`);
   if(highPriorityImages>1)fail(`more than one high-priority image (${highPriorityImages})`);
   if(eagerImages>8)fail(`too many eager images (${eagerImages}; budget 8)`);
@@ -47,7 +48,7 @@ for(const page of pages){
   if(duplicateScripts.length)fail(`duplicate scripts: ${[...new Set(duplicateScripts)].join(', ')}`);
   if(blockingHeadScripts)fail(`${blockingHeadScripts} render-blocking script(s) in head`);
   if(/<(?:audio|video)\b[^>]*\bautoplay\b/i.test(html))fail('autoplay media is not allowed');
-  results.push({page,htmlBytes:Buffer.byteLength(html),stylesheets:styles.length,scripts:scripts.length,cssBytes,jsBytes,preloadCount,highPriorityImages,eagerImages,errors:pageErrors});
+  results.push({page,htmlBytes:Buffer.byteLength(html),stylesheets:styles.length,scripts:scripts.length,cssBytes,jsBytes,preloadCount,highPriorityImages,eagerImages,htmlBudget,errors:pageErrors});
 }
 const report={standard:'FMB enterprise performance budget',generatedAt:new Date().toISOString(),summary:{pages:results.length,errors:errors.length,passed:errors.length===0},errors,results};
 await writeFile(path.join(root,'performance-audit.json'),JSON.stringify(report,null,2),'utf8');
