@@ -33,16 +33,37 @@ if (!/rel=["']manifest["']/i.test(homeHtml)) {
 
 const newsPath = path.join(output, 'news', 'index.html');
 let newsHtml = await readFile(newsPath, 'utf8');
-const headquartersCss = '<link rel="stylesheet" href="/assets/css/fmb-news-headquarters.css?v=20260806a">';
-const responsiveCss = '<link rel="stylesheet" href="/assets/css/fmb-news-responsive.css?v=20260806b">';
-const headquartersJs = '<script src="/assets/js/fmb-news-headquarters.js?v=20260806a" defer></script>';
-if (!newsHtml.includes('fmb-news-headquarters.css')) {
-  newsHtml = newsHtml.replace('</head>', `${headquartersCss}\n${responsiveCss}\n${headquartersJs}\n</head>`);
-  await writeFile(newsPath, newsHtml, 'utf8');
-} else if (!newsHtml.includes('fmb-news-responsive.css')) {
-  newsHtml = newsHtml.replace(headquartersCss, `${headquartersCss}\n${responsiveCss}`);
-  await writeFile(newsPath, newsHtml, 'utf8');
+
+// Remove the legacy newsroom visual systems while retaining the complete article markup,
+// URLs, metadata, structured data, images, credits, and archive content.
+newsHtml = newsHtml
+  .replace(/<link[^>]+href=["'][^"']*\/assets\/css\/news-channel\.css[^"']*["'][^>]*>\s*/gi, '')
+  .replace(/<link[^>]+href=["'][^"']*\/assets\/css\/fmb-news-luxury\.css[^"']*["'][^>]*>\s*/gi, '')
+  .replace(/<link[^>]+href=["'][^"']*\/assets\/css\/fmb-news-headquarters\.css[^"']*["'][^>]*>\s*/gi, '')
+  .replace(/<link[^>]+href=["'][^"']*\/assets\/css\/fmb-news-responsive\.css[^"']*["'][^>]*>\s*/gi, '')
+  .replace(/<script[^>]+src=["'][^"']*\/assets\/js\/fmb-news-headquarters\.js[^"']*["'][^>]*><\/script>\s*/gi, '');
+
+const newsroomTextReplacements = [
+  ['<b>Live</b>', '<b>Newsroom</b>'],
+  ['aria-label="Live newsroom wire"', 'aria-label="Newsroom wire"'],
+  ['<span>Live desk</span>', '<span>News desk</span>'],
+  ['>Watch live<', '>Explore news<'],
+  ['>Live TV<', '>FMB News<'],
+  ['>On air<', '>Newsroom<'],
+  ['>Broadcast status<', '>Editorial standards<'],
+  ['>Live feed<', '>Latest coverage<'],
+  ['>Streaming<', '>Publishing<'],
+  ['>Uplink<', '>Verification<'],
+];
+for (const [from, to] of newsroomTextReplacements) {
+  newsHtml = newsHtml.split(from).join(to);
 }
+
+const headquartersCss = '<link rel="stylesheet" href="/assets/css/fmb-news-headquarters.css?v=20260806c">';
+const responsiveCss = '<link rel="stylesheet" href="/assets/css/fmb-news-responsive.css?v=20260806c">';
+const headquartersJs = '<script src="/assets/js/fmb-news-headquarters.js?v=20260806c" defer></script>';
+newsHtml = newsHtml.replace('</head>', `${headquartersCss}\n${responsiveCss}\n${headquartersJs}\n</head>`);
+await writeFile(newsPath, newsHtml, 'utf8');
 
 const sitemapPath = path.join(output, 'sitemap.xml');
 let sitemapXml = await readFile(sitemapPath, 'utf8');
@@ -53,4 +74,4 @@ if (!sitemapXml.includes(mediaArchiveUrl)) {
   await writeFile(sitemapPath, sitemapXml, 'utf8');
 }
 
-console.log('Built the FMB public website and Yoni application into apps/withlovefmb/dist with the responsive FMB News digital headquarters design, public web app manifest, and searchable media archive connected.');
+console.log('Built the FMB public website and Yoni application with the legacy FMB News designs removed, the complete article archive retained, and the new digital headquarters design active.');
