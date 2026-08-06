@@ -45,10 +45,10 @@ const newsRoot = path.join(output, 'news');
 const newsHtmlFiles = await collectHtmlFiles(newsRoot);
 const legacyNewsCss = /<link[^>]+href=["'][^"']*\/assets\/css\/(?:site|fmb-polish|fmb-content(?:-final)?|fmb-footer(?:-final|-v2)?|news-channel|fmb-news-luxury|fmb-news-headquarters|fmb-news-responsive|fmb-news-articles)\.css[^"']*["'][^>]*>\s*/gi;
 const legacyNewsScripts = /<script[^>]+src=["'][^"']*\/assets\/js\/(?:news-channel|fmb-news-headquarters)\.js[^"']*["'][^>]*><\/script>\s*/gi;
-const headquartersCss = '<link rel="stylesheet" href="/assets/css/fmb-news-headquarters.css?v=20260806e">';
-const responsiveCss = '<link rel="stylesheet" href="/assets/css/fmb-news-responsive.css?v=20260806e">';
-const articlesCss = '<link rel="stylesheet" href="/assets/css/fmb-news-articles.css?v=20260806e">';
-const headquartersJs = '<script src="/assets/js/fmb-news-headquarters.js?v=20260806e" defer></script>';
+const headquartersCss = '<link rel="stylesheet" href="/assets/css/fmb-news-headquarters.css?v=20260806f">';
+const responsiveCss = '<link rel="stylesheet" href="/assets/css/fmb-news-responsive.css?v=20260806f">';
+const articlesCss = '<link rel="stylesheet" href="/assets/css/fmb-news-articles.css?v=20260806f">';
+const headquartersJs = '<script src="/assets/js/fmb-news-headquarters.js?v=20260806f" defer></script>';
 
 const newsroomTextReplacements = [
   ['FMB&amp;CO. News Network', 'FMB News Network'],
@@ -96,6 +96,43 @@ for (const newsFile of newsHtmlFiles) {
   await writeFile(newsFile, newsHtml, 'utf8');
 }
 
+const forbiddenLegacyPatterns = [
+  { label: 'old broadcast stylesheet', pattern: /news-channel\.css/i },
+  { label: 'old luxury newsroom stylesheet', pattern: /fmb-news-luxury\.css/i },
+  { label: 'old broadcast script', pattern: /news-channel\.js/i },
+  { label: 'old FMB&CO. News identity', pattern: /FMB(?:&|&amp;)CO\. News/i },
+  { label: 'old corporate newsroom logo', pattern: /fmbandco-primary-reversed\.png/i },
+];
+
+const requiredRebrandPatterns = [
+  { label: 'headquarters stylesheet', pattern: /fmb-news-headquarters\.css/i },
+  { label: 'responsive stylesheet', pattern: /fmb-news-responsive\.css/i },
+  { label: 'article stylesheet', pattern: /fmb-news-articles\.css/i },
+  { label: 'official FMB News identity', pattern: /FMB News/i },
+];
+
+const auditFailures = [];
+for (const newsFile of newsHtmlFiles) {
+  const newsHtml = await readFile(newsFile, 'utf8');
+  const relativePath = path.relative(output, newsFile);
+
+  for (const check of forbiddenLegacyPatterns) {
+    if (check.pattern.test(newsHtml)) {
+      auditFailures.push(`${relativePath}: contains ${check.label}`);
+    }
+  }
+
+  for (const check of requiredRebrandPatterns) {
+    if (!check.pattern.test(newsHtml)) {
+      auditFailures.push(`${relativePath}: missing ${check.label}`);
+    }
+  }
+}
+
+if (auditFailures.length) {
+  throw new Error(`FMB News rebrand audit failed:\n${auditFailures.join('\n')}`);
+}
+
 const sitemapPath = path.join(output, 'sitemap.xml');
 let sitemapXml = await readFile(sitemapPath, 'utf8');
 const mediaArchiveUrl = 'https://www.francinemariebautista.com/media-archive/';
@@ -105,4 +142,4 @@ if (!sitemapXml.includes(mediaArchiveUrl)) {
   await writeFile(sitemapPath, sitemapXml, 'utf8');
 }
 
-console.log(`Built the FMB public website and Yoni application with the unified FMB News identity applied to ${newsHtmlFiles.length} news pages, the Filipino-first editorial promise active, and the complete article archive retained.`);
+console.log(`Built and audited ${newsHtmlFiles.length} FMB News pages with the unified Filipino-first identity, no legacy newsroom footprint, and the complete article archive retained.`);
