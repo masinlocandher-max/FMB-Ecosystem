@@ -1,7 +1,9 @@
 import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 
-export const logo='/assets/images/fmb-approved/fmb-news-official-transparent.webp';
+export const colorLogo='/assets/images/fmb-approved/fmb-news-logo-color-supplied.webp';
+export const whiteLogo='/assets/images/fmb-approved/fmb-news-logo-white-supplied.webp';
+export const logo=colorLogo;
 export const priority=['western-visayas-ai-festival-2026','pax-silica-new-clark-city-jobs-2026','sb19-lollapalooza-filipino-heritage-branding','katrina-llegado-miss-supranational-2026','myanmar-min-aung-hlaing-thailand-visit-2026','san-marcelino-scholarship-requirements-august-2026'];
 const excluded=new Set(['why-websites-cost-and-how-senz-makes-them-accessible','filipino-centered-training-institution-cognita-vision']);
 const categoryOverride=new Map([
