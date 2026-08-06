@@ -7,6 +7,8 @@ const source = path.join(dist, 'news', 'index.html');
 const aliasDir = path.join(dist, 'fmbnews');
 const alias = path.join(aliasDir, 'index.html');
 
+await import('./post-build-fmb-news-august-6-briefing.mjs');
+
 async function htmlFiles(dir) {
   const files = [];
   for (const entry of await readdir(dir, { withFileTypes: true })) {
