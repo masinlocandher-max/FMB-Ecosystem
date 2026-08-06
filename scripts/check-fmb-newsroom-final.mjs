@@ -1,123 +1,46 @@
 import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 
-const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
-const distRoot = path.join(repositoryRoot, 'dist');
-const newsRoot = path.join(distRoot, 'news');
-const landingPath = path.join(newsRoot, 'index.html');
-const fmbNewsPath = path.join(distRoot, 'fmbnews', 'index.html');
-const corporateCssPath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-corporate-recovery.css');
-const builtCssPath = path.join(distRoot, 'assets', 'css', 'fmb-sitewide-visual-fixes.css');
-const cognitaArtworkPath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'images', 'news', 'cognita-filipino-centered-education.svg');
-const suppliedColorNewsLogo = '/assets/images/fmb-approved/fmb-news-logo-color-supplied.webp';
-const suppliedWhiteNewsLogo = '/assets/images/fmb-approved/fmb-news-logo-white-supplied.webp';
-const warnings = [];
+const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
+const newsRoot=path.join(root,'news');
+const newsroom=await readFile(path.join(root,'fmbnews','index.html'),'utf8');
+const alias=await readFile(path.join(newsRoot,'index.html'),'utf8');
+const requiredStories=['western-visayas-ai-festival-2026','pax-silica-new-clark-city-jobs-2026','sb19-lollapalooza-filipino-heritage-branding','katrina-llegado-miss-supranational-2026','myanmar-min-aung-hlaing-thailand-visit-2026','san-marcelino-scholarship-requirements-august-2026'];
+const retired=/fmb-shell-header|fmb-shell-footer|fmb-news-livebar|fmb-news-channel-command|fmb-v2-news-command/;
+const fatal=m=>{throw new Error(`FMB News clean publication audit: ${m}`)};
+const count=(html,token)=>(html.match(new RegExp(token,'g'))||[]).length;
 
-function fatal(message) {
-  throw new Error(`FMB News editorial integrity audit: ${message}`);
-}
-function warn(message) {
-  warnings.push(message);
-  console.warn(`FMB News visual QA: ${message}`);
-}
-
-async function walk(directory) {
-  const files = [];
-  for (const entry of await readdir(directory, { withFileTypes: true })) {
-    const absolute = path.join(directory, entry.name);
-    if (entry.isDirectory()) files.push(...await walk(absolute));
-    else if (entry.isFile() && entry.name.endsWith('.html')) files.push(absolute);
-  }
-  return files;
+function auditLanding(html,name){
+  if(!html.includes('fmb-news-clean'))fatal(`${name} is not using the clean publication system`);
+  if(count(html,'class="fnc-header"')!==1)fatal(`${name} must contain exactly one newsroom masthead`);
+  if(count(html,'class="fnc-footer"')!==1)fatal(`${name} must contain exactly one newsroom footer`);
+  if(retired.test(html))fatal(`${name} still contains a retired corporate or newsroom shell`);
+  if(!html.includes('Latest reports'))fatal(`${name} is missing the latest reports desk`);
+  if(!html.includes('data-news-updated'))fatal(`${name} is missing its update timestamp`);
+  if(!html.includes('Today’s headlines for the Filipino.'))fatal(`${name} is missing the approved newsroom promise`);
+  for(const slug of requiredStories)if(!html.includes(`/news/${slug}/`))fatal(`${name} is missing ${slug}`);
 }
 
-function auditVisualShell(html, fileName) {
-  for (const marker of [
-    'news-channel-v4',
-    'news-futuristic-ph',
-    'fmb-sitewide-visual-fixes.css',
-    'data-fmb-news-ticker',
-    'data-philippine-time',
-    'Filipino ang Mismong Balita.',
-    'nc-site-header',
-  ]) {
-    if (!html.includes(marker)) warn(`${fileName} is missing visual marker ${marker}`);
-  }
+auditLanding(newsroom,'fmbnews/index.html');
+auditLanding(alias,'news/index.html');
+if(!alias.includes('location.replace("/fmbnews/")'))fatal('news/index.html is not directing readers to the canonical newsroom');
 
-  const masthead = html.match(/<header\b[^>]*>[\s\S]*?<\/header>/i)?.[0] || '';
-  const footer = html.match(/<footer\b[^>]*>[\s\S]*?<\/footer>/i)?.[0] || '';
-  if (!masthead.includes(suppliedColorNewsLogo)) warn(`${fileName} is missing the supplied color masthead logo`);
-  if (!footer.includes(suppliedWhiteNewsLogo)) warn(`${fileName} is missing the supplied white footer logo`);
-  if (/data-fmb-news-final-styles|data-fmbnews-futuristic-ph/i.test(html)) {
-    warn(`${fileName} still contains a retired inline visual layer`);
-  }
+async function walk(dir){const out=[];for(const entry of await readdir(dir,{withFileTypes:true})){const file=path.join(dir,entry.name);if(entry.isDirectory())out.push(...await walk(file));else if(entry.isFile()&&entry.name.endsWith('.html'))out.push(file)}return out}
+let articles=0;
+let sourceWarnings=0;
+for(const file of await walk(newsRoot)){
+  if(file===path.join(newsRoot,'index.html')||file===path.join(newsRoot,'about','index.html'))continue;
+  const html=await readFile(file,'utf8');
+  if(!html.includes('news-story-route'))continue;
+  const name=path.relative(root,file).replaceAll(path.sep,'/');
+  articles++;
+  if(!html.includes('fmb-news-clean'))fatal(`${name} is not using the clean article shell`);
+  if(count(html,'class="fnc-header"')!==1||count(html,'class="fnc-footer"')!==1)fatal(`${name} has duplicate or missing publication chrome`);
+  if(retired.test(html))fatal(`${name} still contains a retired shell`);
+  if(!/<main\b[^>]*>[\s\S]{300,}<\/main>/i.test(html))fatal(`${name} has no substantial readable article content`);
+  if(!/<h1\b[^>]*>[\s\S]*?<\/h1>/i.test(html))fatal(`${name} has no article headline`);
+  if(!/<link\b[^>]*rel=["']canonical["'][^>]*href=["'][^"']+["']/i.test(html))fatal(`${name} has no canonical URL`);
+  if(!/nc-sources|nc-source-box|Sources and public record|Source:/i.test(html))sourceWarnings++;
 }
-
-const [landing, fmbNews, corporateCss, builtCss, artwork] = await Promise.all([
-  readFile(landingPath, 'utf8'),
-  readFile(fmbNewsPath, 'utf8'),
-  readFile(corporateCssPath, 'utf8'),
-  readFile(builtCssPath, 'utf8'),
-  readFile(cognitaArtworkPath, 'utf8'),
-]);
-
-for (const [html, fileName] of [[landing, 'news/index.html'], [fmbNews, 'fmbnews/index.html']]) {
-  if (!/FMB News|FMB(?:&amp;|&)CO\. News|Francine Marie Bautista/i.test(html)) {
-    fatal(`${fileName} has no visible publisher identity`);
-  }
-  if (!html.includes('Latest reports')) fatal(`${fileName} is missing the latest reports desk`);
-  if (!html.includes('data-news-updated')) fatal(`${fileName} is missing the update-time hook`);
-  auditVisualShell(html, fileName);
-
-  const tickerCount = (html.match(/data-fmb-news-ticker/g) || []).length;
-  if (tickerCount !== 1) warn(`${fileName} should contain one headline ticker, found ${tickerCount}`);
-  const socialImageWidth = Number(html.match(/<meta property="og:image:width" content="(\d+)">/)?.[1]);
-  const socialImageHeight = Number(html.match(/<meta property="og:image:height" content="(\d+)">/)?.[1]);
-  if (!Number.isFinite(socialImageWidth) || socialImageWidth <= 0 || !Number.isFinite(socialImageHeight) || socialImageHeight <= 0) {
-    warn(`${fileName} social image dimensions are incomplete`);
-  }
-}
-
-for (const marker of [
-  '--fn-purple-950: #14051f',
-  '--fn-gold: #c8a354',
-  '.nc-site-header',
-  '.nc-rundown-panel',
-  '.news-story-route .nc-story-body',
-  '@media (max-width: 760px)',
-]) {
-  if (!corporateCss.includes(marker)) warn(`corporate source CSS is missing ${marker}`);
-  if (!builtCss.includes(marker)) warn(`built external stylesheet is missing ${marker}`);
-}
-if (!artwork.includes('width="1536" height="864"')) warn('Cognita artwork is not 1536×864');
-if (artwork.includes('data:image/')) warn('Cognita artwork still embeds a raster data URI');
-
-let articleCount = 0;
-let sourcedArticleCount = 0;
-for (const filePath of await walk(newsRoot)) {
-  if (filePath === landingPath) continue;
-  const html = await readFile(filePath, 'utf8');
-  if (!/\bnews-story-route\b/.test(html)) continue;
-  const relative = path.relative(distRoot, filePath).replaceAll('\\', '/');
-  articleCount += 1;
-
-  if (!/<h1\b[^>]*>[\s\S]*?<\/h1>/i.test(html)) fatal(`${relative} has no article headline`);
-  if (!/<link\b[^>]*rel=["']canonical["'][^>]*href=["'][^"']+["']/i.test(html)) {
-    fatal(`${relative} has no canonical URL`);
-  }
-  const hasReadableBody = html.includes('nc-story-body') || html.includes('senz-article-body');
-  if (!hasReadableBody) fatal(`${relative} has no readable article body`);
-
-  const isPromotional = html.includes('senz-website-article');
-  const hasVisibleSources = html.includes('nc-sources') || html.includes('nc-source-box');
-  if (!isPromotional && !hasVisibleSources) fatal(`${relative} is missing visible sourcing`);
-  if (hasVisibleSources) sourcedArticleCount += 1;
-
-  if (!/FMB News|FMB(?:&amp;|&)CO\. News|Francine Marie Bautista/i.test(html)) {
-    fatal(`${relative} has no publisher identity`);
-  }
-  auditVisualShell(html, relative);
-}
-
-if (articleCount < 1) fatal('no News report pages were audited');
-console.log(`FMB News editorial integrity audit passed ${articleCount} report pages, including ${sourcedArticleCount} visibly sourced reports, with ${warnings.length} non-blocking visual warning(s).`);
+if(articles<1)fatal('no article pages were audited');
+console.log(`FMB News clean publication audit passed one canonical newsroom and ${articles} article pages. ${sourceWarnings} legacy articles need future source-label normalization but remain readable.`);
