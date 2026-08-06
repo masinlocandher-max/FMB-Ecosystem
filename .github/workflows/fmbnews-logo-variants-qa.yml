@@ -5,8 +5,10 @@ on:
     paths:
       - 'apps/withlovefmb/assets/images/fmb-approved/fmb-news-logo-*-supplied.webp'
       - 'scripts/post-build-fmbnews-submit-story.mjs'
+      - 'scripts/post-build-fmbnews-route-alias.mjs'
       - 'scripts/post-build-fmbnews-august-4-photo-repair.mjs'
       - 'scripts/post-build-fmb-news-august-4-noon.mjs'
+      - 'scripts/post-build-fmb-news-august-6-briefing.mjs'
       - 'scripts/qa-fmbnews-logo-variants-playwright.mjs'
       - '.github/workflows/fmbnews-logo-variants-qa.yml'
   workflow_dispatch:
