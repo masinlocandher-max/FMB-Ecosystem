@@ -15,9 +15,12 @@ function auditLanding(html,name){
   if(count(html,'class="fnc-header"')!==1)fatal(`${name} must contain exactly one newsroom masthead`);
   if(count(html,'class="fnc-footer"')!==1)fatal(`${name} must contain exactly one newsroom footer`);
   if(retired.test(html))fatal(`${name} still contains a retired corporate or newsroom shell`);
-  if(!html.includes('Latest reports'))fatal(`${name} is missing the latest reports desk`);
+  if(!/Latest (?:reports|news)/i.test(html))fatal(`${name} is missing the latest-news desk`);
   if(!html.includes('data-news-updated'))fatal(`${name} is missing its update timestamp`);
-  if(!html.includes('Today’s headlines for the Filipino.'))fatal(`${name} is missing the approved newsroom promise`);
+  if(!html.includes('Today’s headlines for the Filipino'))fatal(`${name} is missing the approved newsroom promise`);
+  if(!html.includes('fnc-livebar')||!html.includes('data-pht-time'))fatal(`${name} is missing moving headlines or PHT time`);
+  if(!html.includes('/assets/images/fmb-approved/fmb-news-logo-color-supplied.webp'))fatal(`${name} is missing the official color masthead logo`);
+  if(!html.includes('/assets/images/fmb-approved/fmb-news-logo-white-supplied.webp'))fatal(`${name} is missing the official white footer logo`);
   for(const slug of requiredStories)if(!html.includes(`/news/${slug}/`))fatal(`${name} is missing ${slug}`);
 }
 
@@ -40,6 +43,7 @@ for(const file of await walk(newsRoot)){
   if(!/<main\b[^>]*>[\s\S]{300,}<\/main>/i.test(html))fatal(`${name} has no substantial readable article content`);
   if(!/<h1\b[^>]*>[\s\S]*?<\/h1>/i.test(html))fatal(`${name} has no article headline`);
   if(!/<link\b[^>]*rel=["']canonical["'][^>]*href=["'][^"']+["']/i.test(html))fatal(`${name} has no canonical URL`);
+  if(!html.includes('/assets/images/fmb-approved/fmb-news-logo-color-supplied.webp')||!html.includes('/assets/images/fmb-approved/fmb-news-logo-white-supplied.webp'))fatal(`${name} is missing an official logo variant`);
   if(!/nc-sources|nc-source-box|Sources and public record|Source:/i.test(html))sourceWarnings++;
 }
 if(articles<1)fatal('no article pages were audited');
