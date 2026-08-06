@@ -34,9 +34,13 @@ if (!/rel=["']manifest["']/i.test(homeHtml)) {
 const newsPath = path.join(output, 'news', 'index.html');
 let newsHtml = await readFile(newsPath, 'utf8');
 const headquartersCss = '<link rel="stylesheet" href="/assets/css/fmb-news-headquarters.css?v=20260806a">';
+const responsiveCss = '<link rel="stylesheet" href="/assets/css/fmb-news-responsive.css?v=20260806b">';
 const headquartersJs = '<script src="/assets/js/fmb-news-headquarters.js?v=20260806a" defer></script>';
 if (!newsHtml.includes('fmb-news-headquarters.css')) {
-  newsHtml = newsHtml.replace('</head>', `${headquartersCss}\n${headquartersJs}\n</head>`);
+  newsHtml = newsHtml.replace('</head>', `${headquartersCss}\n${responsiveCss}\n${headquartersJs}\n</head>`);
+  await writeFile(newsPath, newsHtml, 'utf8');
+} else if (!newsHtml.includes('fmb-news-responsive.css')) {
+  newsHtml = newsHtml.replace(headquartersCss, `${headquartersCss}\n${responsiveCss}`);
   await writeFile(newsPath, newsHtml, 'utf8');
 }
 
@@ -49,4 +53,4 @@ if (!sitemapXml.includes(mediaArchiveUrl)) {
   await writeFile(sitemapPath, sitemapXml, 'utf8');
 }
 
-console.log('Built the FMB public website and Yoni application into apps/withlovefmb/dist with the FMB News digital headquarters design, public web app manifest, and searchable media archive connected.');
+console.log('Built the FMB public website and Yoni application into apps/withlovefmb/dist with the responsive FMB News digital headquarters design, public web app manifest, and searchable media archive connected.');
