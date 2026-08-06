@@ -9,6 +9,7 @@ const builtCss=await readFile(path.join(root,'assets','css','fmbnews-clean-v1.cs
 const colorLogo='/assets/images/fmb-approved/fmb-news-logo-color-supplied.webp';
 const whiteLogo='/assets/images/fmb-approved/fmb-news-logo-white-supplied.webp';
 const requiredStories=['western-visayas-ai-festival-2026','pax-silica-new-clark-city-jobs-2026','sb19-lollapalooza-filipino-heritage-branding','katrina-llegado-miss-supranational-2026','myanmar-min-aung-hlaing-thailand-visit-2026','san-marcelino-scholarship-requirements-august-2026'];
+const reservedNonReportSlugs=new Set(['about','content-refresh']);
 const retired=/fmb-shell-header|fmb-shell-footer|fmb-news-livebar|fmb-news-channel-command|fmb-v2-news-command|fmb-news-official-transparent\.webp/;
 const fatal=message=>{throw new Error(`FMB News clean publication audit: ${message}`)};
 const count=(html,token)=>(html.match(new RegExp(token,'g'))||[]).length;
@@ -45,6 +46,8 @@ let articles=0;
 let sourceWarnings=0;
 for(const file of await walk(newsRoot)){
   if(file===path.join(newsRoot,'index.html')||file===path.join(newsRoot,'about','index.html'))continue;
+  const slug=path.basename(path.dirname(file));
+  if(reservedNonReportSlugs.has(slug))continue;
   const html=await readFile(file,'utf8');
   if(!html.includes('news-story-route'))continue;
   const name=path.relative(root,file).replaceAll(path.sep,'/');
