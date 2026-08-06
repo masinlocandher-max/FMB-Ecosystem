@@ -1,6 +1,11 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 
+// This is the first final audit after every newsroom mutation. Reapply the
+// supplied-logo, story-submission and article-sharing contract in this fresh
+// Node process so the audit always inspects the true release output.
+await import('./post-build-fmbnews-submit-story.mjs');
+
 const root = path.resolve(new URL('../dist/', import.meta.url).pathname);
 const protectedRoots = ['app/', '_sites/senz/', '_sites/cognita/'];
 const controlledReadingRoutes = ['coming-out-respect.html', 'dress-with-intention.html', 'men-can-cry.html', 'reading.html', 'skin-care-makeup.html', 'womens-health.html'];
