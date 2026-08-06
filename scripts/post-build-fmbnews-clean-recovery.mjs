@@ -22,7 +22,11 @@ function cleanArticle(html,route){
 }
 
 await mkdir(path.join(dist,'assets','css'),{recursive:true});
-await writeFile(path.join(dist,'assets','css','fmbnews-clean-v1.css'),await readFile(path.join(root,'apps','withlovefmb','assets','css','fmbnews-clean-v1.css'),'utf8'),'utf8');
+const [cleanCss,identityCss]=await Promise.all([
+  readFile(path.join(root,'apps','withlovefmb','assets','css','fmbnews-clean-v1.css'),'utf8'),
+  readFile(path.join(root,'apps','withlovefmb','assets','css','fmbnews-supplied-identity.css'),'utf8'),
+]);
+await writeFile(path.join(dist,'assets','css','fmbnews-clean-v1.css'),`${cleanCss}\n${identityCss}`,'utf8');
 const old=await readFile(path.join(news,'index.html'),'utf8');
 const records=merge(await priorityRecords(news),landingRecords(old));
 if(records.length<6)throw new Error('FMB News recovery could not find the August 6 reports.');
