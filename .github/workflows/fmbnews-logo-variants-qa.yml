@@ -9,6 +9,7 @@ on:
       - 'scripts/post-build-fmbnews-august-4-photo-repair.mjs'
       - 'scripts/post-build-fmb-news-august-4-noon.mjs'
       - 'scripts/post-build-fmb-news-august-6-briefing.mjs'
+      - 'scripts/check-fmb-public-brand-routes.mjs'
       - 'scripts/qa-fmbnews-logo-variants-playwright.mjs'
       - '.github/workflows/fmbnews-logo-variants-qa.yml'
   workflow_dispatch:
