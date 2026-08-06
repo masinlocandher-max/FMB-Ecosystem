@@ -18,7 +18,7 @@ const landing=landingPage(records);
 await writeFile(path.join(fmb,'index.html'),landing,'utf8');
 await mkdir(path.join(fmb,'about'),{recursive:true});
 await writeFile(path.join(fmb,'about','index.html'),aboutPage(),'utf8');
-const alias=landing.replace('content="index,follow,max-image-preview:large"','content="noindex,follow"').replace('<body class="fmb-news-clean fmb-news-landing">','<body class="fmb-news-clean fmb-news-landing"><script>if(location.pathname.replace(/\\/+$/,"\")==="/news")location.replace("/fmbnews/");</script>');
+const alias=landing.replace('content="index,follow,max-image-preview:large"','content="noindex,follow"').replace('<body class="fmb-news-clean fmb-news-landing">','<body class="fmb-news-clean fmb-news-landing"><script>location.replace("/fmbnews/");</script>');
 await writeFile(path.join(news,'index.html'),alias,'utf8');
 await mkdir(path.join(news,'about'),{recursive:true});
 await writeFile(path.join(news,'about','index.html'),redirectPage('/fmbnews/about/'),'utf8');
