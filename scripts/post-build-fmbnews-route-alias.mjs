@@ -36,3 +36,8 @@ for (const file of await htmlFiles(dist)) {
 }
 
 console.log(`Restored /fmbnews/ alias and repaired ${changed} legacy links.`);
+
+// The August 6 briefing regeneration and alias copy above can recreate older
+// masthead/footer markup. Reapply the supplied-logo, story-submission and
+// article-sharing contract after every mutation performed by this step.
+await import('./post-build-fmbnews-submit-story.mjs');
