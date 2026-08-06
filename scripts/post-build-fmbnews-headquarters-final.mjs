@@ -23,24 +23,39 @@ const finalJs = '<script src="/assets/js/fmbnews-headquarters-final.js?v=2026080
 const progress = '<div class="fmb-hq-progress" aria-hidden="true"></div>';
 const atmosphere = '<div class="fmb-hq-atmosphere" aria-hidden="true"><i class="fmb-hq-arc fmb-hq-arc--one"></i><i class="fmb-hq-arc fmb-hq-arc--two"></i><i class="fmb-hq-arc fmb-hq-arc--three"></i></div>';
 const segment = '<div class="fmb-hq-segment" aria-hidden="true"></div>';
-const controlStrip = '<div class="fmb-control-strip" aria-label="FMB News network information"><div><span>Philippine time</span><strong data-fmb-hq-clock>--:--:--</strong></div><div><span>Edition</span><strong>Philippines</strong></div><div><span>Archive</span><strong>Full access</strong></div><div><span>Standards</span><strong>Public record</strong></div></div>';
+const controlStrip = '<div class="fmb-control-strip" aria-label="FMB News network information"><div><span>Philippine time</span><strong data-fmb-hq-clock>--:--:--</strong></div><div><span>Edition</span><strong>Philippines</strong></div><div><span>Sources</span><strong>Visible</strong></div><div><span>Standard</span><strong>Evidence first</strong></div></div>';
 
 const editorialLanguage = [
-  ['News explained for Filipinos', 'Philippine perspective. Global consequence.'],
-  ['Today’s headlines for the Filipino', 'Philippine perspective. Global consequence.'],
-  ["Today's headlines for the Filipino", 'Philippine perspective. Global consequence.'],
-  ['The Philippines in context', 'Philippine perspective. Global consequence.'],
-  ['What happened.<br>Why it matters to Filipinos.', 'Where the Philippines meets the world.'],
-  ['Built for Filipinos', 'Philippine perspective'],
-  ['Context before noise', 'Reporting with consequence'],
-  ['News for Filipinos, with context that explains why every story matters.', 'Independent Philippine journalism with a global field of view.'],
-  ['News, context, and clear explanations of why today’s events matter to Filipinos.', 'Reporting on the forces shaping public life, institutions, markets, and the country’s future.'],
-  ['Credible reports, clear context, and why every important story matters to Filipinos.', 'Independent reporting and analysis on the forces shaping the Philippines and the world.'],
-  ['Credible, independent, and community-centered journalism for Filipinos.', 'Independent Philippine journalism with a global field of view.'],
-  ['Verified facts, useful context, and a clear explanation of why every important story matters.', 'Reporting that follows power, consequence, and the public record.'],
+  ['FMB News | Public-Interest Reporting and Analysis', 'FMB News | Important News, Made Clear for Filipinos'],
+  ['Philippine perspective. Global consequence.', 'Important news, made clear for Filipinos.'],
+  ['Where the Philippines meets the world.', 'We simplify the process,<br>not the truth.'],
+  ['Context before noise.<br>Reporting before reaction.', 'We simplify the process.<br>Not the truth.'],
+  ['The official newsroom of the FMB ecosystem', 'Factual news, gathered from credible evidence and explained for Filipinos.'],
+  ['News explained for Filipinos', 'Important news, made clear for Filipinos.'],
+  ['Today’s headlines for the Filipino', 'Important news, made clear for Filipinos.'],
+  ["Today's headlines for the Filipino", 'Important news, made clear for Filipinos.'],
+  ['The Philippines in context', 'Important news, made clear for Filipinos.'],
+  ['Philippine perspective', 'Built for Filipinos'],
+  ['Reporting with consequence', 'Evidence, context, and what comes next'],
+  ['Independent Philippine journalism with a global field of view.', 'Factual news from credible evidence, explained for Filipinos.'],
+  ['Reporting on the forces shaping public life, institutions, markets, and the country’s future.', 'We compare credible reporting, official records, public documents, research, and direct statements to show what happened, what is confirmed, and what comes next.'],
+  ['Independent reporting and analysis on the forces shaping the Philippines and the world.', 'We gather the evidence, compare the available accounts, and produce original reports written for Filipino readers.'],
+  ['Reporting that follows power, consequence, and the public record.', 'We simplify the process, not the truth.'],
+  ['News for Filipinos, with context that explains why every story matters.', 'Factual news from credible evidence, explained for Filipinos.'],
+  ['News, context, and clear explanations of why today’s events matter to Filipinos.', 'We bring together the facts, context, and Philippine relevance so readers do not have to examine every source alone.'],
+  ['Credible reports, clear context, and why every important story matters to Filipinos.', 'Credible evidence, original reporting, and clear explanations of why important stories matter to Filipinos.'],
+  ['Credible, independent, and community-centered journalism for Filipinos.', 'Evidence-based news synthesis and original reporting built for Filipinos.'],
+  ['Verified facts, useful context, and a clear explanation of why every important story matters.', 'What happened, what the evidence shows, why it matters to Filipinos, and what comes next.'],
+  ['Public-interest reporting, source-backed context, constructive reporting and clearly labeled perspective from Francine Marie Bautista and the FMB ecosystem.', 'FMB News gathers facts from credible reporting, official records, public documents, research, and direct statements, then presents original reports written for Filipino readers.'],
+  ['The official newsroom of the FMB ecosystem, built around sourced reporting, context, constructive journalism and clearly labeled perspective.', 'FMB News brings credible evidence together in original reports that help Filipino readers understand what happened and why it matters.'],
+  ['Public-interest reporting, source-backed context and clearly labeled perspective.', 'Factual news from credible evidence, explained for Filipinos.'],
+  ['Public-interest reporting, source-backed context, constructive reporting and clearly labeled perspective from the FMB ecosystem.', 'FMB News gathers credible evidence and turns it into original, clearly sourced reports for Filipino readers.'],
   ['Moving headlines', 'Newsroom wire'],
   ['Top story', 'Lead report'],
   ['Latest news', 'The newsroom'],
+  ['<b>Live</b>', '<b>Newsroom</b>'],
+  ['<span>Live desk</span>', '<span>News desk</span>'],
+  ['aria-label="Live newsroom wire"', 'aria-label="Newsroom wire"'],
 ];
 
 function removePreviousArchitecture(html) {
@@ -93,15 +108,16 @@ for (const file of targets) {
   for (const [from, to] of editorialLanguage) html = html.split(from).join(to);
 
   if (html.includes('news-story-route') && !html.includes('nc-philippine-stakes')) {
-    const stakes = '<section class="nc-philippine-stakes" aria-label="The Philippine stakes"><p>The Philippine stakes</p><p>This report examines the implications for Philippine policy, institutions, economic security, communities, culture, and the country’s position in the region and the world.</p></section>';
-    html = html.replace('<div class="nc-story-body">', `<div class="nc-story-body">${stakes}`);
+    const why = '<section class="nc-philippine-stakes" aria-label="Why this matters to Filipinos"><p>Why this matters to Filipinos</p><p>FMB News connects the verified facts and evidence in this report to the decisions, costs, opportunities, and risks that may affect Filipinos, Philippine communities, and the country.</p></section>';
+    html = html.replace('<div class="nc-story-body">', `<div class="nc-story-body">${why}`);
   }
 
   html = html
     .replaceAll('nc-why-filipinos', 'nc-philippine-stakes')
-    .replaceAll('Why this story matters to Filipinos', 'The Philippine stakes')
-    .replaceAll('Why this matters to Filipinos', 'The Philippine stakes')
-    .replaceAll('This report is not only about what happened. It explains how the issue may affect Filipino rights, safety, livelihood, public services, communities, culture, or the country’s future.', 'This report examines the implications for Philippine policy, institutions, economic security, communities, culture, and the country’s position in the region and the world.');
+    .replaceAll('The Philippine stakes', 'Why this matters to Filipinos')
+    .replaceAll('Why this story matters to Filipinos', 'Why this matters to Filipinos')
+    .replaceAll('This report examines the implications for Philippine policy, institutions, economic security, communities, culture, and the country’s position in the region and the world.', 'FMB News connects the verified facts and evidence in this report to the decisions, costs, opportunities, and risks that may affect Filipinos, Philippine communities, and the country.')
+    .replaceAll('This report is not only about what happened. It explains how the issue may affect Filipino rights, safety, livelihood, public services, communities, culture, or the country’s future.', 'FMB News connects the verified facts and evidence in this report to the decisions, costs, opportunities, and risks that may affect Filipinos, Philippine communities, and the country.');
 
   html = addBodyClassAndArchitecture(html);
   html = addSectionArchitecture(html);
@@ -118,10 +134,11 @@ for (const file of targets) {
   if (!html.includes('fmb-hq-atmosphere')) failures.push('signal atmosphere missing');
   if (!html.includes('fmb-control-strip')) failures.push('control room strip missing');
   if (/fmbnews-clean-v1\.css|FMB News Center|FMB(?:&|&amp;)CO\. News/.test(html)) failures.push('legacy identity remains');
-  if (/News explained for Filipinos|Why this matters to Filipinos|Built for Filipinos/i.test(html)) failures.push('patronizing legacy language remains');
+  if (/Global consequence|Where the Philippines meets the world|The official newsroom of the FMB ecosystem/i.test(html)) failures.push('old positioning language remains');
   if (html.includes('fmb-news-landing') && !html.includes('Newsroom wire')) failures.push('newsroom wire language missing');
-  if (html.includes('news-story-route') && !html.includes('nc-philippine-stakes')) failures.push('Philippine stakes module missing');
+  if (html.includes('fmb-news-landing') && !html.includes('We simplify the process')) failures.push('FMB News promise missing');
+  if (html.includes('news-story-route') && !html.includes('Why this matters to Filipinos')) failures.push('Filipino relevance module missing');
   if (failures.length) throw new Error(`FMB News visual-universe audit failed for ${path.relative(dist, file)}: ${failures.join(', ')}`);
 }
 
-console.log(`Applied the complete FMB News visual universe, signal architecture, cinematic motion system, article design, and control-room footer to ${targets.length} production pages without removing editorial content.`);
+console.log(`Applied the FMB News visual system and evidence-based Filipino editorial mission to ${targets.length} production pages without removing editorial content.`);
