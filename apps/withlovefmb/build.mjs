@@ -45,10 +45,10 @@ const newsRoot = path.join(output, 'news');
 const newsHtmlFiles = await collectHtmlFiles(newsRoot);
 const legacyNewsCss = /<link[^>]+href=["'][^"']*\/assets\/css\/(?:site|fmb-polish|fmb-content(?:-final)?|fmb-footer(?:-final|-v2)?|news-channel|fmb-news-luxury|fmb-news-headquarters|fmb-news-responsive|fmb-news-articles)\.css[^"']*["'][^>]*>\s*/gi;
 const legacyNewsScripts = /<script[^>]+src=["'][^"']*\/assets\/js\/(?:news-channel|fmb-news-headquarters)\.js[^"']*["'][^>]*><\/script>\s*/gi;
-const headquartersCss = '<link rel="stylesheet" href="/assets/css/fmb-news-headquarters.css?v=20260806d">';
-const responsiveCss = '<link rel="stylesheet" href="/assets/css/fmb-news-responsive.css?v=20260806d">';
-const articlesCss = '<link rel="stylesheet" href="/assets/css/fmb-news-articles.css?v=20260806d">';
-const headquartersJs = '<script src="/assets/js/fmb-news-headquarters.js?v=20260806d" defer></script>';
+const headquartersCss = '<link rel="stylesheet" href="/assets/css/fmb-news-headquarters.css?v=20260806e">';
+const responsiveCss = '<link rel="stylesheet" href="/assets/css/fmb-news-responsive.css?v=20260806e">';
+const articlesCss = '<link rel="stylesheet" href="/assets/css/fmb-news-articles.css?v=20260806e">';
+const headquartersJs = '<script src="/assets/js/fmb-news-headquarters.js?v=20260806e" defer></script>';
 
 const newsroomTextReplacements = [
   ['FMB&amp;CO. News Network', 'FMB News Network'],
@@ -58,6 +58,10 @@ const newsroomTextReplacements = [
   ['FMB&CO. News Desk', 'FMB News Desk'],
   ['FMB&CO. News', 'FMB News'],
   ['FMB and Company News', 'FMB News'],
+  ['The official newsroom of the FMB ecosystem', 'News explained for Filipinos'],
+  ['Context before noise.<br>Reporting before reaction.', 'What happened.<br>Why it matters to Filipinos.'],
+  ['Independent Philippine reporting, clear context, and perspective with responsibility.', 'News for Filipinos, with context that explains why every story matters.'],
+  ['Public-interest reporting, source-backed context and clearly labeled perspective.', 'News, context, and clear explanations of why today’s events matter to Filipinos.'],
   ['<b>Live</b>', '<b>Newsroom</b>'],
   ['aria-label="Live newsroom wire"', 'aria-label="Newsroom wire"'],
   ['<span>Live desk</span>', '<span>News desk</span>'],
@@ -101,4 +105,4 @@ if (!sitemapXml.includes(mediaArchiveUrl)) {
   await writeFile(sitemapPath, sitemapXml, 'utf8');
 }
 
-console.log(`Built the FMB public website and Yoni application with the unified FMB News identity applied to ${newsHtmlFiles.length} news pages while retaining the full article archive.`);
+console.log(`Built the FMB public website and Yoni application with the unified FMB News identity applied to ${newsHtmlFiles.length} news pages, the Filipino-first editorial promise active, and the complete article archive retained.`);
