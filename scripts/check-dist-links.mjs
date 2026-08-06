@@ -6,6 +6,8 @@ const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptDirectory, '..');
 const distRoot = path.join(repositoryRoot, 'dist');
 
+await import('./post-build-fmb-news-august-6-homepage-visibility.mjs');
+
 const sites = [
   {
     name: 'FMB',
