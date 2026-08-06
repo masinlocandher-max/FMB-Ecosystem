@@ -13,6 +13,7 @@ const reservedNonReportSlugs=new Set(['about','content-refresh']);
 const retired=/fmb-shell-header|fmb-shell-footer|fmb-news-livebar|fmb-news-channel-command|fmb-v2-news-command|fmb-news-official-transparent\.webp/;
 const fatal=message=>{throw new Error(`FMB News clean publication audit: ${message}`)};
 const count=(html,token)=>(html.match(new RegExp(token,'g'))||[]).length;
+const nativeShareButtonCount=html=>(html.match(/<button\b[^>]*\bdata-fnc-native-share\b[^>]*>/gi)||[]).length;
 
 function auditChrome(html,name){
   if(count(html,'data-fmb-news-logo-light')!==1)fatal(`${name} must contain exactly one supplied light-surface logo`);
@@ -61,7 +62,7 @@ for(const file of await walk(newsRoot)){
   auditChrome(html,name);
   if(count(html,'data-fmb-share-ready')!==1)fatal(`${name} must contain one report sharing panel`);
   if(count(html,'class="fnc-share-icon')!==4)fatal(`${name} must contain four SVG sharing controls`);
-  if(count(html,'data-fnc-native-share')!==1)fatal(`${name} is missing the device sharing control`);
+  if(nativeShareButtonCount(html)!==1)fatal(`${name} must contain exactly one device sharing control`);
   if(!/nc-sources|nc-source-box|Sources and public record|Source:/i.test(html))sourceWarnings++;
 }
 if(articles<1)fatal('no article pages were audited');
