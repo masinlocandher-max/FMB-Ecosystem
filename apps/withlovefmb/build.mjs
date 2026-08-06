@@ -45,10 +45,10 @@ const newsRoot = path.join(output, 'news');
 const newsHtmlFiles = await collectHtmlFiles(newsRoot);
 const legacyNewsCss = /<link[^>]+href=["'][^"']*\/assets\/css\/(?:site|fmb-polish|fmb-content(?:-final)?|fmb-footer(?:-final|-v2)?|news-channel|fmb-news-luxury|fmb-news-headquarters|fmb-news-responsive|fmb-news-articles)\.css[^"']*["'][^>]*>\s*/gi;
 const legacyNewsScripts = /<script[^>]+src=["'][^"']*\/assets\/js\/(?:news-channel|fmb-news-headquarters)\.js[^"']*["'][^>]*><\/script>\s*/gi;
-const headquartersCss = '<link rel="stylesheet" href="/assets/css/fmb-news-headquarters.css?v=20260806f">';
-const responsiveCss = '<link rel="stylesheet" href="/assets/css/fmb-news-responsive.css?v=20260806f">';
-const articlesCss = '<link rel="stylesheet" href="/assets/css/fmb-news-articles.css?v=20260806f">';
-const headquartersJs = '<script src="/assets/js/fmb-news-headquarters.js?v=20260806f" defer></script>';
+const headquartersCss = '<link rel="stylesheet" href="/assets/css/fmb-news-headquarters.css?v=20260806g">';
+const responsiveCss = '<link rel="stylesheet" href="/assets/css/fmb-news-responsive.css?v=20260806g">';
+const articlesCss = '<link rel="stylesheet" href="/assets/css/fmb-news-articles.css?v=20260806g">';
+const headquartersJs = '<script src="/assets/js/fmb-news-headquarters.js?v=20260806g" defer></script>';
 
 const newsroomTextReplacements = [
   ['FMB&amp;CO. News Network', 'FMB News Network'],
@@ -58,10 +58,16 @@ const newsroomTextReplacements = [
   ['FMB&CO. News Desk', 'FMB News Desk'],
   ['FMB&CO. News', 'FMB News'],
   ['FMB and Company News', 'FMB News'],
-  ['The official newsroom of the FMB ecosystem', 'News explained for Filipinos'],
-  ['Context before noise.<br>Reporting before reaction.', 'What happened.<br>Why it matters to Filipinos.'],
-  ['Independent Philippine reporting, clear context, and perspective with responsibility.', 'News for Filipinos, with context that explains why every story matters.'],
-  ['Public-interest reporting, source-backed context and clearly labeled perspective.', 'News, context, and clear explanations of why today’s events matter to Filipinos.'],
+  ['The official newsroom of the FMB ecosystem', 'Philippine perspective. Global consequence.'],
+  ['News explained for Filipinos', 'Philippine perspective. Global consequence.'],
+  ['Context before noise.<br>Reporting before reaction.', 'Where the Philippines meets the world.'],
+  ['What happened.<br>Why it matters to Filipinos.', 'Where the Philippines meets the world.'],
+  ['Built for Filipinos', 'Philippine perspective'],
+  ['Context before noise', 'Reporting with consequence'],
+  ['Independent Philippine reporting, clear context, and perspective with responsibility.', 'Independent Philippine journalism with a global field of view.'],
+  ['News for Filipinos, with context that explains why every story matters.', 'Independent Philippine journalism with a global field of view.'],
+  ['Public-interest reporting, source-backed context and clearly labeled perspective.', 'Reporting on the forces shaping public life, institutions, markets, and the country’s future.'],
+  ['News, context, and clear explanations of why today’s events matter to Filipinos.', 'Reporting on the forces shaping public life, institutions, markets, and the country’s future.'],
   ['<b>Live</b>', '<b>Newsroom</b>'],
   ['aria-label="Live newsroom wire"', 'aria-label="Newsroom wire"'],
   ['<span>Live desk</span>', '<span>News desk</span>'],
@@ -102,6 +108,7 @@ const forbiddenLegacyPatterns = [
   { label: 'old broadcast script', pattern: /news-channel\.js/i },
   { label: 'old FMB&CO. News identity', pattern: /FMB(?:&|&amp;)CO\. News/i },
   { label: 'old corporate newsroom logo', pattern: /fmbandco-primary-reversed\.png/i },
+  { label: 'patronizing legacy copy', pattern: /News explained for Filipinos|Why it matters to Filipinos|Built for Filipinos/i },
 ];
 
 const requiredRebrandPatterns = [
@@ -142,4 +149,4 @@ if (!sitemapXml.includes(mediaArchiveUrl)) {
   await writeFile(sitemapPath, sitemapXml, 'utf8');
 }
 
-console.log(`Built and audited ${newsHtmlFiles.length} FMB News pages with the unified Filipino-first identity, no legacy newsroom footprint, and the complete article archive retained.`);
+console.log(`Built and audited ${newsHtmlFiles.length} FMB News pages with a Philippine-centered, globally aware editorial identity and the complete article archive retained.`);
