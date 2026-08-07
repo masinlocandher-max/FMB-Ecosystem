@@ -183,6 +183,7 @@ const assert = (condition, message) => { if (!condition) fail(message); };
     assert(await page.locator('h1').first().textContent() === 'Magnitude 5.4 Quake Hits Off Occidental Mindoro', 'Article headline is incorrect');
     assert(await page.locator('.nc-sources a').count() === 2, 'Article sources are missing');
     assert((await page.locator('.fnc-footer-brand img').getAttribute('src')).includes('fmb-news-white-transparent-2026.webp'), 'Article footer logo is incorrect');
+    assert(await page.locator('.fnc-search-jump').getAttribute('href') === '/fmbnews/#newsSearch', 'Article search does not return to newsroom search');
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'Article overflows horizontally');
     await page.locator('.fnc-menu').click();
     assert(await page.locator('.fnc-menu').getAttribute('aria-expanded') === 'true', 'Article menu did not open');
@@ -192,6 +193,7 @@ const assert = (condition, message) => { if (!condition) fail(message); };
     await page.goto(`${base}/fmbnews/about/#standards`, { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(600);
     assert(await page.locator('#standards').count() === 1, 'About editorial standards anchor is missing');
+    assert(await page.locator('.fnc-search-jump').getAttribute('href') === '/fmbnews/#newsSearch', 'About search does not return to newsroom search');
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'About page overflows horizontally');
     await context.close();
   } finally {
