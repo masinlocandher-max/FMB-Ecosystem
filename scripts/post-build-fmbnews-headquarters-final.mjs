@@ -32,8 +32,8 @@ await writeFile(
   'utf8',
 );
 
-const finalCss = '<link rel="stylesheet" href="/assets/css/fmbnews-headquarters-final.css?v=20260807-editorial-core">';
-const finalJs = '<script src="/assets/js/fmbnews-headquarters-final.js?v=20260807-editorial-core" defer></script>';
+const finalCss = '<link rel="stylesheet" href="/assets/css/fmbnews-headquarters-final.css?v=20260807-production-polish">';
+const finalJs = '<script src="/assets/js/fmbnews-headquarters-final.js?v=20260807-production-polish" defer></script>';
 const progress = '<div class="fmb-hq-progress" aria-hidden="true"></div>';
 const atmosphere = '<div class="fmb-hq-atmosphere" aria-hidden="true"><i class="fmb-hq-arc fmb-hq-arc--one"></i><i class="fmb-hq-arc fmb-hq-arc--two"></i><i class="fmb-hq-arc fmb-hq-arc--three"></i></div>';
 const segment = '<div class="fmb-hq-segment" aria-hidden="true"></div>';
@@ -81,8 +81,12 @@ function removePreviousArchitecture(html) {
 }
 
 function addBodyClassAndArchitecture(html) {
+  const bodyTag = html.match(/<body[^>]*>/i)?.[0] || '';
+  const hasTopOutsideBody = /\bid=(['"])top\1/i.test(html.replace(bodyTag, ''));
   return html.replace(/<body([^>]*)>/i, (full, attributes) => {
     let next = full;
+    if (hasTopOutsideBody) next = next.replace(/\s+id=(['"])top\1/i, '');
+    else if (!/\bid=(['"])/i.test(next)) next = next.replace(/<body/i, '<body id="top"');
     if (/class=(["'])/i.test(next)) {
       next = next.replace(/class=(["'])(.*?)\1/i, (_match, quote, value) => {
         const classes = new Set(value.split(/\s+/).filter(Boolean));
@@ -138,7 +142,6 @@ for (const file of targets) {
   let html = await readFile(file, 'utf8');
 
   html = removePreviousArchitecture(html)
-    .replace(/<link[^>]+href=["'][^"']*fmbnews-clean-v1\.css[^"']*["'][^>]*>\s*/gi, '')
     .replace(/<link[^>]+href=["'][^"']*fmbnews-headquarters-final\.css[^"']*["'][^>]*>\s*/gi, '')
     .replace(/<script[^>]+src=["'][^"']*fmbnews-headquarters-final\.js[^"']*["'][^>]*><\/script>\s*/gi, '')
     .replaceAll('FMB News Center', 'FMB News')
@@ -195,7 +198,8 @@ for (const file of targets) {
   if (!html.includes('fmb-hq-universe')) failures.push('visual universe body class missing');
   if (!html.includes('fmb-hq-atmosphere')) failures.push('signal atmosphere missing');
   if (!isRedirect && !html.includes('fmb-control-strip')) failures.push('control room strip missing');
-  if (/fmbnews-clean-v1\.css|FMB News Center|FMB(?:&|&amp;)CO\. News/.test(html)) failures.push('legacy identity remains');
+  if (!isRedirect && !html.includes('fmbnews-clean-v1.css')) failures.push('publication stylesheet missing');
+  if (/FMB News Center|FMB(?:&|&amp;)CO\. News/.test(html)) failures.push('legacy identity remains');
   if (/Global consequence|Where the Philippines meets the world|The official newsroom of the FMB ecosystem/i.test(html)) failures.push('old positioning language remains');
   if (!isRedirect && html.includes('fmb-news-landing') && !html.includes('Moving headlines')) failures.push('moving headlines label missing');
   if (!isRedirect && html.includes('fmb-news-landing') && !html.includes('data-pht-time')) failures.push('live Philippine time missing');

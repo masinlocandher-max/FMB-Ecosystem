@@ -2,11 +2,13 @@ import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 
 export const colorLogo='/assets/images/news/fmb-news-primary-logo-2026.webp';
-export const whiteLogo=colorLogo;
+export const whiteLogo='/assets/images/news/fmb-news-white-transparent-2026.webp';
 export const logo=colorLogo;
-export const priority=['western-visayas-ai-festival-2026','pax-silica-new-clark-city-jobs-2026','sb19-lollapalooza-filipino-heritage-branding','katrina-llegado-miss-supranational-2026','myanmar-min-aung-hlaing-thailand-visit-2026','san-marcelino-scholarship-requirements-august-2026'];
+export const priority=['magnitude-54-quake-hits-off-occidental-mindoro','enrique-razon-tops-forbes-philippines-50-richest-list','western-visayas-ai-festival-2026','pax-silica-new-clark-city-jobs-2026','sb19-lollapalooza-filipino-heritage-branding','katrina-llegado-miss-supranational-2026','myanmar-min-aung-hlaing-thailand-visit-2026','san-marcelino-scholarship-requirements-august-2026'];
 const excluded=new Set(['why-websites-cost-and-how-senz-makes-them-accessible','filipino-centered-training-institution-cognita-vision']);
 const categoryOverride=new Map([
+  ['/news/magnitude-54-quake-hits-off-occidental-mindoro/','national'],
+  ['/news/enrique-razon-tops-forbes-philippines-50-richest-list/','business'],
   ['/news/western-visayas-ai-festival-2026/','technology'],
   ['/news/san-marcelino-scholarship-requirements-august-2026/','national'],
 ]);
@@ -19,7 +21,20 @@ export const tag=(s,r,n)=>{const m=String(s??'').match(r);return m?attr(m[0],n):
 export async function walk(dir){const out=[];try{for(const e of await readdir(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())out.push(...await walk(p));else if(e.isFile()&&e.name.endsWith('.html'))out.push(p)}}catch(e){if(e?.code!=='ENOENT')throw e}return out}
 function category(v){v=v.toLowerCase();if(/health|vaccin|medicine/.test(v))return'health';if(/environment|weather|climate|storm|wildfire|water/.test(v))return'environment';if(/technology|tech|artificial intelligence|\bai\b|science|digital|space|semiconductor/.test(v))return'technology';if(/business|money|econom|market|investment|jobs|energy|industry/.test(v))return'business';if(/world|diplomacy|war|gaza|ukraine|iran|korea|japan|myanmar|thailand|united nations/.test(v))return'world';if(/culture|entertainment|pageant|music|sports|tennis|tourism|identity|heritage/.test(v))return'culture';return'national'}
 function formatPublished(value){const raw=String(value||'').trim();if(!/^\d{4}-\d{2}-\d{2}T/.test(raw))return raw||'FMB News report';const d=new Date(raw);if(Number.isNaN(d.getTime()))return raw;return new Intl.DateTimeFormat('en-PH',{timeZone:'Asia/Manila',day:'numeric',month:'long',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true}).format(d).replace(' at ', ', ')+ ' PHT'}
-export function record(block,route){const title=cap(block,/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)||cap(block,/<h[23]\b[^>]*>([\s\S]*?)<\/h[23]>/i)||cap(block,/<title>([\s\S]*?)<\/title>/i).replace(/\s*\|\s*FMB News.*$/i,'');if(!title)return null;const kicker=cap(block,/<p\b[^>]*class=(['"])[^'"]*\bnc-kicker\b[^'"]*\1[^>]*>([\s\S]*?)<\/p>/i)||cap(block,/<p\b[^>]*>([\s\S]*?)<\/p>/i)||'FMB News';const description=cap(block,/<p\b[^>]*class=(['"])[^'"]*\bnc-article-deck\b[^'"]*\1[^>]*>([\s\S]*?)<\/p>/i)||tag(block,/<meta\b[^>]*name=(['"])description\1[^>]*>/i,'content')||'Read the full report and why it matters to Filipinos.';const rawImage=tag(block,/<section\b[^>]*class=(['"])[^'"]*\bnc-story-media\b[^'"]*\1[^>]*>[\s\S]*?<img\b[^>]*>/i,'src')||tag(block,/<img\b[^>]*>/i,'src')||tag(block,/<meta\b[^>]*property=(['"])og:image\1[^>]*>/i,'content')||logo;const image=rawImage.includes('fmb-news-official-transparent.webp')?colorLogo:rawImage;const alt=tag(block,/<img\b[^>]*>/i,'alt')||title;const rawCredit=cap(block,/<span\b[^>]*class=(['"])[^'"]*\bfmb-photo-credit\b[^'"]*\1[^>]*>([\s\S]*?)<\/span>/i)||cap(block,/<figcaption\b[^>]*>([\s\S]*?)<\/figcaption>/i)||'FMB News';const credit=rawImage.includes('fmb-news-official-transparent.webp')?'Official FMB News identity':rawCredit;const rawPublished=tag(block,/<meta\b[^>]*property=(['"])article:published_time\1[^>]*>/i,'content')||cap(block,/<span\b[^>]*>Published\s+([\s\S]*?)<\/span>/i)||cap(block,/<time\b[^>]*>([\s\S]*?)<\/time>/i)||'FMB News report';return{route,title,kicker,description,image,alt,credit,published:formatPublished(rawPublished),category:categoryOverride.get(route)||category(`${kicker} ${title}`)}}
+export function record(block,route){
+  const title=cap(block,/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)||cap(block,/<h[23]\b[^>]*>([\s\S]*?)<\/h[23]>/i)||cap(block,/<title>([\s\S]*?)<\/title>/i).replace(/\s*\|\s*FMB News.*$/i,'');
+  if(!title)return null;
+  const kicker=cap(block,/<p\b[^>]*class=(['"])[^'"]*\b(?:fnc|nc)-kicker\b[^'"]*\1[^>]*>([\s\S]*?)<\/p>/i)||cap(block,/<p\b[^>]*>([\s\S]*?)<\/p>/i)||'FMB News';
+  const description=cap(block,/<p\b[^>]*class=(['"])[^'"]*\bnc-article-deck\b[^'"]*\1[^>]*>([\s\S]*?)<\/p>/i)||tag(block,/<meta\b[^>]*name=(['"])description\1[^>]*>/i,'content')||'Read the full report and why it matters to Filipinos.';
+  const storyImageTag=String(block??'').match(/<section\b[^>]*class=(['"])[^'"]*\bnc-story-media\b[^'"]*\1[^>]*>[\s\S]*?<img\b[^>]*>/i)?.[0]||'';
+  const rawImage=tag(storyImageTag,/<img\b[^>]*>/i,'src')||tag(block,/<meta\b[^>]*property=(['"])og:image\1[^>]*>/i,'content')||tag(block,/<img\b[^>]*>/i,'src')||logo;
+  const image=rawImage.includes('fmb-news-official-transparent.webp')?colorLogo:rawImage;
+  const alt=tag(storyImageTag,/<img\b[^>]*>/i,'alt')||title;
+  const rawCredit=cap(block,/<span\b[^>]*class=(['"])[^'"]*\bfmb-photo-credit\b[^'"]*\1[^>]*>([\s\S]*?)<\/span>/i)||cap(block,/<figcaption\b[^>]*>([\s\S]*?)<\/figcaption>/i)||'FMB News';
+  const credit=rawImage.includes('fmb-news-official-transparent.webp')?'Official FMB News identity':rawCredit;
+  const rawPublished=tag(block,/<meta\b[^>]*property=(['"])article:published_time\1[^>]*>/i,'content')||cap(block,/<span\b[^>]*>Published\s+([\s\S]*?)<\/span>/i)||cap(block,/<time\b[^>]*>([\s\S]*?)<\/time>/i)||'FMB News report';
+  return{route,title,kicker,description,image,alt,credit,published:formatPublished(rawPublished),category:categoryOverride.get(route)||category(`${kicker} ${title}`)};
+}
 export function landingRecords(html){const out=[];for(const m of html.matchAll(/<article\b[^>]*>[\s\S]*?<\/article>/gi)){const route=tag(m[0],/<a\b[^>]*href=(['"])\/news\/[^'"]+\1[^>]*>/i,'href');const slug=route.split('/').filter(Boolean).at(-1);if(!route||excluded.has(slug))continue;const r=record(m[0],route);if(r)out.push(r)}return out}
 export async function articleRecords(newsRoot){const out=[];for(const file of await walk(newsRoot)){if(path.basename(file)!=='index.html')continue;const slug=path.basename(path.dirname(file));if(slug==='news'||slug==='about'||excluded.has(slug))continue;const html=await readFile(file,'utf8');if(/http-equiv=(['"])refresh\1/i.test(html)||/<meta\b[^>]*(?:name|property)=(['"])robots\1[^>]*content=(['"])[^'"]*noindex/i.test(html))continue;if(!/<h1\b/i.test(html))continue;const r=record(html,`/news/${slug}/`);if(r)out.push(r)}return out}
 export async function priorityRecords(newsRoot){const out=[];for(const slug of priority){const html=await readFile(path.join(newsRoot,slug,'index.html'),'utf8');const r=record(html,`/news/${slug}/`);if(r)out.push(r)}return out}

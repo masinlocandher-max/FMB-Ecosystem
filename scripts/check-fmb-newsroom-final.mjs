@@ -6,7 +6,7 @@ const newsRoot=path.join(root,'news');
 const newsroom=await readFile(path.join(root,'fmbnews','index.html'),'utf8');
 const about=await readFile(path.join(root,'fmbnews','about','index.html'),'utf8');
 const alias=await readFile(path.join(newsRoot,'index.html'),'utf8');
-const requiredStories=['western-visayas-ai-festival-2026','pax-silica-new-clark-city-jobs-2026','sb19-lollapalooza-filipino-heritage-branding','katrina-llegado-miss-supranational-2026','myanmar-min-aung-hlaing-thailand-visit-2026','san-marcelino-scholarship-requirements-august-2026'];
+const requiredStories=['magnitude-54-quake-hits-off-occidental-mindoro','enrique-razon-tops-forbes-philippines-50-richest-list','western-visayas-ai-festival-2026','pax-silica-new-clark-city-jobs-2026','sb19-lollapalooza-filipino-heritage-branding','katrina-llegado-miss-supranational-2026','myanmar-min-aung-hlaing-thailand-visit-2026','san-marcelino-scholarship-requirements-august-2026'];
 const nonEditorialCompatibilityPages=new Set(['news/why-websites-cost-and-how-senz-makes-them-accessible/index.html','news/filipino-centered-training-institution-cognita-vision/index.html']);
 const retired=/fmb-shell-header|fmb-shell-footer|fmb-news-livebar|fmb-news-channel-command|fmb-v2-news-command/;
 const fatal=m=>{throw new Error(`FMB News clean publication audit: ${m}`)};
@@ -24,8 +24,11 @@ function auditLanding(html,name){
   if(!html.includes('Moving headlines'))fatal(`${name} is missing the moving-headlines label`);
   if(!html.includes('/assets/images/news/fmb-news-purple-network-hero.webp'))fatal(`${name} is missing the supplied network hero`);
   if(!html.includes('/assets/images/news/fmb-news-primary-logo-2026.webp'))fatal(`${name} is missing the supplied FMB News logo`);
+  if(!html.includes('/assets/images/news/fmb-news-white-transparent-2026.webp'))fatal(`${name} is missing the supplied white footer identity`);
   if(!html.includes('/assets/images/news/fmb-news-outline-logo-2026.webp'))fatal(`${name} is missing the supplied outline identity`);
   if(!html.includes('Every important story must answer four questions'))fatal(`${name} is missing the editorial lens`);
+  if(!html.includes('News menu')||!html.includes('News categories'))fatal(`${name} does not distinguish site navigation from news categories`);
+  if(!html.includes('data-fnc-menu-close')||!html.includes('aria-controls="fncNav"'))fatal(`${name} is missing accessible menu controls`);
   for(const slug of requiredStories)if(!html.includes(`/news/${slug}/`))fatal(`${name} is missing ${slug}`);
 }
 

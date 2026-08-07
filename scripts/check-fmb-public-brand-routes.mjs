@@ -5,6 +5,7 @@ const root = path.resolve(new URL('../dist/', import.meta.url).pathname);
 const protectedRoots = ['app/', '_sites/senz/', '_sites/cognita/'];
 const controlledReadingRoutes = ['coming-out-respect.html', 'dress-with-intention.html', 'men-can-cry.html', 'reading.html', 'skin-care-makeup.html', 'womens-health.html'];
 const suppliedPrimaryNewsLogo = '/assets/images/news/fmb-news-primary-logo-2026.webp';
+const suppliedWhiteNewsLogo = '/assets/images/news/fmb-news-white-transparent-2026.webp';
 const warnings = [];
 const fatal = (message) => { throw new Error(`FMB public-route integrity audit: ${message}`); };
 const warn = (message) => { warnings.push(message); console.warn(`FMB public-route visual QA: ${message}`); };
@@ -71,6 +72,6 @@ if (!/FMB News|Filipino ang Mismong Balita\./i.test(newsIndex)) {
 const masthead = newsIndex.match(/<header\b[^>]*>[\s\S]*?<\/header>/i)?.[0] || '';
 const footer = newsIndex.match(/<footer\b[^>]*>[\s\S]*?<\/footer>/i)?.[0] || '';
 if (!masthead.includes(suppliedPrimaryNewsLogo)) warn('news/index.html is missing the supplied FMB News masthead logo');
-if (!footer.includes(suppliedPrimaryNewsLogo)) warn('news/index.html is missing the supplied FMB News footer logo');
+if (!footer.includes(suppliedWhiteNewsLogo)) warn('news/index.html is missing the supplied white FMB News footer logo');
 
 console.log(`FMB public-route integrity audit passed ${publicPages} public pages, ${newsPages} News routes and ${controlledReadingRoutes.length} controlled reading routes with ${warnings.length} non-blocking visual warning(s).`);

@@ -1,8 +1,18 @@
 import { esc, colorLogo, whiteLogo, logo } from './fmbnews-clean-lib.mjs';
 
-const css = '/assets/css/fmbnews-clean-v1.css?v=20260807-core-v1';
+const css = '/assets/css/fmbnews-clean-v1.css?v=20260807-production-v2';
 const heroArtwork = '/assets/images/news/fmb-news-purple-network-hero.webp';
 const outlineLogo = '/assets/images/news/fmb-news-outline-logo-2026.webp';
+const newsCategories = [
+  ['all', 'All news'],
+  ['national', 'Nation'],
+  ['world', 'World'],
+  ['business', 'Business'],
+  ['technology', 'Technology'],
+  ['culture', 'Life and culture'],
+  ['environment', 'Environment'],
+  ['health', 'Health'],
+];
 
 const defaultTickerItems = [
   { title: 'Important news, made clear for Filipinos', route: '/fmbnews/#reports' },
@@ -22,15 +32,69 @@ function ticker(items = defaultTickerItems) {
 }
 
 export function shell(active = '', headlines = defaultTickerItems) {
-  return `<a class="fnc-skip" href="#main">Skip to the newsroom</a>${ticker(headlines)}<header class="fnc-header"><div class="fnc-shell fnc-header-row"><a class="fnc-brand" href="/fmbnews/" aria-label="FMB News home"><img src="${colorLogo}" width="1225" height="265" alt="FMB News, Filipino Media Bulletin"></a><nav class="fnc-nav" id="fncNav" aria-label="FMB News navigation"><a href="/fmbnews/"${active === 'latest' ? ' aria-current="page"' : ''}>Latest</a><a href="/fmbnews/?section=national#reports">Nation</a><a href="/fmbnews/?section=world#reports">World</a><a href="/fmbnews/?section=business#reports">Business</a><a href="/fmbnews/?section=technology#reports">Tech</a><a href="/fmbnews/?section=culture#reports">Life</a><a href="/fmbnews/about/"${active === 'about' ? ' aria-current="page"' : ''}>About</a></nav><div class="fnc-actions"><a class="fnc-submit" href="mailto:withlovefmb@gmail.com?subject=Story%20Submission%20for%20FMB%20News">Submit story</a><button class="fnc-menu" type="button" aria-label="Open FMB News menu" aria-expanded="false" aria-controls="fncNav"><span></span></button></div></div></header>`;
+  const primaryLinks = [
+    ['Latest reports', '/fmbnews/', 'latest'],
+    ['About FMB News', '/fmbnews/about/', 'about'],
+    ['Editorial standards', '/fmbnews/about/#standards', 'standards'],
+    ['Corrections', 'mailto:withlovefmb@gmail.com?subject=FMB%20News%20Correction', 'corrections'],
+    ['Contact', 'mailto:withlovefmb@gmail.com?subject=FMB%20Newsroom%20Inquiry', 'contact'],
+  ];
+  const links = primaryLinks.map(([label, href, key]) => `<a href="${href}"${active === key ? ' aria-current="page"' : ''}>${label}</a>`).join('');
+  const categories = newsCategories.map(([value, label]) => `<a href="/fmbnews/?section=${value}#reports" data-fnc-drawer-category="${value}">${label}</a>`).join('');
+  return `<a class="fnc-skip" href="#main">Skip to the newsroom</a>${ticker(headlines)}<header class="fnc-header"><div class="fnc-shell fnc-header-row"><a class="fnc-brand" href="/fmbnews/" aria-label="FMB News home"><img src="${colorLogo}" width="1225" height="265" alt="FMB News, Filipino Media Bulletin"></a><nav class="fnc-nav" id="fncNav" aria-label="FMB News menu"><div class="fnc-nav-head"><div><span>FMB News</span><strong>News menu</strong></div><button class="fnc-nav-close" type="button" data-fnc-menu-close aria-label="Close FMB News menu"><i aria-hidden="true"></i></button></div><div class="fnc-nav-links">${links}</div><section class="fnc-nav-categories" aria-labelledby="fncDrawerCategories"><p id="fncDrawerCategories">News categories</p><div>${categories}</div></section><div class="fnc-nav-meta"><span>Edition <strong>Philippines</strong></span><span>Standard <strong>Evidence first</strong></span></div></nav><div class="fnc-actions"><a class="fnc-submit" href="mailto:withlovefmb@gmail.com?subject=Story%20Submission%20for%20FMB%20News">Submit story</a><button class="fnc-menu" type="button" aria-label="Open FMB News menu" aria-expanded="false" aria-controls="fncNav"><span></span></button></div></div></header><div class="fnc-nav-backdrop" data-fnc-menu-close aria-hidden="true"></div>`;
 }
 
 export function foot() {
-  return `<footer class="fnc-footer"><div class="fnc-signal" aria-hidden="true"></div><div class="fnc-shell fnc-footer-grid"><div class="fnc-footer-brand"><span class="fnc-footer-logo-frame"><img src="${whiteLogo}" width="1225" height="265" alt="FMB News, Filipino Media Bulletin"></span><p>The news that matters. Made clear for Filipinos.</p></div><div><h2>We gather the facts, explain the context, and show why the story matters.</h2><p>Credible evidence, visible sources, original writing, and clear Filipino relevance.</p></div><nav aria-label="FMB News footer navigation"><a href="/fmbnews/">Latest reports</a><a href="/fmbnews/about/">About FMB News</a><a href="/fmbnews/about/#standards">Editorial standards</a><a href="mailto:withlovefmb@gmail.com?subject=FMB%20News%20Correction">Send a correction</a><a href="mailto:withlovefmb@gmail.com">Contact newsroom</a></nav></div><div class="fnc-shell fnc-footer-bottom">© 2026 FMB News. All rights reserved.</div></footer>`;
+  return `<footer class="fnc-footer"><div class="fnc-footer-orbit" aria-hidden="true"><i></i><i></i><i></i></div><div class="fnc-signal" aria-hidden="true"></div><div class="fnc-shell fnc-footer-grid"><div class="fnc-footer-brand"><span class="fnc-footer-logo-frame"><img src="${whiteLogo}" width="1133" height="243" alt="FMB News, Filipino Media Bulletin"></span><p>The news that matters.<br>Made clear for Filipinos.</p></div><div class="fnc-footer-statement"><span>Filipino news explainer</span><h2>We gather the facts, explain the context, and show why the story matters.</h2><p>Credible evidence, visible sources, original writing, and clear Filipino relevance.</p></div><nav aria-label="FMB News footer navigation"><a href="/fmbnews/">Latest reports</a><a href="/fmbnews/about/">About FMB News</a><a href="/fmbnews/about/#standards">Editorial standards</a><a href="mailto:withlovefmb@gmail.com?subject=FMB%20News%20Correction">Send a correction</a><a href="mailto:withlovefmb@gmail.com?subject=FMB%20Newsroom%20Inquiry">Contact newsroom</a></nav></div><div class="fnc-shell fnc-footer-bottom"><span>© 2026 FMB News. All rights reserved.</span><a href="#top">Back to top</a></div></footer>`;
 }
 
 export function runtime() {
-  return `<script>(()=>{const body=document.body,menu=document.querySelector('.fnc-menu');menu?.addEventListener('click',()=>{const open=body.classList.toggle('fnc-menu-open');menu.setAttribute('aria-expanded',String(open))});const search=document.querySelector('[data-fnc-search]'),cards=[...document.querySelectorAll('[data-fnc-card]')],buttons=[...document.querySelectorAll('[data-fnc-filter]')];let active=new URLSearchParams(location.search).get('section')||'all';const apply=()=>{const term=(search?.value||'').trim().toLowerCase();cards.forEach(card=>{card.hidden=!((active==='all'||card.dataset.category===active)&&(!term||(card.textContent||'').toLowerCase().includes(term)))});buttons.forEach(button=>button.classList.toggle('is-active',button.dataset.fncFilter===active))};buttons.forEach(button=>button.addEventListener('click',event=>{event.preventDefault();active=button.dataset.fncFilter;apply()}));search?.addEventListener('input',apply);apply();const clocks=[...document.querySelectorAll('[data-pht-time]')];const tick=()=>{const now=new Date(),label=new Intl.DateTimeFormat('en-PH',{timeZone:'Asia/Manila',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}).format(now),iso=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Manila',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now).replace(' ','T')+'+08:00';clocks.forEach(clock=>{clock.textContent=label;clock.setAttribute('datetime',iso)})};tick();setInterval(tick,1000)})();</script>`;
+  return `<script>(()=>{
+    const body=document.body,menu=document.querySelector('.fnc-menu'),nav=document.querySelector('#fncNav'),mobile=matchMedia('(max-width:1080px)');
+    const closeControls=[...document.querySelectorAll('[data-fnc-menu-close]')];
+    const focusable=()=>nav?[...nav.querySelectorAll('a[href],button:not([disabled])')].filter(node=>node.offsetParent!==null):[];
+    const setMenu=open=>{
+      if(!menu||!nav)return;
+      const next=Boolean(open&&mobile.matches);
+      body.classList.toggle('fnc-menu-open',next);
+      body.classList.toggle('fnc-scroll-lock',next);
+      menu.setAttribute('aria-expanded',String(next));
+      menu.setAttribute('aria-label',next?'Close FMB News menu':'Open FMB News menu');
+      nav.setAttribute('aria-hidden',String(mobile.matches&&!next));
+      if(next)requestAnimationFrame(()=>focusable()[0]?.focus());
+    };
+    menu?.addEventListener('click',()=>setMenu(!body.classList.contains('fnc-menu-open')));
+    closeControls.forEach(control=>control.addEventListener('click',()=>{setMenu(false);menu?.focus()}));
+    nav?.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>setMenu(false)));
+    document.addEventListener('keydown',event=>{
+      if(event.key==='Escape'&&body.classList.contains('fnc-menu-open')){setMenu(false);menu?.focus();return}
+      if(event.key!=='Tab'||!body.classList.contains('fnc-menu-open'))return;
+      const nodes=focusable();if(!nodes.length)return;const first=nodes[0],last=nodes[nodes.length-1];
+      if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}
+      else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
+    });
+    const syncMenu=()=>{if(!mobile.matches)setMenu(false);else nav?.setAttribute('aria-hidden',String(!body.classList.contains('fnc-menu-open')))};
+    mobile.addEventListener?.('change',syncMenu);syncMenu();
+
+    const search=document.querySelector('[data-fnc-search]'),cards=[...document.querySelectorAll('[data-fnc-card]')],archiveLinks=[...document.querySelectorAll('[data-fnc-archive-item]')],buttons=[...document.querySelectorAll('[data-fnc-filter]')],archive=document.querySelector('.fnc-archive'),empty=document.querySelector('[data-fnc-empty]'),status=document.querySelector('[data-fnc-filter-status]');
+    const allowed=new Set(['all','national','world','business','technology','culture','environment','health']);
+    let active=new URLSearchParams(location.search).get('section')||'all';if(!allowed.has(active))active='all';
+    const matches=(node,term)=>{const category=node.dataset.category||'national';return(active==='all'||category===active)&&(!term||(node.textContent||'').toLowerCase().includes(term))};
+    const apply=()=>{
+      const term=(search?.value||'').trim().toLowerCase();let shown=0,archiveShown=0;
+      cards.forEach(card=>{card.hidden=!matches(card,term);if(!card.hidden)shown++});
+      archiveLinks.forEach(link=>{link.hidden=!matches(link,term);if(!link.hidden){shown++;archiveShown++}});
+      buttons.forEach(button=>{const selected=button.dataset.fncFilter===active;button.classList.toggle('is-active',selected);button.setAttribute('aria-pressed',String(selected))});
+      if(archive){archive.hidden=archiveShown===0;if((term||active!=='all')&&archiveShown)archive.open=true}
+      if(empty)empty.hidden=shown!==0;if(status){status.textContent=shown===1?'1 report shown':shown+' reports shown';status.setAttribute('aria-live','polite')}
+    };
+    buttons.forEach(button=>button.addEventListener('click',()=>{active=button.dataset.fncFilter||'all';const url=new URL(location.href);if(active==='all')url.searchParams.delete('section');else url.searchParams.set('section',active);history.replaceState({},'',url.pathname+url.search+'#reports');apply()}));
+    search?.addEventListener('input',apply);apply();
+
+    const clocks=[...document.querySelectorAll('[data-pht-time]')];
+    const tick=()=>{const now=new Date(),label=new Intl.DateTimeFormat('en-PH',{timeZone:'Asia/Manila',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}).format(now),iso=new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Manila',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now).replace(' ','T')+'+08:00';clocks.forEach(clock=>{clock.textContent=label;clock.setAttribute('datetime',iso)})};
+    tick();setInterval(tick,1000);
+  })();</script>`;
 }
 
 export function head(title, description, canonical, image = logo, type = 'website') {
@@ -44,16 +108,7 @@ export function landingPage(records) {
   const lead = records[0];
   const visible = records.slice(1, 13);
   const archive = records.slice(13);
-  const filters = [
-    ['all', 'All'],
-    ['national', 'Nation'],
-    ['world', 'World'],
-    ['business', 'Business'],
-    ['technology', 'Tech'],
-    ['culture', 'Life'],
-    ['environment', 'Environment'],
-    ['health', 'Health'],
-  ];
+  const filters = newsCategories;
   const wire = records.slice(0, 6).map((record) => ({ title: record.title, route: record.route }));
   const method = [
     ['01', 'What happened?', 'The verified facts.'],
@@ -62,7 +117,7 @@ export function landingPage(records) {
     ['04', 'What should readers watch next?', 'The decisions, risks, and consequences that may follow.'],
   ];
 
-  return `<!doctype html><html lang="en-PH">${head('FMB News | The News That Matters. Made Clear for Filipinos.', 'FMB News gathers credible facts, adds useful context, and explains why important stories matter to Filipino lives.', 'https://www.francinemariebautista.com/fmbnews/', heroArtwork)}<body id="top" class="fmb-news-clean fmb-news-landing">${shell('latest', wire)}<main id="main"><span id="rundown" hidden></span><span id="philippines" hidden></span><span id="world" hidden></span><span id="culture" hidden></span><section class="fnc-brand-hero" aria-labelledby="fmbNewsHeroTitle"><img class="fnc-brand-hero-media" src="${heroArtwork}" width="1536" height="768" fetchpriority="high" alt=""><div class="fnc-brand-hero-shade" aria-hidden="true"></div><div class="fnc-shell fnc-brand-hero-grid"><div class="fnc-brand-hero-copy"><p class="fnc-brand-hero-kicker">FMB News | Filipino news explainer</p><h1 id="fmbNewsHeroTitle">The news that matters.<span>Made clear for Filipinos.</span></h1><p>We gather credible facts, add useful context, and explain why important stories matter to Filipino lives.</p><div class="fnc-brand-hero-actions"><a href="#reports">Read the latest reports</a><a href="/fmbnews/about/">How FMB News works</a></div></div><ol class="fnc-brand-hero-lens" aria-label="The FMB News reporting lens">${method.map(([number, question]) => `<li><span>${number}</span>${question}</li>`).join('')}</ol></div></section><section class="fnc-hero fnc-lead-desk" aria-labelledby="leadDeskTitle"><div class="fnc-shell"><header class="fnc-lead-desk-head"><div><p class="fnc-kicker">Lead report</p><h2 id="leadDeskTitle">What matters now</h2></div><p>Evidence, context, Filipino relevance, and what comes next.</p></header><article class="fnc-lead" data-category="${lead.category}"><figure class="fnc-lead-media"><img src="${esc(lead.image)}" alt="${esc(lead.alt)}"><figcaption class="fnc-credit">${esc(lead.credit)}</figcaption></figure><div class="fnc-lead-copy"><span class="fnc-top-story">Lead report</span><p class="fnc-kicker">${esc(lead.kicker)}</p><h3>${esc(lead.title)}</h3><p>${esc(lead.description)}</p><div class="fnc-lead-meta"><small>${esc(lead.published)}</small><a class="fnc-read" href="${lead.route}">Read full report</a></div></div></article></div></section><section class="fnc-explainer" id="editorial-standard" aria-labelledby="explainerTitle"><img class="fnc-explainer-watermark" src="${outlineLogo}" width="1133" height="243" alt="" aria-hidden="true"><div class="fnc-shell"><header class="fnc-explainer-head"><p class="fnc-kicker">The FMB News lens</p><h2 id="explainerTitle">Every important story must answer four questions.</h2></header><ol class="fnc-explainer-grid">${method.map(([number, question, answer]) => `<li><span>${number}</span><h3>${question}</h3><p>${answer}</p></li>`).join('')}</ol><a class="fnc-explainer-link" href="/fmbnews/about/#method">Read our editorial method</a></div></section><section class="fnc-tools" aria-label="Search and filter FMB News"><div class="fnc-shell fnc-tools-row"><label class="fnc-search-label"><span class="sr-only">Search FMB News</span><input class="fnc-search" data-fnc-search type="search" placeholder="Search reports, people, places, or topics"></label><div class="fnc-categories">${filters.map(([value, label]) => `<a class="fnc-category" href="#reports" data-fnc-filter="${value}">${label}</a>`).join('')}</div></div></section><section class="fnc-content" id="reports"><div class="fnc-shell"><div class="fnc-section-head"><div><i aria-hidden="true"></i><div><p class="fnc-kicker">Newsroom</p><h2>Latest reports</h2></div></div><p>${records.length} reports accessible</p></div><div class="fnc-grid">${visible.map(card).join('')}</div>${archive.length ? `<details class="fnc-archive"><summary>View ${archive.length} more reports</summary><div class="fnc-archive-list">${archive.map((record) => `<a href="${record.route}">${esc(record.title)}</a>`).join('')}</div></details>` : ''}</div></section></main>${foot()}${runtime()}</body></html>`;
+  return `<!doctype html><html lang="en-PH">${head('FMB News | The News That Matters. Made Clear for Filipinos.', 'FMB News gathers credible facts, adds useful context, and explains why important stories matter to Filipino lives.', 'https://www.francinemariebautista.com/fmbnews/', heroArtwork)}<body id="top" class="fmb-news-clean fmb-news-landing">${shell('latest', wire)}<main id="main"><span id="rundown" hidden></span><span id="philippines" hidden></span><span id="world" hidden></span><span id="culture" hidden></span><section class="fnc-brand-hero" aria-labelledby="fmbNewsHeroTitle"><img class="fnc-brand-hero-media" src="${heroArtwork}" width="1536" height="768" fetchpriority="high" alt=""><div class="fnc-brand-hero-shade" aria-hidden="true"></div><div class="fnc-brand-hero-orbit" aria-hidden="true"><i></i><i></i><i></i><b></b></div><div class="fnc-shell fnc-brand-hero-grid"><div class="fnc-brand-hero-copy"><p class="fnc-brand-hero-kicker">FMB News | Filipino news explainer</p><h1 id="fmbNewsHeroTitle">The news that matters.<span>Made clear for Filipinos.</span></h1><p>We gather credible facts, add useful context, and explain why important stories matter to Filipino lives.</p><div class="fnc-brand-hero-actions"><a href="#reports">Read the latest reports</a><a href="/fmbnews/about/">How FMB News works</a></div><div class="fnc-brand-hero-proof"><span>Philippine edition</span><span>Sources visible</span><span>Evidence first</span></div></div><ol class="fnc-brand-hero-lens" aria-label="The FMB News reporting lens">${method.map(([number, question]) => `<li><span>${number}</span>${question}</li>`).join('')}</ol></div></section><section class="fnc-hero fnc-lead-desk" aria-labelledby="leadDeskTitle"><div class="fnc-shell"><header class="fnc-lead-desk-head"><div><p class="fnc-kicker">Lead report</p><h2 id="leadDeskTitle">What matters now</h2></div><p>Evidence, context, Filipino relevance, and what comes next.</p></header><article class="fnc-lead" data-category="${lead.category}"><figure class="fnc-lead-media"><img src="${esc(lead.image)}" alt="${esc(lead.alt)}"><figcaption class="fnc-credit">${esc(lead.credit)}</figcaption></figure><div class="fnc-lead-copy"><span class="fnc-top-story">Lead report</span><p class="fnc-kicker">${esc(lead.kicker)}</p><h3>${esc(lead.title)}</h3><p>${esc(lead.description)}</p><div class="fnc-lead-meta"><small>${esc(lead.published)}</small><a class="fnc-read" href="${lead.route}">Read full report</a></div></div></article></div></section><section class="fnc-explainer" id="editorial-standard" aria-labelledby="explainerTitle"><img class="fnc-explainer-watermark" src="${outlineLogo}" width="1133" height="243" alt="" aria-hidden="true"><div class="fnc-shell"><header class="fnc-explainer-head"><p class="fnc-kicker">The FMB News lens</p><h2 id="explainerTitle">Every important story must answer four questions.</h2></header><ol class="fnc-explainer-grid">${method.map(([number, question, answer]) => `<li><span>${number}</span><h3>${question}</h3><p>${answer}</p></li>`).join('')}</ol><a class="fnc-explainer-link" href="/fmbnews/about/#method">Read our editorial method</a></div></section><section class="fnc-tools" aria-label="Search and filter FMB News"><div class="fnc-shell fnc-tools-row"><div class="fnc-search-wrap"><label class="fnc-search-label"><span class="sr-only">Search FMB News</span><i aria-hidden="true"></i><input class="fnc-search" data-fnc-search type="search" placeholder="Search reports, people, places, or topics" autocomplete="off"></label><span class="fnc-filter-status" data-fnc-filter-status></span></div><div class="fnc-category-wrap"><p>News categories</p><div class="fnc-categories" aria-label="News categories">${filters.map(([value, label]) => `<button class="fnc-category" type="button" data-fnc-filter="${value}" aria-pressed="false">${label}</button>`).join('')}</div></div></div></section><section class="fnc-content" id="reports"><div class="fnc-shell"><div class="fnc-section-head"><div><i aria-hidden="true"></i><div><p class="fnc-kicker">Newsroom</p><h2>Latest reports</h2></div></div><p>${records.length} reports accessible</p></div><div class="fnc-grid">${visible.map(card).join('')}</div><p class="fnc-no-results" data-fnc-empty hidden>No reports match this search yet. Try another category or search term.</p>${archive.length ? `<details class="fnc-archive"><summary>View ${archive.length} more reports</summary><div class="fnc-archive-list">${archive.map((record) => `<a href="${record.route}" data-fnc-archive-item data-category="${record.category}"><span>${esc(record.kicker)}</span>${esc(record.title)}</a>`).join('')}</div></details>` : ''}</div></section></main>${foot()}${runtime()}</body></html>`;
 }
 
 export function aboutPage() {

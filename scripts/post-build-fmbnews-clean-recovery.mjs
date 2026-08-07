@@ -8,7 +8,19 @@ const dist=path.join(root,'dist');
 const news=path.join(dist,'news');
 const fmb=path.join(dist,'fmbnews');
 function mainLandmark(main){return main.replace(/<main\b([^>]*)>/i,(whole,attrs='')=>{attrs=attrs.replace(/\s+id=(['"])[^'"]*\1/i,'');return `<main id="main"${attrs}>`})}
-function cleanArticle(html,route){const rawMain=html.match(/<main\b[^>]*>[\s\S]*?<\/main>/i)?.[0];if(!rawMain)return html;const main=mainLandmark(rawMain);const title=cap(html,/<title>([\s\S]*?)<\/title>/i)||cap(main,/<h1\b[^>]*>([\s\S]*?)<\/h1>/i);const description=tag(html,/<meta\b[^>]*name=(['"])description\1[^>]*>/i,'content')||cap(main,/<p\b[^>]*class=(['"])[^'"]*\bnc-article-deck\b[^'"]*\1[^>]*>([\s\S]*?)<\/p>/i);const canonical=tag(html,/<link\b[^>]*rel=(['"])canonical\1[^>]*>/i,'href')||`https://www.francinemariebautista.com${route}`;const image=tag(html,/<meta\b[^>]*property=(['"])og:image\1[^>]*>/i,'content')||tag(main,/<img\b[^>]*>/i,'src')||logo;return `<!doctype html><html lang="en-PH">${head(title,description,canonical,image,'article')}<body class="fmb-news-clean fmb-news-article news-story-route">${shell()}${main.replaceAll('href="/news/"','href="/fmbnews/"')}${foot()}${runtime()}</body></html>`}
+function cleanArticle(html,route){
+  const rawMain=html.match(/<main\b[^>]*>[\s\S]*?<\/main>/i)?.[0];
+  if(!rawMain)return html;
+  const brokenCognitaImage='/assets/images/cognita/ads/cognita-brand-banner.webp';
+  const cognitaFallback='/assets/images/news/cognita-filipino-centered-education.svg';
+  const main=mainLandmark(rawMain).replaceAll(brokenCognitaImage,cognitaFallback);
+  const title=cap(html,/<title>([\s\S]*?)<\/title>/i)||cap(main,/<h1\b[^>]*>([\s\S]*?)<\/h1>/i);
+  const description=tag(html,/<meta\b[^>]*name=(['"])description\1[^>]*>/i,'content')||cap(main,/<p\b[^>]*class=(['"])[^'"]*\bnc-article-deck\b[^'"]*\1[^>]*>([\s\S]*?)<\/p>/i);
+  const canonical=tag(html,/<link\b[^>]*rel=(['"])canonical\1[^>]*>/i,'href')||`https://www.francinemariebautista.com${route}`;
+  const rawImage=tag(html,/<meta\b[^>]*property=(['"])og:image\1[^>]*>/i,'content')||tag(main,/<img\b[^>]*>/i,'src')||logo;
+  const image=rawImage.replace(brokenCognitaImage,cognitaFallback);
+  return `<!doctype html><html lang="en-PH">${head(title,description,canonical,image,'article')}<body class="fmb-news-clean fmb-news-article news-story-route">${shell()}${main.replaceAll('href="/news/"','href="/fmbnews/"')}${foot()}${runtime()}</body></html>`;
+}
 await mkdir(path.join(dist,'assets','css'),{recursive:true});
 await writeFile(path.join(dist,'assets','css','fmbnews-clean-v1.css'),await readFile(path.join(root,'apps','withlovefmb','assets','css','fmbnews-clean-v1.css'),'utf8'),'utf8');
 const old=await readFile(path.join(news,'index.html'),'utf8');

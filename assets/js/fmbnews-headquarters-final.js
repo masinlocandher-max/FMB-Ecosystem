@@ -15,7 +15,7 @@
   const revealTargets = [
     ...document.querySelectorAll(
       '.fnc-lead, .fnc-section-head, .fnc-card, .fnc-archive, ' +
-      '.fnc-brand-hero-copy, .fnc-brand-hero-lens, .fnc-lead-desk-head, ' +
+      '.fnc-lead-desk-head, ' +
       '.fnc-explainer-head, .fnc-explainer-grid > li, ' +
       '.nc-article-hero-grid, .nc-story-media, .nc-philippine-stakes, ' +
       '.nc-story-body > h2, .nc-factbox, .nc-pullquote, .nc-reflection, ' +
@@ -37,6 +37,9 @@
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
 
     for (const target of revealTargets) observer.observe(target);
+    window.setTimeout(() => {
+      for (const target of revealTargets) target.classList.add('is-visible');
+    }, 1200);
   }
 
   const focusSurfaces = [
@@ -91,7 +94,7 @@
     if (atmosphere && !reducedMotion) {
       atmosphere.style.transform = `translate3d(0, ${(-ratio * 34).toFixed(2)}px, 0)`;
     }
-    if (brandHeroMedia && !reducedMotion) {
+    if (brandHeroMedia && !reducedMotion && window.innerWidth > 820) {
       const heroOffset = clamp(window.scrollY * 0.035, 0, 42);
       brandHeroMedia.style.transform = `scale(1.035) translate3d(0, ${heroOffset.toFixed(2)}px, 0)`;
     }
