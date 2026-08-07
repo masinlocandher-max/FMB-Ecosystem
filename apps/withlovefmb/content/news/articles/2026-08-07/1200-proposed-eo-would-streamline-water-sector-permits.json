@@ -61,22 +61,24 @@
     }
   ],
   "image": {
-    "kind": "editorial-fallback",
-    "url": "/assets/images/news/fmb-news-editorial-fallback.svg",
-    "sourceUrl": null,
-    "creator": "FMB News",
-    "usageStatus": "The recommended water-infrastructure image was not present as described and its PCO attribution could not be matched to an independently reusable asset; FMB-owned editorial fallback used.",
-    "credit": "FMB News editorial visual",
-    "caption": "An FMB News editorial visual represents this proposed water-governance reform; it is not a photograph of a specific dam, reservoir or government meeting.",
-    "alt": "FMB News editorial graphic for a proposed water-sector permitting reform"
+    "kind": "open-license-photo",
+    "url": "/assets/images/news/2026-08-07/angat-dam.webp",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:AngatDam.jpg",
+    "creator": "Nikbert16",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+    "usageStatus": "Wikimedia Commons file verified as CC BY 3.0; locally hosted crop published with creator, source, and license credit.",
+    "credit": "Photo: Nikbert16 / Wikimedia Commons · CC BY 3.0",
+    "caption": "File photo of Angat Dam, used to illustrate Philippine water infrastructure. It does not depict the proposed executive-order meeting.",
+    "alt": "Angat Dam reservoir surrounded by forested hills in Bulacan"
   },
   "audit": {
     "sourceCheckedAt": "2026-08-07T21:47:05.983+08:00",
-    "photoReferenceUrl": "https://pia.gov.ph/news/pres-marcos-backs-eo-to-streamline-water-sector-permits/",
+    "photoReferenceUrl": "https://commons.wikimedia.org/wiki/File:AngatDam.jpg",
     "notes": [
       "The email's claim that the President had approved the executive order was corrected. The cited government source says the order remains proposed and was targeted for approval before the end of October.",
       "Unsupported claims about finalized timelines and implementing rules were removed.",
-      "The FMB-owned fallback was used because the recommended image description and credit could not be matched to a verifiably reusable asset."
+      "A relevant CC BY 3.0 Angat Dam file photo from Wikimedia Commons is locally hosted with visible creator, source, and license credit."
     ]
   }
 }

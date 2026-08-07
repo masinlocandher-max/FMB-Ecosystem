@@ -81,22 +81,24 @@
     }
   ],
   "image": {
-    "kind": "editorial-fallback",
-    "url": "/assets/images/news/fmb-news-editorial-fallback.svg",
-    "sourceUrl": null,
-    "creator": "FMB News",
-    "credit": "FMB News editorial visual",
-    "usageStatus": "The recommended PNA photograph and credit were confirmed, but the image was not copied into the FMB asset library; FMB-owned editorial fallback used.",
-    "caption": "An FMB News editorial visual represents this extradition report; it is not a photograph of Apollo Quiboloy or a court proceeding.",
-    "alt": "FMB News editorial graphic for a Philippine extradition report"
+    "kind": "public-domain-photo",
+    "url": "/assets/images/news/2026-08-07/apollo-quiboloy-mugshot.webp",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Apollo_Quiboloy_mugshot.jpg",
+    "creator": "Philippine National Police",
+    "license": "Public domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "credit": "Photo: Philippine National Police / Wikimedia Commons · Public domain",
+    "usageStatus": "Philippine National Police image verified as public domain; locally hosted derivative published with source and status credit.",
+    "caption": "Archive Philippine National Police mugshot of Apollo Quiboloy. It does not depict the 2026 extradition request or a court proceeding.",
+    "alt": "Philippine National Police mugshot sheet of Apollo Quiboloy"
   },
   "audit": {
     "sourceCheckedAt": "2026-08-07T01:18:09.941Z",
-    "photoReferenceUrl": "https://www.pna.gov.ph/photos/73182",
+    "photoReferenceUrl": "https://commons.wikimedia.org/wiki/File:Apollo_Quiboloy_mugshot.jpg",
     "notes": [
       "Google redirect links were replaced with direct publisher URLs.",
       "Charges are presented as allegations, and Quiboloy’s denial was added for fairness.",
-      "The recommended PNA photo identity and Avito Dalan credit were confirmed, but the external image was not hotlinked."
+      "A Philippine National Police public-domain mugshot is locally hosted with visible source and status credit."
     ]
   }
 }

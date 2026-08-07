@@ -72,21 +72,23 @@
     }
   ],
   "image": {
-    "kind": "editorial-fallback",
-    "url": "/assets/images/news/fmb-news-editorial-fallback.svg",
-    "sourceUrl": null,
-    "creator": "FMB News",
-    "usageStatus": "The recommended third-party photo was marked reference-only and publication rights were not verified; FMB-owned editorial fallback used.",
-    "credit": "FMB News editorial visual",
-    "caption": "An FMB News editorial visual represents this transport-policy report; it is not a photograph of the event.",
-    "alt": "FMB News editorial graphic for a public transport policy report"
+    "kind": "open-license-photo",
+    "url": "/assets/images/news/2026-08-07/manila-jeepney.webp",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Manila,_Jeepney,_Philippines.jpg",
+    "creator": "Vyacheslav Argenberg",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "usageStatus": "Wikimedia Commons file verified as CC BY 4.0; locally hosted crop published with creator, source, and license credit.",
+    "credit": "Photo: Vyacheslav Argenberg / Wikimedia Commons · CC BY 4.0",
+    "caption": "File photo of a Manila jeepney, used to illustrate public-transport fares. It does not depict the August 2026 policy announcement.",
+    "alt": "A silver passenger jeepney on a Manila street"
   },
   "audit": {
     "sourceCheckedAt": "2026-08-06T23:48:44Z",
-    "photoReferenceUrl": "https://www.philstar.com/headlines/2026/08/07/2547552/dotr-fare-hike-still-suspended-amid-oil-price-hikes",
+    "photoReferenceUrl": "https://commons.wikimedia.org/wiki/File:Manila,_Jeepney,_Philippines.jpg",
     "notes": [
       "Replaced the supplied unsupported ₱1.5 billion allocation claim with verified per-liter subsidy and fee-relief measures.",
-      "Recommended Philstar photograph was not reused because publication rights were not verified."
+      "A relevant CC BY 4.0 Manila jeepney file photo from Wikimedia Commons is locally hosted with visible creator, source, and license credit."
     ]
   }
 }

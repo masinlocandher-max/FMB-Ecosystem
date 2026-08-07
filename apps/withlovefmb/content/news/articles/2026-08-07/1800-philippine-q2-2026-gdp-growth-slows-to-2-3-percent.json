@@ -75,22 +75,24 @@
     }
   ],
   "image": {
-    "kind": "editorial-fallback",
-    "url": "/assets/images/news/fmb-news-editorial-fallback.svg",
-    "sourceUrl": null,
-    "creator": "FMB News",
-    "usageStatus": "The recommended press-conference photograph was identified, but independent republication permission for the PNA image was not confirmed; FMB-owned editorial fallback used.",
-    "credit": "FMB News editorial visual",
-    "caption": "An FMB News editorial visual represents this economic report; it is not a photograph of the government briefing.",
-    "alt": "FMB News editorial graphic for the Philippine second-quarter 2026 GDP report"
+    "kind": "public-domain-photo",
+    "url": "/assets/images/news/2026-08-07/metro-manila-skyline.webp",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bonifacio_Global_City_skyline.jpg",
+    "creator": "PhiliptheNumber1",
+    "license": "CC0 1.0",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "usageStatus": "Wikimedia Commons file verified as CC0 1.0; locally hosted crop published with creator, source, and license credit.",
+    "credit": "Photo: PhiliptheNumber1 / Wikimedia Commons · CC0",
+    "caption": "File photo of the Bonifacio Global City skyline, used to illustrate the Philippine economy. It does not depict the August 7 briefing.",
+    "alt": "Bonifacio Global City skyline viewed across elevated roadways in Metro Manila"
   },
   "audit": {
     "sourceCheckedAt": "2026-08-07T21:47:05.983+08:00",
-    "photoReferenceUrl": "https://www.pna.gov.ph/articles/1281313",
+    "photoReferenceUrl": "https://commons.wikimedia.org/wiki/File:Bonifacio_Global_City_skyline.jpg",
     "notes": [
       "Google redirect URLs were replaced with direct publisher URLs.",
       "The outdated 6% to 7% growth target in the email was corrected to the current 3.5% to 4.5% target supported by the cited reporting.",
-      "The FMB-owned fallback was used because republication rights for the recommended PNA photograph were not independently verified."
+      "A relevant CC0 skyline file photo from Wikimedia Commons is locally hosted with visible creator, source, and license credit."
     ]
   }
 }

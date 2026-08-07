@@ -67,22 +67,24 @@
     }
   ],
   "image": {
-    "kind": "editorial-fallback",
-    "url": "/assets/images/news/fmb-news-editorial-fallback.svg",
-    "sourceUrl": null,
-    "creator": "FMB News",
-    "usageStatus": "No source photograph with verified republication rights was available; FMB-owned editorial fallback used.",
-    "credit": "FMB News editorial visual",
-    "caption": "An FMB News editorial visual represents this earthquake update; it is not a photograph of the epicenter or reported effects.",
-    "alt": "FMB News editorial graphic for an earthquake update off Occidental Mindoro"
+    "kind": "public-domain-photo",
+    "url": "/assets/images/news/2026-08-07/phivolcs-earthquake-exhibit.webp",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:04404jfPhilippine_Institute_of_Volcanology_and_Seismology_Quezon_Cityfvf_01.jpg",
+    "creator": "Judgefloro",
+    "license": "Public domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "usageStatus": "Wikimedia Commons file verified as public domain; locally hosted crop published with creator, source, and status credit.",
+    "credit": "Photo: Judgefloro / Wikimedia Commons · Public domain",
+    "caption": "File photo of a PHIVOLCS earthquake and volcano exhibition in Quezon City. It does not depict the Occidental Mindoro quake or its effects.",
+    "alt": "Earthquake and volcano monitoring exhibition inside a PHIVOLCS facility"
   },
   "audit": {
     "sourceCheckedAt": "2026-08-07T15:00:00+08:00",
-    "photoReferenceUrl": null,
+    "photoReferenceUrl": "https://commons.wikimedia.org/wiki/File:04404jfPhilippine_Institute_of_Volcanology_and_Seismology_Quezon_Cityfvf_01.jpg",
     "notes": [
       "The headline and report use PHIVOLCS' reviewed magnitude 5.4 rather than the initial automatic magnitude 5.8 retained in the bulletin email and source headline.",
       "No unverified casualty or damage claim was added.",
-      "The FMB-owned fallback was used because publication rights for source imagery were not verified."
+      "A relevant public-domain PHIVOLCS file photo from Wikimedia Commons is locally hosted with visible creator, source, and status credit."
     ]
   }
 }
