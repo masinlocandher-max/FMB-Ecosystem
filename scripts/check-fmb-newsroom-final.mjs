@@ -22,13 +22,14 @@ function auditLanding(html,name){
   if(!html.includes('The news that matters.')||!html.includes('Made clear for Filipinos.'))fatal(`${name} is missing the approved newsroom positioning`);
   if(!html.includes('fnc-livebar')||!html.includes('data-pht-time'))fatal(`${name} is missing moving headlines or PHT time`);
   if(!html.includes('Moving headlines'))fatal(`${name} is missing the moving-headlines label`);
-  if(!html.includes('/assets/images/news/fmb-news-purple-network-hero.webp'))fatal(`${name} is missing the supplied network hero`);
   if(!html.includes('/assets/images/news/fmb-news-primary-logo-2026.webp'))fatal(`${name} is missing the supplied FMB News logo`);
   if(!html.includes('/assets/images/news/fmb-news-white-transparent-2026.webp'))fatal(`${name} is missing the supplied white footer identity`);
-  if(!html.includes('/assets/images/news/fmb-news-outline-logo-2026.webp'))fatal(`${name} is missing the supplied outline identity`);
-  if(!html.includes('Every important story must answer four questions'))fatal(`${name} is missing the editorial lens`);
   if(!html.includes('News menu')||!html.includes('News categories'))fatal(`${name} does not distinguish site navigation from news categories`);
   if(!html.includes('data-fnc-menu-close')||!html.includes('aria-controls="fncNav"'))fatal(`${name} is missing accessible menu controls`);
+  if(!html.includes('fnc-identity-band'))fatal(`${name} is missing the compact FMB News identity band`);
+  if(!html.includes('fnc-desk-grid')||!html.includes('fnc-developing')||!html.includes('fnc-briefings'))fatal(`${name} is missing the intentional lead, developing, or briefings columns`);
+  if(!html.includes('fnc-report-columns')||!html.includes('fnc-context'))fatal(`${name} is missing balanced report columns or the context rail`);
+  if(!html.includes('data-fnc-result-card'))fatal(`${name} is missing the complete searchable report index`);
   for(const slug of requiredStories)if(!html.includes(`/news/${slug}/`))fatal(`${name} is missing ${slug}`);
 }
 

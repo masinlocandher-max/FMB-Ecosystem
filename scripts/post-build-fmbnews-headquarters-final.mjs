@@ -32,12 +32,10 @@ await writeFile(
   'utf8',
 );
 
-const finalCss = '<link rel="stylesheet" href="/assets/css/fmbnews-headquarters-final.css?v=20260807-production-polish">';
-const finalJs = '<script src="/assets/js/fmbnews-headquarters-final.js?v=20260807-production-polish" defer></script>';
+const finalCss = '<link rel="stylesheet" href="/assets/css/fmbnews-headquarters-final.css?v=20260807-newsdesk-v4">';
+const finalJs = '<script src="/assets/js/fmbnews-headquarters-final.js?v=20260807-newsdesk-v4" defer></script>';
 const progress = '<div class="fmb-hq-progress" aria-hidden="true"></div>';
 const atmosphere = '<div class="fmb-hq-atmosphere" aria-hidden="true"><i class="fmb-hq-arc fmb-hq-arc--one"></i><i class="fmb-hq-arc fmb-hq-arc--two"></i><i class="fmb-hq-arc fmb-hq-arc--three"></i></div>';
-const segment = '<div class="fmb-hq-segment" aria-hidden="true"></div>';
-const controlStrip = '<div class="fmb-control-strip" aria-label="FMB News network information"><div><span>Philippine time</span><strong data-fmb-hq-clock>--:--:--</strong></div><div><span>Edition</span><strong>Philippines</strong></div><div><span>Sources</span><strong>Visible</strong></div><div><span>Standard</span><strong>Evidence first</strong></div></div>';
 const aboutLink = '<a href="/fmbnews/about/">About</a>';
 
 const editorialLanguage = [
@@ -101,16 +99,7 @@ function addBodyClassAndArchitecture(html) {
 }
 
 function addSectionArchitecture(html) {
-  let next = html;
-  if (next.includes('fmb-news-landing')) {
-    next = next.replace(/(<\/section>\s*)(<section class=["']fnc-tools)/i, `$1${segment}$2`);
-  }
-  next = next.replace(/(<footer class=["']fnc-footer["'][^>]*>)/i, `$1${controlStrip}`);
-  next = next.replace(/(<footer class=["']fnc-footer)/i, `${segment}$1`);
-  if (!next.includes('fmb-control-strip')) {
-    next = next.replace(/<footer\b/i, `${controlStrip}<footer`);
-  }
-  return next;
+  return html;
 }
 
 function addAboutNavigation(html) {
@@ -197,15 +186,19 @@ for (const file of targets) {
   if (!html.includes('fmbnews-headquarters-final.js')) failures.push('final motion system missing');
   if (!html.includes('fmb-hq-universe')) failures.push('visual universe body class missing');
   if (!html.includes('fmb-hq-atmosphere')) failures.push('signal atmosphere missing');
-  if (!isRedirect && !html.includes('fmb-control-strip')) failures.push('control room strip missing');
   if (!isRedirect && !html.includes('fmbnews-clean-v1.css')) failures.push('publication stylesheet missing');
   if (/FMB News Center|FMB(?:&|&amp;)CO\. News/.test(html)) failures.push('legacy identity remains');
   if (/Global consequence|Where the Philippines meets the world|The official newsroom of the FMB ecosystem/i.test(html)) failures.push('old positioning language remains');
   if (!isRedirect && html.includes('fmb-news-landing') && !html.includes('Moving headlines')) failures.push('moving headlines label missing');
   if (!isRedirect && html.includes('fmb-news-landing') && !html.includes('data-pht-time')) failures.push('live Philippine time missing');
-  if (!isRedirect && html.includes('fmb-news-landing') && !html.includes('/assets/images/news/fmb-news-purple-network-hero.webp')) failures.push('supplied network hero missing');
   if (!isRedirect && html.includes('fmb-news-landing') && !html.includes('The news that matters.')) failures.push('FMB News positioning missing');
-  if (!isRedirect && html.includes('fmb-news-landing') && !html.includes('Every important story must answer four questions')) failures.push('four-question explainer missing');
+  if (!isRedirect && html.includes('fmb-news-landing') && !html.includes('fnc-identity-band')) failures.push('compact identity band missing');
+  if (!isRedirect && html.includes('fmb-news-landing') && !html.includes('fnc-desk-grid')) failures.push('intentional front desk grid missing');
+  if (!isRedirect && html.includes('fmb-news-landing') && !html.includes('fnc-developing')) failures.push('developing stories column missing');
+  if (!isRedirect && html.includes('fmb-news-landing') && !html.includes('fnc-briefings')) failures.push('latest briefings rail missing');
+  if (!isRedirect && html.includes('fmb-news-landing') && !html.includes('fnc-report-columns')) failures.push('balanced report columns missing');
+  if (!isRedirect && html.includes('fmb-news-landing') && !html.includes('data-fnc-result-card')) failures.push('complete searchable report index missing');
+  if (!isRedirect && html.includes('fmb-news-landing') && !html.includes('fmb-news-white-transparent-2026.webp')) failures.push('white transparent footer logo missing');
   if (!isRedirect && html.includes('news-story-route') && !html.includes('Why this matters to Filipinos')) failures.push('Filipino relevance module missing');
   if (!isRedirect && relative.endsWith('/about/index.html')) {
     if (!html.includes('fmbnews-about.css')) failures.push('about page stylesheet missing');

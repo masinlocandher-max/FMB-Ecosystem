@@ -10,12 +10,11 @@
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
   const atmosphere = document.querySelector('.fmb-hq-atmosphere');
   const progress = document.querySelector('.fmb-hq-progress');
-  const brandHeroMedia = document.querySelector('.fnc-brand-hero-media');
 
   const revealTargets = [
     ...document.querySelectorAll(
-      '.fnc-lead, .fnc-section-head, .fnc-card, .fnc-archive, ' +
-      '.fnc-lead-desk-head, ' +
+      '.fnc-identity-grid, .fnc-desk-lead, .fnc-developing, .fnc-briefings, ' +
+      '.fnc-section-head, .fnc-report-card, .fnc-context, .fnc-archive, ' +
       '.fnc-explainer-head, .fnc-explainer-grid > li, ' +
       '.nc-article-hero-grid, .nc-story-media, .nc-philippine-stakes, ' +
       '.nc-story-body > h2, .nc-factbox, .nc-pullquote, .nc-reflection, ' +
@@ -43,7 +42,7 @@
   }
 
   const focusSurfaces = [
-    ...document.querySelectorAll('.fnc-lead, .fnc-card figure, .nc-story-media figure'),
+    ...document.querySelectorAll('.fnc-desk-lead-media figure, .fnc-support-story figure, .fnc-report-card figure, .nc-story-media figure'),
   ];
 
   for (const surface of focusSurfaces) {
@@ -94,10 +93,6 @@
     if (atmosphere && !reducedMotion) {
       atmosphere.style.transform = `translate3d(0, ${(-ratio * 34).toFixed(2)}px, 0)`;
     }
-    if (brandHeroMedia && !reducedMotion && window.innerWidth > 820) {
-      const heroOffset = clamp(window.scrollY * 0.035, 0, 42);
-      brandHeroMedia.style.transform = `scale(1.035) translate3d(0, ${heroOffset.toFixed(2)}px, 0)`;
-    }
   };
 
   const queueScene = () => {
@@ -111,7 +106,7 @@
 
   const headlineTargets = [
     ...document.querySelectorAll(
-      '.fnc-brand-hero h1, .fnc-lead h3, .fnc-section-head h2, .fnc-card-copy h3, ' +
+      '.fnc-identity-grid h1, .fnc-desk-lead h2, .fnc-section-head h2, .fnc-report-copy h3, ' +
       '.nc-article-hero h1, .nc-story-body h2, .nc-next h2'
     ),
   ];
