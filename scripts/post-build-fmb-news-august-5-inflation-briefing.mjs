@@ -65,10 +65,13 @@ let landing = await readFile(landingPath, 'utf8');
 if (!landing.includes(href)) {
   const marker = '<div class="nc-rundown-head">';
   const first = landing.indexOf('<article class="nc-rundown-story"', landing.indexOf(marker));
-  if (first < 0) throw new Error('FMB News insertion point not found');
-  const card = `<article class="nc-rundown-story" data-category="${story.category}"><a href="${href}"><span class="nc-rundown-number">10:55</span><figure class="news-visual"><img src="${story.image}" width="1200" height="630" loading="lazy" decoding="async" alt="${esc(story.alt)}"><figcaption>${esc(story.credit)}</figcaption></figure><div><p>${esc(story.kicker)}</p><h3>${esc(story.title)}</h3><span>${story.read}</span></div></a></article>`;
-  landing = `${landing.slice(0, first)}${card}${landing.slice(first)}`;
-  landing = landing.replace('<div class="nc-wire-track">', `<div class="nc-wire-track"><span>${esc(story.title)}</span>`);
+  if (first < 0) {
+    console.log('Skipped obsolete inflation landing insertion; route-based recovery will collect the published report.');
+  } else {
+    const card = `<article class="nc-rundown-story" data-category="${story.category}"><a href="${href}"><span class="nc-rundown-number">10:55</span><figure class="news-visual"><img src="${story.image}" width="1200" height="630" loading="lazy" decoding="async" alt="${esc(story.alt)}"><figcaption>${esc(story.credit)}</figcaption></figure><div><p>${esc(story.kicker)}</p><h3>${esc(story.title)}</h3><span>${story.read}</span></div></a></article>`;
+    landing = `${landing.slice(0, first)}${card}${landing.slice(first)}`;
+    landing = landing.replace('<div class="nc-wire-track">', `<div class="nc-wire-track"><span>${esc(story.title)}</span>`);
+  }
 }
 landing = landing.replace(/<time(?: data-news-updated)?>(?:Updated )?[^<]*<\/time>/, `<time data-news-updated>Updated ${story.publishedLabel}</time>`);
 await writeFile(landingPath, landing, 'utf8');

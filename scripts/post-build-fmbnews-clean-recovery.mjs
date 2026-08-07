@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { cap, tag, walk, priority, priorityRecords, landingRecords, merge, logo } from './fmbnews-clean-lib.mjs';
+import { cap, tag, walk, priority, priorityRecords, articleRecords, landingRecords, merge, logo } from './fmbnews-clean-lib.mjs';
 import { shell, foot, runtime, head, landingPage, aboutPage, redirectPage } from './fmbnews-clean-render.mjs';
 
 const root=path.resolve(new URL('..',import.meta.url).pathname);
@@ -12,10 +12,10 @@ function cleanArticle(html,route){const rawMain=html.match(/<main\b[^>]*>[\s\S]*
 await mkdir(path.join(dist,'assets','css'),{recursive:true});
 await writeFile(path.join(dist,'assets','css','fmbnews-clean-v1.css'),await readFile(path.join(root,'apps','withlovefmb','assets','css','fmbnews-clean-v1.css'),'utf8'),'utf8');
 const old=await readFile(path.join(news,'index.html'),'utf8');
-const records=merge(await priorityRecords(news),landingRecords(old));
+const records=merge(await priorityRecords(news),merge(await articleRecords(news),landingRecords(old)));
 if(records.length<6)throw new Error('FMB News recovery could not find the August 6 reports.');
 await mkdir(fmb,{recursive:true});
-const landing=landingPage(records);
+const landing=landingPage(records).replace('<span id="rundown" hidden></span>', '<span id="rundown" hidden></span><span id="latest-reports" hidden></span>');
 await writeFile(path.join(fmb,'index.html'),landing,'utf8');
 await mkdir(path.join(fmb,'about'),{recursive:true});
 await writeFile(path.join(fmb,'about','index.html'),aboutPage(),'utf8');

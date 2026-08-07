@@ -10,10 +10,13 @@
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
   const atmosphere = document.querySelector('.fmb-hq-atmosphere');
   const progress = document.querySelector('.fmb-hq-progress');
+  const brandHeroMedia = document.querySelector('.fnc-brand-hero-media');
 
   const revealTargets = [
     ...document.querySelectorAll(
       '.fnc-lead, .fnc-section-head, .fnc-card, .fnc-archive, ' +
+      '.fnc-brand-hero-copy, .fnc-brand-hero-lens, .fnc-lead-desk-head, ' +
+      '.fnc-explainer-head, .fnc-explainer-grid > li, ' +
       '.nc-article-hero-grid, .nc-story-media, .nc-philippine-stakes, ' +
       '.nc-story-body > h2, .nc-factbox, .nc-pullquote, .nc-reflection, ' +
       '.nc-sources, .nc-next, .fnc-footer-grid'
@@ -88,6 +91,10 @@
     if (atmosphere && !reducedMotion) {
       atmosphere.style.transform = `translate3d(0, ${(-ratio * 34).toFixed(2)}px, 0)`;
     }
+    if (brandHeroMedia && !reducedMotion) {
+      const heroOffset = clamp(window.scrollY * 0.035, 0, 42);
+      brandHeroMedia.style.transform = `scale(1.035) translate3d(0, ${heroOffset.toFixed(2)}px, 0)`;
+    }
   };
 
   const queueScene = () => {
@@ -101,7 +108,7 @@
 
   const headlineTargets = [
     ...document.querySelectorAll(
-      '.fnc-lead h1, .fnc-section-head h2, .fnc-card-copy h3, ' +
+      '.fnc-brand-hero h1, .fnc-lead h3, .fnc-section-head h2, .fnc-card-copy h3, ' +
       '.nc-article-hero h1, .nc-story-body h2, .nc-next h2'
     ),
   ];

@@ -8,8 +8,8 @@ const appRoot = path.resolve(scriptDirectory, '..');
 const defaultContentRoot = path.join(appRoot, 'content', 'news', 'articles');
 const canonicalOrigin = 'https://www.francinemariebautista.com';
 const fallbackImage = '/assets/images/news/fmb-news-editorial-fallback.svg';
-const colorLogo = '/assets/images/fmb-approved/fmb-news-logo-color-supplied.webp';
-const whiteLogo = '/assets/images/fmb-approved/fmb-news-logo-white-supplied.webp';
+const colorLogo = '/assets/images/news/fmb-news-primary-logo-2026.webp';
+const whiteLogo = colorLogo;
 const stylesheet = '/assets/css/fmbnews-clean-v1.css?v=20260807-publisher';
 const allowedCategories = new Set([
   'National',
@@ -99,6 +99,18 @@ function validateArticle(raw, file) {
     ));
     return { heading, paragraphs };
   });
+
+  const editorialLens = [
+    ['what happened', (heading) => /^what happened\b/i.test(heading)],
+    ['context', (heading) => /\b(?:context|background)\b/i.test(heading)],
+    ['why this matters', (heading) => /^why (?:this )?matters\b/i.test(heading)],
+    ['what comes next', (heading) => /^(?:what (?:happens|comes) next|what to watch next)\b/i.test(heading)],
+  ];
+  for (const [label, matches] of editorialLens) {
+    if (!sections.some((section) => matches(section.heading))) {
+      throw new Error(`${file}: FMB News editorial lens is missing ${label}`);
+    }
+  }
 
   if (!Array.isArray(raw.sources) || raw.sources.length === 0) throw new Error(`${file}: at least one source is required`);
   const sources = raw.sources.map((source, sourceIndex) => {
@@ -238,11 +250,11 @@ function shell(titles = [], active = 'latest') {
     ['Life', '/news/?section=culture#reports', 'culture'],
     ['About', '/news/about/', 'about'],
   ];
-  return `<a class="fnc-skip" href="#main">Skip to the newsroom</a><div class="fnc-livebar" aria-label="Moving headlines and Philippine time"><div class="fnc-live-label"><i aria-hidden="true"></i>Newsroom wire</div><div class="fnc-ticker"><div class="fnc-ticker-track">${ticker}</div></div><div class="fnc-pht"><span>PHT</span><time data-pht-time>--:-- --</time></div></div><header class="fnc-header"><div class="fnc-shell fnc-header-row"><a class="fnc-brand" href="/news/" aria-label="FMB News home"><img src="${colorLogo}" width="576" height="202" alt="FMB News"></a><nav class="fnc-nav" id="fncNav">${links.map(([label, href, key]) => `<a href="${href}"${active === key ? ' aria-current="page"' : ''}>${label}</a>`).join('')}</nav><div class="fnc-actions"><a class="fnc-submit" href="mailto:withlovefmb@gmail.com?subject=Story%20Submission%20for%20FMB%20News">Submit story</a><button class="fnc-menu" aria-label="Open FMB News menu" aria-expanded="false"><span></span></button></div></div></header>`;
+  return `<a class="fnc-skip" href="#main">Skip to the newsroom</a><div class="fnc-livebar" aria-label="Moving headlines and Philippine time"><div class="fnc-live-label"><i aria-hidden="true"></i>Moving headlines</div><div class="fnc-ticker"><div class="fnc-ticker-track">${ticker}</div></div><div class="fnc-pht"><span>Philippine time</span><time data-pht-time>--:--:--</time></div></div><header class="fnc-header"><div class="fnc-shell fnc-header-row"><a class="fnc-brand" href="/news/" aria-label="FMB News home"><img src="${colorLogo}" width="1225" height="265" alt="FMB News, Filipino Media Bulletin"></a><nav class="fnc-nav" id="fncNav">${links.map(([label, href, key]) => `<a href="${href}"${active === key ? ' aria-current="page"' : ''}>${label}</a>`).join('')}</nav><div class="fnc-actions"><a class="fnc-submit" href="mailto:withlovefmb@gmail.com?subject=Story%20Submission%20for%20FMB%20News">Submit story</a><button class="fnc-menu" aria-label="Open FMB News menu" aria-expanded="false"><span></span></button></div></div></header>`;
 }
 
 function foot() {
-  return `<footer class="fnc-footer" id="editorial-standard"><div class="fnc-signal" aria-hidden="true"></div><div class="fnc-shell fnc-footer-grid"><div class="fnc-footer-brand"><img src="${whiteLogo}" width="575" height="203" alt="FMB News"><p>Credible, independent, and community-centered journalism for Filipinos.</p></div><div><h2>Clear information should travel farther than noise.</h2><p>Verified facts, useful context, and a clear distinction between reporting, uncertainty, and analysis.</p></div><nav><a href="/news/">Latest reports</a><a href="/news/about/">About FMB News</a><a href="/fmbandco/">FMB&amp;CO. Home</a><a href="mailto:withlovefmb@gmail.com">Contact newsroom</a></nav></div><div class="fnc-shell fnc-footer-bottom">© 2026 FMB News. All rights reserved.</div></footer>`;
+  return `<footer class="fnc-footer" id="editorial-standard"><div class="fnc-signal" aria-hidden="true"></div><div class="fnc-shell fnc-footer-grid"><div class="fnc-footer-brand"><span class="fnc-footer-logo-frame"><img src="${whiteLogo}" width="1225" height="265" alt="FMB News, Filipino Media Bulletin"></span><p>The news that matters. Made clear for Filipinos.</p></div><div><h2>We gather the facts, explain the context, and show why the story matters.</h2><p>Credible evidence, visible sources, original writing, and clear Filipino relevance.</p></div><nav><a href="/news/">Latest reports</a><a href="/news/about/">About FMB News</a><a href="/news/about/#standards">Editorial standards</a><a href="mailto:withlovefmb@gmail.com">Contact newsroom</a></nav></div><div class="fnc-shell fnc-footer-bottom">© 2026 FMB News. All rights reserved.</div></footer>`;
 }
 
 function runtime() {
@@ -388,7 +400,17 @@ function articlePage(article, tickerTitles) {
     citation: article.sources.map((source) => source.url),
   };
   const sourceLinks = article.sources.map((source) => `<a href="${esc(source.url)}" target="_blank" rel="noopener noreferrer"><strong>${esc(source.publisher)}</strong>: ${esc(source.title)} <span>(${esc(formatPht(source.publishedAt))})</span></a>`).join('');
-  const sections = article.sections.map((section) => `<section><h2>${esc(section.heading)}</h2>${section.paragraphs.map((paragraph) => `<p>${esc(paragraph)}</p>`).join('')}</section>`).join('');
+  const lensLabel = (heading) => {
+    if (/^what happened\b/i.test(heading)) return 'Verified facts';
+    if (/\b(?:context|background)\b/i.test(heading)) return 'Context';
+    if (/^why (?:this )?matters\b/i.test(heading)) return 'Filipino relevance';
+    if (/^(?:what (?:happens|comes) next|what to watch next)\b/i.test(heading)) return 'What to watch next';
+    return '';
+  };
+  const sections = article.sections.map((section) => {
+    const label = lensLabel(section.heading);
+    return `<section${label ? ` class="nc-editorial-lens-section" data-fmb-lens="${esc(label)}"` : ''}>${label ? `<p class="nc-editorial-lens-label">${esc(label)}</p>` : ''}<h2>${esc(section.heading)}</h2>${section.paragraphs.map((paragraph) => `<p>${esc(paragraph)}</p>`).join('')}</section>`;
+  }).join('');
   return `<!doctype html><html lang="en-PH">${head({ title: `${article.headline} | FMB News`, description: article.deck, canonical, image: article.image.url, type: 'article', publishedAt: article.publishedAt, updatedAt: article.updatedAt, schema })}<body id="top" class="fmb-news-clean fmb-news-article news-story-route">${shell(tickerTitles)}<main id="main"><div class="nc-story-masthead"><div class="wrap"><a class="nc-back-link" href="/news/">Back to headlines</a><span>${esc(formatPht(article.publishedAt))}</span></div></div><header class="nc-article-hero"><div class="wrap"><p class="fnc-kicker">${esc(article.kicker)}</p><h1>${esc(article.headline)}</h1><p class="nc-article-deck">${esc(article.deck)}</p><div class="nc-article-meta"><span>By FMB News Desk</span><span>Published ${esc(formatPht(article.publishedAt))}</span><span>${readingTime(article)} min read</span></div></div></header><section class="nc-story-media"><div class="wrap"><figure><img src="${esc(article.image.url)}" alt="${esc(article.image.alt)}" fetchpriority="high" decoding="async"><span class="fmb-photo-credit">${esc(article.image.credit)}</span><figcaption>${esc(article.image.caption)} ${esc(article.image.credit)}</figcaption></figure></div></section><article class="nc-article"><div class="wrap nc-article-layout"><div class="nc-story-body"><div class="nc-factbox"><p><strong>Editorial standard:</strong> Sources are listed below. Verified reporting, attributed claims, uncertainty, and analysis remain distinct.</p></div>${sections}<section class="nc-sources"><h2>Sources and public record</h2>${sourceLinks}</section></div></div></article></main>${foot()}${runtime()}</body></html>`;
 }
 

@@ -97,9 +97,12 @@ await writeFile(path.join(newsRoot, slug, 'index.html'), article, 'utf8');
 let landing = await readFile(landingPath, 'utf8');
 if (!landing.includes(href)) {
   const marker = landing.indexOf('<article class="nc-rundown-story"');
-  if (marker < 0) throw new Error('FMB News landing insertion point missing');
-  const card = `<article class="nc-rundown-story" data-category="health"><a href="${href}"><span class="nc-rundown-number">1PM</span><figure class="news-visual"><img src="${imagePath}" width="1200" height="675" loading="lazy" alt="Measles-rubella vaccination campaign"><figcaption>Editorial illustration by FMB News.</figcaption></figure><div><p>Public Health · Child protection</p><h3>${esc(title)}</h3><span>8 min read</span></div></a></article>`;
-  landing = `${landing.slice(0,marker)}${card}${landing.slice(marker)}`;
+  if (marker < 0) {
+    console.log('Skipped obsolete 1PM landing insertion; route-based recovery will collect the published report.');
+  } else {
+    const card = `<article class="nc-rundown-story" data-category="health"><a href="${href}"><span class="nc-rundown-number">1PM</span><figure class="news-visual"><img src="${imagePath}" width="1200" height="675" loading="lazy" alt="Measles-rubella vaccination campaign"><figcaption>Editorial illustration by FMB News.</figcaption></figure><div><p>Public Health · Child protection</p><h3>${esc(title)}</h3><span>8 min read</span></div></a></article>`;
+    landing = `${landing.slice(0,marker)}${card}${landing.slice(marker)}`;
+  }
 }
 landing = landing.replace(/<time(?: data-news-updated)?>(?:Updated )?[^<]*<\/time>/, `<time data-news-updated>Updated ${label}</time>`);
 await writeFile(landingPath, landing, 'utf8');

@@ -6,7 +6,9 @@ const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptDirectory, '..');
 const distRoot = path.join(repositoryRoot, 'dist');
 
-await import('./post-build-fmb-news-august-6-homepage-visibility.mjs');
+// The release builder runs this audit once before the final newsroom recovery.
+// Preserve legacy fragment contracts at that early checkpoint, but never invoke
+// the feed publisher here: a link audit must not replace the finished newsroom.
 if (globalThis.__FMB_BUILD_RELEASE_INNER__) {
   const landingPath = path.join(distRoot, 'news', 'index.html');
   let landing = await readFile(landingPath, 'utf8');
@@ -16,9 +18,6 @@ if (globalThis.__FMB_BUILD_RELEASE_INNER__) {
     landing = landing.replace(/<main\b[^>]*>/i, (main) => `${main}${missingAnchors.map((anchor) => `<span id="${anchor}" hidden></span>`).join('')}`);
     await writeFile(landingPath, landing, 'utf8');
   }
-} else {
-  const { publishNewsFeed } = await import('../apps/withlovefmb/scripts/publish-news-feed.mjs');
-  await publishNewsFeed({ distRoot });
 }
 
 const sites = [
