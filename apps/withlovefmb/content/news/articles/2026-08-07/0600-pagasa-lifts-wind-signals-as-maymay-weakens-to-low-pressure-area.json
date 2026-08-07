@@ -72,21 +72,24 @@
     }
   ],
   "image": {
-    "kind": "editorial-fallback",
-    "url": "/assets/images/news/fmb-news-editorial-fallback.svg",
-    "sourceUrl": null,
-    "creator": "FMB News",
-    "usageStatus": "A direct reusable image file and its publication terms could not be verified; FMB-owned editorial fallback used.",
-    "credit": "FMB News editorial visual",
-    "caption": "An FMB News editorial visual represents this developing weather report; it is not a photograph of the event.",
-    "alt": "FMB News editorial graphic for a developing weather report"
+    "kind": "open-license-photo",
+    "url": "/assets/images/news/2026-08-07/pagasa-guiuan-weather-station.webp",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:The_DOST-PAGASA_Guiuan_Weather_Station_in_2022.jpg",
+    "creator": "Nairb.Idi9",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "usageStatus": "Wikimedia Commons file verified as CC BY-SA 4.0; locally hosted crop published with creator, source, and license credit.",
+    "credit": "Photo: Nairb.Idi9 / Wikimedia Commons · CC BY-SA 4.0",
+    "caption": "Archive photo of the DOST-PAGASA Guiuan Weather Station in 2022. It does not depict Tropical Depression Maymay.",
+    "alt": "Blue-and-white PAGASA weather station tower in Guiuan, Eastern Samar"
   },
   "audit": {
     "sourceCheckedAt": "2026-08-06T23:48:44Z",
-    "photoReferenceUrl": "https://www.pagasa.dost.gov.ph/tropical-cyclone/severe-weather-bulletin",
+    "photoReferenceUrl": "https://commons.wikimedia.org/wiki/File:The_DOST-PAGASA_Guiuan_Weather_Station_in_2022.jpg",
     "notes": [
       "Removed the unverified orange rainfall warning and class-suspension list from the supplied copy.",
-      "Used PAGASA's final bulletin and corroborating GMA reports for status, landfall, and timing."
+      "Used PAGASA's final bulletin and corroborating GMA reports for status, landfall, and timing.",
+      "A relevant CC BY-SA 4.0 PAGASA archive photo from Wikimedia Commons is locally hosted with visible creator, source, and license credit."
     ]
   }
 }

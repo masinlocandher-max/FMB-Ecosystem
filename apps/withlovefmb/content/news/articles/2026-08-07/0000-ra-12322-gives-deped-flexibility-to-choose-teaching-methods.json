@@ -73,22 +73,24 @@
     }
   ],
   "image": {
-    "kind": "editorial-fallback",
-    "url": "/assets/images/news/fmb-news-editorial-fallback.svg",
-    "sourceUrl": null,
-    "creator": "FMB News",
-    "credit": "FMB News editorial visual",
-    "usageStatus": "The supplied source page did not resolve to the described DepEd building photograph; FMB-owned editorial fallback used.",
-    "caption": "An FMB News editorial visual represents this education-policy report; it is not a photograph of the DepEd Central Office.",
-    "alt": "FMB News editorial graphic for a Philippine education-policy report"
+    "kind": "open-license-photo",
+    "url": "/assets/images/news/2026-08-07/deped-office.webp",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:DepEd_SDO_Mandaue_City_(2023-12-07).jpg",
+    "creator": "PaulGorduiz106",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "credit": "Photo: PaulGorduiz106 / Wikimedia Commons · CC BY-SA 4.0",
+    "usageStatus": "Wikimedia Commons file verified as CC BY-SA 4.0; locally hosted crop published with creator, source, and license credit.",
+    "caption": "Archive photo of the DepEd Schools Division Office in Mandaue City. It does not depict the passage or implementation of RA 12322.",
+    "alt": "Facade of the Department of Education Schools Division Office in Mandaue City"
   },
   "audit": {
     "sourceCheckedAt": "2026-08-07T01:18:09.941Z",
-    "photoReferenceUrl": "https://pia.gov.ph/deped-has-more-flexibility-in-determining-effective-teaching-methods/",
+    "photoReferenceUrl": "https://commons.wikimedia.org/wiki/File:DepEd_SDO_Mandaue_City_(2023-12-07).jpg",
     "notes": [
       "Google redirect links were replaced with direct publisher URLs.",
       "The lead was corrected to state that RA 12322 lapsed into law on August 2.",
-      "The supplied source page showed a PCO logo rather than the described DepEd building photograph, so the FMB-owned fallback was used."
+      "A relevant CC BY-SA 4.0 DepEd office archive photo from Wikimedia Commons is locally hosted with visible creator, source, and license credit."
     ]
   }
 }

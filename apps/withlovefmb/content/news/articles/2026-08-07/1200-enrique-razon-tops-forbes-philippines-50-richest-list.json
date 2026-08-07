@@ -68,22 +68,24 @@
     }
   ],
   "image": {
-    "kind": "editorial-fallback",
-    "url": "/assets/images/news/fmb-news-editorial-fallback.svg",
-    "sourceUrl": null,
-    "creator": "FMB News",
-    "usageStatus": "Source photographs were identified but republication rights were not verified; FMB-owned editorial fallback used.",
-    "credit": "FMB News editorial visual",
-    "caption": "An FMB News editorial visual represents this business ranking; it is not a photograph of Enrique Razon Jr. or a Forbes graphic.",
-    "alt": "FMB News editorial graphic for the 2026 Philippines 50 Richest ranking"
+    "kind": "public-domain-photo",
+    "url": "/assets/images/news/2026-08-07/enrique-razon.webp",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ricky_Razon_2023_(cropped).jpg",
+    "creator": "U.S. Embassy in the Philippines",
+    "license": "Public domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "usageStatus": "U.S. Embassy photograph verified as public domain; locally hosted derivative published with source and status credit.",
+    "credit": "Photo: U.S. Embassy Manila / Wikimedia Commons · Public domain",
+    "caption": "Archive portrait of Enrique Razon Jr. from 2023. It is used to identify the subject and is not a Forbes ranking graphic.",
+    "alt": "Archive portrait of Philippine businessman Enrique Razon Jr."
   },
   "audit": {
     "sourceCheckedAt": "2026-08-07T15:00:00+08:00",
-    "photoReferenceUrl": "https://www.philstar.com/headlines/2026/08/07/2547571/razon-tops-forbes-richest-philippines-list",
+    "photoReferenceUrl": "https://commons.wikimedia.org/wiki/File:Ricky_Razon_2023_(cropped).jpg",
     "notes": [
       "The Philippines 50 Richest list was kept distinct from Forbes' March 2026 World Billionaires list, which used a different valuation date and estimate.",
       "The report states Forbes' valuation date and explains that net-worth rankings are estimates.",
-      "The FMB-owned fallback was used because publication rights for source imagery were not verified."
+      "A U.S. Embassy public-domain archive portrait is locally hosted with visible source and status credit."
     ]
   }
 }

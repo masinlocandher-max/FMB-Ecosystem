@@ -80,23 +80,25 @@
     }
   ],
   "image": {
-    "kind": "editorial-fallback",
-    "url": "/assets/images/news/fmb-news-editorial-fallback.svg",
-    "sourceUrl": null,
-    "creator": "FMB News",
-    "usageStatus": "The recommended flood-response photograph was identified, but independent republication permission for the PNA image was not confirmed; FMB-owned editorial fallback used.",
-    "credit": "FMB News editorial visual",
-    "caption": "An FMB News editorial visual represents this severe-weather report; it is not a photograph of the affected communities or evacuation operations.",
-    "alt": "FMB News editorial graphic for severe weather affecting Philippine communities"
+    "kind": "open-license-photo",
+    "url": "/assets/images/news/2026-08-07/flood-response.webp",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Flood_Rescue_Operation_(52461501731).jpg",
+    "creator": "Bro. Jeffrey Pioquinto, SJ",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+    "usageStatus": "Wikimedia Commons file verified as CC BY 2.0; locally hosted crop published with creator, source, and license credit.",
+    "credit": "Photo: Bro. Jeffrey Pioquinto, SJ / Wikimedia Commons · CC BY 2.0",
+    "caption": "File photo of a flood rescue operation in the Philippines. It does not depict the August 7, 2026 affected communities.",
+    "alt": "Responders and residents during a flood rescue operation in a Philippine neighborhood"
   },
   "audit": {
     "sourceCheckedAt": "2026-08-07T21:47:05.983+08:00",
-    "photoReferenceUrl": "https://www.pna.gov.ph/articles/1281311",
+    "photoReferenceUrl": "https://commons.wikimedia.org/wiki/File:Flood_Rescue_Operation_(52461501731).jpg",
     "notes": [
       "Google redirect URLs were replaced with direct publisher URLs.",
       "The email's 39,812-family figure was corrected to 39,879 families and 132,956 people.",
       "Evacuation data was corrected to 6,215 people from 2,021 families in 61 evacuation centers, and the affected regions were corrected to the six regions listed by OCD.",
-      "The FMB-owned fallback was used because republication rights for the recommended PNA photograph were not independently verified."
+      "A relevant CC BY 2.0 file photo from Wikimedia Commons is locally hosted with visible creator, source, and license credit."
     ]
   }
 }

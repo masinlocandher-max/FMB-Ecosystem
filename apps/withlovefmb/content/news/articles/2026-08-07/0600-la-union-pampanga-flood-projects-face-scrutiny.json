@@ -67,21 +67,23 @@
     }
   ],
   "image": {
-    "kind": "editorial-fallback",
-    "url": "/assets/images/news/fmb-news-editorial-fallback.svg",
-    "sourceUrl": null,
-    "creator": "FMB News",
-    "usageStatus": "The recommended third-party map was marked reference-only and publication rights were not verified; FMB-owned editorial fallback used.",
-    "credit": "FMB News editorial visual",
-    "caption": "An FMB News editorial visual represents this public-works accountability report; it is not a project map or site photograph.",
-    "alt": "FMB News editorial graphic for a flood-control accountability report"
+    "kind": "open-license-photo",
+    "url": "/assets/images/news/2026-08-07/pampanga-flood-control.webp",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Jf6393Santa_Barbara,_Bacolor_Flood,_Pampanga_Bridgefvf_05.JPG",
+    "creator": "Judgefloro",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "usageStatus": "Wikimedia Commons file verified as CC BY-SA 4.0; locally hosted crop published with creator, source, and license credit.",
+    "credit": "Photo: Judgefloro / Wikimedia Commons · CC BY-SA 4.0",
+    "caption": "File photo of a flood-control landscape in Bacolor, Pampanga. It does not identify any specific project named in the complaint.",
+    "alt": "Flood-control landscape and waterways in Bacolor, Pampanga"
   },
   "audit": {
     "sourceCheckedAt": "2026-08-06T23:48:44Z",
-    "photoReferenceUrl": "https://www.philstar.com/headlines/2026/08/07/2547558/p11-billion-la-union-pampanga-flood-projects-flagged",
+    "photoReferenceUrl": "https://commons.wikimedia.org/wiki/File:Jf6393Santa_Barbara,_Bacolor_Flood,_Pampanga_Bridgefvf_05.JPG",
     "notes": [
       "Reframed allegations as allegations and added the dismissal of the complainant's earlier case for balance.",
-      "Recommended third-party map was not reused because publication rights were not verified."
+      "A relevant CC BY-SA 4.0 Pampanga file photo from Wikimedia Commons is locally hosted with visible creator, source, and license credit."
     ]
   }
 }

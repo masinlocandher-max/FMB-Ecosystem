@@ -74,23 +74,25 @@
     }
   ],
   "image": {
-    "kind": "editorial-fallback",
-    "url": "/assets/images/news/fmb-news-editorial-fallback.svg",
-    "sourceUrl": null,
-    "creator": "FMB News",
-    "usageStatus": "The recommended DFA building photograph was identified, but independent republication permission for the PNA image was not confirmed; FMB-owned editorial fallback used.",
-    "credit": "FMB News editorial visual",
-    "caption": "An FMB News editorial visual represents this ASEAN diplomacy report; it is not a photograph of Aung San Suu Kyi, the DFA building or an ASEAN meeting.",
-    "alt": "FMB News editorial graphic for an ASEAN statement on Myanmar"
+    "kind": "public-domain-photo",
+    "url": "/assets/images/news/2026-08-07/aung-san-suu-kyi.webp",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:President_Obama_and_Aung_San_Suu_Kyi_Address_the_Media_(15601562138).jpg",
+    "creator": "U.S. Department of State",
+    "license": "Public domain",
+    "licenseUrl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "usageStatus": "U.S. Department of State photograph verified as public domain; locally hosted crop published with source and status credit.",
+    "credit": "Photo: U.S. Department of State / Wikimedia Commons · Public domain",
+    "caption": "Archive photo of Aung San Suu Kyi speaking beside U.S. President Barack Obama in 2014. It does not depict the 2026 ASEAN statement.",
+    "alt": "Aung San Suu Kyi and Barack Obama speaking at separate lecterns in 2014"
   },
   "audit": {
     "sourceCheckedAt": "2026-08-07T21:47:05.983+08:00",
-    "photoReferenceUrl": "https://www.pna.gov.ph/articles/1281344",
+    "photoReferenceUrl": "https://commons.wikimedia.org/wiki/File:President_Obama_and_Aung_San_Suu_Kyi_Address_the_Media_(15601562138).jpg",
     "notes": [
       "Google redirect URLs were replaced with direct publisher URLs.",
       "The email's description of a joint DFA statement was corrected to identify it accurately as a statement by the Philippines in its role as ASEAN chair.",
       "Unsupported claims about a scheduled Manila ministerial meeting and guaranteed humanitarian delivery were removed.",
-      "The FMB-owned fallback was used because republication rights for the recommended PNA photograph were not independently verified."
+      "A relevant U.S. Department of State public-domain archive photo is locally hosted with visible source and status credit."
     ]
   }
 }

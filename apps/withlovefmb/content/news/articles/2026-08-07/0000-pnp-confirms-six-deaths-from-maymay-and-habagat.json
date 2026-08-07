@@ -73,22 +73,24 @@
     }
   ],
   "image": {
-    "kind": "editorial-fallback",
-    "url": "/assets/images/news/fmb-news-editorial-fallback.svg",
-    "sourceUrl": null,
-    "creator": "FMB News",
-    "credit": "FMB News editorial visual",
-    "usageStatus": "The recommended PNA photograph and credit were confirmed, but the image was not copied into the FMB asset library; FMB-owned editorial fallback used.",
-    "caption": "An FMB News editorial visual represents this weather-casualty report; it is not a photograph of the victims, affected communities, or the police briefing.",
-    "alt": "FMB News editorial graphic for a severe-weather casualty report"
+    "kind": "open-license-photo",
+    "url": "/assets/images/news/2026-08-07/storm-rescue-operation.webp",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Rescue_Operation_-_Tropical_Storm_Nalgae_(52461503146).jpg",
+    "creator": "Bro. Jeffrey Pioquinto, SJ",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+    "credit": "Photo: Bro. Jeffrey Pioquinto, SJ / Wikimedia Commons · CC BY 2.0",
+    "usageStatus": "Wikimedia Commons file verified as CC BY 2.0; locally hosted crop published with creator, source, and license credit.",
+    "caption": "Archive photo from a rescue operation during Tropical Storm Nalgae. It does not depict the reported victims or the August 2026 police briefing.",
+    "alt": "A woman carrying a baby during a storm rescue operation in the Philippines"
   },
   "audit": {
     "sourceCheckedAt": "2026-08-07T01:18:09.941Z",
-    "photoReferenceUrl": "https://www.pna.gov.ph/articles/1281266",
+    "photoReferenceUrl": "https://commons.wikimedia.org/wiki/File:Rescue_Operation_-_Tropical_Storm_Nalgae_(52461503146).jpg",
     "notes": [
       "Google redirect links were replaced with direct publisher URLs.",
       "The post-midnight PAGASA status was added so the archived report does not present Maymay as an active tropical cyclone.",
-      "The recommended PNA photo identity and Lloyd Caliwan credit were confirmed, but the external image was not hotlinked."
+      "A relevant CC BY 2.0 rescue archive photo from Wikimedia Commons is locally hosted with visible creator, source, and license credit."
     ]
   }
 }

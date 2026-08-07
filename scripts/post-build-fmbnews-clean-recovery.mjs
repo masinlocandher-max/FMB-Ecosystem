@@ -1,6 +1,6 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { cap, tag, walk, priority, priorityRecords, articleRecords, landingRecords, merge, chronological, logo } from './fmbnews-clean-lib.mjs';
+import { cap, tag, walk, articleRecords, landingRecords, merge, chronological, assertChronological, logo } from './fmbnews-clean-lib.mjs';
 import { shell, foot, runtime, head, landingPage, aboutPage, redirectPage } from './fmbnews-clean-render.mjs';
 
 const root=path.resolve(new URL('..',import.meta.url).pathname);
@@ -19,13 +19,14 @@ function cleanArticle(html,route){
   const canonical=tag(html,/<link\b[^>]*rel=(['"])canonical\1[^>]*>/i,'href')||`https://www.francinemariebautista.com${route}`;
   const rawImage=tag(html,/<meta\b[^>]*property=(['"])og:image\1[^>]*>/i,'content')||tag(main,/<img\b[^>]*>/i,'src')||logo;
   const image=rawImage.replace(brokenCognitaImage,cognitaFallback);
-  return `<!doctype html><html lang="en-PH">${head(title,description,canonical,image,'article')}<body class="fmb-news-clean fmb-news-article news-story-route">${shell()}${main.replaceAll('href="/news/"','href="/fmbnews/"')}${foot()}${runtime()}</body></html>`;
+  return `<!doctype html><html lang="en-PH">${head(title,description,canonical,image,'article')}<body id="top" class="fmb-news-clean fmb-news-article news-story-route">${shell()}${main.replaceAll('href="/news/"','href="/fmbnews/"')}${foot()}${runtime()}</body></html>`;
 }
 await mkdir(path.join(dist,'assets','css'),{recursive:true});
 await writeFile(path.join(dist,'assets','css','fmbnews-clean-v1.css'),await readFile(path.join(root,'apps','withlovefmb','assets','css','fmbnews-clean-v1.css'),'utf8'),'utf8');
 const old=await readFile(path.join(news,'index.html'),'utf8');
-const records=chronological(merge(await priorityRecords(news),merge(await articleRecords(news),landingRecords(old))));
-if(records.length<6)throw new Error('FMB News recovery could not find the August 6 reports.');
+const records=chronological(merge(landingRecords(old),await articleRecords(news)));
+assertChronological(records,'FMB News clean recovery');
+if(records.length<6)throw new Error('FMB News recovery could not find enough published reports.');
 await mkdir(fmb,{recursive:true});
 const landing=landingPage(records).replace('<span id="rundown" hidden></span>', '<span id="rundown" hidden></span><span id="latest-reports" hidden></span>');
 await writeFile(path.join(fmb,'index.html'),landing,'utf8');
@@ -39,5 +40,5 @@ await writeFile(path.join(news,'about','index.html'),aboutAlias,'utf8');
 let count=0;
 for(const file of await walk(news)){if(file===path.join(news,'index.html')||file===path.join(news,'about','index.html'))continue;const rel=path.relative(news,file).split(path.sep).join('/');if(!rel.endsWith('/index.html'))continue;const route=`/news/${rel.replace(/index\.html$/,'')}`;const before=await readFile(file,'utf8');const after=cleanArticle(before,route);if(after!==before){await writeFile(file,after,'utf8');count++}}
 const final=await readFile(path.join(fmb,'index.html'),'utf8');
-if((final.match(/class="fnc-header"/g)||[]).length!==1||(final.match(/class="fnc-footer"/g)||[]).length!==1||/fmb-shell-header|fmb-shell-footer|fmb-news-livebar|fmb-news-channel-command/.test(final)||!final.includes(priority[0]))throw new Error('FMB News clean recovery validation failed.');
+if((final.match(/class="fnc-header"/g)||[]).length!==1||(final.match(/class="fnc-footer"/g)||[]).length!==1||/fmb-shell-header|fmb-shell-footer|fmb-news-livebar|fmb-news-channel-command/.test(final)||!final.includes(`data-published-at="${records[0].publishedAt}"`))throw new Error('FMB News clean recovery validation failed.');
 console.log(`Recovered FMB News with one canonical newsroom, ${records.length} reports and ${count} clean article pages.`);
