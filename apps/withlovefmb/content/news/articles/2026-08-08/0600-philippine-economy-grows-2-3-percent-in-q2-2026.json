@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-08-0600",
+  "emailSubject": "FMB News | Malacañang Assures Q2 GDP Slowdown Is Temporary | August 8, 2026 | 6:00 AM PHT",
+  "slug": "philippine-economy-grows-2-3-percent-in-q2-2026",
+  "headline": "Philippine Economy Grows 2.3% in Q2 as Construction Slumps",
+  "category": "Business",
+  "kicker": "Philippines · Economy",
+  "deck": "The Philippine economy expanded 2.3% year on year in the second quarter of 2026, its slowest annual pace since 2021, as construction and investment contracted.",
+  "publishedAt": "2026-08-08T06:00:00+08:00",
+  "updatedAt": "2026-08-08T07:11:52+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {
+      "heading": "What happened",
+      "paragraphs": [
+        "The Philippine economy grew 2.3% from a year earlier in the second quarter of 2026, slowing from 2.8% in the first quarter and falling below the 2.8% median forecast in a Reuters poll.",
+        "The result was the country's weakest annual growth rate since 2021. Growth for the first half of 2026 stood at 2.6%."
+      ]
+    },
+    {
+      "heading": "What we know",
+      "paragraphs": [
+        "Construction contracted 14.8% from a year earlier during the quarter. Investment declined 9.2%, its fourth consecutive quarterly contraction, while household spending growth eased to 2.8% from 3.0% in the first quarter.",
+        "The government's revised full-year growth target is 3.5% to 4.5%. The 2.6% first-half result was below the lower end of that range. Inflation averaged 5.0% during the first seven months of 2026, limiting household purchasing power."
+      ]
+    },
+    {
+      "heading": "Government response",
+      "paragraphs": [
+        "Economic Planning Secretary Arsenio Balisacan said the weak result required decisive action while pointing to early signs that activity could improve in the second half. The government expects infrastructure spending to increase as recently approved projects begin.",
+        "The available evidence supports cautious optimism about a possible recovery, but it does not guarantee that the slowdown will be temporary or that the full-year target will be reached."
+      ]
+    },
+    {
+      "heading": "Background",
+      "paragraphs": [
+        "The economy grew 5.5% in the second quarter of 2025, according to the Philippine Statistics Authority. Growth then slowed substantially, reaching 2.8% in the first quarter of 2026 before easing further in the second quarter."
+      ]
+    },
+    {
+      "heading": "Why this matters to Filipinos",
+      "paragraphs": [
+        "Slower growth can mean weaker demand for workers, delayed business expansion, and less momentum for wage and income gains. The contraction in construction also matters because public and private projects support employment, transport, housing, and local supply chains."
+      ]
+    },
+    {
+      "heading": "What remains unclear",
+      "paragraphs": [
+        "The pace at which delayed or newly approved infrastructure projects can begin is still uncertain. It also remains to be seen whether household spending will recover while inflation stays above the government's target."
+      ]
+    },
+    {
+      "heading": "What happens next",
+      "paragraphs": [
+        "The government will monitor project implementation and second-half activity. The Bangko Sentral ng Pilipinas is scheduled to review monetary policy on August 27, when it will weigh weak growth against elevated inflation."
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "publisher": "Reuters",
+      "title": "Philippine economy posts slowest growth in five years in second quarter",
+      "publishedAt": "2026-08-07T10:17:00+08:00",
+      "url": "https://www.reuters.com/world/asia-pacific/philippines-q2-gdp-grows-23-yryr-slower-than-expected-2026-08-07/"
+    },
+    {
+      "publisher": "Philippine Statistics Authority",
+      "title": "GDP Grows by 2.8 Percent in the First Quarter of 2026",
+      "publishedAt": "2026-05-07T00:00:00+08:00",
+      "url": "https://psa.gov.ph/content/gdp-grows-28-percent-first-quarter-2026"
+    },
+    {
+      "publisher": "Philippine Statistics Authority",
+      "title": "GDP Expands by 5.5 Percent in the Second Quarter of 2025",
+      "publishedAt": "2025-08-07T00:00:00+08:00",
+      "url": "https://psa.gov.ph/content/gdp-expands-55-percent-second-quarter-2025"
+    }
+  ],
+  "image": {
+    "kind": "open-license-photo",
+    "url": "/assets/images/news/2026-08-08/makati-city-skyline.svg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Makati_City_Skyline.jpg",
+    "creator": "Lawrence Ruiz",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "usageStatus": "Wikimedia Commons file verified as CC BY-SA 4.0; a locally hosted re-encoded derivative is published with creator, source, license, and adaptation credit.",
+    "credit": "Photo: Lawrence Ruiz / Wikimedia Commons · CC BY-SA 4.0 · Re-encoded",
+    "caption": "Archive photo of the Makati skyline. It illustrates business activity and does not depict the August 2026 GDP briefing.",
+    "alt": "Makati skyline with commercial towers and high-rise buildings"
+  },
+  "audit": {
+    "sourceCheckedAt": "2026-08-08T07:11:52+08:00",
+    "photoReferenceUrl": "https://commons.wikimedia.org/wiki/File:Makati_City_Skyline.jpg",
+    "notes": [
+      "The bulletin's outdated 6% to 7% target, incorrect 2025 comparison, and unsupported construction figure were replaced with verified current data.",
+      "The categorical assurance that the slowdown is temporary was changed to the government's supported position of cautious optimism.",
+      "The recommended PCO/Inquirer image was not used because its reusable publication rights and usable image file could not be independently verified.",
+      "A relevant Makati skyline photograph by Lawrence Ruiz was independently verified on Wikimedia Commons as CC BY-SA 4.0 and is locally hosted with visible creator, source, license, and re-encoding disclosure."
+    ]
+  }
+}
