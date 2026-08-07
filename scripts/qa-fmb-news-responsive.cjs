@@ -121,17 +121,37 @@ const assert = (condition, message) => { if (!condition) fail(message); };
       }
       assert(pageErrors.length === 0, `${name}: page errors: ${pageErrors.join(' | ')}`);
 
-      if (['desktop', 'iphone'].includes(name)) {
+      if (['desktop', 'iphone', 'compact'].includes(name)) {
         await page.screenshot({ path: path.join(output, `${name}-viewport.png`), fullPage: false });
       }
 
       if (width <= 1080) {
         const menu = page.locator('.fnc-menu');
+        assert(await menu.locator('span').count() === 1, `${name}: hamburger icon structure is missing`);
+        const hamburgerPaint = await menu.evaluate((node) => {
+          const top = getComputedStyle(node, '::before');
+          const middle = getComputedStyle(node.querySelector('span'));
+          const bottom = getComputedStyle(node, '::after');
+          return [top, middle, bottom].map((style) => ({
+            width: Number.parseFloat(style.width),
+            height: Number.parseFloat(style.height),
+            color: style.backgroundColor,
+            opacity: Number.parseFloat(style.opacity),
+          }));
+        });
+        assert(
+          hamburgerPaint.every((bar) => bar.width >= 15 && bar.height >= 2 && bar.color !== 'rgba(0, 0, 0, 0)' && bar.opacity > 0),
+          `${name}: hamburger strokes are not visibly painted: ${JSON.stringify(hamburgerPaint)}`,
+        );
+        if (width > 360) assert(await menu.locator('b').isVisible(), `${name}: visible Menu label is missing`);
         await menu.click();
         await page.waitForTimeout(520);
         assert(await menu.getAttribute('aria-expanded') === 'true', `${name}: menu did not open`);
         assert(await page.locator('body').evaluate((body) => body.classList.contains('fnc-menu-open')), `${name}: open menu state missing`);
         assert(await page.locator('#fncNav').evaluate((nav) => getComputedStyle(nav).visibility === 'visible'), `${name}: drawer is not visible`);
+        assert(await page.locator('.fnc-nav-identity img').isVisible(), `${name}: branded drawer identity is missing`);
+        assert(await page.locator('.fnc-nav-links > a:visible').count() === 5, `${name}: primary menu is empty or incomplete`);
+        assert(await page.locator('.fnc-nav-categories a:visible').count() === 8, `${name}: category menu is empty or incomplete`);
         const focusState = await page.evaluate(() => {
           const nav = document.querySelector('#fncNav');
           const close = document.querySelector('.fnc-nav-close');
@@ -149,7 +169,7 @@ const assert = (condition, message) => { if (!condition) fail(message); };
         assert(focusState.inside, `${name}: focus did not enter drawer: ${JSON.stringify(focusState)}`);
         const drawerTargets = await page.locator('#fncNav a:visible,#fncNav button:visible').evaluateAll((nodes) => nodes.map((node) => ({ text: node.textContent.trim() || node.getAttribute('aria-label'), height: node.getBoundingClientRect().height })));
         for (const target of drawerTargets) assert(target.height >= 44, `${name}: drawer target ${target.text} is below 44px`);
-        if (name === 'iphone') await page.screenshot({ path: path.join(output, 'iphone-menu-open.png'), fullPage: false });
+        if (['iphone', 'compact'].includes(name)) await page.screenshot({ path: path.join(output, `${name}-menu-open.png`), fullPage: false });
         await page.keyboard.press('Escape');
         assert(await menu.getAttribute('aria-expanded') === 'false', `${name}: Escape did not close menu`);
         await menu.click();
