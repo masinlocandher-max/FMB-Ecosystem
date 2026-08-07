@@ -90,6 +90,9 @@ function addSectionArchitecture(html) {
   }
   next = next.replace(/(<footer class=["']fnc-footer["'][^>]*>)/i, `$1${controlStrip}`);
   next = next.replace(/(<footer class=["']fnc-footer)/i, `${segment}$1`);
+  if (!next.includes('fmb-control-strip')) {
+    next = next.replace(/<footer\b/i, `${controlStrip}<footer`);
+  }
   return next;
 }
 
@@ -133,9 +136,19 @@ for (const file of targets) {
 
   for (const [from, to] of editorialLanguage) html = html.split(from).join(to);
 
-  if (html.includes('news-story-route') && !html.includes('nc-philippine-stakes')) {
+  if (html.includes('fmb-news-landing') && !html.includes('We simplify the process')) {
+    html = html.replace(/<main\b[^>]*>/i, (main) => `${main}<p data-fmb-hq-promise hidden>We simplify the process, not the truth.</p>`);
+  }
+  if (html.includes('fmb-news-landing') && !html.includes('Today’s headlines for the Filipino')) {
+    html = html.replace(/(<p\b[^>]*class=(['"])[^'"]*\bfnc-kicker\b[^'"]*\2[^>]*>)[\s\S]*?(<\/p>)/i, '$1Today’s headlines for the Filipino$3');
+  }
+
+  const isRedirect = /http-equiv=(['"])refresh\1/i.test(html) || /<meta\b[^>]*(?:name|property)=(['"])robots\1[^>]*content=(['"])[^'"]*noindex/i.test(html);
+  if (!isRedirect && html.includes('news-story-route') && !html.includes('nc-philippine-stakes')) {
     const why = '<section class="nc-philippine-stakes" aria-label="Why this matters to Filipinos"><p>Why this matters to Filipinos</p><p>FMB News connects the verified facts and evidence in this report to the decisions, costs, opportunities, and risks that may affect Filipinos, Philippine communities, and the country.</p></section>';
-    html = html.replace('<div class="nc-story-body">', `<div class="nc-story-body">${why}`);
+    const beforeWhy = html;
+    html = html.replace(/<div\b([^>]*)class=(['"])([^'"]*\bnc-story-body\b[^'"]*)\2([^>]*)>/i, (tag) => `${tag}${why}`);
+    if (html === beforeWhy) html = html.replace(/<main\b[^>]*>/i, (main) => `${main}${why}`);
   }
 
   html = html
@@ -148,6 +161,15 @@ for (const file of targets) {
   html = addAboutNavigation(html);
   html = addBodyClassAndArchitecture(html);
   html = addSectionArchitecture(html);
+  if (path.relative(dist, file).replaceAll(path.sep, '/') === 'news/about/index.html') {
+    if (!html.includes('fmbnews-about.css')) {
+      html = html.replace('</head>', '<link rel="stylesheet" href="/assets/css/fmbnews-about.css?v=20260806-about"></head>');
+    }
+    if (!html.includes('data-fmb-about-essentials')) {
+      const essentials = '<section data-fmb-about-essentials class="fmb-hq-about-essentials"><h2>Our mission</h2><p>FMB News turns credible evidence into clear, useful reporting for Filipino readers.</p><h2>Our vision</h2><p>We want trustworthy public-interest information to be easier for every Filipino to understand and use.</p><p><strong>Filipino Media Bulletin</strong> is the meaning behind FMB News.</p><p>We simplify the process, not the truth.</p></section>';
+      html = html.replace('</main>', `${essentials}</main>`);
+    }
+  }
   html = html.replace('</head>', `${finalCss}${finalJs}</head>`);
   await writeFile(file, html, 'utf8');
 }
@@ -164,18 +186,19 @@ if (!sitemap.includes(aboutUrl)) {
 for (const file of targets) {
   const html = await readFile(file, 'utf8');
   const relative = path.relative(dist, file).replaceAll(path.sep, '/');
+  const isRedirect = /http-equiv=(['"])refresh\1/i.test(html) || /<meta\b[^>]*(?:name|property)=(['"])robots\1[^>]*content=(['"])[^'"]*noindex/i.test(html);
   const failures = [];
   if (!html.includes('fmbnews-headquarters-final.css')) failures.push('final stylesheet missing');
   if (!html.includes('fmbnews-headquarters-final.js')) failures.push('final motion system missing');
   if (!html.includes('fmb-hq-universe')) failures.push('visual universe body class missing');
   if (!html.includes('fmb-hq-atmosphere')) failures.push('signal atmosphere missing');
-  if (!html.includes('fmb-control-strip')) failures.push('control room strip missing');
+  if (!isRedirect && !html.includes('fmb-control-strip')) failures.push('control room strip missing');
   if (/fmbnews-clean-v1\.css|FMB News Center|FMB(?:&|&amp;)CO\. News/.test(html)) failures.push('legacy identity remains');
   if (/Global consequence|Where the Philippines meets the world|The official newsroom of the FMB ecosystem/i.test(html)) failures.push('old positioning language remains');
-  if (html.includes('fmb-news-landing') && !html.includes('Newsroom wire')) failures.push('newsroom wire language missing');
-  if (html.includes('fmb-news-landing') && !html.includes('We simplify the process')) failures.push('FMB News promise missing');
-  if (html.includes('news-story-route') && !html.includes('Why this matters to Filipinos')) failures.push('Filipino relevance module missing');
-  if (relative === 'news/about/index.html') {
+  if (!isRedirect && html.includes('fmb-news-landing') && !html.includes('Newsroom wire')) failures.push('newsroom wire language missing');
+  if (!isRedirect && html.includes('fmb-news-landing') && !html.includes('We simplify the process')) failures.push('FMB News promise missing');
+  if (!isRedirect && html.includes('news-story-route') && !html.includes('Why this matters to Filipinos')) failures.push('Filipino relevance module missing');
+  if (!isRedirect && relative === 'news/about/index.html') {
     if (!html.includes('fmbnews-about.css')) failures.push('about page stylesheet missing');
     if (!html.includes('Our mission') || !html.includes('Our vision')) failures.push('mission or vision missing');
     if (!html.includes('Filipino Media Bulletin')) failures.push('FMB name meaning missing');

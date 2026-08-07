@@ -162,8 +162,16 @@ for (const story of stories) {
 let landing = await readFile(landingPath, 'utf8');
 const latestBriefingHref = '/news/todays-headlines-august-2-2026/';
 const hasLatestBriefing = landing.includes(latestBriefingHref);
+const canUpdateLegacyLanding = landing.includes('<div class="nc-wire-track">')
+  && landing.includes('<div class="nc-rundown-head">')
+  && landing.includes('"itemListElement":[');
+
+if (!canUpdateLegacyLanding) {
+  console.warn('Catch-up edition: legacy landing hooks are absent; the final feed renderer will index the generated reports.');
+}
 
 for (const story of [...stories].reverse()) {
+  if (!canUpdateLegacyLanding) break;
   const href = `/news/${story.slug}/`;
   if (landing.includes(href)) continue;
 

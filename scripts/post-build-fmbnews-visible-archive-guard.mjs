@@ -56,6 +56,7 @@ function routeFrom(html, filePath) {
 
 function articleRecord(html, filePath) {
   if (!/\bnews-story-route\b/i.test(html)) return null;
+  if (/http-equiv=(['"])refresh\1/i.test(html) || /<meta\b[^>]*(?:name|property)=(['"])robots\1[^>]*content=(['"])[^'"]*noindex/i.test(html)) return null;
   const route = routeFrom(html, filePath);
   if (!route) return null;
   const imageTag = html.match(/<img\b[^>]*>/i)?.[0] ?? '';

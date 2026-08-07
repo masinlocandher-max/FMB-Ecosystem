@@ -174,6 +174,9 @@ for (const filePath of targets) {
   html = disableUnifiedRuntime(html);
   html = applyIndependentStyle(html, independentCss);
   html = html.replace(/<script\b[^>]*src=(['"])\/assets\/js\/az-assistant\.js[^'"]*\1[^>]*>\s*<\/script>\s*/gi, '');
+  html = html
+    .replace(/<source\b[^>]*(?:src|srcset)=(['"])[^'"]*(?:fmb-news-official|fmb-news-official-transparent)[^'"]*\1[^>]*>\s*/gi, '')
+    .replace(/<img\b[^>]*src=(['"])[^'"]*(?:fmb-news-official|fmb-news-official-transparent)[^'"]*\1[^>]*>/gi, '<span class="fn7-retired-logo-replacement" aria-hidden="true">FMB NEWS</span>');
   html = cleanTitle(html, landing);
   if (landing) html = addLandingIntro(html);
 

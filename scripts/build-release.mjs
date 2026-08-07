@@ -1,3 +1,5 @@
+globalThis.__FMB_BUILD_RELEASE_INNER__ = true;
+
 const steps = [
   './build-ecosystem.mjs',
   './post-build-entity-copy.mjs',

@@ -91,6 +91,12 @@ for(const file of files){
   if(generic.length){text=text.replace(/\/assets\/images\/fmb\/francine-founder-[^"'\s)]+\.(?:webp|png|jpe?g)/gi,publicPath('portraitFront'));changedReferences+=generic.length;}
   text=normalizeRoutePaths(text,relative);
   if(file.endsWith('.html')){
+    if(relative==='news/index.html'){
+      text=text.replace(
+        /<img\b(?=[^>]*\bdata-fmb-asset=["']logo["'])(?![^>]*\bsrc=)[^>]*>/gi,
+        tag=>tag.replace('<img',`<img src="${publicPath('news')}"`),
+      );
+    }
     text=normalizeDimensions(text);
     let highPriority=false;
     text=text.replace(/<img\b[^>]*fetchpriority=["']high["'][^>]*>/gi,tag=>{
