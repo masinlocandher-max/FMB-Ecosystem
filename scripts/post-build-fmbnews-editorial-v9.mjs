@@ -168,8 +168,10 @@ function aboutBand() {
 }
 
 function landingMain(html, filePath) {
-  const lead = extractLead(html);
-  const stories = extractStories(html);
+  const extractedStories = extractStories(html);
+  const explicitLead = extractLead(html);
+  const lead = explicitLead || extractedStories[0]?.replace(/\bnc-rundown-story\b/, 'nc-lead-broadcast');
+  const stories = explicitLead ? extractedStories : extractedStories.slice(1);
   if (!lead) throw new Error(`Approved FMB News lead story could not be extracted: ${filePath}`);
   if (stories.length < 6) throw new Error(`Approved FMB News report grid needs at least six reports: ${filePath}`);
 

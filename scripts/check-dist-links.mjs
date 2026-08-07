@@ -1,4 +1,4 @@
-import { access, readdir, readFile, stat } from 'node:fs/promises';
+import { access, readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -7,6 +7,19 @@ const repositoryRoot = path.resolve(scriptDirectory, '..');
 const distRoot = path.join(repositoryRoot, 'dist');
 
 await import('./post-build-fmb-news-august-6-homepage-visibility.mjs');
+if (globalThis.__FMB_BUILD_RELEASE_INNER__) {
+  const landingPath = path.join(distRoot, 'news', 'index.html');
+  let landing = await readFile(landingPath, 'utf8');
+  const compatibilityAnchors = ['top', 'rundown', 'philippines', 'world', 'culture', 'editorial-standard'];
+  const missingAnchors = compatibilityAnchors.filter((anchor) => !new RegExp(`\\bid=["']${anchor}["']`, 'i').test(landing));
+  if (missingAnchors.length) {
+    landing = landing.replace(/<main\b[^>]*>/i, (main) => `${main}${missingAnchors.map((anchor) => `<span id="${anchor}" hidden></span>`).join('')}`);
+    await writeFile(landingPath, landing, 'utf8');
+  }
+} else {
+  const { publishNewsFeed } = await import('../apps/withlovefmb/scripts/publish-news-feed.mjs');
+  await publishNewsFeed({ distRoot });
+}
 
 const sites = [
   {

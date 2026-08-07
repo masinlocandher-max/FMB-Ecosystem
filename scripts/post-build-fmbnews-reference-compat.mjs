@@ -63,6 +63,15 @@ for (const file of files) {
     throw new Error(`FMB News reference shared assets were not connected cleanly: ${file}`);
   }
 
+  const currentHeader = html.match(/<header\b[^>]*class=(['"])[^'"]*\bfn13-site-header\b[^'"]*\1[^>]*>[\s\S]*?<\/header>/i)?.[0] || '';
+  if (currentHeader) {
+    const headerToken = '<!-- FMB_NEWS_MASTHEAD_PLACEHOLDER -->';
+    html = html.replace(currentHeader, headerToken)
+      .replace(/<source\b[^>]*(?:src|srcset)=["'][^"']*fmb-news-official-transparent\.webp[^>]*>\s*/gi, '')
+      .replace(/<img\b[^>]*src=["'][^"']*fmb-news-official-transparent\.webp[^>]*>/gi, '<img src="/assets/images/news/fmb-news-editorial-fallback.svg" width="1600" height="900" loading="lazy" decoding="async" alt="FMB News editorial cover">')
+      .replace(headerToken, currentHeader);
+  }
+
   const header = html.match(/<header\b[^>]*class=(['"])[^'"]*\bfn13-site-header\b[^'"]*\1[^>]*>[\s\S]*?<\/header>/i)?.[0] || '';
   if (!header.includes(officialLogo) || !visibleOfficialLogo.test(header)) {
     throw new Error(`FMB News official masthead logo missing after compatibility cleanup: ${file}`);

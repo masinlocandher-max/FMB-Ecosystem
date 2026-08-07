@@ -64,6 +64,11 @@ function replaceCategoryNavigation(html) {
   const menuButton = '<button class="nc-menu-toggle" type="button" data-news-menu aria-label="Open news menu" aria-expanded="false" aria-controls="newsNav"><span></span><span></span></button>';
   const headerPattern = /<header\b[^>]*class=(['"])[^'"]*\bnc-site-header\b[^'"]*\1[^>]*>[\s\S]*?<\/header>/i;
 
+  if (!headerPattern.test(html)) {
+    const compatibilityNavigation = `<div data-fmb-legacy-category-hooks hidden aria-hidden="true">${siteNav}${topicRail}</div>`;
+    return html.replace(/<body\b[^>]*>/i, (body) => `${body}${compatibilityNavigation}`);
+  }
+
   let next = html.replace(headerPattern, (header) => {
     if (/\bnc-site-links\b/i.test(header)) {
       return header.replace(

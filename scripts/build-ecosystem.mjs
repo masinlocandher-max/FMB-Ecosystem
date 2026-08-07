@@ -168,7 +168,16 @@ await Promise.all([
 
 await rm(outputDirectory, { recursive: true, force: true });
 await mkdir(privateSitesDirectory, { recursive: true });
-await cp(personalWebsite, outputDirectory, { recursive: true });
+const personalWebsiteBuildExclusions = new Set(['content', 'dist', 'node_modules']);
+await cp(personalWebsite, outputDirectory, {
+  recursive: true,
+  filter: (source) => {
+    const relativeSource = path.relative(personalWebsite, source);
+    const topLevelName = relativeSource.split(path.sep)[0];
+    return !personalWebsiteBuildExclusions.has(topLevelName)
+      && !['.rsync-tmp', '.DS_Store'].includes(path.basename(source));
+  },
+});
 run('npm', ['run', 'build'], senzWebsite);
 await cp(senzOutput, path.join(privateSitesDirectory, 'senz'), { recursive: true });
 await materializeHomeImages({ outputDirectory });

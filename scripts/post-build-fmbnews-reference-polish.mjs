@@ -284,7 +284,8 @@ for (const filePath of files) {
 
   const original = html;
   const isLanding = /[\\/](?:news|fmbnews)[\\/]index\.html$/i.test(filePath);
-  const isArticle = /\bnews-story-route\b/.test(html);
+  const isRedirect = /http-equiv=(['"])refresh\1/i.test(html) || /<meta\b[^>]*(?:name|property)=(['"])robots\1[^>]*content=(['"])[^'"]*noindex/i.test(html);
+  const isArticle = /\bnews-story-route\b/.test(html) && !isRedirect;
   const searchableBefore = countAttribute(html, 'data-fn9-searchable');
   const storyBodiesBefore = countClass(html, 'nc-story-body');
 

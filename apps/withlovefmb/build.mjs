@@ -6,6 +6,7 @@ const root = path.dirname(fileURLToPath(import.meta.url));
 const output = path.join(root, 'dist');
 const excluded = new Set([
   'build.mjs',
+  'content',
   'dist',
   'node_modules',
   'package-lock.json',
@@ -21,6 +22,7 @@ for (const entry of await readdir(root, { withFileTypes: true })) {
   await cp(path.join(root, entry.name), path.join(output, entry.name), {
     recursive: true,
     force: true,
+    filter: (source) => !['.rsync-tmp', '.DS_Store'].includes(path.basename(source)),
   });
 }
 
@@ -33,7 +35,15 @@ if (!/rel=["']manifest["']/i.test(homeHtml)) {
 
 async function collectHtmlFiles(directory) {
   const files = [];
-  for (const entry of await readdir(directory, { withFileTypes: true })) {
+  let entries;
+  try {
+    entries = await readdir(directory, { withFileTypes: true });
+  } catch (error) {
+    if (error?.code === 'ENOENT') return files;
+    throw error;
+  }
+  for (const entry of entries) {
+    if (entry.name.startsWith('.')) continue;
     const target = path.join(directory, entry.name);
     if (entry.isDirectory()) files.push(...await collectHtmlFiles(target));
     else if (entry.isFile() && entry.name.endsWith('.html')) files.push(target);
@@ -66,6 +76,8 @@ const newsroomTextReplacements = [
   ['Context before noise', 'Reporting with consequence'],
   ['Independent Philippine reporting, clear context, and perspective with responsibility.', 'Independent Philippine journalism with a global field of view.'],
   ['News for Filipinos, with context that explains why every story matters.', 'Independent Philippine journalism with a global field of view.'],
+  ['Why it matters to Filipinos', 'Why this matters'],
+  ['why it matters to Filipinos', 'why this matters'],
   ['Public-interest reporting, source-backed context and clearly labeled perspective.', 'Reporting on the forces shaping public life, institutions, markets, and the country’s future.'],
   ['News, context, and clear explanations of why today’s events matter to Filipinos.', 'Reporting on the forces shaping public life, institutions, markets, and the country’s future.'],
   ['<b>Live</b>', '<b>Newsroom</b>'],
@@ -148,5 +160,8 @@ if (!sitemapXml.includes(mediaArchiveUrl)) {
   sitemapXml = sitemapXml.replace('</urlset>', `${mediaArchiveEntry}</urlset>`);
   await writeFile(sitemapPath, sitemapXml, 'utf8');
 }
+
+const { publishNewsFeed } = await import('./scripts/publish-news-feed.mjs');
+await publishNewsFeed({ distRoot: output });
 
 console.log(`Built and audited ${newsHtmlFiles.length} FMB News pages with a Philippine-centered, globally aware editorial identity and the complete article archive retained.`);
