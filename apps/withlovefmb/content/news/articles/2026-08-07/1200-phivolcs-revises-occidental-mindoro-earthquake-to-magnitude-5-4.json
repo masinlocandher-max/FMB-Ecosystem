@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "fmb-news-2026-08-07-1200-pht",
+  "emailSubject": "FMB News | Magnitude 5.8 Quake Hits Off Occidental Mindoro | August 7, 2026 | 12:00 PM PHT",
+  "slug": "phivolcs-revises-occidental-mindoro-earthquake-to-magnitude-5-4",
+  "headline": "Phivolcs Revises Occidental Mindoro Earthquake to Magnitude 5.4",
+  "category": "National",
+  "kicker": "Occidental Mindoro · Earthquake · Public safety",
+  "deck": "Phivolcs revised the offshore Occidental Mindoro earthquake from an initial magnitude 5.8 to magnitude 5.4 and placed it 13 kilometers southwest of Mamburao.",
+  "publishedAt": "2026-08-07T12:00:00+08:00",
+  "updatedAt": "2026-08-07T21:47:05.983+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {
+      "heading": "What happened",
+      "paragraphs": [
+        "A magnitude 5.4 tectonic earthquake struck offshore near Mamburao, Occidental Mindoro, at 10:38 AM on August 7, 2026. Phivolcs initially measured the event at magnitude 5.8 before revising its parameters.",
+        "The earthquake was felt across parts of Mindoro, Southern Luzon and Metro Manila."
+      ]
+    },
+    {
+      "heading": "What we know",
+      "paragraphs": [
+        "Phivolcs located the revised earthquake 13 kilometers southwest of Mamburao at a depth of 14 kilometers.",
+        "Intensity 5 shaking was reported in Mamburao and several localities in Oriental Mindoro. Lower intensities were recorded in Batangas, Cavite, Laguna, Quezon City and other areas.",
+        "Damage was not expected, but Phivolcs said aftershocks were possible."
+      ]
+    },
+    {
+      "heading": "Background",
+      "paragraphs": [
+        "Earthquake magnitudes and locations can be revised after seismologists receive and analyze additional station data. The initial 5.8 estimate and the later 5.4 measurement refer to the same event, not two separate earthquakes."
+      ]
+    },
+    {
+      "heading": "What remains unclear",
+      "paragraphs": [
+        "Local authorities may continue checking buildings and infrastructure for minor effects. Any confirmed damage or injuries would require separate validation from disaster officials."
+      ]
+    },
+    {
+      "heading": "Why this matters to Filipinos",
+      "paragraphs": [
+        "Clear updates prevent an initial earthquake estimate from circulating as the final measurement. Residents should rely on the latest Phivolcs bulletin and follow local safety instructions during aftershocks."
+      ]
+    },
+    {
+      "heading": "What happens next",
+      "paragraphs": [
+        "Phivolcs will continue recording aftershocks and may issue further information if the event parameters or reported intensities change."
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "publisher": "ABS-CBN News",
+      "title": "Magnitude 5.4 quake hits off Occidental Mindoro, felt in Metro Manila",
+      "publishedAt": "2026-08-07T10:51:00+08:00",
+      "url": "https://www.abs-cbn.com/news/nation/2026/8/7/magnitude-5-8-quake-hits-off-occidental-mindoro-1051"
+    },
+    {
+      "publisher": "Philstar.com",
+      "title": "Magnitude 5.4 Mindoro offshore quake felt in Metro Manila",
+      "publishedAt": "2026-08-07T10:49:00+08:00",
+      "url": "https://www.philstar.com/nation/2026/08/07/2547653/magnitude-54-mindoro-offshore-quake-felt-metro-manila"
+    }
+  ],
+  "image": {
+    "kind": "editorial-fallback",
+    "url": "/assets/images/news/fmb-news-editorial-fallback.svg",
+    "sourceUrl": null,
+    "creator": "FMB News",
+    "usageStatus": "The recommended Phivolcs map was linked through a news page, but its exact reusable file and republication permission were not independently resolved; FMB-owned editorial fallback used.",
+    "credit": "FMB News editorial visual",
+    "caption": "An FMB News editorial visual represents this earthquake update; it is not the Phivolcs epicenter map or a photograph of damage.",
+    "alt": "FMB News editorial graphic for the revised Occidental Mindoro earthquake report"
+  },
+  "audit": {
+    "sourceCheckedAt": "2026-08-07T21:47:05.983+08:00",
+    "photoReferenceUrl": "https://www.abs-cbn.com/news/nation/2026/8/7/magnitude-5-8-quake-hits-off-occidental-mindoro-1051",
+    "notes": [
+      "The article was corrected from the email's initial magnitude 5.8 and 10-kilometer depth to the updated magnitude 5.4, 14-kilometer depth and revised location.",
+      "The initial and revised measurements are explicitly identified as the same earthquake.",
+      "The FMB-owned fallback was used because the recommended map's republication permission and direct reusable asset were not independently verified."
+    ]
+  }
+}
