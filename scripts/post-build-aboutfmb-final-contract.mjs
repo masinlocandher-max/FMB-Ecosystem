@@ -1,4 +1,4 @@
-import { access, readFile, readdir, writeFile } from 'node:fs/promises';
+import { access, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const root = path.resolve(new URL('..', import.meta.url).pathname);
@@ -6,7 +6,9 @@ const dist = path.join(root, 'dist');
 const sourceAbout = path.join(root, 'apps/withlovefmb/aboutfmb/index.html');
 const outputAbout = path.join(dist, 'aboutfmb/index.html');
 const wrongSchool = 'STI College Fairview';
-const verificationCss = '/assets/css/aboutfmb-verification-fixes.css?v=20260808-verify-v1';
+const verificationCss = '/assets/css/aboutfmb-verification-fixes.css?v=20260809-forensic-v2';
+const lifeSpritePublicPath = '/assets/images/fmb-approved/about-life-sprite.webp';
+const lifeSpriteOutput = path.join(dist, lifeSpritePublicPath.replace(/^\//, ''));
 
 async function walk(directory) {
   const files = [];
@@ -72,24 +74,129 @@ for (const file of (await walk(dist)).filter((file) => file.endsWith('.html'))) 
   await writeFile(file, html, 'utf8');
 }
 
+const fullPoemSection = `    <section class="poem-panel" aria-labelledby="poem-title">
+      <div class="poem-layout">
+        <div>
+          <p class="chapter-kicker">This Is Francine</p>
+          <h2 id="poem-title">Before the titles,<br>there was becoming.</h2>
+          <p class="poem-note">The complete personal poem.</p>
+        </div>
+        <div class="poem-lines" data-verified-poem="full">
+          <div class="poem-stanza">
+            <p>I started as a little boy,</p>
+            <p>With a dream so simple and shy.</p>
+            <p>To be a girl, with hopes and joy,</p>
+            <p>Watching the world pass by.</p>
+          </div>
+          <div class="poem-stanza">
+            <p>I liked to sing. I liked to dance.</p>
+            <p>I loved the feel of the stage.</p>
+            <p>Performing gave my heart a chance,</p>
+            <p>To step outside the cage.</p>
+          </div>
+          <div class="poem-stanza">
+            <p>But as I grew, the dream stood still.</p>
+            <p>Life asked me to survive.</p>
+            <p>I learned to work. I learned to build.</p>
+            <p>I learned to stay alive.</p>
+          </div>
+          <div class="poem-stanza">
+            <p>I taught in rooms, with hopes I could</p>
+            <p>Help someone find their way.</p>
+            <p>And when I gave the best I could,</p>
+            <p>Small blessings came each day.</p>
+          </div>
+          <div class="poem-stanza">
+            <p>Then someone heard a prayer I kept,</p>
+            <p>A wish I hid from view.</p>
+            <p>A friend held out a hand so kind,</p>
+            <p>And helped that dream come true.</p>
+          </div>
+          <div class="poem-stanza">
+            <p>I walked a runway, scared but proud,</p>
+            <p>With fear beneath my grin.</p>
+            <p>I did not know if I belonged,</p>
+            <p>But still, I stepped right in.</p>
+          </div>
+          <div class="poem-stanza">
+            <p>I joined again. I lost. I learned.</p>
+            <p>I joined, and lost once more.</p>
+            <p>But every time the page was turned,</p>
+            <p>I came back to the door.</p>
+          </div>
+          <div class="poem-stanza">
+            <p>Until one day, I wore a crown,</p>
+            <p>With tears I could not hide.</p>
+            <p>The little boy I used to know</p>
+            <p>Was standing there with pride.</p>
+          </div>
+          <div class="poem-stanza">
+            <p>Then came a year that broke my heart.</p>
+            <p>I lost the ones I loved.</p>
+            <p>My Mama left. My Father too,</p>
+            <p>Now watching from above.</p>
+          </div>
+          <div class="poem-stanza">
+            <p>Cancer came and took my strength.</p>
+            <p>The sickness shook my soul.</p>
+            <p>There were nights I lost my way.</p>
+            <p>I thought I lost it all.</p>
+          </div>
+          <div class="poem-stanza">
+            <p>But angels came when hope was thin,</p>
+            <p>With gentle hands and care.</p>
+            <p>They held me when I could not stand.</p>
+            <p>They told me they were there.</p>
+          </div>
+          <div class="poem-stanza">
+            <p>Now I am here. I still survive.</p>
+            <p>I still can sing and dance.</p>
+            <p>I still believe in dreams inside.</p>
+            <p>I still believe in chance.</p>
+          </div>
+          <div class="poem-stanza poem-last-stanza">
+            <p>I am not perfect. I am not through.</p>
+            <p>I am still learning how.</p>
+            <p>The little boy once dreamed of her.</p>
+            <p class="poem-final-line">And this… is Francine now.</p>
+          </div>
+        </div>
+      </div>
+    </section>`;
+
 // About FMB is deliberately bespoke. Restore its authored source after generic sitewide transforms,
-// then apply only small verified corrections that should not be lost to future production builds.
+// then apply verified corrections that generic post-build scripts must not erase.
 let about = await readFile(sourceAbout, 'utf8');
+
 if (!about.includes(verificationCss)) {
   about = about.replace('</head>', `  <link rel="stylesheet" href="${verificationCss}">\n</head>`);
 }
 
-// The current poem block contains selected lines from an earlier approved draft, not the complete poem.
-// Make the omission explicit instead of presenting a shortened excerpt as if it were the full work.
-about = about.replace('<div class="poem-lines">', '<div class="poem-lines" data-verified-excerpt="true">');
-about = about.replace(
-  '<p class="poem-turn">That little girl grew up.</p>',
-  '<p class="poem-ellipsis" aria-hidden="true">···</p><p class="poem-turn">That little girl grew up.</p>'
-);
-about = about.replace(
-  'An excerpt from the personal poem created for the About FMB story. It is kept intentionally short here so the page can breathe.',
-  'Selected lines from an earlier approved draft of the personal About FMB poem. The complete poem is not presented here as verified copy.'
-);
+// Preserve the approved real-photo reel while moving its large data URI out of the HTML.
+// This gives the browser one cacheable WebP resource and lets each chapter expose a real lazy-loaded <img>.
+const spriteMatch = about.match(/style="--life-sprite:url\('data:image\/webp;base64,([^']+)'\)"/);
+if (!spriteMatch?.[1]) throw new Error('About FMB approved life-photo sprite was not found in authored source.');
+await mkdir(path.dirname(lifeSpriteOutput), { recursive: true });
+await writeFile(lifeSpriteOutput, Buffer.from(spriteMatch[1], 'base64'));
+about = about.replace(spriteMatch[0], 'data-photo-source="approved-life-sprite"');
+
+const lifePhotos = [
+  { key: 'graduation', alt: 'Francine Marie Bautista in her graduation portrait' },
+  { key: 'pageantry', alt: 'Francine Marie Bautista in her crowned pageant portrait' },
+  { key: 'professional', alt: 'Francine Marie Bautista in her approved white-shirt professional portrait' }
+];
+let lifePhotoIndex = 0;
+about = about.replace(/<article class="life-card">/g, () => {
+  const photo = lifePhotos[lifePhotoIndex++];
+  if (!photo) throw new Error('About FMB contains more life-photo cards than the verified inventory.');
+  return `<article class="life-card" data-photo="${photo.key}"><img class="life-card-media" src="${lifeSpritePublicPath}" alt="${photo.alt}" loading="lazy" decoding="async">`;
+});
+if (lifePhotoIndex !== lifePhotos.length) throw new Error(`About FMB expected ${lifePhotos.length} verified life-photo cards but found ${lifePhotoIndex}.`);
+
+// Replace the earlier excerpt with the complete recovered personal poem.
+const poemPattern = /\s{4}<section class="poem-panel" aria-labelledby="poem-title">[\s\S]*?<\/section>/;
+if (!poemPattern.test(about)) throw new Error('About FMB poem section was not found in authored source.');
+about = about.replace(poemPattern, `\n${fullPoemSection}`);
 
 await writeFile(outputAbout, about, 'utf8');
 
@@ -99,9 +206,15 @@ const expected = [
   'The World According to FMB',
   'hero-name-first',
   'Not stock imagery.',
-  'I started as a little boy,',
-  'data-verified-excerpt="true"',
-  'The complete poem is not presented here as verified copy.',
+  'data-photo="graduation"',
+  'data-photo="pageantry"',
+  'data-photo="professional"',
+  `src="${lifeSpritePublicPath}"`,
+  'data-verified-poem="full"',
+  'With a dream so simple and shy.',
+  'My Mama left. My Father too,',
+  'But angels came when hope was thin,',
+  'And this… is Francine now.',
   'The authority story',
   'The advantage is not one skill.',
   'How it works',
@@ -117,7 +230,16 @@ const expected = [
 for (const marker of expected) {
   if (!html.includes(marker)) throw new Error(`About FMB final contract missing: ${marker}`);
 }
-for (const forbidden of [wrongSchool, 'class="fmb-shell-header"', 'class="fmb-shell-footer"', 'id="how-fmb-can-help"', 'id="fmb-authority"']) {
+for (const forbidden of [
+  wrongSchool,
+  'class="fmb-shell-header"',
+  'class="fmb-shell-footer"',
+  'id="how-fmb-can-help"',
+  'id="fmb-authority"',
+  '--life-sprite:url(\'data:image/webp;base64',
+  'data-verified-excerpt="true"',
+  'The complete poem is not presented here as verified copy.'
+]) {
   if (html.includes(forbidden)) throw new Error(`About FMB final contract contains forbidden post-build mutation: ${forbidden}`);
 }
 
@@ -136,7 +258,11 @@ for (const relative of [
   'assets/js/aboutfmb-cinematic.js',
   'assets/js/aboutfmb-portfolio-v2.js',
   'assets/images/fmb-approved/francine-portrait-front.webp',
-  'assets/images/fmb-approved/francine-standing-landscape.webp'
+  'assets/images/fmb-approved/francine-standing-landscape.webp',
+  'assets/images/fmb-approved/about-life-sprite.webp'
 ]) await access(path.join(dist, relative));
 
-console.log('Protected About FMB and verified its structure, authority story, ecosystem explanation, mobile enhancement layer, transparent availability preview, non-script brand lockup override, and accuracy guard. The autobiographical poem remains explicitly marked as a partial verified excerpt until the complete approved text is recovered.');
+const spriteBytes = (await readFile(lifeSpriteOutput)).byteLength;
+if (spriteBytes < 10_000) throw new Error(`About FMB life-photo sprite is unexpectedly small (${spriteBytes} bytes).`);
+
+console.log(`Protected About FMB with the complete recovered autobiographical poem, three traceable lazy-loaded approved photo chapters backed by one ${spriteBytes}-byte cacheable WebP, clean non-script brand lockup, authority story, ecosystem explanation, mobile enhancement layer, transparent availability preview, and accuracy guard.`);
