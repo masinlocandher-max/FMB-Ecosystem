@@ -1,10 +1,26 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import './post-build-fmb-news-ai-francine-august-8.mjs';
 
 const root = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.join(root, 'dist');
 
 const reports = [
+  {
+    href: '/news/francine-marie-bautista-ai-photography-creative-skill/',
+    canonical: 'https://www.francinemariebautista.com/news/francine-marie-bautista-ai-photography-creative-skill/',
+    title: 'Using AI Does Not Make You Less of a Photographer: Francine Marie Bautista on Skill, Tools and Creative Judgment',
+  },
+  {
+    href: '/news/francine-marie-bautista-pax-silica-terms-must-be-clear/',
+    canonical: 'https://www.francinemariebautista.com/news/francine-marie-bautista-pax-silica-terms-must-be-clear/',
+    title: 'Francine Marie Bautista on Pax Silica: “Terms Must Be Clear. Questions Must Be Answered.”',
+  },
+  {
+    href: '/news/francine-marie-bautista-ai-literacy-minimize-risks/',
+    canonical: 'https://www.francinemariebautista.com/news/francine-marie-bautista-ai-literacy-minimize-risks/',
+    title: 'AI Has Risks. Francine Marie Bautista Says the Answer Is to Learn How to Use It Properly',
+  },
   {
     href: '/news/world-bank-philippines-growth-forecast-2026/',
     canonical: 'https://www.francinemariebautista.com/news/world-bank-philippines-growth-forecast-2026/',
@@ -64,7 +80,7 @@ function currentCollectionSchema() {
     name: 'FMB News',
     description: 'FMB News gathers the latest reports, makes them clear, and explains why they matter to Filipinos.',
     inLanguage: 'en-PH',
-    dateModified: '2026-08-05T15:00:00+08:00',
+    dateModified: '2026-08-08T22:09:00+08:00',
     mainEntity: { '@id': 'https://www.francinemariebautista.com/fmbnews/#august-5-2026-timeline' },
     hasPart: reports.map((report) => ({
       '@type': 'NewsArticle',
@@ -157,5 +173,5 @@ for (const relative of ['news/index.html', 'fmbnews/index.html']) {
 
   verify(html, routeName);
   await writeFile(file, html, 'utf8');
-  console.log(`Aligned the live ticker, social preview and structured data with the August 5 timeline in ${relative}.`);
+  console.log(`Aligned the live ticker, social preview and structured data with the August 8 AI interview series in ${relative}.`);
 }
