@@ -4,28 +4,28 @@
   "bulletinKey": "fmb-news-2026-08-07-0000-pht",
   "emailSubject": "FMB News | US Formally Requests Extradition of Apollo Quiboloy; DFA Transmits Demand to DOJ | August 7, 2026 | 12:00 AM PHT",
   "slug": "us-formally-requests-extradition-of-apollo-quiboloy",
-  "headline": "US Formally Requests Extradition of Apollo Quiboloy; DFA Sends Request to DOJ",
+  "headline": "DOJ Begins Review of US Extradition Request for Apollo Quiboloy",
   "category": "National",
   "kicker": "Justice · Extradition · Philippines and United States",
-  "deck": "The Department of Foreign Affairs confirmed receiving the formal US request for Apollo Quiboloy’s extradition and forwarded it to the Department of Justice for evaluation.",
+  "deck": "The Department of Justice has begun evaluating the United States’ formal request to extradite Apollo Quiboloy, while his Philippine criminal cases remain pending.",
   "publishedAt": "2026-08-07T00:00:00+08:00",
-  "updatedAt": "2026-08-07T09:18:09.942+08:00",
+  "updatedAt": "2026-08-09T07:18:00+08:00",
   "author": "FMB News Desk",
   "articleType": "NewsArticle",
   "sections": [
     {
       "heading": "What happened",
       "paragraphs": [
-        "The United States formally requested the extradition of detained Kingdom of Jesus Christ founder Apollo Quiboloy to face criminal charges in California. On August 6, the Department of Foreign Affairs confirmed receiving the request from the US State Department and transmitting it to the Department of Justice, the Philippine central authority for extradition."
+        "The Department of Justice has begun evaluating the United States’ formal request to extradite detained Kingdom of Jesus Christ founder Apollo Quiboloy after the Department of Foreign Affairs transmitted the request to the department."
       ]
     },
     {
       "heading": "What we know",
       "paragraphs": [
-        "DFA spokesperson Analyn Ratonel confirmed that the extradition papers were received and endorsed to the DOJ for evaluation and possible judicial action.",
-        "Philippine Ambassador to the United States Jose Manuel Romualdez said US authorities wanted the request handled as soon as possible. A 2021 federal indictment in California charges Quiboloy and several associates with offenses that include sex trafficking of children, labor trafficking, visa fraud, bulk cash smuggling, and money laundering.",
+        "Justice Secretary Fredderick Vida said the review will consider the Philippines-US extradition treaty, relevant Philippine laws and rules, Supreme Court decisions and Quiboloy’s pending local cases.",
+        "A 2021 federal indictment in California charges Quiboloy and several associates with alleged offenses that include sex trafficking of children, labor trafficking, visa fraud, bulk cash smuggling and money laundering.",
         "Quiboloy was arrested by Philippine authorities in September 2024 and remains in Philippine custody while facing separate domestic cases, including qualified human trafficking and child-abuse charges.",
-        "The accusations remain allegations unless proven in court. Quiboloy has denied wrongdoing, and his legal team said it could not comment on the extradition request before receiving formal notice."
+        "The accusations remain allegations unless proven in court. Quiboloy has denied wrongdoing. His lawyer has argued that extradition would face legal obstacles, while the DOJ said it would conduct its own evaluation."
       ]
     },
     {
@@ -38,7 +38,7 @@
     {
       "heading": "What remains unclear",
       "paragraphs": [
-        "It remains unclear when the DOJ will complete its assessment, whether prosecutors will seek temporary surrender while Quiboloy’s Philippine cases remain pending, and what objections his defense may raise once formally notified."
+        "It remains unclear when the DOJ will complete its assessment, whether it will file an extradition petition, and how Quiboloy’s pending Philippine cases will affect the timing or form of any court action."
       ]
     },
     {
@@ -50,11 +50,23 @@
     {
       "heading": "What happens next",
       "paragraphs": [
-        "The DOJ will review the request and supporting documents. If the legal requirements are met, prosecutors may file an extradition petition before a Philippine Regional Trial Court, where Quiboloy’s counsel can contest the request."
+        "The DOJ will finish its legal and factual evaluation before deciding whether to pursue an extradition petition in a Philippine court. Extradition is not automatic, and Quiboloy may contest any petition through the judicial process."
       ]
     }
   ],
   "sources": [
+    {
+      "publisher": "Inquirer.net",
+      "title": "DOJ to study US request for Quiboloy extradition",
+      "publishedAt": "2026-08-09T05:32:00+08:00",
+      "url": "https://newsinfo.inquirer.net/2280386/doj-to-study-us-request-for-quiboloy-extradition"
+    },
+    {
+      "publisher": "ABS-CBN News",
+      "title": "What's next for Quiboloy? DOJ lays out extradition process after US request",
+      "publishedAt": "2026-08-08T10:39:00+08:00",
+      "url": "https://news.abs-cbn.com/news/nation/2026/8/8/what-s-next-for-quiboloy-doj-lays-out-extradition-process-after-us-request-1039"
+    },
     {
       "publisher": "Philippine News Agency",
       "title": "Envoy: US wants Quiboloy 'asap,' formally requests extradition from PH",
@@ -93,12 +105,13 @@
     "alt": "Philippine National Police mugshot sheet of Apollo Quiboloy"
   },
   "audit": {
-    "sourceCheckedAt": "2026-08-07T01:18:09.941Z",
+    "sourceCheckedAt": "2026-08-09T07:18:00+08:00",
     "photoReferenceUrl": "https://commons.wikimedia.org/wiki/File:Apollo_Quiboloy_mugshot.jpg",
     "notes": [
       "Google redirect links were replaced with direct publisher URLs.",
       "Charges are presented as allegations, and Quiboloy’s denial was added for fairness.",
       "A Philippine National Police public-domain mugshot is locally hosted with visible source and status credit."
+      ,"Updated from the August 9, 2026 bulletin after the DOJ confirmed it had begun evaluating the request; the existing canonical route and original publication time were preserved to prevent duplication."
     ]
   }
 }
