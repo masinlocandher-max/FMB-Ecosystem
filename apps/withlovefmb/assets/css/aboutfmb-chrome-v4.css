@@ -1,0 +1,74 @@
+/* About FMB v4: premium navigation control + closing/footer system. */
+
+/* MENU CONTROL: make it feel like a designed control, not a generic hamburger. */
+.menu-toggle{position:relative!important;width:54px!important;height:54px!important;flex:0 0 54px!important;padding:0!important;display:grid!important;place-items:center!important;border:1px solid rgba(215,176,107,.18)!important;border-radius:18px!important;background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.025))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 12px 35px rgba(0,0,0,.22)!important;backdrop-filter:blur(18px)!important;-webkit-backdrop-filter:blur(18px)!important;overflow:hidden!important;transition:transform .35s var(--ease),border-color .35s ease,background .35s ease,box-shadow .35s ease!important}
+.menu-toggle::before{position:absolute;inset:7px;border:1px solid rgba(199,146,255,.09);border-radius:12px;content:"";pointer-events:none}
+.menu-toggle::after{position:absolute;top:8px;right:8px;width:5px;height:5px;border-radius:50%;background:var(--portfolio-gold);box-shadow:0 0 13px rgba(215,176,107,.7);content:"";opacity:.8;transition:opacity .3s ease,transform .35s var(--ease)}
+.menu-toggle:hover{transform:translateY(-2px);border-color:rgba(199,146,255,.45)!important;background:linear-gradient(145deg,rgba(140,85,255,.16),rgba(255,255,255,.035))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 18px 44px rgba(0,0,0,.3)!important}
+.menu-toggle span{position:absolute!important;left:50%!important;width:20px!important;height:1.5px!important;margin:0!important;border-radius:2px!important;background:rgba(255,255,255,.92)!important;transform-origin:center!important;transition:transform .38s var(--ease),top .38s var(--ease),width .3s ease!important}
+.menu-toggle span:first-child{top:22px;transform:translateX(-50%)}
+.menu-toggle span:last-child{top:31px;width:13px!important;transform:translateX(-26%)}
+.menu-toggle[aria-expanded="true"]{border-color:rgba(215,176,107,.42)!important;background:rgba(122,63,228,.14)!important}
+.menu-toggle[aria-expanded="true"]::after{opacity:0;transform:scale(.2)}
+.menu-toggle[aria-expanded="true"] span:first-child{top:26px;width:20px!important;transform:translateX(-50%) rotate(45deg)}
+.menu-toggle[aria-expanded="true"] span:last-child{top:26px;width:20px!important;transform:translateX(-50%) rotate(-45deg)}
+
+/* CLOSING: turn the final portrait into a deliberate handoff to the footer. */
+.closing-signature{position:relative;min-height:76svh!important;padding:10vh clamp(28px,8vw,126px) 0!important;display:grid!important;grid-template-columns:minmax(300px,.82fr) minmax(0,1.18fr)!important;align-items:end!important;gap:6vw!important;overflow:hidden!important;background:radial-gradient(circle at 24% 30%,rgba(122,63,228,.2),transparent 32%),linear-gradient(160deg,#100619,#05020a 74%)!important}
+.closing-signature::before{position:absolute;right:-14vw;bottom:-22vw;width:58vw;aspect-ratio:1;border:1px solid rgba(215,176,107,.1);border-radius:50%;box-shadow:0 0 0 7vw rgba(199,146,255,.018),0 0 0 14vw rgba(199,146,255,.009);content:""}
+.closing-signature picture{position:relative;z-index:2;align-self:end;height:68svh!important;display:flex;align-items:flex-end;justify-content:center}
+.closing-signature picture img{width:min(38vw,520px)!important;height:100%!important;object-fit:contain!important;object-position:center bottom!important;filter:drop-shadow(0 32px 50px rgba(0,0,0,.46))!important}
+.closing-copy{position:relative;z-index:3;align-self:center;max-width:720px;padding-bottom:8vh}
+.closing-copy::before{display:block;margin-bottom:24px;color:var(--portfolio-gold);font:800 .58rem/1 "Manrope",sans-serif;letter-spacing:.2em;text-transform:uppercase;content:"A continuing story"}
+.closing-copy p{margin:0!important;font-family:"Cormorant Garamond",Georgia,serif!important;font-size:clamp(3.3rem,6vw,7rem)!important;font-weight:600!important;line-height:.87!important;letter-spacing:-.055em!important}
+.closing-copy strong{display:block;margin-top:34px;color:rgba(255,255,255,.66);font:600 .72rem/1.4 "Manrope",sans-serif!important;letter-spacing:.18em;text-transform:uppercase}
+
+/* FOOTER: architectural rather than a generic link dump. */
+.site-footer{position:relative;padding:72px clamp(28px,7vw,112px) 26px!important;display:grid!important;grid-template-columns:minmax(280px,1.25fr) minmax(150px,.48fr) minmax(180px,.58fr)!important;gap:clamp(42px,7vw,110px)!important;border-top:1px solid rgba(215,176,107,.18)!important;background:linear-gradient(180deg,#05020a 0%,#08030d 62%,#030105 100%)!important;overflow:hidden}
+.site-footer::before{position:absolute;top:0;left:clamp(28px,7vw,112px);width:min(250px,28vw);height:1px;background:linear-gradient(90deg,var(--portfolio-gold),rgba(215,176,107,0));content:""}
+.site-footer::after{position:absolute;right:-4vw;bottom:-.16em;color:rgba(255,255,255,.018);font:600 clamp(10rem,25vw,25rem)/.7 "Bodoni Moda",Georgia,serif;letter-spacing:-.08em;content:"FMB";pointer-events:none}
+.footer-brand{position:relative;z-index:2;max-width:520px}
+.footer-brand::before{font-size:clamp(2rem,3.2vw,3.5rem)!important;letter-spacing:.03em!important}
+.footer-brand::after{margin-top:12px!important;color:var(--portfolio-gold)!important;font-size:.58rem!important;letter-spacing:.2em!important}
+.footer-brand p{max-width:430px;margin:28px 0 0!important;color:rgba(255,255,255,.48)!important;font-size:.78rem!important;line-height:1.75!important}
+.site-footer>nav{position:relative;z-index:2;display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:13px!important}
+.site-footer>nav::before{margin-bottom:9px;color:rgba(255,255,255,.3);font-size:.52rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
+.site-footer>nav[aria-label="About FMB footer"]::before{content:"Navigate"}
+.site-footer>nav[aria-label="FMB ecosystem"]::before{content:"Ecosystem"}
+.site-footer>nav a{position:relative;color:rgba(255,255,255,.62)!important;font-size:.72rem!important;font-weight:600!important;text-decoration:none!important;transition:color .25s ease,transform .25s var(--ease)!important}
+.site-footer>nav a::after{position:absolute;right:-18px;top:50%;width:8px;height:1px;background:var(--portfolio-gold);opacity:0;transform:translate(-6px,-50%);transition:opacity .25s ease,transform .25s var(--ease);content:""}
+.site-footer>nav a:hover{color:#fff!important;transform:translateX(4px)}
+.site-footer>nav a:hover::after{opacity:1;transform:translate(0,-50%)}
+.footer-bottom{position:relative;z-index:2;grid-column:1/-1;margin-top:18px;padding-top:22px;display:flex!important;justify-content:space-between!important;gap:20px!important;border-top:1px solid rgba(255,255,255,.08)!important;color:rgba(255,255,255,.28)!important;font-size:.55rem!important;letter-spacing:.04em}
+
+@media(max-width:980px){
+  .menu-toggle{display:grid!important}
+  .site-footer{grid-template-columns:1fr 1fr!important}
+  .footer-brand{grid-column:1/-1}
+}
+
+@media(max-width:720px){
+  .site-header{height:82px!important;padding:0 20px!important;gap:14px!important;background:linear-gradient(180deg,rgba(5,2,10,.96),rgba(5,2,10,.78))!important;backdrop-filter:blur(22px)!important;-webkit-backdrop-filter:blur(22px)!important;border-bottom:1px solid rgba(255,255,255,.07)!important}
+  .menu-toggle{width:48px!important;height:48px!important;flex-basis:48px!important;margin-left:auto!important;border-radius:16px!important}
+  .menu-toggle span:first-child{top:19px}
+  .menu-toggle span:last-child{top:27px}
+  .menu-toggle[aria-expanded="true"] span:first-child,.menu-toggle[aria-expanded="true"] span:last-child{top:23px}
+
+  .closing-signature{min-height:auto!important;padding:72px 20px 0!important;display:flex!important;flex-direction:column-reverse!important;gap:34px!important;align-items:stretch!important}
+  .closing-copy{align-self:auto!important;max-width:100%;padding:0!important}
+  .closing-copy p{max-width:92%;font-size:clamp(3rem,13.5vw,4.8rem)!important;line-height:.9!important}
+  .closing-copy strong{margin-top:24px}
+  .closing-signature picture{height:56svh!important;width:100%!important}
+  .closing-signature picture img{width:min(92vw,480px)!important}
+
+  .site-footer{padding:54px 20px calc(24px + env(safe-area-inset-bottom))!important;grid-template-columns:1fr!important;gap:38px!important}
+  .site-footer::before{left:20px;width:42vw}
+  .site-footer::after{right:-8vw;bottom:8%;font-size:45vw}
+  .footer-brand{grid-column:auto}
+  .footer-brand::before{font-size:2.4rem!important}
+  .footer-brand p{max-width:310px;margin-top:22px!important;font-size:.72rem!important}
+  .site-footer>nav{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:13px 20px!important}
+  .site-footer>nav::before{grid-column:1/-1;margin-bottom:5px}
+  .site-footer>nav a{font-size:.7rem!important}
+  .footer-bottom{grid-column:auto;flex-direction:column!important;gap:7px!important;margin-top:2px!important;padding-top:20px!important;font-size:.52rem!important;line-height:1.5}
+}
