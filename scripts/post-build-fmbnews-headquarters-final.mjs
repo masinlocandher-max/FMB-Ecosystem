@@ -32,8 +32,8 @@ await writeFile(
   'utf8',
 );
 
-const finalCss = '<link rel="stylesheet" href="/assets/css/fmbnews-headquarters-final.css?v=20260808-newsdesk-v5">';
-const finalJs = '<script src="/assets/js/fmbnews-headquarters-final.js?v=20260808-newsdesk-v5" defer></script>';
+const finalCss = '<link rel="stylesheet" href="/assets/css/fmbnews-headquarters-final.css?v=20260808-newsdesk-v6">';
+const finalJs = '<script src="/assets/js/fmbnews-headquarters-final.js?v=20260808-newsdesk-v6" defer></script>';
 const progress = '<div class="fmb-hq-progress" aria-hidden="true"></div>';
 const atmosphere = '<div class="fmb-hq-atmosphere" aria-hidden="true"><i class="fmb-hq-arc fmb-hq-arc--one"></i><i class="fmb-hq-arc fmb-hq-arc--two"></i><i class="fmb-hq-arc fmb-hq-arc--three"></i></div>';
 const aboutLink = '<a href="/fmbnews/about/">About</a>';

@@ -56,7 +56,13 @@ const assert = (condition, message) => { if (!condition) fail(message); };
       const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: name === 'iphone' ? 2 : 1 });
       const page = await context.newPage();
       const pageErrors = [];
+      const consoleIssues = [];
       page.on('pageerror', (error) => pageErrors.push(error.message));
+      page.on('console', (message) => {
+        if (['error', 'warning'].includes(message.type())) {
+          consoleIssues.push({ type: message.type(), text: message.text(), url: message.location().url });
+        }
+      });
       await page.goto(`${base}/fmbnews/`, { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(1400);
 
@@ -120,6 +126,11 @@ const assert = (condition, message) => { if (!condition) fail(message); };
         assert(control.width >= 44 && control.height >= 44, `${name}: undersized control ${control.label} (${control.width}x${control.height})`);
       }
       assert(pageErrors.length === 0, `${name}: page errors: ${pageErrors.join(' | ')}`);
+      const relevantConsoleIssues = consoleIssues.filter((issue) => {
+        if (!issue.text.startsWith('Failed to load resource:')) return true;
+        try { return new URL(issue.url, base).origin === new URL(base).origin; } catch { return true; }
+      });
+      assert(relevantConsoleIssues.length === 0, `${name}: console issues: ${JSON.stringify(relevantConsoleIssues)}`);
 
       if (['desktop', 'iphone', 'compact'].includes(name)) {
         await page.screenshot({ path: path.join(output, `${name}-viewport.png`), fullPage: false });
@@ -143,7 +154,7 @@ const assert = (condition, message) => { if (!condition) fail(message); };
           hamburgerPaint.every((bar) => bar.width >= 15 && bar.height >= 2 && bar.color !== 'rgba(0, 0, 0, 0)' && bar.opacity > 0),
           `${name}: hamburger strokes are not visibly painted: ${JSON.stringify(hamburgerPaint)}`,
         );
-        if (width > 360) assert(await menu.locator('b').isVisible(), `${name}: visible Menu label is missing`);
+        assert(await menu.getAttribute('aria-label') === 'Open FMB News menu', `${name}: hamburger accessible label is missing`);
         await menu.click();
         await page.waitForTimeout(520);
         assert(await menu.getAttribute('aria-expanded') === 'true', `${name}: menu did not open`);
