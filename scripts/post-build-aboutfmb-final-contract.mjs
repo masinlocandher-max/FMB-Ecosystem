@@ -27,9 +27,7 @@ function sanitizeStructuredData(value) {
   const isFrancine = value['@type'] === 'Person' && value.name === 'Francine Marie Bautista';
   if (isFrancine) {
     delete value.alumniOf;
-    if (value.hasCredential && typeof value.hasCredential === 'object') {
-      delete value.hasCredential.recognizedBy;
-    }
+    if (value.hasCredential && typeof value.hasCredential === 'object') delete value.hasCredential.recognizedBy;
   }
 
   for (const child of Object.values(value)) sanitizeStructuredData(child);
@@ -55,7 +53,6 @@ function sanitizeVisibleSchoolClaim(html) {
     .replace(/STI College Fairview/gi, '');
 }
 
-// Remove the explicitly incorrect school attribution from the canonical machine profile.
 const profilePath = path.join(dist, 'fmb-profile.json');
 try {
   const profile = sanitizeStructuredData(JSON.parse(await readFile(profilePath, 'utf8')));
@@ -66,7 +63,6 @@ try {
   if (error?.code !== 'ENOENT') throw error;
 }
 
-// Sanitize every generated public HTML route, including ordinary Article JSON-LD and visible biography copy.
 for (const file of (await walk(dist)).filter((file) => file.endsWith('.html'))) {
   let html = await readFile(file, 'utf8');
   html = sanitizeJsonLd(html);
@@ -75,20 +71,26 @@ for (const file of (await walk(dist)).filter((file) => file.endsWith('.html'))) 
   await writeFile(file, html, 'utf8');
 }
 
-// About FMB is a bespoke authority experience. Its authored source is the final production contract,
-// so generic sitewide transforms cannot duplicate shells, append generic sections, rewrite portraits,
-// or replace the page's reviewed SEO and structured data.
+// About FMB is deliberately bespoke. Restore its authored source after generic sitewide transforms.
 const about = await readFile(sourceAbout, 'utf8');
 await writeFile(outputAbout, about, 'utf8');
 
-// Final About-specific QA after every other post-build script has finished.
 const html = await readFile(outputAbout, 'utf8');
 const expected = [
   '<title>About Francine Marie Bautista | Creative Director, Strategist &amp; Founder</title>',
   'The World According to FMB',
+  'hero-name-first',
+  'Not stock imagery.',
+  'I started as a little boy,',
+  'The authority story',
   'The advantage is not one skill.',
+  'How it works',
+  'Capacity by design',
+  'Illustrative portfolio calendar, not a live schedule.',
   '/assets/css/aboutfmb-cinematic.css?v=20260808-authority-v1',
+  '/assets/css/aboutfmb-portfolio-v2.css?v=20260808-portfolio-v2',
   '/assets/js/aboutfmb-cinematic.js?v=20260808-authority-v1',
+  '/assets/js/aboutfmb-portfolio-v2.js?v=20260808-portfolio-v2',
   'href="/work-with-fmb/"'
 ];
 for (const marker of expected) {
@@ -108,11 +110,11 @@ for (const match of html.matchAll(/href=["']#([^"']+)["']/gi)) {
 
 for (const relative of [
   'assets/css/aboutfmb-cinematic.css',
+  'assets/css/aboutfmb-portfolio-v2.css',
   'assets/js/aboutfmb-cinematic.js',
+  'assets/js/aboutfmb-portfolio-v2.js',
   'assets/images/fmb-approved/francine-portrait-front.webp',
   'assets/images/fmb-approved/francine-standing-landscape.webp'
-]) {
-  await access(path.join(dist, relative));
-}
+]) await access(path.join(dist, relative));
 
-console.log('Protected About FMB and removed the incorrect school attribution from visible and structured FMB biography data.');
+console.log('Protected the expanded About FMB portfolio experience and verified its real-photo story, poem, authority, ecosystem, mobile layer, availability disclosure, and accuracy guard.');
