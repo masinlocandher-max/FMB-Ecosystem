@@ -17,36 +17,48 @@ async function walk(directory) {
   return files;
 }
 
-function sanitizePersonGraph(graph) {
-  const nodes = Array.isArray(graph?.['@graph']) ? graph['@graph'] : [graph];
-  for (const node of nodes) {
-    if (!node || typeof node !== 'object') continue;
-    const isFrancine = node['@type'] === 'Person' && node.name === 'Francine Marie Bautista';
-    if (!isFrancine) continue;
-    delete node.alumniOf;
-    if (node.hasCredential && typeof node.hasCredential === 'object') {
-      delete node.hasCredential.recognizedBy;
+function sanitizeStructuredData(value) {
+  if (!value || typeof value !== 'object') return value;
+  if (Array.isArray(value)) {
+    for (const item of value) sanitizeStructuredData(item);
+    return value;
+  }
+
+  const isFrancine = value['@type'] === 'Person' && value.name === 'Francine Marie Bautista';
+  if (isFrancine) {
+    delete value.alumniOf;
+    if (value.hasCredential && typeof value.hasCredential === 'object') {
+      delete value.hasCredential.recognizedBy;
     }
   }
-  return graph;
+
+  for (const child of Object.values(value)) sanitizeStructuredData(child);
+  return value;
 }
 
-function sanitizeAuthorityScript(html) {
-  const pattern = /<script\b[^>]*data-fmb-authority-entity[^>]*>([\s\S]*?)<\/script>/gi;
-  return html.replace(pattern, (full, raw) => {
+function sanitizeJsonLd(html) {
+  const pattern = /<script\b([^>]*)type=["']application\/ld\+json["']([^>]*)>([\s\S]*?)<\/script>/gi;
+  return html.replace(pattern, (full, before, after, raw) => {
     try {
-      const graph = sanitizePersonGraph(JSON.parse(raw));
-      return full.replace(raw, `\n${JSON.stringify(graph, null, 2)}\n`);
+      const graph = sanitizeStructuredData(JSON.parse(raw));
+      return `<script${before}type="application/ld+json"${after}>\n${JSON.stringify(graph, null, 2)}\n</script>`;
     } catch {
       return full;
     }
   });
 }
 
-// Remove an explicitly incorrect school attribution from the canonical machine profile.
+function sanitizeVisibleSchoolClaim(html) {
+  return html
+    .replace(/\s*<div class=["']fact["']>\s*<strong>College<\/strong>\s*<span>STI College Fairview<\/span>\s*<\/div>/gi, '')
+    .replace(/\s+at STI College Fairview(?=[.,<])/gi, '')
+    .replace(/STI College Fairview/gi, '');
+}
+
+// Remove the explicitly incorrect school attribution from the canonical machine profile.
 const profilePath = path.join(dist, 'fmb-profile.json');
 try {
-  const profile = sanitizePersonGraph(JSON.parse(await readFile(profilePath, 'utf8')));
+  const profile = sanitizeStructuredData(JSON.parse(await readFile(profilePath, 'utf8')));
   const serialized = `${JSON.stringify(profile, null, 2)}\n`;
   if (serialized.includes(wrongSchool)) throw new Error('Incorrect school attribution survived canonical profile sanitation.');
   await writeFile(profilePath, serialized, 'utf8');
@@ -54,19 +66,18 @@ try {
   if (error?.code !== 'ENOENT') throw error;
 }
 
-// Keep already-generated authority graphs useful while stripping the known-wrong school attribution.
+// Sanitize every generated public HTML route, including ordinary Article JSON-LD and visible biography copy.
 for (const file of (await walk(dist)).filter((file) => file.endsWith('.html'))) {
   let html = await readFile(file, 'utf8');
-  html = sanitizeAuthorityScript(html);
-  if (html.includes(wrongSchool)) {
-    throw new Error(`${path.relative(dist, file)} still contains the incorrect school attribution.`);
-  }
+  html = sanitizeJsonLd(html);
+  html = sanitizeVisibleSchoolClaim(html);
+  if (html.includes(wrongSchool)) throw new Error(`${path.relative(dist, file)} still contains the incorrect school attribution.`);
   await writeFile(file, html, 'utf8');
 }
 
 // About FMB is a bespoke authority experience. Its authored source is the final production contract,
-// so generic sitewide post-build transforms cannot duplicate shells, append sections, rewrite portraits,
-// or replace its carefully reviewed SEO and structured data.
+// so generic sitewide transforms cannot duplicate shells, append generic sections, rewrite portraits,
+// or replace the page's reviewed SEO and structured data.
 const about = await readFile(sourceAbout, 'utf8');
 await writeFile(outputAbout, about, 'utf8');
 
@@ -104,4 +115,4 @@ for (const relative of [
   await access(path.join(dist, relative));
 }
 
-console.log('Protected the final About FMB authority experience and removed the incorrect school attribution from generated authority data.');
+console.log('Protected About FMB and removed the incorrect school attribution from visible and structured FMB biography data.');
