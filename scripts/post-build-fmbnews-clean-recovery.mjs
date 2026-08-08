@@ -20,7 +20,12 @@ function cleanArticle(html,route,publishedAt=''){
   const rawImage=tag(html,/<meta\b[^>]*property=(['"])og:image\1[^>]*>/i,'content')||tag(main,/<img\b[^>]*>/i,'src')||logo;
   const image=rawImage.replace(brokenCognitaImage,cognitaFallback);
   const sourcePublished=tag(html,/<meta\b[^>]*property=(['"])article:published_time\1[^>]*>/i,'content')||publishedAt;
-  return `<!doctype html><html lang="en-PH">${head(title,description,canonical,image,'article',sourcePublished)}<body id="top" class="fmb-news-clean fmb-news-article news-story-route">${shell()}${main.replaceAll('href="/news/"','href="/fmbnews/"')}${foot()}${runtime()}</body></html>`;
+  const sourceUpdated=tag(html,/<meta\b[^>]*property=(['"])article:modified_time\1[^>]*>/i,'content');
+  const imageAlt=tag(html,/<meta\b[^>]*property=(['"])og:image:alt\1[^>]*>/i,'content')||tag(main,/<img\b[^>]*>/i,'alt')||'FMB News';
+  const imageWidth=tag(html,/<meta\b[^>]*property=(['"])og:image:width\1[^>]*>/i,'content');
+  const imageHeight=tag(html,/<meta\b[^>]*property=(['"])og:image:height\1[^>]*>/i,'content');
+  const structuredData=[...html.matchAll(/<script\b[^>]*type=(['"])application\/ld\+json\1[^>]*>[\s\S]*?<\/script>/gi)].map(match=>match[0]).join('');
+  return `<!doctype html><html lang="en-PH">${head(title,description,canonical,image,'article',sourcePublished,{updatedAt:sourceUpdated,imageAlt,imageWidth,imageHeight,structuredData})}<body id="top" class="fmb-news-clean fmb-news-article news-story-route">${shell()}${main.replaceAll('href="/news/"','href="/fmbnews/"')}${foot()}${runtime()}</body></html>`;
 }
 await mkdir(path.join(dist,'assets','css'),{recursive:true});
 await writeFile(path.join(dist,'assets','css','fmbnews-clean-v1.css'),await readFile(path.join(root,'apps','withlovefmb','assets','css','fmbnews-clean-v1.css'),'utf8'),'utf8');
