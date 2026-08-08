@@ -47,7 +47,11 @@
   </script>
   <link rel="icon" href="/assets/images/icon-transparent.png">
   <link rel="preload" as="image" href="/assets/images/fmb-approved/francine-portrait-front.webp" type="image/webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/aboutfmb-cinematic.css?v=20260808-authority-v1">
+  <link rel="stylesheet" href="/assets/css/aboutfmb-portfolio-v2.css?v=20260808-portfolio-v2">
 </head>
 <body class="about-scroll-page">
   <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -87,9 +91,10 @@
 
   <main id="main-content">
     <section class="chapter hero-chapter" id="identity" data-chapter="Identity" data-index="01" aria-labelledby="about-title">
+      <span class="hero-monogram" aria-hidden="true">F</span>
       <div class="hero-copy">
         <p class="chapter-kicker">The World According to FMB</p>
-        <h1 id="about-title">Francine<br>Marie Bautista</h1>
+        <h1 id="about-title" class="hero-name"><span class="hero-name-first">Francine</span><span class="hero-name-rest">Marie Bautista</span></h1>
         <p class="hero-roles">Creative Director. Strategist. Storyteller. Founder.</p>
         <p class="hero-statement">I connect strategy, story, image, and public perception so the work is not only seen. It is understood, trusted, and remembered.</p>
         <div class="hero-actions">
@@ -121,33 +126,43 @@
           <p>Each discipline changes the way Francine reads a problem. Together they create one practice built around clarity, meaning, public understanding, reputation, and long-term value.</p>
         </div>
         <div class="identity-constellation" aria-label="Professional disciplines">
-          <span data-role="creative">Creative Director</span>
-          <span data-role="strategy">Strategist</span>
-          <span data-role="business">Entrepreneur</span>
-          <span data-role="photo">Photographer</span>
-          <span data-role="story">Storyteller</span>
-          <span data-role="pr">PR Practitioner</span>
-          <span data-role="brand">Brand Consultant</span>
-          <span data-role="culture">Cultural Advocate</span>
-          <span data-role="education">Educator</span>
-          <span data-role="founder">Founder</span>
+          <span data-role="creative">Creative Director</span><span data-role="strategy">Strategist</span><span data-role="business">Entrepreneur</span><span data-role="photo">Photographer</span><span data-role="story">Storyteller</span><span data-role="pr">PR Practitioner</span><span data-role="brand">Brand Consultant</span><span data-role="culture">Cultural Advocate</span><span data-role="education">Educator</span><span data-role="founder">Founder</span>
         </div>
-        <div class="identity-steps" aria-hidden="true">
-          <i class="identity-step" data-active-role="creative"></i><i class="identity-step" data-active-role="strategy"></i><i class="identity-step" data-active-role="business"></i><i class="identity-step" data-active-role="photo"></i><i class="identity-step" data-active-role="story"></i><i class="identity-step" data-active-role="pr"></i><i class="identity-step" data-active-role="brand"></i><i class="identity-step" data-active-role="culture"></i><i class="identity-step" data-active-role="education"></i><i class="identity-step" data-active-role="founder"></i>
-        </div>
+        <div class="identity-steps" aria-hidden="true"><i class="identity-step" data-active-role="creative"></i><i class="identity-step" data-active-role="strategy"></i><i class="identity-step" data-active-role="business"></i><i class="identity-step" data-active-role="photo"></i><i class="identity-step" data-active-role="story"></i><i class="identity-step" data-active-role="pr"></i><i class="identity-step" data-active-role="brand"></i><i class="identity-step" data-active-role="culture"></i><i class="identity-step" data-active-role="education"></i><i class="identity-step" data-active-role="founder"></i></div>
       </div>
     </section>
 
     <section class="chapter origin-chapter" id="origin" data-chapter="Origin" data-index="02" aria-labelledby="origin-title">
-      <div class="origin-portrait">
-        <img src="/assets/images/fmb/francine-founder-front-cutout-900-v1.webp" width="900" height="1125" alt="Francine Marie Bautista" loading="lazy" decoding="async">
-      </div>
+      <div class="origin-portrait"><img src="/assets/images/fmb/francine-founder-front-cutout-900-v1.webp" width="900" height="1125" alt="Francine Marie Bautista" loading="lazy" decoding="async"></div>
       <div class="origin-copy">
         <p class="chapter-kicker">Origin</p>
         <h2 id="origin-title">Before the platform,<br>there was the place.</h2>
         <p>Francine’s work is shaped by Masinloc, Zambales, by Filipino and Sambal identity, by the communities she has encountered, and by the stories she believes should not disappear.</p>
         <p>Place is not background decoration. It influences the questions she asks about memory, identity, visibility, culture, belonging, and who gets to be understood.</p>
         <div class="origin-signals" aria-label="Identity and origin"><span>Masinloqueña</span><span>Zambaleña</span><span>Filipina</span><span>Transgender woman</span></div>
+      </div>
+    </section>
+
+    <section class="life-reel" aria-labelledby="life-reel-title" style="--life-sprite:url('data:image/webp;base64,AJaud9p9J8uP5KLq6+bO4ckZQz5lkEJ8m0mNbka4p5Th/ejCOWcO1RGwxxawkEJSvy+p4Zj9ot1Xs2cZmMfl0fmxjDZlIOsK0JjBlXsBmpEUkum25N8luIvtxL3pejdAwTClggyLMNMwkmjq5Oq9h5ZogOxTeZm5FetogSXyA8B8XfYDrCHysLDcCVPPtlgq9g16ZyrAqJdTG1E9uF5/yRfbAadS5wg4sKUPgWltk95/q25TK4UITxXbIt/HR3zBX2PKSLqBocOoD/nTD5+u0FM0knlCpzbbr5azYW70Bmae+LcC+SAqIEVv3UWa/iyonyL+PYDt0BOepLY46XeLVSAr67JhjU4Xfsm3b3Jk7cUGUJIeftOdyxtyBtvwOv/Iok4PsuWDokcr6iPFkNc84YY+ClHhtDUBwZJNDtmHnug32AgG96UKJb71BtkC+Pufc9X+HXlgPui+PDjJmD1borUJFMjBA+wtx0dgmkSmiriZ/MTbwua+YScN7EVF2u6ufkBM6jIKO97Khwb8pMI7idAfT0ZA+Re7IEGMQNtLHcWYQxMXbD6p2m/Cu4AAD/DbIc9JHY9WybNQKUUEnkQt1Wj2ZewZ9B1QTfmVehJ3B/zEbgMHpsGzfk4CwzMUE2c0PspzHSZvtY62wuW0tNgRVXcepv+Y+V24nR73H3b7kVn/neLxxlfrCF02c/3ff+a/jb0+rb12g4Drd2B3mPN7NRoNp1YFjJgTCMSCghAn46eQ8qZZrk9SMYMV8MoBqoGqNYbCMLVYTPq1Aa2p67NrdEynlB81o1yym+/v0RIJfL5yiboiERmK7mvNigVu/nqnen/o1zSmtT0TXCqPz+1zMrVPisfsmRrMVZOeepvnFjAnpeXdEPlUZOE9bFdH/oYynZSQNRI9pCUzhBVey1BKXFmivWGAqfsoUYTQOA6jFe32G5dWNtnOGF6sMru35WQ22/zf27HaAXr+5OqNNtWtMtFXjhYcpHg2ue1wMTkMAoDsbnEYHCRY4Y4NSb921Y32yNKJI954Szv7fDdygQ0Ewc3n5wVnrxm/BFPLnfGOU1ikJUommZYXZwVQVB6TIwq6ROIk0WWuByDeEaTXGY39PhJjCrkYZ6AT0ddLs5wJm56hEvVj8k0mvdFQHXvEoibert6VXyE+wyXWwnysLt+NSS18R3LdaZQQG+idWTvE6UKlIrRC3oxZn0jymPFBK05teaMdeVBxG3UIoF/Mh6px7MGuJQd8U5heXaoVHog22nWHVtriiFYtIlqCw87ISLcL7joUYMkOOzEeLrI1yKZ+j2kZ6SuycKUa1gHcrJlKL0w4RwFyFmfTsEnFT8pKZN4Oheqn+sn6vMr3lq2FraOwwCYfoCV14ZfQ8oqX3ChlGbD/3E6PtSSM06ADD2rw7OmqZA96vX+xYtRNxyRKEJ1awRCERwwIxkJwPuvkzXk6rA4AdBh2ofn+S/tIUX4F7V7OZZorQlrhBR0J7KS2wK5/dHzJ8xJqmaXqSpnYTA9iyzU1gxjsGlvQooiUEDKgsvBOhB9/PNjhG3xElHPgi7D2Ldbut1Os9v+E0PZ4bzfKGVpTBoQ6uBFnCbbLGsGXdPceF2BkviS5JMsmqYB+025YvpjUX476mVYo44eSDqRPQEhV/jHV+oB/9CGgU0Izl5h58J5F8MerAOxbfoEew2XRrElJePYpKdcPUQ8f0RtW4/E3tuXUAAAIhvTbPpzdcOJELKQMfcoAK4Zmt0jA1Z0XpOy6Lqbees/f3RMWOZxn0m7pQmmdwMmRXgIDnqjBzxnzOjWtvWYNUhd0nEW86K5agccgoCc4d8fYdSgBN+MEVgkeP+O5ItHfpcvbMzUN5pLmGtMtjq8k9julXj6zdyyB6D2JXY9SJ32alDdEm2wp61CiCbsFBvT6oc6qTv2/rrjqrEM+MFrBdNI99PgLmbyjtFP3WOZRbE5Wa0PL8B8TnV4NwEAV1Ym0A/KGb3jR66Q8zWNPH1Ubv792gWrTRp/OLrXf7HqB3JC7vFCRr7vk0lgoH6ZHA4UT55bUIsoQNh2a8DznXmPyr6iTNiH/fx7SVeTS8mAc6wO+Hrsg8gPSxM8UsttId1qOQz8xgXkuhsuGXof/yfAsWpEAOyalYdW5ETraC6wh3YxnKD72AJLORsv5jRYC3Ny8fa3rWxV60mTII22741A27PFxT4SfRhqdviXQHdf79b+PlZy7MvsPsgcOTZIOKaVNhiOVzoLwVaeLq0IS78C59h/UogtJBigH8Tic6nT8SJsMdj7HS9vdgFpvtaiItprLb9+A5UzjMv4U2jr28Ae70dCS7ZPjotCegKRKkVIu66HTZspRdJRTCIvDasW0Xr29/fdFgMGvnG+PdDTairTIAOPW7YFi3L8Vds5xe9505MLuvmQD9xoTREoiEUD+1Qm/KQLOfJc/fQV4HukEsnyitH7jKBtMqdBU3vdDJ5xBeKJE1h62usEuqG8jYOfnpw0OZDIBI0JJuTM1Eec/nQ3UJjEqe9bwuNAYZYHspRhA/IbWVq9yX06QR+ZYmt8UshpKPK5sXLR2OZ3H0XILYQY5o68ETyZm5RbK1rbQhUjBecGlQqdEK99xOc/s4RL65NyCcBk2aD9ELjxAjFlRIm+IOFXJxg9899a0OfkzL5VwPuZYk4xUHQUqcVjpVUNxHviaZNXcZ64pyWIIy6ASxYF/HBAg3swzZQzc4p4HgDUDIItV8i15G5N66/ZaX226DsoMgDFudLjKNzSNxNJadbeRTBQq93ghKhYALTmBURCuBq2/GCC27HbeNQ5JdmCxbnUhvwDij2u4R8+IJ6c6e+PJ3IxM5ipg8fFBPgBn5rfSQuG7cU5EBBfebqMhSJoKcLQZ/A69+oeTyCGaD0ZE4otqE8puJj/qU0afSC9CxijRcjZcMUi7qckJr4WcQAG2AkYAU74q6aVWJ7PE/jXBUxQz6HRMGH5KU09arZvIkpqIBiGxXE4+HXnbvjHbbwRW7zAMx0pz7ViPpVZWjIzWeDA62qjThyreDUzSGLLad845JHNsp/0guvRZC+EQKQWKDl7+bFMAffmHTGu3eHoytIZyPF2jMKmh7+NcGiyJjJpQn7gbXuvlTP/lEbR7Hz10eQWSxTpqb+hLXDAqHVqWfLiU+cgQKU9MhamYQ6+HVMoHkG7X1cbReyMC28Cjfrt/qfbN3dNRcUyae600g85ZnsQQs8XmozgJuzKltK3ZDsMcpIxSMUL4iMOcRKRCUMc5u5UM22iTpS6ux3cXRjZ5czAf2TT/V3qffIctDVbVyZME0/WpAPS2X8LXx54lm+fHEVQQx5xDgbvWG7txQOMRPodMhAgpGQ8HXU8lPqivzpWVidGc8nhHawg4Cq5mc67aWgOcsepYbXs96fJn/TB3eHfSTmOHH4iEGpBf642tKQAjWCAKPO/9bQuVAsw20FIDpjUIuS9pWsbIiU2mTiMKV33VBNgkg8OxLJlz6eU050iruyPjaLlQulyiuliAv9tuRwErx1P4WA7JZFyzgwZWPAxolye+hACFewcj38pYoG1Fl6zxNXsnb1piz6/JtB1dJH+R59kbsBdRA+OJRkpdhufTTyzwQ7QzQ/WVSXua7jabWRzDxUqGCICsgOUxfitcPtmw+agXMqCjoNeRSQyDNZSrjjNPmkO+bn1Os3DLe1ER7wcrbVJ9jfk0BgHURDKXVgcqMVDgF9G7wLtZ6rLkawBWphy3DM7RX/1XbywY+L7poEp2IvSRAQKS7mFPCW71bBZEE7Tcz3gdojlcI/Rtj9wJHLXqj0rVTtJUPuh7mJXY2mT0xrMY5ndCZC8U4liU7uBW3ooolXRvPHkc6Z3mMnfQykxuAtoYJRJKv7oXinkTbFUoCdeVDsDHPBLVEbkG5f5NAidsJAxNIHUvh73+MYWxCMu8hv1NfXjONTNcHRXdb6Z/RaB0Jl1E8UmJQ0yvk1nxkLUIRFCypijOzCgprRjQtsj3ThV3YSn56tCctlqHyEwCjT8XnRs4y/rY6hmZb7ipVn3cI3lZu0qck1mOQpUdu15U/KBP4WHBe6+SddR1F54CD6ps2FSOxea/EnAeBm6B4gyYqJ33mgJ2M7UTELoxqgR8L/IZeM2Om8QQpL7KGGAnNfBwGkoIeagCeC4BC8kV7EbfqMeEDSA1zAUcc0w7mLzPJYJ9MIkF9yNuCZ7T6hRUjiluqTLz2hw9jbGMgio4fEqLI3nX6xLcNUkfgtVBWC9eJPk1MERrKM6J8wXXGSNNRFNsErkA3PAC8M75iLyz7ZX3hWr316n33FAMnYhAirLxFXF3AjHKui/mmR/du0P3yE3Jq2TzaRhZyx6dvzKroNVXWzf1nH1j20J42+Mqmzue57yEFknecs1RV3goO2wthrZprnMtKw8msELwgpSfuf/t4xB+7lduimv3mirJyy7/WoDk7tpjm0lX2wLl3zFc5L0UQRetX/LJV4TyOAYAUHC9+xaOE025XlIGl0FgFR8PHkkk8HkTB5jatjwBoOujvE7X5AERd0yxbrgdVZJjHVEt6s49H6SXOO1CfCeOV2fr04tlXgTYzPdrHi8AGVMzBBgssCM22PVyxbkrb9XQWcmkpG6rbdXT9DJxa8BKy6VfINryByWeeHVcdHB/PD0K7Mjni3owYCZ6nfNrFrG+Xe2o0iaigfa6VHn4/48sYE9bEWuy34C/5XqfMCjH5Ub9zApEGoXrVMA5/fsyh1AI+jiSpsjnu9k2rqrIWtkRqlXQaHm27YiKx9JJJhXA31eFjQ/phwFpakCJsUSW3x7dsld7sLHqSn7HS4Ifz/sLmgBUe4K0CALJJv6MPXo/HPOvsc438afxCI+NkI034lRaUDH+H7QvnUUX9k+mLS/4UxKsaxHymgYnq3OhOzCDRALFm7iR2PVfs7HHN/l5Z/FLmzxBLecEK+tf0NvcauAeJjFwV1X7QC5Zz4UI5fIEi2v6VG3ViXQQcjS5ukpFbRMpZB02h9VsO1asuZkGZvhSNxFb4O0f60txTDLiGfJfBOjH28HewRLl2XKRBlmuIaec6aHLoH4dIhRT6Vm5njXnS16ten4mAHD1EiacQ0xzd7AwBWeq9H9yymVjRO9M2QAAAW7g4fRfJlspRJvgu5WOKAHCOJpofkrftgnqD22JipquTXMOCYbukebwfnCo67+JoUgfhbFm9kFt6uFRjbIMQhP7/P8A+OLzi5GvoShRfxN984Oo6VgTc9i4mqRkcecZlBo7QnJdRDQeJrWJm3BJnUvGayGqzYg0W46eGy6bAWZyh/2VRaOIhjEtM088wF4QWnKiMMJJK2fLVG3nbl0t3Nxchi3a7u4GCZipCxZjRpxp3x6g8yc27zsJgXWajALfWBrlP0xyMO+hRzouIFw2Dy5QcVXatmjW8CtFQwuPSSMU7304Ep2fStfpe1/H8tP1Nxl0lPPfPf0SNRp8vP/5NxsYBFdo6darcFDZvP29uDxYkQZq4LY6Onwgjme7KyRXh0pziD9+M49QIylisGOmmkTmQOlB2qLJIwRH6tuOXE2JtKK2MmA6jLI+J05EuTBjM8vqEDatcfS8x/tq+qNeeQcpx2SNpU1EInTaM/c14XJjQA9hMNyXLCsVhy+TQDuLAYn1qbtl1RacYUiFYDDUdC9t8rx3Fy0dpfhv9cXv991sksZ7IBkN748j9SO52Z5SK+c+8Pltfx5B+3bgfAOsH3UeyYyDZ4JMTU0kXlHcK6/p4hbuQmG4/CrJ0xyj4Gngmm/Fcphbw8kzP7LfoeMjOzRCoW7YSi96+mt0x2KiDQadzrgBhJ/D2wM2majABUfk4aUVOo+Oq+ULx6X+apNGzYLK+qQUNYGAPb9zCHzu+YMtjG1ceaX84G7xJ6tGJENucY++05iV0pJDQf4EsIwn3VbV/WmrflKB1Awbnr3kCwvFntxKxf4zH3KOQr8jb5RsmcnasaBaDfYimR0doLLTIyqKRrdvYOBK2nAdkFR2X2kvLkIJwoGJWaaOxQ4zUtJ5PsJM7qi7seks8CoCjIhdyo1f2IeJEWsDZzg0423zY2H0qLa/J/E/cjjAezJGgnWf7x801pXFHbZW2IPm2l6fQDHnJHWk/ADt40ZviTCwnhx34qFEs9eeFak9ykUHJshuG95dynO9T0kyaeYvnEjhTn3mdfJlQcW/yvDSk3sE0vF+JBo65SLqPISNgy80evLiCT6fhyqRfVXI1JYqaeIlBGz5mKW4xBgn1ah8lLNSYn+4guoUeCMB7TzL5wV3cETWPCeD8smtl0XBVoA+xJWZcZC5zApyjDWZLeJBEV2Lc2UnvIlAa/+L3kVJSm9S9FDt47G63Ny9HHof0yh4wOZw654WwrWk6qjKJz8bUWMBpcO44Xmy0dQV1cMNZfYn+VikZy3mOZoFpMCIDbC3zHmQ+kWGUVm4AHUtP3QfXGJZaaHVBKfRGlmAXQ7dnIVsK+TIK4EgATXhBopbTbvLrl5MXHnG2sBxI4h+JxW3xsCZswNmBE75EVv97SZMULf0rh5gsSZKCEGmxodce7N3dWTi8fRl3M/cHs+TSr1GHIb7Coxl5uGJjlCsSuS7H4GUIM/R1zgAACSxLL7KlSvl8XqMKva02FnmNI8ltjVee8Yea113yMxhnNn2lxI97wU2UOcsf1REjGUfyAsYT+Eznv6xm/oIupxqFzqXIM/rhHNpIaYsJjtWOzJ81/pYPBF4PKB7WhwO38brtVAcwSU61h5FK6rPlxZYGeB+dJmA//iheb7UaBVbEkWPIvO+DoXu/L2QsroXMtiKZXevw3u5Aydw+ymwJ/cWwSLmwS0/DolG9WBIrl/mFPdtUJC46s4QKk3RrzPiz9nz2E5RHLKwjm1ICeMYONzeZqhoN7XSmsw2vx5xu6UwCHmppyQ1p8LVshMKUvDz1ZuHAsVOUPcQVmqAl0yblISIb0PlxbpjFA0ab1peRpjOCU3NUY0qagW/BQtMCSRrEE3QwEzT4UX6eGRllEX6UF8GSce+517xzzp0wxUMNQKzvDf3b9ZMInSYiOXx+a+fjr/kML/xhUNtVAv1rd5ep1NllfEGrMriTfgpMxb/aJLoBV12vfkPuWxNOgOnjNP6SwDQT5XhddlnLar3lAq+Yknsko5ZSTcE4+bsYmc0MphzvoMZoB37JWwSse5Mx4zkN82sH45Q9e3bGrNpIIEwB+Uxle08G0e/1CRxsMIjRkWD1KQAMlkOhAcOjxUYAAPvKYcEUF5ofFW2YwTuosN+WxvbgiGSoMHAjkGjm5j4f8Hz7cp270dgfpVWfdcy4B2evDtzQop1444dbLf/7Hq4kg6TgiYSPzTXxKKSA5YxVizWQi3Zlc9KbuCRJ/9zIIADxh2J+B7jzcpmRWVvMeKDqe/T7rxLH/6ziHsnEdkeet4H1YW5Vavbtl2D+Z4kzWkAvCftBmcRsBYXupoUqxfoEd9NeC0Bcd0ycaWlU90e/10WU9WeV66tqRVAnC+/mLcyiJ0GDVwIqkmqYCTvcGTH4fiZ+I6FwdsjMyHAHuLzxgutNR9Lgf6TXn1xw4Npm2sSk1qACOY4cTeTmxb96PCByvSzcEL90ZnB8X2l/6b+LIjproy0KV6LVBVs6peKg2vM+vvw/FwW2nRVlTxk7X3VO/oOkvHoa/SmYgehufDh5/bmG/WnG8uAoAAABA0vuK+boIUlO4BfKwHWkXz7LrCmnUTKw/GPW0PNHNm4bge/pUxFMY2W3BMnO+LLBcK2+zqeZkOcEMOrIV/JUWVBtrKxmYqVVdbdOPmfUpSSKqBH4zr3Z5Pw/3hG2nLuyo86N6wBoZtN/PaCO8gYOtXBf+xT0ibfjzv5G0jB+Xo4e4iIp5IaAaF34OhSbn3tOfCNwmkZTb6R6XXnqdgORI9MrW63NalqR9Y2PMCrR1qsUl2+mILvfQ0f+Haxk4ArIliyTRTclK0MF2G65cxRERKm8ZqpU4R2rXdzIeSfcteSmHQehs+UGUbJ9kepFpBVyTbg4cxmqBpHFcGmc48eELSykoxA+7rNy1CpVeXzULoVgA5n40L7Ma1m8wjCp6lvQvt+vTjBaB2OV72yxsvQuoXMr7w137y6t2vsVZbW60hBmn63xmCHq3v1wgSygbeQBSZKALlccXbIn+AXWljVSxwgrYZq/EVIcwc202CgZax1A1CbKlq4vFmm4IqeajAA6UJcbd9gdeHLWj5NyJcZRny9oJ784wLPKlDZl8lR9YsuECdwC7JZ28gtF7k8EzfpQJgbJlyco9UZ0SV6X/VWXywUWoDAi0dYnhP+W/auuwxgcL3Vjc2ZelsgO7dK0snLwL0DHbynPlTsJjJKetY/XBHV38DXfKXb4Z/OeToUX7Gb4wPqxpcTMZf/PV4uCebxCuaPm0aLXWxPGKUR5TS6/3s3p7CnWcb+JXpnzsorFik+lDoUP5c2yhRhHy9tdJaMfzkhuuBYNrPaxkXDlvEQ6vhAk56hWZ0Ru/EIEE2hm2yio9bTh+1YxBRFHi+mrP3Twmaj/CKOdl0EIgimkgih/OHm/C/85yNv6rBJtuhohikaH8p8nhTsplYuZ+7wvPRZl8d1zbMQ3icnYV5KY3NI/hvcRZnBmMA2SwmcMnF3IaJ5GFFYV2NtJIYuzTJjvD/CUCcVUNtFp3ZWwiykqJ1nejCIvdgfGRlhQUzSGZAgeIYqg9H4C+GZ6c6aNbvbvwpH1A75XPQn2lfyp6eroDYzASQwjpEhZe4hnBAHKAPU7+DOE8GDX9Fbl0VNR97KaftXkLU3RIzN0d67akIgIntjdSJImgJgOf4ErGuiJ3BXvMztIFWok7R8/TMV+bVlVG0qTF1Qit1Fnbr3KkHDKludepK0Pp40XFsmsBKNFgv2CNwk45Rh58EAAGH/pKXAevu68WM4rcEj1q8nS4JI1IG/wYCLmLzvacFJojeOnjt9mdJVdkRmuwVpOJkf7yQlrvF3rEzpgEk6aIQoZh4dLfyggctCZaJ7VfmwqCwGYsUzsZuhtSLN7SrngLCHEert3c+8+Q8sWpsXz8RDuGqvsW2gTnFtBbqv3z/A77C/6EZMABGA7y6if9Jm7qZq2ECxvqb7gfQc+BWRYkGaNCqBhMEetGtoY6JzMqeiS+hgcw+9b7PMYwl3I1Y3QZIJYXJVXBK5q56cmaXP1vfW8w+MmO9jwS72+nx7HRQyN9JialPH2I2PYMx9k6zGObcj9if6Hap204NBQqsbgKN+9inAzkRYQ4sh5kNPNntD+3Fa1RJOw/co395iuOlBcRTGBmjbavWKMCaTRwHJY7O48KMIxS2puK7+5PoeCTsZee+GGGL3lyPB4N19uNLnU/SR7vVxwnged39RRobyJQ2WL+BjSgsmBSXPNQD31mBPCCPlzqpaJzloUMG9W/8mCbGfTf/qhE6rpJsjjRUV1KQuoSfRRbKTdpGHSWh0OwJruIW7xkD0BqRKOfwbW0KisuV77aEQmxsmWnkMcnLaNyoNifCzSKjiDBSXXO3KEp0u7ImreqFq0222OjzT97Nbl/oMVNcsCnU5KpQbA8ZygsEWhVI0l03iGYrLf/Qg5+tnYbhubyj1axC+pqgDTtN+MkhHOCYE8DeC8aHxYifF9oDNkBbBqjp2RGZJnZq+FLDSPFVUCzxUh9C5XlYHQPR7OGOtlAUSzwYKqsBBclshtCm8xnSsam0gt7WeXQy+udKrr+wg368aat7U2YaUeXf5fPFVOIDvbs0Jrpu9FmfYWRxZUY+vzJl/CwwQW35OWqUYE7ciwOPjw92OQP+HgU5SsR9TP4uur/ZnpFYtC5+W5DpZcON8sxHeB3AIU1pjuztQq5PJ/0Uc9FQT3yoNTPT7jpAAoZIKhQBu8efZkwfuC9MeVByiRlQSpB9eZh8M5sHnnlfvApWRY0FxXY1P3bqyhAX+IJOnKsfZNgZ2rxFHIC36SG/UIf76+Y4HS0vFfUFfLh7K+/DwsdRJUF8aMfQU7Ak2f5xEnqYfamRjFUFAnFWhFFOAXQ8vfSoW6Xn5zoWzebjkIljbHdmNQteJbX3o6q/gXiJpFddhlyTpH0rK4YZI4ma19YGpdXhg68KEY8yWgBn6g+/vzMEYXSZu6or1OxmHuXnDreE67bbl5yt7qkkgc6BwuhdWpcWXVgFPGCH0a6bNHl6TspXIozcHPoN7Yyo9XYZ2AuABKO3zOIg33QsogDcX+nu28TZ+egZHtwphwEMv2cHlewy3rYpUZhlf8yVsNbK0lDoC7s0H26qWYON4NPVXoQjLr8iJ3sPzLcWx8WUYxeY6X3fs0XIEc8Nw3UP43g+lIwnLC8BjW//hgeIlSS9ubdI1Ee5FQzzizgeSAE9iphv9YokUIKnFc9znePeA+W1dY2yrIYqbEkasWy3fEmtHrATD5vynA5+cDcOij9ChbYHj1UAQOUrZVLkUvkYK9rgHDwgctmLQnHAVGMvl0MvV0wsNMor7i/1oS/iYqqG9sKbqaeABiyQApifVUj0rX5jVEdKzST+InVw1YvCLSsow72/X2SENoHKTvFWJ/lbAmIEPiryi/QUi7uORHrFEGTtRvMcs5dNH4tBOPbPvD5W6kpvDTsOTf3VgDtFXVle65FNHAA0iZ8SuRGNdGMSHfwvMPxECsRtm8UiANObYnE7eX2/BbMou2MUpzkcUS7O3DLxUYEau8/Zk+rTatnBQR6QhEFdw1qofppWmjHHcNU2qEAfNwLVpfQAn9RprbcrnaLvxkeVycDvNTj9AJ84Lud2Gz/EsCN9/tpjhUecqEwNvTvnsmEiA/f1UL4LnhfbH2sqv1O1eBDM+lcPbdstSqelH3B3BI7RSa+KRA9oIXJd8DjsE0l0ECNF1p/CC3fTuk4sIb1pcHdWDiLRr91Jqsyk/HJqdgC19bVvuNVd4CfwpeJ8ozz5aTp05OehUdMiCAZJeCT2Tgg43hUVlYHcscAd/fVznZvaupW3uwF2hxTkDDWz48EUnRYLAnxKWoMwBBJB8yudmLqm31YdaW7L5tcV+zuhK/Oqnc+qOHb4rQFejXWQl0mL9sWah6gGaGVhJdjqOeRHg0bBpITNtNMKSkNtqAHQJkIL5jVoANySwf1Sr0TLFpYX6lvTzgDEzMI0kJ0OhWN6ze58nOJX2GgmqzZzkNBRzEcb/Yo4jfWR9kpV63kWW0+toWDJpBjOSCUNul7YMshr0E9cERKx4fomAfaeCiW0V82TERQQfjgE4jF+CnobZhRJ8SJDuypoX6zqakJR9S99r21wXF/4fn3sHO0O1dbrAOptIN4Jh5Fv9yhknqBOJ3wrjveKoVJsMD6GWNUWzFwy+M626s1E+tQBNK2yCqMBMp/IOJdyLzhClv7+oTL0j05Fbg/sbN/wtx4QlSdDGCIcKreCjjEJLY593WWIHQeRgh6kogMu8+sZeiy4Wcyb7PJ67bfOLprqrHHWY9xl6R059lSqb1X7j57mdRHIrPGD2xBIGOWAd8xQ9UbjWpz8h2HGL1k0iES/DQevgx/gF4GSvrqCRa0HUXEe0OT5YqFksJc2SSMuJM0f6v9NxrAgCqjb4PNpBV7vU5Ivbsc5PjodxbUweUB66ZhJRu39zJCC/yS4DNllErLjwqBtXJHdK/+LlTdjLxbJoqzhhdilLugUFBgGMWvRh4Wak5ez+LP5/ekhwfnIi4oVIHhfyhMnR3PEwzQDZCah3nfqPYyBO6okCxMqlKhG8WpFw1s08z7/rI9xHQwU8T7Oar5DiN1Hdb+nC64u1HHola2FuOZTA95jYaTVTfHPuYUXBJu/t7U2GOgP8F7nWbFxRX/HHKW3ZP/Ol9CaWovH6VUDg7MVl+KRgA//3DhyVApLJyjaDsiBlEWYvlXjaCVjiAqAOhkO9OMa0J1V/FZjCFgCZo38+5zVptRdDQvEbdx6Fnn8sTWzqieXj38Rg9CP70AAGMVRLyIwnXOFlR3HWxAGNe3/9scxznUUXkrfeGZr5TJhIurnN2MZFq3r+8uR6AcYm4QRqg4MNRlRf03sOQxIMo0hfpchTy23xMsJUH2gaUdD0a1JIkYS4ym5mbzf/0EuG0BAs1MlN4JAYBRDKuisNDGVbXYYP2fwFx1MTJqBIZM8QHQ0DNXqgo21JzYq4d9WmKDo/xjfrC5M6J3pRYclXYZZojiBU1T0ZYSAlqx/xGghi3IZLnMnqG1YdhrcmPz7EsRNjniP9KkkN4yw+OZFKAtaiDXLFBujhu9UrxTzb+OrVT02vFyggM1g9mlyPd/Wl4o6iFZgzgfEBgwwynmu6k1nbrmR1lnEPV+3HnD92F98EotaVmLDUZjJF7wQ+9qwk8fPnykvXbtQp2rJuvq21EX8tjczwX5HcdcxuE0SpKcoeFgphqisJ9B3IaTQQvugFkBKlfF/USoTSyshP7dZ/qnkfdto2K5NxvffE8ZMTQkEbrPkOKtaQ5WNI0Ai/Nfc6NExKdiWQvyeZfP7jW5Tyis9akWZD20/xgDZCahhe1OlJ/Z2IIC885eDp07YjKhpyORW34bz2HlAiFZO+aZwLP8frnZ2LjTf7yiJ+oRupnKxs3xtpemtikcTqENRF02JfkCQMY6Xhg44HkM43TKLyC8anuzTei7ysmN3HK/xetsPCfdOIjIf+2pExTnt675F3TgIv2JFtq2I5w8f7Cwwv7739oUFMHJxsoXQGB5+rnZw+DVFlxXPAH78rKBog3c6WDvvYLondYG4BPIClE5XlFjVZFFtpe5n+iRsrJUvR+0rOyw9AshZgRrKPsU7P+PdYCs4zF6xywsyybKnHWTK4TUlWRmeU8zZjeM8UmULnNZ+JqTVKLPi74zhak8rNiuzn0YzfplXqaUl7rh7J1SHRGSNmxKk3DMZN5u/jobIaboCd23SX96mmel07dXV0ZToVXJFqhNdmWQUVV/krWGPOA234eGifeJUQRfGUNCddPMAmZyAJqtjK8ERxJA/PkqAi/QyzbpokCxmsvSNUHw0c+abkLELyzWcDoMr5CKWjVzG8/wcFICLrAG5vUYT2BoDAQEk4GSlnfUbTOhk4YioYl52oRZA52OtZhd12/ReWBwjCXiW8YDTFqDsFBTA2bs3ew+QuHBHkXtM65EGR6/hLxmYYtEA1cAnuxTZwI9KPLJ5EHyiHe/QnFP8X/d1opkPPLBpq1+Yezxd+F0Q5sbI/2aCe+4iIwxQ/6LDr1iFpVhbaXsqGida/4bIKkvY7svy3YLQY1LHyK2pIAWqooyURjb33tHfKPdok9PP+dgvWxvTWZfM1qoHGd9oENfvU28nsBOVYdcmPbWmzbbpSQZoPF29tC78/MWP1yzP69BDQUH292LF28eV4E9U+9b9ibegqBnRte6p6suAEw/ouNcs/dfZGAt5y3DBnyMFqzD4sZCfJH/VUslGgUHBZMCmr66GUt5I5y9DlsgRvTmk6LenPoB/aqQbvgg3cpa3hKVHjwXDHDnv1bir8pVtZN21hNxWTTdUk5SgwSBV6UdQTCQxqIbmIKvpXbyVwXHRFRq9M+SRoldr79BZB1yPgn0WBwiZ8jSSenR7LlHVfOTXg9a1SEVXOFlLPES47fFEXkjyFrvIEscBd2Ea5lMOl+yeSOUR7h3/WbBlbmdLOccsWV88aWIstfM8t1sBPDfpQ/bPlinNaVM3GNoWBIhuWfNspyJk5FPGAOPUoykFBfKq9wmrQisB83Mvb4+61Z1OoPC6svl347Lwhog5DehY8Xts3099FSWETHURkrpmhhMCL0zZQokbHusmG8knGECKxt4NWgIrxE6XMC238wh+WW7+63xlxbCWL85O9fr9tBJwklbx9BZKKZuJicDfyQ5YaLjvwX6ac+GBIme6ZfS5yQyQUWSpkEmfCbgLU2oF66JaBZtuHLsfJNz+7ctkAnXMTd6DviE+tbHVpHWApwuz36EA93qJjjuO3F3uAeinR9bXCVRvzosxBqVHLJduLXPS5nSstp2b2MjMrox8FBDGToVr8AJ0z/1Vg0n3vhl0c7EjQ/6HbjjqTbull8+6N/6xS+f5oZHyKgEcmYFXl526rlxSLrcMPmW2yCN/cA9/qMjx9Zpr7e3p2tTdKXSBlBy15F0eKTN9EC9dwr9Xh1QmqYK/V+CdZL5xdgONIJFFVa7xy+OqnNO77n9hr0PdJawAY5R0S7hqMkrcSnvGlb+4TYlCkZW5lhJWbwFnC5d5rICngsda8fttLcL3lMEicySV40obfh+BwhjYBirPt4aFHBJ/qXFxvzUTuNbK3Z5epWk56ssQ/WruNL4K9BOjVCBWO16Rrels4GqeIa8gVblgFE6+sFN/m0GzMC5XMvjFlt6o09G1Y6fe8T5h+DwMIwL8R7jCaokNf7vy+Sd3cZdswUUzWeFeIrPddYr2+95ZdAgCU8754YiSgcnbTHIHcwvfasMjn5yXhBC1p83xwG1gdkrSp9B+BZ68iZ3hYOy2y6JllWZkcc4KtqiLrRs/ry4xyPRQz7aMLBL4v7NAln8kkiaJOWsViWF+sAGPqXq2MatbVKlr9v7F3pqH1uXxy1BgaCocWhl18OD3NlUn05l9Vp+1TNzmiswy16W2ix1kqFa5t93S/siM/7chw8O0ae27DClGEsOUfivC3fx6KbTByFSxCgAdCl7gyN4x+J8byQQq6kx7VhvThXes5xcf9feD/ogQokc7BadwmNfF+MqhJUIgXQkOIidHiDOq+FGQufPm1haap07Z9WK5fQJFtZbUeSgF109Jrh4FKx83dx0kylXiqls52ogfkkHp8cOobLCMauvE9AZYxCm0M1Gr+4B4K/2K4SWFUN2o0zyKyBm/9Sf4T20Ad/qW9W1WmxBMfgssFo0x1QXURSmv2bY0y15wuFQOLx/00ueBK2V3bdlnGnP/oPk40XhmBRxPBJGaVSYP2hfWeTVcJWwkc0h64JsHqprYfNeCdqkbbGXlvWDzUUUDkkFrwcpUCEj7cRhaXFssqX0wDDTqpgCOmpnLYRBSDEpYgg2KsuYt59Grmo9QEahXiWD3REI04D1m+sJ6qt+w9bYA6aXwlarfajRcfRFTy8/418SH4aJg45aMpp9U6AZ2OC9oE0MNcyVDGgtbV2TVLdOnNAXYDYQJzMUsLiisysM4eGl8Be4/0xFf+QJ39XgrYeGyjekc7wpcm95Yp7ROWCZQiPzvt2CNK3nGANEqmVK8qrvMqPrhMVkfeRkLRMG86FYTijowPDBhP2AUwlHUqB3XpcPnGOqVm+ghTyusvC67yhaYlYlGmMaltiGaFWf3lXXGq3qv9wHkkFj8hCpRQV0IDht6oBPZPUvg7zA6BoWKHOvUTAJdiSJtWk64RDLZSDQRV2pvOrZT/FtyYccHLsMuPL1Sn8YaIVkhy+YE1/yCRgQ8JfKngzWexYJ9btNf9cny4qLpFVaAYA7FxKPlG4ECDaZIGMFrlJHOmyeEN1GK8XJOdSmeeAu4WRPlVVDhMiPclSB3cYEUUgJqSSFqvpusxP4fjlnvRot8ryFLD3RuY8WFBNDxdgO6Q2HkQoODzHOwlzVPeSP1UTT9EAHRdSYwKY4gpwJJL0aIXCuCx2ybGI8+nW0w1JL9daAKtc37BZ6E7UER6U+OCkRJJ7JPIBQh2oqm/3/9+/VKv9QumPpjmJaWs/YVWRAscnI50MlHzOJXM5TXjziacO71F3bRNP9SUJW0ZjEfadkjbeBX2DTlOXvlsGxIoG9+lewb1JybUgaWOA5MDkvVjKPCptWvX/rOyHPRlW+YHjF6xEDPhdQx+lrAnEZxFRC4TJJrDMaWFPS94ZuiuF15yc+pO/XHkKwTUNLwoRlCWq67LL4aMQng7RcdL6EqwlEKBLaYurJvwDcYnNGcl89BGSl1XD49DFaABQ9fnoIogGoxeBgGMfLWkmE9J7QP+id/2TSXAEAFrn6LsjtN0ucfd06gA4AC8tEF+mCWy91w0p86kofGW4xYGLcL1UlV1IYGEkXNG0pab0SgcCYPUwcX+jSG+xINW8mn4Wi+pKd0HM3+593eyBNsGiGFh5gzS3DXPd4GK+AnCDrlp/WQ5PLpPLlelkJeiCasuoH6otoi3M+VBwg4PSoB2RII8QD7OBBwmOGoMPVVpAKG5qSPgaKcaxfoAuVcV+Qhm4nYosijG4JKLokSlnry+4MFKhqJ5y880E+TVMOWXWhZmpknhexX1/bga5KhDiJgqQVnKRYK4SX6b5zYEd4ma4QIRfppRO0gCPq65dHptOVM/gaXHosebIaK0sFUYamVjz/b64T+CwkxLZFpUY9uk22h1lT3hHlksowFaVe1bf3t0V+NV9eKe4AF6ruJ01Jd7VMbKPAk7fBgfd7f1kEnYUdv4OBNqwWrnugon8Z/7sFw2QtSRkpTJLMu9NtNcOHnm/dC37witihf19UOemZQb4TrerCO5cl6B5Lcs4vxhgMIrqU8eRW0AH/NnKk2Tdtc1XUCD9+ConLqOwtwp6JXPpZhXZCLEPKA43zWHjDx62l4j35e4i74DqTyIi13nzrw3EIzZqE5ZOOtDhrcGpIVBBfMtPKYlmHY0SQjkMvWmtOW1TdEofQiEsT/a3ibAV+5lCGwTHuaEZh0DfgQAAS4Fcl+n4roRaAevgmozEcdIEpQguuUQw2WtIMH5qllE0dChALsoV2YZ9e1uWb8mkTFhHASdWeSFei9IGtVbAniDGrBxOaLu80jNdwzjZGgWIbbPaytJ9cCbSXxsWgmsTzOmLA9CebhmxYaSpLRzYP9PhckS99R2NDc6MahME8qlIwwIgle0M3u1OHicm37LoA6oCTfR64454JVJjkrk/cLmuFivg83foDwcoUyRVc+Qv+Ane7XYgLT/7vuwIKS0zaPf7EmvQVV9mUuzkhcQsHGYu7hHynO5Ajt9g++CaiSpsnZV9gzlsXtMuxxJLuo6gTcloTmQxDI4qfuljbaxeFR1d2CuC0dI1WyLDBiIA8cIPLvYtgbGFLpr/dPW17mkfVQwjGpcgduuGcPsaePH+SPV/nP0wB0GGfEvjnogmkaUmu1JWFRNWn9gHk5brgsCtN/6AE4hRR74Df6FDCispecgk5hz0budssmMk88VPlEJ9HGdjw+TXKGBleZfM7mdlV5upQguOZcoduOuAEMayLGu49KG8W6rewrjMMu00GI7ce3pSTn3fKYimtNZWeUK4Y0+C7t/gPWSiGfE88KTRNjuig6MoGso0aFT6EwXw0KK+BcSAfWg65BK4dhCCCNQuPqaUAPbkiNTFg/Xa37pO1LZ/MArfJS7DY3PEFo3r0lhGqomCagAXATp9tdl1IB7m3Wyc/XdDuCNkuhyeSFL8UHdRnnS0Pijs8tRqPlzR06Ycq+mi/CYA71abJfjPtr6wU+854+SqMJbBzMhwytYRpSdShh5D8Z5kdsg5HvAMQc+5lOn6ifWS88MRnZeT3U4n9i4lprhK2UJDctB5X8dI8dZ6W745yAr8ru2v31yY3MOybIHMRHC3a7wzSeBhPr5sftFJR/mnhyYik8mDRhH4EXXANWhStYupLYsmMcVa7x2rn2G1SjyuCQR8NIzcEUiQbwXHL0/6MNe75JIoUQosRuxahcyNjnPQ0RSGoVRoQo6yZdpXGBRJh403CEFFh97K9A3r6bGkjjhxkHeRoFt/a1NDL62hBgn6/zAoDRbzjlUplKBAWaWF/RhYOi1oAjIfdXpCPfc/uXtmxaB+xlf7l/VXRaqqLOkLEbgMlui/Zx6pz5Nut8VcdzAb1X6RobB8gNWo6/QoTMwAlhW04h2k/TZebZHTz2Rq/S5R+IctwzA4KiUDZ3dj3ZbHMJhebcz8rB//vfqZh4kwiSx0Wb6kUhUnhUnFDjWbhaXdaAluEYNQlPlZ5c1ipKrX8uJjCUWW0gNbckfbp/KFR7p+4WLpkt7qS1hBTDplsq41q8h42HblgMI/+LapWf+gtdfTFgbZOucnxRlwCg2gZ2DBgy93TUGOztUqTPiLdBMVH9dXUkzO8oe6+TzroMkdD0okWO2BZ0fMEBZgh3StVBtiMCbQ5WjF3VxZvOXxr4vhf+dNaZ21H420NHmct7il4fkiv3GL3DsNqCokV6GVEVhkmcV4xhrTNZVVZC/DW8BI7SM9EPluQRThO0g3c8A3mshbx2E0e5vueetgI5rrECTJtA8x5U4ytKPCdnQ/iZlbXPldGAnCClkkL9fNDMDqfe+DbeiBEDA1b7mcFdLRUYxaDIxQnhwjv+TNAwOj1/VYloCskqSucjmoCGIe3OJ8G5Fmz+SWFJX93TB9XdHOLFw3M+2uc7ZjN9xPfnKUG9v9ybXnq4UHut9peVry/NQOF39nljFroIGlFDIoRAMyA2KQIssprQAE2/ACTPVQ9esyQgWEBaNyb+RyzUAEsEiJe325DMQmxKCi5Q3mx7u9OMSqpnE+l9Qtv34z8pwo7lEddG+o3SaSzoPeg1MnADZpgN4j1GSdFi3D5FI/WsznT9IsvgGXejHrdWlAXP9Az1ZG4EJIttcrG+Gnbi4s0VR3f+0LjeZGY8R3WJvoMJTSasMiB7i8T5/ET58KgB99RJLP4DD7TEFYulD7Kvi1gF4F9489e2F1oQ8bAU8PM3jBHwYwGzsNdS3fZn3ORLHfL2/ggzV+ypQFKpUI5d4lUQivi/65XA0almoVhAG9M9d/WO5KDx1087+5IwdRsRW1vvQJr7w19CkFXqcnsg/9lILebvX0PRugF0mX49JiuAgncW4tKh2cIIR5hGZq7WoinW47cfRovR8c9UpFTgdtA00ElH55g1dPR9Pr85a0bU0j2S2r5OG5Wvd2ytaM6WvLao+hkMLDQRdGjH2WxQLRS0qFWyvKJBc+VVWU64VDz7vMe1m22rjVOi+hDYktapStc3dZcxdlWha6368zm50dzo6qKeW9xQT8KfXo9wRPePHkYyN8wUJ3uWX57D8fF6ykk78KATShxbtnQyPx6L9Cl244r+Jqo8gloXyC58gQ+fm+1zwaa5J/q4hNXEHwF9gkjt6kP7+BRlTH/50et1ZrVjnFnAsuzClvpfS8x/LFt4Gnzr5lnUeGpM5j1shyEhYJcxi4757sPwBcEshdlt7TbVb17N1bVTPF2vePF3Q99gTY9b+oqhNLJ1x0iSskjDZF84cQkoev+wVLkPJWOyzkIEh6Ise4gpNdhzN96f987G7cbO8iyttpRs+C8LzotIwwxzB4yof9mVg3KBb0sUEuNcdQOlthaURb41vrnz0YsuAjtowTh2Gq5PxZK/+UrvQbIi+3yP0nxROrRdK1n/rUt80gbhU07U3ijiy2OXfqQKMHqefu2mFZyBcv0C4T9g+rtGOWv6hRJGZTVZ8GuIeSwxIZvB11JchfEWdPP8yQ4irslo0qFDTOoZ9NAiF1QyqJSHrUcfJrApMCafsrOg4uYCR0q+kELn1Hy6+nakudKQMP/0AUqkOXWHnAM4eJk9Q/p63kGZxcGdonQmzLO4lbiWAs9L1ISKylOCcpij9t9qKbn+BM2B2XLW74PEdTpTsVR2FE0sjOL6CziaJox8/ETveT7ms6Bafn5MBBe5O709fP/I9v/7yeR6/cYfrB12HkjdPWq3P7rdX4ynm27JDrB93IkP1Sf+v4Ac0BdiW/lAE+D9yaVRnC2N9xWc6NFd1RC3VJKRBDUQyW2HhHBmJxA2oeyOTKKB7Ep/CxPjmU+gkJXIxwaHl8k0coeYrR9K/mCGlbCpjc0C5GVFwaC1AoRYaVs745xTBfY7XRSHS1j/GEh75O4AwSE9ANCIWFk87zSgnF7CAmKGRCy13Y2YHROfz0kVgYi5vtcweCBbAWYBczQNAyyaCbD8Sas3RQqWVIVYaVNICJQ4q926eWIOMxu8xl4oGxAGLeeRNF5QtznPTPZ/iJ7Jx721Cz9uei24kti28AewFYyN4kFsaubE9S2iSU6a3U9qURuiaIfcYJ8MPcqu+sDKxxmFwFIHTYq8tOgIDeEWDaNIOEhfTVUtO6x8a49856rNA7ZaVAX8QVJi57VkRtTk0rf1QKhZuREY1tkiGSt+wB1k53AgrZUYjAJgAAA=')">
+      <div class="life-reel-head">
+        <div><p class="chapter-kicker">A life in frames</p><h2 id="life-reel-title">Not stock imagery.<br>Actual chapters.</h2></div>
+        <p>The portfolio now uses real photographs from different chapters of Francine’s life so visitors do not meet the same polished portrait again and again. Learning, pageantry, and professional presence each carry a different kind of authority.</p>
+      </div>
+      <div class="life-cards" aria-label="Selected portraits from Francine Marie Bautista's journey">
+        <article class="life-card"><div class="life-card-copy"><span>Learning</span><h3>Graduation</h3><p>A chapter grounded in education, service, people, and the discipline of becoming.</p></div></article>
+        <article class="life-card"><div class="life-card-copy"><span>Visibility</span><h3>Pageantry</h3><p>Standing where image, scrutiny, confidence, performance, and public perception meet.</p></div></article>
+        <article class="life-card"><div class="life-card-copy"><span>Presence</span><h3>Professional portrait</h3><p>A quieter kind of confidence: direct, composed, and ready to lead the conversation.</p></div></article>
+      </div>
+      <p class="life-mobile-hint">Swipe the chapters</p>
+    </section>
+
+    <section class="poem-panel" aria-labelledby="poem-title">
+      <div class="poem-layout">
+        <div><p class="chapter-kicker">This Is Francine</p><h2 id="poem-title">Before the titles,<br>there was becoming.</h2><p class="poem-note">An excerpt from the personal poem created for the About FMB story. It is kept intentionally short here so the page can breathe.</p></div>
+        <div class="poem-lines">
+          <p>I started as a little boy,</p><p>with a girl somewhere within.</p><p>I didn’t know what life would bring,</p><p>or where I should begin.</p>
+          <p class="poem-turn">That little girl grew up.</p><p class="poem-close">And this is Francine.</p>
+        </div>
       </div>
     </section>
 
@@ -167,60 +182,54 @@
       </div>
     </section>
 
+    <section class="authority-story" aria-labelledby="authority-story-title">
+      <div class="authority-story-grid">
+        <div>
+          <p class="chapter-kicker">The authority story</p>
+          <h2 id="authority-story-title">Why Francine is difficult to put in one box.</h2>
+          <p class="authority-lead">She has been in front of the camera and behind it, on a stage and in a classroom, inside a brand brief and inside the responsibility of building one from nothing.</p>
+        </div>
+        <div class="authority-body">
+          <p>Francine did not arrive through one perfectly packaged career path. Tourism taught her to read people, place, service, and experience. Teaching and training taught her that complicated ideas are useless when people cannot understand them. Photography taught her to notice what a frame says before a word is spoken. Pageantry taught her what it feels like to be watched, judged, remembered, and misunderstood.</p>
+          <p>Brand strategy, public relations, creative direction, entrepreneurship, and digital work brought those lessons together. That is why she rarely sees a website as only a website, a campaign as only content, or a public image as only aesthetics. She looks at the whole reputation system: what people see, what they believe, what they remember, and what happens after the attention arrives.</p>
+          <p>The value is not that Francine can do many things. It is that the disciplines speak to one another. Strategy survives the design. The story survives the campaign. The culture survives the trend. And the work is built with enough clarity to keep moving when the launch moment is over.</p>
+          <div class="authority-proof">
+            <div><span>01 · SEE</span><strong>Reads the whole perception system</strong></div>
+            <div><span>02 · TRANSLATE</span><strong>Makes complex ideas understandable</strong></div>
+            <div><span>03 · BUILD</span><strong>Moves from concept into execution</strong></div>
+            <div><span>04 · PROTECT</span><strong>Thinks beyond attention toward reputation</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="chapter philosophy-chapter" id="philosophy" data-chapter="Philosophy" data-index="04" aria-labelledby="philosophy-title">
       <div class="philosophy-stage">
-        <div class="philosophy-intro">
-          <p class="chapter-kicker">How FMB thinks</p>
-          <h2 id="philosophy-title">The work begins<br>before the design.</h2>
-          <p>Every project begins with a deeper question: what should people understand, remember, trust, feel, and do next?</p>
-        </div>
-        <div class="principle-stack" aria-live="polite">
-          <p class="principle is-active"><span>01</span>Clarity before visibility.</p>
-          <p class="principle"><span>02</span>Meaning before decoration.</p>
-          <p class="principle"><span>03</span>Story before promotion.</p>
-          <p class="principle"><span>04</span>Identity before aesthetics.</p>
-          <p class="principle"><span>05</span>Trust before attention.</p>
-          <p class="principle"><span>06</span>Culture before trend.</p>
-          <p class="principle"><span>07</span>Long-term reputation before temporary reaction.</p>
-        </div>
+        <div class="philosophy-intro"><p class="chapter-kicker">How FMB thinks</p><h2 id="philosophy-title">The work begins<br>before the design.</h2><p>Every project begins with a deeper question: what should people understand, remember, trust, feel, and do next?</p></div>
+        <div class="principle-stack" aria-live="polite"><p class="principle is-active"><span>01</span>Clarity before visibility.</p><p class="principle"><span>02</span>Meaning before decoration.</p><p class="principle"><span>03</span>Story before promotion.</p><p class="principle"><span>04</span>Identity before aesthetics.</p><p class="principle"><span>05</span>Trust before attention.</p><p class="principle"><span>06</span>Culture before trend.</p><p class="principle"><span>07</span>Long-term reputation before temporary reaction.</p></div>
         <div class="principle-steps" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
       </div>
     </section>
 
     <section class="chapter work-chapter" id="work" data-chapter="Work" data-index="05" aria-labelledby="work-title">
-      <header class="section-heading compact-heading">
-        <p class="chapter-kicker">What FMB builds</p>
-        <h2 id="work-title">Ideas become systems.<br>Stories become platforms.</h2>
-      </header>
-      <div class="work-scene">
-        <div class="work-track" id="workTrack">
-          <article class="work-panel"><span>01</span><h3>Brand Strategy</h3><p>Positioning, identity, audience understanding, reputation, and the choices that make a brand easier to understand, trust, and remember.</p></article>
-          <article class="work-panel image-panel"><img src="/assets/images/fmb-approved/francine-standing-landscape.webp" alt="Francine Marie Bautista" loading="lazy"><div><span>02</span><h3>Creative Direction</h3><p>One connected visual and narrative system across photography, campaigns, media, products, spaces, and public presence.</p></div></article>
-          <article class="work-panel"><span>03</span><h3>Public Relations</h3><p>Clear messages, credible narratives, thoughtful visibility, and public communication designed with long-term reputation in mind.</p></article>
-          <article class="work-panel image-panel"><img src="/assets/images/fmb/francine-founder-side-cutout-900-v1.webp" alt="Francine Marie Bautista" loading="lazy"><div><span>04</span><h3>Photography &amp; Storytelling</h3><p>Images and stories designed to preserve identity, atmosphere, emotion, and the details an audience remembers.</p></div></article>
-          <article class="work-panel"><span>05</span><h3>Digital Platforms</h3><p>Websites, applications, learning experiences, content systems, and tools that transform ideas into useful public experiences.</p></article>
-          <article class="work-panel light"><span>06</span><h3>Culture &amp; Community</h3><p>Language preservation, local history, advocacy, education, wellbeing, and initiatives grounded in dignity, access, and memory.</p></article>
-        </div>
-      </div>
+      <header class="section-heading compact-heading"><p class="chapter-kicker">What FMB builds</p><h2 id="work-title">Ideas become systems.<br>Stories become platforms.</h2></header>
+      <div class="work-scene"><div class="work-track" id="workTrack">
+        <article class="work-panel"><span>01</span><h3>Brand Strategy</h3><p>Positioning, identity, audience understanding, reputation, and the choices that make a brand easier to understand, trust, and remember.</p></article>
+        <article class="work-panel image-panel"><img src="/assets/images/fmb-approved/francine-standing-landscape.webp" alt="Francine Marie Bautista" loading="lazy"><div><span>02</span><h3>Creative Direction</h3><p>One connected visual and narrative system across photography, campaigns, media, products, spaces, and public presence.</p></div></article>
+        <article class="work-panel"><span>03</span><h3>Public Relations</h3><p>Clear messages, credible narratives, thoughtful visibility, and public communication designed with long-term reputation in mind.</p></article>
+        <article class="work-panel image-panel"><img src="/assets/images/fmb/francine-founder-side-cutout-900-v1.webp" alt="Francine Marie Bautista" loading="lazy"><div><span>04</span><h3>Photography &amp; Storytelling</h3><p>Images and stories designed to preserve identity, atmosphere, emotion, and the details an audience remembers.</p></div></article>
+        <article class="work-panel"><span>05</span><h3>Digital Platforms</h3><p>Websites, applications, learning experiences, content systems, and tools that transform ideas into useful public experiences.</p></article>
+        <article class="work-panel light"><span>06</span><h3>Culture &amp; Community</h3><p>Language preservation, local history, advocacy, education, wellbeing, and initiatives grounded in dignity, access, and memory.</p></article>
+      </div></div>
     </section>
 
     <section class="chapter purpose-chapter" id="purpose" data-chapter="Purpose" data-index="06" aria-labelledby="purpose-title">
       <div class="purpose-image"><img src="/assets/images/fmb-approved/francine-standing-landscape.webp" alt="Francine Marie Bautista" loading="lazy" decoding="async"></div>
-      <div class="purpose-copy">
-        <p class="chapter-kicker">Culture, identity, and purpose</p>
-        <h2 id="purpose-title">The future is incomplete<br>when the past is forgotten.</h2>
-        <p>Francine’s work in language preservation, Sambal culture and heritage, women, LGBTQIA+ visibility, mental health, safe digital spaces, education, and community development is not a side note to the professional practice. It explains why visibility, dignity, access, and memory matter so much in the work.</p>
-        <div class="purpose-list"><span>Language preservation</span><span>Sambal culture &amp; heritage</span><span>Women</span><span>LGBTQIA+ visibility</span><span>Mental health</span><span>Community development</span></div>
-        <a class="button ghost" href="/mabayani/">Explore culture and advocacy</a>
-      </div>
+      <div class="purpose-copy"><p class="chapter-kicker">Culture, identity, and purpose</p><h2 id="purpose-title">The future is incomplete<br>when the past is forgotten.</h2><p>Francine’s work in language preservation, Sambal culture and heritage, women, LGBTQIA+ visibility, mental health, safe digital spaces, education, and community development is not a side note to the professional practice. It explains why visibility, dignity, access, and memory matter so much in the work.</p><div class="purpose-list"><span>Language preservation</span><span>Sambal culture &amp; heritage</span><span>Women</span><span>LGBTQIA+ visibility</span><span>Mental health</span><span>Community development</span></div><a class="button ghost" href="/mabayani/">Explore culture and advocacy</a></div>
     </section>
 
     <section class="chapter ecosystem-chapter" id="ecosystem" data-chapter="Ecosystem" data-index="07" aria-labelledby="ecosystem-title">
-      <header class="section-heading centered-heading">
-        <p class="chapter-kicker">The ecosystem</p>
-        <h2 id="ecosystem-title">One direction.<br>Many expressions.</h2>
-        <p>Each platform has its own purpose, audience, and responsibility. What connects the work is a shared interest in clarity, culture, education, communication, technology, and public impact.</p>
-      </header>
+      <header class="section-heading centered-heading"><p class="chapter-kicker">The ecosystem</p><h2 id="ecosystem-title">One direction.<br>Many expressions.</h2><p>Each platform has its own purpose, audience, and responsibility. What connects the work is a shared interest in clarity, culture, education, communication, technology, and public impact.</p></header>
       <div class="ecosystem-map" id="ecosystemMap">
         <div class="ecosystem-lines" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <a class="ecosystem-node central-node" href="/fmbandco/"><strong>FMB&amp;CO.</strong><span>Direction, ventures &amp; company work</span></a>
@@ -231,63 +240,53 @@
         <a class="ecosystem-node node-mabayani" href="/mabayani/"><strong>Mabayani</strong><span>History, language, memory &amp; courage</span></a>
         <a class="ecosystem-node node-future" href="/projects/"><strong>PageantIndex</strong><span>Pageantry network &amp; industry platform</span></a>
       </div>
+      <div class="ecosystem-explainer">
+        <div><p class="chapter-kicker">How it works</p><h3>Not a pile of projects.<br>A portfolio with roles.</h3><p>FrancineMarieBautista.com is the public gateway. The wider ecosystem separates business, client services, learning, public information, culture, and community work so each initiative can stay clear about what it is responsible for.</p></div>
+        <div class="ecosystem-roles">
+          <div class="ecosystem-role"><strong>FMB&amp;CO.</strong><span>The business and strategic house for ventures, partnerships, development, and cross-brand direction.</span></div>
+          <div class="ecosystem-role"><strong>SENZ</strong><span>The client-service arm for marketing, public relations, branding, digital solutions, and communications.</span></div>
+          <div class="ecosystem-role"><strong>Cognita</strong><span>The learning and knowledge arm for education, research, courses, and learning-oriented digital experiences.</span></div>
+          <div class="ecosystem-role"><strong>With Love, FMB + Yoni</strong><span>Care, advocacy, community, and digital experiences designed around support and access.</span></div>
+          <div class="ecosystem-role"><strong>FMB News</strong><span>A Filipino news-explainer platform built around verified facts, context, relevance, and what readers should watch next.</span></div>
+          <div class="ecosystem-role"><strong>Mabayani + PageantIndex</strong><span>Distinct cultural and industry-building work: memory, heritage, language, pageantry, profiles, and professional networks.</span></div>
+        </div>
+      </div>
     </section>
 
     <section class="founder-words" aria-labelledby="why-fmb-title">
-      <div class="founder-words-frame">
-        <p class="chapter-kicker">Why FMB</p>
-        <h2 id="why-fmb-title">The advantage is not one skill.<br>It is the connection between them.</h2>
-        <p class="why-intro">A brand can look beautiful and still be misunderstood. A campaign can be visible and still lack trust. A website can function and still say nothing. Francine works across the decisions that connect positioning, story, public perception, visual direction, and execution.</p>
-        <div class="why-grid">
-          <article class="why-card"><span>01</span><h3>Sees the whole reputation system</h3><p>Audience, message, visual identity, behavior, channels, and public perception are treated as one connected system, not separate deliverables.</p></article>
-          <article class="why-card"><span>02</span><h3>Strategy survives execution</h3><p>Francine can move from positioning into copy, photography, creative direction, websites, campaigns, and content without losing the original idea.</p></article>
-          <article class="why-card"><span>03</span><h3>Complex ideas become clear</h3><p>Teaching and training experience shaped a practical instinct: if people cannot understand the idea, the work is not finished.</p></article>
-          <article class="why-card"><span>04</span><h3>Public image is not abstract</h3><p>Photography and pageantry sharpened how she reads presence, framing, scrutiny, emotion, confidence, and the signals people remember.</p></article>
-          <article class="why-card"><span>05</span><h3>Founder thinking changes the brief</h3><p>As an entrepreneur and builder, she considers timing, resources, sustainability, scalability, and what happens after the launch.</p></article>
-          <article class="why-card"><span>06</span><h3>Culture adds depth, not decoration</h3><p>Work in heritage, language, community, and identity keeps cultural relevance connected to responsibility rather than trend-chasing.</p></article>
+      <div class="founder-words-frame"><p class="chapter-kicker">Why FMB</p><h2 id="why-fmb-title">The advantage is not one skill.<br>It is the connection between them.</h2><p class="why-intro">A brand can look beautiful and still be misunderstood. A campaign can be visible and still lack trust. A website can function and still say nothing. Francine works across the decisions that connect positioning, story, public perception, visual direction, and execution.</p><div class="why-grid"><article class="why-card"><span>01</span><h3>Sees the whole reputation system</h3><p>Audience, message, visual identity, behavior, channels, and public perception are treated as one connected system, not separate deliverables.</p></article><article class="why-card"><span>02</span><h3>Strategy survives execution</h3><p>Francine can move from positioning into copy, photography, creative direction, websites, campaigns, and content without losing the original idea.</p></article><article class="why-card"><span>03</span><h3>Complex ideas become clear</h3><p>Teaching and training experience shaped a practical instinct: if people cannot understand the idea, the work is not finished.</p></article><article class="why-card"><span>04</span><h3>Public image is not abstract</h3><p>Photography and pageantry sharpened how she reads presence, framing, scrutiny, emotion, confidence, and the signals people remember.</p></article><article class="why-card"><span>05</span><h3>Founder thinking changes the brief</h3><p>As an entrepreneur and builder, she considers timing, resources, sustainability, scalability, and what happens after the launch.</p></article><article class="why-card"><span>06</span><h3>Culture adds depth, not decoration</h3><p>Work in heritage, language, community, and identity keeps cultural relevance connected to responsibility rather than trend-chasing.</p></article></div><p class="why-pull">Clearer. More meaningful. Harder to ignore.</p><a class="button primary" href="/work-with-fmb/">Work With FMB</a></div>
+    </section>
+
+    <section class="availability-section" aria-labelledby="availability-title">
+      <div class="availability-grid">
+        <div class="availability-copy"><p class="chapter-kicker">Capacity by design</p><h2 id="availability-title">Good work needs<br>room to think.</h2><p>Francine keeps project capacity intentionally selective so strategy, creative direction, and execution do not become assembly-line work. Start with an inquiry; fit, timing, and the correct FMB route are reviewed before anything is confirmed.</p><div class="capacity-stat"><strong>04</strong><span>illustrative inquiry windows shown in this portfolio preview</span></div><a class="button primary" href="/work-with-fmb/">Request a project review</a></div>
+        <div class="calendar-card" aria-label="Illustrative August 2026 availability calendar">
+          <div class="calendar-head"><strong>August 2026</strong><span>Capacity preview</span></div>
+          <div class="calendar-weekdays"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+          <div class="calendar-days">
+            <span class="calendar-day empty"></span><span class="calendar-day empty"></span><span class="calendar-day empty"></span><span class="calendar-day empty"></span><span class="calendar-day empty"></span><span class="calendar-day empty"></span>
+            <span class="calendar-day private">1</span><span class="calendar-day private">2</span><span class="calendar-day reserved">3</span><span class="calendar-day reserved">4</span><span class="calendar-day reserved">5</span><span class="calendar-day private">6</span><span class="calendar-day reserved">7</span><span class="calendar-day private">8</span>
+            <span class="calendar-day private">9</span><span class="calendar-day reserved">10</span><span class="calendar-day inquiry">11</span><span class="calendar-day reserved">12</span><span class="calendar-day reserved">13</span><span class="calendar-day reserved">14</span><span class="calendar-day private">15</span>
+            <span class="calendar-day private">16</span><span class="calendar-day inquiry">17</span><span class="calendar-day reserved">18</span><span class="calendar-day reserved">19</span><span class="calendar-day reserved">20</span><span class="calendar-day inquiry">21</span><span class="calendar-day private">22</span>
+            <span class="calendar-day private">23</span><span class="calendar-day reserved">24</span><span class="calendar-day reserved">25</span><span class="calendar-day reserved">26</span><span class="calendar-day reserved">27</span><span class="calendar-day inquiry">28</span><span class="calendar-day private">29</span><span class="calendar-day private">30</span><span class="calendar-day reserved">31</span>
+          </div>
+          <div class="calendar-legend"><span><i class="l-reserved"></i>Reserved example</span><span><i class="l-inquiry"></i>Inquiry window</span><span><i class="l-private"></i>Private / unavailable</span></div>
+          <p class="calendar-disclosure">Illustrative portfolio calendar, not a live schedule. Actual availability is confirmed only after an inquiry is reviewed.</p>
         </div>
-        <p class="why-pull">Clearer. More meaningful. Harder to ignore.</p>
-        <a class="button primary" href="/work-with-fmb/">Work With FMB</a>
       </div>
     </section>
 
     <section class="chapter future-chapter" id="future" data-chapter="Future" data-index="08" aria-labelledby="future-title">
-      <div class="future-copy">
-        <p class="chapter-kicker">Future vision</p>
-        <h2 id="future-title">The work is<br>still becoming.</h2>
-        <p>The goal is not simply to create more. It is to build work that remains useful, meaningful, trusted, transferable, and remembered.</p>
-      </div>
-      <div class="manifesto">
-        <p>Visibility should have purpose.</p>
-        <p>Identity should not be erased for acceptance.</p>
-        <p>Culture can move forward without forgetting where it came from.</p>
-        <p>Creativity is strongest when guided by strategy.</p>
-        <p>Public perception can be shaped responsibly.</p>
-        <p>Stories can build trust, community, opportunity, and change.</p>
-        <p>The future should be designed with memory, meaning, and courage.</p>
-      </div>
+      <div class="future-copy"><p class="chapter-kicker">Future vision</p><h2 id="future-title">The work is<br>still becoming.</h2><p>The goal is not simply to create more. It is to build work that remains useful, meaningful, trusted, transferable, and remembered.</p></div>
+      <div class="manifesto"><p>Visibility should have purpose.</p><p>Identity should not be erased for acceptance.</p><p>Culture can move forward without forgetting where it came from.</p><p>Creativity is strongest when guided by strategy.</p><p>Public perception can be shaped responsibly.</p><p>Stories can build trust, community, opportunity, and change.</p><p>The future should be designed with memory, meaning, and courage.</p></div>
     </section>
 
     <section class="work-with-fmb" id="work-with-fmb" aria-labelledby="work-with-title">
-      <div class="contact-intro">
-        <p class="chapter-kicker">Work With FMB</p>
-        <h2 id="work-with-title">Bring the problem,<br>not a perfect brief.</h2>
-        <p>You do not need to know whether the answer is brand strategy, PR, creative direction, photography, a website, a campaign, training, or something else. Start with the outcome you need. The inquiry route will help place the work where it belongs.</p>
-        <ul><li>Creative direction &amp; strategy</li><li>Branding, PR &amp; public perception</li><li>Photography &amp; visual storytelling</li><li>Speaking, training &amp; workshops</li><li>Digital project direction</li><li>Partnerships &amp; collaborations</li></ul>
-      </div>
-      <div class="contact-action-panel">
-        <span>START HERE</span>
-        <h3>Tell us what you are trying to make happen.</h3>
-        <p>The professional inquiry page separates direct FMB work, SENZ, Cognita, and FMB&amp;CO. partnerships so you do not have to guess the correct route.</p>
-        <a class="button primary" href="/work-with-fmb/">Open the Inquiry Desk</a>
-        <p class="contact-note">An inquiry is a request for review, not a confirmation of availability, pricing, a meeting, or an agreement.</p>
-      </div>
+      <div class="contact-intro"><p class="chapter-kicker">Work With FMB</p><h2 id="work-with-title">Bring the problem,<br>not a perfect brief.</h2><p>You do not need to know whether the answer is brand strategy, PR, creative direction, photography, a website, a campaign, training, or something else. Start with the outcome you need. The inquiry route will help place the work where it belongs.</p><ul><li>Creative direction &amp; strategy</li><li>Branding, PR &amp; public perception</li><li>Photography &amp; visual storytelling</li><li>Speaking, training &amp; workshops</li><li>Digital project direction</li><li>Partnerships &amp; collaborations</li></ul></div>
+      <div class="contact-action-panel"><span>START HERE</span><h3>Tell us what you are trying to make happen.</h3><p>The professional inquiry page separates direct FMB work, SENZ, Cognita, and FMB&amp;CO. partnerships so you do not have to guess the correct route.</p><a class="button primary" href="/work-with-fmb/">Open the Inquiry Desk</a><p class="contact-note">An inquiry is a request for review, not a confirmation of availability, pricing, a meeting, or an agreement.</p></div>
     </section>
 
-    <section class="closing-signature" aria-label="Closing statement">
-      <picture><img src="/assets/images/fmb/francine-founder-front-cutout-900-v1.webp" alt="Francine Marie Bautista" loading="lazy" decoding="async"></picture>
-      <div class="closing-copy"><p>This is not only who I am.<br>It is what I am still becoming.</p><strong>With love, FMB</strong></div>
-    </section>
+    <section class="closing-signature" aria-label="Closing statement"><picture><img src="/assets/images/fmb/francine-founder-front-cutout-900-v1.webp" alt="Francine Marie Bautista" loading="lazy" decoding="async"></picture><div class="closing-copy"><p>This is not only who I am.<br>It is what I am still becoming.</p><strong>With love, FMB</strong></div></section>
   </main>
 
   <footer class="site-footer">
@@ -298,5 +297,6 @@
   </footer>
 
   <script src="/assets/js/aboutfmb-cinematic.js?v=20260808-authority-v1" defer></script>
+  <script src="/assets/js/aboutfmb-portfolio-v2.js?v=20260808-portfolio-v2" defer></script>
 </body>
 </html>
