@@ -20,6 +20,56 @@
   --fmb-scroll: 0;
 }
 
+/* Search-intent Q&A for profile and explainer articles. */
+.news-story-route .nc-faq {
+  margin-top: clamp(72px, 9vw, 126px);
+  padding-top: clamp(38px, 5vw, 64px);
+  border-top: 1px solid var(--fmb-line-strong);
+}
+
+.news-story-route .nc-faq-list {
+  display: grid;
+  margin-top: 34px;
+  border-bottom: 1px solid var(--fmb-line);
+}
+
+.news-story-route .nc-faq-item {
+  padding: 28px 0 30px;
+  border-top: 1px solid var(--fmb-line);
+}
+
+.news-story-route .nc-faq-item h3 {
+  max-width: 25ch;
+  margin: 0 0 12px;
+  color: var(--fmb-ink);
+  font-family: var(--fmb-serif);
+  font-size: clamp(26px, 3vw, 42px);
+  font-weight: 650;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+.news-story-route .nc-faq-item p {
+  margin: 0;
+  color: var(--fmb-ink-soft);
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+@media (max-width: 520px) {
+  .news-story-route .nc-faq-item {
+    padding-block: 24px;
+  }
+
+  .news-story-route .nc-faq-item h3 {
+    font-size: 30px;
+  }
+
+  .news-story-route .nc-faq-item p {
+    font-size: 16px;
+  }
+}
+
 html {
   background: #fff;
   color-scheme: light;

@@ -10,7 +10,7 @@ const canonicalOrigin = 'https://www.francinemariebautista.com';
 const fallbackImage = '/assets/images/news/fmb-news-editorial-fallback.svg';
 const colorLogo = '/assets/images/news/fmb-news-primary-logo-2026.webp';
 const whiteLogo = '/assets/images/news/fmb-news-white-transparent-2026.webp';
-const stylesheet = '/assets/css/fmbnews-clean-v1.css?v=20260807-production-v3';
+const stylesheet = '/assets/css/fmbnews-clean-v1.css?v=20260808-profile-v1';
 const allowedCategories = new Set([
   'National',
   'World',
@@ -23,7 +23,12 @@ const allowedCategories = new Set([
   'Pageantry',
 ]);
 const allowedArticleTypes = new Set(['NewsArticle', 'AnalysisNewsArticle', 'ReportageNewsArticle']);
-const allowedImageKinds = new Set(['open-license-photo', 'public-domain-photo', 'editorial-fallback']);
+const allowedImageKinds = new Set([
+  'open-license-photo',
+  'public-domain-photo',
+  'publisher-supplied-photo',
+  'editorial-fallback',
+]);
 const unsafeUsagePattern = /reference image only|publication rights not verified|rights not verified|permission not verified/i;
 
 const esc = (value) => String(value ?? '')
@@ -120,9 +125,27 @@ function validateArticle(raw, file) {
       publisher: requiredString(source?.publisher, `${prefix}.publisher`, file),
       title: requiredString(source?.title, `${prefix}.title`, file),
       publishedAt: validDate(source?.publishedAt, `${prefix}.publishedAt`, file),
+      dateLabel: source?.dateLabel ? requiredString(source.dateLabel, `${prefix}.dateLabel`, file) : null,
       url: validHttpUrl(source?.url, `${prefix}.url`, file),
     };
   });
+
+  if (raw.faq !== undefined && (!Array.isArray(raw.faq) || raw.faq.length === 0)) {
+    throw new Error(`${file}: faq must be a non-empty array when provided`);
+  }
+  const faq = raw.faq === undefined ? [] : raw.faq.map((item, itemIndex) => {
+    const prefix = `faq[${itemIndex}]`;
+    return {
+      question: requiredString(item?.question, `${prefix}.question`, file),
+      answer: requiredString(item?.answer, `${prefix}.answer`, file),
+    };
+  });
+  if (raw.keywords !== undefined && (!Array.isArray(raw.keywords) || raw.keywords.length === 0)) {
+    throw new Error(`${file}: keywords must be a non-empty array when provided`);
+  }
+  const keywords = raw.keywords === undefined ? [] : raw.keywords.map((keyword, keywordIndex) => (
+    requiredString(keyword, `keywords[${keywordIndex}]`, file)
+  ));
 
   const image = raw.image;
   if (!image || typeof image !== 'object' || Array.isArray(image)) throw new Error(`${file}: image is required`);
@@ -150,6 +173,9 @@ function validateArticle(raw, file) {
     emailSubject: requiredString(raw.emailSubject, 'emailSubject', file),
     slug,
     headline: requiredString(raw.headline, 'headline', file),
+    seoTitle: raw.seoTitle ? requiredString(raw.seoTitle, 'seoTitle', file) : requiredString(raw.headline, 'headline', file),
+    seoDescription: raw.seoDescription ? requiredString(raw.seoDescription, 'seoDescription', file) : requiredString(raw.deck, 'deck', file),
+    keywords,
     category,
     kicker: requiredString(raw.kicker, 'kicker', file),
     deck: requiredString(raw.deck, 'deck', file),
@@ -158,6 +184,10 @@ function validateArticle(raw, file) {
     author: raw.author === 'FMB News Desk' ? raw.author : 'FMB News Desk',
     articleType,
     sections,
+    faq,
+    faqTitle: raw.faqTitle
+      ? requiredString(raw.faqTitle, 'faqTitle', file)
+      : 'Quick answers',
     sources,
     image: {
       kind: imageKind,
@@ -170,6 +200,10 @@ function validateArticle(raw, file) {
       credit: requiredString(image.credit, 'image.credit', file),
       caption: requiredString(image.caption, 'image.caption', file),
       alt: requiredString(image.alt, 'image.alt', file),
+      width: Number.isInteger(image.width) && image.width > 0 ? image.width : 1440,
+      height: Number.isInteger(image.height) && image.height > 0 ? image.height : 900,
+      focusX: Number.isFinite(image.focusX) && image.focusX >= 0 && image.focusX <= 100 ? image.focusX : 50,
+      focusY: Number.isFinite(image.focusY) && image.focusY >= 0 && image.focusY <= 100 ? image.focusY : 50,
     },
     audit: {
       sourceCheckedAt: validDate(audit.sourceCheckedAt, 'audit.sourceCheckedAt', file),
@@ -237,7 +271,9 @@ function categoryKey(category) {
 }
 
 function readingTime(article) {
-  const words = article.sections.flatMap((section) => section.paragraphs).join(' ').split(/\s+/).filter(Boolean).length;
+  const sectionWords = article.sections.flatMap((section) => section.paragraphs);
+  const faqWords = article.faq.flatMap((item) => [item.question, item.answer]);
+  const words = [...sectionWords, ...faqWords].join(' ').split(/\s+/).filter(Boolean).length;
   return Math.max(2, Math.ceil(words / 220));
 }
 
@@ -251,9 +287,11 @@ function assertChronological(records, label = 'FMB News feed') {
   }
 }
 
-function head({ title, description, canonical, image, type = 'website', publishedAt, updatedAt, schema }) {
+function head({ title, description, canonical, image, imageWidth, imageHeight, imageAlt, type = 'website', publishedAt, updatedAt, schema }) {
   const imageUrl = absoluteUrl(image || colorLogo);
-  return `<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>${esc(title)}</title><meta name="description" content="${esc(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="${esc(canonical)}"><meta property="og:type" content="${type}"><meta property="og:site_name" content="FMB News"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${esc(canonical)}"><meta property="og:image" content="${esc(imageUrl)}"><meta name="twitter:card" content="summary_large_image">${publishedAt ? `<meta property="article:published_time" content="${esc(publishedAt)}"><meta property="article:modified_time" content="${esc(updatedAt || publishedAt)}">` : ''}${schema ? `<script type="application/ld+json">${JSON.stringify(schema).replaceAll('<', '\\u003c')}</script>` : ''}<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Playfair+Display:wght@600;700&display=swap"><link rel="stylesheet" href="${stylesheet}"></head>`;
+  const imageType = /\.jpe?g(?:$|\?)/i.test(imageUrl) ? 'image/jpeg' : /\.png(?:$|\?)/i.test(imageUrl) ? 'image/png' : /\.webp(?:$|\?)/i.test(imageUrl) ? 'image/webp' : null;
+  const imageMeta = `${imageType ? `<meta property="og:image:type" content="${imageType}">` : ''}${imageWidth ? `<meta property="og:image:width" content="${esc(imageWidth)}">` : ''}${imageHeight ? `<meta property="og:image:height" content="${esc(imageHeight)}">` : ''}${imageAlt ? `<meta property="og:image:alt" content="${esc(imageAlt)}"><meta name="twitter:image:alt" content="${esc(imageAlt)}">` : ''}`;
+  return `<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>${esc(title)}</title><meta name="description" content="${esc(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="${esc(canonical)}"><meta property="og:type" content="${type}"><meta property="og:site_name" content="FMB News"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${esc(canonical)}"><meta property="og:image" content="${esc(imageUrl)}">${imageMeta}<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(title)}"><meta name="twitter:description" content="${esc(description)}"><meta name="twitter:image" content="${esc(imageUrl)}">${publishedAt ? `<meta property="article:published_time" content="${esc(publishedAt)}"><meta property="article:modified_time" content="${esc(updatedAt || publishedAt)}">` : ''}${schema ? `<script type="application/ld+json">${JSON.stringify(schema).replaceAll('<', '\\u003c')}</script>` : ''}<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Playfair+Display:wght@600;700&display=swap"><link rel="stylesheet" href="${stylesheet}"></head>`;
 }
 
 function shell(titles = [], active = 'latest') {
@@ -287,6 +325,8 @@ function articleRecord(article) {
     image: article.image.url,
     alt: article.image.alt,
     credit: article.image.credit,
+    focusX: article.image.focusX,
+    focusY: article.image.focusY,
     publishedAt: article.publishedAt,
     published: formatPht(article.publishedAt),
     category: categoryKey(article.category),
@@ -376,7 +416,7 @@ async function migrateLegacyNewsLinks(newsRoot, excludedSlugs) {
 }
 
 function card(record) {
-  return `<article class="fnc-card" data-fnc-card data-category="${esc(record.category)}" data-published-at="${esc(record.publishedAt)}"><a href="${record.route}"><figure><img src="${esc(record.image)}" loading="lazy" decoding="async" alt="${esc(record.alt)}"><figcaption class="fnc-credit">${esc(record.credit)}</figcaption></figure><div class="fnc-card-copy"><p class="fnc-meta">${esc(record.kicker)}</p><h3>${esc(record.title)}</h3><small><time datetime="${esc(record.publishedAt)}">${esc(record.published)}</time></small></div></a></article>`;
+  return `<article class="fnc-card" data-fnc-card data-category="${esc(record.category)}" data-published-at="${esc(record.publishedAt)}" style="--fmb-focus-x:${esc(record.focusX ?? 50)}%;--fmb-focus-y:${esc(record.focusY ?? 50)}%"><a href="${record.route}"><figure><img src="${esc(record.image)}" loading="lazy" decoding="async" alt="${esc(record.alt)}"><figcaption class="fnc-credit">${esc(record.credit)}</figcaption></figure><div class="fnc-card-copy"><p class="fnc-meta">${esc(record.kicker)}</p><h3>${esc(record.title)}</h3><small><time datetime="${esc(record.publishedAt)}">${esc(record.published)}</time></small></div></a></article>`;
 }
 
 function landingPage(records) {
@@ -394,16 +434,16 @@ function landingPage(records) {
     ['environment', 'Environment'],
     ['health', 'Health'],
   ];
-  return `<!doctype html><html lang="en-PH">${head({ title: 'FMB News | Today’s Headlines for the Filipino', description: 'Credible reports, clear context, and the information Filipinos need to understand why each development matters.', canonical: `${canonicalOrigin}/news/`, image: lead.image })}<body id="top" class="fmb-news-clean fmb-news-landing">${shell(records.map((record) => record.title))}<main id="main"><span id="rundown" hidden></span><span id="latest-reports" hidden></span><span id="philippines" hidden></span><span id="world" hidden></span><span id="culture" hidden></span><section class="fnc-hero"><div class="fnc-signal fnc-signal-hero" aria-hidden="true"></div><div class="fnc-shell"><p class="fnc-kicker">Today’s headlines for the Filipino</p><article class="fnc-lead" data-fnc-card data-category="${esc(lead.category)}" data-published-at="${esc(lead.publishedAt)}"><figure class="fnc-lead-media"><img src="${esc(lead.image)}" alt="${esc(lead.alt)}"><figcaption class="fnc-credit">${esc(lead.credit)}</figcaption></figure><div class="fnc-lead-copy"><span class="fnc-top-story">Top story</span><p class="fnc-kicker">${esc(lead.kicker)}</p><h1>${esc(lead.title)}</h1><p>${esc(lead.description)}</p><div class="fnc-lead-meta"><small><time datetime="${esc(lead.publishedAt)}">${esc(lead.published)}</time></small><a class="fnc-read" href="${lead.route}">Read full report</a></div></div></article></div></section><section class="fnc-tools"><div class="fnc-shell fnc-tools-row"><input class="fnc-search" data-fnc-search type="search" placeholder="Search reports, people, places, or topics" aria-label="Search FMB News reports"><div class="fnc-categories">${filters.map(([value, label]) => `<a class="fnc-category" href="#reports" data-fnc-filter="${value}">${label}</a>`).join('')}</div></div></section><section class="fnc-content" id="reports"><div class="fnc-shell"><div class="fnc-section-head"><div><i aria-hidden="true"></i><div><p class="fnc-kicker">Newsroom</p><h2>Latest news</h2></div></div><p data-news-updated="${esc(lead.publishedAt)}"><strong>Newest first</strong><span>${records.length} reports accessible</span></p></div><div class="fnc-grid">${visible.map(card).join('')}</div>${archive.length ? `<details class="fnc-archive"><summary>View ${archive.length} more reports</summary><div class="fnc-archive-list">${archive.map((record) => `<a href="${record.route}" data-category="${esc(record.category)}" data-published-at="${esc(record.publishedAt)}"><span>${esc(record.kicker)}</span><strong>${esc(record.title)}</strong><time datetime="${esc(record.publishedAt)}">${esc(record.published)}</time></a>`).join('')}</div></details>` : ''}</div></section></main>${foot()}${runtime()}</body></html>`;
+  return `<!doctype html><html lang="en-PH">${head({ title: 'FMB News | Today’s Headlines for the Filipino', description: 'Credible reports, clear context, and the information Filipinos need to understand why each development matters.', canonical: `${canonicalOrigin}/news/`, image: lead.image })}<body id="top" class="fmb-news-clean fmb-news-landing">${shell(records.map((record) => record.title))}<main id="main"><span id="rundown" hidden></span><span id="latest-reports" hidden></span><span id="philippines" hidden></span><span id="world" hidden></span><span id="culture" hidden></span><section class="fnc-hero"><div class="fnc-signal fnc-signal-hero" aria-hidden="true"></div><div class="fnc-shell"><p class="fnc-kicker">Today’s headlines for the Filipino</p><article class="fnc-lead" data-fnc-card data-category="${esc(lead.category)}" data-published-at="${esc(lead.publishedAt)}" style="--fmb-focus-x:${esc(lead.focusX ?? 50)}%;--fmb-focus-y:${esc(lead.focusY ?? 50)}%"><figure class="fnc-lead-media"><img src="${esc(lead.image)}" alt="${esc(lead.alt)}"><figcaption class="fnc-credit">${esc(lead.credit)}</figcaption></figure><div class="fnc-lead-copy"><span class="fnc-top-story">Top story</span><p class="fnc-kicker">${esc(lead.kicker)}</p><h1>${esc(lead.title)}</h1><p>${esc(lead.description)}</p><div class="fnc-lead-meta"><small><time datetime="${esc(lead.publishedAt)}">${esc(lead.published)}</time></small><a class="fnc-read" href="${lead.route}">Read full report</a></div></div></article></div></section><section class="fnc-tools"><div class="fnc-shell fnc-tools-row"><input class="fnc-search" data-fnc-search type="search" placeholder="Search reports, people, places, or topics" aria-label="Search FMB News reports"><div class="fnc-categories">${filters.map(([value, label]) => `<a class="fnc-category" href="#reports" data-fnc-filter="${value}">${label}</a>`).join('')}</div></div></section><section class="fnc-content" id="reports"><div class="fnc-shell"><div class="fnc-section-head"><div><i aria-hidden="true"></i><div><p class="fnc-kicker">Newsroom</p><h2>Latest news</h2></div></div><p data-news-updated="${esc(lead.publishedAt)}"><strong>Newest first</strong><span>${records.length} reports accessible</span></p></div><div class="fnc-grid">${visible.map(card).join('')}</div>${archive.length ? `<details class="fnc-archive"><summary>View ${archive.length} more reports</summary><div class="fnc-archive-list">${archive.map((record) => `<a href="${record.route}" data-category="${esc(record.category)}" data-published-at="${esc(record.publishedAt)}"><span>${esc(record.kicker)}</span><strong>${esc(record.title)}</strong><time datetime="${esc(record.publishedAt)}">${esc(record.published)}</time></a>`).join('')}</div></details>` : ''}</div></section></main>${foot()}${runtime()}</body></html>`;
 }
 
 function articlePage(article, tickerTitles) {
   const route = `/news/${article.slug}/`;
   const canonical = `${canonicalOrigin}${route}`;
   const imageUrl = absoluteUrl(article.image.url);
-  const schema = {
-    '@context': 'https://schema.org',
+  const articleSchema = {
     '@type': article.articleType,
+    '@id': `${canonical}#article`,
     headline: article.headline,
     description: article.deck,
     datePublished: article.publishedAt,
@@ -414,6 +454,7 @@ function articlePage(article, tickerTitles) {
     publisher: { '@type': 'Organization', name: 'FMB News', url: `${canonicalOrigin}/news/` },
     mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
     articleSection: article.category,
+    keywords: article.keywords,
     image: [{
       '@type': 'ImageObject',
       contentUrl: imageUrl,
@@ -421,10 +462,27 @@ function articlePage(article, tickerTitles) {
       creator: article.image.creator,
       license: article.image.licenseUrl,
       acquireLicensePage: article.image.sourceUrl,
+      width: article.image.width,
+      height: article.image.height,
     }],
     citation: article.sources.map((source) => source.url),
   };
-  const sourceLinks = article.sources.map((source) => `<a href="${esc(source.url)}" target="_blank" rel="noopener noreferrer"><strong>${esc(source.publisher)}</strong>: ${esc(source.title)} <span>(${esc(formatPht(source.publishedAt))})</span></a>`).join('');
+  const schema = article.faq.length ? {
+    '@context': 'https://schema.org',
+    '@graph': [
+      articleSchema,
+      {
+        '@type': 'FAQPage',
+        '@id': `${canonical}#faq`,
+        mainEntity: article.faq.map((item) => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: { '@type': 'Answer', text: item.answer },
+        })),
+      },
+    ],
+  } : { '@context': 'https://schema.org', ...articleSchema };
+  const sourceLinks = article.sources.map((source) => `<a href="${esc(source.url)}" target="_blank" rel="noopener noreferrer"><strong>${esc(source.publisher)}</strong>: ${esc(source.title)} <span>(${esc(source.dateLabel || formatPht(source.publishedAt))})</span></a>`).join('');
   const lensLabel = (heading) => {
     if (/^what happened\b/i.test(heading)) return 'Verified facts';
     if (/\b(?:context|background)\b/i.test(heading)) return 'Context';
@@ -436,9 +494,10 @@ function articlePage(article, tickerTitles) {
     const label = lensLabel(section.heading);
     return `<section${label ? ` class="nc-editorial-lens-section" data-fmb-lens="${esc(label)}"` : ''}>${label ? `<p class="nc-editorial-lens-label">${esc(label)}</p>` : ''}<h2>${esc(section.heading)}</h2>${section.paragraphs.map((paragraph) => `<p>${esc(paragraph)}</p>`).join('')}</section>`;
   }).join('');
+  const faq = article.faq.length ? `<section class="nc-faq" aria-labelledby="nc-faq-title"><p class="nc-editorial-lens-label">Quick answers</p><h2 id="nc-faq-title">${esc(article.faqTitle)}</h2><div class="nc-faq-list">${article.faq.map((item) => `<article class="nc-faq-item"><h3>${esc(item.question)}</h3><p>${esc(item.answer)}</p></article>`).join('')}</div></section>` : '';
   const photoSourceLink = `<a href="${esc(article.image.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(article.image.credit)}</a>`;
   const photoLicenseLink = `<a href="${esc(article.image.licenseUrl)}" target="_blank" rel="license noopener noreferrer">License details</a>`;
-  return `<!doctype html><html lang="en-PH">${head({ title: `${article.headline} | FMB News`, description: article.deck, canonical, image: article.image.url, type: 'article', publishedAt: article.publishedAt, updatedAt: article.updatedAt, schema })}<body id="top" class="fmb-news-clean fmb-news-article news-story-route">${shell(tickerTitles)}<main id="main"><div class="nc-story-masthead"><div class="wrap"><a class="nc-back-link" href="/fmbnews/">Back to headlines</a><span>${esc(formatPht(article.publishedAt))}</span></div></div><header class="nc-article-hero"><div class="wrap"><p class="fnc-kicker">${esc(article.kicker)}</p><h1>${esc(article.headline)}</h1><p class="nc-article-deck">${esc(article.deck)}</p><div class="nc-article-meta"><span>By FMB News Desk</span><span>Published ${esc(formatPht(article.publishedAt))}</span><span>${readingTime(article)} min read</span></div></div></header><section class="nc-story-media"><div class="wrap"><figure><img src="${esc(article.image.url)}" width="1440" height="900" alt="${esc(article.image.alt)}" fetchpriority="high" decoding="async"><span class="fmb-photo-credit">${photoSourceLink}</span><figcaption><span>${esc(article.image.caption)}</span><span class="nc-photo-attribution">${photoSourceLink}<span aria-hidden="true"> · </span>${photoLicenseLink}</span></figcaption></figure></div></section><article class="nc-article"><div class="wrap nc-article-layout"><div class="nc-story-body"><div class="nc-factbox"><p><strong>Editorial standard:</strong> Sources are listed below. Verified reporting, attributed claims, uncertainty, and analysis remain distinct.</p></div>${sections}<section class="nc-sources"><h2>Sources and public record</h2>${sourceLinks}</section></div></div></article></main>${foot()}${runtime()}</body></html>`;
+  return `<!doctype html><html lang="en-PH">${head({ title: `${article.seoTitle} | FMB News`, description: article.seoDescription, canonical, image: article.image.url, imageWidth: article.image.width, imageHeight: article.image.height, imageAlt: article.image.alt, type: 'article', publishedAt: article.publishedAt, updatedAt: article.updatedAt, schema })}<body id="top" class="fmb-news-clean fmb-news-article news-story-route">${shell(tickerTitles)}<main id="main"><div class="nc-story-masthead"><div class="wrap"><a class="nc-back-link" href="/fmbnews/">Back to headlines</a><span>${esc(formatPht(article.publishedAt))}</span></div></div><header class="nc-article-hero"><div class="wrap"><p class="fnc-kicker">${esc(article.kicker)}</p><h1>${esc(article.headline)}</h1><p class="nc-article-deck">${esc(article.deck)}</p><div class="nc-article-meta"><span>By FMB News Desk</span><span>Published ${esc(formatPht(article.publishedAt))}</span><span>${readingTime(article)} min read</span></div></div></header><section class="nc-story-media"><div class="wrap"><figure style="--fmb-focus-x:${esc(article.image.focusX)}%;--fmb-focus-y:${esc(article.image.focusY)}%"><img src="${esc(article.image.url)}" width="${esc(article.image.width)}" height="${esc(article.image.height)}" alt="${esc(article.image.alt)}" fetchpriority="high" decoding="async"><span class="fmb-photo-credit">${photoSourceLink}</span><figcaption><span>${esc(article.image.caption)}</span><span class="nc-photo-attribution">${photoSourceLink}<span aria-hidden="true"> · </span>${photoLicenseLink}</span></figcaption></figure></div></section><article class="nc-article"><div class="wrap nc-article-layout"><div class="nc-story-body"><div class="nc-factbox"><p><strong>Editorial standard:</strong> Sources are listed below. Verified reporting, attributed claims, uncertainty, and analysis remain distinct.</p></div>${sections}${faq}<section class="nc-sources"><h2>Sources and public record</h2>${sourceLinks}</section></div></div></article></main>${foot()}${runtime()}</body></html>`;
 }
 
 function redirectPage(destination) {
