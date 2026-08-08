@@ -6,6 +6,7 @@ const dist = path.join(root, 'dist');
 const sourceAbout = path.join(root, 'apps/withlovefmb/aboutfmb/index.html');
 const outputAbout = path.join(dist, 'aboutfmb/index.html');
 const wrongSchool = 'STI College Fairview';
+const verificationCss = '/assets/css/aboutfmb-verification-fixes.css?v=20260808-verify-v1';
 
 async function walk(directory) {
   const files = [];
@@ -71,8 +72,25 @@ for (const file of (await walk(dist)).filter((file) => file.endsWith('.html'))) 
   await writeFile(file, html, 'utf8');
 }
 
-// About FMB is deliberately bespoke. Restore its authored source after generic sitewide transforms.
-const about = await readFile(sourceAbout, 'utf8');
+// About FMB is deliberately bespoke. Restore its authored source after generic sitewide transforms,
+// then apply only small verified corrections that should not be lost to future production builds.
+let about = await readFile(sourceAbout, 'utf8');
+if (!about.includes(verificationCss)) {
+  about = about.replace('</head>', `  <link rel="stylesheet" href="${verificationCss}">\n</head>`);
+}
+
+// The current poem block contains selected lines from an earlier approved draft, not the complete poem.
+// Make the omission explicit instead of presenting a shortened excerpt as if it were the full work.
+about = about.replace('<div class="poem-lines">', '<div class="poem-lines" data-verified-excerpt="true">');
+about = about.replace(
+  '<p class="poem-turn">That little girl grew up.</p>',
+  '<p class="poem-ellipsis" aria-hidden="true">···</p><p class="poem-turn">That little girl grew up.</p>'
+);
+about = about.replace(
+  'An excerpt from the personal poem created for the About FMB story. It is kept intentionally short here so the page can breathe.',
+  'Selected lines from an earlier approved draft of the personal About FMB poem. The complete poem is not presented here as verified copy.'
+);
+
 await writeFile(outputAbout, about, 'utf8');
 
 const html = await readFile(outputAbout, 'utf8');
@@ -82,6 +100,8 @@ const expected = [
   'hero-name-first',
   'Not stock imagery.',
   'I started as a little boy,',
+  'data-verified-excerpt="true"',
+  'The complete poem is not presented here as verified copy.',
   'The authority story',
   'The advantage is not one skill.',
   'How it works',
@@ -89,6 +109,7 @@ const expected = [
   'Illustrative portfolio calendar, not a live schedule.',
   '/assets/css/aboutfmb-cinematic.css?v=20260808-authority-v1',
   '/assets/css/aboutfmb-portfolio-v2.css?v=20260808-portfolio-v2',
+  verificationCss,
   '/assets/js/aboutfmb-cinematic.js?v=20260808-authority-v1',
   '/assets/js/aboutfmb-portfolio-v2.js?v=20260808-portfolio-v2',
   'href="/work-with-fmb/"'
@@ -111,10 +132,11 @@ for (const match of html.matchAll(/href=["']#([^"']+)["']/gi)) {
 for (const relative of [
   'assets/css/aboutfmb-cinematic.css',
   'assets/css/aboutfmb-portfolio-v2.css',
+  'assets/css/aboutfmb-verification-fixes.css',
   'assets/js/aboutfmb-cinematic.js',
   'assets/js/aboutfmb-portfolio-v2.js',
   'assets/images/fmb-approved/francine-portrait-front.webp',
   'assets/images/fmb-approved/francine-standing-landscape.webp'
 ]) await access(path.join(dist, relative));
 
-console.log('Protected the expanded About FMB portfolio experience and verified its real-photo story, poem, authority, ecosystem, mobile layer, availability disclosure, and accuracy guard.');
+console.log('Protected About FMB and verified its structure, authority story, ecosystem explanation, mobile enhancement layer, transparent availability preview, non-script brand lockup override, and accuracy guard. The autobiographical poem remains explicitly marked as a partial verified excerpt until the complete approved text is recovered.');
