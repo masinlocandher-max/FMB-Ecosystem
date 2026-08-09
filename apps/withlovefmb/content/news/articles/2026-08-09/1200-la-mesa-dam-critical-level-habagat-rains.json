@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "fmb-news-2026-08-09-1200-pht",
+  "emailSubject": "FMB News | La Mesa Dam Breaches Critical Water Level Amid Habagat Rains | August 9, 2026 | 12:00 PM PHT",
+  "slug": "la-mesa-dam-critical-level-habagat-rains",
+  "headline": "La Mesa Dam Rises Above Critical Level Amid Habagat Rains",
+  "category": "Environment",
+  "kicker": "Habagat · Reservoir monitoring · Flood preparedness",
+  "deck": "La Mesa Dam reached 79.77 meters on Sunday morning, above its 79.50-meter critical level but still below the 80.15-meter overflow level.",
+  "publishedAt": "2026-08-09T12:00:00+08:00",
+  "updatedAt": "2026-08-09T13:24:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {
+      "heading": "What happened",
+      "paragraphs": [
+        "La Mesa Dam's water level reached 79.77 meters at 10:20 a.m. on August 9, according to the state weather bureau's figures reported by GMA News. That placed the reservoir 27 centimeters above its 79.50-meter critical level and 38 centimeters below its 80.15-meter overflow level."
+      ]
+    },
+    {
+      "heading": "What we know",
+      "paragraphs": [
+        "La Mesa has an ungated spillway, so excess water flows out once the reservoir reaches its overflow level. Residents in low-lying communities along the Tullahan River were advised to monitor official warnings and prepare for possible flooding.",
+        "Persistent southwest monsoon rains continued to affect Luzon. The Office of Civil Defense said roughly 110,000 families had been affected by recent storms and the habagat, while about 7,300 people were staying in 86 evacuation centers as of August 8."
+      ]
+    },
+    {
+      "heading": "Background",
+      "paragraphs": [
+        "La Mesa Dam supplies part of Metro Manila's water system and drains into the Tullahan River. Its ungated spillway makes current reservoir and downstream river monitoring especially important during prolonged rain."
+      ]
+    },
+    {
+      "heading": "What remains unclear",
+      "paragraphs": [
+        "The bulletin supplied higher national totals for affected and displaced residents, but those figures could not be reconciled with the accessible official record at publication time. FMB News has therefore not presented them as confirmed. Water levels and evacuation counts can also change during continuing rainfall."
+      ]
+    },
+    {
+      "heading": "Why this matters",
+      "paragraphs": [
+        "La Mesa is a key water source for Metro Manila. Because the spillway is ungated, communities downstream need timely, location-specific warnings when the reservoir approaches the overflow mark."
+      ]
+    },
+    {
+      "heading": "What happens next",
+      "paragraphs": [
+        "PAGASA and local disaster offices will continue monitoring rainfall, reservoir levels and river conditions. Residents should rely on current local government and PAGASA advisories rather than the measurements in this report alone."
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "publisher": "GMA News Online",
+      "title": "LIVE UPDATES: Habagat and its effects on Sunday, August 9, 2026",
+      "publishedAt": "2026-08-09T10:20:00+08:00",
+      "url": "https://www.gmanetwork.com/news/topstories/nation/997868/live-updates-habagat-and-its-effects-on-sunday-august-9-2026/story/"
+    },
+    {
+      "publisher": "PAGASA",
+      "title": "Official weather advisories and bulletins",
+      "publishedAt": "2026-08-09T12:00:00+08:00",
+      "dateLabel": "Accessed August 9, 2026",
+      "url": "https://www.pagasa.dost.gov.ph/"
+    }
+  ],
+  "image": {
+    "kind": "open-license-photo",
+    "url": "/assets/images/news/2026-08-09/la-mesa-dam-critical-level.webp",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:La_Mesa_Dam_-_panoramio.jpg",
+    "creator": "dnumde",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "usageStatus": "Reuse permitted under CC BY-SA 3.0; locally hosted crop retains exact creator attribution and license.",
+    "credit": "Photo: dnumde · CC BY-SA 3.0",
+    "caption": "Archive photograph of La Mesa Dam in 2008. It does not depict water conditions on August 9, 2026.",
+    "alt": "Archive view across La Mesa Dam and reservoir",
+    "width": 1600,
+    "height": 900,
+    "focusX": 50,
+    "focusY": 50
+  },
+  "audit": {
+    "sourceCheckedAt": "2026-08-09T13:24:00+08:00",
+    "photoReferenceUrl": "https://commons.wikimedia.org/wiki/File:La_Mesa_Dam_-_panoramio.jpg",
+    "notes": [
+      "The 79.77-meter reading and the critical and overflow thresholds were verified against GMA News' live report.",
+      "The bulletin's 382,000-people and 12,000-displaced figures were omitted because the accessible sources did not independently substantiate them.",
+      "The supplied news photograph was not reused because publication permission was not independently established; a licensed archive photograph is used with a historical caption."
+    ]
+  }
+}
