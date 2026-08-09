@@ -86,26 +86,31 @@ const capabilityItems=[
 ];
 const capabilityMarkup=capabilityItems.map(([number,title,copy,key])=>`<article class="fmb-approved-capability"><b>${number}</b><h3>${title}</h3><p>${copy}</p><button class="sr-only" type="button" data-fmb-v2-open="${key}">Open ${title}</button></article>`).join('');
 
-const dashboard=`<section class="fmb-approved-control-center" aria-label="FMB corporate headquarters overview">
+const dashboard=`<section class="fmb-approved-control-center" aria-label="FMB authority and selected work">
   <section class="fmb-approved-capabilities fmb-approved-glass" aria-labelledby="approvedWhyTitle">
-    <header class="fmb-approved-cap-head"><h2 id="approvedWhyTitle">Why work with FMB?</h2><button type="button" data-fmb-v2-open="strategy">View full capabilities →</button></header>
+    <header class="fmb-approved-cap-head"><div><p class="fmb-approved-overline">Capabilities</p><h2 id="approvedWhyTitle">What FMB brings into the room.</h2></div><a href="/work-with-fmb/">Discuss your objective →</a></header>
     <div class="fmb-approved-cap-grid">${capabilityMarkup}</div>
   </section>
 
   <section class="fmb-approved-projects fmb-approved-glass" aria-labelledby="approvedProjectsTitle">
-    <header class="fmb-approved-section-head"><h2 id="approvedProjectsTitle">My Projects</h2><a href="/projects/">View all projects →</a></header>
+    <header class="fmb-approved-section-head"><div><p class="fmb-approved-overline">Selected work</p><h2 id="approvedProjectsTitle">Work that turns direction into something real.</h2></div><a href="/projects/">View all work →</a></header>
     <div class="fmb-approved-project-grid">
-      <article class="fmb-approved-project yoni"><img src="/app/assets/yoni/yoni-hero.webp" width="1254" height="1254" loading="lazy" decoding="async" alt="Yoni, the digital companion of With Love, FMB"><div class="fmb-approved-project-copy"><small>With Love, FMB</small><h3>Yoni</h3><p>Your digital companion for wellbeing, identity, reflection, reading, listening, and personal growth.</p><button type="button" data-fmb-v2-open="yoni">Explore Yoni →</button></div></article>
-      <article class="fmb-approved-project mabayani"><div class="fmb-approved-project-copy"><small>History. Expression. Remembrance.</small><h3>Mabayani</h3><p>A developing cultural and historical research project preserving stories, identity, and heritage of the Sambal people.</p><button type="button" data-fmb-v2-open="mabayani">Learn more →</button></div></article>
-      <article class="fmb-approved-project volunteer"><img src="/assets/images/volunteer/francine-leading-with-love-fmb.webp" width="1023" height="1537" loading="lazy" decoding="async" alt="Francine Marie Bautista in a community setting"><div class="fmb-approved-project-copy"><small>On the ground. With people.</small><h3>Volunteer Activities</h3><p>Published community photographs showing participation, leadership, and responsibility.</p><button type="button" data-fmb-v2-open="volunteer">See our impact →</button></div></article>
+      <article class="fmb-approved-project yoni"><img src="/app/assets/yoni/yoni-hero.webp" width="1254" height="1254" loading="lazy" decoding="async" alt="Yoni, the digital companion of With Love, FMB"><div class="fmb-approved-project-index">01</div><div class="fmb-approved-project-copy"><small>Product and experience direction</small><h3>Yoni</h3><p>A private digital companion uniting reflection, reading, listening and support-oriented tools in one human-centered experience.</p><button type="button" data-fmb-v2-open="yoni">Read the project story →</button></div></article>
+      <article class="fmb-approved-project mabayani"><div class="fmb-approved-project-index">02</div><div class="fmb-approved-project-copy"><small>Cultural research and storytelling</small><h3>Mabayani</h3><p>A source-first cultural project preserving Sambal identity, memory, language and heritage through research and editorial direction.</p><button type="button" data-fmb-v2-open="mabayani">Read the project story →</button></div></article>
+      <article class="fmb-approved-project volunteer"><img src="/assets/images/volunteer/francine-leading-with-love-fmb.webp" width="1023" height="1537" loading="lazy" decoding="async" alt="Francine Marie Bautista working with a community"><div class="fmb-approved-project-index">03</div><div class="fmb-approved-project-copy"><small>Participation and public responsibility</small><h3>Community Work</h3><p>Real participation, facilitation and volunteer work documented with clarity, dignity and responsibility.</p><button type="button" data-fmb-v2-open="volunteer">See the work →</button></div></article>
     </div>
   </section>
 
-  <div class="fmb-approved-library-grid">
+  <section class="fmb-authority-map fmb-approved-glass" aria-labelledby="ecosystemMapTitle">
+    <header class="fmb-approved-section-head"><div><p class="fmb-approved-overline">Structure</p><h2 id="ecosystemMapTitle">One direction. Clear boundaries.</h2></div><a href="/fmbandco/">Explore FMB&amp;CO. →</a></header>
+    <div class="fmb-approved-map-grid"><article><small>Personal practice</small><h3>FMB</h3><p>Strategy, creative direction and storytelling for brands, organizations and communities.</p></article><article><small>Company</small><h3>FMB&amp;CO.</h3><p><a href="https://senzpr.com/">SENZ</a><span>Strategic communications and digital solutions</span><a href="https://thecognitainstitute.com/">Cognita</a><span>Learning, research and knowledge-building</span></p></article><article><small>Public projects and channels</small><h3>Independent platforms</h3><nav><a href="https://yoni.francinemariebautista.com/">Yoni</a><a href="/mabayani/">Mabayani</a><a href="/withlovefmb/">With Love, FMB</a><a href="/news/">FMB News</a></nav></article></div>
+  </section>
+
+  <div class="fmb-approved-library-grid fmb-approved-editorial-grid">
     <section class="fmb-approved-library-panel fmb-approved-glass" aria-labelledby="approvedNewsTitle">
-      <header class="fmb-approved-section-head"><h2 id="approvedNewsTitle">FMB News Center</h2><a href="/news/">View all news →</a></header>
-      <article class="fmb-approved-news-lead"><img src="/assets/images/news/subic-aeta-dumpsite-iwitness.jpg" width="800" height="533" loading="lazy" decoding="async" alt="FMB News reporting image from the Subic Aeta dumpsite investigation"><div><small>Live Desk</small><h3>The Dumping Stopped. Subic’s Duty to Restore Has Not.</h3></div></article>
-      <div class="fmb-approved-news-list"><a href="/news/remembering-amor-deloso/"><span>Remembering Amor Deloso, former governor of Zambales</span><time>Latest</time></a><a href="/news/pax-silica-water/"><span>Pax Silica will need a lot of water</span><time>Analysis</time></a><a href="/news/binibining-pilipinas-2026/"><span>North Luzon takes both Binibining Pilipinas crowns</span><time>Culture</time></a></div>
+      <header class="fmb-approved-section-head"><div><p class="fmb-approved-overline">Editorial platform</p><h2 id="approvedNewsTitle">FMB News</h2></div><a href="/news/">View all reports →</a></header>
+      <article class="fmb-approved-news-lead"><img src="/assets/images/news/2026-08-08/cleopatra-barrera-reina-filipinas-2026.jpeg" width="1200" height="675" loading="lazy" decoding="async" alt="Cleopatra Barrera of Zambales"><div><small>Lead report</small><h3>Who Is Cleopatra Barrera? How Binibining Masinloc 2026 Rose to the Reina Filipinas National Stage</h3></div></article>
+      <div class="fmb-approved-news-list"><a href="/news/who-is-lorna-kapunan-famous-cases-biography/"><span>Who Is Atty. Lorna Kapunan? Her famous cases, career and role in the Sara Duterte impeachment</span><time>Profile</time></a><a href="/news/cleopatra-barrera/"><span>Masinloc crowned her first. Months later, she carried Zambales to the national stage.</span><time>Pageantry</time></a></div>
     </section>
 
     <section class="fmb-approved-library-panel fmb-approved-glass" aria-labelledby="approvedMusicTitle">
@@ -121,6 +126,7 @@ const dashboard=`<section class="fmb-approved-control-center" aria-label="FMB co
       <div class="fmb-approved-books"><a class="fmb-approved-book" href="/reading.html"><img src="/assets/images/reading/finding-your-way-back-cover.svg" loading="lazy" decoding="async" alt="Finding Your Way Back to Yourself cover"><strong>Finding Your Way Back</strong><span>Fully open</span></a><a class="fmb-approved-book" href="/coming-out-respect.html"><img src="/assets/images/reading/07883274-1340-48DC-A112-C4AD44B5ABD1.png" loading="lazy" decoding="async" alt="Pride. Identity. Love. cover"><strong>Pride. Identity. Love.</strong><span>Fully open</span></a><a class="fmb-approved-book" href="/men-can-cry.html"><img src="/assets/images/reading/E9562EB3-F505-4736-B5E8-E4D54C769059.png" loading="lazy" decoding="async" alt="Men Can Cry cover"><strong>Men Can Cry</strong><span>Fully open</span></a><a class="fmb-approved-book" href="/womens-health.html"><img src="/assets/images/reading/B4DDDB01-C125-4E08-8908-09A5FE5157E7.png" loading="lazy" decoding="async" alt="Women’s Health Matters cover"><strong>Women’s Health Matters</strong><span>First chapter</span></a></div>
     </section>
   </div>
+  <section class="fmb-approved-inquiry" aria-labelledby="approvedInquiryTitle"><div><p class="fmb-approved-overline">Work with FMB</p><h2 id="approvedInquiryTitle">Bring us the real objective.</h2><p>Tell us what you are trying to achieve, who it needs to reach, and what decision must move next.</p></div><a href="/work-with-fmb/">Start a clear inquiry <span>→</span></a></section>
 </section>`;
 
 const heroStack=`<aside class="fmb-approved-hero-stack" aria-label="Live FMB headquarters information">
@@ -138,7 +144,7 @@ home=home.replace(/<p class="role-line">[\s\S]*?<\/p>/i,'<p class="role-line">St
 home=home.replace(/<p class="hero-lede">[\s\S]*?<\/p>/i,'<p class="hero-lede">I help brands, organizations, and communities become clearer, stronger, and more intentional in how they show up and make impact.</p>');
 home=home.replace(/<picture class="hero-portrait">[\s\S]*?<\/picture>/i,'<picture class="hero-portrait"><img id="homeHeroImage" src="/assets/images/fmb-approved/francine-portrait-front.webp" width="922" height="1152" alt="Francine Marie Bautista in the approved corporate portrait"></picture>');
 home=home.replace(/(<\/section>\s*)(?=\s*<section[^>]*class="fmb-approved-control-center")/i,'$1');
-if(!home.includes('class="fmb-approved-hero-stack"'))home=home.replace(/(<\/picture>)/i,`$1\n${heroStack}`);
+home=home.replace(/<div class="hero-actions">[\s\S]*?<\/div>/i,'<div class="hero-actions"><a class="button primary" href="/work-with-fmb/">Work with FMB <span>→</span></a><a class="button secondary" href="#fmb-authority">Explore selected work</a></div>');
 if(!home.includes('class="fmb-approved-control-center"'))home=home.replace(/(<\/section>\s*)(?=\s*<section[^>]*class="bottom-grid)/i,`$1\n${dashboard}\n`);
 if(!home.includes('class="fmb-approved-control-center"'))home=home.replace('</main>',`${dashboard}\n</main>`);
 await writeFile(homeFile,home,'utf8');
@@ -150,7 +156,7 @@ for(const page of ['news/index.html','music/index.html','ebooks/index.html']){
   await writeFile(file,html,'utf8');
 }
 
-for(const required of ['fmb-approved-dashboard','fmb-approved-control-center','fmb-approved-hero-stack','Direction<br>before <em>noise.</em>',quotePortrait]){
+for(const required of ['fmb-approved-dashboard','fmb-approved-control-center','Direction<br>before <em>noise.</em>','fmb-approved-inquiry','fmb-authority-map']){
   if(!home.includes(required))throw new Error(`Approved homepage is missing ${required}`);
 }
 console.log('Built the approved FMB corporate luxury dashboard, project stories, News Center, Music Library, categorized eBook Library, and repaired homepage portrait placement.');

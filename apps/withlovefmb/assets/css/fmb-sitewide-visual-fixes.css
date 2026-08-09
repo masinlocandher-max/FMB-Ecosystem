@@ -872,3 +872,92 @@ body.fmb-unified-public form :is(
     padding: 24px 18px !important;
   }
 }
+
+/* Shared intentionality layer: one editorial standard without flattening brand identities. */
+body.fmb-unified-public {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.fmb-unified-public :is(main, article) :is(p, li) {
+  text-wrap: pretty;
+}
+
+body.fmb-unified-public :is(h1, h2, h3) {
+  text-wrap: balance;
+}
+
+body.fmb-unified-public main > :is(section, article):not(:first-child) {
+  scroll-margin-top: 96px;
+}
+
+body.fmb-unified-public :is(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid #d9bd83 !important;
+  outline-offset: 4px !important;
+}
+
+body.fmb-unified-public :is(a, button) {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body.fmb-unified-public :is(img, video) {
+  max-width: 100%;
+}
+
+body.fmb-unified-public img:not([class*="logo"]):not([class*="brand"]):not([class*="icon"]) {
+  background: rgba(30, 18, 38, 0.035);
+}
+
+body.fmb-unified-public .fmb-shell-header {
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+body.fmb-unified-public .fmb-shell-brand img,
+body.fmb-unified-public .fmb-shell-footer img {
+  opacity: 1 !important;
+  filter: none;
+}
+
+body.fmb-unified-public .fmb-shell-nav a {
+  position: relative;
+}
+
+body.fmb-unified-public .fmb-shell-nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: -7px;
+  height: 1px;
+  background: currentColor;
+  transition: right 220ms ease;
+}
+
+body.fmb-unified-public .fmb-shell-nav a:hover::after,
+body.fmb-unified-public .fmb-shell-nav a[aria-current="page"]::after,
+body.fmb-unified-public .fmb-shell-nav a.active::after {
+  right: 0;
+}
+
+body.fmb-unified-public .fmb-shell-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.fmb-unified-public .fmb-shell-footer nav a {
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+body.fmb-unified-public .fmb-shell-footer nav a:hover {
+  transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.fmb-unified-public *,
+  body.fmb-unified-public *::before,
+  body.fmb-unified-public *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
