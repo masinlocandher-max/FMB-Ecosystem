@@ -8,6 +8,8 @@ const canonical = `https://www.francinemariebautista.com/news/${slug}/`;
 const title = 'The Multifaceted Impact of the All-Purpose Kween: Understanding Kween Yasmin’s Place in Filipino Digital Culture';
 const description = 'A fun but evidence-based FMB News cultural study of Kween Yasmin, Filipino digital culture, meme circulation, creator entrepreneurship, internet celebrity and the meaning of the All-Purpose Kween.';
 const image = 'https://www.francinemariebautista.com/assets/images/fmbnews/kween-yasmin-multifaceted-impact.jpeg';
+const imageWidth = 600;
+const imageHeight = 300;
 const published = '2026-08-11T06:10:00+08:00';
 const modified = new Date().toISOString();
 
@@ -34,8 +36,8 @@ html = upsertMeta(html, 'property', 'og:description', description);
 html = upsertMeta(html, 'property', 'og:image', image);
 html = upsertMeta(html, 'property', 'og:image:secure_url', image);
 html = upsertMeta(html, 'property', 'og:image:type', 'image/jpeg');
-html = upsertMeta(html, 'property', 'og:image:width', '1536');
-html = upsertMeta(html, 'property', 'og:image:height', '768');
+html = upsertMeta(html, 'property', 'og:image:width', String(imageWidth));
+html = upsertMeta(html, 'property', 'og:image:height', String(imageHeight));
 html = upsertMeta(html, 'property', 'og:image:alt', 'The Multifaceted Impact of the All-Purpose Kween featuring Kween Yasmin');
 html = upsertMeta(html, 'property', 'article:section', 'Culture');
 html = upsertMeta(html, 'property', 'article:published_time', published);
@@ -56,7 +58,7 @@ if (!html.includes('data-fmb-kween-schema')) {
         url:canonical,
         headline:title,
         description,
-        image:[{ '@type':'ImageObject', url:image, width:1536, height:768 }],
+        image:[{ '@type':'ImageObject', url:image, width:imageWidth, height:imageHeight }],
         datePublished:published,
         dateModified:modified,
         inLanguage:'en-PH',
@@ -87,7 +89,7 @@ if (!html.includes('data-fmb-kween-schema')) {
         url:canonical,
         name:title,
         description,
-        primaryImageOfPage:{ '@type':'ImageObject', url:image, width:1536, height:768 },
+        primaryImageOfPage:{ '@type':'ImageObject', url:image, width:imageWidth, height:imageHeight },
         breadcrumb:{ '@id':`${canonical}#breadcrumb` }
       },
       {
