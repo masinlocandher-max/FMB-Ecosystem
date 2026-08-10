@@ -19,4 +19,3 @@ export const stories = [
 
 await import('./post-build-fmb-news-ai-francine-august-8.mjs');
 await import('./post-build-fmb-news-kween-yasmin-live.mjs');
-await import('./post-build-fmb-news-august-11-7am.mjs');
