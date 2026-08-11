@@ -5,8 +5,8 @@ const root = path.resolve(new URL('..', import.meta.url).pathname);
 const newsRoot = path.join(root, 'dist', 'news');
 const landingPath = path.join(newsRoot, 'index.html');
 const sitemapPath = path.join(root, 'dist', 'sitemap.xml');
-const published = '2026-08-11T06:10:00+08:00';
-const publishedLabel = '11 August 2026, 6:10 a.m. PHT';
+const published = '2026-08-11T08:38:00+08:00';
+const publishedLabel = '11 August 2026, 8:38 a.m. PHT';
 const esc = value => String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 
 const slug = 'multifaceted-impact-all-purpose-kween-yasmin-filipino-digital-culture';
@@ -18,7 +18,7 @@ const hero = '/assets/images/fmbnews/kween-yasmin-multifaceted-impact.jpeg';
 const sections = [
   ['Ano nga ba talaga ang meron kay Kween Yasmin?', [
     'Singer. Content creator. Poet. Actress. Endorser. Mango graham entrepreneur. At, apparently, may recurring genre pa ang love life niya involving security guards. Madaling gawing punchline ang listahang iyon. Pero kapag pinag-aralan nang mas seryoso, may mas malaking kuwento sa likod nito.',
-    'Kween Yasmin, whose real name is Yasmin Marie M. Asistido, has built a public identity that moves easily between performance, humor, meme culture, television, brand work and everyday life. That flexibility is not a side effect of her fame. It is the structure of it.',
+    'Kween Yasmin, whose real name is Yasmin Marie Asistido, has built a public identity that moves easily between performance, humor, meme culture, television, brand work and everyday life. That flexibility is not a side effect of her fame. It is the structure of it.',
     'So the question is not simply why she became viral. The more useful question is: what makes Kween Yasmin a Kween, and why has she lasted when so many viral personalities disappear after one meme cycle?'
   ]],
   ['1. The Kween Who Was Crowned by the Internet', [
@@ -80,19 +80,21 @@ const sections = [
 
 const sources = [
   ['GMA Entertainment, Kween Yasmin on her past love life', 'https://www.gmanetwork.com/entertainment/showbiznews/kween-yasmin-may-inamin-kay-luis-manzano-tungkol-sa-past-love-life/111481/'],
-  ['ABS-CBN, Canva x Kween Yasmin All-Purpose Kween creative packs', 'https://www.abs-cbn.com/lifestyle/people-culture-events/2025/11/28/netizens-hop-on-canva-x-kween-yasmin-s-allpurposekween-creative-packs-1712'],
+  ['GMA News Online, Kween Yasmin and the Canva All-Purpose Kween design assets', 'https://www.gmanetwork.com/news/lifestyle/hobbiesandactivities/967779/what-s-with-the-kween-yasmin-font-here-s-where-it-came-from-and-how-you-can-use-it/story/'],
+  ['ABS-CBN Lifestyle, Canva x Kween Yasmin All-Purpose Kween creative packs', 'https://www.abs-cbn.com/lifestyle/people-culture-events/2025/11/28/netizens-hop-on-canva-x-kween-yasmin-s-allpurposekween-creative-packs-1712'],
+  ['GMA Entertainment, Kween Yasmin, virality and business opportunities', 'https://www.gmanetwork.com/entertainment/tv/trggrd/262563/trggrd-the-rise-of-kween-yasmin-diwata-and-their-virality-turning-into-a-business-opportunity/video'],
   ['Kween Yasmin official Facebook post, Kween of Mango Graham Special', 'https://www.facebook.com/www.facebookyasminasistido.090/posts/for-the-batch-4-on-my-business-kween-of-mango-graham-special-thanks-so-much-ever/1159521022208570/']
 ];
 
 const articleHtml = `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="en-PH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)} | FMB News</title><meta name="description" content="${esc(description)}"><link rel="canonical" href="https://www.francinemariebautista.com/news/${slug}/">
 <meta property="og:type" content="article"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:image" content="https://www.francinemariebautista.com${hero}"><meta property="article:published_time" content="${published}">
 <style>body{margin:0;font-family:Georgia,serif;background:#fff;color:#17121f;line-height:1.75}main{max-width:920px;margin:auto;padding:28px 20px 80px}.kicker{font:700 12px/1.2 Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#5a2a83}.hero{width:100%;border-radius:24px;margin:20px 0 12px}h1{font-size:clamp(40px,7vw,78px);line-height:.95;margin:18px 0}.deck{font-size:22px;color:#51485d}.meta{font:14px Arial,sans-serif;color:#756b7d;margin-bottom:26px}.credit{font:11px Arial,sans-serif;color:#756b7d}.article{font-size:20px}.article h2{font-size:34px;line-height:1.1;margin-top:52px}.article p{margin:18px 0}.sources{margin-top:54px;padding-top:24px;border-top:1px solid #ddd}.sources li{margin:8px 0}.sources a{color:#4b1f70}.fmbnote{margin-top:44px;padding:22px;border-radius:18px;background:#f6f1fa;font:16px/1.6 Arial,sans-serif}</style></head><body><main>
 <div class="kicker">Culture · Digital Culture · Feature Essay</div><h1>${esc(title)}</h1><p class="deck">${esc(deck)}</p><div class="meta">FMB News · ${publishedLabel}</div>
-<img class="hero" src="${hero}" alt="The Multifaceted Impact of the All-Purpose Kween feature artwork featuring Kween Yasmin"><div class="credit">FMB NEWS FEATURE ARTWORK</div>
+<img class="hero" src="${hero}" width="1536" height="768" alt="The Multifaceted Impact of the All-Purpose Kween feature artwork featuring Kween Yasmin"><div class="credit">FMB NEWS FEATURE ARTWORK</div>
 <div class="article">${sections.map(([h,ps])=>`<h2>${esc(h)}</h2>${ps.map(p=>`<p>${esc(p)}</p>`).join('')}`).join('')}</div>
-<section class="sources"><h2>Sources and references</h2><ul>${sources.map(([label,url])=>`<li><a href="${url}" rel="noopener noreferrer">${esc(label)}</a></li>`).join('')}</ul></section>
+<section class="sources"><h2>Sources and references</h2><ul>${sources.map(([label,url])=>`<li><a href="${url}" target="_blank" rel="noopener noreferrer">${esc(label)}</a></li>`).join('')}</ul></section>
 <div class="fmbnote"><strong>FMB News cultural review:</strong> This feature distinguishes documented events from interpretation. Humor is used as part of the explainer style, not as a substitute for evidence.</div>
 </main></body></html>`;
 
@@ -101,7 +103,7 @@ await writeFile(path.join(newsRoot, slug, 'index.html'), articleHtml, 'utf8');
 
 try {
   let landing = await readFile(landingPath, 'utf8');
-  const card = `<article class="news-card" data-fmb-kween-yasmin><a href="/news/${slug}/"><img src="${hero}" alt="Kween Yasmin cultural feature"><div><span>Culture · Feature Essay</span><h3>${esc(title)}</h3><p>${esc(deck)}</p></div></a></article>`;
+  const card = `<article class="news-card" data-fmb-kween-yasmin><a href="/news/${slug}/"><img src="${hero}" width="1536" height="768" alt="Kween Yasmin cultural feature"><div><span>Culture · Feature Essay</span><h3>${esc(title)}</h3><p>${esc(deck)}</p></div></a></article>`;
   if (!landing.includes(`data-fmb-kween-yasmin`)) {
     const marker = /(<main[^>]*>)/i;
     landing = marker.test(landing) ? landing.replace(marker, `$1${card}`) : `${card}${landing}`;
