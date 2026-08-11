@@ -74,7 +74,7 @@ if (!html.includes('data-fmb-kween-schema')) {
         '@type':'Person',
         '@id':'https://www.francinemariebautista.com/news/kween-yasmin/#person',
         name:'Kween Yasmin',
-        alternateName:'Yasmin Marie M. Asistido',
+        alternateName:'Yasmin Marie Asistido',
         description:'Filipino digital personality, performer, creator and entrepreneur discussed in this FMB News cultural feature.'
       },
       {
