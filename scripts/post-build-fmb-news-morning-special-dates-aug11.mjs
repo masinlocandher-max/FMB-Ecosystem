@@ -42,7 +42,7 @@ for (const relative of ['news/index.html','fmbnews/index.html']) {
 
 const aboutPath = path.join(dist, 'news', 'about', 'index.html');
 let aboutHtml = await readFile(aboutPath, 'utf8');
-const standardsAnchors = ['method', 'standards'];
+const standardsAnchors = ['method', 'standards', 'image-policy'];
 const missingStandardsAnchors = standardsAnchors.filter((anchor) => !new RegExp(`\\bid=["']${anchor}["']`, 'i').test(aboutHtml));
 if (missingStandardsAnchors.length) {
   const anchorsHtml = missingStandardsAnchors.map((anchor) => `<span id="${anchor}" hidden aria-hidden="true"></span>`).join('');
