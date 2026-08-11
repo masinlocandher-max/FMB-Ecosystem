@@ -49,20 +49,26 @@
     }
   ],
   "image": {
-    "kind": "editorial-fallback",
-    "url": "/assets/images/news/fmb-news-editorial-fallback.svg",
-    "sourceUrl": null,
-    "creator": "FMB News",
-    "usageStatus": "FMB-owned editorial fallback used because the recommended source-page photograph did not provide a resolvable image file with independently confirmed reuse metadata.",
-    "credit": "FMB News editorial visual",
-    "caption": "FMB News editorial visual. This graphic does not depict the reported event.",
-    "alt": "FMB News editorial visual accompanying a report on a PDEA enforcement announcement"
+    "kind": "public-domain-photo",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/PDEA_pressbriefing_Eduardo_Ano_Apr_30_2018_%28cropped%29.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:PDEA_pressbriefing_Eduardo_Ano_Apr_30_2018_(cropped).jpg",
+    "creator": "Joey Razon for the Philippine News Agency",
+    "license": "Public domain · Philippine government work",
+    "licenseUrl": "https://commons.wikimedia.org/wiki/Template:PD-PhilippinesGov",
+    "usageStatus": "Wikimedia Commons identifies this Philippine News Agency photograph as a Philippine government work in the public domain. Used as an archive PDEA photograph and not as a depiction of the July 30 to August 6 operations.",
+    "credit": "Photo: Joey Razon / Philippine News Agency · Public domain",
+    "caption": "Archive photograph from a PDEA press briefing in Quezon City on April 30, 2018. It does not depict the July 30 to August 6, 2026 operations.",
+    "alt": "Archive photograph from a Philippine Drug Enforcement Agency press briefing",
+    "width": 1465,
+    "height": 1771,
+    "focusX": 50,
+    "focusY": 45
   },
   "audit": {
     "sourceCheckedAt": "2026-08-11T13:20:00+08:00",
-    "photoReferenceUrl": "https://www.pna.gov.ph/articles/1281554",
+    "photoReferenceUrl": "https://commons.wikimedia.org/wiki/File:PDEA_pressbriefing_Eduardo_Ano_Apr_30_2018_(cropped).jpg",
     "notes": [
-      "The recommended PDEA/PNA photograph was not copied or hotlinked because the bulletin supplied only a source-page URL, not a resolvable image asset with independently verifiable reuse metadata.",
+      "The article uses a separate archive PDEA photograph whose public-domain status is independently documented by Wikimedia Commons, with exact photographer and agency credit.",
       "The article attributes all seizure and arrest figures to PDEA and expressly preserves the presumption of innocence.",
       "Unsupported details about suspect classifications, concealment methods, locations and automatic non-bailable charges were omitted."
     ]
