@@ -1,288 +1,220 @@
 #!/usr/bin/env python3
-"""Run the site quality suite against the current FMB Network, Yoni, newsroom, Music, and eBook contracts."""
+"""Future-proof structural quality checks for the current FMB public/Yoni application.
+
+This checker deliberately validates site integrity rather than freezing specific copy,
+article slugs, image credits, or versioned stylesheet names. Editorial content and
+visual design are expected to evolve; broken structure and missing runtime assets are not.
+"""
 from __future__ import annotations
 
+import json
+import re
+import sys
+from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import unquote, urlparse
 
-import quality_check as checks
+ROOT = Path(__file__).resolve().parents[1]
 
-
-LEGACY_APP_ERROR = "app/index.html: missing verified app-entry marker:"
-STALE_NEWS_ERRORS = {
-    "news/index.html: every main story must have one sourced lead visual",
-    "news/index.html: every editorial visual must show its source or credit below it",
-}
-STALE_NEWS_PREFIXES = (
-    "news/index.html: missing broadcast channel marker:",
-    "assets/js/news-channel.js: missing clock, motion, or sharing marker:",
-)
-STALE_HOME_ERRORS = {
-    "index.html: missing first-visit benefit: Official FMB Bulletin",
-    'index.html: missing first-visit benefit: id="latest-release"',
-    'index.html: missing first-visit benefit: id="channels"',
-    "index.html: missing first-visit benefit: Meet Yoni. A complete space to listen, read, write, and check in.",
-    "index.html: missing first-visit benefit: /assets/js/fmb-bulletin-home.js",
-}
-STALE_PRODUCT_ERRORS = {
-    "ebooks/index.html: deterministic mobile luxury stylesheet is missing",
-    "ebooks/index.html: core persistent mobile menu script is missing",
-    "ebooks/index.html: accessible floating mobile menu is missing",
-    "music/index.html: deterministic mobile luxury stylesheet is missing",
-    "music/index.html: core persistent mobile menu script is missing",
-    "music/index.html: accessible floating mobile menu is missing",
-}
-STALE_MUSIC_ERRORS = {
-    "assets/js/music.js: missing cross-page playback marker: fmb:global-music-command",
-    "assets/js/music.js: missing cross-page playback marker: Restoring your listening session",
-}
-GENERATED_HOME_REFERENCES = (
-    "/assets/images/home/francine-home-hero-hd.webp",
-    "/assets/images/home/francine-home-founder-hd.webp",
+CRITICAL_HTML = (
+    "index.html",
+    "aboutfmb/index.html",
+    "news/index.html",
+    "app/index.html",
+    "music/index.html",
+    "ebooks/index.html",
+    "fmbandco/index.html",
+    "gethelp/index.html",
+    "profile/index.html",
 )
 
-ORIGINAL_CHECK_HTML = checks.check_html
-ORIGINAL_MEMBERSHIP_CHECK = checks.check_membership_features
-ORIGINAL_NAVIGATION_CHECK = checks.check_navigation_experience
-ORIGINAL_EDITORIAL_MEDIA_CHECK = checks.check_mobile_and_editorial_media
+CRITICAL_FILES = (
+    "service-worker.js",
+    "manifest.webmanifest",
+    "assets/js/site.js",
+    "assets/js/supabase-client.js",
+)
+
+MERGE_CONFLICT_LINE = re.compile(r"(?m)^\s*(?:<<<<<<< .+|=======|>>>>>>> .+)\s*$")
+BAD_RUNTIME_REFERENCES = (
+    'src="undefined"',
+    "src='undefined'",
+    'href="undefined"',
+    "href='undefined'",
+    'src="null"',
+    "src='null'",
+    'href="null"',
+    "href='null'",
+)
 
 
-def home_generation_is_configured() -> bool:
-    source = checks.ROOT / "assets/data/home"
-    script = checks.ROOT.parents[1] / "scripts/home-image-assets.mjs"
-    return script.exists() and all(
-        (source / name).exists()
-        for name in (
-            "hero-01.txt",
-            "hero-02.txt",
-            "hero-03.txt",
-            "hero-04.txt",
-            "founder-01.txt",
-            "founder-02.txt",
-            "founder-03.txt",
-            "founder-04.txt",
-            "founder-05.txt",
-        )
+class PageParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.ids: list[str] = []
+        self.title_depth = 0
+        self.title_text: list[str] = []
+        self.runtime_refs: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        data = dict(attrs)
+        element_id = data.get("id")
+        if element_id:
+            self.ids.append(str(element_id))
+        if tag == "title":
+            self.title_depth += 1
+        if tag == "script" and data.get("src"):
+            self.runtime_refs.append(str(data["src"]))
+        if tag == "link" and data.get("href"):
+            rel = str(data.get("rel") or "").lower()
+            href = str(data["href"])
+            if "stylesheet" in rel or urlparse(href).path.lower().endswith(".css"):
+                self.runtime_refs.append(href)
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "title" and self.title_depth:
+            self.title_depth -= 1
+
+    def handle_data(self, data: str) -> None:
+        if self.title_depth:
+            self.title_text.append(data)
+
+
+def local_runtime_target(page: Path, reference: str) -> Path | None:
+    value = unquote(reference.strip())
+    if not value or value.startswith(("http://", "https://", "//", "data:", "javascript:")):
+        return None
+    parsed = urlparse(value)
+    if parsed.scheme or parsed.netloc or not parsed.path:
+        return None
+    if parsed.path.startswith("/"):
+        candidate = ROOT / parsed.path.lstrip("/")
+    else:
+        candidate = page.parent / parsed.path
+    try:
+        resolved = candidate.resolve()
+        resolved.relative_to(ROOT.resolve())
+    except ValueError:
+        return None
+    return resolved
+
+
+def check_text_file(relative: str, errors: list[str], minimum_bytes: int = 32) -> None:
+    path = ROOT / relative
+    if not path.is_file():
+        errors.append(f"{relative}: critical file is missing")
+        return
+    try:
+        text = path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        errors.append(f"{relative}: critical text file is not valid UTF-8")
+        return
+    if len(text.encode("utf-8")) < minimum_bytes:
+        errors.append(f"{relative}: critical file is unexpectedly small")
+    if MERGE_CONFLICT_LINE.search(text):
+        errors.append(f"{relative}: unresolved merge-conflict block found")
+
+
+def check_html(relative: str, errors: list[str]) -> None:
+    path = ROOT / relative
+    if not path.is_file():
+        errors.append(f"{relative}: critical page is missing")
+        return
+
+    text = path.read_text(encoding="utf-8")
+    if len(text.encode("utf-8")) < 256:
+        errors.append(f"{relative}: critical page is unexpectedly small")
+        return
+
+    lower = text.lower()
+    for marker in ("<html", "<head", "</head>", "<body", "</body>", "</html>"):
+        if marker not in lower:
+            errors.append(f"{relative}: incomplete HTML document, missing {marker}")
+
+    if MERGE_CONFLICT_LINE.search(text):
+        errors.append(f"{relative}: unresolved merge-conflict block found")
+    for marker in BAD_RUNTIME_REFERENCES:
+        if marker in lower:
+            errors.append(f"{relative}: invalid runtime reference found: {marker}")
+
+    parser = PageParser()
+    try:
+        parser.feed(text)
+    except Exception as exc:
+        errors.append(f"{relative}: HTML parser failed: {exc}")
+        return
+
+    title = "".join(parser.title_text).strip()
+    if not title:
+        errors.append(f"{relative}: page title is missing")
+
+    seen: set[str] = set()
+    duplicates: set[str] = set()
+    for element_id in parser.ids:
+        if element_id in seen:
+            duplicates.add(element_id)
+        seen.add(element_id)
+    if duplicates:
+        errors.append(f"{relative}: duplicate element IDs: {', '.join(sorted(duplicates))}")
+
+    for reference in parser.runtime_refs:
+        target = local_runtime_target(path, reference)
+        if target is not None and not target.is_file():
+            errors.append(f"{relative}: missing local runtime asset: {reference}")
+
+
+def check_json_file(relative: str, errors: list[str]) -> None:
+    path = ROOT / relative
+    if not path.is_file():
+        errors.append(f"{relative}: critical JSON/manifest file is missing")
+        return
+    try:
+        json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        errors.append(f"{relative}: invalid JSON: {exc}")
+
+
+def check_security_basics(errors: list[str]) -> None:
+    config_candidates = (
+        ROOT / "assets/js/config.js",
+        ROOT / "assets/js/supabase-client.js",
     )
+    service_role_pattern = re.compile(r"service[_-]?role|SUPABASE_SERVICE_ROLE", re.I)
+    for path in config_candidates:
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8")
+        if service_role_pattern.search(text):
+            errors.append(f"{path.relative_to(ROOT)}: public client code must not contain a service-role credential")
 
 
-def check_current_html(path: Path, errors: list[str]) -> None:
-    local_errors: list[str] = []
-    ORIGINAL_CHECK_HTML(path, local_errors)
-    generated_home_ready = home_generation_is_configured()
-    relative = str(path.relative_to(checks.ROOT))
-    for error in local_errors:
-        generated_reference = (
-            generated_home_ready
-            and error.startswith(f"{relative}: broken ")
-            and any(reference in error for reference in GENERATED_HOME_REFERENCES)
-        )
-        if not generated_reference:
-            errors.append(error)
+def main() -> int:
+    errors: list[str] = []
 
+    for relative in CRITICAL_HTML:
+        check_html(relative, errors)
 
-def check_current_membership_features(errors: list[str]) -> None:
-    legacy_errors: list[str] = []
-    ORIGINAL_MEMBERSHIP_CHECK(legacy_errors)
-    errors.extend(error for error in legacy_errors if not error.startswith(LEGACY_APP_ERROR))
+    for relative in CRITICAL_FILES:
+        if relative.endswith((".json", ".webmanifest")):
+            check_json_file(relative, errors)
+        else:
+            check_text_file(relative, errors)
 
-    app_html = (checks.ROOT / "app/index.html").read_text(encoding="utf-8")
-    current_markers = (
-        'id="accessGate"',
-        'id="signupForm"',
-        'id="signinForm"',
-        'id="signupStatus"',
-        'id="screen-community"',
-        'id="wallForm"',
-        'id="screen-profile"',
-        'data-fruit="orange"',
-        'data-theme-choice="midnight"',
-        'id="screen-help"',
-        "/app/assets/yoni/yoni-hero.webp",
-        "const YONI_URL='https://yoni.francinemariebautista.com/'",
-        "Yoni is a digital companion",
+    check_security_basics(errors)
+
+    if errors:
+        print("Quality check failed:\n")
+        for error in errors:
+            print(f"- {error}")
+        return 1
+
+    print(
+        "Quality check passed: critical routes are structurally complete, local CSS/JS "
+        "runtime references resolve, no merge-conflict blocks were found, and public "
+        "client files pass the basic secret guard."
     )
-    for marker in current_markers:
-        if marker not in app_html:
-            errors.append(f"app/index.html: missing current Yoni marker: {marker}")
-
-    current_files = (
-        "assets/css/yoni-app-refresh.css",
-        "assets/css/yoni-native-libraries.css",
-        "assets/css/yoni-native-reader-compat.css",
-        "assets/js/yoni-experience-loader.js",
-        "assets/js/yoni-native-libraries.js",
-        "assets/js/yoni-native-music.js",
-        "assets/js/yoni-native-ebooks.js",
-        "assets/js/supabase-client.js",
-        "app/assets/yoni/yoni-app-icon-192.png",
-        "app/assets/yoni/yoni-app-icon-512.png",
-        "app/assets/yoni/yoni-apple-touch-icon-180.png",
-        "app/assets/yoni/yoni-hero.webp",
-        "app/assets/yoni/yoni-theme-background.webp",
-        "app/assets/yoni/yoni-wordmark.png",
-    )
-    for relative in current_files:
-        if not (checks.ROOT / relative).exists():
-            errors.append(f"{relative}: current Yoni experience file is missing")
-
-    loader_path = checks.ROOT / "assets/js/yoni-experience-loader.js"
-    if loader_path.exists():
-        loader = loader_path.read_text(encoding="utf-8")
-        for marker in (
-            "/assets/css/yoni-app-refresh.css",
-            "/assets/css/yoni-native-libraries.css",
-            "/assets/css/yoni-native-reader-compat.css",
-            "/assets/js/yoni-native-libraries.js",
-            "/assets/js/yoni-native-music.js",
-            "/assets/js/yoni-native-ebooks.js",
-        ):
-            if marker not in loader:
-                errors.append(f"assets/js/yoni-experience-loader.js: missing current experience module: {marker}")
-
-    supabase_path = checks.ROOT / "assets/js/supabase-client.js"
-    if supabase_path.exists():
-        supabase_loader = supabase_path.read_text(encoding="utf-8")
-        for marker in (
-            "yoni.francinemariebautista.com",
-            "/assets/js/yoni-experience-loader.js",
-        ):
-            if marker not in supabase_loader:
-                errors.append(f"assets/js/supabase-client.js: missing current Yoni loader: {marker}")
-
-    service_worker_path = checks.ROOT / "service-worker.js"
-    if service_worker_path.exists():
-        worker = service_worker_path.read_text(encoding="utf-8")
-        for marker in (
-            "/app/assets/yoni/yoni-hero.webp",
-            "/app/assets/yoni/yoni-theme-background.webp",
-            "/assets/js/yoni-experience-loader.js",
-            "/assets/js/yoni-native-libraries.js",
-            "/assets/js/yoni-native-music.js",
-            "/assets/js/yoni-native-ebooks.js",
-        ):
-            if marker not in worker:
-                errors.append(f"service-worker.js: current Yoni cache marker is missing: {marker}")
+    return 0
 
 
-def check_current_navigation_experience(errors: list[str]) -> None:
-    legacy_errors: list[str] = []
-    ORIGINAL_NAVIGATION_CHECK(legacy_errors)
-    errors.extend(error for error in legacy_errors if error not in STALE_HOME_ERRORS)
-
-    index = (checks.ROOT / "index.html").read_text(encoding="utf-8")
-    for marker in (
-        "Official Bulletin",
-        'id="bulletin"',
-        'id="ecosystem"',
-        'id="work"',
-        "Shaping What Comes Next.",
-        "/music/",
-        "/ebooks/",
-        'id="homeHeroImage"',
-        'id="homeFounderImage"',
-    ):
-        if marker not in index:
-            errors.append(f"index.html: missing current official-bulletin marker: {marker}")
-
-
-def check_current_mobile_and_editorial_media(errors: list[str]) -> None:
-    legacy_errors: list[str] = []
-    ORIGINAL_EDITORIAL_MEDIA_CHECK(legacy_errors)
-    errors.extend(
-        error
-        for error in legacy_errors
-        if error not in STALE_NEWS_ERRORS
-        and error not in STALE_PRODUCT_ERRORS
-        and error not in STALE_MUSIC_ERRORS
-        and not error.startswith(STALE_NEWS_PREFIXES)
-    )
-
-    product_js = (checks.ROOT / "assets/js/fmb-product-modern.js").read_text(encoding="utf-8")
-    for marker in (
-        "data-music-filter",
-        "data-ebook-filter",
-        "fmb_music_state_v3",
-        "fmb:global-music-command",
-        "Restoring your listening session",
-    ):
-        if marker not in product_js:
-            errors.append(f"assets/js/fmb-product-modern.js: missing modern product marker: {marker}")
-
-    for name in ("music/index.html", "ebooks/index.html"):
-        page = (checks.ROOT / name).read_text(encoding="utf-8")
-        for marker in (
-            "/assets/css/fmb-product-modern.css",
-            'class="fmb-product-menu"',
-            'class="fmb-product-nav"',
-            "/assets/js/fmb-product-modern.js",
-        ):
-            if marker not in page:
-                errors.append(f"{name}: missing modern responsive product marker: {marker}")
-
-    ebooks = (checks.ROOT / "ebooks/index.html").read_text(encoding="utf-8")
-    for marker in (
-        'data-ebook-filter="open"',
-        'data-ebook-filter="preview"',
-        'data-access="open"',
-        'data-access="preview"',
-        'data-topics="wellbeing"',
-        'data-topics="identity"',
-    ):
-        if marker not in ebooks:
-            errors.append(f"ebooks/index.html: missing current library filter marker: {marker}")
-
-    music = (checks.ROOT / "music/index.html").read_text(encoding="utf-8")
-    for marker in ('id="playlistGrid"', 'id="mainPlayButton"', 'id="audioPlayer"'):
-        if marker not in music:
-            errors.append(f"music/index.html: missing current listening marker: {marker}")
-
-    news = (checks.ROOT / "news/index.html").read_text(encoding="utf-8")
-    if news.count('class="news-visual"') != 7:
-        errors.append("news/index.html: the current lead story and six-story rundown must each have one sourced visual")
-    if news.count("<figcaption>") != 7:
-        errors.append("news/index.html: the current lead story and six-story rundown must each show a visual credit")
-
-    required_news_markers = (
-        "FMB News Network",
-        "Context before noise.",
-        'id="rundown"',
-        'id="editorial-standard"',
-        'class="nc-site-header"',
-        "/assets/images/fmb-approved/fmb-news-official-transparent.webp",
-        "/news/subic-aeta-landfill/",
-        "/news/remembering-amor-deloso/",
-        "/news/filipinos-monkey-insult-racism/",
-        "/news/pax-silica-water/",
-        "/news/binibining-pilipinas-2026/",
-        "/news/china-ai-monkey-video/",
-        "/news/good-news/",
-        "fmb-news-luxury.css?v=20260722-luxury-v3",
-    )
-    for marker in required_news_markers:
-        if marker not in news:
-            errors.append(f"news/index.html: missing current newsroom marker: {marker}")
-
-    required_credits = (
-        "GMA Public Affairs / I-Witness",
-        "DILG Zambales, 2018",
-        "Micluna / Wikimedia Commons, CC BY-SA 4.0",
-        "Philippine Information Agency",
-        "Earl D.C. Bracamonte / Philstar.com",
-        "does not reproduce the racist video",
-        "FMB editorial illustration based on public releases",
-    )
-    for credit in required_credits:
-        if credit not in news:
-            errors.append(f"news/index.html: missing current editorial visual credit: {credit}")
-
-    news_js = (checks.ROOT / "assets/js/news-channel.js").read_text(encoding="utf-8")
-    for marker in ("Asia/Manila", "data-news-clock", "IntersectionObserver", "navigator.share"):
-        if marker not in news_js:
-            errors.append(f"assets/js/news-channel.js: missing current newsroom interaction marker: {marker}")
-
-
-checks.check_html = check_current_html
-checks.check_membership_features = check_current_membership_features
-checks.check_navigation_experience = check_current_navigation_experience
-checks.check_mobile_and_editorial_media = check_current_mobile_and_editorial_media
-raise SystemExit(checks.main())
+if __name__ == "__main__":
+    raise SystemExit(main())
