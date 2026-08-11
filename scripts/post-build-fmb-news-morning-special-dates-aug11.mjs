@@ -80,4 +80,14 @@ for (const relative of ['news/index.html','fmbnews/index.html']) {
   await writeFile(file, html, 'utf8');
 }
 
-console.log('Corrected Morning Special publication timestamp, event dates, and source URLs for 11 August 2026.');
+// Preserve newsroom standards links used by published articles.
+const aboutPath = path.join(dist, 'news', 'about', 'index.html');
+let aboutHtml = await readFile(aboutPath, 'utf8');
+const standardsAnchors = ['method', 'standards'];
+const missingStandardsAnchors = standardsAnchors.filter((anchor) => !new RegExp(`\\bid=["']${anchor}["']`, 'i').test(aboutHtml));
+if (missingStandardsAnchors.length) {
+  aboutHtml = aboutHtml.replace(/<main\b[^>]*>/i, (main) => `${main}${missingStandardsAnchors.map((anchor) => `<span id="${anchor}" hidden></span>`).join('')}`);
+  await writeFile(aboutPath, aboutHtml, 'utf8');
+}
+
+console.log('Corrected Morning Special publication timestamp, event dates, source URLs, and newsroom standards anchors for 11 August 2026.');
