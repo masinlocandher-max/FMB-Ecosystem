@@ -35,7 +35,7 @@ CRITICAL_FILES = (
     "assets/js/supabase-client.js",
 )
 
-MERGE_MARKERS = ("<<<<<<<", "=======", ">>>>>>>")
+MERGE_CONFLICT_LINE = re.compile(r"(?m)^\s*(?:<<<<<<< .+|=======|>>>>>>> .+)\s*$")
 BAD_RUNTIME_REFERENCES = (
     'src="undefined"',
     "src='undefined'",
@@ -111,9 +111,8 @@ def check_text_file(relative: str, errors: list[str], minimum_bytes: int = 32) -
         return
     if len(text.encode("utf-8")) < minimum_bytes:
         errors.append(f"{relative}: critical file is unexpectedly small")
-    for marker in MERGE_MARKERS:
-        if marker in text:
-            errors.append(f"{relative}: unresolved merge-conflict marker found: {marker}")
+    if MERGE_CONFLICT_LINE.search(text):
+        errors.append(f"{relative}: unresolved merge-conflict block found")
 
 
 def check_html(relative: str, errors: list[str]) -> None:
@@ -132,9 +131,8 @@ def check_html(relative: str, errors: list[str]) -> None:
         if marker not in lower:
             errors.append(f"{relative}: incomplete HTML document, missing {marker}")
 
-    for marker in MERGE_MARKERS:
-        if marker in text:
-            errors.append(f"{relative}: unresolved merge-conflict marker found: {marker}")
+    if MERGE_CONFLICT_LINE.search(text):
+        errors.append(f"{relative}: unresolved merge-conflict block found")
     for marker in BAD_RUNTIME_REFERENCES:
         if marker in lower:
             errors.append(f"{relative}: invalid runtime reference found: {marker}")
@@ -212,7 +210,7 @@ def main() -> int:
 
     print(
         "Quality check passed: critical routes are structurally complete, local CSS/JS "
-        "runtime references resolve, no merge-conflict markers were found, and public "
+        "runtime references resolve, no merge-conflict blocks were found, and public "
         "client files pass the basic secret guard."
     )
     return 0
