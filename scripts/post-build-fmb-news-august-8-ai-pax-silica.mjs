@@ -11,14 +11,10 @@ export const stories = [
 await import('./post-build-fmb-news-ai-francine-august-8.mjs');
 
 const root = path.resolve(new URL('..', import.meta.url).pathname);
-const sourceDir = path.join(root, 'assets', 'fmbnews');
+const sourceDir = path.join(root, 'scripts', 'assets');
 const chunkNames = [
-  'kween-yasmin-master.part00a.txt',
-  'kween-yasmin-master.part00b.txt',
-  'kween-yasmin-master.part00c.txt',
-  'kween-yasmin-master.part00d.txt',
-  'kween-yasmin-master.part01.txt',
-  'kween-yasmin-master.part02.txt'
+  'kween-yasmin-hero.part01.txt',
+  'kween-yasmin-hero.part02.txt'
 ];
 const expectedBytes = 468524;
 const expectedSha256 = 'abde36f3f45b44e32f9e40313ffcdc534ec8a5059a63ff4890fec0d39ed75ba7';
