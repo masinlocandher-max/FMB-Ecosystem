@@ -1,10 +1,9 @@
+import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 // Compatibility entrypoint for the August 8 FMB News AI / Pax Silica series.
 // The canonical publisher lives in post-build-fmb-news-ai-francine-august-8.mjs.
-// Keep the three slug/title pairs here because the related-story pass reads this
-// entrypoint as its stable series manifest.
 export const stories = [
   {
     slug:'francine-marie-bautista-ai-photography-creative-skill',
@@ -22,24 +21,36 @@ export const stories = [
 
 await import('./post-build-fmb-news-ai-francine-august-8.mjs');
 
-// Kween Yasmin is intentionally isolated from the main newsroom build.
-// A damaged or incomplete embedded hero must never block unrelated FMB News publication.
-try {
-  const root = path.resolve(new URL('..', import.meta.url).pathname);
-  const sourcePath = path.join(root, 'scripts', 'post-build-fmb-news-kween-yasmin-live.mjs');
-  const source = await readFile(sourcePath, 'utf8');
-  const match = source.match(/const heroBase64 = `([\s\S]*?)`;/);
-  if (!match) throw new Error('approved hero source is missing');
-
-  const heroBytes = Buffer.from(match[1], 'base64');
-  if (heroBytes.length < 100000) throw new Error(`approved hero payload is incomplete (${heroBytes.length} bytes)`);
-
-  const heroDir = path.join(root, 'dist', 'assets', 'images', 'fmbnews');
-  await mkdir(heroDir, { recursive: true });
-  await writeFile(path.join(heroDir, 'kween-yasmin-multifaceted-impact.jpeg'), heroBytes);
-
-  await import('./post-build-fmb-news-august-11-kween-yasmin.mjs');
-  await import('./post-build-fmb-news-kween-yasmin-seo.mjs');
-} catch (error) {
-  console.warn(`Kween Yasmin publication pass skipped without blocking newsroom build: ${error.message}`);
+// Reconstruct the exact user-approved 1536×768 Kween Yasmin JPEG from source-controlled
+// base64 chunks. The expected size/hash are from the original uploaded master, so a
+// truncated, substituted, or generated image cannot silently reach production.
+const root = path.resolve(new URL('..', import.meta.url).pathname);
+const sourceDir = path.join(root, 'assets', 'fmbnews');
+const chunkNames = [
+  'kween-yasmin-master.part00a.txt',
+  'kween-yasmin-master.part00b.txt',
+  'kween-yasmin-master.part00c.txt',
+  'kween-yasmin-master.part00d.txt',
+  'kween-yasmin-master.part01.txt',
+  'kween-yasmin-master.part02.txt'
+];
+const chunks = await Promise.all(chunkNames.map((name) => readFile(path.join(sourceDir, name), 'utf8')));
+const heroBase64 = chunks.join('').replace(/\s+/g, '');
+const heroBytes = Buffer.from(heroBase64, 'base64');
+const expectedBytes = 468524;
+const expectedSha256 = 'abde36f3f45b44e32f9e40313ffcdc534ec8a5059a63ff4890fec0d39ed75ba7';
+const actualSha256 = createHash('sha256').update(heroBytes).digest('hex');
+if (heroBytes.length !== expectedBytes) {
+  throw new Error(`Kween Yasmin approved hero byte-length mismatch: ${heroBytes.length} !== ${expectedBytes}`);
 }
+if (actualSha256 !== expectedSha256) {
+  throw new Error(`Kween Yasmin approved hero SHA-256 mismatch: ${actualSha256}`);
+}
+
+const heroDir = path.join(root, 'dist', 'assets', 'images', 'fmbnews');
+const heroPath = path.join(heroDir, 'kween-yasmin-multifaceted-impact.jpeg');
+await mkdir(heroDir, { recursive: true });
+await writeFile(heroPath, heroBytes);
+console.log(`Installed byte-verified approved Kween Yasmin hero (${heroBytes.length} bytes, ${actualSha256}).`);
+
+await import('./post-build-fmb-news-kween-yasmin-live.mjs');
