@@ -117,3 +117,8 @@ for (const htmlFile of htmlFiles) {
 }
 
 console.log(`FMB News image rasterization complete: ${replacements.size / 2} trusted SVG wrapper(s) converted, ${remoteMatches.size} Wikimedia URL(s) localized, ${changedReferences} generated reference(s) rewritten.`);
+
+// This is deliberately the final newsroom mutation in the build. Legacy news
+// publishers above may preserve historical routes, but this pass decides their
+// final information architecture and keeps Morning Special out of Latest News.
+await import('./post-build-fmbnews-newsroom-structure.mjs');
