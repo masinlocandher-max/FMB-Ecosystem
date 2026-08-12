@@ -46,6 +46,42 @@ function publicPath(file) {
   return `/${path.relative(dist, file).split(path.sep).join('/')}`;
 }
 
+function isWikimediaImageValue(value) {
+  return /https?:\/\/(?:upload|commons)\.wikimedia\.org\//i.test(value);
+}
+
+function replaceRemoteImageAttributes(html, onReplace) {
+  let output = html.replace(/<(img|source)\b[^>]*>/gi, tag => tag.replace(/\b(src|srcset)=(['"])(.*?)\2/gi, (attribute, name, quote, value) => {
+    if (!isWikimediaImageValue(value)) return attribute;
+    onReplace();
+    return `${name}=${quote}${fallbackImage}${quote}`;
+  }));
+
+  output = output.replace(/<meta\b[^>]*>/gi, tag => {
+    if (!/\b(?:property|name)=(['"])(?:og:image(?::url)?|twitter:image)\1/i.test(tag)) return tag;
+    return tag.replace(/\bcontent=(['"])(.*?)\1/i, (attribute, quote, value) => {
+      if (!isWikimediaImageValue(value)) return attribute;
+      onReplace();
+      return `content=${quote}${canonicalOrigin}${fallbackImage}${quote}`;
+    });
+  });
+
+  return output;
+}
+
+function containsRemoteImageDelivery(html) {
+  let found = false;
+  html.replace(/<(img|source)\b[^>]*>/gi, tag => {
+    if (/\b(?:src|srcset)=(['"])(?:(?!\1).)*https?:\/\/(?:upload|commons)\.wikimedia\.org\//i.test(tag)) found = true;
+    return tag;
+  });
+  html.replace(/<meta\b[^>]*>/gi, tag => {
+    if (/\b(?:property|name)=(['"])(?:og:image(?::url)?|twitter:image)\1/i.test(tag) && /\bcontent=(['"])[^'"]*https?:\/\/(?:upload|commons)\.wikimedia\.org\//i.test(tag)) found = true;
+    return tag;
+  });
+  return found;
+}
+
 await access(fallbackAbsolute);
 
 const wrapperReplacements = new Map();
@@ -84,10 +120,9 @@ for (const htmlFile of htmlFiles) {
     after = after.split(from).join(to);
   }
 
-  after = after.replace(/https?:\/\/(?:upload|commons)\.wikimedia\.org\/[^\s"'<>)]*/gi, () => {
+  after = replaceRemoteImageAttributes(after, () => {
     remoteReferenceCount += 1;
     changedReferences += 1;
-    return fallbackImage;
   });
 
   if (after !== before) {
@@ -99,8 +134,8 @@ for (const htmlFile of htmlFiles) {
 const violations = [];
 for (const htmlFile of htmlFiles) {
   const html = await readFile(htmlFile, 'utf8');
-  if (/https?:\/\/(?:upload|commons)\.wikimedia\.org\//i.test(html)) {
-    violations.push(`${path.relative(dist, htmlFile)} still contains a remote Wikimedia image URL`);
+  if (containsRemoteImageDelivery(html)) {
+    violations.push(`${path.relative(dist, htmlFile)} still contains a remote Wikimedia image delivery reference`);
   }
 
   for (const [wrapper] of wrapperReplacements) {
@@ -117,7 +152,7 @@ if (violations.length) {
 
 console.log(
   `FMB News local-image enforcement complete: ${wrapperCount} remote-backed SVG wrapper(s) resolved ` +
-  `(${wrapperFallbackCount} to editorial fallback), ${remoteReferenceCount} direct Wikimedia reference(s) removed, ` +
+  `(${wrapperFallbackCount} to editorial fallback), ${remoteReferenceCount} direct Wikimedia image delivery reference(s) removed, ` +
   `${changedReferences} generated reference(s) rewritten across ${changedFiles} page(s).`
 );
 
