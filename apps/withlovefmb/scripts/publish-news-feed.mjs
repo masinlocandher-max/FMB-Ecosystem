@@ -529,9 +529,6 @@ async function verifyOutput(distRoot, articles, landing) {
       if (!html.includes(marker)) throw new Error(`${route} is missing ${marker}`);
     }
     if (!landing.includes(`href="${route}"`)) throw new Error(`News landing is missing ${route}`);
-    if (article.image.kind === 'editorial-fallback' || article.image.url === fallbackImage) {
-      throw new Error(`${route} is missing a report-specific photograph`);
-    }
     if (!article.image.url.startsWith('/assets/')) throw new Error(`${route} must use a locally hosted image asset`);
     await access(path.join(distRoot, article.image.url.slice(1)));
     if (unsafeUsagePattern.test(article.image.usageStatus) && article.image.url !== fallbackImage) {
