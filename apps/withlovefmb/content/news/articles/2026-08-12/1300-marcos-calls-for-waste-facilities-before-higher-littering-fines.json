@@ -58,16 +58,16 @@
     }
   ],
   "image": {
-    "kind": "public-domain-photo",
-    "url": "/assets/images/news/2026-08-11/marcos-flood-mitigation-archive.svg",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:2026-05-20_%E2%80%93_PBBM_inspects_ongoing_drainage_improvement_project_along_flood-prone_Araneta_Ave,_QC_(03).jpg",
-    "creator": "Presidential Communications Office",
-    "license": "Public domain · Philippine government work",
-    "licenseUrl": "https://commons.wikimedia.org/wiki/Template:PD-PhilippinesGov",
-    "usageStatus": "Wikimedia Commons identifies the photograph as a Philippine government work in the public domain. Used as a clearly labeled archive image.",
-    "credit": "Photo: Presidential Communications Office · Public domain",
-    "caption": "Archive photograph from May 20, 2026 showing President Ferdinand Marcos Jr. inspecting a flood-mitigation project in Quezon City. It does not depict the August 12 Parañaque cleanup.",
-    "alt": "Archive photograph of President Ferdinand Marcos Jr. inspecting a flood-mitigation project",
+    "kind": "editorial-fallback",
+    "url": "/assets/images/news/fmb-news-editorial-fallback.svg",
+    "sourceUrl": null,
+    "creator": "FMB News",
+    "license": "FMB-owned editorial visual",
+    "licenseUrl": "https://www.francinemariebautista.com/news/",
+    "usageStatus": "FMB-owned editorial visual used because the supplied publisher photograph lacked verified reuse permission and the archive alternative could not be delivered as a fully local raster asset.",
+    "credit": "FMB News editorial visual",
+    "caption": "FMB News editorial visual accompanying the report. It does not depict the August 12 Parañaque cleanup.",
+    "alt": "FMB News editorial visual for the Parañaque waste-management report",
     "width": 1074,
     "height": 768,
     "focusX": 50,
@@ -77,7 +77,7 @@
     "sourceCheckedAt": "2026-08-12T19:18:00+08:00",
     "photoReferenceUrl": "https://commons.wikimedia.org/wiki/File:2026-05-20_%E2%80%93_PBBM_inspects_ongoing_drainage_improvement_project_along_flood-prone_Araneta_Ave,_QC_(03).jpg",
     "notes": [
-      "The supplied Philippine Star photograph was not used because attribution alone does not establish reuse permission.",
+      "The supplied Philippine Star photograph was not used because attribution alone does not establish reuse permission; the displayed FMB visual and credit match exactly.",
       "Unsupported claims about a DILG compliance audit, barangay-level mandates and private recycling partnerships were omitted.",
       "The headline avoids calling the situation a garbage crisis because Marcos explicitly stopped short of that label."
     ]

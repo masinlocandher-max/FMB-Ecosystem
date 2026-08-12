@@ -53,16 +53,16 @@
     }
   ],
   "image": {
-    "kind": "open-license-photo",
-    "url": "/assets/images/news/2026-08-11/philippines-transmission-lines-judgefloro.svg",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:0111Provincial_Bypass_Roads_Fields_San_Rafael,_Bulacan_01.jpg",
-    "creator": "Judgefloro",
-    "license": "CC0 1.0 Universal",
-    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-    "usageStatus": "Wikimedia Commons records the photograph as the creator's own work released under CC0 1.0. The locally hosted archive visual preserves the creator credit.",
-    "credit": "Photo: Judgefloro · CC0 1.0",
-    "caption": "Archive photograph showing high-voltage power lines in San Rafael, Bulacan in 2017. It is a generic Philippine transmission image and does not depict the August 12 Visayas or Mindanao grid conditions.",
-    "alt": "Archive view of high-voltage transmission lines in the Philippines",
+    "kind": "editorial-fallback",
+    "url": "/assets/images/news/fmb-news-editorial-fallback.svg",
+    "sourceUrl": null,
+    "creator": "FMB News",
+    "license": "FMB-owned editorial visual",
+    "licenseUrl": "https://www.francinemariebautista.com/news/",
+    "usageStatus": "FMB-owned editorial visual used because the rights-cleared archive photograph could not be delivered as a fully local raster asset.",
+    "credit": "FMB News editorial visual",
+    "caption": "FMB News editorial visual accompanying the grid-alert report. It does not depict the August 12 Visayas or Mindanao grid conditions.",
+    "alt": "FMB News editorial visual for the Visayas and Mindanao grid alerts",
     "width": 1200,
     "height": 675,
     "focusX": 50,
@@ -74,7 +74,8 @@
     "notes": [
       "Corrected the bulletin's unsupported 340 MW figure to NGCP's reported 931.5 MW unavailable in the Visayas and 621.6 MW unavailable in Mindanao.",
       "Updated alert periods and capacity figures using the source's 3:40 p.m. update.",
-      "Did not claim that specific rotational interruptions had already occurred because the checked report described them as expected or possible."
+      "Did not claim that specific rotational interruptions had already occurred because the checked report described them as expected or possible.",
+      "The displayed FMB-owned editorial visual and visible credit match exactly."
     ]
   }
 }

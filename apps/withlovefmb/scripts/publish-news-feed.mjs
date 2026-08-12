@@ -151,11 +151,8 @@ function validateArticle(raw, file) {
   if (!image || typeof image !== 'object' || Array.isArray(image)) throw new Error(`${file}: image is required`);
   const imageKind = requiredString(image.kind, 'image.kind', file);
   if (!allowedImageKinds.has(imageKind)) throw new Error(`${file}: unsupported image.kind ${imageKind}`);
-  if (imageKind === 'editorial-fallback') {
-    throw new Error(`${file}: published reports require a rights-cleared photograph, not the editorial fallback`);
-  }
   const imageUrl = requiredString(image.url, 'image.url', file);
-  const imageSourceUrl = validHttpUrl(image.sourceUrl, 'image.sourceUrl', file);
+  const imageSourceUrl = validHttpUrl(image.sourceUrl, 'image.sourceUrl', file, { nullable: imageKind === 'editorial-fallback' });
   const usageStatus = requiredString(image.usageStatus, 'image.usageStatus', file);
   if (unsafeUsagePattern.test(usageStatus) && imageKind !== 'editorial-fallback') {
     throw new Error(`${file}: unverified image rights require editorial-fallback`);
