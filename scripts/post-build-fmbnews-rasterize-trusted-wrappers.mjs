@@ -47,7 +47,7 @@ function publicPath(file) {
 }
 
 function isWikimediaImageValue(value) {
-  return /https?:\/\/(?:upload|commons)\.wikimedia\.org\//i.test(value);
+  return /https?:\/\/(?:upload|commons)\.wikimedia\.org\//i.test(value) || value.startsWith('/api/news-image?url=');
 }
 
 function replaceRemoteImageAttributes(html, onReplace) {

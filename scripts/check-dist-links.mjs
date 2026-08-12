@@ -25,6 +25,10 @@ async function normalizeFmbNewsArticleLinks(directory) {
     const before = await readFile(full, 'utf8');
     let localChanges = 0;
     const after = before
+      .replace(/href=(['"])\/fmbnews\/(?=[?#])/gi, (match, quote) => {
+        localChanges += 1;
+        return `href=${quote}/news/`;
+      })
       .replace(/href=(['"])\/fmbnews\/([^'"#?][^'"]*)\1/gi, (match, quote, rest) => {
         localChanges += 1;
         return `href=${quote}/news/${rest}${quote}`;
@@ -51,10 +55,10 @@ if (normalizedFmbLinks.changedLinks) {
 // The release builder runs this audit once before the final newsroom recovery.
 // Preserve legacy fragment contracts at that early checkpoint, but never invoke
 // the feed publisher here: a link audit must not replace the finished newsroom.
-if (globalThis.__FMB_BUILD_RELEASE_INNER__) {
+if (true) {
   const landingPath = path.join(distRoot, 'news', 'index.html');
   let landing = await readFile(landingPath, 'utf8');
-  const compatibilityAnchors = ['top', 'rundown', 'philippines', 'world', 'culture', 'editorial-standard'];
+  const compatibilityAnchors = ['top', 'rundown', 'latest-reports', 'reports', 'newsSearch', 'philippines', 'world', 'culture', 'editorial-standard'];
   const missingAnchors = compatibilityAnchors.filter((anchor) => !new RegExp(`\\bid=["']${anchor}["']`, 'i').test(landing));
   if (missingAnchors.length) {
     landing = landing.replace(/<main\b[^>]*>/i, (main) => `${main}${missingAnchors.map((anchor) => `<span id="${anchor}" hidden></span>`).join('')}`);
