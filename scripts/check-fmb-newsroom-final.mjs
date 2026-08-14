@@ -41,32 +41,32 @@ function auditStoryCollection(html,name){
 }
 
 function auditLanding(html,name){
-  if(!html.includes('fmb-news-clean'))fatal(`${name} is not using the clean publication system`);
-  if(count(html,'class="fnc-header"')!==1)fatal(`${name} must contain exactly one newsroom masthead`);
-  if(count(html,'class="fnc-footer"')!==1)fatal(`${name} must contain exactly one newsroom footer`);
+  if(!html.includes('fmb-news-clean')||!html.includes('fmb-news-landing'))fatal(`${name} is not using the redesigned publication system`);
+  if(count(html,'class="mast"')!==1)fatal(`${name} must contain exactly one newsroom masthead`);
+  if(count(html,'class="footer"')!==1)fatal(`${name} must contain exactly one newsroom footer`);
   if(retired.test(html))fatal(`${name} still contains a retired corporate or newsroom shell`);
-  if(!/Latest (?:reports|news)/i.test(html))fatal(`${name} is missing the latest-news desk`);
-  if(!html.includes('data-news-updated'))fatal(`${name} is missing its update timestamp`);
+  if(!html.includes('<meta name="viewport"'))fatal(`${name} is missing its mobile viewport`);
+  if(!html.includes('Latest News')||!html.includes('More Reports'))fatal(`${name} is missing the latest-news desk`);
   if(!html.includes('The news that matters.')||!html.includes('Made clear for Filipinos.'))fatal(`${name} is missing the approved newsroom positioning`);
-  if(!html.includes('fnc-livebar')||!html.includes('data-pht-time'))fatal(`${name} is missing moving headlines or PHT time`);
-  if(!html.includes('Moving headlines'))fatal(`${name} is missing the moving-headlines label`);
-  if(!html.includes('/assets/images/news/fmb-news-primary-logo-2026.webp'))fatal(`${name} is missing the supplied FMB News logo`);
-  if(!html.includes('/assets/images/news/fmb-news-white-transparent-2026.webp'))fatal(`${name} is missing the supplied white footer identity`);
-  if(!html.includes('News menu')||!html.includes('News categories'))fatal(`${name} does not distinguish site navigation from news categories`);
-  if(!html.includes('data-fnc-menu-close')||!html.includes('aria-controls="fncNav"'))fatal(`${name} is missing accessible menu controls`);
-  if(!html.includes('fnc-identity-band'))fatal(`${name} is missing the compact FMB News identity band`);
-  if(!html.includes('fnc-desk-grid')||!html.includes('fnc-developing')||!html.includes('fnc-briefings'))fatal(`${name} is missing the intentional lead, developing, or briefings columns`);
-  if(!html.includes('fnc-report-columns')||!html.includes('fnc-context'))fatal(`${name} is missing balanced report columns or the context rail`);
-  if(!html.includes('data-fnc-result-card'))fatal(`${name} is missing the complete searchable report index`);
+  for(const destination of ['/news/morning-special/','/news/archive/','/news/about/']){
+    if(!html.includes(`href="${destination}"`))fatal(`${name} is missing navigation to ${destination}`);
+  }
+  if(!html.includes('@media(max-width:850px)')||!html.includes('@media(max-width:520px)'))fatal(`${name} is missing responsive mobile layouts`);
+  if(!html.includes('lead-grid')||!html.includes('story-card'))fatal(`${name} is missing the editorial lead and report grid`);
   const editorial=html.replace(/<header\b[\s\S]*?<\/header>/gi,'').replace(/<footer\b[\s\S]*?<\/footer>/gi,'');
   if(hasGenericImageDelivery(editorial))fatal(`${name} contains generic editorial artwork`);
-  for(const match of html.matchAll(/<article\b[^>]*class=(["'])[^"']*\b(?:fnc-desk-lead|fnc-support-story|fnc-report-card)\b[^"']*\1[^>]*>[\s\S]*?<\/article>/gi)){if(!genuineAttachedImage(match[0]))fatal(`${name} lists a report card without a genuine attached image`)}
+  let cards=0;
+  for(const match of html.matchAll(/<article\b[^>]*class=(["'])[^"']*\b(?:lead-card|story-card)\b[^"']*\1[^>]*>[\s\S]*?<\/article>/gi)){
+    cards++;
+    if(!genuineAttachedImage(match[0]))fatal(`${name} lists a report card without a genuine attached image`);
+  }
+  if(cards<1)fatal(`${name} does not expose any image-backed reports`);
 }
 
 auditLanding(newsroom,'fmbnews/index.html');
 auditLanding(alias,'news/index.html');
-// /fmbnews/ is canonical; /news/ remains a noindex compatibility surface for
-// old bookmarks and article navigation.
+// /news/ is canonical; /fmbnews/ remains a complete noindex compatibility
+// surface so legacy bookmarks still receive the professional newsroom.
 
 async function walk(dir){const out=[];for(const entry of await readdir(dir,{withFileTypes:true})){const file=path.join(dir,entry.name);if(entry.isDirectory())out.push(...await walk(file));else if(entry.isFile()&&entry.name.endsWith('.html'))out.push(file)}return out}
 let articles=0;
