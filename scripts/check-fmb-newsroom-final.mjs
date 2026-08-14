@@ -7,7 +7,7 @@ const newsroom = await readFile(path.join(root, 'fmbnews', 'index.html'), 'utf8'
 const about = await readFile(path.join(root, 'fmbnews', 'about', 'index.html'), 'utf8');
 const canonicalLanding = await readFile(path.join(newsRoot, 'index.html'), 'utf8');
 const morningArchive = await readFile(path.join(newsRoot, 'morning-special', 'index.html'), 'utf8');
-const genericVisual = /(?:fmb-news-editorial-fallback|newsroom-editorial-fallback|fmb-news-(?:primary-logo|white-transparent|official)|(?:^|[-_/])(?:logo|wordmark|masthead)(?:[-_.?/]|$))/i;
+const genericVisual = /(?:newsroom-editorial-fallback|fmb-news-(?:primary-logo|white-transparent|official)|(?:^|[-_/])(?:logo|wordmark|masthead)(?:[-_.?/]|$))/i;
 const nonEditorialCompatibilityPages = new Set(['news/why-websites-cost-and-how-senz-makes-them-accessible/index.html', 'news/filipino-centered-training-institution-cognita-vision/index.html']);
 const retired = /fmb-shell-header|fmb-shell-footer|fmb-news-livebar|fmb-news-channel-command|fmb-v2-news-command/;
 const fatal = (message) => { throw new Error(`FMB News clean publication audit: ${message}`); };

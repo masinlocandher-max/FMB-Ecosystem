@@ -6,7 +6,7 @@ const dist = path.join(root, 'dist');
 const newsRoot = path.join(dist, 'news');
 const editionRoot = path.join(root, 'apps', 'withlovefmb', 'content', 'news', 'morning-special');
 const origin = 'https://www.francinemariebautista.com';
-const forbiddenImagePattern = /(?:fmb-news-editorial-fallback|newsroom-editorial-fallback|fmb-news-(?:primary-logo|white-transparent|official)|(?:^|[-_/])(?:logo|wordmark|masthead)(?:[-_.?/]|$))/i;
+const forbiddenImagePattern = /(?:newsroom-editorial-fallback|fmb-news-(?:primary-logo|white-transparent|official)|(?:^|[-_/])(?:logo|wordmark|masthead)(?:[-_.?/]|$))/i;
 
 const esc = (value = '') => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
 const decode = (value = '') => String(value).replace(/&amp;/gi, '&').replace(/&quot;/gi, '"').replace(/&#39;|&apos;/gi, "'").replace(/&lt;/gi, '<').replace(/&gt;/gi, '>');
@@ -206,7 +206,7 @@ function unavailableStoryRedirect() {
 }
 
 function cleanGenericImageDelivery(html) {
-  return html.replace(/<style\b[^>]*id=["']fmb-news-image-fallback-surface["'][^>]*>[\s\S]*?<\/style>\s*/gi, '').replace(/<figure\b[^>]*>[\s\S]*?(?:fmb-news-editorial-fallback|newsroom-editorial-fallback)\.svg[\s\S]*?<\/figure>\s*/gi, '').replace(/<(?:img|source)\b[^>]*(?:fmb-news-editorial-fallback|newsroom-editorial-fallback)\.svg[^>]*>\s*/gi, '').replace(/<meta\b[^>]*content=["'][^"']*(?:fmb-news-editorial-fallback|newsroom-editorial-fallback)\.svg[^"']*["'][^>]*>\s*/gi, '');
+  return html.replace(/<style\b[^>]*id=["']fmb-news-image-fallback-surface["'][^>]*>[\s\S]*?<\/style>\s*/gi, '').replace(/<figure\b[^>]*>[\s\S]*?newsroom-editorial-fallback\.svg[\s\S]*?<\/figure>\s*/gi, '').replace(/<(?:img|source)\b[^>]*newsroom-editorial-fallback\.svg[^>]*>\s*/gi, '').replace(/<meta\b[^>]*content=["'][^"']*newsroom-editorial-fallback\.svg[^"']*["'][^>]*>\s*/gi, '');
 }
 
 async function readSitemap() {

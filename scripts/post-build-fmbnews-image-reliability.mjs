@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptDirectory, '..');
 const newsRoot = path.join(repositoryRoot, 'dist', 'news');
-const genericVisualPattern = /(?:fmb-news-editorial-fallback|newsroom-editorial-fallback)\.svg/i;
+const genericVisualPattern = /newsroom-editorial-fallback\.svg/i;
 
 async function listHtml(directory) {
   const files = [];
@@ -27,14 +27,14 @@ async function listHtml(directory) {
 function removeGenericVisuals(html) {
   let output = html
     .replace(/<style\b[^>]*id=["']fmb-news-image-fallback-surface["'][^>]*>[\s\S]*?<\/style>\s*/gi, '')
-    .replace(/<figure\b[^>]*>[\s\S]*?(?:fmb-news-editorial-fallback|newsroom-editorial-fallback)\.svg[\s\S]*?<\/figure>\s*/gi, '')
-    .replace(/<(?:img|source)\b[^>]*(?:fmb-news-editorial-fallback|newsroom-editorial-fallback)\.svg[^>]*>\s*/gi, '')
-    .replace(/<meta\b[^>]*content=["'][^"']*(?:fmb-news-editorial-fallback|newsroom-editorial-fallback)\.svg[^"']*["'][^>]*>\s*/gi, '');
+    .replace(/<figure\b[^>]*>[\s\S]*?newsroom-editorial-fallback\.svg[\s\S]*?<\/figure>\s*/gi, '')
+    .replace(/<(?:img|source)\b[^>]*newsroom-editorial-fallback\.svg[^>]*>\s*/gi, '')
+    .replace(/<meta\b[^>]*content=["'][^"']*newsroom-editorial-fallback\.svg[^"']*["'][^>]*>\s*/gi, '');
 
   output = output.replace(/<img\b[^>]*>/gi, (tag) => (
     genericVisualPattern.test(tag)
       ? ''
-      : tag.replace(/\s+onerror=(["'])(?:(?!\1)[\s\S])*?(?:fmb-news-editorial-fallback|newsroom-editorial-fallback)(?:(?!\1)[\s\S])*?\1/gi, '')
+      : tag.replace(/\s+onerror=(["'])(?:(?!\1)[\s\S])*?newsroom-editorial-fallback(?:(?!\1)[\s\S])*?\1/gi, '')
   ));
   return output;
 }
@@ -45,9 +45,9 @@ let removedReferences = 0;
 
 for (const file of htmlFiles) {
   const before = await readFile(file, 'utf8');
-  const beforeCount = (before.match(/(?:fmb-news-editorial-fallback|newsroom-editorial-fallback)\.svg/gi) || []).length;
+  const beforeCount = (before.match(/newsroom-editorial-fallback\.svg/gi) || []).length;
   const after = removeGenericVisuals(before);
-  const afterCount = (after.match(/(?:fmb-news-editorial-fallback|newsroom-editorial-fallback)\.svg/gi) || []).length;
+  const afterCount = (after.match(/newsroom-editorial-fallback\.svg/gi) || []).length;
   removedReferences += Math.max(0, beforeCount - afterCount);
   if (after !== before) {
     await writeFile(file, after, 'utf8');
