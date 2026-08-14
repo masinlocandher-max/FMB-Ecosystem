@@ -123,6 +123,7 @@ function record(html, file) {
   if (!title) return null;
   const description = meta(html, 'description') || meta(html, 'og:description') || '';
   const published = meta(html, 'article:published_time') || meta(html, 'date') || jsonDate(html);
+  if (!dateValue(published)) return null;
   const category = strip(html.match(/<[^>]+class=(["'])[^"']*(?:nc-kicker|ms-kicker)[^"']*\1[^>]*>([\s\S]*?)<\//i)?.[2] || '') || 'FMB News';
   const morning = /FMB News Morning Special|fmb-morning-special|\bms-top\b|Morning Special/i.test(html);
   const image = firstImage(html);
@@ -173,6 +174,32 @@ function archivePage(normal) {
   return shell({ title:'News Archive | FMB News', description:'Browse the complete chronological archive of standard FMB News reports.', active:'archive', body });
 }
 
+function editorialStoryRoute(html, file) {
+  const route = canonical(html, file);
+  if (!route.startsWith('/news/') || route === '/news/' || route.startsWith('/news/about/') || route.startsWith('/news/archive/') || route.startsWith('/news/morning-special/')) return '';
+  if (/http-equiv=["']refresh["']/i.test(html) || /\bnoindex\b/i.test(meta(html, 'robots')) || !/<h1\b/i.test(html)) return '';
+  return route;
+}
+
+function unavailableStoryRedirect() {
+  return `<!doctype html><html lang="en-PH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Report unavailable | FMB News</title><meta name="description" content="Continue to the current FMB News newsroom."><meta name="robots" content="noindex,follow"><link rel="canonical" href="${origin}/news/"><meta http-equiv="refresh" content="0;url=/news/"></head><body><main><p>This report is not currently published. <a href="/news/">Continue to FMB News</a>.</p></main></body></html>`;
+}
+
+async function removeWithheldRoutesFromSitemap(routes) {
+  if (!routes.length) return;
+  const sitemapPath = path.join(dist, 'sitemap.xml');
+  let before = '';
+  try { before = await readFile(sitemapPath, 'utf8'); } catch (error) {
+    if (error?.code === 'ENOENT') return;
+    throw error;
+  }
+  const absolute = new Set(routes.map((route) => origin + route));
+  const after = before.replace(/<url>[\s\S]*?<\/url>/g, (block) => (
+    [...absolute].some((url) => block.includes(`<loc>${url}</loc>`)) ? '' : block
+  ));
+  if (after !== before) await writeFile(sitemapPath, after, 'utf8');
+}
+
 function cleanGenericImageDelivery(html) {
   return html
     .replace(/<style\b[^>]*id=["']fmb-news-image-fallback-surface["'][^>]*>[\s\S]*?<\/style>\s*/gi, '')
@@ -183,11 +210,15 @@ function cleanGenericImageDelivery(html) {
 
 const files = await walk(newsRoot);
 const records = [];
+const withheldStories = [];
 for (const file of files) {
   if (file === path.join(newsRoot, 'index.html')) continue;
-  let html = await readFile(file, 'utf8');
+  const html = await readFile(file, 'utf8');
+  const route = editorialStoryRoute(html, file);
   const rec = record(html, file);
-  if (rec && await imageExists(rec.image)) records.push(rec);
+  const publishable = Boolean(rec && await imageExists(rec.image));
+  if (publishable) records.push(rec);
+  else if (route) withheldStories.push({ file, route });
   const cleaned = cleanGenericImageDelivery(html);
   if (cleaned !== html) await writeFile(file, cleaned, 'utf8');
 }
@@ -206,4 +237,9 @@ const aliasDir = path.join(dist,'fmbnews');
 await mkdir(aliasDir,{recursive:true});
 await writeFile(path.join(aliasDir,'index.html'), `<!doctype html><html><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><link rel="canonical" href="${origin}/news/"><meta http-equiv="refresh" content="0;url=/news/"><title>FMB News</title></head><body><p><a href="/news/">Continue to FMB News</a></p></body></html>`, 'utf8');
 
-console.log(`FMB News newsroom structure finalized with real attached images only: ${normal.length} standard reports, ${morning.length} Morning Special stories. Reports without valid local editorial media were withheld from all indexes.`);
+for (const story of withheldStories) {
+  await writeFile(story.file, unavailableStoryRedirect(), 'utf8');
+}
+await removeWithheldRoutesFromSitemap(withheldStories.map((story) => story.route));
+
+console.log(`FMB News newsroom structure finalized with real attached images only: ${normal.length} standard reports, ${morning.length} Morning Special stories, and ${withheldStories.length} invalid or imageless story routes redirected out of publication.`);

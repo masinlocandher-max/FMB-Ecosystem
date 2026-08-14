@@ -49,6 +49,8 @@ for(const file of await walk(newsRoot)){
   if(!html.includes('news-story-route'))continue;
   const name=path.relative(root,file).replaceAll(path.sep,'/');
   if(nonEditorialCompatibilityPages.has(name))continue;
+  const route='/' + name.replace(/index\\.html$/,'');
+  if(!newsroom.includes(`href="${route}"`)&&!alias.includes(`href="${route}"`))continue;
   articles++;
   if(!html.includes('fmb-news-clean'))fatal(`${name} is not using the clean article shell`);
   if(count(html,'class="fnc-header"')!==1||count(html,'class="fnc-footer"')!==1)fatal(`${name} has duplicate or missing publication chrome`);

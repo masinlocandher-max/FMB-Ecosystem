@@ -1,4 +1,4 @@
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { cap, tag, walk, articleRecords, landingRecords, merge, chronological, assertChronological, logo } from './fmbnews-clean-lib.mjs';
 import { shell, foot, runtime, head, landingPage, aboutPage, redirectPage } from './fmbnews-clean-render.mjs';
@@ -44,21 +44,13 @@ await mkdir(path.join(news,'about'),{recursive:true});
 const aboutAlias=redirectPage('/fmbnews/about/').replace('<meta name="robots"','<meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="FMB News has moved to its canonical About page."><meta name="robots"');
 await writeFile(path.join(news,'about','index.html'),aboutAlias,'utf8');
 let count=0;
-let withheld=0;
 const recordsByRoute=new Map(records.map(record=>[record.route,record]));
-const preservedCompatibility=new Set(['why-websites-cost-and-how-senz-makes-them-accessible','filipino-centered-training-institution-cognita-vision','archive','morning-special']);
 for(const file of await walk(news)){
   if(file===path.join(news,'index.html')||file===path.join(news,'about','index.html'))continue;
   const rel=path.relative(news,file).split(path.sep).join('/');
   if(!rel.endsWith('/index.html'))continue;
   const route=`/news/${rel.replace(/index\\.html$/,'')}`;
-  const slug=route.split('/').filter(Boolean).at(-1);
   const record=recordsByRoute.get(route);
-  if(!record&&!preservedCompatibility.has(slug)){
-    await rm(path.dirname(file),{recursive:true,force:true});
-    withheld++;
-    continue;
-  }
   if(!record)continue;
   const before=await readFile(file,'utf8');
   const after=cleanArticle(before,route,record.publishedAt,record.image);
@@ -66,4 +58,4 @@ for(const file of await walk(news)){
 }
 const final=await readFile(path.join(fmb,'index.html'),'utf8');
 if((final.match(/class="fnc-header"/g)||[]).length!==1||(final.match(/class="fnc-footer"/g)||[]).length!==1||/fmb-shell-header|fmb-shell-footer|fmb-news-livebar|fmb-news-channel-command/.test(final)||!final.includes(`data-published-at="${records[0].publishedAt}"`))throw new Error('FMB News clean recovery validation failed.');
-console.log(`Recovered FMB News with one canonical newsroom, ${records.length} image-backed reports, ${count} clean article pages, and ${withheld} invalid or imageless report routes withheld.`);
+console.log(`Recovered FMB News with one canonical newsroom, ${records.length} image-backed reports and ${count} clean article pages; final route withholding runs after all article processors.`);
