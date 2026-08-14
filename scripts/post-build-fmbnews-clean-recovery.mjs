@@ -49,7 +49,7 @@ for(const file of await walk(news)){
   if(file===path.join(news,'index.html')||file===path.join(news,'about','index.html'))continue;
   const rel=path.relative(news,file).split(path.sep).join('/');
   if(!rel.endsWith('/index.html'))continue;
-  const route=`/news/${rel.replace(/index\\.html$/,'')}`;
+  const route=`/news/${rel.replace(/index\.html$/,'')}`;
   const record=recordsByRoute.get(route);
   if(!record)continue;
   const before=await readFile(file,'utf8');
