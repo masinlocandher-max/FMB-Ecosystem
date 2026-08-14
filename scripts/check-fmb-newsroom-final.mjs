@@ -12,6 +12,34 @@ const retired=/fmb-shell-header|fmb-shell-footer|fmb-news-livebar|fmb-news-chann
 const fatal=m=>{throw new Error(`FMB News clean publication audit: ${m}`)};
 const count=(html,token)=>(html.match(new RegExp(token,'g'))||[]).length;
 
+function imageSources(html){
+  const out=[];
+  for(const match of String(html||'').matchAll(/<(?:img|source)\b[^>]*>/gi)){
+    const tag=match[0];
+    for(const name of ['src','srcset']){
+      const value=tag.match(new RegExp(`\\b${name}\\s*=\\s*(["'])([\\s\\S]*?)\\1`,'i'))?.[2]||'';
+      for(const candidate of value.split(',').map(part=>part.trim().split(/\\s+/)[0]).filter(Boolean))out.push(candidate);
+    }
+  }
+  return out;
+}
+function genuineAttachedImage(html){
+  return imageSources(html).some(value=>{
+    try{
+      const parsed=new URL(value,'https://www.francinemariebautista.com');
+      return parsed.origin==='https://www.francinemariebautista.com'&&parsed.pathname.startsWith('/assets/')&&!genericVisual.test(parsed.pathname);
+    }catch{return false}
+  });
+}
+function hasGenericImageDelivery(html){return imageSources(html).some(value=>genericVisual.test(value))}
+function auditStoryCollection(html,name){
+  if(hasGenericImageDelivery(html))fatal(`${name} exposes generic editorial artwork`);
+  for(const match of html.matchAll(/<article\b[^>]*>[\s\S]*?<\/article>/gi)){
+    if(!/href=(["'])\/news\/[^"'#?]+\/\1/i.test(match[0]))continue;
+    if(!genuineAttachedImage(match[0]))fatal(`${name} lists a report without a genuine attached image`);
+  }
+}
+
 function auditLanding(html,name){
   if(!html.includes('fmb-news-clean'))fatal(`${name} is not using the clean publication system`);
   if(count(html,'class="fnc-header"')!==1)fatal(`${name} must contain exactly one newsroom masthead`);
@@ -30,8 +58,9 @@ function auditLanding(html,name){
   if(!html.includes('fnc-desk-grid')||!html.includes('fnc-developing')||!html.includes('fnc-briefings'))fatal(`${name} is missing the intentional lead, developing, or briefings columns`);
   if(!html.includes('fnc-report-columns')||!html.includes('fnc-context'))fatal(`${name} is missing balanced report columns or the context rail`);
   if(!html.includes('data-fnc-result-card'))fatal(`${name} is missing the complete searchable report index`);
-  if(genericVisual.test(html.replace(/<header\b[\s\S]*?<\/header>/gi,'').replace(/<footer\b[\s\S]*?<\/footer>/gi,'')))fatal(`${name} contains a generic visual in editorial content`);
-  for(const match of html.matchAll(/<article\b[^>]*class=(["'])[^"']*\b(?:fnc-desk-lead|fnc-support-story|fnc-report-card)\b[^"']*\1[^>]*>[\s\S]*?<\/article>/gi)){if(!/<img\b[^>]*src=["']\/assets\//i.test(match[0])||genericVisual.test(match[0]))fatal(`${name} lists a report card without a genuine attached image`)}
+  const editorial=html.replace(/<header\b[\s\S]*?<\/header>/gi,'').replace(/<footer\b[\s\S]*?<\/footer>/gi,'');
+  if(hasGenericImageDelivery(editorial))fatal(`${name} contains generic editorial artwork`);
+  for(const match of html.matchAll(/<article\b[^>]*class=(["'])[^"']*\b(?:fnc-desk-lead|fnc-support-story|fnc-report-card)\b[^"']*\1[^>]*>[\s\S]*?<\/article>/gi)){if(!genuineAttachedImage(match[0]))fatal(`${name} lists a report card without a genuine attached image`)}
 }
 
 auditLanding(newsroom,'fmbnews/index.html');
@@ -59,11 +88,18 @@ for(const file of await walk(newsRoot)){
   if(!/<h1\b[^>]*>[\s\S]*?<\/h1>/i.test(html))fatal(`${name} has no article headline`);
   if(!/<link\b[^>]*rel=["']canonical["'][^>]*href=["'][^"']+["']/i.test(html))fatal(`${name} has no canonical URL`);
   const editorialMedia=html.match(/<section\b[^>]*class=(["'])[^"']*\bnc-story-media\b[^"']*\1[^>]*>[\s\S]*?<\/section>/i)?.[0]||'';
-  if(!/<img\b[^>]*src=["']\/assets\//i.test(editorialMedia)||genericVisual.test(editorialMedia))fatal(`${name} has no genuine attached editorial image`);
+  if(!genuineAttachedImage(editorialMedia))fatal(`${name} has no genuine attached editorial image`);
   if(!html.includes('/assets/images/news/fmb-news-primary-logo-2026.webp'))fatal(`${name} is missing the supplied FMB News identity`);
   if(!/nc-sources|nc-source-box|class=(["'])[^"']*\bsources\b[^"']*\1|Sources and (?:public record|documents)|Source:/i.test(html))sourceWarnings++;
 }
 if(articles<1)fatal('no article pages were audited');
+for(const [relative,name] of [
+  ['archive/index.html','news/archive/index.html'],
+  ['morning-special/index.html','news/morning-special/index.html'],
+]){
+  try{auditStoryCollection(await readFile(path.join(newsRoot,relative),'utf8'),name)}
+  catch(error){if(error?.code!=='ENOENT')throw error}
+}
 for(const marker of ['Our mission','Our vision','What happened?','What is the context?','Why does it matter to Filipinos?','What should readers watch next?','Evidence first','Context always']){
   if(!about.includes(marker))fatal(`fmbnews/about/index.html is missing ${marker}`);
 }
