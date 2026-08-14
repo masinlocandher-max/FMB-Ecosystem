@@ -1,4 +1,4 @@
-import { access, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { access, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -331,6 +331,39 @@ function articleRecord(article) {
   };
 }
 
+function normalizeEditorialImage(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  let normalized = raw;
+  try {
+    const parsed = new URL(raw, canonicalOrigin);
+    if (parsed.origin !== canonicalOrigin) return raw;
+    normalized = parsed.pathname + parsed.search;
+  } catch {
+    return '';
+  }
+  if (!normalized.startsWith('/assets/')) return '';
+  if (/(?:fmb-news-editorial-fallback|newsroom-editorial-fallback|fmb-news-(?:primary-logo|white-transparent|official)|(?:^|[-_/])(?:logo|wordmark|masthead)(?:[-_.?/]|$))/i.test(normalized)) return '';
+  return normalized;
+}
+
+function firstEditorialImage(html) {
+  const candidates = [
+    meta(html, 'property', 'og:image'),
+    ...[...String(html || '').matchAll(/<img\b[^>]*>/gi)].map((match) => attr(match[0], 'src')),
+  ];
+  for (const candidate of candidates) {
+    const normalized = normalizeEditorialImage(candidate);
+    if (normalized) return normalized;
+  }
+  return '';
+}
+
+function isPublishableEditorialImage(article) {
+  return article.image.kind !== 'editorial-fallback'
+    && !/(?:fmb-news-editorial-fallback|newsroom-editorial-fallback|fmb-news-(?:primary-logo|white-transparent|official)|(?:^|[-_/])(?:logo|wordmark|masthead)(?:[-_.?/]|$))/i.test(article.image.url);
+}
+
 async function legacyRecords(newsRoot, excludedSlugs) {
   const records = [];
   let entries = [];
@@ -364,10 +397,13 @@ async function legacyRecords(newsRoot, excludedSlugs) {
     const description = meta(html, 'name', 'description')
       || stripTags(html.match(/<p\b[^>]*class=(['"])[^'"]*\bnc-article-deck\b[^'"]*\1[^>]*>([\s\S]*?)<\/p>/i)?.[2] || '')
       || 'Read the complete FMB News report.';
-    const rawImage = meta(html, 'property', 'og:image')
-      || attr(html.match(/<img\b[^>]*>/i)?.[0] || '', 'src')
-      || fallbackImage;
-    const image = rawImage.startsWith(canonicalOrigin) ? rawImage.slice(canonicalOrigin.length) : rawImage;
+    const image = firstEditorialImage(html);
+    if (!image || !image.startsWith('/assets/')) continue;
+    try {
+      await access(path.join(path.dirname(newsRoot), image.split('?')[0].slice(1)));
+    } catch {
+      continue;
+    }
     const section = meta(html, 'property', 'article:section') || 'FMB News';
     const kicker = stripTags(html.match(/<p\b[^>]*class=(['"])[^'"]*\bnc-kicker\b[^'"]*\1[^>]*>([\s\S]*?)<\/p>/i)?.[2] || section);
     const credit = stripTags(html.match(/<figcaption\b[^>]*>([\s\S]*?)<\/figcaption>/i)?.[1] || 'FMB News');
@@ -413,7 +449,7 @@ async function migrateLegacyNewsLinks(newsRoot, excludedSlugs) {
 }
 
 function card(record) {
-  return `<article class="fnc-card" data-fnc-card data-category="${esc(record.category)}" data-published-at="${esc(record.publishedAt)}" style="--fmb-focus-x:${esc(record.focusX ?? 50)}%;--fmb-focus-y:${esc(record.focusY ?? 50)}%"><a href="${record.route}"><figure><img src="${esc(record.image)}" onerror="this.onerror=null;this.src='/assets/images/news/fmb-news-editorial-fallback.svg'" loading="lazy" decoding="async" alt="${esc(record.alt)}"><figcaption class="fnc-credit">${esc(record.credit)}</figcaption></figure><div class="fnc-card-copy"><p class="fnc-meta">${esc(record.kicker)}</p><h3>${esc(record.title)}</h3><small><time datetime="${esc(record.publishedAt)}">${esc(record.published)}</time></small></div></a></article>`;
+  return `<article class="fnc-card" data-fnc-card data-category="${esc(record.category)}" data-published-at="${esc(record.publishedAt)}" style="--fmb-focus-x:${esc(record.focusX ?? 50)}%;--fmb-focus-y:${esc(record.focusY ?? 50)}%"><a href="${record.route}"><figure><img src="${esc(record.image)}" onerror="this.closest('article')?.remove()" loading="lazy" decoding="async" alt="${esc(record.alt)}"><figcaption class="fnc-credit">${esc(record.credit)}</figcaption></figure><div class="fnc-card-copy"><p class="fnc-meta">${esc(record.kicker)}</p><h3>${esc(record.title)}</h3><small><time datetime="${esc(record.publishedAt)}">${esc(record.published)}</time></small></div></a></article>`;
 }
 
 function landingPage(records) {
@@ -431,7 +467,7 @@ function landingPage(records) {
     ['environment', 'Environment'],
     ['health', 'Health'],
   ];
-  return `<!doctype html><html lang="en-PH">${head({ title: 'FMB News | Today’s Headlines for the Filipino', description: 'Credible reports, clear context, and the information Filipinos need to understand why each development matters.', canonical: `${canonicalOrigin}/news/`, image: lead.image })}<body id="top" class="fmb-news-clean fmb-news-landing">${shell(records.map((record) => record.title))}<main id="main"><span id="rundown" hidden></span><span id="latest-reports" hidden></span><span id="philippines" hidden></span><span id="world" hidden></span><span id="culture" hidden></span><section class="fnc-hero"><div class="fnc-signal fnc-signal-hero" aria-hidden="true"></div><div class="fnc-shell"><p class="fnc-kicker">Today’s headlines for the Filipino</p><article class="fnc-lead" data-fnc-card data-category="${esc(lead.category)}" data-published-at="${esc(lead.publishedAt)}" style="--fmb-focus-x:${esc(lead.focusX ?? 50)}%;--fmb-focus-y:${esc(lead.focusY ?? 50)}%"><figure class="fnc-lead-media"><img src="${esc(lead.image)}" onerror="this.onerror=null;this.src='/assets/images/news/fmb-news-editorial-fallback.svg'" alt="${esc(lead.alt)}"><figcaption class="fnc-credit">${esc(lead.credit)}</figcaption></figure><div class="fnc-lead-copy"><span class="fnc-top-story">Top story</span><p class="fnc-kicker">${esc(lead.kicker)}</p><h1>${esc(lead.title)}</h1><p>${esc(lead.description)}</p><div class="fnc-lead-meta"><small><time datetime="${esc(lead.publishedAt)}">${esc(lead.published)}</time></small><a class="fnc-read" href="${lead.route}">Read full report</a></div></div></article></div></section><section class="fnc-tools"><div class="fnc-shell fnc-tools-row"><input class="fnc-search" data-fnc-search type="search" placeholder="Search reports, people, places, or topics" aria-label="Search FMB News reports"><div class="fnc-categories">${filters.map(([value, label]) => `<a class="fnc-category" href="#reports" data-fnc-filter="${value}">${label}</a>`).join('')}</div></div></section><section class="fnc-content" id="reports"><div class="fnc-shell"><div class="fnc-section-head"><div><i aria-hidden="true"></i><div><p class="fnc-kicker">Newsroom</p><h2>Latest news</h2></div></div><p data-news-updated="${esc(lead.publishedAt)}"><strong>Newest first</strong><span>${records.length} reports accessible</span></p></div><div class="fnc-grid">${visible.map(card).join('')}</div>${archive.length ? `<details class="fnc-archive"><summary>View ${archive.length} more reports</summary><div class="fnc-archive-list">${archive.map((record) => `<a href="${record.route}" data-category="${esc(record.category)}" data-published-at="${esc(record.publishedAt)}"><span>${esc(record.kicker)}</span><strong>${esc(record.title)}</strong><time datetime="${esc(record.publishedAt)}">${esc(record.published)}</time></a>`).join('')}</div></details>` : ''}</div></section></main>${foot()}${runtime()}</body></html>`;
+  return `<!doctype html><html lang="en-PH">${head({ title: 'FMB News | Today’s Headlines for the Filipino', description: 'Credible reports, clear context, and the information Filipinos need to understand why each development matters.', canonical: `${canonicalOrigin}/news/`, image: lead.image })}<body id="top" class="fmb-news-clean fmb-news-landing">${shell(records.map((record) => record.title))}<main id="main"><span id="rundown" hidden></span><span id="latest-reports" hidden></span><span id="philippines" hidden></span><span id="world" hidden></span><span id="culture" hidden></span><section class="fnc-hero"><div class="fnc-signal fnc-signal-hero" aria-hidden="true"></div><div class="fnc-shell"><p class="fnc-kicker">Today’s headlines for the Filipino</p><article class="fnc-lead" data-fnc-card data-category="${esc(lead.category)}" data-published-at="${esc(lead.publishedAt)}" style="--fmb-focus-x:${esc(lead.focusX ?? 50)}%;--fmb-focus-y:${esc(lead.focusY ?? 50)}%"><figure class="fnc-lead-media"><img src="${esc(lead.image)}" onerror="this.closest('article')?.remove()" alt="${esc(lead.alt)}"><figcaption class="fnc-credit">${esc(lead.credit)}</figcaption></figure><div class="fnc-lead-copy"><span class="fnc-top-story">Top story</span><p class="fnc-kicker">${esc(lead.kicker)}</p><h1>${esc(lead.title)}</h1><p>${esc(lead.description)}</p><div class="fnc-lead-meta"><small><time datetime="${esc(lead.publishedAt)}">${esc(lead.published)}</time></small><a class="fnc-read" href="${lead.route}">Read full report</a></div></div></article></div></section><section class="fnc-tools"><div class="fnc-shell fnc-tools-row"><input class="fnc-search" data-fnc-search type="search" placeholder="Search reports, people, places, or topics" aria-label="Search FMB News reports"><div class="fnc-categories">${filters.map(([value, label]) => `<a class="fnc-category" href="#reports" data-fnc-filter="${value}">${label}</a>`).join('')}</div></div></section><section class="fnc-content" id="reports"><div class="fnc-shell"><div class="fnc-section-head"><div><i aria-hidden="true"></i><div><p class="fnc-kicker">Newsroom</p><h2>Latest news</h2></div></div><p data-news-updated="${esc(lead.publishedAt)}"><strong>Newest first</strong><span>${records.length} reports accessible</span></p></div><div class="fnc-grid">${visible.map(card).join('')}</div>${archive.length ? `<details class="fnc-archive"><summary>View ${archive.length} more reports</summary><div class="fnc-archive-list">${archive.map((record) => `<a href="${record.route}" data-category="${esc(record.category)}" data-published-at="${esc(record.publishedAt)}"><span>${esc(record.kicker)}</span><strong>${esc(record.title)}</strong><time datetime="${esc(record.publishedAt)}">${esc(record.published)}</time></a>`).join('')}</div></details>` : ''}</div></section></main>${foot()}${runtime()}</body></html>`;
 }
 
 function articlePage(article, tickerTitles) {
@@ -494,14 +530,14 @@ function articlePage(article, tickerTitles) {
   const faq = article.faq.length ? `<section class="nc-faq" aria-labelledby="nc-faq-title"><p class="nc-editorial-lens-label">Quick answers</p><h2 id="nc-faq-title">${esc(article.faqTitle)}</h2><div class="nc-faq-list">${article.faq.map((item) => `<article class="nc-faq-item"><h3>${esc(item.question)}</h3><p>${esc(item.answer)}</p></article>`).join('')}</div></section>` : '';
   const photoSourceLink = `<a href="${esc(article.image.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(article.image.credit)}</a>`;
   const photoLicenseLink = `<a href="${esc(article.image.licenseUrl)}" target="_blank" rel="license noopener noreferrer">License details</a>`;
-  return `<!doctype html><html lang="en-PH">${head({ title: `${article.seoTitle} | FMB News`, description: article.seoDescription, canonical, image: article.image.url, imageWidth: article.image.width, imageHeight: article.image.height, imageAlt: article.image.alt, type: 'article', publishedAt: article.publishedAt, updatedAt: article.updatedAt, schema })}<body id="top" class="fmb-news-clean fmb-news-article news-story-route">${shell(tickerTitles)}<main id="main"><div class="nc-story-masthead"><div class="wrap"><a class="nc-back-link" href="/fmbnews/">Back to headlines</a><span>${esc(formatPht(article.publishedAt))}</span></div></div><header class="nc-article-hero"><div class="wrap"><p class="fnc-kicker">${esc(article.kicker)}</p><h1>${esc(article.headline)}</h1><p class="nc-article-deck">${esc(article.deck)}</p><div class="nc-article-meta"><span>By FMB News Desk</span><span>Published ${esc(formatPht(article.publishedAt))}</span><span>${readingTime(article)} min read</span></div></div></header><section class="nc-story-media"><div class="wrap"><figure style="--fmb-focus-x:${esc(article.image.focusX)}%;--fmb-focus-y:${esc(article.image.focusY)}%"><img src="${esc(article.image.url)}" onerror="this.onerror=null;this.src='/assets/images/news/fmb-news-editorial-fallback.svg'" width="${esc(article.image.width)}" height="${esc(article.image.height)}" alt="${esc(article.image.alt)}" fetchpriority="high" decoding="async"><span class="fmb-photo-credit">${photoSourceLink}</span><figcaption><span>${esc(article.image.caption)}</span><span class="nc-photo-attribution">${photoSourceLink}<span aria-hidden="true"> · </span>${photoLicenseLink}</span></figcaption></figure></div></section><article class="nc-article"><div class="wrap nc-article-layout"><div class="nc-story-body"><div class="nc-factbox"><p><strong>Editorial standard:</strong> Sources are listed below. Verified reporting, attributed claims, uncertainty, and analysis remain distinct.</p></div>${sections}${faq}<section class="nc-sources"><h2>Sources and public record</h2>${sourceLinks}</section></div></div></article></main>${foot()}${runtime()}</body></html>`;
+  return `<!doctype html><html lang="en-PH">${head({ title: `${article.seoTitle} | FMB News`, description: article.seoDescription, canonical, image: article.image.url, imageWidth: article.image.width, imageHeight: article.image.height, imageAlt: article.image.alt, type: 'article', publishedAt: article.publishedAt, updatedAt: article.updatedAt, schema })}<body id="top" class="fmb-news-clean fmb-news-article news-story-route">${shell(tickerTitles)}<main id="main"><div class="nc-story-masthead"><div class="wrap"><a class="nc-back-link" href="/fmbnews/">Back to headlines</a><span>${esc(formatPht(article.publishedAt))}</span></div></div><header class="nc-article-hero"><div class="wrap"><p class="fnc-kicker">${esc(article.kicker)}</p><h1>${esc(article.headline)}</h1><p class="nc-article-deck">${esc(article.deck)}</p><div class="nc-article-meta"><span>By FMB News Desk</span><span>Published ${esc(formatPht(article.publishedAt))}</span><span>${readingTime(article)} min read</span></div></div></header><section class="nc-story-media"><div class="wrap"><figure style="--fmb-focus-x:${esc(article.image.focusX)}%;--fmb-focus-y:${esc(article.image.focusY)}%"><img src="${esc(article.image.url)}" onerror="this.closest('figure')?.remove()" width="${esc(article.image.width)}" height="${esc(article.image.height)}" alt="${esc(article.image.alt)}" fetchpriority="high" decoding="async"><span class="fmb-photo-credit">${photoSourceLink}</span><figcaption><span>${esc(article.image.caption)}</span><span class="nc-photo-attribution">${photoSourceLink}<span aria-hidden="true"> · </span>${photoLicenseLink}</span></figcaption></figure></div></section><article class="nc-article"><div class="wrap nc-article-layout"><div class="nc-story-body"><div class="nc-factbox"><p><strong>Editorial standard:</strong> Sources are listed below. Verified reporting, attributed claims, uncertainty, and analysis remain distinct.</p></div>${sections}${faq}<section class="nc-sources"><h2>Sources and public record</h2>${sourceLinks}</section></div></div></article></main>${foot()}${runtime()}</body></html>`;
 }
 
 function redirectPage(destination) {
   return `<!doctype html><html lang="en-PH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="FMB News canonical route redirect."><meta name="robots" content="noindex,follow"><meta http-equiv="refresh" content="0;url=${destination}"><link rel="canonical" href="${canonicalOrigin}${destination}"><title>FMB News</title></head><body><span id="top" hidden></span><span id="reports" hidden></span><span id="latest-reports" hidden></span><span id="rundown" hidden></span><p>Continue to <a href="${destination}">${destination}</a>.</p></body></html>`;
 }
 
-async function updateSitemap(distRoot, articles) {
+async function updateSitemap(distRoot, articles, withheldArticles = []) {
   const sitemapPath = path.join(distRoot, 'sitemap.xml');
   let sitemap;
   try {
@@ -510,6 +546,10 @@ async function updateSitemap(distRoot, articles) {
     if (error?.code !== 'ENOENT') throw error;
     sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n</urlset>\n';
   }
+  const withheldUrls = new Set(withheldArticles.map((article) => `${canonicalOrigin}/news/${article.slug}/`));
+  sitemap = sitemap.replace(/<url>[\s\S]*?<\/url>/g, (block) => (
+    [...withheldUrls].some((url) => block.includes(`<loc>${url}</loc>`)) ? '' : block
+  ));
   for (const article of articles) {
     const url = `${canonicalOrigin}/news/${article.slug}/`;
     if (sitemap.includes(`<loc>${url}</loc>`)) continue;
@@ -547,8 +587,13 @@ export async function publishNewsFeed({ distRoot = path.join(appRoot, 'dist'), c
   const fmbNewsRoot = path.join(resolvedDist, 'fmbnews');
   await mkdir(newsRoot, { recursive: true });
 
-  const articles = await loadArticles(resolvedContent);
-  const structuredSlugs = new Set(articles.map((article) => article.slug));
+  const loadedArticles = await loadArticles(resolvedContent);
+  const articles = loadedArticles.filter(isPublishableEditorialImage);
+  const withheldArticles = loadedArticles.filter((article) => !isPublishableEditorialImage(article));
+  const structuredSlugs = new Set(loadedArticles.map((article) => article.slug));
+  for (const article of withheldArticles) {
+    await rm(path.join(newsRoot, article.slug), { recursive: true, force: true });
+  }
   await migrateLegacyNewsLinks(newsRoot, structuredSlugs);
   const legacy = await legacyRecords(newsRoot, structuredSlugs);
   const records = [...articles.map(articleRecord), ...legacy]
@@ -569,11 +614,11 @@ export async function publishNewsFeed({ distRoot = path.join(appRoot, 'dist'), c
   await writeFile(path.join(fmbNewsRoot, 'index.html'), redirectPage('/news/'), 'utf8');
   await mkdir(path.join(fmbNewsRoot, 'about'), { recursive: true });
   await writeFile(path.join(fmbNewsRoot, 'about', 'index.html'), redirectPage('/news/about/'), 'utf8');
-  await updateSitemap(resolvedDist, articles);
+  await updateSitemap(resolvedDist, articles, withheldArticles);
   await verifyOutput(resolvedDist, articles, landing);
 
-  console.log(`FMB News publisher rendered ${articles.length} structured article(s), retained ${legacy.length} legacy report(s), and exposed ${uniqueRecords.length} independent story route(s).`);
-  return { articleCount: articles.length, legacyCount: legacy.length, totalCount: uniqueRecords.length };
+  console.log(`FMB News publisher rendered ${articles.length} image-backed structured article(s), withheld ${withheldArticles.length} report(s) without a real attached image, retained ${legacy.length} image-backed legacy report(s), and exposed ${uniqueRecords.length} independent story route(s).`);
+  return { articleCount: articles.length, withheldCount: withheldArticles.length, legacyCount: legacy.length, totalCount: uniqueRecords.length };
 }
 
 function cliValue(name) {

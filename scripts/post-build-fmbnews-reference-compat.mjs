@@ -68,7 +68,7 @@ for (const file of files) {
     const headerToken = '<!-- FMB_NEWS_MASTHEAD_PLACEHOLDER -->';
     html = html.replace(currentHeader, headerToken)
       .replace(/<source\b[^>]*(?:src|srcset)=["'][^"']*fmb-news-official-transparent\.webp[^>]*>\s*/gi, '')
-      .replace(/<img\b[^>]*src=["'][^"']*fmb-news-official-transparent\.webp[^>]*>/gi, '<img src="/assets/images/news/fmb-news-editorial-fallback.svg" width="1600" height="900" loading="lazy" decoding="async" alt="FMB News editorial cover">')
+      .replace(/<img\b[^>]*src=["'][^"']*fmb-news-official-transparent\.webp[^>]*>/gi, '')
       .replace(headerToken, currentHeader);
   }
 

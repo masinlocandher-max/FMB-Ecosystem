@@ -1,13 +1,11 @@
-import { access, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptDirectory, '..');
-const distRoot = path.join(repositoryRoot, 'dist');
-const newsRoot = path.join(distRoot, 'news');
-const fallbackImage = '/assets/images/news/fmb-news-editorial-fallback.svg';
-const fallbackAbsolute = path.join(distRoot, fallbackImage.slice(1));
+const newsRoot = path.join(repositoryRoot, 'dist', 'news');
+const genericVisualPattern = /(?:fmb-news-editorial-fallback|newsroom-editorial-fallback)\.svg/i;
 
 async function listHtml(directory) {
   const files = [];
@@ -26,38 +24,35 @@ async function listHtml(directory) {
   return files;
 }
 
-function addImageFallback(html) {
-  return html.replace(/<img\b([^>]*?)>/gi, (tag, attrs) => {
-    if (/\bonerror\s*=/i.test(attrs)) return tag;
-    return `<img${attrs} onerror="this.onerror=null;this.src='${fallbackImage}';this.removeAttribute('srcset');">`;
-  });
+function removeGenericVisuals(html) {
+  let output = html
+    .replace(/<style\b[^>]*id=["']fmb-news-image-fallback-surface["'][^>]*>[\s\S]*?<\/style>\s*/gi, '')
+    .replace(/<figure\b[^>]*>[\s\S]*?(?:fmb-news-editorial-fallback|newsroom-editorial-fallback)\.svg[\s\S]*?<\/figure>\s*/gi, '')
+    .replace(/<(?:img|source)\b[^>]*(?:fmb-news-editorial-fallback|newsroom-editorial-fallback)\.svg[^>]*>\s*/gi, '')
+    .replace(/<meta\b[^>]*content=["'][^"']*(?:fmb-news-editorial-fallback|newsroom-editorial-fallback)\.svg[^"']*["'][^>]*>\s*/gi, '');
+
+  output = output.replace(/<img\b[^>]*>/gi, (tag) => (
+    genericVisualPattern.test(tag)
+      ? ''
+      : tag.replace(/\s+onerror=(["'])(?:(?!\1)[\s\S])*?(?:fmb-news-editorial-fallback|newsroom-editorial-fallback)(?:(?!\1)[\s\S])*?\1/gi, '')
+  ));
+  return output;
 }
 
-function addFigureFallbackSurface(html) {
-  const style = `<style id="fmb-news-image-fallback-surface">.fnc-card figure,.fnc-lead-media,.nc-article-media,.ms-media figure,.news-card figure,.story-card figure{background:#241033 url('${fallbackImage}') center/cover no-repeat}.fnc-card img,.fnc-lead-media img,.nc-article-media img,.ms-media img,.news-card img,.story-card img{background:#241033 url('${fallbackImage}') center/cover no-repeat}</style>`;
-  if (html.includes('id="fmb-news-image-fallback-surface"')) return html;
-  return html.includes('</head>') ? html.replace('</head>', `${style}</head>`) : html;
-}
+const htmlFiles = await listHtml(newsRoot);
+let changedFiles = 0;
+let removedReferences = 0;
 
-async function repairNewsImages() {
-  await access(fallbackAbsolute);
-  const htmlFiles = await listHtml(newsRoot);
-  let changed = 0;
-  let imageCount = 0;
-
-  for (const file of htmlFiles) {
-    const before = await readFile(file, 'utf8');
-    const beforeCount = (before.match(/<img\b/gi) || []).length;
-    let after = addImageFallback(before);
-    after = addFigureFallbackSurface(after);
-    imageCount += beforeCount;
-    if (after !== before) {
-      await writeFile(file, after, 'utf8');
-      changed += 1;
-    }
+for (const file of htmlFiles) {
+  const before = await readFile(file, 'utf8');
+  const beforeCount = (before.match(/(?:fmb-news-editorial-fallback|newsroom-editorial-fallback)\.svg/gi) || []).length;
+  const after = removeGenericVisuals(before);
+  const afterCount = (after.match(/(?:fmb-news-editorial-fallback|newsroom-editorial-fallback)\.svg/gi) || []).length;
+  removedReferences += Math.max(0, beforeCount - afterCount);
+  if (after !== before) {
+    await writeFile(file, after, 'utf8');
+    changedFiles += 1;
   }
-
-  console.log(`FMB News image reliability pass: protected ${imageCount} image(s) across ${htmlFiles.length} page(s); updated ${changed} page(s).`);
 }
 
-await repairNewsImages();
+console.log('FMB News image policy removed ' + removedReferences + ' generic visual reference(s) across ' + changedFiles + ' page(s).');
