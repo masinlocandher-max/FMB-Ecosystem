@@ -360,8 +360,9 @@ function firstEditorialImage(html) {
 }
 
 function isPublishableEditorialImage(article) {
-  return article.image.kind !== 'editorial-fallback'
-    && !/(?:fmb-news-editorial-fallback|newsroom-editorial-fallback|fmb-news-(?:primary-logo|white-transparent|official)|(?:^|[-_/])(?:logo|wordmark|masthead)(?:[-_.?/]|$))/i.test(article.image.url);
+  if (!article.image.url.startsWith('/assets/')) return false;
+  if (article.image.kind === 'editorial-fallback') return article.image.url === fallbackImage;
+  return !/(?:fmb-news-editorial-fallback|newsroom-editorial-fallback|fmb-news-(?:primary-logo|white-transparent|official)|(?:^|[-_/])(?:logo|wordmark|masthead)(?:[-_.?/]|$))/i.test(article.image.url);
 }
 
 async function legacyRecords(newsRoot, excludedSlugs) {
@@ -528,7 +529,9 @@ function articlePage(article, tickerTitles) {
     return `<section${label ? ` class="nc-editorial-lens-section" data-fmb-lens="${esc(label)}"` : ''}>${label ? `<p class="nc-editorial-lens-label">${esc(label)}</p>` : ''}<h2>${esc(section.heading)}</h2>${section.paragraphs.map((paragraph) => `<p>${esc(paragraph)}</p>`).join('')}</section>`;
   }).join('');
   const faq = article.faq.length ? `<section class="nc-faq" aria-labelledby="nc-faq-title"><p class="nc-editorial-lens-label">Quick answers</p><h2 id="nc-faq-title">${esc(article.faqTitle)}</h2><div class="nc-faq-list">${article.faq.map((item) => `<article class="nc-faq-item"><h3>${esc(item.question)}</h3><p>${esc(item.answer)}</p></article>`).join('')}</div></section>` : '';
-  const photoSourceLink = `<a href="${esc(article.image.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(article.image.credit)}</a>`;
+  const photoSourceLink = article.image.sourceUrl
+    ? `<a href="${esc(article.image.sourceUrl)}" target="_blank" rel="noopener noreferrer">${esc(article.image.credit)}</a>`
+    : `<span>${esc(article.image.credit)}</span>`;
   const photoLicenseLink = `<a href="${esc(article.image.licenseUrl)}" target="_blank" rel="license noopener noreferrer">License details</a>`;
   return `<!doctype html><html lang="en-PH">${head({ title: `${article.seoTitle} | FMB News`, description: article.seoDescription, canonical, image: article.image.url, imageWidth: article.image.width, imageHeight: article.image.height, imageAlt: article.image.alt, type: 'article', publishedAt: article.publishedAt, updatedAt: article.updatedAt, schema })}<body id="top" class="fmb-news-clean fmb-news-article news-story-route">${shell(tickerTitles)}<main id="main"><div class="nc-story-masthead"><div class="wrap"><a class="nc-back-link" href="/fmbnews/">Back to headlines</a><span>${esc(formatPht(article.publishedAt))}</span></div></div><header class="nc-article-hero"><div class="wrap"><p class="fnc-kicker">${esc(article.kicker)}</p><h1>${esc(article.headline)}</h1><p class="nc-article-deck">${esc(article.deck)}</p><div class="nc-article-meta"><span>By FMB News Desk</span><span>Published ${esc(formatPht(article.publishedAt))}</span><span>${readingTime(article)} min read</span></div></div></header><section class="nc-story-media"><div class="wrap"><figure style="--fmb-focus-x:${esc(article.image.focusX)}%;--fmb-focus-y:${esc(article.image.focusY)}%"><img src="${esc(article.image.url)}" onerror="this.closest('figure')?.remove()" width="${esc(article.image.width)}" height="${esc(article.image.height)}" alt="${esc(article.image.alt)}" fetchpriority="high" decoding="async"><span class="fmb-photo-credit">${photoSourceLink}</span><figcaption><span>${esc(article.image.caption)}</span><span class="nc-photo-attribution">${photoSourceLink}<span aria-hidden="true"> · </span>${photoLicenseLink}</span></figcaption></figure></div></section><article class="nc-article"><div class="wrap nc-article-layout"><div class="nc-story-body"><div class="nc-factbox"><p><strong>Editorial standard:</strong> Sources are listed below. Verified reporting, attributed claims, uncertainty, and analysis remain distinct.</p></div>${sections}${faq}<section class="nc-sources"><h2>Sources and public record</h2>${sourceLinks}</section></div></div></article></main>${foot()}${runtime()}</body></html>`;
 }
@@ -565,7 +568,7 @@ async function verifyOutput(distRoot, articles, landing) {
     const file = path.join(distRoot, 'news', article.slug, 'index.html');
     const html = await readFile(file, 'utf8');
     const route = `/news/${article.slug}/`;
-    for (const marker of [article.headline, route, article.image.url, article.image.sourceUrl, article.image.licenseUrl, article.image.credit, 'FMB News Desk', 'Sources and public record']) {
+    for (const marker of [article.headline, route, article.image.url, article.image.sourceUrl, article.image.licenseUrl, article.image.credit, 'FMB News Desk', 'Sources and public record'].filter(Boolean)) {
       if (!html.includes(marker)) throw new Error(`${route} is missing ${marker}`);
     }
     if (!landing.includes(`href="${route}"`)) throw new Error(`News landing is missing ${route}`);

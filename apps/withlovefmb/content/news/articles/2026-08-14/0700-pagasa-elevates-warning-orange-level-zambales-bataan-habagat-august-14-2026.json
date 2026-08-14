@@ -4,63 +4,59 @@
   "bulletinKey": "2026-08-14-0700",
   "emailSubject": "FMB News | DepEd Pegs Storm Damage at ₱235.5M Across 1,195 Schools | August 14, 2026 | 7:00 AM PHT",
   "slug": "pagasa-elevates-warning-orange-level-zambales-bataan-habagat-august-14-2026",
-  "headline": "PAGASA Elevates Warning to Orange Level in Zambales and Bataan as Monsoon Rains Persist",
-  "seoTitle": "PAGASA Keeps Orange Rainfall Warning Over Zambales and Bataan",
-  "seoDescription": "PAGASA kept Zambales and Bataan under an Orange Heavy Rainfall Warning on August 14, saying flooding remained threatening as the southwest monsoon affected Luzon.",
-  "keywords": [
-    "PAGASA Orange rainfall warning",
-    "Zambales flooding warning",
-    "Bataan flooding warning",
-    "Habagat August 14 2026"
-  ],
+  "headline": "Orange Rain Warning Persists in Parts of Bataan and Zambales at 5 PM",
+  "seoTitle": "Orange Rain Warning Persists in Parts of Bataan and Zambales",
+  "seoDescription": "PAGASA kept parts of Bataan and Zambales under an Orange rainfall warning at 5 p.m. on August 14, while Metro Manila and nearby areas remained at Yellow level.",
+  "keywords": ["PAGASA Orange rainfall warning", "Zambales flooding warning", "Bataan flooding warning", "Habagat August 14 2026"],
   "category": "Environment",
   "kicker": "Weather · Public safety · Central Luzon",
-  "deck": "PAGASA kept Zambales and Bataan under an Orange Heavy Rainfall Warning Friday morning, saying flooding remained threatening as southwest monsoon rains continued.",
+  "deck": "PAGASA kept parts of Bataan and Zambales at Orange level at 5 p.m. Friday and maintained Yellow warnings over Metro Manila and nearby areas.",
   "publishedAt": "2026-08-14T07:00:00+08:00",
-  "updatedAt": "2026-08-14T09:10:00+08:00",
+  "updatedAt": "2026-08-14T18:30:00+08:00",
   "author": "FMB News Desk",
   "articleType": "NewsArticle",
   "sections": [
     {
       "heading": "What happened",
       "paragraphs": [
-        "PAGASA kept Zambales and Bataan under an Orange Heavy Rainfall Warning at 8:00 a.m. on Friday, August 14, saying flooding remained threatening in the two provinces.",
-        "The agency's 5:00 a.m. warning had already placed Zambales and Bataan at Orange level. It also placed Pampanga, Bulacan, Metro Manila, parts of Tarlac, Cavite, Batangas, Rizal and Quezon under a Yellow warning for possible flooding in flood-prone areas."
+        "PAGASA's 5 p.m. rainfall advisory kept parts of Bataan and Zambales under an Orange warning, meaning flooding remained threatening in the listed localities.",
+        "The Orange coverage included Bagac, Mariveles, Morong, Limay, Orion, Pilar and Balanga in Bataan, and San Antonio, Subic and Olongapo in Zambales."
       ]
     },
     {
       "heading": "Context",
       "paragraphs": [
-        "The warning identified the southwest monsoon, or Habagat, as the weather system driving the rainfall. PAGASA's regional forecast issued at 5:00 a.m. showed cloudy skies with scattered rains and thunderstorms, while the Philippine News Agency reported that rains were expected across much of Luzon.",
-        "The 8:00 a.m. update said light to moderate rain with occasional heavy rain was also affecting other parts of Southern and Central Luzon and could persist or spread to nearby areas."
+        "The 5 p.m. advisory placed Metro Manila and additional areas of Zambales, Bataan, Pampanga, Bulacan, Cavite and Batangas under a Yellow warning for flooding in flood-prone locations.",
+        "This is the same evolving weather event covered by FMB News' 7 a.m. report. The 1 p.m. delivery block was therefore merged into this canonical report instead of being published as a duplicate article."
       ]
     },
     {
-      "heading": "Why this matters to Filipinos",
+      "heading": "Why this matters",
       "paragraphs": [
-        "An Orange warning means flooding is threatening. The notice is especially important for residents, commuters and local disaster offices in low-lying, flood-prone and landslide-prone communities across Zambales and Bataan."
+        "Rainfall warning areas changed during the day, so residents and travelers needed the newest locality-level advisory rather than relying on the morning map. Low-lying communities and routes near waterways remained vulnerable to sudden flooding."
       ]
     },
     {
       "heading": "What to watch next",
       "paragraphs": [
-        "PAGASA advised the public and disaster risk reduction offices to keep monitoring conditions and said the next regional warning was scheduled for 11:00 a.m. Residents should follow the latest PAGASA and local government instructions because warning levels can change as rainfall moves."
+        "PAGASA said the southwest monsoon would continue affecting Luzon and the western Visayas on August 15. Residents should monitor later PAGASA and local disaster-office advisories because warning coverage can narrow or expand quickly."
       ]
     }
   ],
   "sources": [
     {
-      "publisher": "DOST-PAGASA NCR-PRSD",
-      "title": "Heavy Rainfall Warning No. 3",
-      "publishedAt": "2026-08-14T08:00:00+08:00",
-      "dateLabel": "Issued August 14, 2026 at 8:00 AM PHT",
-      "url": "https://www.pagasa.dost.gov.ph/regional-forecast/ncrprsd"
+      "publisher": "GMA News Online",
+      "title": "LIVE UPDATES: Habagat rains affect parts of PH on Friday (Aug. 14, 2026)",
+      "publishedAt": "2026-08-14T10:26:00+08:00",
+      "dateLabel": "Updated August 14, 2026 at 5:38 PM PHT",
+      "url": "https://www.gmanetwork.com/news/weather/content/998524/live-updates-habagat-rains-affect-parts-of-ph-on-friday-aug-14-2026/story/"
     },
     {
-      "publisher": "Philippine News Agency",
-      "title": "Rains to prevail across Luzon Friday",
-      "publishedAt": "2026-08-14T07:08:00+08:00",
-      "url": "https://www.pna.gov.ph/articles/1281860"
+      "publisher": "DOST-PAGASA NCR-PRSD",
+      "title": "Regional heavy rainfall warning and forecast",
+      "publishedAt": "2026-08-14T17:00:00+08:00",
+      "dateLabel": "Updated August 14, 2026 at 5:00 PM PHT",
+      "url": "https://www.pagasa.dost.gov.ph/regional-forecast/ncrprsd"
     }
   ],
   "image": {
@@ -72,20 +68,19 @@
     "licenseUrl": "https://lawphil.net/statutes/repacts/ra1997/ra_8293_1997.html",
     "usageStatus": "Official PAGASA warning and live weather map captured from the agency's public government website and locally hosted with source credit.",
     "credit": "Screenshot: DOST-PAGASA NCR-PRSD / FMB News",
-    "caption": "PAGASA's 8:00 a.m. rainfall warning kept Zambales and Bataan at Orange level while its live map showed heavy rain bands over western and central Luzon on August 14, 2026.",
-    "alt": "PAGASA rainfall warning panel showing Orange level for Zambales and Bataan beside a weather map of heavy rain over Luzon",
+    "caption": "PAGASA's official rainfall warning and live map documented the Habagat-driven rain event affecting western and central Luzon on August 14, 2026.",
+    "alt": "PAGASA rainfall warning panel and weather map showing heavy rain over western and central Luzon",
     "width": 1363,
     "height": 936,
     "focusX": 62,
     "focusY": 45
   },
   "audit": {
-    "sourceCheckedAt": "2026-08-14T09:10:00+08:00",
+    "sourceCheckedAt": "2026-08-14T18:30:00+08:00",
     "photoReferenceUrl": "https://www.pagasa.dost.gov.ph/regional-forecast/ncrprsd",
     "notes": [
-      "Updated the email's early-morning warning details with PAGASA's later 8:00 AM Warning No. 3.",
-      "Removed the email's unsupported 15-to-30 millimeters-per-hour claim because the checked PAGASA warning did not state that rate.",
-      "Used a locally hosted screenshot of the official PAGASA warning and live map; no generic editorial fallback is used."
+      "Updated the existing canonical weather report with PAGASA's 5 PM warning instead of creating a duplicate route from the 1 PM email block.",
+      "Retained the locally hosted screenshot of the official PAGASA warning and live map with its exact government-source credit."
     ]
   }
 }
