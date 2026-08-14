@@ -6,7 +6,7 @@ const newsRoot=path.join(root,'news');
 const newsroom=await readFile(path.join(root,'fmbnews','index.html'),'utf8');
 const about=await readFile(path.join(root,'fmbnews','about','index.html'),'utf8');
 const alias=await readFile(path.join(newsRoot,'index.html'),'utf8');
-const requiredStories=['magnitude-54-quake-hits-off-occidental-mindoro','enrique-razon-tops-forbes-philippines-50-richest-list','western-visayas-ai-festival-2026','pax-silica-new-clark-city-jobs-2026','sb19-lollapalooza-filipino-heritage-branding','katrina-llegado-miss-supranational-2026','myanmar-min-aung-hlaing-thailand-visit-2026','san-marcelino-scholarship-requirements-august-2026'];
+const genericVisual=/(?:fmb-news-editorial-fallback|newsroom-editorial-fallback|fmb-news-(?:primary-logo|white-transparent|official)|(?:^|[-_/])(?:logo|wordmark|masthead)(?:[-_.?/]|$))/i;
 const nonEditorialCompatibilityPages=new Set(['news/why-websites-cost-and-how-senz-makes-them-accessible/index.html','news/filipino-centered-training-institution-cognita-vision/index.html']);
 const retired=/fmb-shell-header|fmb-shell-footer|fmb-news-livebar|fmb-news-channel-command|fmb-v2-news-command/;
 const fatal=m=>{throw new Error(`FMB News clean publication audit: ${m}`)};
@@ -30,7 +30,8 @@ function auditLanding(html,name){
   if(!html.includes('fnc-desk-grid')||!html.includes('fnc-developing')||!html.includes('fnc-briefings'))fatal(`${name} is missing the intentional lead, developing, or briefings columns`);
   if(!html.includes('fnc-report-columns')||!html.includes('fnc-context'))fatal(`${name} is missing balanced report columns or the context rail`);
   if(!html.includes('data-fnc-result-card'))fatal(`${name} is missing the complete searchable report index`);
-  for(const slug of requiredStories)if(!html.includes(`/news/${slug}/`))fatal(`${name} is missing ${slug}`);
+  if(genericVisual.test(html.replace(/<header\b[\s\S]*?<\/header>/gi,'').replace(/<footer\b[\s\S]*?<\/footer>/gi,'')))fatal(`${name} contains a generic visual in editorial content`);
+  for(const match of html.matchAll(/<article\b[^>]*>[\s\S]*?<\/article>/gi)){if(!/<img\b[^>]*src=["']\/assets\//i.test(match[0])||genericVisual.test(match[0]))fatal(`${name} lists a report without a genuine attached image`)}
 }
 
 auditLanding(newsroom,'fmbnews/index.html');
@@ -55,6 +56,8 @@ for(const file of await walk(newsRoot)){
   if(!/<main\b[^>]*>[\s\S]{300,}<\/main>/i.test(html))fatal(`${name} has no substantial readable article content`);
   if(!/<h1\b[^>]*>[\s\S]*?<\/h1>/i.test(html))fatal(`${name} has no article headline`);
   if(!/<link\b[^>]*rel=["']canonical["'][^>]*href=["'][^"']+["']/i.test(html))fatal(`${name} has no canonical URL`);
+  const editorialMedia=html.match(/<section\b[^>]*class=(["'])[^"']*\bnc-story-media\b[^"']*\1[^>]*>[\s\S]*?<\/section>/i)?.[0]||'';
+  if(!/<img\b[^>]*src=["']\/assets\//i.test(editorialMedia)||genericVisual.test(editorialMedia))fatal(`${name} has no genuine attached editorial image`);
   if(!html.includes('/assets/images/news/fmb-news-primary-logo-2026.webp'))fatal(`${name} is missing the supplied FMB News identity`);
   if(!/nc-sources|nc-source-box|class=(["'])[^"']*\bsources\b[^"']*\1|Sources and (?:public record|documents)|Source:/i.test(html))sourceWarnings++;
 }
