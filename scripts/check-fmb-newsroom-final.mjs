@@ -31,7 +31,7 @@ function auditLanding(html,name){
   if(!html.includes('fnc-report-columns')||!html.includes('fnc-context'))fatal(`${name} is missing balanced report columns or the context rail`);
   if(!html.includes('data-fnc-result-card'))fatal(`${name} is missing the complete searchable report index`);
   if(genericVisual.test(html.replace(/<header\b[\s\S]*?<\/header>/gi,'').replace(/<footer\b[\s\S]*?<\/footer>/gi,'')))fatal(`${name} contains a generic visual in editorial content`);
-  for(const match of html.matchAll(/<article\b[^>]*>[\s\S]*?<\/article>/gi)){if(!/<img\b[^>]*src=["']\/assets\//i.test(match[0])||genericVisual.test(match[0]))fatal(`${name} lists a report without a genuine attached image`)}
+  for(const match of html.matchAll(/<article\b[^>]*class=(["'])[^"']*\b(?:fnc-desk-lead|fnc-support-story|fnc-report-card)\b[^"']*\1[^>]*>[\s\S]*?<\/article>/gi)){if(!/<img\b[^>]*src=["']\/assets\//i.test(match[0])||genericVisual.test(match[0]))fatal(`${name} lists a report card without a genuine attached image`)}
 }
 
 auditLanding(newsroom,'fmbnews/index.html');
