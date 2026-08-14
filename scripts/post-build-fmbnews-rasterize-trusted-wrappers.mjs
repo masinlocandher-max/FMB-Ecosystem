@@ -73,8 +73,18 @@ function removeUnavailableImageDelivery(html, unavailableValues, onRemove) {
 }
 
 function containsUnavailableDelivery(html, unavailableValues) {
-  return /https?:\/\/(?:upload|commons)\.wikimedia\.org\//i.test(html)
-    || unavailableValues.some((item) => html.includes(item));
+  let found = false;
+  html.replace(/<(?:img|source)\b[^>]*>/gi, (tag) => {
+    if (tagDeliversUnavailableImage(tag, unavailableValues)) found = true;
+    return tag;
+  });
+  html.replace(/<meta\b[^>]*>/gi, (tag) => {
+    if (!/\b(?:property|name)=(["'])(?:og:image(?::url)?|twitter:image)\1/i.test(tag)) return tag;
+    const value = tag.match(/\bcontent=(["'])(.*?)\1/i)?.[2] || '';
+    if (isRemoteImageValue(value) || unavailableValues.some((item) => value.includes(item))) found = true;
+    return tag;
+  });
+  return found;
 }
 
 const wrapperReplacements = new Map();
