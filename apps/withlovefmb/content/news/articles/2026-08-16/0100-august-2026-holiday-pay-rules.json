@@ -12,26 +12,19 @@
   "kicker": "Labor · Holiday pay",
   "deck": "August 21 is a special non-working day and August 31 is a regular holiday. DOLE's Labor Advisory No. 12, Series of 2025 already sets the wage rules that apply throughout 2026.",
   "publishedAt": "2026-08-16T01:00:00+08:00",
-  "updatedAt": "2026-08-16T07:01:00+08:00",
+  "updatedAt": "2026-08-16T07:06:00+08:00",
   "author": "FMB News Desk",
   "articleType": "NewsArticle",
   "sections": [
     {
-      "heading": "What workers need to know",
+      "heading": "What happened",
       "paragraphs": [
         "Under Proclamation No. 1006, August 21, 2026 is Ninoy Aquino Day and a special non-working day. August 31, 2026, the last Monday of August, is National Heroes Day and a regular holiday.",
-        "For August 21, the general rule is 'no work, no pay' unless a favorable company policy, practice or collective bargaining agreement provides otherwise. Employees who work the first eight hours are entitled to 130% of their basic wage."
+        "For August 21, the general rule is 'no work, no pay' unless a favorable company policy, practice or collective bargaining agreement provides otherwise. Employees who work the first eight hours are entitled to 130% of their basic wage. For the regular holiday on August 31, employees who qualify for holiday pay and do not work are entitled to 100% of their wage for the day, subject to the labor advisory's conditions, while employees who work the first eight hours are entitled to 200% of their basic wage. Overtime and rest-day combinations carry additional premiums."
       ]
     },
     {
-      "heading": "National Heroes Day pay",
-      "paragraphs": [
-        "For the regular holiday on August 31, employees who qualify for holiday pay and do not work are entitled to 100% of their wage for the day, subject to the conditions in the labor advisory. Employees who work the first eight hours are entitled to 200% of their basic wage.",
-        "Overtime and rest-day combinations carry additional premiums under the same DOLE advisory."
-      ]
-    },
-    {
-      "heading": "Correction to the newsroom brief",
+      "heading": "Context",
       "paragraphs": [
         "The FMB News email described the rules as a newly issued Labor Advisory No. 12 on August 15, 2026. The official DOLE record instead shows that Labor Advisory No. 12, Series of 2025 was issued in 2025 to govern regular holidays, special non-working days and special working days for the entire year 2026.",
         "FMB News is therefore publishing the verified wage rules and correct advisory reference rather than repeating the email's incorrect issuance date."
@@ -41,6 +34,12 @@
       "heading": "Why this matters",
       "paragraphs": [
         "The distinction between a special non-working day and a regular holiday changes both unworked-day treatment and the premium due when an employee reports for work. Employers and workers should use the correct holiday classification when computing August payroll."
+      ]
+    },
+    {
+      "heading": "What to watch next",
+      "paragraphs": [
+        "Workers should check their employer's payroll policy or collective bargaining agreement where applicable, especially for special-day pay beyond the statutory minimum, and watch DOLE channels for any later clarification affecting the August holidays."
       ]
     }
   ],
@@ -81,7 +80,7 @@
     "focusY": 50
   },
   "audit": {
-    "sourceCheckedAt": "2026-08-16T07:01:00+08:00",
+    "sourceCheckedAt": "2026-08-16T07:06:00+08:00",
     "notes": [
       "Proclamation No. 1006 confirms August 21 as a special non-working day and August 31 as National Heroes Day, a regular holiday.",
       "Official DOLE records show Labor Advisory No. 12-25 governs wage computation for 2026; the email's claim of a newly issued August 15, 2026 Labor Advisory No. 12 was corrected.",
