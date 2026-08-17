@@ -37,3 +37,45 @@ jobs:
         run: npm run build
       - name: Compare final outputs byte-for-byte
         run: node scripts/compare-release-paths.mjs baseline-main/dist dist
+      - name: Print exact remaining differences
+        if: failure()
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const files = [
+            'assets/images/home/home-image-manifest.json',
+            'enterprise-audit.json',
+            'performance-audit.json',
+          ];
+          function diffJson(a, b, prefix = '') {
+            const out = [];
+            if (Object.is(a, b)) return out;
+            if (Array.isArray(a) && Array.isArray(b)) {
+              const max = Math.max(a.length, b.length);
+              for (let i = 0; i < max; i++) out.push(...diffJson(a[i], b[i], `${prefix}[${i}]`));
+              return out;
+            }
+            if (a && b && typeof a === 'object' && typeof b === 'object' && !Array.isArray(a) && !Array.isArray(b)) {
+              const keys = [...new Set([...Object.keys(a), ...Object.keys(b)])].sort();
+              for (const key of keys) out.push(...diffJson(a[key], b[key], prefix ? `${prefix}.${key}` : key));
+              return out;
+            }
+            out.push({ key: prefix || '<root>', baseline: a, candidate: b });
+            return out;
+          }
+          for (const file of files) {
+            const baseline = JSON.parse(fs.readFileSync(path.join('baseline-main/dist', file), 'utf8'));
+            const candidate = JSON.parse(fs.readFileSync(path.join('dist', file), 'utf8'));
+            console.log(`\n=== JSON DIFF ${file} ===`);
+            const changes = diffJson(baseline, candidate);
+            if (!changes.length) console.log('(no semantic JSON differences)');
+            for (const change of changes) console.log(JSON.stringify(change));
+          }
+          NODE
+          echo ""
+          echo "=== HTML DIFF news/amor-deloso-public-record/index.html ==="
+          diff -u baseline-main/dist/news/amor-deloso-public-record/index.html dist/news/amor-deloso-public-record/index.html || true
+          echo ""
+          echo "=== HTML DIFF news/pbbm-sona-2026-analysis/index.html ==="
+          diff -u baseline-main/dist/news/pbbm-sona-2026-analysis/index.html dist/news/pbbm-sona-2026-analysis/index.html || true
