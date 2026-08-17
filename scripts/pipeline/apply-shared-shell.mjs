@@ -1,11 +1,13 @@
+import path from 'node:path';
+import { applyPersonalSharedShell } from '../../apps/withlovefmb/scripts/apply-personal-shared-shell.mjs';
 import { runModules } from './run-modules.mjs';
 
-// The full Morning Special set is republished after image sanitization, then the
-// canonical newsroom renderer applies the final FMB News masthead, navigation,
-// footer and publication layout from the source-backed newsroom structure.
+const distRoot = path.resolve(new URL('../../dist/', import.meta.url).pathname);
+
+// Content generation is complete before this stage. Apply only the canonical
+// newsroom and personal-site shells, then align source-backed edition framing.
 await runModules('apply:shared-shell', [
-  '../post-build-fmb-news-morning-special-catchup-aug13-16.mjs',
-  '../post-build-fmb-news-morning-special-edition-aug17.mjs',
   '../post-build-fmbnews-newsroom-structure.mjs',
   './align-morning-special-framing.mjs',
 ]);
+await applyPersonalSharedShell({ distRoot });
