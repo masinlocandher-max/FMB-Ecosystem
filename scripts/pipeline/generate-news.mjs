@@ -36,9 +36,6 @@ const historicalNewsMaterialization = [
   '../post-build-fmbnews-unpublished-backlog-aug5.mjs',
   '../post-build-fmb-news-article-masthead-guard.mjs',
   '../post-build-fmb-unified-design.mjs',
-
-  // These are intentionally re-applied after the historical routes above are
-  // created. They are repeated operations, not duplicate mistakes.
   '../post-build-fmb-approved-launch.mjs',
   '../post-build-fmb-mobile-footer-pax.mjs',
   '../post-build-fmb-sitewide-visual-fixes.mjs',
@@ -85,12 +82,7 @@ const newsroomMigrationLayers = [
   '../post-build-fmbnews-reference-final.mjs',
   '../post-build-fmbnews-submit-story.mjs',
   '../post-build-fmbnews-route-alias.mjs',
-  // This used to run as a hidden side effect inside a checker. Keep it in the
-  // mutation stage so verify:dist remains read-only.
   '../post-build-fmbnews-exact-logo-share-pht.mjs',
-  // Despite its historical check-* name, this file writes the canonical
-  // August 5 landing timeline. live-surfaces verifies and extends that output,
-  // so this mutation must remain immediately before it.
   '../check-fmb-approved-launch.mjs',
 ];
 
@@ -109,6 +101,10 @@ const canonicalStructuredPublication = [
   '../post-build-fmb-news-morning-special-edition-aug17.mjs',
   '../post-build-fmbnews-image-reliability.mjs',
   '../post-build-fmbnews-rasterize-trusted-wrappers.mjs',
+  // The old rasterizer secretly re-ran these two generators. Preserve that
+  // behavior explicitly inside generation, before shell application.
+  '../post-build-fmb-news-morning-special-catchup-aug13-16.mjs',
+  '../post-build-fmb-news-morning-special-edition-aug17.mjs',
 ];
 
 await runModules('generate:news', [
