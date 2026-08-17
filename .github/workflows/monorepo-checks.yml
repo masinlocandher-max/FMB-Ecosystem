@@ -27,6 +27,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - run: node scripts/check-release-contract.mjs
       - run: node tooling/check-monorepo.mjs
       - run: node tooling/check-deployment-boundaries.mjs
       - run: node --check apps/senz/server.js
