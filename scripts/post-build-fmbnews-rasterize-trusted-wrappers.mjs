@@ -142,11 +142,3 @@ console.log(
   ' wrapper(s), withheld ' + withheldReferences + ' unavailable image reference(s), and rewrote ' +
   changedReferences + ' reference(s) across ' + changedFiles + ' page(s).'
 );
-
-// Legacy catch-up publishers run before the canonical newsroom builder. The
-// canonical Morning Special archive below is authoritative and replaces their
-// temporary landing output with the structured dated editions.
-await import('./post-build-fmb-news-morning-special-catchup-aug13-16.mjs');
-await import('./post-build-fmb-news-morning-special-edition-aug17.mjs');
-await import('./post-build-fmbnews-newsroom-structure.mjs');
-await import('./post-build-fmbnews-morning-special-dynamic-framing.mjs');

@@ -1,7 +1,7 @@
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
-const dist = path.resolve(new URL('../dist/', import.meta.url).pathname);
+const dist = path.resolve(new URL('../../dist/', import.meta.url).pathname);
 const root = path.join(dist, 'news', 'morning-special');
 
 let updated = 0;
