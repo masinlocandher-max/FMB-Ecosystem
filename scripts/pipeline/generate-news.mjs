@@ -85,6 +85,9 @@ const newsroomMigrationLayers = [
   '../post-build-fmbnews-reference-final.mjs',
   '../post-build-fmbnews-submit-story.mjs',
   '../post-build-fmbnews-route-alias.mjs',
+  // This used to run as a hidden side effect inside a checker. Keep it in the
+  // mutation stage so verify:dist remains read-only.
+  '../post-build-fmbnews-exact-logo-share-pht.mjs',
 ];
 
 const canonicalStructuredPublication = [
