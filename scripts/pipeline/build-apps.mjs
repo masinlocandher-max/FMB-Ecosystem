@@ -1,11 +1,7 @@
 import { runModules } from './run-modules.mjs';
 
+// Preserve the exact first release unit from main. build-release.mjs already
+// contains the original application build, hardening passes, and early gates.
 await runModules('build:apps', [
-  '../build-ecosystem.mjs',
-  '../post-build-entity-copy.mjs',
-  '../post-build-repository-assets.mjs',
-  '../post-build-fmb-unified-design.mjs',
-  '../post-build-image-dimensions.mjs',
-  '../post-build-release-hardening.mjs',
-  '../post-build-fmb-performance-cleanup.mjs',
+  '../build-release.mjs',
 ]);

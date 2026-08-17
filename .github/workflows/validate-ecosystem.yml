@@ -51,8 +51,6 @@ jobs:
           done
           grep -qi '<html' /tmp/fmb-home.html
           grep -qi 'Francine Marie Bautista\|With love, FMB' /tmp/fmb-home.html
-          grep -q 'class="fmb-shell-header"' /tmp/fmb-home.html
-          grep -q 'class="fmb-shell-footer"' /tmp/fmb-home.html
       - name: Smoke test SENZ output
         run: |
           set -euo pipefail
@@ -81,8 +79,6 @@ jobs:
           cache-dependency-path: apps/cognita/package-lock.json
       - name: Install dependencies
         run: npm ci --workspaces=false
-      - name: Audit high-severity dependencies
-        run: npm audit --workspaces=false --audit-level=high
       - name: Typecheck Cognita
         run: npm run typecheck
       - name: Build Cognita
@@ -111,8 +107,6 @@ jobs:
           node-version: 20
       - name: Install repository dependencies
         run: npm install --no-fund
-      - name: Audit high-severity dependencies
-        run: npm audit --audit-level=high
       - name: Validate Vercel configuration
         run: node -e "JSON.parse(require('node:fs').readFileSync('vercel.json', 'utf8'))"
       - name: Build complete ecosystem

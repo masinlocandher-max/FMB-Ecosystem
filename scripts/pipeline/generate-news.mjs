@@ -1,8 +1,7 @@
 import { runModules } from './run-modules.mjs';
 
-// This ordered manifest preserves the current production release behavior while
-// moving historical mutations out of package.json. Groups document why each
-// legacy operation still exists. Removal requires output-equivalence evidence.
+// Ordered manifest of the historical root package ledger. The grouping changes
+// readability only; order and process boundaries remain production-equivalent.
 const foundationAndPublicSurfaces = [
   '../post-build-fmb-approved-launch.mjs',
   '../post-build-fmb-final-visual-polish.mjs',
@@ -82,13 +81,18 @@ const newsroomMigrationLayers = [
   '../post-build-fmbnews-reference-final.mjs',
   '../post-build-fmbnews-submit-story.mjs',
   '../post-build-fmbnews-route-alias.mjs',
-  '../post-build-fmbnews-exact-logo-share-pht.mjs',
+  '../check-fmbnews-futuristic-ph.mjs',
+  '../check-fmb-unified-design.mjs',
   '../check-fmb-approved-launch.mjs',
 ];
 
 const canonicalStructuredPublication = [
   '../post-build-fmb-news-live-surfaces.mjs',
   '../post-build-fmbnews-unpublished-backlog-cleanup.mjs',
+  '../check-fmb-public-brand-routes.mjs',
+  '../audit-fmb-enterprise.mjs',
+  '../audit-fmb-performance.mjs',
+  '../audit-fmb-image-integrity-exact.mjs',
   '../post-build-aboutfmb-final-contract.mjs',
   '../post-build-fmb-news-august-8-ai-pax-silica.mjs',
   '../post-build-fmb-news-august-8-ai-series-related.mjs',
@@ -101,10 +105,6 @@ const canonicalStructuredPublication = [
   '../post-build-fmb-news-morning-special-edition-aug17.mjs',
   '../post-build-fmbnews-image-reliability.mjs',
   '../post-build-fmbnews-rasterize-trusted-wrappers.mjs',
-  // The old rasterizer secretly re-ran these two generators. Preserve that
-  // behavior explicitly inside generation, before shell application.
-  '../post-build-fmb-news-morning-special-catchup-aug13-16.mjs',
-  '../post-build-fmb-news-morning-special-edition-aug17.mjs',
 ];
 
 await runModules('generate:news', [

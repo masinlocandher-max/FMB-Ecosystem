@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Francine Marie Bautista public website and Yoni web application.",
   "scripts": {
-    "build": "node ./build.mjs && node ./scripts/generate-personal-shell.mjs"
+    "build": "node ./build.mjs"
   },
   "engines": {
     "node": ">=20"

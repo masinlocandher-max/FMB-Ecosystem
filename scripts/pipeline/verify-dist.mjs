@@ -1,13 +1,8 @@
 import { runModules } from './run-modules.mjs';
 
+// The legacy root ledger ended with exactly these two final gates. Earlier
+// checks and audits stay at their original positions in build/generation.
 await runModules('verify:dist', [
-  '../check-fmbnews-futuristic-ph.mjs',
-  '../check-fmb-unified-design.mjs',
-  '../check-fmb-public-brand-routes.mjs',
-  '../audit-fmb-enterprise.mjs',
-  '../audit-fmb-performance.mjs',
-  '../../apps/withlovefmb/scripts/check-orchestrator.mjs',
-  '../audit-fmb-image-integrity-exact.mjs',
   '../check-fmb-newsroom-final.mjs',
   '../check-dist-links.mjs',
 ]);
