@@ -11,7 +11,18 @@ permissions:
   contents: read
 
 jobs:
+  content-schema:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate FMB News content before builds
+        run: node scripts/validate-content.mjs
+
   validate-static-sites:
+    needs: content-schema
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -49,6 +60,7 @@ jobs:
           grep -qi 'SENZ' /tmp/senz-home.html
 
   validate-cognita:
+    needs: content-schema
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -62,6 +74,8 @@ jobs:
           cache-dependency-path: apps/cognita/package-lock.json
       - name: Install dependencies
         run: npm ci --workspaces=false
+      - name: Audit high-severity dependencies
+        run: npm audit --audit-level=high
       - name: Build Cognita
         run: npm run build
       - name: Smoke test Cognita build
@@ -79,6 +93,7 @@ jobs:
           grep -qi 'Cognita' /tmp/cognita-home.html
 
   validate-unified-vercel-build:
+    needs: content-schema
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -86,7 +101,9 @@ jobs:
         with:
           node-version: 20
       - name: Install repository dependencies
-        run: npm install --no-audit --no-fund
+        run: npm install --no-fund
+      - name: Audit high-severity dependencies
+        run: npm audit --audit-level=high
       - name: Validate Vercel configuration
         run: node -e "JSON.parse(require('node:fs').readFileSync('vercel.json', 'utf8'))"
       - name: Build complete ecosystem
