@@ -75,7 +75,7 @@ jobs:
       - name: Install dependencies
         run: npm ci --workspaces=false
       - name: Audit high-severity dependencies
-        run: npm audit --audit-level=high
+        run: npm audit --workspaces=false --audit-level=high
       - name: Build Cognita
         run: npm run build
       - name: Smoke test Cognita build
