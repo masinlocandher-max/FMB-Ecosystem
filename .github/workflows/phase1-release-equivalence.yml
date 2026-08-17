@@ -1,0 +1,30 @@
+name: Phase 1 release equivalence
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  compare-release-paths:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install repository dependencies
+        run: npm install --no-fund
+      - name: Build current full release ledger
+        run: npm run build
+      - name: Preserve ledger output
+        run: mv dist dist-ledger
+      - name: Build shortened release path
+        run: npm run build:legacy
+      - name: Preserve shortened output
+        run: mv dist dist-short
+      - name: Compare outputs byte-for-byte
+        run: node scripts/compare-release-paths.mjs dist-ledger dist-short
