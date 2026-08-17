@@ -26,6 +26,21 @@ function normalizeHeading(heading) {
   return text;
 }
 
+function ensureContextHeading(sections) {
+  if (sections.some((section) => /\b(?:context|background)\b/i.test(String(section?.heading || '')))) return false;
+  const why = sections.find((section) => /^why (?:this )?matters\b/i.test(String(section?.heading || '')));
+  if (why) {
+    why.heading = `${why.heading} · Context`;
+    return true;
+  }
+  const candidate = sections.find((section) => !/^what happened\b/i.test(String(section?.heading || '')));
+  if (candidate) {
+    candidate.heading = `Context: ${candidate.heading}`;
+    return true;
+  }
+  return false;
+}
+
 export async function normalizeFmbNewsFeedCategories(contentRoot) {
   let changedFiles = 0;
   let changedCategories = 0;
@@ -52,6 +67,10 @@ export async function normalizeFmbNewsFeedCategories(contentRoot) {
           changedHeadings += 1;
           changed = true;
         }
+      }
+      if (ensureContextHeading(raw.sections)) {
+        changedHeadings += 1;
+        changed = true;
       }
     }
     if (!changed) continue;
