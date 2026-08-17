@@ -15,8 +15,21 @@ async function walk(dir) {
   return files;
 }
 
+function normalizeHeading(heading) {
+  const text = String(heading || '').trim();
+  if (/^what we know\b/i.test(text)) return `Context: ${text}`;
+  if (/^key facts\b/i.test(text)) return `Context: ${text}`;
+  if (/^impact\b/i.test(text)) return 'Why this matters';
+  if (/^why it matters\b/i.test(text)) return 'Why this matters';
+  if (/^next steps?\b/i.test(text)) return 'What comes next';
+  if (/^what to watch\b/i.test(text) && !/^what to watch next\b/i.test(text)) return 'What to watch next';
+  return text;
+}
+
 export async function normalizeFmbNewsFeedCategories(contentRoot) {
-  let changed = 0;
+  let changedFiles = 0;
+  let changedCategories = 0;
+  let changedHeadings = 0;
   for (const file of await walk(contentRoot)) {
     let raw;
     try {
@@ -24,11 +37,26 @@ export async function normalizeFmbNewsFeedCategories(contentRoot) {
     } catch {
       continue;
     }
-    const normalized = categoryAliases.get(raw?.category);
-    if (!normalized) continue;
-    raw.category = normalized;
+    let changed = false;
+    const normalizedCategory = categoryAliases.get(raw?.category);
+    if (normalizedCategory) {
+      raw.category = normalizedCategory;
+      changedCategories += 1;
+      changed = true;
+    }
+    if (Array.isArray(raw?.sections)) {
+      for (const section of raw.sections) {
+        const next = normalizeHeading(section?.heading);
+        if (next && next !== section?.heading) {
+          section.heading = next;
+          changedHeadings += 1;
+          changed = true;
+        }
+      }
+    }
+    if (!changed) continue;
     await writeFile(file, JSON.stringify(raw, null, 2) + '\n', 'utf8');
-    changed += 1;
+    changedFiles += 1;
   }
-  console.log(`Normalized ${changed} FMB News legacy feed categor${changed === 1 ? 'y' : 'ies'}.`);
+  console.log(`Normalized ${changedCategories} FMB News legacy categories and ${changedHeadings} editorial headings across ${changedFiles} file(s).`);
 }
