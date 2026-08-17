@@ -7,4 +7,5 @@ await runModules('apply:shared-shell', [
   '../post-build-fmb-news-morning-special-catchup-aug13-16.mjs',
   '../post-build-fmb-news-morning-special-edition-aug17.mjs',
   '../post-build-fmbnews-newsroom-structure.mjs',
+  './align-morning-special-framing.mjs',
 ]);
