@@ -88,6 +88,10 @@ const newsroomMigrationLayers = [
   // This used to run as a hidden side effect inside a checker. Keep it in the
   // mutation stage so verify:dist remains read-only.
   '../post-build-fmbnews-exact-logo-share-pht.mjs',
+  // Despite its historical check-* name, this file writes the canonical
+  // August 5 landing timeline. live-surfaces verifies and extends that output,
+  // so this mutation must remain immediately before it.
+  '../check-fmb-approved-launch.mjs',
 ];
 
 const canonicalStructuredPublication = [
