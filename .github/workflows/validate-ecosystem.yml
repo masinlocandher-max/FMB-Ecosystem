@@ -26,18 +26,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Verify application entry files
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Build personal website independently
+        run: npm run build:fmb
+      - name: Build SENZ independently
+        run: npm run build:senz
+      - name: Verify application outputs
         run: |
           set -euo pipefail
-          test -f apps/withlovefmb/index.html
-          test -f apps/withlovefmb/app/index.html
-          test -f apps/senz/index.html
-          test -f apps/cognita/index.html
-          test -f apps/cognita/package.json
-      - name: Smoke test personal website
+          test -f apps/withlovefmb/dist/index.html
+          test -f apps/withlovefmb/dist/app/index.html
+          test -f apps/senz/dist/index.html
+      - name: Smoke test personal website output
         run: |
           set -euo pipefail
-          python3 -m http.server 4171 --directory apps/withlovefmb >/tmp/fmb-http.log 2>&1 &
+          python3 -m http.server 4171 --directory apps/withlovefmb/dist >/tmp/fmb-http.log 2>&1 &
           SERVER_PID=$!
           trap 'kill $SERVER_PID' EXIT
           for i in {1..20}; do
@@ -46,10 +51,12 @@ jobs:
           done
           grep -qi '<html' /tmp/fmb-home.html
           grep -qi 'Francine Marie Bautista\|With love, FMB' /tmp/fmb-home.html
-      - name: Smoke test SENZ
+          grep -q 'class="fmb-shell-header"' /tmp/fmb-home.html
+          grep -q 'class="fmb-shell-footer"' /tmp/fmb-home.html
+      - name: Smoke test SENZ output
         run: |
           set -euo pipefail
-          python3 -m http.server 4172 --directory apps/senz >/tmp/senz-http.log 2>&1 &
+          python3 -m http.server 4172 --directory apps/senz/dist >/tmp/senz-http.log 2>&1 &
           SERVER_PID=$!
           trap 'kill $SERVER_PID' EXIT
           for i in {1..20}; do
@@ -76,6 +83,8 @@ jobs:
         run: npm ci --workspaces=false
       - name: Audit high-severity dependencies
         run: npm audit --workspaces=false --audit-level=high
+      - name: Typecheck Cognita
+        run: npm run typecheck
       - name: Build Cognita
         run: npm run build
       - name: Smoke test Cognita build
@@ -111,7 +120,7 @@ jobs:
           set +e
           npm run build > fmb-hard-audit.log 2>&1
           STATUS=$?
-          tail -n 160 fmb-hard-audit.log
+          tail -n 200 fmb-hard-audit.log
           exit $STATUS
       - name: Preserve hard-audit log
         if: always()
