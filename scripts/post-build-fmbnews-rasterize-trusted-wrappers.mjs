@@ -142,9 +142,3 @@ console.log(
   ' wrapper(s), withheld ' + withheldReferences + ' unavailable image reference(s), and rewrote ' +
   changedReferences + ' reference(s) across ' + changedFiles + ' page(s).'
 );
-
-// Publish the full Morning Special backlog after the legacy remote-image audit so
-// the dated archive editions are not stripped before the newsroom structure pass.
-await import('./post-build-fmb-news-morning-special-catchup-aug13-16.mjs');
-await import('./post-build-fmb-news-morning-special-edition-aug17.mjs');
-await import('./post-build-fmbnews-newsroom-structure.mjs');
