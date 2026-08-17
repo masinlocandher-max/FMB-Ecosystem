@@ -7,7 +7,10 @@ const fail = (message) => {
   warnings.push(message);
   console.warn(`FMB unified design gate: ${message}`);
 };
-const excludedPrefixes = ['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/'];
+// FMB News has its own source-generated newsroom shell and is validated by the
+// dedicated newsroom/corporate checks. Applying the personal-site shell contract
+// to News creates false drift warnings and would encourage duplicate headers.
+const excludedPrefixes = ['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/', 'news/', 'fmbnews/'];
 const excludedFiles = new Set(['admin.html', 'login.html', 'signup.html', 'reset-password.html', 'confirm-email.html']);
 
 async function walk(directory) {
@@ -105,4 +108,4 @@ for (const route of ['work-with-fmb/index.html', 'get-involved/index.html']) {
   if (!html.includes('fmb-journey-options')) fail(`${route} lost its journey content`);
 }
 
-console.log(`Completed the FMB unified design audit across ${pagesChecked} public pages with ${warnings.length} non-blocking warning(s).`);
+console.log(`Completed the FMB unified design audit across ${pagesChecked} personal-site public pages with ${warnings.length} non-blocking warning(s). FMB News is validated separately by its newsroom contract.`);
