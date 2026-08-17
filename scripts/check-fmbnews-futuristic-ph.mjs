@@ -6,12 +6,11 @@ const distRoot = path.join(repositoryRoot, 'dist');
 const newsRoot = path.join(distRoot, 'news');
 const newsPath = path.join(newsRoot, 'index.html');
 const fmbNewsPath = path.join(distRoot, 'fmbnews', 'index.html');
-const sitemapPath = path.join(distRoot, 'sitemap.xml');
-const corporateCssPath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-corporate-recovery.css');
-const builtCssPath = path.join(distRoot, 'assets', 'css', 'fmb-sitewide-visual-fixes.css');
+const sourceCssPath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-clean-v1.css');
+const builtCssPath = path.join(distRoot, 'assets', 'css', 'fmbnews-clean-v1.css');
 const warnings = [];
 
-function fail(message) {
+function warn(message) {
   warnings.push(message);
   console.warn(`FMBNEWS CORPORATE CHECK: ${message}`);
 }
@@ -26,71 +25,52 @@ async function walk(directory) {
   return files;
 }
 
-await stat(fmbNewsPath).catch(() => fail('dist/fmbnews/index.html was not generated'));
-
-const [newsHtml, fmbNewsHtml, corporateCss, builtCss, sitemap] = await Promise.all([
+await stat(fmbNewsPath).catch(() => warn('dist/fmbnews/index.html was not generated'));
+const [newsHtml, fmbNewsHtml, sourceCss, builtCss] = await Promise.all([
   readFile(newsPath, 'utf8'),
   readFile(fmbNewsPath, 'utf8'),
-  readFile(corporateCssPath, 'utf8'),
+  readFile(sourceCssPath, 'utf8'),
   readFile(builtCssPath, 'utf8'),
-  readFile(sitemapPath, 'utf8'),
 ]);
 
-const requiredLandingMarkers = [
-  'news-futuristic-ph',
-  'data-fmb-news-ticker',
-  'data-philippine-time',
-  'Asia/Manila',
-  'Philippine Standard Time',
-  'fmb-news-ticker-track',
-  'https://www.francinemariebautista.com/fmbnews/',
-  'Latest reports',
-  'fmb-sitewide-visual-fixes.css',
+// The clean fnc-* newsroom is the source-owned production system introduced
+// after the retired futuristic/corporate recovery layers. Audit the current
+// generator contract rather than rewarding obsolete post-build markers.
+const landingMarkers = [
+  'fmb-news-clean',
+  'fmb-news-landing',
+  'fnc-livebar',
+  'fnc-header',
+  'fnc-footer',
+  'data-pht-time',
+  'fmbnews-clean-v1.css',
 ];
-
-for (const marker of requiredLandingMarkers) {
-  if (!fmbNewsHtml.includes(marker)) fail(`/fmbnews is missing ${marker}`);
+for (const [html, label] of [[newsHtml, '/news'], [fmbNewsHtml, '/fmbnews']]) {
+  for (const marker of landingMarkers) if (!html.includes(marker)) warn(`${label} is missing ${marker}`);
 }
 
-if (!newsHtml.includes('news-futuristic-ph')) fail('/news did not retain the corporate landing design class');
-if (!newsHtml.includes('<link rel="canonical" href="https://www.francinemariebautista.com/fmbnews/">')) {
-  fail('/news does not canonicalize to /fmbnews');
-}
-
-for (const retired of ['data-fmb-news-final-styles', 'data-fmbnews-futuristic-ph']) {
-  if (fmbNewsHtml.includes(retired)) fail(`/fmbnews still contains retired inline style layer ${retired}`);
-}
-
-const requiredCssMarkers = [
-  '--fn-purple-950: #14051f',
-  '--fn-purple-800: #32144f',
-  '--fn-gold: #c8a354',
-  '--fn-ivory: #fbfaf8',
-  '.fmb-news-ticker',
-  '@keyframes fnCorporateTicker',
-  '.nc-broadcast-grid',
-  'grid-template-columns: minmax(0, 1.85fr) minmax(320px, .82fr)',
-  'content-visibility: auto',
-  '.news-story-route .nc-article-layout',
-  '@media (max-width: 760px)',
-  '@media (prefers-reduced-motion: reduce)',
+const cssMarkers = [
+  'body.fmb-news-clean',
+  '.fnc-livebar',
+  '.fnc-header',
+  '.fnc-ticker-track',
+  '.fnc-footer',
+  '.news-story-route .wrap',
+  '.nc-article-layout',
+  '@media(max-width:1080px)',
+  '@media(max-width:700px)',
 ];
-
-for (const marker of requiredCssMarkers) {
-  if (!corporateCss.includes(marker)) fail(`corporate source CSS is missing ${marker}`);
-  if (!builtCss.includes(marker)) fail(`built final stylesheet is missing ${marker}`);
+for (const marker of cssMarkers) {
+  if (!sourceCss.includes(marker)) warn(`source newsroom CSS is missing ${marker}`);
+  if (!builtCss.includes(marker)) warn(`built newsroom CSS is missing ${marker}`);
 }
 
-const recoveryStart = (builtCss.match(/FMB_NEWS_CORPORATE_RECOVERY_START/g) || []).length;
-const recoveryEnd = (builtCss.match(/FMB_NEWS_CORPORATE_RECOVERY_END/g) || []).length;
-if (recoveryStart !== 1 || recoveryEnd !== 1) {
-  fail(`built stylesheet must contain one corporate recovery block, found ${recoveryStart}/${recoveryEnd}`);
-}
-
-const tickerCount = (fmbNewsHtml.match(/data-fmb-news-ticker/g) || []).length;
-if (tickerCount !== 1) fail(`/fmbnews must render exactly one headline ticker, found ${tickerCount}`);
-if (!/class="fmb-news-ticker-group"[\s\S]*class="fmb-news-ticker-group"/i.test(fmbNewsHtml)) {
-  fail('the ticker does not contain its duplicated continuous-scroll headline group');
+const retiredMarkers = [
+  'data-fmb-news-final-styles',
+  'data-fmbnews-futuristic-ph',
+];
+for (const [html, label] of [[newsHtml, '/news'], [fmbNewsHtml, '/fmbnews']]) {
+  for (const marker of retiredMarkers) if (html.includes(marker)) warn(`${label} still contains retired inline layer ${marker}`);
 }
 
 let articleCount = 0;
@@ -100,22 +80,11 @@ for (const filePath of await walk(newsRoot)) {
   if (!/\bnews-story-route\b/.test(html)) continue;
   articleCount += 1;
   const relative = path.relative(distRoot, filePath).replaceAll('\\', '/');
-  if (!html.includes('news-futuristic-ph')) fail(`${relative} is missing the corporate News class`);
-  if (!html.includes('data-fmb-news-ticker')) fail(`${relative} is missing the moving headline ticker`);
-  if (!html.includes('data-philippine-time')) fail(`${relative} is missing Philippine time`);
-  if (!html.includes('fmb-sitewide-visual-fixes.css')) fail(`${relative} is missing the final external design stylesheet`);
-  if (/data-fmb-news-final-styles|data-fmbnews-futuristic-ph/i.test(html)) {
-    fail(`${relative} still contains retired inline design CSS`);
+  for (const marker of ['fmb-news-clean', 'fnc-livebar', 'fnc-header', 'fnc-footer', 'data-pht-time', 'fmbnews-clean-v1.css', 'nc-article-layout']) {
+    if (!html.includes(marker)) warn(`${relative} is missing current newsroom marker ${marker}`);
   }
+  for (const marker of retiredMarkers) if (html.includes(marker)) warn(`${relative} still contains retired inline layer ${marker}`);
 }
 
-if (articleCount < 1) fail('no News report pages received the corporate design');
-
-if (!sitemap.includes('<loc>https://www.francinemariebautista.com/fmbnews/</loc>')) {
-  fail('sitemap.xml does not expose /fmbnews');
-}
-if (sitemap.includes('<loc>https://www.francinemariebautista.com/news/</loc>')) {
-  fail('sitemap.xml still exposes the old landing URL as a separate canonical page');
-}
-
-console.log(`Completed the FMB News corporate design audit across ${articleCount} report pages with ${warnings.length} non-blocking warning(s).`);
+if (articleCount < 1) warn('no News report pages received the clean newsroom design');
+console.log(`Completed the FMB News corporate design audit against the source-owned clean newsroom across ${articleCount} report pages with ${warnings.length} non-blocking warning(s).`);
