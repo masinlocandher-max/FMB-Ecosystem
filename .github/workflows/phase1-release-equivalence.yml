@@ -43,7 +43,8 @@ jobs:
           node <<'NODE'
           const fs = require('fs');
           const path = require('path');
-          const files = [
+          const { execFileSync } = require('child_process');
+          const jsonFiles = [
             'assets/images/home/home-image-manifest.json',
             'enterprise-audit.json',
             'performance-audit.json',
@@ -64,18 +65,21 @@ jobs:
             out.push({ key: prefix || '<root>', baseline: a, candidate: b });
             return out;
           }
-          for (const file of files) {
+          for (const file of jsonFiles) {
             const baseline = JSON.parse(fs.readFileSync(path.join('baseline-main/dist', file), 'utf8'));
             const candidate = JSON.parse(fs.readFileSync(path.join('dist', file), 'utf8'));
-            console.log(`\n=== JSON DIFF ${file} ===`);
             const changes = diffJson(baseline, candidate);
-            if (!changes.length) console.log('(no semantic JSON differences)');
-            for (const change of changes) console.log(JSON.stringify(change));
+            const payload = Buffer.from(JSON.stringify(changes)).toString('base64');
+            console.log(`::warning title=FMB_JSON_DIFF_${file.replace(/[^A-Za-z0-9]/g,'_')}::${payload}`);
+          }
+          for (const file of ['news/amor-deloso-public-record/index.html','news/pbbm-sona-2026-analysis/index.html']) {
+            let diff = '';
+            try {
+              diff = execFileSync('diff', ['-u', path.join('baseline-main/dist', file), path.join('dist', file)], {encoding:'utf8'});
+            } catch (error) {
+              diff = String(error.stdout || '');
+            }
+            const payload = Buffer.from(diff).toString('base64');
+            console.log(`::warning title=FMB_HTML_DIFF_${file.replace(/[^A-Za-z0-9]/g,'_')}::${payload}`);
           }
           NODE
-          echo ""
-          echo "=== HTML DIFF news/amor-deloso-public-record/index.html ==="
-          diff -u baseline-main/dist/news/amor-deloso-public-record/index.html dist/news/amor-deloso-public-record/index.html || true
-          echo ""
-          echo "=== HTML DIFF news/pbbm-sona-2026-analysis/index.html ==="
-          diff -u baseline-main/dist/news/pbbm-sona-2026-analysis/index.html dist/news/pbbm-sona-2026-analysis/index.html || true
