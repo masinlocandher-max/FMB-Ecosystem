@@ -18,6 +18,8 @@ jobs:
           node-version: 20
       - name: Install repository dependencies
         run: npm install --no-fund
+      - name: Audit current release ledger
+        run: node scripts/audit-build-ledger.mjs
       - name: Build current full release ledger
         run: npm run build
       - name: Preserve ledger output
