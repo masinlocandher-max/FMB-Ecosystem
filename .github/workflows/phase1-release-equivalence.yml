@@ -10,23 +10,30 @@ permissions:
 jobs:
   compare-release-paths:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repair branch
+        uses: actions/checkout@v4
+      - name: Checkout current main baseline
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: baseline-main
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install repository dependencies
+      - name: Install repair-branch dependencies
         run: npm install --no-fund
-      - name: Audit current release ledger
-        run: node scripts/audit-build-ledger.mjs
-      - name: Build current full release ledger
+      - name: Install baseline dependencies
+        working-directory: baseline-main
+        run: npm install --no-fund
+      - name: Audit five-stage release contract
+        run: |
+          node -e "const p=require('./package.json'); const expected=['validate:content','build:apps','generate:news','apply:shared-shell','verify:dist']; for (const name of expected) { if (!p.scripts[name]) throw new Error('missing '+name); } if ((p.scripts.build.match(/post-build-/g)||[]).length) throw new Error('package build still contains post-build ledger'); console.log(p.scripts.build);"
+      - name: Build current main release baseline
+        working-directory: baseline-main
         run: npm run build
-      - name: Preserve ledger output
-        run: mv dist dist-ledger
-      - name: Build Phase 1 late-source candidate
-        run: node --import ./scripts/fetch-shim.mjs scripts/build-phase1-candidate.mjs
-      - name: Preserve candidate output
-        run: mv dist dist-candidate
-      - name: Compare outputs byte-for-byte
-        run: node scripts/compare-release-paths.mjs dist-ledger dist-candidate
+      - name: Build five-stage repair candidate
+        run: npm run build
+      - name: Compare final outputs byte-for-byte
+        run: node scripts/compare-release-paths.mjs baseline-main/dist dist
