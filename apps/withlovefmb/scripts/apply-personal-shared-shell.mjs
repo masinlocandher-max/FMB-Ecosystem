@@ -132,11 +132,17 @@ function ensureShell(html) {
   return html;
 }
 
+function suppressKnownInvalidAuthoredAssets(html, relative) {
+  if (relative !== 'aboutfmb/index.html') return html;
+  return html.replace(/\s*<img\b(?=[^>]*\blife-card-media\b)(?=[^>]*\babout-life-sprite\.webp\b)[^>]*>/gi, '');
+}
+
 export async function applyPersonalSharedShell({ distRoot = path.join(appRoot, 'dist') } = {}) {
   const htmlFiles = (await walk(distRoot)).filter(isPublicHtml);
   for (const relative of htmlFiles) {
     const file = path.join(distRoot, relative);
     let html = await readFile(file, 'utf8');
+    html = suppressKnownInvalidAuthoredAssets(html, relative);
     html = addBodyIdentity(html, pageKey(relative));
     html = ensureShell(html);
     html = ensureHeadAssets(html);
@@ -147,6 +153,9 @@ export async function applyPersonalSharedShell({ distRoot = path.join(appRoot, '
     const html = await readFile(path.join(distRoot, relative), 'utf8');
     for (const required of ['fmb-unified-public', 'fmb-shell-header', 'fmb-shell-footer', cssHref, jsSrc]) {
       if (!html.includes(required)) throw new Error(`${relative}: source-generated personal shell is missing ${required}`);
+    }
+    if (relative === 'aboutfmb/index.html' && html.includes('about-life-sprite.webp')) {
+      throw new Error('aboutfmb/index.html still publishes the invalid authored life-photo sprite.');
     }
   }
   console.log(`Applied the source-generated FMB personal-site shell to ${htmlFiles.length} public HTML pages.`);
