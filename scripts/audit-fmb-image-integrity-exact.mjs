@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
+import sharp from 'sharp';
 
 const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
 const sourceRoot=path.resolve(new URL('..',import.meta.url).pathname);
@@ -54,7 +55,15 @@ async function dimensions(file){
     if(width&&height)return {width,height,vector:true};
     return;
   }
-  const bytes=await readFile(file);return png(bytes)||gif(bytes)||jpeg(bytes)||webp(bytes);
+  const bytes=await readFile(file);
+  const parsed=png(bytes)||gif(bytes)||jpeg(bytes)||webp(bytes);
+  if(parsed)return parsed;
+  try{
+    const metadata=await sharp(bytes,{failOn:'error'}).metadata();
+    if(metadata.width&&metadata.height)return {width:metadata.width,height:metadata.height};
+  }catch{
+    return;
+  }
 }
 
 for(const asset of manifest.assets){
