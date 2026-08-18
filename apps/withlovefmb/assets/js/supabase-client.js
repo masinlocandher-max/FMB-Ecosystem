@@ -87,8 +87,6 @@
     const status=document.getElementById('signupStatus');
     if(!form||!button)return;
 
-    const registrationOpen=false;
-
     function showStatus(message,type=''){
       if(!status)return;
       status.textContent=message;
@@ -113,6 +111,78 @@
   }
 
   installYoniRegistrationGuard();
+
+  function installYoniTruthfulnessGuard(){
+    const community=document.getElementById('screen-community');
+    if(community){
+      const lede=community.querySelector('.page-lede');
+      if(lede)lede.textContent='The Kind Wall is currently a preview only. No public community feed or moderator submission is active. Nothing typed here is sent or published.';
+
+      const identityLabel=community.querySelector('.community-identity small');
+      if(identityLabel)identityLabel.textContent='Previewing as';
+
+      const moderationPill=community.querySelector('.moderation-pill');
+      if(moderationPill)moderationPill.textContent='Preview only';
+
+      const composeMeta=community.querySelectorAll('.community-compose-meta span');
+      if(composeMeta[1])composeMeta[1].textContent='Not submitted or published';
+
+      const consentText=community.querySelector('.community-consent span');
+      if(consentText)consentText.textContent='I understand this preview is not connected to a moderator or public community feed.';
+
+      const wallForm=document.getElementById('wallForm');
+      const wallButton=wallForm?.querySelector('button[type="submit"]');
+      const wallStatus=document.getElementById('wallStatus');
+      if(wallButton){
+        wallButton.disabled=true;
+        wallButton.textContent='Community posting not active';
+        wallButton.setAttribute('aria-disabled','true');
+        wallButton.style.opacity='.58';
+        wallButton.style.cursor='not-allowed';
+      }
+      if(wallStatus){
+        wallStatus.textContent='Preview only: nothing from this form is sent to a moderator, stored in a public community database, or published.';
+        wallStatus.classList.add('visible');
+      }
+      wallForm?.addEventListener('submit',event=>{
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        if(wallStatus){
+          wallStatus.textContent='Community posting is not active. Nothing was submitted or transmitted.';
+          wallStatus.classList.add('visible');
+        }
+      },true);
+
+      const sectionHeadings=[...community.querySelectorAll('.section-heading')];
+      const examplesHeading=sectionHeadings.find(section=>section.querySelector('h2')?.textContent.trim()==='Approved stories');
+      if(examplesHeading){
+        examplesHeading.querySelector('h2').textContent='Example stories';
+        const sub=examplesHeading.querySelector('span');
+        if(sub)sub.textContent='Fictional samples — not real member submissions';
+      }
+
+      community.querySelectorAll('.story-head div > span').forEach(label=>{label.textContent='Fictional example'});
+
+      const queueHeading=sectionHeadings.find(section=>section.querySelector('h2')?.textContent.trim()==='Your submissions');
+      if(queueHeading){
+        queueHeading.querySelector('h2').textContent='Local preview drafts';
+        const sub=queueHeading.querySelector('span');
+        if(sub)sub.textContent='Stored only in this browser from earlier preview use';
+      }
+      community.querySelectorAll('.queue-card strong').forEach(label=>{label.textContent='Saved locally — not submitted'});
+
+      const notice=community.querySelector('.notice');
+      if(notice)notice.textContent='The Kind Wall is not a live community feature today. The visible stories are fictional examples, and no moderator queue or public publishing flow is active.';
+    }
+
+    const profileScreen=document.getElementById('screen-profile');
+    if(profileScreen){
+      const profileLede=profileScreen.querySelector('.page-lede');
+      if(profileLede)profileLede.textContent='Your real name is part of your private account identity. Your username and fruit avatar are profile settings; no public Kind Wall is active today.';
+      const profileHelp=profileScreen.querySelector('.profile-help');
+      if(profileHelp)profileHelp.textContent='Your fruit avatar is a profile setting. Yoni does not use your real photo here, and no public Kind Wall is active today.';
+    }
+  }
 
   const YONI_ROOT='/app/assets/yoni/';
   const officialHero=YONI_ROOT+'yoni-hero.webp';
@@ -160,6 +230,11 @@
     await loadScript(`/assets/js/yoni-experience-loader.js?v=${experienceVersion}`,'data-yoni-final-loader');
   };
 
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',loadExperience,{once:true});
-  else loadExperience();
+  const finishYoniSetup=()=>{
+    installYoniTruthfulnessGuard();
+    loadExperience();
+  };
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',finishYoniSetup,{once:true});
+  else finishYoniSetup();
 })();
