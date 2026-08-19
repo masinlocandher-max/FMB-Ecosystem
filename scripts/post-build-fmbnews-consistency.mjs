@@ -48,11 +48,22 @@ function publicBriefRoute(date) {
   return `/news/fmb-brief-${month}-${day}-${year}/`;
 }
 
+function legacyRouteTarget(relative) {
+  if (!/^(?:news|fmbnews)\/morning-special(?:\/|$)/i.test(relative)) return '';
+  const date = relative.match(/2026-08-(?:11|12|13|14|15|16|17)/)?.[0];
+  return date ? publicBriefRoute(date) : '/news/fmb-brief/';
+}
+
+function redirectHtml(target) {
+  const canonical = `${origin}${target}`;
+  return `<!doctype html><html lang="en-PH"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,follow"><link rel="canonical" href="${canonical}"><meta http-equiv="refresh" content="0;url=${target}"><title>FMB Brief</title></head><body><p>This legacy briefing now belongs in <a href="${target}">FMB Brief</a>.</p><script>location.replace(${JSON.stringify(target)});</script></body></html>`;
+}
+
 function retireMorningSpecialLinks(html) {
-  html = html
-    .replace(/href=(['"])\/news\/morning-special\/\1/gi, 'href="/news/fmb-brief/"')
-    .replace(/href=(['"])\/fmbnews\/morning-special\/\1/gi, 'href="/news/fmb-brief/"');
   html = html.replace(/href=(['"])\/news\/morning-special\/(2026-08-(?:11|12|13|14|15|16|17))\/\1/gi, (_m, _q, date) => `href="${publicBriefRoute(date)}"`);
+  html = html
+    .replace(/href=(['"])\/(?:news|fmbnews)\/morning-special\/(?:[^'"]*)\1/gi, 'href="/news/fmb-brief/"')
+    .replace(/href=(['"])\/(?:news|fmbnews)\/morning-special\/\1/gi, 'href="/news/fmb-brief/"');
   return html
     .replace(/Today(?:&rsquo;|’|')s Morning Special/gi, 'FMB Brief')
     .replace(/Morning Special/gi, 'FMB Brief');
@@ -96,7 +107,15 @@ const targets = [...new Set([
 ])];
 
 let updated = 0;
+let retiredRoutes = 0;
 for (const file of targets) {
+  const relative = path.relative(dist, file).replaceAll(path.sep, '/');
+  const legacyTarget = legacyRouteTarget(relative);
+  if (legacyTarget) {
+    await writeFile(file, redirectHtml(legacyTarget), 'utf8');
+    retiredRoutes += 1;
+    continue;
+  }
   let html = await readFile(file, 'utf8');
   if (isRedirect(html)) continue;
   html = retireMorningSpecialLinks(html);
@@ -105,6 +124,15 @@ for (const file of targets) {
   html = ensureStyles(html);
   await writeFile(file, html, 'utf8');
   updated += 1;
+}
+
+const sitemapPath = path.join(dist, 'sitemap.xml');
+try {
+  let sitemap = await readFile(sitemapPath, 'utf8');
+  sitemap = sitemap.replace(/\s*<url>\s*<loc>https:\/\/www\.francinemariebautista\.com\/(?:news|fmbnews)\/morning-special\/[^<]*<\/loc>[\s\S]*?<\/url>/gi, '');
+  await writeFile(sitemapPath, sitemap, 'utf8');
+} catch (error) {
+  if (error?.code !== 'ENOENT') throw error;
 }
 
 const failures = [];
@@ -121,6 +149,7 @@ for (const file of targets) {
   if (!html.includes('fmb-news-identity-lockup.css')) failures.push(`${relative}: FMB News identity stylesheet missing`);
   if (/FMB News Center|FMB(?:&|&amp;)CO\. News/i.test(html)) failures.push(`${relative}: retired newsroom identity remains`);
   if (/Morning Special/i.test(html)) failures.push(`${relative}: retired Morning Special branding remains`);
+  if (/href=(['"])\/(?:news|fmbnews)\/morning-special\//i.test(html)) failures.push(`${relative}: retired Morning Special link remains`);
   if (!/<main\b/i.test(html) && !/\/about\/?$/i.test(new URL(canonical, origin).pathname)) failures.push(`${relative}: main content landmark missing`);
   if (!/<title>[\s\S]*?<\/title>/i.test(html)) failures.push(`${relative}: document title missing`);
 
@@ -135,4 +164,4 @@ for (const file of targets) {
 }
 
 if (failures.length) throw new Error(`FMB News all-page consistency audit failed:\n${failures.join('\n')}`);
-console.log(`Applied the unified FMB News visual system to ${updated} non-redirect public page(s) and verified every generated /news and /fmbnews page.`);
+console.log(`Applied the unified FMB News visual system to ${updated} non-redirect public page(s), retired ${retiredRoutes} legacy Morning Special route(s), and verified every generated /news and /fmbnews page.`);
