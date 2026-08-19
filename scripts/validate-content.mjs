@@ -63,6 +63,15 @@ function validHttpUrl(value, label, errors, { nullable = false } = {}) {
   }
 }
 
+function isContextHeading(heading) {
+  const text = String(heading || '').trim();
+  return /\b(?:context|background)\b/i.test(text)
+    || /^how (?:we got here|it happened|this happened)\b/i.test(text)
+    || /^what (?:it|this|that|the .+?) means\b/i.test(text)
+    || /^what .+? expects\b/i.test(text)
+    || /^what(?:'s|’s| is) (?:driving|behind)\b/i.test(text);
+}
+
 function validateArticle(raw) {
   const errors = [];
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return ['article must be a JSON object'];
@@ -109,7 +118,7 @@ function validateArticle(raw) {
 
   const editorialLens = [
     ['what happened', (heading) => /^what happened\b/i.test(heading)],
-    ['context', (heading) => /\b(?:context|background)\b/i.test(heading)],
+    ['context', isContextHeading],
     ['why this matters', (heading) => /^why (?:this )?matters\b/i.test(heading)],
     ['what comes next', (heading) => /^(?:what (?:happens|comes) next|what to watch next)\b/i.test(heading)],
   ];
