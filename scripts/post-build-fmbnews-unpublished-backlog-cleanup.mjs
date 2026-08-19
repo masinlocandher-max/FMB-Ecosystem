@@ -7,5 +7,5 @@ await normalizeFmbNewsFeedCategories(contentRoot);
 const { publishNewsFeed } = await import('../apps/withlovefmb/scripts/publish-news-feed.mjs');
 await publishNewsFeed({ distRoot: path.resolve('dist'), contentRoot });
 await import('./post-build-fmbnews-clean-recovery.mjs');
-await import('./post-build-fmbnews-headquarters-final.mjs');
+await import('./post-build-fmbnews-headquarters-with-brief.mjs');
 await import('./post-build-fmb-news-ai-series-polish.mjs');
