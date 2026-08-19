@@ -52,7 +52,6 @@ function retireMorningSpecialLinks(html) {
   html = html
     .replace(/href=(['"])\/news\/morning-special\/\1/gi, 'href="/news/fmb-brief/"')
     .replace(/href=(['"])\/fmbnews\/morning-special\/\1/gi, 'href="/news/fmb-brief/"');
-
   html = html.replace(/href=(['"])\/news\/morning-special\/(2026-08-(?:11|12|13|14|15|16|17))\/\1/gi, (_m, _q, date) => `href="${publicBriefRoute(date)}"`);
   return html
     .replace(/Today(?:&rsquo;|’|')s Morning Special/gi, 'FMB Brief')
@@ -64,6 +63,28 @@ function ensureStyles(html) {
   if (!html.includes('fmb-news-identity-lockup.css')) html = html.replace('</head>', `${identityLink}</head>`);
   html = html.replace(/<link[^>]+href=["'][^"']*fmb-news-consistency\.css[^"']*["'][^>]*>\s*/gi, '');
   return html.replace('</head>', `${consistencyLink}</head>`);
+}
+
+function metaContent(html, key) {
+  for (const match of html.matchAll(/<meta\b[^>]*>/gi)) {
+    const tag = match[0];
+    const identity = tag.match(/\b(?:property|name)=(['"])([^'"]+)\1/i)?.[2]?.toLowerCase();
+    if (identity !== key.toLowerCase()) continue;
+    return tag.match(/\bcontent=(['"])([^'"]*)\1/i)?.[2] || '';
+  }
+  return '';
+}
+
+function escAttr(value) {
+  return String(value).replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+}
+
+function ensureShareMeta(html) {
+  const ogImage = metaContent(html, 'og:image');
+  if (!ogImage) return html;
+  if (!metaContent(html, 'twitter:card')) html = html.replace('</head>', '<meta name="twitter:card" content="summary_large_image"></head>');
+  if (!metaContent(html, 'twitter:image')) html = html.replace('</head>', `<meta name="twitter:image" content="${escAttr(ogImage)}"></head>`);
+  return html;
 }
 
 await mkdir(path.dirname(cssTarget), { recursive:true });
@@ -80,6 +101,7 @@ for (const file of targets) {
   if (isRedirect(html)) continue;
   html = retireMorningSpecialLinks(html);
   html = addBodyClass(html, 'fmb-publication');
+  html = ensureShareMeta(html);
   html = ensureStyles(html);
   await writeFile(file, html, 'utf8');
   updated += 1;
@@ -107,7 +129,8 @@ for (const file of targets) {
   if (isArticle) {
     if (!/<h1\b/i.test(html)) failures.push(`${relative}: article headline missing`);
     if (!/<img\b/i.test(html)) failures.push(`${relative}: article image missing`);
-    if (!/<meta\b[^>]*property=(['"])og:image\1[^>]*content=(['"])[^'"]+\2/i.test(html)) failures.push(`${relative}: social image metadata missing`);
+    if (!metaContent(html, 'og:image')) failures.push(`${relative}: social image metadata missing`);
+    if (!metaContent(html, 'twitter:card')) failures.push(`${relative}: Twitter card metadata missing`);
   }
 }
 
