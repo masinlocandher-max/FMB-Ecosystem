@@ -1,14 +1,20 @@
-import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { access, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
 
 const root = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.join(root, 'dist');
 const newsRoot = path.join(dist, 'news');
+const sourceNewsRoot = path.join(root, 'apps', 'withlovefmb', 'news');
 const socialRoot = path.join(dist, 'assets', 'images', 'news', 'social');
+const heroRoot = path.join(dist, 'assets', 'images', 'news', 'brief');
 const origin = 'https://www.francinemariebautista.com';
 
 const attr = (tag, name) => tag.match(new RegExp(`\\b${name}=(['"])(.*?)\\1`, 'i'))?.[2] || '';
+
+async function exists(file) {
+  try { await access(file); return true; } catch { return false; }
+}
 
 function metaValue(html, key, value) {
   const tag = html.match(new RegExp(`<meta\\b(?=[^>]*\\b${key}=(['"])${value}\\1)[^>]*>`, 'i'))?.[0] || '';
@@ -52,7 +58,36 @@ async function cropSocial(buffer, output) {
   return { sourceWidth:meta.width, sourceHeight:meta.height };
 }
 
+async function localHero(buffer, output) {
+  await mkdir(path.dirname(output), { recursive:true });
+  await sharp(buffer).rotate().resize({ width:1600, withoutEnlargement:true }).webp({ quality:90, effort:5 }).toFile(output);
+}
+
+function sourceHeroData(html) {
+  const figure = html.match(/<figure\b[^>]*class=(['"])[^'"]*\bbrief-hero\b[^'"]*\1[^>]*>[\s\S]*?<\/figure>/i)?.[0] || '';
+  const image = figure.match(/<img\b[^>]*>/i)?.[0] || html.match(/<img\b[^>]*>/i)?.[0] || '';
+  return {
+    src: attr(image, 'src') || metaValue(html, 'property', 'og:image'),
+    alt: attr(image, 'alt') || metaValue(html, 'property', 'og:image:alt') || 'FMB Brief editorial image',
+  };
+}
+
+function restoreHero(html, heroUrl, alt) {
+  const figureOpen = html.match(/<figure\b[^>]*class=(['"])[^'"]*\bbrief-hero\b[^'"]*\1[^>]*>/i)?.[0] || '';
+  if (!figureOpen) throw new Error('FMB Brief hero figure is missing from rendered edition');
+  const figureStart = html.indexOf(figureOpen);
+  const figureEnd = html.indexOf('</figure>', figureStart);
+  if (figureEnd < 0) throw new Error('FMB Brief hero figure is malformed');
+  const figure = html.slice(figureStart, figureEnd + 9);
+  const imageTag = `<img src="${heroUrl}" alt="${String(alt).replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;').replaceAll('>','&gt;')}" fetchpriority="high">`;
+  const restored = /<img\b/i.test(figure)
+    ? figure.replace(/<img\b[^>]*>/i, imageTag)
+    : figure.replace(figureOpen, `${figureOpen}${imageTag}`);
+  return html.slice(0, figureStart) + restored + html.slice(figureEnd + 9);
+}
+
 await mkdir(socialRoot, { recursive:true });
+await mkdir(heroRoot, { recursive:true });
 const entries = await readdir(newsRoot, { withFileTypes:true });
 const generated = [];
 for (const entry of entries) {
@@ -64,23 +99,33 @@ for (const entry of entries) {
   const date = new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Manila',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(published));
   const currentOg = metaValue(html, 'property', 'og:image');
   const socialUrl = `/assets/images/news/social/fmb-brief-${date}-1200x630.webp`;
-  if (currentOg.endsWith(socialUrl)) continue;
-  const heroTag = html.match(/<figure\b[^>]*class=(['"])[^'"]*\bbrief-hero\b[^'"]*\1[^>]*>[\s\S]*?<img\b[^>]*>/i)?.[0]
-    || html.match(/<img\b[^>]*>/i)?.[0]
-    || '';
-  const heroSrc = attr(heroTag, 'src') || currentOg;
-  if (!heroSrc) throw new Error(`${entry.name}: FMB Brief has no hero image for social crop`);
+  const localHeroUrl = `/assets/images/news/brief/fmb-brief-${date}-hero.webp`;
+  if (currentOg.endsWith(socialUrl) && /<figure\b[^>]*class=(['"])[^'"]*\bbrief-hero\b[^'"]*\1[^>]*>[\s\S]*?<img\b/i.test(html)) continue;
+
+  const renderedHero = sourceHeroData(html);
+  let sourceHtml = '';
+  const sourceFile = path.join(sourceNewsRoot, entry.name, 'index.html');
+  if (await exists(sourceFile)) sourceHtml = await readFile(sourceFile, 'utf8');
+  const sourceHero = sourceHtml ? sourceHeroData(sourceHtml) : { src:'', alt:'' };
+  const heroSrc = renderedHero.src || currentOg || sourceHero.src;
+  const heroAlt = renderedHero.alt || sourceHero.alt || 'FMB Brief editorial image';
+  if (!heroSrc) throw new Error(`${entry.name}: FMB Brief has no recoverable hero image`);
+
   const buffer = await sourceBuffer(heroSrc);
   const output = path.join(dist, socialUrl.slice(1));
   const dimensions = await cropSocial(buffer, output);
+  await localHero(buffer, path.join(dist, localHeroUrl.slice(1)));
+  html = restoreHero(html, localHeroUrl, heroAlt);
+
   const absolute = `${origin}${socialUrl}`;
   html = replaceMeta(html, 'property', 'og:image', absolute);
   html = replaceMeta(html, 'property', 'og:image:width', '1200');
   html = replaceMeta(html, 'property', 'og:image:height', '630');
+  html = replaceMeta(html, 'property', 'og:image:alt', heroAlt);
   html = replaceMeta(html, 'name', 'twitter:image', absolute);
   html = replaceMeta(html, 'name', 'twitter:card', 'summary_large_image');
   await writeFile(file, html, 'utf8');
-  generated.push({ date, route:`/news/${entry.name}/`, sourceImage:heroSrc, socialUrl, ...dimensions });
+  generated.push({ date, route:`/news/${entry.name}/`, sourceImage:heroSrc, localHeroUrl, socialUrl, ...dimensions });
 }
 
 const archiveFile = path.join(newsRoot, 'fmb-brief', 'index.html');
@@ -97,4 +142,4 @@ let manifest = {};
 try { manifest = JSON.parse(await readFile(manifestFile,'utf8')); } catch {}
 manifest.existingBriefs = generated;
 await writeFile(manifestFile, JSON.stringify(manifest,null,2), 'utf8');
-console.log(`Generated ${generated.length} dedicated 1200×630 social crop(s) for existing FMB Brief editions.`);
+console.log(`Recovered local display heroes and generated ${generated.length} dedicated 1200×630 social crop(s) for existing FMB Brief editions.`);
