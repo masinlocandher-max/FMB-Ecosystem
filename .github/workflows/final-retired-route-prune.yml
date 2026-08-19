@@ -1,0 +1,84 @@
+name: Final retired-route prune
+
+on:
+  push:
+    branches: [cleanup/fmb-ecosystem-hygiene-20260820]
+    paths: [.github/workflows/final-retired-route-prune.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cleanup/fmb-ecosystem-hygiene-20260820
+          fetch-depth: 0
+      - name: Remove post-build resurrection of retired routes
+        shell: bash
+        run: |
+          python <<'PY'
+          from pathlib import Path
+          import re
+
+          repo=Path('.')
+          unified=repo/'scripts/post-build-fmb-unified-design.mjs'
+          text=unified.read_text()
+
+          # Retired product links must not be injected into generated navigation or footer.
+          text=text.replace("  ['/ebooks/', 'Reading'],\n", '')
+          text=text.replace("  ['/music/', 'Music'],\n", '')
+          text=text.replace('      <a href="/ebooks/">Reading</a>\n', '')
+          text=text.replace('      <a href="/music/">Music</a>\n', '')
+
+          # Yoni is now external. Keep only promotional artwork under the normal FMB image library.
+          text=text.replace('/app/assets/yoni/', '/assets/images/yoni/')
+          text=text.replace('A private digital companion for existing members, with reflection, reading, listening, and support-oriented tools.',
+                            'A gentle wellbeing companion with reflection, listening, and support-oriented tools.')
+          text=text.replace('<em>Existing members</em>', '<em>Wellbeing companion</em>')
+          text=text.replace('This is the official public desk for current announcements from Francine Marie Bautista, FMB&amp;CO., SENZ, Cognita, With Love, FMB, Yoni, Mabayani, FMB News, Music, and Reading.',
+                            'This is the official public desk for current announcements from Francine Marie Bautista, FMB&amp;CO., SENZ, Cognita, With Love, FMB, Yoni, Mabayani, and FMB News.')
+
+          # Retire product-brand wording from the public-impact narrative without deleting the wider wellbeing mission.
+          text=text.replace('Public information, reading, music, support directories, safe-space principles, and responsible pathways to independent professional help.',
+                            'Public information, reflective resources, support directories, safe-space principles, and responsible pathways to independent professional help.')
+          text=text.replace('<article><h3>Reading and Music</h3><p>Accessible books, essays, reflections, original music, and resources designed for learning, comfort, courage, and connection.</p></article>',
+                            '<article><h3>Reflection and Creative Resources</h3><p>Accessible reflections, stories, wellbeing resources, and creative materials designed for learning, comfort, courage, and connection.</p></article>')
+          unified.write_text(text)
+
+          # The performance audit must evaluate only destinations that still exist.
+          perf=repo/'scripts/audit-fmb-performance.mjs'
+          p=perf.read_text()
+          p=p.replace("'news/index.html','music/index.html','ebooks/index.html','fmbandco/index.html','fmbandco/senz/index.html','fmbandco/cognita/index.html','app/install/index.html'",
+                      "'news/index.html','fmbandco/index.html','fmbandco/senz/index.html','fmbandco/cognita/index.html'")
+          perf.write_text(p)
+
+          # Any remaining old embedded-Yoni promo path in active FMB source/build scripts now points to the external-promo asset library.
+          active_roots=[repo/'scripts', repo/'apps/withlovefmb']
+          suffixes={'.mjs','.js','.html','.css','.json','.xml','.webmanifest'}
+          for root in active_roots:
+            for f in root.rglob('*'):
+              if not f.is_file() or f.suffix.lower() not in suffixes: continue
+              # Skip historical SQL migrations; they are immutable records of schema transitions.
+              if 'supabase/migrations' in f.as_posix(): continue
+              try: s=f.read_text()
+              except Exception: continue
+              if '/app/assets/yoni/' in s:
+                f.write_text(s.replace('/app/assets/yoni/','/assets/images/yoni/'))
+
+          # This workflow is one-use and must not remain as repo debris.
+          me=repo/'.github/workflows/final-retired-route-prune.yml'
+          if me.exists(): me.unlink()
+          PY
+
+          echo 'Remaining literal retired-route references in active post-build scripts:'
+          grep -RInE "href=.[^\n]*(/ebooks/|/music/)|['\"](music/index\.html|ebooks/index\.html|app/install/index\.html)['\"]|/app/assets/yoni/" scripts apps/withlovefmb --include='*.mjs' --include='*.js' --include='*.html' --include='*.css' --include='*.json' --include='*.xml' --include='*.webmanifest' || true
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --stat
+          git commit -m "Remove final post-build legacy route injectors"
+          git push origin HEAD:cleanup/fmb-ecosystem-hygiene-20260820
