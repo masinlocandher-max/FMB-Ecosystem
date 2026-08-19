@@ -4,6 +4,7 @@ import path from 'node:path';
 const root = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.join(root, 'dist');
 const origin = 'https://www.francinemariebautista.com';
+const stage = new URL(import.meta.url).searchParams.get('stage') || 'post';
 const cssSource = path.join(root, 'apps', 'withlovefmb', 'assets', 'css', 'fmb-news-consistency.css');
 const cssTarget = path.join(dist, 'assets', 'css', 'fmb-news-consistency.css');
 const consistencyLink = '<link rel="stylesheet" href="/assets/css/fmb-news-consistency.css?v=20260820-unified">';
@@ -13,7 +14,7 @@ const identityLink = '<link rel="stylesheet" href="/assets/css/fmb-news-identity
 async function walk(directory) {
   const files = [];
   let entries = [];
-  try { entries = await readdir(directory, { withFileTypes: true }); }
+  try { entries = await readdir(directory, { withFileTypes:true }); }
   catch (error) { if (error?.code === 'ENOENT') return files; throw error; }
   for (const entry of entries) {
     const target = path.join(directory, entry.name);
@@ -86,12 +87,36 @@ function metaContent(html, key) {
   return '';
 }
 
+function attr(tag, name) {
+  return tag.match(new RegExp(`\\b${name}\\s*=\\s*(["'])([\\s\\S]*?)\\1`, 'i'))?.[2] || '';
+}
+
 function escAttr(value) {
   return String(value).replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 }
 
+function meaningfulImage(html) {
+  const scopes = [];
+  const main = html.match(/<main\b[\s\S]*?<\/main>/i)?.[0];
+  if (main) scopes.push(main);
+  scopes.push(html);
+  for (const scope of scopes) {
+    for (const match of scope.matchAll(/<img\b[^>]*>/gi)) {
+      const src = attr(match[0], 'src').trim();
+      if (!src || /^data:/i.test(src)) continue;
+      if (/(?:logo|wordmark|signature|avatar|portrait|favicon|icon|fmbandco|brand-lockup)/i.test(src)) continue;
+      try { return new URL(src, origin).href; } catch {}
+    }
+  }
+  return '';
+}
+
 function ensureShareMeta(html) {
-  const ogImage = metaContent(html, 'og:image');
+  let ogImage = metaContent(html, 'og:image');
+  if (!ogImage) {
+    ogImage = meaningfulImage(html);
+    if (ogImage) html = html.replace('</head>', `<meta property="og:image" content="${escAttr(ogImage)}"></head>`);
+  }
   if (!ogImage) return html;
   if (!metaContent(html, 'twitter:card')) html = html.replace('</head>', '<meta name="twitter:card" content="summary_large_image"></head>');
   if (!metaContent(html, 'twitter:image')) html = html.replace('</head>', `<meta name="twitter:image" content="${escAttr(ogImage)}"></head>`);
@@ -135,33 +160,36 @@ try {
   if (error?.code !== 'ENOENT') throw error;
 }
 
-const failures = [];
-for (const file of targets) {
-  const html = await readFile(file, 'utf8');
-  if (isRedirect(html)) continue;
-  const relative = path.relative(dist, file).replaceAll(path.sep, '/');
-  const route = `/${relative.replace(/index\.html$/, '')}`;
-  const canonical = html.match(/<link\b[^>]*rel=(['"])canonical\1[^>]*href=(['"])([^'"]+)\2/i)?.[3] || `${origin}${route}`;
+if (stage === 'pre') {
+  console.log(`Prepared ${updated} FMB News page(s) for the compatibility pass and retired ${retiredRoutes} legacy Morning Special route(s); strict all-page verification is deferred to the final pass.`);
+} else {
+  const failures = [];
+  for (const file of targets) {
+    const html = await readFile(file, 'utf8');
+    if (isRedirect(html)) continue;
+    const relative = path.relative(dist, file).replaceAll(path.sep, '/');
+    const route = `/${relative.replace(/index\.html$/, '')}`;
+    const canonical = html.match(/<link\b[^>]*rel=(['"])canonical\1[^>]*href=(['"])([^'"]+)\2/i)?.[3] || `${origin}${route}`;
 
-  if (!html.includes('fmb-publication')) failures.push(`${relative}: publication body class missing`);
-  if (!html.includes('fmb-news-consistency.css')) failures.push(`${relative}: final consistency stylesheet missing`);
-  if (!html.includes('fmbnews-clean-v1.css')) failures.push(`${relative}: clean publication stylesheet missing`);
-  if (!html.includes('fmb-news-identity-lockup.css')) failures.push(`${relative}: FMB News identity stylesheet missing`);
-  if (/FMB News Center|FMB(?:&|&amp;)CO\. News/i.test(html)) failures.push(`${relative}: retired newsroom identity remains`);
-  if (/Morning Special/i.test(html)) failures.push(`${relative}: retired Morning Special branding remains`);
-  if (/href=(['"])\/(?:news|fmbnews)\/morning-special\//i.test(html)) failures.push(`${relative}: retired Morning Special link remains`);
-  if (!/<main\b/i.test(html) && !/\/about\/?$/i.test(new URL(canonical, origin).pathname)) failures.push(`${relative}: main content landmark missing`);
-  if (!/<title>[\s\S]*?<\/title>/i.test(html)) failures.push(`${relative}: document title missing`);
+    if (!html.includes('fmb-publication')) failures.push(`${relative}: publication body class missing`);
+    if (!html.includes('fmb-news-consistency.css')) failures.push(`${relative}: final consistency stylesheet missing`);
+    if (!html.includes('fmbnews-clean-v1.css')) failures.push(`${relative}: clean publication stylesheet missing`);
+    if (!html.includes('fmb-news-identity-lockup.css')) failures.push(`${relative}: FMB News identity stylesheet missing`);
+    if (/FMB News Center|FMB(?:&|&amp;)CO\. News/i.test(html)) failures.push(`${relative}: retired newsroom identity remains`);
+    if (/Morning Special/i.test(html)) failures.push(`${relative}: retired Morning Special branding remains`);
+    if (/href=(['"])\/(?:news|fmbnews)\/morning-special\//i.test(html)) failures.push(`${relative}: retired Morning Special link remains`);
+    if (!/<main\b/i.test(html) && !/\/about\/?$/i.test(new URL(canonical, origin).pathname)) failures.push(`${relative}: main content landmark missing`);
+    if (!/<title>[\s\S]*?<\/title>/i.test(html)) failures.push(`${relative}: document title missing`);
 
-  const pathname = new URL(canonical, origin).pathname;
-  const isArticle = /<meta\b[^>]*property=(['"])og:type\1[^>]*content=(['"])article\2/i.test(html) || /news-story-route|news-article|brief-route/i.test(html) && pathname !== '/news/fmb-brief/';
-  if (isArticle) {
-    if (!/<h1\b/i.test(html)) failures.push(`${relative}: article headline missing`);
-    if (!/<img\b/i.test(html)) failures.push(`${relative}: article image missing`);
-    if (!metaContent(html, 'og:image')) failures.push(`${relative}: social image metadata missing`);
-    if (!metaContent(html, 'twitter:card')) failures.push(`${relative}: Twitter card metadata missing`);
+    const pathname = new URL(canonical, origin).pathname;
+    const isArticle = /<meta\b[^>]*property=(['"])og:type\1[^>]*content=(['"])article\2/i.test(html) || /news-story-route|news-article|brief-route/i.test(html) && pathname !== '/news/fmb-brief/';
+    if (isArticle) {
+      if (!/<h1\b/i.test(html)) failures.push(`${relative}: article headline missing`);
+      if (!/<img\b/i.test(html)) failures.push(`${relative}: article image missing`);
+      if (!metaContent(html, 'og:image')) failures.push(`${relative}: social image metadata missing`);
+      if (!metaContent(html, 'twitter:card')) failures.push(`${relative}: Twitter card metadata missing`);
+    }
   }
+  if (failures.length) throw new Error(`FMB News all-page consistency audit failed:\n${failures.join('\n')}`);
+  console.log(`Applied and verified the unified FMB News visual system on ${updated} non-redirect public page(s), with ${retiredRoutes} legacy Morning Special route(s) retired.`);
 }
-
-if (failures.length) throw new Error(`FMB News all-page consistency audit failed:\n${failures.join('\n')}`);
-console.log(`Applied the unified FMB News visual system to ${updated} non-redirect public page(s), retired ${retiredRoutes} legacy Morning Special route(s), and verified every generated /news and /fmbnews page.`);
