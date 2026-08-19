@@ -164,4 +164,25 @@ if (!sitemapXml.includes(mediaArchiveUrl)) {
 const { publishNewsFeed } = await import('./scripts/publish-news-feed.mjs');
 await publishNewsFeed({ distRoot: output });
 
+// FMB Brief is a distinct daily newsletter, not another item in the supplied-news feed.
+// publishNewsFeed owns the generated newsroom landing page, so the newsletter entry point
+// is added only after that publisher has finished rendering the regular FMB News feed.
+const newsLandingPath = path.join(output, 'news', 'index.html');
+let newsLandingHtml = await readFile(newsLandingPath, 'utf8');
+const briefStylesheet = '<link rel="stylesheet" href="/assets/css/fmb-brief.css?v=20260820">';
+if (!newsLandingHtml.includes('/assets/css/fmb-brief.css')) {
+  newsLandingHtml = newsLandingHtml.replace('</head>', `${briefStylesheet}\n</head>`);
+}
+if (!newsLandingHtml.includes('href="/news/fmb-brief/"')) {
+  newsLandingHtml = newsLandingHtml.replace(
+    '<div class="fnc-nav-links">',
+    '<div class="fnc-nav-links"><a href="/news/fmb-brief/">FMB Brief</a>',
+  );
+}
+const briefFeature = `<section class="brief-feature" data-fmb-brief-feature aria-labelledby="fmbBriefFeatureTitle"><div class="fnc-shell brief-feature-grid"><div class="brief-feature-copy"><h2 id="fmbBriefFeatureTitle">FMB Brief<span>One complete daily newsletter</span></h2><p>Separate from individual FMB News reports. FMB Brief brings the Philippines and the world into one issue, with the developments, context, business signals and implications worth knowing before the day gets noisy.</p><div class="brief-feature-actions"><a href="/news/fmb-brief-august-20-2026/">Read today’s brief</a><a href="/news/fmb-brief/">All editions</a></div></div><article class="brief-feature-latest"><img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Humanoid_Robot_at_International_Exhibitions.jpg" alt="Humanoid robot displayed at an international exhibition"><div><small>August 20 · Philippines + World</small><h3>Robots rally, school safety moves to the national agenda, and energy risk travels through prices.</h3><p>China robotics, Philippine school safety, Hormuz, U.S. bond markets, Korea diplomacy, Gaza accountability and the startup signals worth watching.</p><a href="/news/fmb-brief-august-20-2026/">Open the full newsletter →</a></div></article></div></section>`;
+if (!newsLandingHtml.includes('data-fmb-brief-feature')) {
+  newsLandingHtml = newsLandingHtml.replace('<section class="fnc-tools">', `${briefFeature}<section class="fnc-tools">`);
+}
+await writeFile(newsLandingPath, newsLandingHtml, 'utf8');
+
 console.log(`Built and audited ${newsHtmlFiles.length} FMB News pages with a Philippine-centered, globally aware editorial identity and the complete article archive retained.`);
