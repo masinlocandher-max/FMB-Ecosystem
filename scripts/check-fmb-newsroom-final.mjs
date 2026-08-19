@@ -2,100 +2,123 @@ import { access, readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 
 const dist = path.resolve(new URL('../dist/', import.meta.url).pathname);
-const newsRoot = path.join(dist, 'news');
-const morningRoot = path.join(newsRoot, 'morning-special');
 const origin = 'https://www.francinemariebautista.com';
-const fatal = (message) => { throw new Error(`FMB News clean publication audit: ${message}`); };
-const count = (html, token) => (html.match(new RegExp(token, 'g')) || []).length;
-const genericVisual = /(?:newsroom-editorial-fallback|fmb-news-(?:primary-logo|white-transparent|official)|(?:^|[-_/])(?:logo|wordmark|masthead)(?:[-_.?/]|$))/i;
+const roots = [path.join(dist, 'news'), path.join(dist, 'fmbnews')];
+const fatal = (message) => { throw new Error(`FMB News unified publication audit: ${message}`); };
+const failures = [];
 
-function imageSources(html) {
-  const out = [];
-  for (const match of String(html || '').matchAll(/<(?:img|source)\b[^>]*>/gi)) {
+async function walk(directory) {
+  const files = [];
+  let entries = [];
+  try { entries = await readdir(directory, { withFileTypes:true }); }
+  catch (error) { if (error?.code === 'ENOENT') return files; throw error; }
+  for (const entry of entries) {
+    const target = path.join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...await walk(target));
+    else if (entry.isFile() && entry.name === 'index.html') files.push(target);
+  }
+  return files;
+}
+
+function attr(tag, name) {
+  return tag.match(new RegExp(`\\b${name}\\s*=\\s*(["'])([\\s\\S]*?)\\1`, 'i'))?.[2] || '';
+}
+
+function meta(html, key) {
+  for (const match of html.matchAll(/<meta\b[^>]*>/gi)) {
     const tag = match[0];
-    for (const name of ['src', 'srcset']) {
-      const value = tag.match(new RegExp(`\\b${name}\\s*=\\s*(["'])([\\s\\S]*?)\\1`, 'i'))?.[2] || '';
-      for (const candidate of value.split(',').map((part) => part.trim().split(/\s+/)[0]).filter(Boolean)) out.push(candidate);
-    }
+    if ((attr(tag, 'property') || attr(tag, 'name')).toLowerCase() === key.toLowerCase()) return attr(tag, 'content');
   }
-  return out;
+  return '';
 }
 
-function localEditorialImage(value) {
-  try {
-    const parsed = new URL(value, origin);
-    return parsed.origin === origin && parsed.pathname.startsWith('/assets/') && !genericVisual.test(parsed.pathname);
-  } catch { return false; }
+function isRedirect(html) {
+  return /http-equiv=(['"])refresh\1/i.test(html) || /\bnoindex\b/i.test(meta(html, 'robots'));
 }
 
-function genuineAttachedImage(html) {
-  return imageSources(html).some(localEditorialImage);
+function canonicalPath(html, file) {
+  for (const match of html.matchAll(/<link\b[^>]*>/gi)) {
+    const tag = match[0];
+    if (attr(tag, 'rel').toLowerCase() !== 'canonical') continue;
+    try { return new URL(attr(tag, 'href'), origin).pathname; } catch {}
+  }
+  return `/${path.relative(dist, path.dirname(file)).replaceAll(path.sep, '/')}/`.replace(/\/+/g, '/');
 }
 
-async function assertLocalImagesExist(html, name) {
-  for (const value of imageSources(html)) {
+function images(html) {
+  return [...html.matchAll(/<img\b[^>]*>/gi)].map((match) => ({
+    src: attr(match[0], 'src'),
+    alt: attr(match[0], 'alt'),
+  })).filter((item) => item.src);
+}
+
+async function assertLocalImagesExist(html, relative) {
+  for (const image of images(html)) {
     let parsed;
-    try { parsed = new URL(value, origin); } catch { continue; }
+    try { parsed = new URL(image.src, origin); } catch { continue; }
     if (parsed.origin !== origin || !parsed.pathname.startsWith('/assets/')) continue;
-    if (genericVisual.test(parsed.pathname)) fatal(`${name} exposes generic editorial artwork: ${parsed.pathname}`);
     try { await access(path.join(dist, parsed.pathname.replace(/^\/+/, ''))); }
-    catch { fatal(`${name} references a missing image file: ${parsed.pathname}`); }
+    catch { failures.push(`${relative}: missing local image ${parsed.pathname}`); }
   }
 }
 
-const canonicalLanding = await readFile(path.join(newsRoot, 'index.html'), 'utf8');
-const aliasLanding = await readFile(path.join(dist, 'fmbnews', 'index.html'), 'utf8');
-const archive = await readFile(path.join(morningRoot, 'index.html'), 'utf8');
+const files = [...new Set((await Promise.all(roots.map(walk))).flat())].sort();
+if (!files.length) fatal('no generated /news or /fmbnews pages found');
 
-for (const [html, name] of [[canonicalLanding, 'news/index.html'], [aliasLanding, 'fmbnews/index.html']]) {
-  if (!html.includes('fmb-news-clean') || !html.includes('fmb-news-landing')) fatal(`${name} is not using the clean newsroom system`);
-  if (!html.includes('/news/morning-special/') || !html.includes('/news/archive/') || !html.includes('/news/about/')) fatal(`${name} is missing newsroom navigation`);
-  if (!genuineAttachedImage(html)) fatal(`${name} exposes no genuine image-backed report`);
-  await assertLocalImagesExist(html, name);
-}
+let audited = 0;
+let redirects = 0;
+let articles = 0;
+let briefs = 0;
+const canonicalSeen = new Map();
 
-if (!archive.includes('Today &amp; Archive') || !archive.includes('one continuous magazine-style article')) fatal('Morning Special archive is missing its complete-edition explanation');
-
-const editionDates = (await readdir(morningRoot, { withFileTypes: true }))
-  .filter((entry) => entry.isDirectory() && /^\d{4}-\d{2}-\d{2}$/.test(entry.name))
-  .map((entry) => entry.name)
-  .sort()
-  .reverse();
-
-if (!editionDates.length) fatal('no dated Morning Special editions were generated');
-const newest = editionDates[0];
-if (!canonicalLanding.includes(`href="/news/morning-special/${newest}/"`)) fatal(`news/index.html is missing newest Morning Special ${newest}`);
-
-let totalChapters = 0;
-for (const date of editionDates) {
-  const route = `/news/morning-special/${date}/`;
-  if (!archive.includes(`href="${route}"`)) fatal(`Morning Special archive is missing ${date}`);
-  const file = path.join(morningRoot, date, 'index.html');
+for (const file of files) {
   const html = await readFile(file, 'utf8');
-  const name = `news/morning-special/${date}/index.html`;
-  const chapters = count(html, 'class="chapter"');
-  const sourceBoxes = count(html, 'class="sources"');
-  const chapterFigures = count(html, 'class="chapter-figure"');
-  const captions = count(html, 'class="figcaption"');
+  const relative = path.relative(dist, file).replaceAll(path.sep, '/');
+  if (isRedirect(html)) { redirects += 1; continue; }
+  audited += 1;
+  const pathname = canonicalPath(html, file);
+  const canonicalKey = pathname.replace(/\/+$/, '/') || '/';
+  if (canonicalSeen.has(canonicalKey) && !relative.startsWith('fmbnews/')) failures.push(`${relative}: duplicate canonical route also emitted by ${canonicalSeen.get(canonicalKey)}`);
+  else canonicalSeen.set(canonicalKey, relative);
 
-  if (count(html, 'class="morning-edition"') !== 1) fatal(`${name} must contain exactly one complete magazine article`);
-  if (!html.includes(`data-edition-date="${date}"`)) fatal(`${name} has the wrong edition date`);
-  if (chapters < 1) fatal(`${name} has no magazine chapters`);
-  if (sourceBoxes !== chapters) fatal(`${name} must expose sources for every chapter`);
-  if (count(html, 'class="edition-hero"') !== 1) fatal(`${name} must expose exactly one edition hero`);
-  if (captions !== 1 + chapterFigures) fatal(`${name} is missing a visible caption or credit for an attached image`);
-  if (!html.includes('<nav class="toc"')) fatal(`${name} is missing magazine navigation`);
-  const chapterLabel = `${chapters} chapter${chapters === 1 ? '' : 's'} · One complete edition`;
-  if (!html.includes(chapterLabel)) fatal(`${name} has an inaccurate chapter-count label`);
-  if (!html.includes(`rel="canonical" href="${origin}${route}"`)) fatal(`${name} has the wrong canonical URL`);
-  if (!genuineAttachedImage(html)) fatal(`${name} has no genuine attached local image`);
-  if (!/loading="eager"[^>]*fetchpriority="high"/i.test(html)) fatal(`${name} does not prioritize its hero image`);
-  if (!/<main\b[^>]*>[\s\S]{2500,}<\/main>/i.test(html)) fatal(`${name} is not a substantial readable edition`);
-  await assertLocalImagesExist(html, name);
-  totalChapters += chapters;
+  if (!html.includes('fmb-publication')) failures.push(`${relative}: unified publication body class missing`);
+  if (!html.includes('fmb-news-consistency.css')) failures.push(`${relative}: final consistency stylesheet missing`);
+  if (!html.includes('fmbnews-clean-v1.css')) failures.push(`${relative}: clean publication stylesheet missing`);
+  if (!html.includes('fmb-news-identity-lockup.css')) failures.push(`${relative}: FMB News identity lockup missing`);
+  if (/FMB News Center|FMB(?:&|&amp;)CO\. News/i.test(html)) failures.push(`${relative}: retired newsroom identity remains`);
+  if (/Morning Special/i.test(html)) failures.push(`${relative}: retired Morning Special branding remains`);
+  if (/href=(['"])\/(?:news|fmbnews)\/morning-special\//i.test(html)) failures.push(`${relative}: retired Morning Special link remains`);
+  if (!/<title>[\s\S]*?<\/title>/i.test(html)) failures.push(`${relative}: title missing`);
+
+  const isBrief = pathname === '/news/fmb-brief/' || /^\/news\/fmb-brief-[^/]+\/$/.test(pathname);
+  const isArticle = meta(html, 'og:type').toLowerCase() === 'article' || /\bnews-story-route\b|\bnews-article\b/i.test(html) || (isBrief && pathname !== '/news/fmb-brief/');
+  if (isBrief) briefs += 1;
+  if (isArticle) articles += 1;
+
+  if (pathname !== '/news/about/' && pathname !== '/fmbnews/about/' && !/<main\b/i.test(html)) failures.push(`${relative}: main landmark missing`);
+  if (isArticle) {
+    if (!/<h1\b/i.test(html)) failures.push(`${relative}: article headline missing`);
+    const pageImages = images(html);
+    if (!pageImages.length) failures.push(`${relative}: article image missing`);
+    if (pageImages.some((item) => !item.alt.trim())) failures.push(`${relative}: image alt text missing`);
+    if (!meta(html, 'og:image')) failures.push(`${relative}: Open Graph image missing`);
+    if (!meta(html, 'twitter:card')) failures.push(`${relative}: Twitter card metadata missing`);
+  }
+  if (isBrief && pathname !== '/news/fmb-brief/') {
+    if (!html.includes('brief-credit')) failures.push(`${relative}: visible FMB Brief photo credit missing`);
+    if (!meta(html, 'article:published_time')) failures.push(`${relative}: FMB Brief publication time missing`);
+  }
+  await assertLocalImagesExist(html, relative);
 }
 
-const about = await readFile(path.join(dist, 'fmbnews', 'about', 'index.html'), 'utf8');
-for (const marker of ['Our mission', 'Our vision', 'Evidence first', 'Context always']) if (!about.includes(marker)) fatal(`fmbnews/about/index.html is missing ${marker}`);
+const briefArchiveFile = path.join(dist, 'news', 'fmb-brief', 'index.html');
+let briefArchive = '';
+try { briefArchive = await readFile(briefArchiveFile, 'utf8'); }
+catch { failures.push('news/fmb-brief/index.html: visible FMB Brief archive missing'); }
+for (let day = 11; day <= 20; day += 1) {
+  const route = `/news/fmb-brief-august-${day}-2026/`;
+  if (!briefArchive.includes(`href="${route}"`)) failures.push(`news/fmb-brief/index.html: August ${day} edition missing from visible archive`);
+}
 
-console.log(`FMB News audit passed ${editionDates.length} complete Morning Special editions from ${editionDates.at(-1)} through ${newest}, covering ${totalChapters} sourced chapters with local credited imagery.`);
+if (failures.length) fatal(`failed ${failures.length} check(s):\n${failures.join('\n')}`);
+console.log(`FMB News unified publication audit passed ${audited} public page(s), including ${articles} article/edition page(s) and ${briefs} FMB Brief route(s); ${redirects} legacy redirect page(s) were intentionally exempted.`);
