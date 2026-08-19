@@ -1,6 +1,7 @@
 name: Prebuilt production deploy
 
 # Manual or main-only fallback for the audited FMB ecosystem production release.
+# Production release trigger: FMB Brief, 20 August 2026.
 on:
   push:
     branches: [main]
