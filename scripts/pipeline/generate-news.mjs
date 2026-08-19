@@ -107,7 +107,7 @@ const canonicalStructuredPublication = [
   '../post-build-fmbnews-rasterize-trusted-wrappers.mjs',
   // These must run last: legacy Morning Special builders above remain historical
   // materializers, while final public output is FMB Brief with dedicated share crops.
-  '../post-build-fmb-brief-finalize.mjs',
+  '../post-build-fmb-brief-finalize-safe.mjs',
   '../post-build-fmb-brief-existing-social.mjs',
 ];
 
