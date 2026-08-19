@@ -35,7 +35,7 @@ function makeImageLazy(tag) {
 
 function hardenHomepageImages(html) {
   return html
-    .replace(/<img\b[^>]*src=["']\/app\/assets\/yoni\/yoni-hero\.webp["'][^>]*>/gi, makeImageLazy)
+    .replace(/<img\b[^>]*src=["']\/assets\/images\/yoni\/yoni-hero\.webp["'][^>]*>/gi, makeImageLazy)
     .replace(/<img\b(?=[^>]*id=["']homeFounderImage["'])[^>]*>/gi, makeImageLazy);
 }
 
@@ -87,7 +87,7 @@ for (const required of ['/privacy/', '/terms/', '/data-deletion/']) {
 }
 if (/body\{visibility:hidden\}/i.test(home)) throw new Error('Homepage still depends on a JavaScript-only body visibility reveal.');
 for (const pattern of [
-  /<img\b(?=[^>]*src=["']\/app\/assets\/yoni\/yoni-hero\.webp["'])(?=[^>]*loading=["']lazy["'])(?=[^>]*fetchpriority=["']low["'])[^>]*>/i,
+  /<img\b(?=[^>]*src=["']\/assets\/images\/yoni\/yoni-hero\.webp["'])(?=[^>]*loading=["']lazy["'])(?=[^>]*fetchpriority=["']low["'])[^>]*>/i,
   /<img\b(?=[^>]*id=["']homeFounderImage["'])(?=[^>]*loading=["']lazy["'])(?=[^>]*fetchpriority=["']low["'])[^>]*>/i,
 ]) {
   if (!pattern.test(home)) throw new Error('Homepage below-fold imagery is not fully protected by lazy loading.');
