@@ -37,17 +37,17 @@
             <div class="yoni-promo-copy">
               <span class="yoni-promo-badge">FMB digital companion</span>
               <div class="yoni-promo-brand">
-                <img src="/app/assets/yoni/yoni-app-icon-192.png" alt="Yoni app icon">
+                <img src="/assets/images/yoni/yoni-app-icon-192.png" alt="Yoni app icon">
                 <span><strong>yoni</strong><small>your gentle digital companion</small></span>
               </div>
               <h2 id="app-promo-title">Meet Yoni. A softer place to say what you <em>really feel.</em></h2>
               <p class="yoni-promo-lede">Yoni is a private digital companion created for the moments when you need to vent, feel heard, slow down, write honestly, or take one small step forward. He does not pretend to be human, and he does not replace professional care. He gives you a calmer place to begin.</p>
               <div class="yoni-promo-actions">
                 <a class="pill" href="https://yoni.francinemariebautista.com/">Open Yoni</a>
-                <a class="pill secondary" href="https://yoni.francinemariebautista.com/?auth=signin">Sign in with my existing account</a>
+                <a class="pill secondary" href="https://yoni.francinemariebautista.com/?auth=signin">Sign in to Yoni</a>
               </div>
               <div class="yoni-promo-assurances" aria-label="Yoni account and privacy notes">
-                <span><i></i>Same account for current members</span>
+                <span><i></i>Account access is managed by Yoni</span>
                 <span><i></i>Private journal and check-ins</span>
                 <span><i></i>No App Store required</span>
               </div>
@@ -61,10 +61,10 @@
               <div class="yoni-promo-device">
                 <div class="yoni-promo-device-screen">
                   <div class="yoni-promo-device-island"></div>
-                  <div class="yoni-promo-device-head"><span><strong>Hi, I’m Yoni.</strong><small>digital companion</small></span><img src="/app/assets/yoni/yoni-app-icon-192.png" alt=""></div>
+                  <div class="yoni-promo-device-head"><span><strong>Hi, I’m Yoni.</strong><small>digital companion</small></span><img src="/assets/images/yoni/yoni-app-icon-192.png" alt=""></div>
                   <div class="yoni-promo-device-copy"><small>A safe place to start</small><h3>You can vent here.</h3></div>
                   <div class="yoni-promo-chat"><span>You do not have to make the story neat. I can listen first.</span><span>I just need someone to hear me.</span></div>
-                  <img class="yoni-promo-mascot" src="/app/assets/yoni/yoni-hero.webp" alt="Yoni, an orange bear wearing a green beanie">
+                  <img class="yoni-promo-mascot" src="/assets/images/yoni/yoni-hero.webp" alt="Yoni, an orange bear wearing a green beanie">
                 </div>
               </div>
             </div>

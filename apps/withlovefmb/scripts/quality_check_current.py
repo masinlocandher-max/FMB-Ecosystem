@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
-"""Future-proof structural quality checks for the current FMB public/Yoni application.
+"""Structural quality checks for the current FMB public website.
 
-This checker deliberately validates site integrity rather than freezing specific copy,
-article slugs, image credits, or versioned stylesheet names. Editorial content and
-visual design are expected to evolve; broken structure and missing runtime assets are not.
+This checker validates active site integrity while also protecting the retirement of
+embedded Yoni, FMB Music, and FMB eBook product surfaces. Editorial content and visual
+design may evolve; critical routes, runtime assets, and product boundaries must remain sound.
 """
 from __future__ import annotations
 
 import json
 import re
-import sys
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlparse
@@ -20,9 +19,9 @@ CRITICAL_HTML = (
     "index.html",
     "aboutfmb/index.html",
     "news/index.html",
-    "app/index.html",
-    "music/index.html",
-    "ebooks/index.html",
+    "projects/index.html",
+    "withlovefmb/index.html",
+    "communityengagements/index.html",
     "fmbandco/index.html",
     "gethelp/index.html",
     "profile/index.html",
@@ -33,6 +32,26 @@ CRITICAL_FILES = (
     "manifest.webmanifest",
     "assets/js/site.js",
     "assets/js/supabase-client.js",
+    "assets/js/live-hotfix.js",
+    "assets/js/yoni-home-promo.js",
+)
+
+RETIRED_PATHS = (
+    "app/index.html",
+    "app/manifest.webmanifest",
+    "app/install",
+    "music/index.html",
+    "music.html",
+    "ebooks/index.html",
+    "reading.html",
+    "api/music.js",
+    "assets/data/music-library.json",
+    "assets/js/global-music.js",
+    "assets/js/music.js",
+    "assets/js/fmb-reader-modern.js",
+    "assets/js/yoni-experience-loader.js",
+    "assets/js/yoni-native-music.js",
+    "assets/js/yoni-native-ebooks.js",
 )
 
 MERGE_CONFLICT_LINE = re.compile(r"(?m)^\s*(?:<<<<<<< .+|=======|>>>>>>> .+)\s*$")
@@ -188,6 +207,18 @@ def check_security_basics(errors: list[str]) -> None:
             errors.append(f"{path.relative_to(ROOT)}: public client code must not contain a service-role credential")
 
 
+def check_product_boundaries(errors: list[str]) -> None:
+    for relative in RETIRED_PATHS:
+        if (ROOT / relative).exists():
+            errors.append(f"{relative}: retired product surface must remain absent")
+
+    home = (ROOT / "index.html").read_text(encoding="utf-8")
+    if "https://yoni.francinemariebautista.com/" not in home:
+        errors.append("index.html: independent Yoni destination is missing")
+    if re.search(r'href=["\']\/app\/', home, re.I):
+        errors.append("index.html: embedded local Yoni app link is still present")
+
+
 def main() -> int:
     errors: list[str] = []
 
@@ -201,6 +232,7 @@ def main() -> int:
             check_text_file(relative, errors)
 
     check_security_basics(errors)
+    check_product_boundaries(errors)
 
     if errors:
         print("Quality check failed:\n")
@@ -209,9 +241,9 @@ def main() -> int:
         return 1
 
     print(
-        "Quality check passed: critical routes are structurally complete, local CSS/JS "
-        "runtime references resolve, no merge-conflict blocks were found, and public "
-        "client files pass the basic secret guard."
+        "Quality check passed: active routes are structurally complete, local CSS/JS "
+        "runtime references resolve, retired product surfaces remain absent, Yoni stays "
+        "externally linked, and public client files pass the basic secret guard."
     )
     return 0
 

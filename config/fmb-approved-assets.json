@@ -1,5 +1,5 @@
 {
-  "version": "2026-07-22-hard-correction-v1",
+  "version": "2026-08-20-retired-products-v1",
   "policy": {
     "source": "Exact user-supplied masters archived through the Adobe connector",
     "fallbacksAllowed": false,
@@ -40,26 +40,6 @@
       "usage": ["FMB News masthead", "News social image"]
     },
     {
-      "key": "music",
-      "file": "fmb-music-official-transparent.webp",
-      "adobeAssetId": "urn:aaid:sc:AP:3eb4db72-08a5-4e1a-8299-4de6cd0e13c5",
-      "sourceUrl": "https://at.adobe.com/bacTx44MoZj1NJVC",
-      "sha256": "de13bfb1f2e0e092c4fb1a9b4dcb6f88e814dabb668478d879fda9e6cb593248",
-      "width": 916,
-      "height": 212,
-      "usage": ["FMB Music masthead", "Music social image"]
-    },
-    {
-      "key": "ebook",
-      "file": "fmb-ebook-official-transparent.webp",
-      "adobeAssetId": "urn:aaid:sc:AP:29348d3d-c5ba-427f-928b-6c69e3c14cae",
-      "sourceUrl": "https://at.adobe.com/JSHKZvFoglgLDNVI",
-      "sha256": "4e0f06e94e785fb55fa02a7f5ae2e65f0a6b4e0f769cf2e0648cd16366f5f3ef",
-      "width": 939,
-      "height": 210,
-      "usage": ["FMB eBook masthead", "eBook social image"]
-    },
-    {
       "key": "standingLandscape",
       "file": "francine-standing-landscape.webp",
       "adobeAssetId": "urn:aaid:sc:AP:eccdbf19-b752-492f-b04c-5b1224038f14",
@@ -87,7 +67,7 @@
       "sha256": "c23e6754666902c423cc0c0ab4245ca188d5990cfa0dcb1cc9071701a3693ebe",
       "width": 1122,
       "height": 1402,
-      "usage": ["FMB Music direction", "SENZ founder feature"]
+      "usage": ["SENZ founder feature", "approved founder portrait"]
     },
     {
       "key": "portraitAngleRight",
@@ -97,7 +77,7 @@
       "sha256": "cde469bef1238b30535a55432c3fed4a0de48d9c5839a84cd0f9377d7f894c9d",
       "width": 1122,
       "height": 1402,
-      "usage": ["FMB eBook direction", "Cognita founder feature"]
+      "usage": ["Cognita founder feature", "approved founder portrait"]
     },
     {
       "key": "portraitFront",

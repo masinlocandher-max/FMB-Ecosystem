@@ -34,27 +34,6 @@ async function injectStylesheet(relativePagePath, stylesheetHref) {
   await writeFile(pagePath, html.replace('</head>', `${stylesheet}\n</head>`), 'utf8');
 }
 
-async function lockYoniFirstPaintIdentity() {
-  const pagePath = path.join(outputDirectory, 'app', 'index.html');
-  const stylesheetHref = '/assets/css/yoni-trust-access-v1.css?v=20260722-trust-v1';
-  const scriptSrc = '/assets/js/yoni-trust-access-v1.js?v=20260722-trust-v1';
-  let html = await readFile(pagePath, 'utf8');
-  html = html
-    .replaceAll('/app/yoni-icon.svg', '/app/assets/yoni/yoni-app-icon-192.png')
-    .replaceAll('/app/yoni-mascot.svg', '/app/assets/yoni/yoni-app-icon-512.png')
-    .replace(
-      '<title>Yoni | Private Mental Health Companion by FMB</title>',
-      '<title>Yoni | Private Digital Wellbeing Companion by FMB</title>',
-    );
-  if (!html.includes(`href="${stylesheetHref}"`)) {
-    html = html.replace('</head>', `<link rel="stylesheet" href="${stylesheetHref}">\n</head>`);
-  }
-  if (!html.includes(`src="${scriptSrc}"`)) {
-    html = html.replace('</body>', `<script src="${scriptSrc}"></script>\n</body>`);
-  }
-  await writeFile(pagePath, html, 'utf8');
-}
-
 async function downloadImage(sourceUrl, relativeOutputPath, minimumBytes = 100000) {
   const response = await fetch(sourceUrl, {
     redirect: 'follow',
@@ -151,15 +130,6 @@ function run(command, args, cwd) {
 
 await Promise.all([
   requireFile(path.join(personalWebsite, 'index.html')),
-  requireFile(path.join(personalWebsite, 'app', 'assets', 'yoni', 'yoni-hero.webp')),
-  requireFile(path.join(personalWebsite, 'app', 'assets', 'yoni', 'yoni-theme-background.webp')),
-  requireFile(path.join(personalWebsite, 'app', 'assets', 'yoni', 'yoni-app-icon-192.png')),
-  requireFile(path.join(personalWebsite, 'app', 'assets', 'yoni', 'yoni-app-icon-512.png')),
-  requireFile(path.join(personalWebsite, 'app', 'assets', 'yoni', 'yoni-apple-touch-icon-180.png')),
-  requireFile(path.join(personalWebsite, 'app', 'assets', 'yoni', 'yoni-social-1200.jpg')),
-  requireFile(path.join(personalWebsite, 'app', 'assets', 'yoni', 'yoni-wordmark.png')),
-  requireFile(path.join(personalWebsite, 'assets', 'css', 'yoni-trust-access-v1.css')),
-  requireFile(path.join(personalWebsite, 'assets', 'js', 'yoni-trust-access-v1.js')),
   requireFile(path.join(senzWebsite, 'index.html')),
   requireFile(path.join(senzWebsite, 'package.json')),
   requireFile(path.join(cognitaWebsite, 'index.html')),
@@ -184,10 +154,7 @@ await materializeHomeImages({ outputDirectory });
 
 await Promise.all([
   injectStylesheet('news/index.html', '/assets/css/fmb-sitewide-gateway.css?v=20260721-responsive-v2'),
-  injectStylesheet('music/index.html', '/assets/css/fmb-sitewide-gateway.css?v=20260721-responsive-v2'),
-  injectStylesheet('ebooks/index.html', '/assets/css/fmb-sitewide-gateway.css?v=20260721-responsive-v2'),
   injectStylesheet('aboutfmb/index.html', '/assets/css/aboutfmb-seamless.css?v=20260721-responsive-v2'),
-  lockYoniFirstPaintIdentity(),
   applyHdNewsImages(),
 ]);
 
@@ -199,7 +166,6 @@ await applyEntityAuthority({ outputDirectory, privateSitesDirectory });
 await Promise.all([
   requireFile(path.join(outputDirectory, 'index.html')),
   requireFile(path.join(outputDirectory, 'projects', 'index.html')),
-  requireFile(path.join(outputDirectory, 'app', 'index.html')),
   requireFile(path.join(outputDirectory, 'assets', 'images', 'home', 'francine-home-hero-hd.webp')),
   requireFile(path.join(outputDirectory, 'assets', 'images', 'home', 'francine-home-founder-hd.webp')),
   requireFile(path.join(outputDirectory, 'assets', 'images', 'home', 'home-image-manifest.json')),

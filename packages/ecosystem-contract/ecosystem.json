@@ -4,7 +4,7 @@
   "policy": {
     "sourceControl": "One GitHub monorepo",
     "deployment": "One independently configured Vercel project per application boundary",
-    "data": "No production database, authentication tenant, service-role key, or private environment variable may be shared across FMB/Yoni, SENZ, and Cognita unless explicitly approved and documented."
+    "data": "No production database, authentication tenant, service-role key, or private environment variable may be shared across FMB, SENZ, and Cognita unless explicitly approved and documented."
   },
   "applications": {
     "fmb": {
@@ -14,17 +14,13 @@
       "domains": [
         "www.francinemariebautista.com",
         "francinemariebautista.com",
-        "yoni.francinemariebautista.com",
         "app.francinemariebautista.com"
       ],
       "dataBoundary": "fmb-public-member",
       "owns": [
         "FMB public website",
         "With love, FMB",
-        "Yoni",
         "FMB News",
-        "FMB Music",
-        "FMB eBooks",
         "Mabayani public pages"
       ]
     },

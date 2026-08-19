@@ -9,7 +9,11 @@ const textExtensions=new Set(['.html','.css','.js','.json','.webmanifest','.xml'
 const manifest=JSON.parse(await readFile(path.join(sourceRoot,'config/fmb-approved-assets.json'),'utf8'));
 if(manifest.policy?.fallbacksAllowed!==false)throw new Error('Approved FMB assets must prohibit fallbacks.');
 const byKey=new Map(manifest.assets.map(asset=>[asset.key,asset]));
-const publicPath=key=>`${approvedPublic}/${byKey.get(key).file}`;
+const publicPath=key=>{
+  const asset=byKey.get(key);
+  if(!asset)throw new Error(`Required approved asset ${key} is missing from manifest.`);
+  return `${approvedPublic}/${asset.file}`;
+};
 const sha256=bytes=>createHash('sha256').update(bytes).digest('hex');
 
 async function walk(directory){
@@ -36,11 +40,8 @@ const replacements=new Map([
   ['/assets/images/home/francine-home-hero-hd.webp',publicPath('standingLandscape')],
   ['/assets/images/home/francine-home-founder-hd.webp',publicPath('seatedLandscape')],
   ['/assets/images/news/fmb-news-official.svg',publicPath('news')],
-  ['/assets/images/channels/fmb-music-official.svg',publicPath('music')],
-  ['/assets/images/channels/fmb-ebook-official.svg',publicPath('ebook')],
   ['/assets/images/fmb-official-2026/fmb-master-square.webp',publicPath('masterSquare')],
   ['/assets/images/fmb-official-2026/fmb-news-official.webp',publicPath('news')],
-  ['/assets/images/fmb-official-2026/fmb-music-official.webp',publicPath('music')],
   ['/assets/images/fmbandco/francine-founder-hero-640.webp',publicPath('portraitFront')],
   ['/assets/images/founder.webp',publicPath('portraitFront')],
   ['assets/images/founder.webp',publicPath('portraitFront')],
@@ -70,7 +71,7 @@ function normalizeRoutePaths(text,relative){
   if(relative==='_sites/cognita/index.html'){
     return text.replace(/(\b(?:src|href|poster)=["'])\/assets\//gi,'$1./assets/');
   }
-  if(relative.endsWith('.html')&&relative!=='index.html'&&!relative.startsWith('app/')&&!relative.startsWith('_sites/')){
+  if(relative.endsWith('.html')&&relative!=='index.html'&&!relative.startsWith('_sites/')){
     text=text.replace(/(\b(?:src|href|poster)=["'])assets\//gi,'$1/assets/');
   }
   if(relative.startsWith('assets/js/')){
@@ -116,9 +117,7 @@ await writeFile(cognitaAliasPath,`<svg xmlns="http://www.w3.org/2000/svg" viewBo
 
 const assignments={
   'index.html':[publicPath('masterTransparent'),publicPath('standingLandscape'),publicPath('seatedLandscape')],
-  'news/index.html':[publicPath('news')],
-  'music/index.html':[publicPath('music')],
-  'ebooks/index.html':[publicPath('ebook')]
+  'news/index.html':[publicPath('news')]
 };
 for(const [relative,markers] of Object.entries(assignments)){
   const html=await readFile(path.join(root,relative),'utf8');
@@ -130,8 +129,17 @@ for(const image of ['/assets/images/volunteer/francine-leading-with-love-fmb.web
   if(!withLove.includes(image))throw new Error(`Protected volunteer image is missing: ${image}`);
 }
 
-const retired=[...replacements.keys()].filter(marker=>marker!=='cognita-wordmark-transparent.svg');
-retired.push('https://at.adobe.com/');
+const retired=[
+  ...replacements.keys(),
+  '/assets/images/channels/fmb-music-official.svg',
+  '/assets/images/music/fmb-music-official.svg',
+  '/assets/images/channels/fmb-ebook-official.svg',
+  '/assets/images/ebooks/fmb-ebook-official.svg',
+  '/assets/images/fmb-official-2026/fmb-music-official.webp',
+  '/assets/images/fmb-approved/fmb-music-official-transparent.webp',
+  '/assets/images/fmb-approved/fmb-ebook-official-transparent.webp',
+  'https://at.adobe.com/'
+].filter(marker=>marker!=='cognita-wordmark-transparent.svg');
 for(const file of files){
   const text=await readFile(file,'utf8');
   for(const marker of retired)if(text.includes(marker))throw new Error(`${path.relative(root,file)} still renders retired asset ${marker}`);

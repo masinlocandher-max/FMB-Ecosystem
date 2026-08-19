@@ -90,7 +90,6 @@ for(const record of references.values()){
 
 const required=manifest.assets.map(asset=>`assets/images/fmb-approved/${asset.file}`);
 for(const name of required)if(!verified.some(asset=>asset.name===name))errors.push(`${name}: exact master was not verified`);
-if(!verified.some(asset=>asset.name==='app/assets/yoni/yoni-hero.webp'))errors.push('app/assets/yoni/yoni-hero.webp: Yoni hero was not verified');
 
 if(errors.length){console.error(`Exact image audit failed with ${errors.length} issue(s):`);for(const error of errors)console.error(`- ${error}`);process.exit(1);}
 console.log(`Exact image integrity audit passed ${verified.length} referenced images, including ${manifest.assets.length} byte-identical uploaded masters.`);
