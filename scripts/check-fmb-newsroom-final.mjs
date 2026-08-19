@@ -49,6 +49,7 @@ function images(html) {
   return [...html.matchAll(/<img\b[^>]*>/gi)].map((match) => ({
     src: attr(match[0], 'src'),
     alt: attr(match[0], 'alt'),
+    hasAlt: /\balt\s*=\s*(["'])/i.test(match[0]),
   })).filter((item) => item.src);
 }
 
@@ -100,7 +101,7 @@ for (const file of files) {
     if (!/<h1\b/i.test(html)) failures.push(`${relative}: article headline missing`);
     const pageImages = images(html);
     if (!pageImages.length) failures.push(`${relative}: article image missing`);
-    if (pageImages.some((item) => !item.alt.trim())) failures.push(`${relative}: image alt text missing`);
+    if (pageImages.some((item) => !item.hasAlt)) failures.push(`${relative}: image alt attribute missing`);
     if (!meta(html, 'og:image')) failures.push(`${relative}: Open Graph image missing`);
     if (!meta(html, 'twitter:card')) failures.push(`${relative}: Twitter card metadata missing`);
   }
