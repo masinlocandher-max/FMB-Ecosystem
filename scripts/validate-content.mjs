@@ -172,11 +172,6 @@ function validateArticle(raw) {
     requiredString(image.credit, 'image.credit', errors);
     requiredString(image.caption, 'image.caption', errors);
     requiredString(image.alt, 'image.alt', errors);
-    if (imageKind !== 'editorial-fallback') {
-      for (const [name, value] of [['focusX', image.focusX], ['focusY', image.focusY]]) {
-        if (!Number.isFinite(value) || value < 0 || value > 100) errors.push(`image.${name} must be a number from 0 to 100 for social-safe cropping`);
-      }
-    }
   }
 
   const audit = raw.audit && typeof raw.audit === 'object' && !Array.isArray(raw.audit) ? raw.audit : {};
