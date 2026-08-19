@@ -65,7 +65,7 @@ const sharedArticleState = new Set([
   'news/image-repair-queue.json',
 ]);
 
-function isAuditedArticleOutput(file) {
+function isDirectAuditedArticleOutput(file) {
   if (!articleSlugSet.size) return false;
   if (sharedArticleState.has(file)) return true;
 
@@ -75,6 +75,27 @@ function isAuditedArticleOutput(file) {
     if (new RegExp(`^assets/images/news/${slug.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\.(?:jpe?g|png|webp|gif|avif|svg)$`, 'i').test(file)) return true;
   }
   return false;
+}
+
+const sharedPublicationHtml = [
+  /^news\/index\.html$/,
+  /^fmbnews\/index\.html$/,
+  /^news\/about\/index\.html$/,
+  /^news\/fmb-brief(?:-[^/]+)?\/index\.html$/,
+];
+
+function isSharedPublicationHtml(file) {
+  return sharedPublicationHtml.some((pattern) => pattern.test(file));
+}
+
+async function sharedHtmlReferencesChangedArticle(file) {
+  if (!articleSlugSet.size || !isSharedPublicationHtml(file)) return false;
+  let left = '';
+  let right = '';
+  try { left = await readFile(path.join(leftRoot, file), 'utf8'); } catch (error) { if (error?.code !== 'ENOENT') throw error; }
+  try { right = await readFile(path.join(rightRoot, file), 'utf8'); } catch (error) { if (error?.code !== 'ENOENT') throw error; }
+  const combined = `${left}\n${right}`;
+  return articleSlugs.some((slug) => combined.includes(slug));
 }
 
 const leftFiles = await walk(leftRoot);
@@ -94,6 +115,15 @@ for (const file of common) {
   if (sha256(left) !== sha256(right)) changed.push(file);
 }
 
+const referenceBearingSharedHtml = new Set();
+for (const file of [...onlyLeft, ...onlyRight, ...changed]) {
+  if (await sharedHtmlReferencesChangedArticle(file)) referenceBearingSharedHtml.add(file);
+}
+
+function isAuditedArticleOutput(file) {
+  return isDirectAuditedArticleOutput(file) || referenceBearingSharedHtml.has(file);
+}
+
 const expectedOnlyLeft = onlyLeft.filter(isAuditedArticleOutput);
 const expectedOnlyRight = onlyRight.filter(isAuditedArticleOutput);
 const expectedChanged = changed.filter(isAuditedArticleOutput);
@@ -105,6 +135,8 @@ console.log(`Release-path comparison: ${leftFiles.length} baseline files vs ${ri
 if (articleSlugs.length) {
   console.log(`Audited article-source deltas: ${articleSlugs.length}`);
   for (const slug of articleSlugs) console.log(`  article ${slug}`);
+  console.log(`Reference-bearing shared newsroom pages: ${referenceBearingSharedHtml.size}`);
+  for (const file of [...referenceBearingSharedHtml].sort()) console.log(`  shared ${file}`);
   console.log(`Expected generated deltas: ${expectedOnlyLeft.length + expectedOnlyRight.length + expectedChanged.length}`);
 } else {
   console.log('Audited article-source deltas: 0; strict byte-for-byte equivalence remains in force.');
@@ -124,6 +156,7 @@ const report = {
   leftFiles: leftFiles.length,
   rightFiles: rightFiles.length,
   articleSlugs,
+  referenceBearingSharedHtml: [...referenceBearingSharedHtml].sort(),
   expected: {
     onlyLeft: expectedOnlyLeft,
     onlyRight: expectedOnlyRight,
