@@ -13,7 +13,6 @@ const [
   orchestratorSource,
   commandCenterSource,
   adminSource,
-  authSource,
   vercelSource,
   migrationSource,
   operationsMigrationSource,
@@ -25,7 +24,6 @@ const [
   readFile(path.join(siteRoot, 'assets/js/orchestrator.js'), 'utf8'),
   readFile(path.join(siteRoot, 'assets/js/command-center.js'), 'utf8'),
   readFile(path.join(siteRoot, 'assets/js/admin.js'), 'utf8'),
-  readFile(path.join(siteRoot, 'assets/js/auth.js'), 'utf8'),
   readFile(path.join(repoRoot, 'vercel.json'), 'utf8'),
   readFile(path.join(siteRoot, 'supabase/migrations/20260723120000_add_orchestrator_workspace.sql'), 'utf8'),
   readFile(path.join(siteRoot, 'supabase/migrations/20260726120000_add_operations_command_center.sql'), 'utf8'),
@@ -45,11 +43,8 @@ const requiredPanels = [
   'analyticsPanel',
   'automationPanel',
   'qaPanel',
-  'membersCommunityPanel',
-  'membersPanel',
   'moderationPanel',
   'contentPanel',
-  'musicPanel',
   'mediaPanel',
   'messagesPanel',
 ];
@@ -69,8 +64,6 @@ const publicFiles = [
   'aboutfmb/index.html',
   'news/index.html',
   'projects/index.html',
-  'ebooks/index.html',
-  'music/index.html',
   'withlovefmb/index.html',
   'communityengagements/index.html',
   'volunteer.html',
@@ -78,8 +71,6 @@ const publicFiles = [
   'fmbandco/index.html',
   'mabayani/index.html',
   'freedom-wall.html',
-  'profile/index.html',
-  'app/index.html',
 ];
 for (const relativePath of publicFiles) {
   const filePath = path.join(siteRoot, relativePath);
@@ -138,7 +129,7 @@ assert.match(orchestratorSource, /navigator\.clipboard\.writeText/);
 assert.match(orchestratorSource, /It has no send control/);
 assert.match(orchestratorSource, /from\('orchestrator_workspaces'\)/);
 assert.doesNotMatch(orchestratorSource, /fetch\(\s*["']https?:\/\//i, 'Orchestrator must not send records to an external API');
-assert.match(adminSource, /auth\.html\?next=%2Fadmin\.html#signin/);
+assert.match(adminSource, /admin-login\.html/);
 assert.match(adminSource, /\['admin','moderator'\]\.includes\(profile\.role\)/);
 assert.match(commandCenterSource, /from\('work_orders'\)/);
 assert.match(commandCenterSource, /from\('work_evidence'\)/);
@@ -162,7 +153,6 @@ assert.match(commandCenterSource, /data-revenue-action/);
 assert.match(commandCenterSource, /Prepare a seven-day SENZ client acquisition sprint/);
 assert.doesNotMatch(commandCenterSource, /data-connection-manage/);
 assert.doesNotMatch(commandCenterSource, /fetch\(\s*["']https?:\/\//i, 'Command Center must not transmit records to an undeclared external API');
-assert.match(authSource, /target\.origin===location\.origin/);
 
 const vercel = JSON.parse(vercelSource);
 assert.ok(vercel.rewrites.some((rule) => rule.source === '/' && rule.destination === '/admin.html' && rule.has?.some((condition) => condition.value === 'data.francinemariebautista.com')));

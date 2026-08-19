@@ -176,14 +176,14 @@
   $('#messageFilter').addEventListener('change',loadMessages);
   $('#refreshMessages').addEventListener('click',loadMessages);
 
-  $('#adminSignOut').addEventListener('click',async()=>{if(client)await client.auth.signOut();location.replace('auth.html#signin')});
+  $('#adminSignOut').addEventListener('click',async()=>{if(client)await client.auth.signOut();location.replace('/admin-login.html')});
 
   async function init(){
     const localPreview=/^(localhost|127\.0\.0\.1)$/i.test(location.hostname)&&new URLSearchParams(location.search).get('preview')==='1';
     if(localPreview){
       currentRole='admin';
       $('#adminIdentity').textContent='Local design preview · live member data is paused';
-      ['membersCommunityPanel','membersPanel','moderationPanel','contentPanel','mediaPanel','messagesPanel'].forEach(id=>{
+      ['moderationPanel','contentPanel','mediaPanel','messagesPanel'].forEach(id=>{
         const panel=document.getElementById(id);if(!panel)return;
         panel.querySelectorAll('button,input,textarea,select').forEach(control=>control.disabled=true);
       });
@@ -198,14 +198,14 @@
     }
     client=await resolveClient();
     const {data,error}=await client.auth.getSession();
-    if(error||!data.session){location.replace('auth.html?next=%2Fadmin.html#signin');return}
+    if(error||!data.session){location.replace('/admin-login.html');return}
     const {data:{user:verifiedUser},error:userError}=await client.auth.getUser();
-    if(userError||!verifiedUser){location.replace('auth.html?next=%2Fadmin.html#signin');return}
+    if(userError||!verifiedUser){location.replace('/admin-login.html');return}
     user=verifiedUser;
     const {data:profile,error:profileError}=await client.from('profiles').select('full_name,username,role,status').eq('id',user.id).maybeSingle();
     if(profileError||!profile||!['admin','moderator'].includes(profile.role)||profile.status!=='active'){
       setStatus('Active FMB operations access is required.','error');
-      setTimeout(()=>location.replace('/profile/'),900);
+      setTimeout(()=>location.replace('/admin-login.html'),900);
       return;
     }
     currentRole=profile.role;
