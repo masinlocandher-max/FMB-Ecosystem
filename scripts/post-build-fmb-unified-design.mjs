@@ -29,8 +29,6 @@ const publicNavigation = [
   ['/aboutfmb/', 'About FMB'],
   ['/news/', 'Bulletin'],
   ['/projects/', 'Projects'],
-  ['/ebooks/', 'Reading'],
-  ['/music/', 'Music'],
   ['/get-involved/', 'Get Involved'],
   ['/gethelp/', 'Get Help'],
   ['/fmbandco/', 'FMB&CO.'],
@@ -72,8 +70,6 @@ const shellFooter = `
     </nav>
     <nav aria-label="Public resources">
       <strong>Public Resources</strong>
-      <a href="/ebooks/">Reading</a>
-      <a href="/music/">Music</a>
       <a href="/withlovefmb/">With Love, FMB</a>
       <a href="/get-involved/">Get Involved</a>
       <a href="/gethelp/">Get Help</a>
@@ -147,10 +143,10 @@ const impactDepth = `
   </div>
   <div class="fmb-impact-grid">
     <article><h3>Women and Identity</h3><p>Women’s empowerment, women’s health information, transgender visibility, LGBTQIA+ dignity, inclusion, and identity-centered storytelling.</p></article>
-    <article><h3>Mental Health and Wellbeing</h3><p>Public information, reading, music, support directories, safe-space principles, and responsible pathways to independent professional help.</p></article>
+    <article><h3>Mental Health and Wellbeing</h3><p>Public information, reflective resources, support directories, safe-space principles, and responsible pathways to independent professional help.</p></article>
     <article><h3>Culture and Language</h3><p>Sambal language preservation, Masinloc history, Mabayani, heritage research, local memory, cultural expression, and public education.</p></article>
     <article><h3>Community Participation</h3><p>Volunteer pathways, partnerships, community engagements, collaboration, sponsorship, donations, and responsible ways to contribute.</p></article>
-    <article><h3>Reading and Music</h3><p>Accessible books, essays, reflections, original music, and resources designed for learning, comfort, courage, and connection.</p></article>
+    <article><h3>Reflection and Creative Resources</h3><p>Accessible reflections, stories, wellbeing resources, and creative materials designed for learning, comfort, courage, and connection.</p></article>
     <article><h3>Projects with Purpose</h3><p>Yoni, Mabayani, community programs, advocacy campaigns, and future projects that carry the values of care, dignity, and access.</p></article>
   </div>
   <div class="fmb-strategy-actions"><a class="primary" href="/get-involved/">Support or participate</a><a href="/gethelp/">Open the support directory</a><a href="/projects/">View the project desk</a></div>
@@ -161,13 +157,13 @@ const consolidatedBulletin = `
   <header class="section-intro">
     <p class="kicker">Official Bulletin</p>
     <h2 id="bulletinTitle">What’s<br>Happening<br>Now</h2>
-    <p>Official updates and public stories from Francine Marie Bautista and the FMB ecosystem. This is the official public desk for current announcements from Francine Marie Bautista, FMB&amp;CO., SENZ, Cognita, With Love, FMB, Yoni, Mabayani, FMB News, Music, and Reading.</p>
+    <p>Official updates and public stories from Francine Marie Bautista and the FMB ecosystem. This is the official public desk for current announcements from Francine Marie Bautista, FMB&amp;CO., SENZ, Cognita, With Love, FMB, Yoni, Mabayani, and FMB News.</p>
     <a href="/news/">View all news <span>→</span></a>
   </header>
   <article class="bulletin-feature">
-    <div class="bulletin-copy"><p>Featured platform</p><h3>Meet Yoni</h3><span>A private digital companion for existing members, with reflection, reading, listening, and support-oriented tools.</span><a href="https://yoni.francinemariebautista.com/">Open Yoni <b>→</b></a></div>
-    <img src="/app/assets/yoni/yoni-hero.webp" width="1254" height="1254" loading="lazy" decoding="async" alt="Yoni, the orange bear companion">
-    <em>Existing members</em>
+    <div class="bulletin-copy"><p>Featured platform</p><h3>Meet Yoni</h3><span>A gentle wellbeing companion with reflection, listening, and support-oriented tools.</span><a href="https://yoni.francinemariebautista.com/">Open Yoni <b>→</b></a></div>
+    <img src="/assets/images/yoni/yoni-hero.webp" width="1254" height="1254" loading="lazy" decoding="async" alt="Yoni, the orange bear companion">
+    <em>Wellbeing companion</em>
   </article>
   <article class="fmb-bulletin-lead">
     <span class="fmb-strategy-kicker">Official FMB Bulletin · Current priority</span>

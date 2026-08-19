@@ -55,8 +55,8 @@
       </div>
       <div class="fmb-yoni-senz-ad__visual" aria-label="Yoni digital companion presented as a SENZ digital solutions case study">
         <span class="fmb-yoni-senz-ad__halo" aria-hidden="true"></span>
-        <img class="fmb-yoni-senz-ad__wordmark" src="/app/assets/yoni/yoni-wordmark.png" width="981" height="441" loading="lazy" decoding="async" alt="Yoni">
-        <img class="fmb-yoni-senz-ad__mascot" src="/app/assets/yoni/yoni-hero.webp" width="1254" height="1254" loading="lazy" decoding="async" alt="Yoni, the orange digital companion">
+        <img class="fmb-yoni-senz-ad__wordmark" src="/assets/images/yoni/yoni-wordmark.png" width="981" height="441" loading="lazy" decoding="async" alt="Yoni">
+        <img class="fmb-yoni-senz-ad__mascot" src="/assets/images/yoni/yoni-hero.webp" width="1254" height="1254" loading="lazy" decoding="async" alt="Yoni, the orange digital companion">
         <a class="fmb-yoni-senz-ad__senz" href="https://www.senzpr.com/digital-products.html" aria-label="Explore SENZ Digital Products">
           <img src="/assets/images/projects/senz-logo-clean.png" width="1080" height="416" loading="lazy" decoding="async" alt="SENZ">
           <span><small>Built as a real example</small><strong>SENZ Digital Solutions turns ideas into branded spaces people can actually use.</strong></span>

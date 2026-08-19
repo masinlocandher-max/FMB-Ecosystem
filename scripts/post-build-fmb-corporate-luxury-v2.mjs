@@ -22,7 +22,7 @@ const assetExists=async relativePath=>{
 const requiredAssets=[
   '/assets/images/fmb-approved/francine-standing-landscape.webp',
   '/assets/images/fmb-approved/francine-portrait-front.webp',
-  '/app/assets/yoni/yoni-hero.webp',
+  '/assets/images/yoni/yoni-hero.webp',
   '/assets/images/volunteer/francine-leading-with-love-fmb.webp',
   '/assets/images/volunteer/francine-serving-with-volunteers.webp',
   '/assets/images/volunteer/community-and-volunteer-team.webp',
@@ -77,7 +77,7 @@ const projectsSection=`<section class="fmb-v2-projects" id="signature-projects" 
   <header class="fmb-v2-projects-head"><h2 id="signatureProjectsTitle">Projects that show how the work becomes real.</h2><p>Each project has a different public role. They are presented through their purpose, current stage, and Francine’s responsibility rather than as interchangeable brand cards.</p></header>
   <div class="fmb-v2-project-grid">
     <article class="fmb-v2-project yoni" data-fmb-v2-open="yoni" tabindex="0" role="button" aria-label="Open the Yoni project story">
-      <img src="/app/assets/yoni/yoni-hero.webp" width="1254" height="1254" loading="lazy" decoding="async" alt="Yoni, the digital companion of With Love, FMB">
+      <img src="/assets/images/yoni/yoni-hero.webp" width="1254" height="1254" loading="lazy" decoding="async" alt="Yoni, the digital companion of With Love, FMB">
       <div class="fmb-v2-project-copy"><small>Digital companion</small><h3>Yoni</h3><p>A warm private companion experience for reflection, reading, listening, and support-oriented tools.</p><button type="button" data-fmb-v2-open="yoni">View project story</button></div>
     </article>
     <article class="fmb-v2-project mabayani" data-fmb-v2-open="mabayani" tabindex="0" role="button" aria-label="Open the Mabayani project story">

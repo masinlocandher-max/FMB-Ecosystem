@@ -122,7 +122,7 @@ const editorialVisuals = `<section class="fmb-editorial-visuals" id="fmb-visual-
       <span class="fmb-editorial-card-copy"><small>Advocacy and community</small><strong>With Love, FMB</strong></span>
     </a>
     <a class="fmb-editorial-card" href="https://yoni.francinemariebautista.com/">
-      <img src="/app/assets/yoni/yoni-hero.webp" width="1254" height="1254" loading="lazy" decoding="async" alt="Yoni, the digital companion of With Love, FMB">
+      <img src="/assets/images/yoni/yoni-hero.webp" width="1254" height="1254" loading="lazy" decoding="async" alt="Yoni, the digital companion of With Love, FMB">
       <span class="fmb-editorial-card-copy"><small>Digital companion</small><strong>Meet Yoni</strong></span>
     </a>
     <a class="fmb-editorial-card" href="/news/pax-silica-water/">

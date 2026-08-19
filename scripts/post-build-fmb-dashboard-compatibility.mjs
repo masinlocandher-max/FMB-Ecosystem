@@ -43,7 +43,7 @@ if (!html.includes('id="fmb-visual-ecosystem"')) {
   const inventory = `<section id="fmb-visual-ecosystem" class="sr-only" aria-label="Approved FMB visual asset inventory" hidden>
     <img src="/assets/images/fmb-approved/francine-standing-landscape.webp" width="1364" height="768" loading="lazy" decoding="async" alt="">
     <img src="/assets/images/volunteer/francine-leading-with-love-fmb.webp" width="1023" height="1537" loading="lazy" decoding="async" alt="">
-    <img src="/app/assets/yoni/yoni-hero.webp" width="1254" height="1254" loading="lazy" decoding="async" alt="">
+    <img src="/assets/images/yoni/yoni-hero.webp" width="1254" height="1254" loading="lazy" decoding="async" alt="">
     <img src="/assets/images/news/new-clark-city-pax-silica-pia.jpg" width="800" height="500" loading="lazy" decoding="async" alt="">
   </section>`;
   html = html.replace('</main>', `${inventory}\n</main>`);
@@ -80,7 +80,7 @@ for (const marker of [
   'id="fmb-visual-ecosystem"',
   '/assets/images/fmb-approved/francine-standing-landscape.webp',
   '/assets/images/volunteer/francine-leading-with-love-fmb.webp',
-  '/app/assets/yoni/yoni-hero.webp',
+  '/assets/images/yoni/yoni-hero.webp',
   '/assets/images/news/new-clark-city-pax-silica-pia.jpg',
   '/assets/images/reading/finding-your-way-back-cover.svg',
   authorityStatement,
