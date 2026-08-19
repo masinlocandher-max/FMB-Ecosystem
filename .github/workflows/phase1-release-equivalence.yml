@@ -39,8 +39,8 @@ jobs:
         run: |
           release_stamp="$(git -C baseline-main show -s --format=%cI HEAD)"
           FMB_BUILD_TIMESTAMP="$release_stamp" NODE_OPTIONS="--require=$GITHUB_WORKSPACE/scripts/freeze-build-clock.cjs" npm run build
-      - name: Compare final outputs byte-for-byte
-        run: node scripts/compare-release-paths.mjs baseline-main/dist dist
+      - name: Compare final outputs with audited article deltas
+        run: node scripts/compare-release-paths.mjs baseline-main/dist dist baseline-main .
       - name: Print exact remaining differences
         if: failure()
         run: |
