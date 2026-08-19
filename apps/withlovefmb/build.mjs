@@ -161,7 +161,7 @@ if (!sitemapXml.includes(mediaArchiveUrl)) {
   await writeFile(sitemapPath, sitemapXml, 'utf8');
 }
 
-const { publishNewsFeed } = await import('./scripts/publish-news-feed.mjs');
-await publishNewsFeed({ distRoot: output });
+const { publishFmbEditorial } = await import('./scripts/publish-fmb-editorial.mjs');
+await publishFmbEditorial({ distRoot: output });
 
-console.log(`Built and audited ${newsHtmlFiles.length} FMB News pages with a Philippine-centered, globally aware editorial identity and the complete article archive retained.`);
+console.log(`Built and audited ${newsHtmlFiles.length} FMB News pages with the strict related-image gate, the FMB Brief newsletter product, and the image-backed article archive retained.`);
