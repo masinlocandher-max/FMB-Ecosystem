@@ -81,10 +81,11 @@ for(const file of all.filter(file=>textExtensions.has(path.extname(file).toLower
 }
 for(const record of references.values()){
   const name=relative(record.target);if(protectedPrefixes.some(prefix=>name.startsWith(prefix)))continue;
-  if(/(?:placeholder|ai-generated|generated-(?:hero|image|portrait|photo)|\/mockups?\/|\/temp(?:orary)?\/)/i.test(name)){errors.push(`${name}: unapproved placeholder or generated-image path is referenced`);continue;}
+  const sources=[...record.sources].slice(0,5).join(', ');
+  if(/(?:placeholder|ai-generated|generated-(?:hero|image|portrait|photo)|\/mockups?\/|\/temp(?:orary)?\/)/i.test(name)){errors.push(`${name}: unapproved placeholder or generated-image path is referenced; used by ${sources}`);continue;}
   if(!imageExtensions.has(path.extname(record.target).toLowerCase()))continue;
-  try{const info=await stat(record.target);if(!info.isFile())throw new Error();}catch{errors.push(`${name}: referenced image is missing`);continue;}
-  const size=await dimensions(record.target);if(!size?.width||!size?.height){errors.push(`${name}: image integrity or dimensions are unreadable`);continue;}
+  try{const info=await stat(record.target);if(!info.isFile())throw new Error();}catch{errors.push(`${name}: referenced image is missing; used by ${sources}`);continue;}
+  const size=await dimensions(record.target);if(!size?.width||!size?.height){errors.push(`${name}: image integrity or dimensions are unreadable; used by ${sources}`);continue;}
   if(!verified.some(item=>item.name===name))verified.push({name,width:size.width,height:size.height,label:size.vector?'vector':'referenced raster'});
 }
 
