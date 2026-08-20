@@ -265,8 +265,7 @@ body.fmb-unified-public > .fco-skip:focus {
   transform: scaleX(1);
 }
 
-.fmb-shell-cta,
-.fmb-shell-yoni {
+.fmb-shell-cta {
   display: inline-flex;
   min-height: 44px;
   align-items: center;
@@ -287,10 +286,6 @@ body.fmb-unified-public > .fco-skip:focus {
   box-shadow: 0 12px 34px rgba(216, 162, 58, 0.2);
 }
 
-.fmb-shell-yoni {
-  border: 1px solid rgba(232, 216, 245, 0.22);
-  color: var(--fmb-white);
-}
 
 .fmb-shell-menu {
   display: none;
@@ -528,8 +523,6 @@ body.fmb-unified-public > .fco-skip:focus {
 .fmb-unified-public .nc-rundown-story,
 .fmb-unified-public [class*="project-card"],
 .fmb-unified-public [class*="resource-card"],
-.fmb-unified-public [class*="ebook-card"],
-.fmb-unified-public [class*="music-card"],
 .fmb-unified-public [class*="company-card"] {
   border: 1px solid var(--fmb-line) !important;
   border-radius: var(--fmb-radius-md) !important;
@@ -542,9 +535,7 @@ body.fmb-unified-public > .fco-skip:focus {
 .fmb-unified-public .work-card:hover,
 .fmb-unified-public .bulletin-list > a:hover,
 .fmb-unified-public [class*="project-card"]:hover,
-.fmb-unified-public [class*="resource-card"]:hover,
-.fmb-unified-public [class*="ebook-card"]:hover,
-.fmb-unified-public [class*="music-card"]:hover {
+.fmb-unified-public [class*="resource-card"]:hover:hover:hover {
   transform: translateY(-5px);
   border-color: rgba(111, 53, 216, 0.34) !important;
   box-shadow: var(--fmb-shadow) !important;
@@ -1557,7 +1548,6 @@ body.fmb-unified-public > .fco-skip:focus {
     grid-template-columns: minmax(145px, 190px) minmax(0, 1fr) auto;
   }
 
-  .fmb-shell-yoni { display: none; }
   .fmb-shell-nav { gap: 12px; }
   .fmb-shell-nav a { font-size: 9px; }
 
