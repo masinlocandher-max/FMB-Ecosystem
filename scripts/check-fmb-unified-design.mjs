@@ -7,8 +7,8 @@ const fail = (message) => {
   warnings.push(message);
   console.warn(`FMB unified design gate: ${message}`);
 };
-const excludedPrefixes = ['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/'];
-const excludedFiles = new Set(['admin.html', 'login.html', 'signup.html', 'reset-password.html', 'confirm-email.html']);
+const excludedPrefixes = ['_sites/', 'api/', 'admin/', 'data/'];
+const excludedFiles = new Set(['admin.html', 'admin-login.html', 'admin-activate.html']);
 
 async function walk(directory) {
   const files = [];
@@ -44,15 +44,20 @@ for (const marker of ['fmb-shell-menu', 'aria-expanded', 'IntersectionObserver',
   if (!js.includes(marker)) fail(`unified interaction script is missing ${marker}`);
 }
 
-const obsoleteVisualMarkers = [
+const obsoleteMarkers = [
   'fmb-network-optimized.css',
   'fmb-network-optimized.js',
   'fmb-production-qa.css',
   'fmb-strategy-completion.css',
-  'fmb-page-home.css',
-  'fmb-page-about.css',
+  'fmb-home-approved.js',
   '/aboutfmb/#work-with-fmb',
   '/withlovefmb/#volunteer',
+  '/music/',
+  '/ebooks/',
+  '/profile/',
+  '/auth.html',
+  'yoni.francinemariebautista.com',
+  '/assets/images/yoni/',
 ];
 
 let pagesChecked = 0;
@@ -78,31 +83,20 @@ for (const file of publicHtml) {
   if ((html.match(/fmb-unified-system\.css/g) || []).length !== 1) fail(`${name} does not have exactly one unified stylesheet`);
   if ((html.match(/fmb-unified-system\.js/g) || []).length !== 1) fail(`${name} does not have exactly one unified interaction script`);
 
-  for (const marker of obsoleteVisualMarkers) {
-    if (html.includes(marker)) fail(`${name} still contains obsolete visual marker ${marker}`);
+  for (const marker of obsoleteMarkers) {
+    if (html.includes(marker)) fail(`${name} still contains retired or obsolete marker ${marker}`);
   }
 }
 
 const home = await readFile(path.join(root, 'index.html'), 'utf8');
-for (const marker of [
-  'fmb-bulletin-consolidated',
-  'id="how-fmb-can-help"',
-  'id="fmb-authority"',
-  'Creative Director. Brand Strategist. Entrepreneur. Storyteller. Educator. Founder.',
-]) {
-  if (!home.includes(marker)) fail(`homepage is missing ${marker}`);
+if ((home.match(/id="bulletin"/g) || []).length !== 1) fail('homepage must contain exactly one bulletin');
+for (const marker of ['Meet Yoni', 'Music Library', 'eBook Library', 'Existing members']) {
+  if (home.includes(marker)) fail(`homepage still contains retired content: ${marker}`);
 }
-if ((home.match(/id="bulletin"/g) || []).length !== 1) fail('homepage contains more than one bulletin');
-
-const fmbCo = await readFile(path.join(root, 'fmbandco/index.html'), 'utf8');
-if (!fmbCo.includes('id="company-depth"')) fail('FMB&CO. page is missing the strategic-house section');
-
-const withLove = await readFile(path.join(root, 'withlovefmb/index.html'), 'utf8');
-if (!withLove.includes('id="impact-depth"')) fail('With Love, FMB page is missing the advocacy depth section');
 
 for (const route of ['work-with-fmb/index.html', 'get-involved/index.html']) {
   const html = await readFile(path.join(root, route), 'utf8');
   if (!html.includes('fmb-journey-options')) fail(`${route} lost its journey content`);
 }
 
-console.log(`Completed the FMB unified design audit across ${pagesChecked} public pages with ${warnings.length} non-blocking warning(s).`);
+console.log(`Completed the FMB clean-foundation design audit across ${pagesChecked} public pages with ${warnings.length} non-blocking warning(s).`);
