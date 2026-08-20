@@ -2,7 +2,7 @@ name: Prebuilt production deploy
 
 # Main-branch fallback for the audited FMB ecosystem production release.
 # Keep production in sync when Vercel's Git integration cancels or skips rapid News updates.
-# Release trigger: FMB News modern newspaper treatment.
+# Release trigger: FMB News modern newspaper treatment, contract-aligned.
 on:
   push:
     branches: [main]
