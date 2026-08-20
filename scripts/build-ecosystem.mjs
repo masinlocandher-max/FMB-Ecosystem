@@ -96,8 +96,6 @@ await materializeHomeImages({ outputDirectory });
 
 await Promise.all([
   injectStylesheet('news/index.html', '/assets/css/fmb-sitewide-gateway.css?v=20260721-responsive-v2'),
-  injectStylesheet('music/index.html', '/assets/css/fmb-sitewide-gateway.css?v=20260721-responsive-v2'),
-  injectStylesheet('ebooks/index.html', '/assets/css/fmb-sitewide-gateway.css?v=20260721-responsive-v2'),
   injectStylesheet('aboutfmb/index.html', '/assets/css/aboutfmb-seamless.css?v=20260721-responsive-v2'),
   lockYoniFirstPaintIdentity(),
 ]);
@@ -120,4 +118,4 @@ await Promise.all([
   requireFile(path.join(privateSitesDirectory, 'cognita', 'index.html')),
 ]);
 
-console.log('FMB ecosystem build completed successfully with unified entity authority, repository-backed news images, and direct HD homepage images.');
+console.log('FMB ecosystem build completed successfully with unified entity authority, repository-backed news images, direct HD homepage images, and retired public Reading/Music routes excluded.');
