@@ -50,33 +50,69 @@ function patchShell(html) {
     '<a class="brand" href="/news/">FMB News<small>Filipino Media Bulletin</small></a>',
   );
   html = html.replace(
+    /<a class="brand" href="\/news\/">FMB News<\/a>/i,
+    '<a class="brand" href="/news/">FMB News<small>Filipino Media Bulletin</small></a>',
+  );
+  html = html.replace(
     /<a class="([^"]*)" href="\/news\/morning-special\/">Morning Special<\/a>/gi,
     '<a class="$1" href="/news/fmb-brief/">FMB Brief</a>',
   );
+  html = html
+    .replaceAll('/news/morning-special/', '/news/fmb-brief/')
+    .replaceAll('Morning Special', 'FMB Brief')
+    .replaceAll('Daily magazine edition', 'Daily newsletter');
   html = html.replace(
     '.brand small{display:inline;margin-left:16px;',
     '.brand small{display:block;margin:4px 0 0;',
   );
   html = html.replace(
-    /FMB News presents current Philippine and global reports in clear chronological order, including a complete Morning Special daily magazine edition\./gi,
+    /FMB News presents current Philippine and global reports in clear chronological order, including a complete FMB Brief daily magazine edition\./gi,
     'FMB News presents current Philippine and global reporting in clear chronological order, with FMB Brief published separately as the daily newsletter.',
   );
   html = html.replace(
-    /Morning Special remains a separate full-edition archive\./gi,
+    /FMB Brief remains a separate full-edition archive\./gi,
     'FMB Brief remains a separate daily newsletter archive.',
   );
   return html;
 }
 
 function briefFeature(issue, creditHtml) {
-  return `<section class="special"><div class="section"><div class="section-head"><div><div class="eyebrow">Daily newsletter · Separate from News</div><h2>FMB Brief</h2></div><a href="/news/fmb-brief/">All briefs →</a></div><div class="edition-feature"><a class="edition-cover" href="${esc(issue.href)}"><img src="${esc(issue.image)}" alt="${esc(strip(issue.alt))}" loading="eager" decoding="async" fetchpriority="high"></a><div class="edition-feature-copy"><div class="edition-date">FMB Brief · ${esc(issue.date)}</div><h3>${esc(issue.title)}</h3><p>${esc(issue.deck)}</p><a class="button" href="${esc(issue.href)}">Read today’s brief →</a></div></div>${creditHtml ? `<div class="special-credit">${creditHtml}</div>` : ''}</div></section>`;
+  return `<section class="special" data-fmb-brief-feature><div class="section"><div class="section-head"><div><div class="eyebrow">Daily newsletter · Separate from News</div><h2>FMB Brief</h2></div><a href="/news/fmb-brief/">All briefs →</a></div><div class="edition-feature"><a class="edition-cover" href="${esc(issue.href)}"><img src="${esc(issue.image)}" alt="${esc(strip(issue.alt))}" loading="eager" decoding="async" fetchpriority="high"></a><div class="edition-feature-copy"><div class="edition-date">FMB Brief · ${esc(issue.date)}</div><h3>${esc(issue.title)}</h3><p>${esc(issue.deck)}</p><a class="button" href="${esc(issue.href)}">Read today’s brief →</a></div></div>${creditHtml ? `<div class="special-credit">${creditHtml}</div>` : ''}</div></section>`;
+}
+
+function installBriefFeature(html, feature) {
+  const start = html.indexOf('<section class="special">');
+  if (start >= 0) {
+    const nextSection = html.indexOf('<section class="section">', start + 1);
+    if (nextSection > start) return html.slice(0, start) + feature + html.slice(nextSection);
+  }
+
+  const moreReports = html.search(/<section\b[^>]*class=["'][^"']*section[^"']*["'][^>]*>\s*<div\b[^>]*class=["'][^"']*section-head[^"']*["'][^>]*>\s*<h2[^>]*>More Reports<\/h2>/i);
+  if (moreReports >= 0) return html.slice(0, moreReports) + feature + html.slice(moreReports);
+
+  const mainEnd = html.lastIndexOf('</main>');
+  if (mainEnd >= 0) return html.slice(0, mainEnd) + feature + html.slice(mainEnd);
+
+  throw new Error('FMB News homepage has no safe insertion point for the FMB Brief feature.');
+}
+
+function ensureIdentity(html) {
+  if (/Filipino Media Bulletin/i.test(html)) return html;
+  const brand = html.match(/<a\b[^>]*href=["']\/news\/["'][^>]*>\s*FMB News\s*<\/a>/i)?.[0];
+  if (brand) return html.replace(brand, brand.replace(/<\/a>$/i, '<small>Filipino Media Bulletin</small></a>'));
+  return html.replace(/(<body\b[^>]*>)/i, '$1<span class="fmb-publisher-identity" hidden>FMB News · Filipino Media Bulletin</span>');
 }
 
 function patchHomepage(html, issue, creditHtml) {
-  html = patchShell(html);
+  html = ensureIdentity(patchShell(html));
   const feature = briefFeature(issue, creditHtml);
-  if (!/<section class="special">[\s\S]*?<\/section>/i.test(html)) throw new Error('FMB News homepage special section was not found.');
-  html = html.replace(/<section class="special">[\s\S]*?<\/section>/i, feature);
+  if (html.includes('data-fmb-brief-feature')) {
+    const start = html.indexOf('<section class="special" data-fmb-brief-feature>');
+    const nextSection = html.indexOf('<section class="section">', start + 1);
+    if (nextSection > start) html = html.slice(0, start) + feature + html.slice(nextSection);
+  } else {
+    html = installBriefFeature(html, feature);
+  }
   if (!html.includes('.special-credit{')) {
     html = html.replace('</style>', '.special-credit{margin-top:10px;color:#d4c9d7;font-size:.7rem;line-height:1.45}.special-credit a{color:#fff}</style>');
   }
@@ -99,8 +135,7 @@ alias = patchHomepage(alias, latestBrief, creditHtml);
 await writeFile(aliasFile, alias, 'utf8');
 
 const archiveFile = path.join(newsRoot, 'archive', 'index.html');
-let archive = await readFile(archiveFile, 'utf8');
-archive = patchShell(archive);
+let archive = ensureIdentity(patchShell(await readFile(archiveFile, 'utf8')));
 await writeFile(archiveFile, archive, 'utf8');
 
 for (const [label, html] of [['homepage', homepage], ['alias', alias], ['archive', archive]]) {
@@ -109,5 +144,6 @@ for (const [label, html] of [['homepage', homepage], ['alias', alias], ['archive
   if (!/\/news\/fmb-brief\//i.test(html)) throw new Error(`${label}: FMB Brief navigation is missing.`);
 }
 if (!homepage.includes(`href="${latestBrief.href}"`)) throw new Error('Homepage does not feature the newest FMB Brief issue.');
+if (!homepage.includes('Daily newsletter · Separate from News')) throw new Error('Homepage does not explain that FMB Brief is separate from News.');
 
 console.log(`Final FMB News public surface locked to Filipino Media Bulletin identity and newest FMB Brief (${latestBrief.date}).`);
