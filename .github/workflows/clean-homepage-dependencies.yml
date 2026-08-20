@@ -25,25 +25,17 @@ jobs:
 
           repo = Path('.')
           site = repo / 'apps' / 'withlovefmb'
+          me = repo / '.github' / 'workflows' / 'clean-homepage-dependencies.yml'
 
-          # 1) Homepage source: no embedded/linked Yoni product surface, no JS-only body reveal.
+          # Homepage is already source-cleaned. Assert that no retired surface came back.
           home = site / 'index.html'
           s = home.read_text()
-          s = re.sub(r"\n\s*if \(host === 'app\.francinemariebautista\.com'\) \{[\s\S]*?\n\s*\}\n", "\n", s, count=1)
-          s = s.replace('  <style>html{background:#05020a}body{visibility:hidden}</style>\n  <noscript><style>body{visibility:visible}</style></noscript>\n', '  <style>html{background:#05020a}</style>\n')
-          s = re.sub(r'\n\s*<a class="header-cta" href="https://yoni\.francinemariebautista\.com/">Open Yoni</a>', '', s)
-          s = re.sub(r'\n\s*<article class="bulletin-feature reveal d1">[\s\S]*?</article>', '', s, count=1)
-          s = re.sub(r'\n\s*<a class="brand-card yoni-card"[\s\S]*?</a>', '', s, count=1)
-          s = s.replace('<a href="https://yoni.francinemariebautista.com/">Yoni</a>', '')
-          s = s.replace('<a href="/">Home</a><a href="/news/">News</a><a href="/projects/">Projects</a><a href="/withlovefmb/#volunteer">Get Involved</a><a href="https://yoni.francinemariebautista.com/">Yoni</a>', '<a href="/">Home</a><a href="/news/">News</a><a href="/projects/">Projects</a><a href="/get-involved/">Get Involved</a><a href="/aboutfmb/">About</a>')
-          s = s.replace('/withlovefmb/#volunteer', '/get-involved/')
           if 'yoni.francinemariebautista.com' in s or '/assets/images/yoni/' in s:
-              raise SystemExit('Homepage still contains a Yoni dependency after cleanup')
+              raise SystemExit('Homepage still contains a Yoni dependency')
           if '/music/' in s or '/ebooks/' in s or '/profile/' in s or '/auth.html' in s:
               raise SystemExit('Homepage still contains a retired product/account route')
-          home.write_text(s)
 
-          # 2) Active post-build shell: do not re-inject parked/retired surfaces.
+          # Active post-build shell must not re-inject parked/retired surfaces.
           shell = repo / 'scripts' / 'post-build-fmb-unified-design.mjs'
           s = shell.read_text()
           s = re.sub(r'\n\s*<a class="fmb-shell-yoni" href="https://yoni\.francinemariebautista\.com/">Open Yoni</a>', '', s)
@@ -58,20 +50,22 @@ jobs:
               raise SystemExit('Active post-build shell still injects retired product routes')
           shell.write_text(s)
 
-          # 3) Homepage-linked participation page: remove retired product wording.
+          # Homepage-linked participation page must not advertise retired products.
           involved = site / 'get-involved' / 'index.html'
-          s = involved.read_text()
-          s = s.replace('language preservation, books, music, community access, or a defined public project', 'language preservation, public resources, community access, or a defined public project')
+          s = involved.read_text().replace(
+              'language preservation, books, music, community access, or a defined public project',
+              'language preservation, public resources, community access, or a defined public project'
+          )
           involved.write_text(s)
 
-          # 4) Remove obsolete homepage injectors only when nothing references them.
+          # Remove obsolete homepage injectors only when nothing else references them.
           legacy = [
               repo / 'scripts' / 'post-build-fmb-approved-dashboard.mjs',
               repo / 'scripts' / 'post-build-fmb-approved-launch.mjs',
           ]
           searchable = []
           for f in repo.rglob('*'):
-              if not f.is_file() or '.git' in f.parts or f in legacy:
+              if not f.is_file() or '.git' in f.parts or f in legacy or f == me:
                   continue
               if f.suffix.lower() not in {'.mjs','.js','.json','.yml','.yaml','.md','.html'}:
                   continue
@@ -87,15 +81,13 @@ jobs:
                   raise SystemExit(f'Will not delete referenced legacy injector {target.name}: {refs}')
               target.unlink()
 
-          # Temporary workflow must not remain in the clean repository.
-          me = repo / '.github' / 'workflows' / 'clean-homepage-dependencies.yml'
           if me.exists():
               me.unlink()
           PY
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- apps/withlovefmb/index.html scripts/post-build-fmb-unified-design.mjs apps/withlovefmb/get-involved/index.html scripts/post-build-fmb-approved-dashboard.mjs scripts/post-build-fmb-approved-launch.mjs .github/workflows/clean-homepage-dependencies.yml
+          git add -- scripts/post-build-fmb-unified-design.mjs apps/withlovefmb/get-involved/index.html scripts/post-build-fmb-approved-dashboard.mjs scripts/post-build-fmb-approved-launch.mjs .github/workflows/clean-homepage-dependencies.yml
           git diff --cached --stat
-          git commit -m "Remove retired homepage dependencies"
+          git commit -m "Remove hidden retired homepage injectors"
           git push origin HEAD:cleanup/fmb-ecosystem-hygiene-20260820
