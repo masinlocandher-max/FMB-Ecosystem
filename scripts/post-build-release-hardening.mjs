@@ -34,9 +34,7 @@ function makeImageLazy(tag) {
 }
 
 function hardenHomepageImages(html) {
-  return html
-    .replace(/<img\b[^>]*src=["']\/assets\/images\/yoni\/yoni-hero\.webp["'][^>]*>/gi, makeImageLazy)
-    .replace(/<img\b(?=[^>]*id=["']homeFounderImage["'])[^>]*>/gi, makeImageLazy);
+  return html.replace(/<img\b(?=[^>]*id=["']homeFounderImage["'])[^>]*>/gi, makeImageLazy);
 }
 
 function addNewsMobileDock(html) {
@@ -86,15 +84,12 @@ for (const required of ['/privacy/', '/terms/', '/data-deletion/']) {
   if (!home.includes(`href="${required}"`)) throw new Error(`Homepage legal navigation is missing ${required}`);
 }
 if (/body\{visibility:hidden\}/i.test(home)) throw new Error('Homepage still depends on a JavaScript-only body visibility reveal.');
-for (const pattern of [
-  /<img\b(?=[^>]*src=["']\/assets\/images\/yoni\/yoni-hero\.webp["'])(?=[^>]*loading=["']lazy["'])(?=[^>]*fetchpriority=["']low["'])[^>]*>/i,
-  /<img\b(?=[^>]*id=["']homeFounderImage["'])(?=[^>]*loading=["']lazy["'])(?=[^>]*fetchpriority=["']low["'])[^>]*>/i,
-]) {
-  if (!pattern.test(home)) throw new Error('Homepage below-fold imagery is not fully protected by lazy loading.');
-}
+const founderImage = /<img\b(?=[^>]*id=["']homeFounderImage["'])(?=[^>]*loading=["']lazy["'])(?=[^>]*fetchpriority=["']low["'])[^>]*>/i;
+if (!founderImage.test(home)) throw new Error('Homepage founder image is not protected by lazy loading.');
+
 const news = await readFile(path.join(root, 'news/index.html'), 'utf8');
 if (!news.includes('class="nc-mobile-dock"') || (news.match(/class="nc-mobile-dock"/g) || []).length !== 1 || !news.includes('data-fmb-news-mobile-dock')) {
   throw new Error('FMB News must have one visible, styled mobile newsroom dock.');
 }
 
-console.log(`Release hardening updated ${changed} HTML file(s): legal navigation is current, below-fold homepage artwork is lazy-loaded, and FMB News has collision-safe mobile navigation.`);
+console.log(`Release hardening updated ${changed} HTML file(s): legal navigation is current, retained below-fold homepage imagery is lazy-loaded, and FMB News has collision-safe mobile navigation.`);
