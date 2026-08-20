@@ -1,11 +1,16 @@
 name: Prebuilt production deploy
 
-# Manual or main-only fallback for the audited FMB ecosystem production release.
-# Production release trigger: FMB Brief, 20 August 2026.
+# Main-branch fallback for the audited FMB ecosystem production release.
+# Keep production in sync when Vercel's Git integration cancels or skips rapid News updates.
 on:
   push:
     branches: [main]
     paths:
+      - 'apps/withlovefmb/**'
+      - 'scripts/pipeline/**'
+      - 'scripts/post-build-fmb*.mjs'
+      - 'package.json'
+      - 'package-lock.json'
       - '.github/workflows/prebuilt-production-deploy.yml'
   workflow_dispatch:
 
@@ -32,6 +37,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: npm
       - name: Verify deployment credentials are present
         shell: bash
         run: |
@@ -40,7 +46,7 @@ jobs:
           test -n "$VERCEL_PROJECT_ID"
           test -n "$VERCEL_TOKEN"
       - name: Install dependencies
-        run: npm install --ignore-scripts
+        run: npm ci --ignore-scripts
       - name: Link production project
         run: npx --yes vercel@56.5.0 pull --yes --environment=production --token="$VERCEL_TOKEN"
       - name: Build audited production output locally
