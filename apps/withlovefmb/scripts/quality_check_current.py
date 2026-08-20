@@ -21,8 +21,6 @@ CRITICAL_HTML = (
     "aboutfmb/index.html",
     "news/index.html",
     "app/index.html",
-    "music/index.html",
-    "ebooks/index.html",
     "fmbandco/index.html",
     "gethelp/index.html",
     "profile/index.html",
