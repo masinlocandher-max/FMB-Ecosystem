@@ -44,15 +44,12 @@ async function assertLocalImagesExist(html, name) {
 }
 
 const canonicalLanding = await readFile(path.join(newsRoot, 'index.html'), 'utf8');
-const aliasLanding = await readFile(path.join(dist, 'fmbnews', 'index.html'), 'utf8');
 const archive = await readFile(path.join(morningRoot, 'index.html'), 'utf8');
 
-for (const [html, name] of [[canonicalLanding, 'news/index.html'], [aliasLanding, 'fmbnews/index.html']]) {
-  if (!html.includes('fmb-news-clean') || !html.includes('fmb-news-landing')) fatal(`${name} is not using the clean newsroom system`);
-  if (!html.includes('/news/morning-special/') || !html.includes('/news/archive/') || !html.includes('/news/about/')) fatal(`${name} is missing newsroom navigation`);
-  if (!genuineAttachedImage(html)) fatal(`${name} exposes no genuine image-backed report`);
-  await assertLocalImagesExist(html, name);
-}
+if (!canonicalLanding.includes('fmb-news-clean') || !canonicalLanding.includes('fmb-news-landing')) fatal('news/index.html is not using the clean newsroom system');
+if (!canonicalLanding.includes('/news/morning-special/') || !canonicalLanding.includes('/news/archive/') || !canonicalLanding.includes('/news/about/')) fatal('news/index.html is missing newsroom navigation');
+if (!genuineAttachedImage(canonicalLanding)) fatal('news/index.html exposes no genuine image-backed report');
+await assertLocalImagesExist(canonicalLanding, 'news/index.html');
 
 if (!archive.includes('Today &amp; Archive') || !archive.includes('one continuous magazine-style article')) fatal('Morning Special archive is missing its complete-edition explanation');
 
@@ -95,7 +92,10 @@ for (const date of editionDates) {
   totalChapters += chapters;
 }
 
-const about = await readFile(path.join(dist, 'fmbnews', 'about', 'index.html'), 'utf8');
-for (const marker of ['Our mission', 'Our vision', 'Evidence first', 'Context always']) if (!about.includes(marker)) fatal(`fmbnews/about/index.html is missing ${marker}`);
+const about = await readFile(path.join(newsRoot, 'about', 'index.html'), 'utf8');
+for (const marker of ['Our mission', 'Our vision', 'Sources remain visible', 'Facts and claims are kept distinct']) {
+  if (!about.includes(marker)) fatal(`news/about/index.html is missing ${marker}`);
+}
+if (!about.includes(`rel="canonical" href="${origin}/news/about/"`)) fatal('news/about/index.html has the wrong canonical URL');
 
 console.log(`FMB News audit passed ${editionDates.length} complete Morning Special editions from ${editionDates.at(-1)} through ${newest}, covering ${totalChapters} sourced chapters with local credited imagery.`);

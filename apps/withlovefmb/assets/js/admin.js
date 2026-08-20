@@ -4,9 +4,7 @@
   const $$=selector=>document.querySelectorAll(selector);
   let client=null;
   let user=null;
-  let members=[];
   let contentItems=[];
-  let musicItems=[];
   let currentRole='';
   const staffPanels=new Set(['overviewPanel','workQueuePanel','evidencePanel','automationPanel']);
 
@@ -61,61 +59,7 @@
     return error?0:count||0;
   }
 
-  async function loadOverview(){
-    const monthStart=new Date();monthStart.setUTCDate(1);monthStart.setUTCHours(0,0,0,0);
-    const [total,recent,published,pending,newMessages]=await Promise.all([
-      count('profiles'),
-      count('profiles',[['gte','joined_at',monthStart.toISOString()]]),
-      count('content_items',[['eq','status','published']]),
-      count('freedom_wall_posts',[['eq','status','pending']]),
-      count('contact_messages',[['eq','status','new']])
-    ]);
-    $('#totalMembers').textContent=String(total);
-    $('#recentMembers').textContent=String(recent);
-    $('#publishedContent').textContent=String(published);
-    $('#pendingPosts').textContent=String(pending);
-    $('#newMessages').textContent=String(newMessages);
-
-    const {data:registrations}=await client.from('profiles').select('full_name,username,joined_at,status').order('joined_at',{ascending:false}).limit(8);
-    $('#recentRegistrationList').innerHTML=registrations?.length?registrations.map(item=>`<article class="entry"><strong>${window.FMB.escapeHtml(item.full_name)}</strong><p>@${window.FMB.escapeHtml(item.username)} · ${window.FMB.escapeHtml(item.status)}</p><time>${formatDate(item.joined_at)}</time></article>`).join(''):'<div class="empty">No member registrations yet.</div>';
-
-    const {data:activity}=await client.from('admin_activity').select('action,entity_type,created_at').order('created_at',{ascending:false}).limit(8);
-    $('#activityList').innerHTML=activity?.length?activity.map(item=>`<article class="entry"><strong>${window.FMB.escapeHtml(item.action.replaceAll('_',' '))}</strong><p>${window.FMB.escapeHtml(item.entity_type)}</p><time>${formatDate(item.created_at)}</time></article>`).join(''):'<div class="empty">No administrative activity recorded yet.</div>';
-  }
-
-  $('#refreshOverview').addEventListener('click',async()=>{
-    const button=$('#refreshOverview');setLoading(button,true,'Refreshing…');
-    await Promise.all([loadOverview(),loadMembers(),loadModeration(),loadMessages()]);
-    setLoading(button,false);setStatus('Dashboard information was refreshed.','success');
-  });
-
-  async function loadMembers(){
-    const {data,error}=await client.from('profiles').select('id,full_name,username,email,role,status,joined_at').order('joined_at',{ascending:false}).limit(500);
-    if(error){setStatus('Members could not be loaded.','error');return}
-    members=data||[];renderMembers();
-  }
-  function renderMembers(){
-    const search=$('#memberSearch').value.trim().toLowerCase();
-    const role=$('#memberRoleFilter').value;
-    const statusFilter=$('#memberStatusFilter').value;
-    const filtered=members.filter(member=>{
-      const haystack=`${member.full_name} ${member.username} ${member.email}`.toLowerCase();
-      return (!search||haystack.includes(search))&&(!role||member.role===role)&&(!statusFilter||member.status===statusFilter);
-    });
-    $('#memberRows').innerHTML=filtered.length?filtered.map(member=>`<tr data-member-id="${window.FMB.escapeHtml(member.id)}"><td><strong>${window.FMB.escapeHtml(member.full_name)}</strong><br><small>@${window.FMB.escapeHtml(member.username)}</small></td><td>${window.FMB.escapeHtml(member.email||'')}</td><td>${formatDate(member.joined_at)}</td><td><select class="row-role" aria-label="Role for ${window.FMB.escapeHtml(member.full_name)}"><option value="member"${member.role==='member'?' selected':''}>Member</option><option value="moderator"${member.role==='moderator'?' selected':''}>Moderator</option><option value="admin"${member.role==='admin'?' selected':''}>Admin</option></select></td><td><select class="row-status" aria-label="Status for ${window.FMB.escapeHtml(member.full_name)}"><option value="active"${member.status==='active'?' selected':''}>Active</option><option value="suspended"${member.status==='suspended'?' selected':''}>Suspended</option></select></td><td><div class="table-actions"><button class="save-member" type="button">Save</button></div></td></tr>`).join(''):'<tr><td colspan="6">No members match these filters.</td></tr>';
-    $$('.save-member').forEach(button=>button.addEventListener('click',async()=>{
-      const row=button.closest('[data-member-id]');
-      const roleValue=row.querySelector('.row-role').value;
-      const statusValue=row.querySelector('.row-status').value;
-      setLoading(button,true,'Saving…');
-      const {error}=await client.rpc('admin_update_member',{p_user_id:row.dataset.memberId,p_role:roleValue,p_status:statusValue});
-      setLoading(button,false);
-      if(error){setStatus(error.message||'The member could not be updated.','error');return}
-      setStatus('Member access was updated.','success');await loadMembers();await loadOverview();
-    }));
-  }
-  ['memberSearch','memberRoleFilter','memberStatusFilter'].forEach(id=>document.getElementById(id).addEventListener('input',renderMembers));
-  $('#refreshMembers').addEventListener('click',loadMembers);
+  async function loadOverview(){}
 
   async function loadModeration(){
     const value=$('#moderationFilter').value;
@@ -181,42 +125,6 @@
     await logActivity('content_deleted','content_item',id);resetContentForm();loadContent();loadOverview();setStatus('Content was deleted.','success');
   });
 
-  function resetMusicForm(){
-    $('#musicForm').reset();$('#musicId').value='';$('#musicArtist').value='FMB';$('#musicCategory').value='Made by FMB';$('#musicStatus').value='draft';$('#musicOrder').value='0';$('#deleteMusic').disabled=true;
-    $$('#musicList button').forEach(button=>button.classList.remove('active'));
-  }
-  async function loadMusic(){
-    const {data,error}=await client.from('music_entries').select('*').order('sort_order').order('created_at',{ascending:false}).limit(500);
-    if(error){$('#musicList').innerHTML='<div class="empty">Music could not be loaded.</div>';return}
-    musicItems=data||[];
-    $('#musicList').innerHTML=musicItems.length?musicItems.map(item=>`<button type="button" data-music-id="${window.FMB.escapeHtml(item.id)}"><strong>${window.FMB.escapeHtml(item.title)}</strong><br><small>${window.FMB.escapeHtml(item.category)} · ${window.FMB.escapeHtml(item.status)}</small></button>`).join(''):'<div class="empty">No music entries yet.</div>';
-    $$('[data-music-id]').forEach(button=>button.addEventListener('click',()=>editMusic(button.dataset.musicId)));
-  }
-  function editMusic(id){
-    const item=musicItems.find(entry=>entry.id===id);if(!item)return;
-    $('#musicId').value=item.id;$('#musicTitle').value=item.title;$('#musicArtist').value=item.artist;$('#musicDescription').value=item.description||'';$('#musicCategory').value=item.category;$('#musicAudio').value=item.audio_url;$('#musicCover').value=item.cover_url||'';$('#musicStatus').value=item.status;$('#musicOrder').value=String(item.sort_order||0);$('#deleteMusic').disabled=false;
-    $$('#musicList button').forEach(button=>button.classList.toggle('active',button.dataset.musicId===id));
-  }
-  $('#musicForm').addEventListener('submit',async event=>{
-    event.preventDefault();
-    const id=$('#musicId').value,title=window.FMB.cleanText($('#musicTitle').value,180),artist=window.FMB.cleanText($('#musicArtist').value,120),audioUrl=$('#musicAudio').value.trim();
-    if(!title||!artist||!audioUrl){setStatus('Music needs a title, artist, and public audio URL.','error');return}
-    const statusValue=$('#musicStatus').value;
-    const payload={title,artist,description:window.FMB.cleanText($('#musicDescription').value,1000)||null,category:window.FMB.cleanText($('#musicCategory').value,100)||'Made by FMB',audio_url:audioUrl,cover_url:$('#musicCover').value.trim()||null,status:statusValue,sort_order:Number($('#musicOrder').value)||0,updated_by:user.id,published_at:statusValue==='published'?new Date().toISOString():null};
-    const button=$('#saveMusic');setLoading(button,true,'Saving…');
-    const result=id?await client.from('music_entries').update(payload).eq('id',id).select().single():await client.from('music_entries').insert({...payload,created_by:user.id}).select().single();
-    setLoading(button,false);
-    if(result.error){setStatus('Music could not be saved.','error');return}
-    await logActivity(id?'music_updated':'music_created','music_entry',result.data.id,{status:statusValue});setStatus('Music was saved.','success');await loadMusic();editMusic(result.data.id);
-  });
-  $('#newMusic').addEventListener('click',resetMusicForm);
-  $('#deleteMusic').addEventListener('click',async()=>{
-    const id=$('#musicId').value;if(!id||!confirm('Delete this music entry permanently?'))return;
-    const {error}=await client.from('music_entries').delete().eq('id',id);
-    if(error){setStatus('Music could not be deleted.','error');return}
-    await logActivity('music_deleted','music_entry',id);resetMusicForm();loadMusic();setStatus('Music was deleted.','success');
-  });
-
   async function loadMedia(){
     const {data,error}=await client.from('media_assets').select('*').order('created_at',{ascending:false}).limit(500);
     if(error){$('#mediaRows').innerHTML='<tr><td colspan="5">Media could not be loaded.</td></tr>';return}
@@ -268,14 +176,14 @@
   $('#messageFilter').addEventListener('change',loadMessages);
   $('#refreshMessages').addEventListener('click',loadMessages);
 
-  $('#adminSignOut').addEventListener('click',async()=>{if(client)await client.auth.signOut();location.replace('auth.html#signin')});
+  $('#adminSignOut').addEventListener('click',async()=>{if(client)await client.auth.signOut();location.replace('/admin-login.html')});
 
   async function init(){
     const localPreview=/^(localhost|127\.0\.0\.1)$/i.test(location.hostname)&&new URLSearchParams(location.search).get('preview')==='1';
     if(localPreview){
       currentRole='admin';
       $('#adminIdentity').textContent='Local design preview · live member data is paused';
-      ['membersCommunityPanel','membersPanel','moderationPanel','contentPanel','musicPanel','mediaPanel','messagesPanel'].forEach(id=>{
+      ['moderationPanel','contentPanel','mediaPanel','messagesPanel'].forEach(id=>{
         const panel=document.getElementById(id);if(!panel)return;
         panel.querySelectorAll('button,input,textarea,select').forEach(control=>control.disabled=true);
       });
@@ -290,14 +198,14 @@
     }
     client=await resolveClient();
     const {data,error}=await client.auth.getSession();
-    if(error||!data.session){location.replace('auth.html?next=%2Fadmin.html#signin');return}
+    if(error||!data.session){location.replace('/admin-login.html');return}
     const {data:{user:verifiedUser},error:userError}=await client.auth.getUser();
-    if(userError||!verifiedUser){location.replace('auth.html?next=%2Fadmin.html#signin');return}
+    if(userError||!verifiedUser){location.replace('/admin-login.html');return}
     user=verifiedUser;
     const {data:profile,error:profileError}=await client.from('profiles').select('full_name,username,role,status').eq('id',user.id).maybeSingle();
     if(profileError||!profile||!['admin','moderator'].includes(profile.role)||profile.status!=='active'){
       setStatus('Active FMB operations access is required.','error');
-      setTimeout(()=>location.replace('/profile/'),900);
+      setTimeout(()=>location.replace('/admin-login.html'),900);
       return;
     }
     currentRole=profile.role;
@@ -305,7 +213,7 @@
     $('#adminIdentity').textContent=`Signed in as ${profile.full_name} · ${currentRole==='admin'?'administrator':'operations staff'}`;
     document.body.classList.add('orchestrator-ready');
     window.dispatchEvent(new CustomEvent('fmb:admin-ready',{detail:{client,user,profile,preview:false}}));
-    if(currentRole==='admin')await Promise.all([loadOverview(),loadMembers(),loadModeration(),loadContent(),loadMusic(),loadMedia(),loadMessages()]);
+    if(currentRole==='admin')await Promise.all([loadOverview(),loadModeration(),loadContent(),loadMedia(),loadMessages()]);
     const initial=location.hash.slice(1);if(document.getElementById(initial)?.classList.contains('admin-panel'))showPanel(initial);else showPanel(currentRole==='moderator'?'workQueuePanel':'overviewPanel');
   }
   init();

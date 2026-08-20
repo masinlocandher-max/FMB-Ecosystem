@@ -43,7 +43,9 @@ jobs:
           node-version: 20
       - run: npm run build:fmb
       - run: test -f apps/withlovefmb/dist/index.html
-      - run: test -f apps/withlovefmb/dist/app/index.html
+      - run: test ! -e apps/withlovefmb/dist/app/index.html
+      - run: test ! -e apps/withlovefmb/dist/music/index.html
+      - run: test ! -e apps/withlovefmb/dist/ebooks/index.html
       - run: npm run build:senz
       - run: test -f apps/senz/dist/index.html
 

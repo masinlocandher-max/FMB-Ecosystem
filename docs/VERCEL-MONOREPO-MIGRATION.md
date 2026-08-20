@@ -1,39 +1,20 @@
 # Vercel Monorepo Migration
 
-The code remains in one GitHub repository. The migration changes only the Vercel deployment boundaries.
+The repository remains the GitHub source home for the active FMB, SENZ, and Cognita workspaces. Deployment boundaries should remain independent even when a legacy Vercel project name is still in use.
 
-Do not move all domains at once. Verify one application project at a time and keep the current combined deployment available for rollback until the final step.
+## Active workspaces
 
-## Automated project setup
+- `apps/withlovefmb` → FMB public website and ecosystem gateway
+- `apps/senz` → SENZ
+- `apps/cognita` → Cognita
 
-The repository includes an idempotent project setup tool:
+The current FMB Vercel project may still be named `fmb-public-and-yoni`; treat that as a legacy infrastructure identifier, not a statement that Yoni source remains in this workspace.
 
-```bash
-npm run vercel:plan
-VERCEL_TOKEN=... npm run vercel:verify
-VERCEL_TOKEN=... npm run vercel:bootstrap
-```
+Yoni is independently deployed at `https://yoni.francinemariebautista.com/`. The compatibility host `app.francinemariebautista.com` may redirect there, but the FMB workspace must not rewrite Yoni traffic into a local `/app/` implementation.
 
-The setup creates or verifies these Vercel projects in the connected `senz` team:
+FMB Music and FMB eBooks are retired and must not appear in deployment verification, routing, manifests, service-worker caches, or public navigation.
 
-- `fmb-public-and-yoni` with Root Directory `apps/withlovefmb`
-- `senz` with Root Directory `apps/senz`
-- `cognita` with Root Directory `apps/cognita`
-
-It connects each project to `masinlocandher-max/FMB-Ecosystem`, sets the application build and output directories, and enables affected-project deployments.
-
-The automation intentionally does **not**:
-
-- move or attach production domains
-- copy environment variables or Supabase credentials
-- delete or modify the legacy `withlovefmb` Vercel project
-- silently rewrite an existing project with conflicting settings
-
-A manual GitHub Actions workflow is also available at **Actions > Vercel Project Bootstrap**. Add a repository secret named `VERCEL_TOKEN`, select `apply`, and run it. The Vercel token is used only by GitHub Actions and must never be committed to the repository.
-
-## 1. Merge and verify the monorepo branch
-
-Run:
+## Verification commands
 
 ```bash
 npm run check
@@ -42,97 +23,50 @@ npm run build:senz
 cd apps/cognita && npm ci && npm run build
 ```
 
-The root `npm run build` remains the legacy combined build during migration.
+The root `npm run build` remains the legacy combined build until the active application-root Vercel projects are verified and the combined deployment can be retired safely.
 
-## 2. Create the FMB and Yoni Vercel project
+## FMB project
 
-Connect the existing GitHub repository and configure:
+Configure:
 
-- Project Name: `fmb-public-and-yoni`
 - Root Directory: `apps/withlovefmb`
 - Build Command: `npm run build`
 - Output Directory: `dist`
-- Domains:
-  - `www.francinemariebautista.com`
-  - `francinemariebautista.com`
-  - `yoni.francinemariebautista.com`
-  - `app.francinemariebautista.com`
+- Primary domains: `www.francinemariebautista.com`, `francinemariebautista.com`
+- Compatibility redirect host: `app.francinemariebautista.com` → `https://yoni.francinemariebautista.com/`
 
-Copy only environment variables that belong to the FMB public/member system. Do not copy SENZ or Cognita service keys.
+Before a production domain change, verify:
 
-Before moving the domains, verify the Vercel preview URL for:
+- homepage and primary navigation
+- About FMB, News, Projects, With Love FMB, Get Help, FMB&CO., Mabayani, profile/admin routes where applicable
+- external Yoni links and the app-subdomain redirect
+- canonical URLs, sitemap, robots.txt, manifest, service worker, and social preview assets
+- no retired eBook or Music routes or runtime requests
 
-- Homepage and principal navigation
-- News, projects, eBooks, music, Get Help, and FMB&Co.
-- Yoni sign-up, sign-in, password reset, legal pages, and app assets
-- Canonical URLs, sitemap, robots.txt, and social preview images
+## SENZ project
 
-## 3. Create the SENZ Vercel project
+Configure `apps/senz` as its own Vercel project and keep SENZ environment variables and Supabase credentials isolated from FMB and Cognita.
 
-Connect the same GitHub repository and configure:
+Verify public pages, health/API routes, inquiry submission, authorized inquiry retrieval, and domain redirects before moving production domains.
 
-- Project Name: `senz`
-- Root Directory: `apps/senz`
-- Build Command: `npm run build`
-- Output Directory: `dist`
-- Domains:
-  - `www.senzpr.com`
-  - `senzpr.com`
+## Cognita project
 
-Configure only SENZ variables, including the SENZ-specific values for:
+Configure `apps/cognita` as its own Vercel project and keep Cognita environment variables isolated. Verify important client-side routes through direct loading and browser refreshes.
 
-- `SITE_ORIGIN`
-- `ADMIN_TOKEN`
-- `SUPABASE_URL`
-- `SUPABASE_SERVICE_ROLE_KEY`
+## Domain moves
 
-The service-role key must never be added to frontend JavaScript, GitHub files, or another Vercel project.
+Move one application boundary at a time:
 
-Verify:
+1. Confirm the new preview is healthy.
+2. Move only that application’s domains.
+3. Verify HTTPS, redirects, canonical URLs, forms, authentication, and assets.
+4. Keep rollback available until the new boundary is proven stable.
 
-- Public pages and assets
-- `/api/health`
-- `/api/agents`
-- `/api/agents/recommend`
-- Inquiry submission to the SENZ Supabase project
-- Authorized inquiry retrieval
-- Redirect from `senzpr.com` to `www.senzpr.com`
+## Retiring the combined deployment
 
-## 4. Create the Cognita Vercel project
+Only after all active application boundaries are verified:
 
-Connect the same GitHub repository and configure:
-
-- Project Name: `cognita`
-- Root Directory: `apps/cognita`
-- Build Command: `npm run build`
-- Output Directory: `dist`
-- Domains:
-  - `www.thecognitainstitute.com`
-  - `thecognitainstitute.com`
-
-Copy only Cognita environment variables. Cognita must not receive SENZ or FMB authentication and database credentials.
-
-Verify direct loading and browser refreshes for every important Cognita route because the app uses client-side routing.
-
-## 5. Move domains one application at a time
-
-For each application:
-
-1. Confirm the new project preview is healthy.
-2. Remove the domain from the legacy Vercel project.
-3. Add it to the new app-root project.
-4. Verify HTTPS, redirects, canonical URLs, forms, login, and assets.
-5. Keep the legacy project available until the next application is proven stable.
-
-## 6. Retire the combined deployment
-
-Only after all domains are verified:
-
-- Remove the root `vercel.json` in a separate pull request.
-- Change the root `build` script from `build:legacy` to `build:all` or make the root non-deployable.
-- Remove obsolete combined-build scripts only after confirming no application still depends on them.
-- Keep GitHub as the single code repository.
-
-## Rollback
-
-If an application fails after its domain move, detach that domain from the new project and restore it to the legacy project. Do not change the other application projects during that rollback.
+- remove the root `vercel.json` in a separate controlled change
+- change the root build away from `build:legacy`
+- remove obsolete combined-build scripts only after confirming no active deployment depends on them
+- keep GitHub as the source-control home

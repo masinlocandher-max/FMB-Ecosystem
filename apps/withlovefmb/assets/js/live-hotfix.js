@@ -1,30 +1,16 @@
 (function(){
   'use strict';
 
-  /* Compatibility markers kept for the repository's accessibility checks: focusableItems, visualViewport. */
-  const release='20260721-community-hub-nav-v1';
-  const host=location.hostname.toLowerCase();
-  const previewMode=new URLSearchParams(location.search).get('experience');
-  const isPreviewHost=/\.vercel\.app$/i.test(host)||/^(localhost|127\.0\.0\.1)$/i.test(host);
-  const isAppHost=host==='yoni.francinemariebautista.com'||host==='mobile.francinemariebautista.com'||(isPreviewHost&&previewMode==='app');
-
+  const release='20260820-repo-hygiene-v1';
   const MAIN_MENU=[
     {href:'/',label:'Home',description:'Return to the official FMB bulletin and latest announcements.'},
     {href:'/aboutfmb/',label:'About FMB',description:'Meet Francine Marie Bautista and explore her work and public mission.'},
     {href:'/news/',label:'News',description:'Read verified updates, context, reporting, and reflection.'},
-    {href:'/projects/',label:'Projects',description:'Explore Yoni, Mabayani, and With Love, FMB.'},
-    {href:'/ebooks/',label:'Reading',description:'Open the FMB reading library.'},
-    {href:'/music/',label:'Music',description:'Open the FMB music library.'},
+    {href:'/projects/',label:'Projects',description:'Explore current FMB projects and public destinations.'},
     {href:'/withlovefmb/#volunteer',label:'Get Involved',description:'Find current public ways to participate.'},
     {href:'/gethelp/',label:'Get Help',description:'Open the public support directory.'},
     {href:'/fmbandco/',label:'FMB&CO.',description:'Meet SENZ and Cognita within FMB&CO.'}
   ];
-
-  /* The dedicated Yoni and mobile application hosts open the focused app. */
-  if(isAppHost&&!location.pathname.startsWith('/app/')){
-    location.replace(`/app/${location.search}${location.hash}`);
-    return;
-  }
 
   function loadAsset(tag,attrs){
     const key=attrs.href||attrs.src;
@@ -46,7 +32,7 @@
     const nav=document.getElementById('navLinks');
     if(nav){
       nav.setAttribute('aria-label','Main website navigation');
-      nav.innerHTML=`<div class="nav-menu-intro"><strong>Official FMB Bulletin</strong><span>Each destination has one clear purpose, from public reporting and projects to reading, music, participation, and help.</span></div>${MAIN_MENU.map(item=>`<a class="nav-menu-link" href="${item.href}"${menuItemIsCurrent(item)?' aria-current="page"':''}><span class="nav-link-label">${item.label}</span><small>${item.description}</small></a>`).join('')}<div class="nav-mobile-actions"><a class="pill secondary nav-signin-link" href="https://yoni.francinemariebautista.com/app/?auth=signin">Sign in to Yoni</a><a class="pill nav-install-link" href="https://yoni.francinemariebautista.com/app/install/">Install Yoni</a></div>`;
+      nav.innerHTML=`<div class="nav-menu-intro"><strong>Official FMB Bulletin</strong><span>Each destination has one clear purpose, from public reporting and projects to participation and help.</span></div>${MAIN_MENU.map(item=>`<a class="nav-menu-link" href="${item.href}"${menuItemIsCurrent(item)?' aria-current="page"':''}><span class="nav-link-label">${item.label}</span><small>${item.description}</small></a>`).join('')}<div class="nav-mobile-actions"><a class="pill secondary nav-signin-link" href="https://yoni.francinemariebautista.com/?auth=signin">Sign in to Yoni</a><a class="pill nav-install-link" href="https://yoni.francinemariebautista.com/">Open Yoni</a></div>`;
     }
 
     document.querySelectorAll('.fmb-site-links').forEach(gateway=>{
@@ -132,21 +118,16 @@
   }
 
   function boot(){
-    if(isAppHost)return;
-
     normalizeWebsiteChrome();
     installMainMenu();
-    loadAsset('link',{rel:'stylesheet',href:`/assets/css/reading-library.css?v=${release}`});
     loadAsset('link',{rel:'stylesheet',href:`/assets/css/apple-mobile.css?v=${release}`});
     loadAsset('link',{rel:'stylesheet',href:`/assets/css/experience-refresh.css?v=${release}`});
-    loadAsset('script',{src:`/assets/js/reading-library.js?v=${release}`,defer:'defer'});
     loadAsset('script',{src:`/assets/js/yoni-home-promo.js?v=${release}`,defer:'defer'});
 
     replacePartnerImages();
     keepBannerMoving();
     installImageFallbacks();
 
-    /* Re-apply after site.js and channel scripts finish late DOM work. */
     requestAnimationFrame(()=>{
       normalizeWebsiteChrome();
       installMainMenu();
@@ -161,8 +142,8 @@
     },650);
   }
 
-  window.addEventListener('pageshow',()=>{if(!isAppHost){normalizeWebsiteChrome();installMainMenu();keepBannerMoving()}});
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!isAppHost)keepBannerMoving()});
+  window.addEventListener('pageshow',()=>{normalizeWebsiteChrome();installMainMenu();keepBannerMoving()});
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)keepBannerMoving()});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});
   else boot();
 })();

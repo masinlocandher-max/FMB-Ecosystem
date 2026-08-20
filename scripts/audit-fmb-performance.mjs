@@ -2,7 +2,8 @@ import { readFile, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
-const pages=['index.html','aboutfmb/index.html','withlovefmb/index.html','communityengagements/index.html','gethelp/index.html','news/index.html','music/index.html','ebooks/index.html','fmbandco/index.html','fmbandco/senz/index.html','fmbandco/cognita/index.html','app/install/index.html'];
+// Audit only active destinations. Retired embedded Yoni, Music, and eBook routes must remain absent.
+const pages=['index.html','aboutfmb/index.html','withlovefmb/index.html','communityengagements/index.html','gethelp/index.html','news/index.html','fmbandco/index.html','fmbandco/senz/index.html','fmbandco/cognita/index.html'];
 const errors=[];
 const results=[];
 const htmlBudget=260_000;

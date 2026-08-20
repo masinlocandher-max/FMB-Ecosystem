@@ -114,7 +114,7 @@
 
   installYoniRegistrationGuard();
 
-  const YONI_ROOT='/app/assets/yoni/';
+  const YONI_ROOT='/assets/images/yoni/';
   const officialHero=YONI_ROOT+'yoni-hero.webp';
   const officialBackground=YONI_ROOT+'yoni-theme-background.webp';
   const officialAppIcon=YONI_ROOT+'yoni-app-icon-192.png';

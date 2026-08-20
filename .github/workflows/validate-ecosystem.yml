@@ -37,7 +37,10 @@ jobs:
         run: |
           set -euo pipefail
           test -f apps/withlovefmb/dist/index.html
-          test -f apps/withlovefmb/dist/app/index.html
+          test ! -e apps/withlovefmb/dist/app/index.html
+          test ! -e apps/withlovefmb/dist/music/index.html
+          test ! -e apps/withlovefmb/dist/ebooks/index.html
+          test ! -e apps/withlovefmb/dist/profile/index.html
           test -f apps/senz/dist/index.html
       - name: Smoke test personal website output
         run: |
@@ -51,6 +54,7 @@ jobs:
           done
           grep -qi '<html' /tmp/fmb-home.html
           grep -qi 'Francine Marie Bautista\|With love, FMB' /tmp/fmb-home.html
+          ! grep -q 'https://yoni.francinemariebautista.com/' /tmp/fmb-home.html
       - name: Smoke test SENZ output
         run: |
           set -euo pipefail
@@ -128,10 +132,14 @@ jobs:
         run: |
           set -euo pipefail
           test -f dist/index.html
-          test -f dist/app/index.html
+          test ! -e dist/app/index.html
+          test ! -e dist/music/index.html
+          test ! -e dist/ebooks/index.html
+          test ! -e dist/profile/index.html
           test -f dist/_sites/senz/index.html
           test -f dist/_sites/cognita/index.html
           grep -qi 'Francine Marie Bautista\|With love, FMB' dist/index.html
+          ! grep -q 'https://yoni.francinemariebautista.com/' dist/index.html
           grep -qi 'SENZ' dist/_sites/senz/index.html
           grep -qi 'Cognita' dist/_sites/cognita/index.html
       - name: Preserve audited preview output

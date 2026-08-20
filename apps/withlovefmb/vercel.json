@@ -41,26 +41,6 @@
       "source": "/:path*",
       "has": [{"type": "host", "value": "data.francinemariebautista.com"}],
       "destination": "/admin.html"
-    },
-    {
-      "source": "/",
-      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
-      "destination": "/app/index.html"
-    },
-    {
-      "source": "/app/:path*",
-      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
-      "destination": "/app/:path*"
-    },
-    {
-      "source": "/assets/:path*",
-      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
-      "destination": "/assets/:path*"
-    },
-    {
-      "source": "/:path*",
-      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
-      "destination": "/app/index.html"
     }
   ],
   "headers": [

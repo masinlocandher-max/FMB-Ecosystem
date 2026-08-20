@@ -1,8 +1,6 @@
-import { runModules } from './run-modules.mjs';
-
-// Reproduce the shell/framing tail that historically ran inside the rasterizer.
-// No additional markup, image-priority, or personal-site mutations belong in
-// Phase 1 because this stage must remain byte-equivalent to main.
-await runModules('apply:shared-shell', [
-  './apply-newsroom-shell-legacy.mjs',
-]);
+// Apply the retained FMB News framing operations directly. Keeping the order
+// explicit avoids the retired generic module runner and hidden serial ledgers.
+await import('../post-build-fmb-news-morning-special-catchup-aug13-16.mjs');
+await import('../post-build-fmb-news-morning-special-edition-aug17.mjs');
+await import('../post-build-fmbnews-newsroom-structure.mjs');
+await import('./align-morning-special-framing.mjs');

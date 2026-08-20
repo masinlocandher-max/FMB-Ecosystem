@@ -1,8 +1,4 @@
-import { runModules } from './run-modules.mjs';
-
-// The legacy root ledger ended with exactly these two final gates. Earlier
-// checks and audits stay at their original positions in build/generation.
-await runModules('verify:dist', [
-  '../check-fmb-newsroom-final.mjs',
-  '../check-dist-links.mjs',
-]);
+// Run the final distribution gates directly. The generic module runner was
+// retired with the historical post-build ledger.
+await import('../check-fmb-newsroom-final.mjs');
+await import('../check-dist-links.mjs');

@@ -48,7 +48,6 @@ jobs:
           name: fmb-image-review-${{ github.run_id }}
           path: |
             apps/withlovefmb/assets/images
-            apps/withlovefmb/app/assets/yoni
             /tmp/fmb-ecosystem-build.log
           if-no-files-found: warn
           retention-days: 3

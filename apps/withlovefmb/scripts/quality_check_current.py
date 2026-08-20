@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Future-proof structural quality checks for the current FMB public/Yoni application.
+"""Structural quality checks for the current FMB public website.
 
-This checker deliberately validates site integrity rather than freezing specific copy,
-article slugs, image credits, or versioned stylesheet names. Editorial content and
-visual design are expected to evolve; broken structure and missing runtime assets are not.
+This checker validates active site integrity while protecting the retirement of
+embedded Yoni, FMB Music, FMB eBook, and former public member/account surfaces.
+Editorial content and visual design may evolve; active routes, runtime assets, and
+repository boundaries must remain sound.
 """
 from __future__ import annotations
 
 import json
 import re
-import sys
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlparse
@@ -20,12 +20,13 @@ CRITICAL_HTML = (
     "index.html",
     "aboutfmb/index.html",
     "news/index.html",
-    "app/index.html",
-    "music/index.html",
-    "ebooks/index.html",
+    "projects/index.html",
+    "withlovefmb/index.html",
+    "communityengagements/index.html",
     "fmbandco/index.html",
     "gethelp/index.html",
-    "profile/index.html",
+    "get-involved/index.html",
+    "work-with-fmb/index.html",
 )
 
 CRITICAL_FILES = (
@@ -33,6 +34,46 @@ CRITICAL_FILES = (
     "manifest.webmanifest",
     "assets/js/site.js",
     "assets/js/supabase-client.js",
+    "assets/js/live-hotfix.js",
+    "assets/js/fmb-unified-system.js",
+    "assets/css/fmb-unified-system.css",
+)
+
+RETIRED_PATHS = (
+    "app/index.html",
+    "app/manifest.webmanifest",
+    "app/install",
+    "music/index.html",
+    "music.html",
+    "ebooks/index.html",
+    "reading.html",
+    "profile/index.html",
+    "auth.html",
+    "member.html",
+    "api/music.js",
+    "assets/data/music-library.json",
+    "assets/js/global-music.js",
+    "assets/js/music.js",
+    "assets/js/fmb-reader-modern.js",
+    "assets/js/yoni-home-promo.js",
+    "assets/js/yoni-experience-loader.js",
+    "assets/js/yoni-native-music.js",
+    "assets/js/yoni-native-ebooks.js",
+)
+
+RETIRED_HOME_MARKERS = (
+    'href="/music/',
+    "href='/music/",
+    'href="/ebooks/',
+    "href='/ebooks/",
+    'href="/profile/',
+    "href='/profile/",
+    'href="/auth.html',
+    "href='/auth.html",
+    "yoni.francinemariebautista.com",
+    "/assets/images/yoni/",
+    "fmb-yoni-senz-ad",
+    "fmb-shell-yoni",
 )
 
 MERGE_CONFLICT_LINE = re.compile(r"(?m)^\s*(?:<<<<<<< .+|=======|>>>>>>> .+)\s*$")
@@ -87,10 +128,7 @@ def local_runtime_target(page: Path, reference: str) -> Path | None:
     parsed = urlparse(value)
     if parsed.scheme or parsed.netloc or not parsed.path:
         return None
-    if parsed.path.startswith("/"):
-        candidate = ROOT / parsed.path.lstrip("/")
-    else:
-        candidate = page.parent / parsed.path
+    candidate = ROOT / parsed.path.lstrip("/") if parsed.path.startswith("/") else page.parent / parsed.path
     try:
         resolved = candidate.resolve()
         resolved.relative_to(ROOT.resolve())
@@ -144,8 +182,7 @@ def check_html(relative: str, errors: list[str]) -> None:
         errors.append(f"{relative}: HTML parser failed: {exc}")
         return
 
-    title = "".join(parser.title_text).strip()
-    if not title:
+    if not "".join(parser.title_text).strip():
         errors.append(f"{relative}: page title is missing")
 
     seen: set[str] = set()
@@ -175,17 +212,23 @@ def check_json_file(relative: str, errors: list[str]) -> None:
 
 
 def check_security_basics(errors: list[str]) -> None:
-    config_candidates = (
-        ROOT / "assets/js/config.js",
-        ROOT / "assets/js/supabase-client.js",
-    )
-    service_role_pattern = re.compile(r"service[_-]?role|SUPABASE_SERVICE_ROLE", re.I)
-    for path in config_candidates:
+    for path in (ROOT / "assets/js/config.js", ROOT / "assets/js/supabase-client.js"):
         if not path.is_file():
             continue
         text = path.read_text(encoding="utf-8")
-        if service_role_pattern.search(text):
+        if re.search(r"service[_-]?role|SUPABASE_SERVICE_ROLE", text, re.I):
             errors.append(f"{path.relative_to(ROOT)}: public client code must not contain a service-role credential")
+
+
+def check_retired_boundaries(errors: list[str]) -> None:
+    for relative in RETIRED_PATHS:
+        if (ROOT / relative).exists():
+            errors.append(f"{relative}: retired product/account surface must remain absent")
+
+    home = (ROOT / "index.html").read_text(encoding="utf-8")
+    for marker in RETIRED_HOME_MARKERS:
+        if marker.lower() in home.lower():
+            errors.append(f"index.html: retired homepage dependency remains: {marker}")
 
 
 def main() -> int:
@@ -201,6 +244,7 @@ def main() -> int:
             check_text_file(relative, errors)
 
     check_security_basics(errors)
+    check_retired_boundaries(errors)
 
     if errors:
         print("Quality check failed:\n")
@@ -209,9 +253,9 @@ def main() -> int:
         return 1
 
     print(
-        "Quality check passed: critical routes are structurally complete, local CSS/JS "
-        "runtime references resolve, no merge-conflict blocks were found, and public "
-        "client files pass the basic secret guard."
+        "Quality check passed: active routes and runtime assets are structurally complete, "
+        "retired Yoni/Music/eBook/member surfaces remain absent from the homepage boundary, "
+        "and public client files pass the basic secret guard."
     )
     return 0
 

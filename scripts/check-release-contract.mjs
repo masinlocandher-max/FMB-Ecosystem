@@ -3,7 +3,7 @@ import path from 'node:path';
 
 const root = path.resolve(new URL('..', import.meta.url).pathname);
 const pkg = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
-const stages = ['validate:content', 'build:apps', 'generate:news', 'apply:shared-shell', 'verify:dist'];
+const stages = ['validate:content', 'build:apps', 'apply:shared-shell', 'verify:dist'];
 const expectedBuild = stages.map((stage) => `npm run ${stage}`).join(' && ');
 
 if (pkg.scripts?.build !== expectedBuild) {
@@ -19,11 +19,10 @@ if (/post-build-[^\s&]+\.mjs/.test(pkg.scripts.build)) {
 for (const relative of [
   'scripts/validate-content.mjs',
   'scripts/pipeline/build-apps.mjs',
-  'scripts/pipeline/generate-news.mjs',
   'scripts/pipeline/apply-shared-shell.mjs',
   'scripts/pipeline/verify-dist.mjs',
 ]) {
   await access(path.join(root, relative));
 }
 
-console.log(`Release contract passed: ${stages.join(' -> ')}. Root post-build ledger count: 0.`);
+console.log(`Release contract passed: ${stages.join(' -> ')}. Root historical post-build ledger count: 0.`);
