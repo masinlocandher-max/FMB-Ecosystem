@@ -5,6 +5,7 @@ const root = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.join(root, 'dist');
 const homepage = path.join(dist, 'index.html');
 const protectedPrefixes = ['app/', '_sites/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/'];
+const yoniBookPrefix = 'app/content/books/';
 const retiredRoutes = [
   '/ebooks/',
   '/music/',
@@ -62,6 +63,18 @@ function removeRetiredLinks(html) {
   return output;
 }
 
+function neutralizeYoniBookNavigation(html) {
+  return removeRetiredLinks(html).replace(
+    /<a\b([^>]*)href=["']([^"']+)["']([^>]*)>([\s\S]*?)<\/a>/gi,
+    (tag, before, href, after, inner) => href.startsWith('#') ? tag : inner,
+  );
+}
+
+function isProtected(relative) {
+  if (relative.startsWith(yoniBookPrefix)) return false;
+  return protectedPrefixes.some((prefix) => relative.startsWith(prefix));
+}
+
 async function walk(directory) {
   const files = [];
   for (const entry of await readdir(directory, { withFileTypes: true })) {
@@ -91,14 +104,18 @@ await writeFile(homepage, html, 'utf8');
 const allFiles = await walk(dist);
 for (const file of allFiles) {
   const relative = path.relative(dist, file).replaceAll(path.sep, '/');
-  if (protectedPrefixes.some((prefix) => relative.startsWith(prefix))) continue;
+  if (isProtected(relative)) continue;
   if (/\.html$/i.test(file)) {
     const before = await readFile(file, 'utf8');
-    let after = removeRetiredLinks(before);
-    after = after
-      .replace(/<article\b[^>]*>[\s\S]*?<h3>Reading and Music<\/h3>[\s\S]*?<\/article>/gi, '')
-      .replace(/<section\b[^>]*aria-labelledby=["']approvedMusicTitle["'][^>]*>[\s\S]*?<\/section>/gi, '')
-      .replace(/<section\b[^>]*aria-labelledby=["']approvedBooksTitle["'][^>]*>[\s\S]*?<\/section>/gi, '');
+    let after = relative.startsWith(yoniBookPrefix)
+      ? neutralizeYoniBookNavigation(before)
+      : removeRetiredLinks(before);
+    if (!relative.startsWith(yoniBookPrefix)) {
+      after = after
+        .replace(/<article\b[^>]*>[\s\S]*?<h3>Reading and Music<\/h3>[\s\S]*?<\/article>/gi, '')
+        .replace(/<section\b[^>]*aria-labelledby=["']approvedMusicTitle["'][^>]*>[\s\S]*?<\/section>/gi, '')
+        .replace(/<section\b[^>]*aria-labelledby=["']approvedBooksTitle["'][^>]*>[\s\S]*?<\/section>/gi, '');
+    }
     if (after !== before) await writeFile(file, after, 'utf8');
   }
 }
@@ -125,7 +142,7 @@ for (const relative of retiredFiles) {
 
 for (const file of await walk(dist)) {
   const relative = path.relative(dist, file).replaceAll(path.sep, '/');
-  if (protectedPrefixes.some((prefix) => relative.startsWith(prefix))) continue;
+  if (isProtected(relative)) continue;
   if (!/\.(?:html|xml|webmanifest)$/i.test(file)) continue;
   const content = await readFile(file, 'utf8');
   for (const route of retiredRoutes) {
@@ -153,4 +170,4 @@ if (violations.length) {
   throw new Error(`FMB public Reading/Music hard deletion failed:\n${violations.join('\n')}`);
 }
 
-console.log('FMB public Reading/Music hard deletion passed: retired routes removed, public links and sitemaps scrubbed, one landing shell retained, and Yoni app paths preserved.');
+console.log('FMB public Reading/Music hard deletion passed: retired routes removed, public links and sitemaps scrubbed before audits, one landing shell retained, and Yoni book content preserved without obsolete public navigation.');
