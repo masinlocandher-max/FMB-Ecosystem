@@ -1,8 +1,32 @@
-import { readFile, writeFile } from 'node:fs/promises';
+import { readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const root = path.resolve(new URL('..', import.meta.url).pathname);
-const homepage = path.join(root, 'dist', 'index.html');
+const dist = path.join(root, 'dist');
+const homepage = path.join(dist, 'index.html');
+const protectedPrefixes = ['app/', '_sites/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/'];
+const retiredRoutes = [
+  '/ebooks/',
+  '/music/',
+  '/music.html',
+  '/reading.html',
+  '/womens-health.html',
+  '/skin-care-makeup.html',
+  '/coming-out-respect.html',
+  '/men-can-cry.html',
+  '/dress-with-intention.html',
+];
+const retiredFiles = [
+  'ebooks',
+  'music',
+  'music.html',
+  'reading.html',
+  'womens-health.html',
+  'skin-care-makeup.html',
+  'coming-out-respect.html',
+  'men-can-cry.html',
+  'dress-with-intention.html',
+];
 
 function findSectionEnd(html, start) {
   const token = /<section\b|<\/section>/gi;
@@ -25,46 +49,108 @@ function removeSectionByLabel(html, labelId) {
   return end > match.index ? html.slice(0, match.index) + html.slice(end) : html;
 }
 
-function removeExactRouteLinks(html, route) {
-  const escaped = route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  return html.replace(new RegExp(`<a\\b[^>]*href=["']${escaped}["'][^>]*>[\\s\\S]*?<\\/a>`, 'gi'), '');
+function escapeRegex(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function removeRetiredLinks(html) {
+  let output = html;
+  for (const route of retiredRoutes) {
+    const escaped = escapeRegex(route);
+    output = output.replace(new RegExp(`<a\\b[^>]*href=["']${escaped}(?:[?#][^"']*)?["'][^>]*>[\\s\\S]*?<\\/a>`, 'gi'), '');
+  }
+  return output;
+}
+
+async function walk(directory) {
+  const files = [];
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    const full = path.join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...await walk(full));
+    else files.push(full);
+  }
+  return files;
+}
+
+for (const relative of retiredFiles) {
+  await rm(path.join(dist, relative), { recursive: true, force: true });
 }
 
 let html = await readFile(homepage, 'utf8');
-
-// The homepage is a hiring/authority landing page. Reading and Music remain
-// valid standalone destinations, but they are no longer promoted here.
 html = removeSectionByLabel(html, 'approvedMusicTitle');
 html = removeSectionByLabel(html, 'approvedBooksTitle');
-html = removeExactRouteLinks(html, '/ebooks/');
-html = removeExactRouteLinks(html, '/music/');
-
-// Remove the retired duplicate shell. The FMB unified shell remains the only
-// public header/footer/navigation system on the landing page.
-html = html
+html = removeRetiredLinks(html)
   .replace(/<header\b[^>]*class=["'][^"']*\bsite-header\b[^"']*["'][^>]*>[\s\S]*?<\/header>/i, '')
   .replace(/<footer\b[^>]*class=["'][^"']*\bsite-footer\b[^"']*["'][^>]*>[\s\S]*?<\/footer>/i, '')
   .replace(/<nav\b[^>]*class=["'][^"']*\bmobile-dock\b[^"']*["'][^>]*>[\s\S]*?<\/nav>/i, '')
   .replace('Explore verified news, projects, reading, music, and ecosystem destinations.', 'Explore verified news, projects, selected work, and ecosystem destinations.')
   .replace('Verified news, projects, reading, music, and ecosystem destinations from the official website of Francine Marie Bautista.', 'Verified news, projects, selected work, and ecosystem destinations from the official website of Francine Marie Bautista.')
   .replace('fmb-approved-library-grid fmb-approved-editorial-grid', 'fmb-approved-library-grid fmb-approved-editorial-grid fmb-approved-news-only');
+await writeFile(homepage, html, 'utf8');
 
-const violations = [];
-if (/approvedMusicTitle|Music Library/i.test(html)) violations.push('Music Library remains on homepage');
-if (/approvedBooksTitle|eBook Library/i.test(html)) violations.push('eBook Library remains on homepage');
-if (/href=["']\/music\/["']/i.test(html)) violations.push('Music is still linked from homepage');
-if (/href=["']\/ebooks\/["']/i.test(html)) violations.push('Reading is still linked from homepage');
-if (/class=["'][^"']*\bsite-header\b/i.test(html)) violations.push('legacy duplicate header remains');
-if (/class=["'][^"']*\bsite-footer\b/i.test(html)) violations.push('legacy duplicate footer remains');
-if (/class=["'][^"']*\bmobile-dock\b/i.test(html)) violations.push('legacy mobile dock remains');
-if (!/class=["'][^"']*\bfmb-shell-header\b/i.test(html)) violations.push('unified header is missing');
-if (!/class=["'][^"']*\bfmb-shell-footer\b/i.test(html)) violations.push('unified footer is missing');
-if (!/href=["']\/news\/["']/i.test(html)) violations.push('FMB News link is missing');
-if (!/href=["']\/work-with-fmb\/["']/i.test(html)) violations.push('Work with FMB link is missing');
-
-if (violations.length) {
-  throw new Error(`FMB homepage landing cleanup failed:\n${violations.join('\n')}`);
+const allFiles = await walk(dist);
+for (const file of allFiles) {
+  const relative = path.relative(dist, file).replaceAll(path.sep, '/');
+  if (protectedPrefixes.some((prefix) => relative.startsWith(prefix))) continue;
+  if (/\.html$/i.test(file)) {
+    const before = await readFile(file, 'utf8');
+    let after = removeRetiredLinks(before);
+    after = after
+      .replace(/<article\b[^>]*>[\s\S]*?<h3>Reading and Music<\/h3>[\s\S]*?<\/article>/gi, '')
+      .replace(/<section\b[^>]*aria-labelledby=["']approvedMusicTitle["'][^>]*>[\s\S]*?<\/section>/gi, '')
+      .replace(/<section\b[^>]*aria-labelledby=["']approvedBooksTitle["'][^>]*>[\s\S]*?<\/section>/gi, '');
+    if (after !== before) await writeFile(file, after, 'utf8');
+  }
 }
 
-await writeFile(homepage, html, 'utf8');
-console.log('FMB homepage cleaned: one shell retained; Reading and Music removed from the landing surface while standalone routes remain intact.');
+for (const file of allFiles.filter((item) => /sitemap[^/]*\.xml$/i.test(item))) {
+  let xml = await readFile(file, 'utf8');
+  const before = xml;
+  for (const route of retiredRoutes) {
+    const escaped = escapeRegex(route.replace(/\/$/, ''));
+    xml = xml.replace(new RegExp(`<url>[^<]*(?:<[^>]+>[^<]*)*?<loc>[^<]*${escaped}\/?[^<]*<\\/loc>[\\s\\S]*?<\\/url>`, 'gi'), '');
+  }
+  if (xml !== before) await writeFile(file, xml, 'utf8');
+}
+
+const violations = [];
+for (const relative of retiredFiles) {
+  try {
+    const parent = path.dirname(path.join(dist, relative));
+    const base = path.basename(relative);
+    const entries = await readdir(parent);
+    if (entries.includes(base)) violations.push(`retired output still exists: ${relative}`);
+  } catch {}
+}
+
+for (const file of await walk(dist)) {
+  const relative = path.relative(dist, file).replaceAll(path.sep, '/');
+  if (protectedPrefixes.some((prefix) => relative.startsWith(prefix))) continue;
+  if (!/\.(?:html|xml|webmanifest)$/i.test(file)) continue;
+  const content = await readFile(file, 'utf8');
+  for (const route of retiredRoutes) {
+    if (new RegExp(`href=["']${escapeRegex(route)}(?:[?#][^"']*)?["']`, 'i').test(content)) {
+      violations.push(`${relative} still links to ${route}`);
+    }
+    if (/\.xml$/i.test(file) && content.includes(route)) {
+      violations.push(`${relative} still publishes ${route}`);
+    }
+  }
+}
+
+const finalHome = await readFile(homepage, 'utf8');
+if (/approvedMusicTitle|Music Library/i.test(finalHome)) violations.push('Music Library remains on homepage');
+if (/approvedBooksTitle|eBook Library/i.test(finalHome)) violations.push('eBook Library remains on homepage');
+if (/class=["'][^"']*\bsite-header\b/i.test(finalHome)) violations.push('legacy duplicate header remains');
+if (/class=["'][^"']*\bsite-footer\b/i.test(finalHome)) violations.push('legacy duplicate footer remains');
+if (/class=["'][^"']*\bmobile-dock\b/i.test(finalHome)) violations.push('legacy mobile dock remains');
+if (!/class=["'][^"']*\bfmb-shell-header\b/i.test(finalHome)) violations.push('unified header is missing');
+if (!/class=["'][^"']*\bfmb-shell-footer\b/i.test(finalHome)) violations.push('unified footer is missing');
+if (!/href=["']\/news\/["']/i.test(finalHome)) violations.push('FMB News link is missing');
+if (!/href=["']\/work-with-fmb\/["']/i.test(finalHome)) violations.push('Work with FMB link is missing');
+
+if (violations.length) {
+  throw new Error(`FMB public Reading/Music hard deletion failed:\n${violations.join('\n')}`);
+}
+
+console.log('FMB public Reading/Music hard deletion passed: retired routes removed, public links and sitemaps scrubbed, one landing shell retained, and Yoni app paths preserved.');
