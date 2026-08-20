@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-site-shell-20260820-hygiene-v1';
+const CACHE_NAME='fmb-site-shell-20260820-home-clean-v2';
 const PUBLIC_PAGES=new Set([
   '/',
   '/index.html',
@@ -6,13 +6,14 @@ const PUBLIC_PAGES=new Set([
   '/projects/',
   '/withlovefmb/',
   '/communityengagements/',
+  '/get-involved/',
   '/gethelp/',
   '/fmbandco/',
+  '/work-with-fmb/',
+  '/mabayani/',
   '/news/',
   '/privacy-policy.html',
-  '/membership-agreement.html',
-  '/community-guidelines.html',
-  '/data-rights.html'
+  '/community-guidelines.html'
 ]);
 const APP_SHELL=['/','/index.html','/manifest.webmanifest'];
 self.addEventListener('install',event=>{event.waitUntil((async()=>{const cache=await caches.open(CACHE_NAME);await Promise.allSettled(APP_SHELL.map(url=>cache.add(new Request(url,{cache:'reload'}))));await self.skipWaiting()})())});
@@ -38,7 +39,7 @@ self.addEventListener('fetch',event=>{
     })());
     return;
   }
-  if(!['style','script','image','font','audio','manifest'].includes(request.destination))return;
+  if(!['style','script','image','font','manifest'].includes(request.destination))return;
   if(['style','script','manifest'].includes(request.destination)){
     event.respondWith((async()=>{
       try{
