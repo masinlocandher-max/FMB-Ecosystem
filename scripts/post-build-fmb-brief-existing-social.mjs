@@ -9,6 +9,7 @@ const sourceNewsRoot = path.join(root, 'apps', 'withlovefmb', 'news');
 const socialRoot = path.join(dist, 'assets', 'images', 'news', 'social');
 const heroRoot = path.join(dist, 'assets', 'images', 'news', 'brief');
 const origin = 'https://www.francinemariebautista.com';
+const identityCss = '<link rel="stylesheet" href="/assets/css/fmb-news-identity-lockup.css?v=20260820">';
 
 const attr = (tag, name) => tag.match(new RegExp(`\\b${name}=(['"])(.*?)\\1`, 'i'))?.[2] || '';
 
@@ -90,22 +91,35 @@ await mkdir(socialRoot, { recursive:true });
 await mkdir(heroRoot, { recursive:true });
 const entries = await readdir(newsRoot, { withFileTypes:true });
 const generated = [];
+const restored = [];
 for (const entry of entries) {
   if (!entry.isDirectory() || !/^fmb-brief-(?:august|september|october|november|december|january|february|march|april|may|june|july)-\d{1,2}-\d{4}$/i.test(entry.name)) continue;
   const file = path.join(newsRoot, entry.name, 'index.html');
+  const sourceFile = path.join(sourceNewsRoot, entry.name, 'index.html');
+  let sourceHtml = '';
+  if (await exists(sourceFile)) sourceHtml = await readFile(sourceFile, 'utf8');
+
   let html = await readFile(file, 'utf8');
+  const renderedPublished = metaValue(html, 'property', 'article:published_time');
+  const renderedUnavailable = /http-equiv=(['"])refresh\1/i.test(html) || /\bnoindex\b/i.test(metaValue(html, 'name', 'robots')) || !renderedPublished;
+  if (renderedUnavailable && sourceHtml) {
+    html = sourceHtml;
+    restored.push(entry.name);
+  }
+  if (!html.includes('fmb-news-identity-lockup.css')) html = html.replace('</head>', `${identityCss}</head>`);
+
   const published = metaValue(html, 'property', 'article:published_time');
   if (!published || Number.isNaN(new Date(published).getTime())) continue;
   const date = new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Manila',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(published));
   const currentOg = metaValue(html, 'property', 'og:image');
   const socialUrl = `/assets/images/news/social/fmb-brief-${date}-1200x630.webp`;
   const localHeroUrl = `/assets/images/news/brief/fmb-brief-${date}-hero.webp`;
-  if (currentOg.endsWith(socialUrl) && /<figure\b[^>]*class=(['"])[^'"]*\bbrief-hero\b[^'"]*\1[^>]*>[\s\S]*?<img\b/i.test(html)) continue;
+  if (currentOg.endsWith(socialUrl) && /<figure\b[^>]*class=(['"])[^'"]*\bbrief-hero\b[^'"]*\1[^>]*>[\s\S]*?<img\b/i.test(html)) {
+    await writeFile(file, html, 'utf8');
+    continue;
+  }
 
   const renderedHero = sourceHeroData(html);
-  let sourceHtml = '';
-  const sourceFile = path.join(sourceNewsRoot, entry.name, 'index.html');
-  if (await exists(sourceFile)) sourceHtml = await readFile(sourceFile, 'utf8');
   const sourceHero = sourceHtml ? sourceHeroData(sourceHtml) : { src:'', alt:'' };
   const heroSrc = renderedHero.src || currentOg || sourceHero.src;
   const heroAlt = renderedHero.alt || sourceHero.alt || 'FMB Brief editorial image';
@@ -141,5 +155,6 @@ const manifestFile = path.join(newsRoot, 'social-image-manifest.json');
 let manifest = {};
 try { manifest = JSON.parse(await readFile(manifestFile,'utf8')); } catch {}
 manifest.existingBriefs = generated;
+manifest.restoredAuthoredBriefs = restored;
 await writeFile(manifestFile, JSON.stringify(manifest,null,2), 'utf8');
-console.log(`Recovered local display heroes and generated ${generated.length} dedicated 1200×630 social crop(s) for existing FMB Brief editions.`);
+console.log(`Restored ${restored.length} authored FMB Brief route(s) and generated ${generated.length} dedicated 1200×630 social crop(s).`);
