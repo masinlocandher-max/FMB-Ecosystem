@@ -3,7 +3,7 @@ import path from 'node:path';
 
 const root = path.resolve(new URL('..', import.meta.url).pathname);
 const pkg = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
-const stages = ['validate:content', 'build:apps', 'generate:news', 'apply:shared-shell', 'verify:dist'];
+const stages = ['validate:content', 'build:apps', 'generate:news', 'apply:shared-shell', 'verify:dist', 'finalize:fmb-brief'];
 const expectedBuild = stages.map((stage) => `npm run ${stage}`).join(' && ');
 
 if (pkg.scripts?.build !== expectedBuild) {
@@ -22,8 +22,11 @@ for (const relative of [
   'scripts/pipeline/generate-news.mjs',
   'scripts/pipeline/apply-shared-shell.mjs',
   'scripts/pipeline/verify-dist.mjs',
+  'scripts/post-build-fmb-news-final-public-surface.mjs',
+  'scripts/post-build-fmb-news-modern-newspaper.mjs',
+  'scripts/post-build-fmb-news-consistency-guard.mjs',
 ]) {
   await access(path.join(root, relative));
 }
 
-console.log(`Release contract passed: ${stages.join(' -> ')}. Root post-build ledger count: 0.`);
+console.log(`Release contract passed: ${stages.join(' -> ')}. Final public surface is an explicit named release stage.`);
