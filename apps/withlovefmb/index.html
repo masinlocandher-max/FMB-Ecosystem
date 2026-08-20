@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Francine Marie Bautista | Official Digital Headquarters</title>
-  <meta name="description" content="The official digital headquarters and public gateway of Francine Marie Bautista and the FMB ecosystem.">
+  <meta name="description" content="The official digital headquarters and public gateway of Francine Marie Bautista, FMB&CO., SENZ, Cognita, With Love, FMB, FMB News, and current public projects.">
   <meta name="author" content="Francine Marie Bautista">
   <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
   <meta name="theme-color" content="#05020A">
@@ -25,15 +25,8 @@
       const host = window.location.hostname.toLowerCase();
       const path = window.location.pathname;
       const suffix = `${window.location.search}${window.location.hash}`;
-
       if (host === 'data.francinemariebautista.com' && (path === '/' || path === '/index.html')) {
         window.location.replace(`/admin.html${suffix}`);
-        return;
-      }
-
-      if (host === 'app.francinemariebautista.com') {
-        const targetPath = path === '/index.html' ? '/' : path;
-        window.location.replace(`https://yoni.francinemariebautista.com${targetPath}${suffix}`);
       }
     })();
   </script>
@@ -71,8 +64,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>html{background:#05020a}body{visibility:hidden}</style>
-  <noscript><style>body{visibility:visible}</style></noscript>
+  <style>html{background:#05020a}</style>
   <link rel="stylesheet" href="/assets/css/fmb-production-qa.css?v=20260723-production-qa-v1">
 </head>
 <body>
@@ -88,11 +80,10 @@
       <a href="/aboutfmb/">About FMB</a>
       <a href="/news/">News</a>
       <a href="/projects/">Projects</a>
-      <a href="/withlovefmb/#volunteer">Get Involved</a>
+      <a href="/get-involved/">Get Involved</a>
       <a href="/gethelp/">Get Help</a>
       <a href="/fmbandco/">FMB&amp;CO.</a>
     </nav>
-    <a class="header-cta" href="https://yoni.francinemariebautista.com/">Open Yoni</a>
     <button class="menu-button" id="menuButton" aria-label="Open navigation" aria-expanded="false" aria-controls="bulletinNav">
       <span></span><span></span>
     </button>
@@ -111,7 +102,7 @@
         <p class="hero-lede">Directing distinct projects and businesses with clear roles, public destinations, and responsibilities.</p>
         <div class="hero-actions">
           <a class="button primary" href="#bulletin">See the latest <span>→</span></a>
-          <a class="button secondary" href="/aboutfmb/#work-with-fmb">Work with FMB</a>
+          <a class="button secondary" href="/work-with-fmb/">Work with FMB</a>
         </div>
       </div>
       <picture class="hero-portrait">
@@ -125,20 +116,10 @@
       <header class="section-intro reveal">
         <p class="kicker">Official Bulletin</p>
         <h2 id="bulletinTitle">What’s<br>Happening<br>Now</h2>
-        <p>Official updates and public stories from Francine Marie Bautista and the FMB ecosystem.</p>
+        <p>Official updates and public stories from Francine Marie Bautista and the active FMB ecosystem.</p>
         <a href="/news/">View all news <span>→</span></a>
       </header>
-      <article class="bulletin-feature reveal d1">
-        <div class="bulletin-copy">
-          <p>Featured platform</p>
-          <h3>Meet Yoni</h3>
-          <span>A private digital companion for reflection, listening, reading, and support.</span>
-          <a href="https://yoni.francinemariebautista.com/">Open Yoni <b>→</b></a>
-        </div>
-        <img src="/assets/images/yoni/yoni-hero.webp" alt="Yoni, the orange bear companion">
-        <em>Existing members</em>
-      </article>
-      <div class="bulletin-list reveal d2">
+      <div class="bulletin-list reveal d1">
         <a href="/fmbandco/">
           <div class="mini-art fco" aria-hidden="true"></div>
           <span><small>Company</small><strong>Explore FMB&amp;CO.</strong><p>Meet SENZ and Cognita.</p></span><b>→</b>
@@ -149,7 +130,7 @@
         </a>
         <a href="https://thecognitainstitute.com/">
           <div class="mini-art cognita-mini" aria-hidden="true"></div>
-          <span><small>Knowledge and learning</small><strong>Cognita</strong><p>Visit the FMB&CO. learning arm.</p></span><b>→</b>
+          <span><small>Knowledge and learning</small><strong>Cognita</strong><p>Visit the FMB&amp;CO. learning arm.</p></span><b>→</b>
         </a>
       </div>
     </section>
@@ -166,7 +147,6 @@
         <a class="brand-card senz-card" href="https://senzpr.com/"><img src="/assets/images/projects/senz-logo-clean.png" alt="SENZ"></a>
         <a class="brand-card cognita-card" href="https://thecognitainstitute.com/"><img src="/assets/images/projects/cognita-logo-clean.png" alt="Cognita"></a>
         <a class="brand-card wlf-card" href="/withlovefmb/"><img src="/assets/images/signature-transparent.png" alt="With Love, FMB"></a>
-        <a class="brand-card yoni-card" href="https://yoni.francinemariebautista.com/"><img src="/assets/images/yoni/yoni-wordmark.png" alt="Yoni"></a>
         <a class="brand-card mabayani-card" href="/mabayani/"><strong>Mabayani</strong><small>History. Expression.<br>Remembrance.</small></a>
       </div>
     </section>
@@ -226,7 +206,7 @@
         <p class="kicker">Work With FMB</p>
         <h2>Start with a clear inquiry.</h2>
         <p>Describe what you need. The team will confirm the correct route and whether a next step is available.</p>
-        <a class="button primary compact" href="/aboutfmb/#work-with-fmb">Open the inquiry form <span>→</span></a>
+        <a class="button primary compact" href="/work-with-fmb/">Open the inquiry form <span>→</span></a>
       </article>
     </section>
   </main>
@@ -237,13 +217,13 @@
       <small>© 2026 Francine Marie Bautista. All rights reserved.</small>
     </div>
     <nav><strong>Official Site</strong><a href="/">Home</a><a href="/aboutfmb/">About FMB</a><a href="/news/">News</a><a href="/projects/">Projects</a></nav>
-    <nav><strong>Explore</strong><a href="/withlovefmb/#volunteer">Get Involved</a><a href="/gethelp/">Get Help</a></nav>
-    <nav><strong>Ecosystem</strong><a href="/fmbandco/">FMB&amp;CO.</a><a href="https://senzpr.com/">SENZ</a><a href="https://thecognitainstitute.com/">Cognita</a><a href="/withlovefmb/">With Love, FMB</a><a href="https://yoni.francinemariebautista.com/">Yoni</a><a href="/mabayani/">Mabayani</a></nav>
+    <nav><strong>Explore</strong><a href="/get-involved/">Get Involved</a><a href="/gethelp/">Get Help</a></nav>
+    <nav><strong>Ecosystem</strong><a href="/fmbandco/">FMB&amp;CO.</a><a href="https://senzpr.com/">SENZ</a><a href="https://thecognitainstitute.com/">Cognita</a><a href="/withlovefmb/">With Love, FMB</a><a href="/mabayani/">Mabayani</a></nav>
     <nav><strong>Legal</strong><a href="/privacy-policy.html">Privacy Policy</a><a href="mailto:withlovefmb@gmail.com?subject=Accessibility%20Support">Accessibility Support</a><a href="/sitemap.xml">Sitemap</a></nav>
   </footer>
 
   <nav class="mobile-dock" aria-label="Mobile navigation">
-    <a href="/">Home</a><a href="/news/">News</a><a href="/projects/">Projects</a><a href="/withlovefmb/#volunteer">Get Involved</a><a href="https://yoni.francinemariebautista.com/">Yoni</a>
+    <a href="/">Home</a><a href="/news/">News</a><a href="/projects/">Projects</a><a href="/get-involved/">Get Involved</a><a href="/aboutfmb/">About</a>
   </nav>
   <script src="/assets/js/fmb-home-approved.js?v=20260723-production-qa-v1" defer></script>
 </body>
