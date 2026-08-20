@@ -55,8 +55,8 @@ const home = await readFile(path.join(root, 'index.html'), 'utf8');
 if (!home.includes('/assets/images/fmb-approved/fmb-master-transparent.webp')) {
   fatal('index.html is missing the approved FMB master identity');
 }
-if (!home.includes('https://yoni.francinemariebautista.com/')) {
-  fatal('index.html is missing the independent Yoni destination');
+if (/yoni\.francinemariebautista\.com/i.test(home)) {
+  fatal('index.html still contains the retired Yoni destination');
 }
 if (/href=["']\/app\//i.test(home)) {
   fatal('index.html still links to an embedded local Yoni application');
@@ -68,6 +68,9 @@ for (const retired of [
   'ebooks/index.html',
   'reading.html',
   'music.html',
+  'profile/index.html',
+  'daily.html',
+  'data-rights.html',
 ]) {
   try {
     await access(path.join(root, retired));
@@ -86,4 +89,4 @@ const footer = newsIndex.match(/<footer\b[^>]*>[\s\S]*?<\/footer>/i)?.[0] || '';
 if (!masthead.includes(suppliedPrimaryNewsLogo)) warn('news/index.html is missing the supplied FMB News masthead logo');
 if (!footer.includes(suppliedWhiteNewsLogo)) warn('news/index.html is missing the supplied white FMB News footer logo');
 
-console.log(`FMB public-route integrity audit passed ${publicPages} active public pages and ${newsPages} News routes with retired eBook, Music, and embedded Yoni routes absent; ${warnings.length} non-blocking visual warning(s).`);
+console.log(`FMB public-route integrity audit passed ${publicPages} active public pages and ${newsPages} News routes with retired eBook, Music, public member, and Yoni routes absent; ${warnings.length} non-blocking visual warning(s).`);
