@@ -16,6 +16,7 @@ const retiredPublicRoutes = [
 ];
 const suppliedPrimaryNewsLogo = '/assets/images/news/fmb-news-primary-logo-2026.webp';
 const suppliedWhiteNewsLogo = '/assets/images/news/fmb-news-white-transparent-2026.webp';
+const unifiedHomeLogo = '/assets/images/fmbandco/fmbandco-primary-reversed.png';
 const warnings = [];
 const fatal = (message) => { throw new Error(`FMB public-route integrity audit: ${message}`); };
 const warn = (message) => { warnings.push(message); console.warn(`FMB public-route visual QA: ${message}`); };
@@ -70,8 +71,14 @@ for (const retired of retiredPublicRoutes) {
 }
 
 const homepage = await readFile(path.join(root, 'index.html'), 'utf8');
-if (!homepage.includes('/assets/images/fmb-approved/fmb-master-transparent.webp')) {
-  fatal('index.html is missing the approved FMB identity');
+if (!homepage.includes(unifiedHomeLogo) || !/class=["'][^"']*\bfmb-shell-header\b/i.test(homepage)) {
+  fatal('index.html is missing the unified FMB&CO. public identity');
+}
+if ((homepage.match(/class=["'][^"']*\bfmb-shell-header\b/gi) || []).length !== 1) {
+  fatal('index.html must contain exactly one unified public header');
+}
+if ((homepage.match(/class=["'][^"']*\bfmb-shell-footer\b/gi) || []).length !== 1) {
+  fatal('index.html must contain exactly one unified public footer');
 }
 
 const newsIndex = await readFile(path.join(root, 'news/index.html'), 'utf8');
@@ -83,4 +90,4 @@ const footer = newsIndex.match(/<footer\b[^>]*>[\s\S]*?<\/footer>/i)?.[0] || '';
 if (!masthead.includes(suppliedPrimaryNewsLogo)) warn('news/index.html is missing the supplied FMB News masthead logo');
 if (!footer.includes(suppliedWhiteNewsLogo)) warn('news/index.html is missing the supplied white FMB News footer logo');
 
-console.log(`FMB public-route integrity audit passed ${publicPages} public pages and ${newsPages} News routes; retired Reading/Music routes are absent with ${warnings.length} non-blocking visual warning(s).`);
+console.log(`FMB public-route integrity audit passed ${publicPages} public pages and ${newsPages} News routes; retired Reading/Music routes are absent and the homepage has one unified FMB&CO. shell, with ${warnings.length} non-blocking visual warning(s).`);
