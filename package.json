@@ -12,10 +12,9 @@
   "scripts": {
     "validate:content": "node scripts/validate-content.mjs",
     "build:apps": "node --import ./scripts/fetch-shim.mjs scripts/pipeline/build-apps.mjs",
-    "generate:news": "node --import ./scripts/fetch-shim.mjs scripts/pipeline/generate-news.mjs",
     "apply:shared-shell": "node --import ./scripts/fetch-shim.mjs scripts/pipeline/apply-shared-shell.mjs",
     "verify:dist": "node --import ./scripts/fetch-shim.mjs scripts/pipeline/verify-dist.mjs",
-    "build": "npm run validate:content && npm run build:apps && npm run generate:news && npm run apply:shared-shell && npm run verify:dist",
+    "build": "npm run validate:content && npm run build:apps && npm run apply:shared-shell && npm run verify:dist",
     "build:legacy": "node --import ./scripts/fetch-shim.mjs scripts/build-release.mjs",
     "build:all": "npm run build:fmb && npm run build:senz && npm run build:cognita",
     "build:fmb": "npm --workspace @fmb/withlovefmb run build",
