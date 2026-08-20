@@ -48,6 +48,36 @@
       "destination": "/app/index.html"
     },
     {
+      "source": "/reading.html",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/app/content/books/reading.html"
+    },
+    {
+      "source": "/womens-health.html",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/app/content/books/womens-health.html"
+    },
+    {
+      "source": "/skin-care-makeup.html",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/app/content/books/skin-care-makeup.html"
+    },
+    {
+      "source": "/coming-out-respect.html",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/app/content/books/coming-out-respect.html"
+    },
+    {
+      "source": "/men-can-cry.html",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/app/content/books/men-can-cry.html"
+    },
+    {
+      "source": "/dress-with-intention.html",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/app/content/books/dress-with-intention.html"
+    },
+    {
       "source": "/app/:path*",
       "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
       "destination": "/app/:path*"

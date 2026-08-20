@@ -1,9 +1,19 @@
-import { readdir, readFile } from 'node:fs/promises';
+import { access, readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const root = path.resolve(new URL('../dist/', import.meta.url).pathname);
 const protectedRoots = ['app/', '_sites/senz/', '_sites/cognita/'];
-const controlledReadingRoutes = ['coming-out-respect.html', 'dress-with-intention.html', 'men-can-cry.html', 'reading.html', 'skin-care-makeup.html', 'womens-health.html'];
+const retiredPublicRoutes = [
+  'ebooks/index.html',
+  'music/index.html',
+  'music.html',
+  'coming-out-respect.html',
+  'dress-with-intention.html',
+  'men-can-cry.html',
+  'reading.html',
+  'skin-care-makeup.html',
+  'womens-health.html',
+];
 const suppliedPrimaryNewsLogo = '/assets/images/news/fmb-news-primary-logo-2026.webp';
 const suppliedWhiteNewsLogo = '/assets/images/news/fmb-news-white-transparent-2026.webp';
 const warnings = [];
@@ -48,21 +58,20 @@ for (const file of await walk(root)) {
   ]) {
     if (html.includes(marker)) warn(`${name} still contains retired visual identity ${marker}`);
   }
+}
 
-  if (controlledReadingRoutes.includes(name) && !html.includes('membership-gate.js')) {
-    fatal(`${name} is missing its controlled reading gate`);
+for (const retired of retiredPublicRoutes) {
+  try {
+    await access(path.join(root, retired));
+    fatal(`${retired} was retired and must not be emitted as a public FMB route`);
+  } catch (error) {
+    if (error?.code !== 'ENOENT') throw error;
   }
 }
 
-const required = {
-  'index.html': '/assets/images/fmb-approved/fmb-master-transparent.webp',
-  'music/index.html': '/assets/images/fmb-approved/fmb-music-official-transparent.webp',
-  'ebooks/index.html': '/assets/images/fmb-approved/fmb-ebook-official-transparent.webp',
-  'womens-health.html': 'membership-gate.js',
-};
-for (const [fileName, marker] of Object.entries(required)) {
-  const html = await readFile(path.join(root, fileName), 'utf8');
-  if (!html.includes(marker)) fatal(`${fileName} is missing required functional marker ${marker}`);
+const homepage = await readFile(path.join(root, 'index.html'), 'utf8');
+if (!homepage.includes('/assets/images/fmb-approved/fmb-master-transparent.webp')) {
+  fatal('index.html is missing the approved FMB identity');
 }
 
 const newsIndex = await readFile(path.join(root, 'news/index.html'), 'utf8');
@@ -74,4 +83,4 @@ const footer = newsIndex.match(/<footer\b[^>]*>[\s\S]*?<\/footer>/i)?.[0] || '';
 if (!masthead.includes(suppliedPrimaryNewsLogo)) warn('news/index.html is missing the supplied FMB News masthead logo');
 if (!footer.includes(suppliedWhiteNewsLogo)) warn('news/index.html is missing the supplied white FMB News footer logo');
 
-console.log(`FMB public-route integrity audit passed ${publicPages} public pages, ${newsPages} News routes and ${controlledReadingRoutes.length} controlled reading routes with ${warnings.length} non-blocking visual warning(s).`);
+console.log(`FMB public-route integrity audit passed ${publicPages} public pages and ${newsPages} News routes; retired Reading/Music routes are absent with ${warnings.length} non-blocking visual warning(s).`);
