@@ -2,7 +2,7 @@
   "name": "fmb-ecosystem",
   "version": "2.0.0",
   "private": true,
-  "description": "GitHub monorepo for the independently deployed FMB/Yoni, SENZ, and Cognita applications.",
+  "description": "GitHub monorepo for the active FMB, SENZ, and Cognita applications.",
   "workspaces": [
     "apps/withlovefmb",
     "apps/senz",
