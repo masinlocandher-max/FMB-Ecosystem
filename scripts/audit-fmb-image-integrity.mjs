@@ -86,10 +86,10 @@ function requirementFor(name,size){
   const result={long,short,minLong:720,minShort:480,label:'supporting raster'};
 
   if(size.vector)return {...result,minLong:0,minShort:0,label:'vector identity'};
-  if(/(?:favicon|apple-touch|maskable|app-icon|icon-|\/icons?\/|avatar|emoji|badge|qr|seal|sprite|ampersand|yoni-music|yoni-master-static)/i.test(lower)){
+  if(/(?:favicon|apple-touch|maskable|app-icon|icon-|\/icons?\/|avatar|emoji|badge|qr|seal|sprite|ampersand)/i.test(lower)){
     return {...result,minLong:180,minShort:180,label:'icon, compact mark, avatar, or mascot'};
   }
-  if(/(?:logo|wordmark|lockup|brandmark|signature|fmbandco|fmb-music-official|fmb-ebook-official)/i.test(lower)){
+  if(/(?:logo|wordmark|lockup|brandmark|signature|fmbandco)/i.test(lower)){
     return {...result,minLong:512,minShort:96,label:'logo, signature, or wordmark'};
   }
   if(/(?:share-1200x630|briefing|editorial-card)/i.test(lower)){
@@ -98,7 +98,7 @@ function requirementFor(name,size){
   if(/(?:^|\/)assets\/images\/news\//i.test(lower)){
     return {...result,minLong:800,minShort:500,label:'faithful editorial source photography'};
   }
-  if(/(?:album|track|music-cover|ebook-cover|book-cover|reading-cover|pubmat)/i.test(lower)){
+  if(/(?:cover|pubmat)/i.test(lower)){
     return {...result,minLong:1080,minShort:720,label:'cover or publication artwork'};
   }
   if(/(?:francine|founder|hero|portrait|volunteer|community|project|article|story|campaign|event|feature|background)/i.test(lower)){
@@ -146,7 +146,7 @@ for(const record of references.values()){
   const name=relative(record.target);
   if(protectedPrefixes.some(prefix=>name.startsWith(prefix)))continue;
   if(forbiddenPathPatterns.some(pattern=>pattern.test(name))){
-    errors.push(`${name}: production page references a placeholder, generated, mockup, or temporary image path`);
+    errors.push(`${name}: production page references a placeholder, generated, mockup, or temporary image path; used by ${[...record.sources].slice(0,3).join(', ')}`);
     continue;
   }
   const extension=path.extname(record.target).toLowerCase();
@@ -160,30 +160,28 @@ for(const record of references.values()){
   }
   const size=await dimensions(record.target);
   if(!size?.width||!size?.height){
-    errors.push(`${name}: image dimensions or file integrity could not be verified`);
+    errors.push(`${name}: image dimensions or file integrity could not be verified; used by ${[...record.sources].slice(0,3).join(', ')}`);
     continue;
   }
   const requirement=requirementFor(name,size);
   if(requirement.long<requirement.minLong||requirement.short<requirement.minShort){
     const candidates=await nearbyCandidates(record.target,requirement);
     const candidateNote=candidates.length?`; nearby HD candidates: ${candidates.join(', ')}`:'';
-    errors.push(`${name}: ${size.width}×${size.height} is below the ${requirement.label} release minimum of ${requirement.minLong}×${requirement.minShort} on long/short edges${candidateNote}`);
+    errors.push(`${name}: ${size.width}×${size.height} is below the ${requirement.label} release minimum of ${requirement.minLong}×${requirement.minShort} on long/short edges; used by ${[...record.sources].slice(0,3).join(', ')}${candidateNote}`);
     continue;
   }
   verified.push({name,width:size.width,height:size.height,label:requirement.label});
 }
 
 const exactRequired=[
-  'assets/images/home/fmb-home-logo.webp',
+  'assets/images/fmb-approved/fmb-master-transparent.webp',
   'assets/images/home/francine-home-hero-hd.webp',
   'assets/images/home/francine-home-founder-hd.webp',
-  'assets/images/news/fmb-news-official.svg',
-  'assets/images/fmb-approved/fmb-music-official-transparent.webp',
-  'assets/images/fmb-approved/fmb-ebook-official-transparent.webp',
-  'app/assets/yoni/yoni-hero.webp',
+  'assets/images/news/fmb-news-primary-logo-2026.webp',
+  'assets/images/news/fmb-news-white-transparent-2026.webp',
 ];
 for(const required of exactRequired){
-  if(!verified.some(asset=>asset.name===required))errors.push(`${required}: approved identity or hero asset was not HD-verified in the built public experience`);
+  if(!verified.some(asset=>asset.name===required))errors.push(`${required}: current approved identity or hero asset was not HD-verified in the built public experience`);
 }
 
 if(errors.length){
