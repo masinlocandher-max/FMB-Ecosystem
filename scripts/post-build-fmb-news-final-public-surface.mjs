@@ -148,3 +148,5 @@ if (!homepage.includes(`href="${latestBrief.href}"`)) throw new Error('Homepage 
 if (!homepage.includes('Daily newsletter · Separate from News')) throw new Error('Homepage does not explain that FMB Brief is separate from News.');
 
 console.log(`Final FMB News public surface locked to Filipino Media Bulletin identity and newest FMB Brief (${latestBrief.date}).`);
+
+await import('./post-build-fmb-news-modern-newspaper.mjs');
