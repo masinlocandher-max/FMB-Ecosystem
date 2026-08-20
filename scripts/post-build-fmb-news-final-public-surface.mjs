@@ -93,7 +93,7 @@ function installBriefFeature(html, feature) {
   const mainEnd = html.lastIndexOf('</main>');
   if (mainEnd >= 0) return html.slice(0, mainEnd) + feature + html.slice(mainEnd);
 
-  throw new Error('FMB News homepage has no safe insertion point for the FMB Brief feature.');
+  throw new Error('Canonical FMB News homepage has no safe insertion point for the FMB Brief feature.');
 }
 
 function ensureIdentity(html) {
@@ -129,9 +129,10 @@ let homepage = await readFile(homepageFile, 'utf8');
 homepage = patchHomepage(homepage, latestBrief, creditHtml);
 await writeFile(homepageFile, homepage, 'utf8');
 
+// Keep the compatibility landing byte-synchronized with the canonical News
+// page instead of reinterpreting a legacy/redirect alias as a second homepage.
 const aliasFile = path.join(dist, 'fmbnews', 'index.html');
-let alias = await readFile(aliasFile, 'utf8');
-alias = patchHomepage(alias, latestBrief, creditHtml);
+const alias = homepage;
 await writeFile(aliasFile, alias, 'utf8');
 
 const archiveFile = path.join(newsRoot, 'archive', 'index.html');
