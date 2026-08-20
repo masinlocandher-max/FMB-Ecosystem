@@ -43,19 +43,14 @@ async function sourceBuffer(src) {
 }
 
 async function cropSocial(buffer, output) {
-  const rotated = sharp(buffer).rotate();
-  const meta = await rotated.metadata();
+  const image = sharp(buffer).rotate();
+  const meta = await image.metadata();
   if (!meta.width || !meta.height) throw new Error(`Cannot read FMB Brief hero dimensions for ${output}`);
-  const targetRatio = 1200 / 630;
-  let left=0, top=0, width=meta.width, height=meta.height;
-  if (meta.width / meta.height > targetRatio) {
-    width = Math.round(meta.height * targetRatio);
-    left = Math.round((meta.width - width) / 2);
-  } else if (meta.width / meta.height < targetRatio) {
-    height = Math.round(meta.width / targetRatio);
-    top = Math.round((meta.height - height) / 2);
-  }
-  await sharp(buffer).rotate().extract({left,top,width,height}).resize(1200,630).webp({quality:88,effort:5}).toFile(output);
+  await sharp(buffer)
+    .rotate()
+    .resize(1200, 630, { fit:'cover', position:'centre' })
+    .webp({ quality:88, effort:5 })
+    .toFile(output);
   return { sourceWidth:meta.width, sourceHeight:meta.height };
 }
 
