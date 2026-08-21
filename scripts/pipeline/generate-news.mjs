@@ -105,6 +105,9 @@ const canonicalStructuredPublication = [
   '../post-build-fmb-news-morning-special-edition-aug17.mjs',
   '../post-build-fmbnews-image-reliability.mjs',
   '../post-build-fmbnews-rasterize-trusted-wrappers.mjs',
+  // Reassert the public hard deletion after all legacy News layers so no
+  // shared-shell regeneration can bring Reading or Music routes back.
+  '../post-build-fmb-home-landing-clean.mjs',
   // FMB Brief finalization runs once, after shared-shell materialization and
   // verification, so no legacy stage can overwrite its public identity.
 ];
