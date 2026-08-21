@@ -58,8 +58,6 @@ const announcements = [
   ['Official Bulletin', '/news/'],
   ['Explore the complete FMB ecosystem', '/projects/'],
   ['Work with Francine Marie Bautista', '/work-with-fmb/'],
-  ['Open the reading library', '/ebooks/'],
-  ['Listen to FMB Music', '/music/'],
   ['Enter FMB&CO.', '/fmbandco/'],
 ];
 
@@ -205,4 +203,4 @@ for (const file of publicHtml) {
   }
 }
 
-console.log(`Compiled the approved FMB launch layer into the single public CSS and JS bundles, connected the web manifest, removed duplicate compiled sources, and updated ${updatedPages} public pages.`);
+console.log(`Compiled the approved FMB&CO. launch layer into the single public CSS and JS bundles, connected the web manifest, kept announcements limited to active public routes, and updated ${updatedPages} public pages.`);
