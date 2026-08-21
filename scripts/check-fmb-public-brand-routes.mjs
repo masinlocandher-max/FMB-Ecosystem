@@ -71,13 +71,15 @@ for (const retired of retiredPublicRoutes) {
 }
 
 const homepage = await readFile(path.join(root, 'index.html'), 'utf8');
-if (!homepage.includes(unifiedHomeLogo) || !/class=["'][^"']*\bfmb-shell-header\b/i.test(homepage)) {
+const unifiedHeaderTags = homepage.match(/<header\b[^>]*class=["'][^"']*(?:^|\s)fmb-shell-header(?:\s|["'])[^>]*>/gi) || [];
+const unifiedFooterTags = homepage.match(/<footer\b[^>]*class=["'][^"']*(?:^|\s)fmb-shell-footer(?:\s|["'])[^>]*>/gi) || [];
+if (!homepage.includes(unifiedHomeLogo) || unifiedHeaderTags.length !== 1) {
   fatal('index.html is missing the unified FMB&CO. public identity');
 }
-if ((homepage.match(/class=["'][^"']*\bfmb-shell-header\b/gi) || []).length !== 1) {
+if (unifiedHeaderTags.length !== 1) {
   fatal('index.html must contain exactly one unified public header');
 }
-if ((homepage.match(/class=["'][^"']*\bfmb-shell-footer\b/gi) || []).length !== 1) {
+if (unifiedFooterTags.length !== 1) {
   fatal('index.html must contain exactly one unified public footer');
 }
 
