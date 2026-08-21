@@ -16,6 +16,8 @@ const retiredRoutes = [
   '/coming-out-respect.html',
   '/men-can-cry.html',
   '/dress-with-intention.html',
+  'reading.html',
+  'music.html',
 ];
 const retiredFiles = [
   'ebooks',
@@ -52,6 +54,16 @@ function removeSectionByLabel(html, labelId) {
 
 function escapeRegex(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function removeArticleByHeading(html, heading) {
+  const headingMatch = new RegExp(`<h3\\b[^>]*>\\s*${escapeRegex(heading)}\\s*<\\/h3>`, 'i').exec(html);
+  if (!headingMatch) return html;
+  const start = html.lastIndexOf('<article', headingMatch.index);
+  const previousClose = html.lastIndexOf('</article>', headingMatch.index);
+  const closeStart = html.indexOf('</article>', headingMatch.index);
+  if (start < 0 || closeStart < 0 || start < previousClose) return html;
+  return html.slice(0, start) + html.slice(closeStart + '</article>'.length);
 }
 
 function removeRetiredLinks(html) {
@@ -111,8 +123,8 @@ for (const file of allFiles) {
       ? neutralizeYoniBookNavigation(before)
       : removeRetiredLinks(before);
     if (!relative.startsWith(yoniBookPrefix)) {
+      after = removeArticleByHeading(after, 'Reading and Music');
       after = after
-        .replace(/<article\b[^>]*>[\s\S]*?<h3>Reading and Music<\/h3>[\s\S]*?<\/article>/gi, '')
         .replace(/<section\b[^>]*aria-labelledby=["']approvedMusicTitle["'][^>]*>[\s\S]*?<\/section>/gi, '')
         .replace(/<section\b[^>]*aria-labelledby=["']approvedBooksTitle["'][^>]*>[\s\S]*?<\/section>/gi, '');
     }
@@ -123,7 +135,7 @@ for (const file of allFiles) {
 for (const file of allFiles.filter((item) => /sitemap[^/]*\.xml$/i.test(item))) {
   let xml = await readFile(file, 'utf8');
   const before = xml;
-  for (const route of retiredRoutes) {
+  for (const route of retiredRoutes.filter((item) => item.startsWith('/'))) {
     const escaped = escapeRegex(route.replace(/\/$/, ''));
     xml = xml.replace(new RegExp(`<url>[^<]*(?:<[^>]+>[^<]*)*?<loc>[^<]*${escaped}\/?[^<]*<\\/loc>[\\s\\S]*?<\\/url>`, 'gi'), '');
   }
@@ -149,7 +161,7 @@ for (const file of await walk(dist)) {
     if (new RegExp(`href=["']${escapeRegex(route)}(?:[?#][^"']*)?["']`, 'i').test(content)) {
       violations.push(`${relative} still links to ${route}`);
     }
-    if (/\.xml$/i.test(file) && content.includes(route)) {
+    if (/\.xml$/i.test(file) && route.startsWith('/') && content.includes(route)) {
       violations.push(`${relative} still publishes ${route}`);
     }
   }
