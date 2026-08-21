@@ -71,8 +71,8 @@ for (const retired of retiredPublicRoutes) {
 }
 
 const homepage = await readFile(path.join(root, 'index.html'), 'utf8');
-const unifiedHeaderTags = homepage.match(/<header\b[^>]*class=["'][^"']*(?:^|\s)fmb-shell-header(?:\s|["'])[^>]*>/gi) || [];
-const unifiedFooterTags = homepage.match(/<footer\b[^>]*class=["'][^"']*(?:^|\s)fmb-shell-footer(?:\s|["'])[^>]*>/gi) || [];
+const unifiedHeaderTags = homepage.match(/<header\b(?=[^>]*class=["'][^"']*\bfmb-shell-header\b)[^>]*>/gi) || [];
+const unifiedFooterTags = homepage.match(/<footer\b(?=[^>]*class=["'][^"']*\bfmb-shell-footer\b)[^>]*>/gi) || [];
 if (!homepage.includes(unifiedHomeLogo) || unifiedHeaderTags.length !== 1) {
   fatal('index.html is missing the unified FMB&CO. public identity');
 }
