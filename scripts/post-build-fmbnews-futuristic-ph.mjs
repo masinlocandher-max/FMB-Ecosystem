@@ -11,7 +11,7 @@ const sitemapPath = path.join(distRoot, 'sitemap.xml');
 const cssSourcePath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-futuristic-ph.css');
 const readabilityCssSourcePath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-final-readability.css');
 const shellCssSourcePath = path.join(repositoryRoot, 'apps', 'withlovefmb', 'assets', 'css', 'fmbnews-single-publication-shell.css');
-const canonicalUrl = 'https://www.francinemariebautista.com/fmbnews/';
+const canonicalUrl = 'https://www.francinemariebautista.com/news/';
 
 const tickerStart = '<!-- FMB_NEWS_TICKER_START -->';
 const tickerEnd = '<!-- FMB_NEWS_TICKER_END -->';
@@ -76,8 +76,8 @@ function extractHeadlineItems(html) {
   }
 
   if (!items.length) {
-    add('/fmbnews/', 'FMB News Center: Filipino ang Mismong Balita.');
-    add('/fmbnews/#stories', 'Latest reports, context and public-interest updates');
+    add('/news/', 'FMB News Center: Filipino ang Mismong Balita.');
+    add('/news/#stories', 'Latest reports, context and public-interest updates');
   }
 
   return items.slice(0, 10);
@@ -158,11 +158,11 @@ function makeCanonicalLanding(html, combinedCss, tickerMarkup) {
     .replace(/<meta name="theme-color" content="[^"]*">/i, '<meta name="theme-color" content="#211032">')
     .replace(/<link rel="canonical" href="[^"]*">/i, `<link rel="canonical" href="${canonicalUrl}">`)
     .replace(/<meta property="og:url" content="[^"]*">/i, `<meta property="og:url" content="${canonicalUrl}">`)
-    .replaceAll('https://www.francinemariebautista.com/news/#page', 'https://www.francinemariebautista.com/fmbnews/#page')
-    .replaceAll('https://www.francinemariebautista.com/news/#stories', 'https://www.francinemariebautista.com/fmbnews/#stories')
-    .replace('"url":"https://www.francinemariebautista.com/news/"', '"url":"https://www.francinemariebautista.com/fmbnews/"')
-    .replaceAll('href="/news/"', 'href="/fmbnews/"')
-    .replaceAll("href='/news/'", "href='/fmbnews/'");
+    .replaceAll('https://www.francinemariebautista.com/fmbnews/#page', 'https://www.francinemariebautista.com/news/#page')
+    .replaceAll('https://www.francinemariebautista.com/fmbnews/#stories', 'https://www.francinemariebautista.com/news/#stories')
+    .replace('"url":"https://www.francinemariebautista.com/fmbnews/"', '"url":"https://www.francinemariebautista.com/news/"')
+    .replaceAll('href="/fmbnews/"', 'href="/news/"')
+    .replaceAll("href='/fmbnews/'", "href='/news/'");
 
   return applyEditorialSystem(next, combinedCss, tickerMarkup);
 }
@@ -211,8 +211,8 @@ for (const filePath of await walkHtml(newsRoot)) {
   if (!/\bnews-story-route\b/.test(html)) continue;
   const updated = applyEditorialSystem(
     html
-      .replaceAll('href="/news/"', 'href="/fmbnews/"')
-      .replaceAll("href='/news/'", "href='/fmbnews/'"),
+      .replaceAll('href="/fmbnews/"', 'href="/news/"')
+      .replaceAll("href='/fmbnews/'", "href='/news/'"),
     combinedNewsroomCss,
     tickerMarkup,
   );
@@ -222,10 +222,10 @@ for (const filePath of await walkHtml(newsRoot)) {
 
 let linkedPages = 0;
 for (const filePath of await walkPublicHtml(distRoot)) {
-  let html = await readFile(filePath, 'utf8');
+  const html = await readFile(filePath, 'utf8');
   const updated = html
-    .replaceAll('href="/news/"', 'href="/fmbnews/"')
-    .replaceAll("href='/news/'", "href='/fmbnews/'");
+    .replaceAll('href="/fmbnews/"', 'href="/news/"')
+    .replaceAll("href='/fmbnews/'", "href='/news/'");
   if (updated !== html) {
     await writeFile(filePath, updated, 'utf8');
     linkedPages += 1;
@@ -233,12 +233,14 @@ for (const filePath of await walkPublicHtml(distRoot)) {
 }
 
 let sitemap = await readFile(sitemapPath, 'utf8');
-const oldLandingLoc = '<loc>https://www.francinemariebautista.com/news/</loc>';
-const newLandingLoc = '<loc>https://www.francinemariebautista.com/fmbnews/</loc>';
-if (!sitemap.includes(oldLandingLoc) && !sitemap.includes(newLandingLoc)) {
-  throw new Error('FMB News editorial layer could not find the newsroom landing URL in sitemap.xml.');
+const canonicalLandingLoc = '<loc>https://www.francinemariebautista.com/news/</loc>';
+const legacyLandingLoc = '<loc>https://www.francinemariebautista.com/fmbnews/</loc>';
+if (sitemap.includes(legacyLandingLoc)) sitemap = sitemap.replaceAll(legacyLandingLoc, canonicalLandingLoc);
+if (!sitemap.includes(canonicalLandingLoc)) {
+  const entry = `  <url><loc>https://www.francinemariebautista.com/news/</loc><changefreq>daily</changefreq><priority>0.9</priority></url>\n`;
+  if (!sitemap.includes('</urlset>')) throw new Error('FMB News editorial layer found an invalid sitemap.xml without a closing urlset.');
+  sitemap = sitemap.replace('</urlset>', `${entry}</urlset>`);
 }
-sitemap = sitemap.replace(oldLandingLoc, newLandingLoc);
 await writeFile(sitemapPath, sitemap, 'utf8');
 
-console.log(`Published the FMB&CO. purple-gold newsroom, live headline ticker and Philippine time across the landing page and ${articleCount} report pages; updated ${linkedPages} public navigation page(s).`);
+console.log(`Published the FMB News editorial layer on canonical /news/, kept /fmbnews/ as a compatibility output, and normalized ${linkedPages} public navigation page(s).`);
