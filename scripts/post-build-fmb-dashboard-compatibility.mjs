@@ -61,14 +61,10 @@ function addImageDimensions(source, width, height) {
 }
 
 for (const [source, width, height] of [
-  ['/assets/images/music/fmb-calm-official-album-cover.jpg', 1254, 1254],
-  ['/assets/images/music/fmb-70s-feel-good-cover.svg', 600, 600],
-  ['/assets/images/music/fmb-80s-feel-good-cover.svg', 600, 600],
-  ['/assets/images/music/fmb-ost-with-love-fmb-cover.png', 1254, 1254],
-  ['/assets/images/reading/finding-your-way-back-cover.svg', 1080, 1440],
-  ['/assets/images/reading/07883274-1340-48DC-A112-C4AD44B5ABD1.png', 1086, 1448],
-  ['/assets/images/reading/E9562EB3-F505-4736-B5E8-E4D54C769059.png', 1086, 1448],
-  ['/assets/images/reading/B4DDDB01-C125-4E08-8908-09A5FE5157E7.png', 1086, 1448],
+  ['/assets/images/fmb-approved/francine-standing-landscape.webp', 1364, 768],
+  ['/assets/images/volunteer/francine-leading-with-love-fmb.webp', 1023, 1537],
+  ['/app/assets/yoni/yoni-hero.webp', 1254, 1254],
+  ['/assets/images/news/new-clark-city-pax-silica-pia.jpg', 800, 500],
 ]) {
   addImageDimensions(source, width, height);
 }
@@ -82,10 +78,13 @@ for (const marker of [
   '/assets/images/volunteer/francine-leading-with-love-fmb.webp',
   '/app/assets/yoni/yoni-hero.webp',
   '/assets/images/news/new-clark-city-pax-silica-pia.jpg',
-  '/assets/images/reading/finding-your-way-back-cover.svg',
   authorityStatement,
 ]) {
   if (!html.includes(marker)) throw new Error(`Corporate dashboard compatibility marker is missing: ${marker}`);
+}
+
+if (/approvedMusicTitle|approvedBooksTitle|href=["']\/music\/["']|href=["']\/ebooks\/["']/i.test(html)) {
+  throw new Error('Corporate dashboard compatibility reintroduced retired Reading/Music surfaces.');
 }
 
 if ((html.match(/id="bulletin"/g) || []).length !== 1) {
@@ -93,4 +92,4 @@ if ((html.match(/id="bulletin"/g) || []).length !== 1) {
 }
 
 await writeFile(homeFile, html, 'utf8');
-console.log('Preserved homepage landmarks and stabilized the approved dashboard image inventory.');
+console.log('Preserved homepage landmarks and stabilized the approved dashboard image inventory without retired Reading/Music surfaces.');
