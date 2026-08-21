@@ -89,6 +89,9 @@ const newsroomMigrationLayers = [
 const canonicalStructuredPublication = [
   '../post-build-fmb-news-live-surfaces.mjs',
   '../post-build-fmbnews-unpublished-backlog-cleanup.mjs',
+  // Structured publication rebuilds article shells. Scrub retired public
+  // Reading/Music routes immediately before integrity and enterprise audits.
+  '../post-build-fmb-home-landing-clean.mjs',
   '../check-fmb-public-brand-routes.mjs',
   '../audit-fmb-enterprise.mjs',
   '../audit-fmb-performance.mjs',
@@ -105,8 +108,7 @@ const canonicalStructuredPublication = [
   '../post-build-fmb-news-morning-special-edition-aug17.mjs',
   '../post-build-fmbnews-image-reliability.mjs',
   '../post-build-fmbnews-rasterize-trusted-wrappers.mjs',
-  // Reassert the public hard deletion after all legacy News layers so no
-  // shared-shell regeneration can bring Reading or Music routes back.
+  // Reassert the public hard deletion after every remaining legacy News layer.
   '../post-build-fmb-home-landing-clean.mjs',
   // FMB Brief finalization runs once, after shared-shell materialization and
   // verification, so no legacy stage can overwrite its public identity.
