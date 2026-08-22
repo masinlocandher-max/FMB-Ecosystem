@@ -25,3 +25,7 @@ Thumbs.db
 *.log
 .tmp/
 tmp/
+
+# Local QA run outputs
+qa-artifacts/
+test-results/
