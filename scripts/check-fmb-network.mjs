@@ -23,7 +23,7 @@ for(const item of manifest.assets){
 
 const retired=['/assets/images/home/fmb-home-logo.webp','/assets/images/home/francine-home-hero-hd.webp','/assets/images/home/francine-home-founder-hd.webp','/assets/images/news/fmb-news-official.svg','/assets/images/channels/fmb-music-official.svg','/assets/images/channels/fmb-ebook-official.svg','https://at.adobe.com/'];
 const pages={
-  'index.html':[asset('masterTransparent'),asset('standingLandscape'),asset('seatedLandscape'),'Official Digital Headquarters','Mabayani','/assets/js/az-assistant.js'],
+  'index.html':[asset('masterTransparent'),asset('standingLandscape'),asset('seatedLandscape'),'Official Digital Headquarters','Mabayani'],
   'aboutfmb/index.html':[asset('standingLandscape'),asset('portraitFront'),'data-fmb-signature="about"'],
   'withlovefmb/index.html':['data-fmb-signature="withlove"','/assets/images/volunteer/francine-leading-with-love-fmb.webp','/assets/images/volunteer/francine-serving-with-volunteers.webp'],
   'news/index.html':[asset('news'),asset('portraitFront'),'data-fmb-signature="news"'],
@@ -94,6 +94,4 @@ if(/(?:data-fmb-portrait|fmb-official-(?:landscape|portrait))[^}]*object-fit\s*:
 const interactions=await read('assets/js/fmb-network-optimized.js');
 for(const marker of ['FMB Network','Search full articles, FAQs and brands'])if(!interactions.includes(marker))fail(`optimized interaction bundle is missing ${marker}`);
 if(/hero\.style\.transform|founder\.style\.transform|scale\(1\.0[2-9]/.test(interactions))fail('optimized motion still distorts founder photography');
-const reception=await read('assets/js/az-assistant.js');
-if(!reception.includes(asset('masterTransparent')))fail('Reception Desk is missing the exact FMB master');
 console.log(`FMB Network exact-asset gate passed ${manifest.assets.length} uploaded masters across ${Object.keys(pages).length} principal pages.`);

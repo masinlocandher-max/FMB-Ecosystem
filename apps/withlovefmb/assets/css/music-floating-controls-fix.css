@@ -97,40 +97,9 @@ body.music-app .fmb-music-dock{
     transform:translateX(1px);
   }
 
-  /* AZ belongs above the player, not beside or behind it. */
-  body.music-app .az-help-trigger{
-    right:max(14px,env(safe-area-inset-right,0px))!important;
-    bottom:calc(94px + env(safe-area-inset-bottom,0px))!important;
-    left:auto!important;
-    width:56px!important;
-    min-width:56px!important;
-    height:56px!important;
-    min-height:56px!important;
-    padding:8px!important;
-    border-radius:20px!important;
-  }
 
-  body.music-app .az-help-trigger-icon{
-    width:40px!important;
-    height:40px!important;
-  }
 
-  body.music-app .az-help-panel{
-    right:8px!important;
-    bottom:calc(8px + env(safe-area-inset-bottom,0px))!important;
-    left:8px!important;
-    width:auto!important;
-    height:min(720px,calc(100dvh - 16px - env(safe-area-inset-bottom,0px)))!important;
-    transform-origin:bottom right!important;
-  }
 
-  /* Give AZ the full interaction area while it is open. */
-  body.music-app.az-help-open .mini-player{
-    opacity:0!important;
-    visibility:hidden!important;
-    transform:translateY(12px)!important;
-    pointer-events:none!important;
-  }
 }
 
 @media(max-width:390px){
@@ -159,9 +128,7 @@ body.music-app .fmb-music-dock{
 }
 
 @media print{
-  body.music-app .mini-player,
-  body.music-app .az-help-trigger,
-  body.music-app .az-help-layer{
+  body.music-app .mini-player{
     display:none!important;
   }
 }

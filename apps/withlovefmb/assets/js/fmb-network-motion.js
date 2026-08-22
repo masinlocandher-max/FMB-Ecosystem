@@ -53,8 +53,7 @@
     '.fco-company-card','.fco-gateway-card','.nc-rundown-card','.story-row',
     '.fmb-network-now-card','.fmb-network-contact'
   ];
-  const revealItems=[...new Set(revealSelectors.flatMap(selector=>[...document.querySelectorAll(selector)]))]
-    .filter(node=>!node.closest('.az-help-layer'));
+  const revealItems=[...new Set(revealSelectors.flatMap(selector=>[...document.querySelectorAll(selector)]))];
   revealItems.forEach((node,index)=>{
     node.classList.add('network-reveal');
     if(index%4)node.classList.add(`network-stagger-${index%4}`);

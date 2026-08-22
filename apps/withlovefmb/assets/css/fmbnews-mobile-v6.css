@@ -16,9 +16,6 @@ html body.news-route.news-editorial-v5 .fmb-shell-footer,
 html body.news-route.news-editorial-v5 .nc-broadcast-identity,
 html body.news-route.news-editorial-v5 .nc-wire,
 html body.news-route.news-editorial-v5 .nc-brandline,
-html body.news-route.news-editorial-v5 .pearly-lazy-trigger,
-html body.news-route.news-editorial-v5 .az-help-trigger,
-html body.news-route.news-editorial-v5 .az-help-layer,
 html body.news-route.news-editorial-v5 .nc-mobile-dock {
   display: none !important;
 }

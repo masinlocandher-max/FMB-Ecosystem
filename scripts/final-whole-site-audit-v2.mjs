@@ -127,14 +127,6 @@ async function exercise(page,item,profile){
     return {name:'news-navigation',status:header?'passed':'failed',proof:`mobile header visible=${Boolean(header)}`};
   }
 
-  if(item.name==='about-fmb'&&profile.isMobile){
-    await page.waitForTimeout(1000);
-    const trigger=await firstVisible(page,'.pearly-lazy-trigger,.az-help-trigger');
-    if(!trigger)return {name:'reception',status:'failed',proof:'Reception trigger is not visible.'};
-    await trigger.click();
-    const opened=await page.locator('.az-help-panel').first().waitFor({state:'visible',timeout:6000}).then(()=>true).catch(()=>false);
-    return {name:'reception',status:opened?'passed':'failed',proof:`panel visible=${opened}`};
-  }
 
   if(item.name==='music'){
     const filter=await firstVisible(page,'[data-music-filter]:not([data-music-filter="all"])');

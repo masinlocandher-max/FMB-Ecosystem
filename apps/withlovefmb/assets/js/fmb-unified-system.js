@@ -187,17 +187,6 @@
     revealTargets.forEach((target) => target.classList.add('fmb-reveal', 'is-visible'));
   }
 
-  const loadReceptionDesk = () => {
-    if (document.querySelector('script[src*="/assets/js/az-assistant.js"]')) return;
-    const script = document.createElement('script');
-    script.src = '/assets/js/az-assistant.js?v=20260724-fmbandco-unified-v1';
-    script.defer = true;
-    document.body.appendChild(script);
-  };
-
-  if ('requestIdleCallback' in window) window.requestIdleCallback(loadReceptionDesk, { timeout: 1600 });
-  else window.setTimeout(loadReceptionDesk, 500);
-
   window.addEventListener('resize', () => {
     if (window.innerWidth > 960) closeMenu();
   });

@@ -3,8 +3,6 @@
   const $=selector=>document.querySelector(selector);
   const $$=selector=>document.querySelectorAll(selector);
   const MOBILE_EXPERIENCE_HOST='mobile.francinemariebautista.com';
-  const YONI_HOST='yoni.francinemariebautista.com';
-  const isPublicWebsiteHost=location.hostname.toLowerCase()!==YONI_HOST;
   const isPreviewMobileExperience=(/\.vercel\.app$/i.test(location.hostname)||/^(localhost|127\.0\.0\.1)$/i.test(location.hostname))&&new URLSearchParams(location.search).get('experience')==='mobile';
   const isDedicatedMobileHost=location.hostname.toLowerCase()===MOBILE_EXPERIENCE_HOST||isPreviewMobileExperience;
 
@@ -71,7 +69,6 @@
   ensureStylesheet('/assets/css/desktop-premium.css?v=20260716-desktop-premium-v1');
   ensureStylesheet('/assets/css/member-experience.css?v=20260716-member-mobile-v1');
   ensureStylesheet('/assets/css/mobile-app.css?v=20260716-member-mobile-v1');
-  if(isPublicWebsiteHost)ensureStylesheet('/assets/css/az-assistant.css?v=20260720-az-website-only-v1');
   const mobileStyles='assets/css/fmb-mobile-clean.css?v=20260716-mobile-plan';
   ensureStylesheet(mobileStyles);
   requestAnimationFrame(()=>{
@@ -80,7 +77,6 @@
   });
   ensureAppMetadata();
   loadScript('/assets/js/desktop-premium.js?v=20260716-desktop-premium-v1').catch(()=>{});
-  if(isPublicWebsiteHost)loadScript('/assets/js/az-assistant.js?v=20260720-az-website-only-v1').catch(()=>{});
 
   if(!document.querySelector('.skip-link')){
     const main=document.querySelector('main');if(main&&!main.id)main.id='main-content';

@@ -108,12 +108,6 @@ async function exercise(page,item,profile){
     const dock=await firstVisible(page,'.nc-mobile-dock');const links=dock?await dock.locator('a').count():0;
     return {name:'news-navigation',status:dock&&links>=3?'passed':'failed',proof:`dock=${Boolean(dock)}; links=${links}`};
   }
-  if(item.name==='about-fmb'&&profile.isMobile){
-    await page.waitForTimeout(1000);const trigger=await firstVisible(page,'.pearly-lazy-trigger,.az-help-trigger');
-    if(!trigger)return {name:'reception',status:'failed',proof:'Reception trigger is not visible.'};
-    await trigger.click();const opened=await page.locator('.az-help-panel').first().waitFor({state:'visible',timeout:6000}).then(()=>true).catch(()=>false);
-    return {name:'reception',status:opened?'passed':'failed',proof:`panel visible=${opened}`};
-  }
   if(item.name==='music'){
     const filter=await firstVisible(page,'[data-music-filter]:not([data-music-filter="all"])');
     if(!filter)return {name:'music-filter',status:'failed',proof:'No collection filter is visible.'};

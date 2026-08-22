@@ -322,66 +322,6 @@ def check_navigation_experience(errors: list[str]) -> None:
             errors.append(f"assets/js/site.js: missing navigation UX marker: {marker}")
     if ".entry-benefits" not in site_css:
         errors.append("assets/css/site.css: first-visit benefit styles are missing")
-def check_az_assistant(errors: list[str]) -> None:
-    site_js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
-    app_html = (ROOT / "app/index.html").read_text(encoding="utf-8")
-    worker = (ROOT / "service-worker.js").read_text(encoding="utf-8")
-    assistant_path = ROOT / "assets/js/az-assistant.js"
-    styles_path = ROOT / "assets/css/az-assistant.css"
-    if not assistant_path.exists():
-        errors.append("assets/js/az-assistant.js: AZ help flow is missing")
-        return
-    if not styles_path.exists():
-        errors.append("assets/css/az-assistant.css: AZ help interface styles are missing")
-        return
-    assistant = assistant_path.read_text(encoding="utf-8")
-    core_path = ROOT / "assets/js/az-assistant-core.js"
-    if not core_path.exists():
-        errors.append("assets/js/az-assistant-core.js: Pearly response bank is missing")
-        return
-    assistant += "\n" + core_path.read_text(encoding="utf-8")
-    styles = styles_path.read_text(encoding="utf-8")
-    for marker in (
-        "FMB&CO. Receptionist",
-        "Receptionist",
-        "AZ does not invent prices, packages, payment instructions, or availability.",
-        "verified premade reply bank",
-        "UNKNOWN_QUESTION_KEY",
-        "fmb:az-unmatched",
-        "www.francinemariebautista.com",
-        "FMB&amp;CO. Website Reception",
-        "Outside AZ’s Website Role",
-        "outside AZ’s capabilities",
-        "does not provide mental-health guidance",
-        "Website and Brands",
-        "News and Publications",
-        "Find Something",
-        "Community Pages",
-        "Website Privacy Information",
-        "Work with FMB",
-        "Volunteer and Collaborate",
-        "Services, Fees, and Partnerships",
-        "Report a Website Problem",
-        "Frequently Asked Website Questions",
-        "submit_contact_message",
-    ):
-        if marker not in assistant:
-            errors.append(f"assets/js/az-assistant.js: missing guided-help marker: {marker}")
-    for marker in (".az-help-trigger", ".az-help-panel", ".az-help-role", ".az-quick-reply", "min-height:44px", "min-width:150px", "fmb-mobile-host"):
-        if marker not in styles:
-            errors.append(f"assets/css/az-assistant.css: missing responsive help style: {marker}")
-    for marker in ("az-assistant.css", "az-assistant.js", "YONI_HOST", "isPublicWebsiteHost"):
-        if marker not in site_js:
-            errors.append(f"assets/js/site.js: AZ website-only loading guard is missing: {marker}")
-    for marker in ("az-assistant.css", "az-assistant.js"):
-        if marker in app_html:
-            errors.append(f"app/index.html: AZ must not load inside the companion app: {marker}")
-        if marker in worker:
-            errors.append(f"service-worker.js: AZ must not be part of the companion app shell: {marker}")
-    if "yoni.francinemariebautista.com')return" not in assistant:
-        errors.append("assets/js/az-assistant.js: AZ Yoni-host safety guard is missing")
-
-
 def check_advertising_flow(errors: list[str]) -> None:
     site_js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
     banner_css = (ROOT / "assets/css/experience-refresh.css").read_text(encoding="utf-8")
@@ -880,7 +820,6 @@ def main() -> int:
     check_config(errors)
     check_membership_features(errors)
     check_navigation_experience(errors)
-    check_az_assistant(errors)
     check_advertising_flow(errors)
     check_sharing_and_footer(errors)
     check_mobile_and_editorial_media(errors)

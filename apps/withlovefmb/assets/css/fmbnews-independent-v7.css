@@ -33,9 +33,6 @@ html body.news-independent-v7 .nc-broadcast-identity,
 html body.news-independent-v7 .nc-wire,
 html body.news-independent-v7 .nc-brandline,
 html body.news-independent-v7 .nc-mobile-dock,
-html body.news-independent-v7 .pearly-lazy-trigger,
-html body.news-independent-v7 .az-help-trigger,
-html body.news-independent-v7 .az-help-layer,
 html body.news-independent-v7 .fmb-news-ticker {
   display: none !important;
 }

@@ -11,8 +11,7 @@ const fullPageEvidenceStyle = `
     transform: none !important;
     transition: none !important;
   }
-  .fmb-shell-rail, .fmb-shell-header, .fmb-mobile-dock,
-  .pearly-lazy-trigger, .az-help-trigger, .az-help-layer { display: none !important; }
+  .fmb-shell-rail, .fmb-shell-header, .fmb-mobile-dock { display: none !important; }
 `;
 
 await mkdir(artifactDirectory, { recursive: true });
