@@ -141,7 +141,6 @@ See `SUPABASE_SETUP.md` for the detailed process.
 - `assets/js/music.js` – dynamic music library and player
 - `assets/js/config.js` – public Supabase configuration
 - `supabase/schema.sql` – tables, functions, storage, permissions, and RLS
-- `scripts/quality_check.py` – static link and asset checks
 - `.github/workflows/quality.yml` – automated quality workflow
 - `docs/new-website-structure-todo.md` – approved structure and phased implementation checklist
 
