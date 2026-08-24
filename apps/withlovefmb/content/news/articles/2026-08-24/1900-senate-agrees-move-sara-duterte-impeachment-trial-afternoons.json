@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-24-1900",
+  "emailSubject": "FMB News | Typhoon Saudel Enters PAR as 'Obet'; Impeachment Court Begins 3 PM Sessions | August 24, 2026 | 7:00 PM PHT",
+  "slug": "senate-agrees-move-sara-duterte-impeachment-trial-afternoons",
+  "headline": "Senate Agrees to Move Sara Duterte Impeachment Trial to Afternoons",
+  "seoTitle": "Senate Agrees to Afternoon Sara Duterte Impeachment Hearings | FMB News",
+  "seoDescription": "Senator-judges agreed to move regular Senate business to the morning and hold longer impeachment trial hearings in the afternoon.",
+  "keywords": ["Sara Duterte impeachment trial schedule", "Senate afternoon impeachment hearings", "Sherwin Gatchalian impeachment trial"],
+  "category": "National",
+  "kicker": "Politics · Public Accountability",
+  "deck": "The schedule change is intended to allow longer hearings and support the Senate's target of completing the trial before the end of 2026.",
+  "publishedAt": "2026-08-24T19:00:00+08:00",
+  "updatedAt": "2026-08-25T01:25:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {"heading": "What happened", "paragraphs": ["Senate President Sherwin Gatchalian said senator-judges had reached a consensus to move regular legislative sessions to the morning and hold longer impeachment trial hearings in the afternoon.", "The plan would allow the impeachment court to open around 3 p.m. after legislative work, rather than limiting trial proceedings to the morning. Gatchalian said the adjustment would be implemented within the week."]},
+    {"heading": "Context", "paragraphs": ["The Senate is trying to prevent the impeachment trial of Vice President Sara Duterte from extending into 2027. Gatchalian said the chamber is targeting one witness per day and hopes to reach a verdict by December.", "Day 17 proceeded on August 24 with former Office of the Vice President special disbursing officer Gina Acosta completing her testimony. The trial concerns allegations involving the use of confidential funds; the charges remain subject to adjudication by the impeachment court."]},
+    {"heading": "Why this matters", "paragraphs": ["A longer daily trial window could speed up witness examination while allowing the Senate to continue its regular legislative work, including deliberations on the proposed 2027 national budget."]},
+    {"heading": "What to watch next", "paragraphs": ["Watch for the Senate's formal daily calendar confirming when the revised schedule takes effect, the next prosecution witness and any rulings that alter the pace of the proceedings."]}
+  ],
+  "sources": [
+    {"publisher": "The Philippine Star", "title": "Impeachment trial moved to afternoon", "publishedAt": "2026-08-22T00:00:00+08:00", "url": "https://www.philstar.com/headlines/2026/08/22/2550929/impeachment-trial-moved-afternoon"},
+    {"publisher": "Philstar.com", "title": "Sara Duterte trial recap, Aug. 24: More aliases on receipts, cash trail to Sara's guard", "publishedAt": "2026-08-24T18:03:00+08:00", "url": "https://www.philstar.com/headlines/2026/08/24/2551506/sara-duterte-trial-recap-aug-24-more-aliases-receipts-cash-trail-saras-guard"},
+    {"publisher": "Philstar.com", "title": "Witness Acosta: I don't know why Sara Duterte chose me to disburse funds", "publishedAt": "2026-08-24T17:40:00+08:00", "url": "https://www.philstar.com/headlines/2026/08/24/2551500/witness-acosta-i-dont-know-why-sara-duterte-chose-me-disburse-funds"}
+  ],
+  "image": {"kind": "editorial-fallback", "url": "/assets/images/news/fmb-news-editorial-fallback.svg", "sourceUrl": null, "creator": "FMB News", "license": "FMB-owned editorial visual", "licenseUrl": "https://www.francinemariebautista.com/news/", "usageStatus": "FMB-owned editorial visual used because publication rights for the recommended legislative photo could not be independently verified.", "credit": "FMB News editorial visual", "caption": "FMB News editorial visual accompanying the Senate impeachment-trial schedule report; it does not depict the actual August 24 proceedings.", "alt": "FMB News editorial visual for the Senate impeachment-trial schedule update", "width": 1200, "height": 675, "focusX": 50, "focusY": 50},
+  "audit": {"sourceCheckedAt": "2026-08-25T01:25:00+08:00", "photoReferenceUrl": "https://www.pna.gov.ph/categories/national", "notes": ["The supplied headline's claim that 3 p.m. sessions had already begun was narrowed because the accessible source described a consensus to implement the schedule within the week.", "Same-day reporting confirms that Day 17 proceedings occurred and documents Gina Acosta's testimony.", "The article treats the confidential-fund case as allegations under adjudication and omits the bulletin's unsupported quotation and procedural details."]}
+}

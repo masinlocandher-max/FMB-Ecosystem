@@ -4,28 +4,28 @@
   "bulletinKey": "2026-08-24-1300",
   "emailSubject": "FMB News | DepEd Postpones Active Shooter Drills; Typhoon Saudel Reaches 175 km/h | August 24, 2026 | 1:00 PM PHT",
   "slug": "typhoon-saudel-175-kmh-nears-par-as-obet",
-  "headline": "Typhoon Saudel Enters PAR as Obet After Reaching 175 km/h",
-  "seoTitle": "Typhoon Saudel Enters PAR as Obet at 175 km/h | FMB News",
-  "seoDescription": "Typhoon Saudel entered the Philippine Area of Responsibility as Obet after PAGASA measured sustained winds of 175 km/h and gusts of up to 215 km/h.",
-  "keywords": ["Typhoon Saudel 175 kmh", "Obet enters PAR August 24 2026", "PAGASA Saudel advisory"],
+  "headline": "Typhoon Obet Enters PAR, Forecast to Exit Within 12 Hours",
+  "seoTitle": "Typhoon Obet Enters PAR, Exit Forecast Within 12 Hours | FMB News",
+  "seoDescription": "Typhoon Saudel entered the Philippine Area of Responsibility as Obet on August 24, with PAGASA reporting 165 km/h winds and an expected exit within 12 hours.",
+  "keywords": ["Typhoon Obet August 24 2026", "Saudel enters PAR", "PAGASA Obet 165 kmh", "Habagat Luzon"],
   "category": "National",
   "kicker": "Weather · Public Safety",
-  "deck": "PAGASA first monitored the near-super-typhoon inside PAR at 1:20 p.m. after its 11 a.m. advisory placed maximum sustained winds at 175 km/h.",
+  "deck": "PAGASA said Obet remained far from the Philippine landmass but would continue to enhance the southwest monsoon while crossing the northeastern edge of PAR.",
   "publishedAt": "2026-08-24T13:00:00+08:00",
-  "updatedAt": "2026-08-24T19:05:00+08:00",
+  "updatedAt": "2026-08-25T01:25:00+08:00",
   "author": "FMB News Desk",
   "articleType": "NewsArticle",
   "sections": [
-    {"heading": "What happened", "paragraphs": ["Typhoon Saudel entered the Philippine Area of Responsibility on Monday afternoon and was assigned the local name Obet, PAGASA said. The weather bureau first monitored the cyclone inside PAR at 1:20 p.m.", "In its 11 a.m. advisory, PAGASA placed Saudel 1,480 kilometers east-northeast of Extreme Northern Luzon, with maximum sustained winds of 175 kilometers per hour, gusts of up to 215 km/h and a central pressure of 940 hectopascals. It was moving west-northwestward at 30 km/h."]},
-    {"heading": "Context", "paragraphs": ["PAGASA classified the cyclone as being near super-typhoon strength and said further intensification before or while inside PAR could not be ruled out. Its forecast kept the center over the Philippine Sea, far from the country's landmass.", "The agency said Obet could leave PAR on Monday night or Tuesday morning, although a more westward track could keep it inside longer. PAGASA also reported that Obet and Tropical Depression Gaenari were enhancing the southwest monsoon over parts of Northern and Central Luzon."]},
+    {"heading": "What happened", "paragraphs": ["Typhoon Saudel entered the Philippine Area of Responsibility on Monday afternoon, August 24, and was assigned the local name Obet, PAGASA said. The weather bureau first monitored the cyclone inside PAR at 1:20 p.m.", "PAGASA monitoring reproduced by local disaster authorities placed Obet about 1,430 kilometers east-northeast of Extreme Northern Luzon as of 4 p.m., with maximum sustained winds of 165 kilometers per hour, gusts of up to 205 km/h and west-northwest movement at 30 km/h."]},
+    {"heading": "Context", "paragraphs": ["The typhoon was forecast to stay far from the Philippine landmass and leave PAR within about 12 hours. No tropical cyclone wind signal was in effect over the country in the 5 p.m. bulletin.", "Even without a direct landfall, PAGASA said Obet would continue to enhance the southwest monsoon, bringing rain and gusty conditions to parts of Luzon and adjacent seas."]},
     {"heading": "Why this matters", "paragraphs": ["A powerful offshore cyclone can strengthen monsoon flow even without a direct landfall. Communities and small-vessel operators should rely on the latest PAGASA bulletins because the storm's position, intensity and marine effects can change quickly."]},
     {"heading": "What to watch next", "paragraphs": ["Watch PAGASA for updated intensity and track forecasts, confirmation of when Obet exits PAR, and any revised rainfall or marine advisories linked to the enhanced southwest monsoon."]}
   ],
   "sources": [
-    {"publisher": "DOST-PAGASA", "title": "Tropical Cyclone Advisory No. 4: Typhoon Saudel", "publishedAt": "2026-08-24T11:00:00+08:00", "url": "https://pubfiles.pagasa.dost.gov.ph/tamss/weather/tcadvisory.pdf"},
-    {"publisher": "INQUIRER.net", "title": "At 'near super typhoon' category, Obet to enter PAR Monday afternoon", "publishedAt": "2026-08-24T11:43:00+08:00", "url": "https://newsinfo.inquirer.net/2290722/at-near-super-typhoon-category-obet-to-enter-par-monday-afternoon"},
-    {"publisher": "INQUIRER.net", "title": "'Near-Super Typhoon' Obet enters PAR – Pagasa", "publishedAt": "2026-08-24T14:00:00+08:00", "url": "https://newsinfo.inquirer.net/2291091/near-super-typhoon-obet-enters-par-pagasa"}
+    {"publisher": "Pangasinan Provincial Government", "title": "Typhoon Saudel Enters PAR as Obet; PAGASA Issues Rainfall Advisory for Pangasinan", "publishedAt": "2026-08-24T17:00:00+08:00", "url": "https://www.pangasinan.gov.ph/typhoon-saudel-enters-par-as-obet-pagasa-issues-rainfall-advisory-for-pangasinan/"},
+    {"publisher": "News5", "title": "Typhoon Obet enters PAR, likely to stay far from PH – PAGASA", "publishedAt": "2026-08-24T18:53:00+08:00", "url": "https://news.tv5.com.ph/weather/read/typhoon-obet-enters-par-likely-to-stay-far-from-ph-pagasa"},
+    {"publisher": "ABS-CBN News", "title": "Obet to exit PAR in 12 hours, no longer expected to become super typhoon", "publishedAt": "2026-08-24T17:43:00+08:00", "url": "https://www.abs-cbn.com/news/weather-traffic/2026/8/24/obet-to-exit-par-in-12-hours-no-longer-expected-to-become-super-typhoon-1743"}
   ],
   "image": {"kind": "editorial-fallback", "url": "/assets/images/news/fmb-news-editorial-fallback.svg", "sourceUrl": null, "creator": "FMB News", "license": "FMB-owned editorial visual", "licenseUrl": "https://www.francinemariebautista.com/news/", "usageStatus": "FMB-owned editorial visual used because publication rights for the recommended satellite image could not be independently verified.", "credit": "FMB News editorial visual", "caption": "FMB News editorial visual accompanying the Typhoon Obet update; it is not a satellite image of the actual cyclone.", "alt": "FMB News editorial visual for Typhoon Obet entering the Philippine Area of Responsibility", "width": 1200, "height": 675, "focusX": 50, "focusY": 50},
-  "audit": {"sourceCheckedAt": "2026-08-24T19:05:00+08:00", "photoReferenceUrl": "https://www.pna.gov.ph/categories/national", "notes": ["The 11 a.m. PAGASA advisory supports 175 km/h sustained winds, 215 km/h gusts, 940 hPa pressure, a 1,480-km east-northeast position and 30-km/h movement.", "The article was updated after PAGASA confirmed PAR entry at 1:20 p.m.", "Unsupported rainfall totals, wave heights and an incorrect 1,620-km position from the delivery envelope were omitted."]}
+  "audit": {"sourceCheckedAt": "2026-08-25T01:25:00+08:00", "photoReferenceUrl": "https://www.pna.gov.ph/categories/national", "notes": ["Preserved the original 1:00 p.m. publication time because the 7:00 p.m. bulletin explicitly marked this story as an update.", "Verified PAR entry, 165 km/h sustained winds, 205 km/h gusts, 30 km/h movement and the within-12-hours PAR exit forecast.", "Removed the duplicate 7:00 p.m. route and omitted unsupported rainfall totals, wave heights and quotation text."]}
 }

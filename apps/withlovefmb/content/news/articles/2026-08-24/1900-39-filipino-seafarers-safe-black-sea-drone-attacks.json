@@ -12,7 +12,7 @@
   "kicker": "Migrant Workers · Maritime Security",
   "deck": "Seventeen Filipino crew members of M/V Anna S and 22 aboard M/V Elina B were reported safe as the DMW continued monitoring assistance and repatriation arrangements.",
   "publishedAt": "2026-08-24T19:00:00+08:00",
-  "updatedAt": "2026-08-25T01:12:00+08:00",
+  "updatedAt": "2026-08-25T01:25:00+08:00",
   "author": "FMB News Desk",
   "articleType": "NewsArticle",
   "sections": [
@@ -22,10 +22,10 @@
     {"heading": "What to watch next", "paragraphs": ["Watch for DMW updates on repatriation arrangements, medical assistance and any further safety directives for licensed manning agencies and Filipino crews operating near conflict-affected waters."]}
   ],
   "sources": [
-    {"publisher": "The Insider News", "title": "39 Filipino seafarers safe after Black Sea drone attacks – DMW", "publishedAt": "2026-08-24T12:00:00+08:00", "url": "https://www.theinsidernews.info/39-filipino-seafarers-safe-after-black-sea-drone-attacks-dmw/metro/"},
+    {"publisher": "INQUIRER.net", "title": "39 Filipino seafarers safe after Black Sea drone attacks", "publishedAt": "2026-08-24T16:00:00+08:00", "url": "https://globalnation.inquirer.net/335756/39-filipino-seafarers-safe-after-black-sea-drone-attacks"},
     {"publisher": "Journal News Online", "title": "DMW mino-monitor kalagayan ng OFWs sa barko sa Black Sea", "publishedAt": "2026-08-23T12:00:00+08:00", "url": "https://journalnews.com.ph/dmw-mino-monitor-kalagayan-ng-ofws-sa-barko-sa-black-sea/"},
     {"publisher": "Philippine News Agency", "title": "Black Sea ban for Filipino seafarers stays amid continuing risks", "publishedAt": "2026-08-14T18:07:00+08:00", "url": "https://www.pna.gov.ph/articles/1281946"}
   ],
   "image": {"kind": "editorial-fallback", "url": "/assets/images/news/fmb-news-editorial-fallback.svg", "sourceUrl": null, "creator": "FMB News", "license": "FMB-owned editorial visual", "licenseUrl": "https://www.francinemariebautista.com/news/", "usageStatus": "FMB-owned editorial visual used because the approved email referenced DMW/government imagery but did not provide a stable reusable original image file with a direct asset URL.", "credit": "FMB News editorial visual", "caption": "FMB News editorial visual accompanying the Black Sea seafarer safety report.", "alt": "FMB News editorial visual for the report on 39 Filipino seafarers in the Black Sea", "width": 1200, "height": 675, "focusX": 50, "focusY": 50},
-  "audit": {"sourceCheckedAt": "2026-08-25T01:12:00+08:00", "photoReferenceUrl": "https://dmw.gov.ph/", "notes": ["Verified the 17 plus 22 crew breakdown and that the 39 seafarers were reported safe.", "Clarified that one seafarer was hospitalized for an unrelated kidney condition rather than an injury from the attack.", "Did not reproduce the email's broader compensation claims beyond independently supported high-risk-zone protections."]}
+  "audit": {"sourceCheckedAt": "2026-08-25T01:25:00+08:00", "photoReferenceUrl": "https://www.pna.gov.ph/categories/national", "notes": ["Verified the 17 plus 22 crew breakdown and that the 39 seafarers were reported safe.", "Clarified that one seafarer was hospitalized for an unrelated kidney condition rather than an injury from the attack.", "Did not reproduce the email's broader compensation claims beyond independently supported high-risk-zone protections."]}
 }
