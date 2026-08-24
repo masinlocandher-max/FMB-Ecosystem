@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-24-0700",
+  "emailSubject": "FMB News | Telcos to Block Violence Sites; DepEd Urged to Fill SPED Posts | August 24, 2026 | 7:00 AM PHT",
+  "slug": "gatchalian-urges-deped-fill-133-disability-support-posts",
+  "headline": "Gatchalian Urges DepEd to Fill 133 Disability-Support Posts",
+  "seoTitle": "Gatchalian Urges DepEd to Fill 133 Support Posts | FMB News",
+  "seoDescription": "Senate President Sherwin Gatchalian urged DepEd to fill 133 newly approved positions supporting programs and services for learners with disabilities.",
+  "keywords": [
+    "DepEd 133 plantilla positions",
+    "Sherwin Gatchalian learners with disabilities",
+    "Republic Act 11650",
+    "inclusive education Philippines"
+  ],
+  "category": "National",
+  "kicker": "Education · Inclusive learning",
+  "deck": "The newly approved positions include education program specialists, physical therapists and occupational therapists.",
+  "publishedAt": "2026-08-24T07:00:00+08:00",
+  "updatedAt": "2026-08-24T12:57:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {
+      "heading": "What happened",
+      "paragraphs": [
+        "Senate President Sherwin Gatchalian urged the Department of Education to fill 133 newly created personnel positions intended to strengthen support and specialized services for learners with disabilities.",
+        "The Department of Budget and Management approved the new plantilla items, which include Senior Education Program Specialists, Education Program Specialist IIs, Physical Therapist IIs and Occupational Therapist IIs."
+      ]
+    },
+    {
+      "heading": "Context",
+      "paragraphs": [
+        "Republic Act No. 11650 establishes a national policy of inclusion and services for learners with disabilities. It directs the government to support Inclusive Learning Resource Centers and provides for specialists, assessment, intervention and related services.",
+        "The source report supports the 133 approved positions and the listed job classes. It does not substantiate the bulletin's claims about speech-therapist posts, more than 300,000 affected learners, completed regional hiring pools or university recruitment partnerships, so those details are excluded."
+      ]
+    },
+    {
+      "heading": "Why this matters",
+      "paragraphs": [
+        "Filling the posts is a concrete implementation step for the law's promise of accessible, inclusive and appropriate public education for learners with disabilities."
+      ]
+    },
+    {
+      "heading": "What to watch next",
+      "paragraphs": [
+        "Watch for DepEd's recruitment timetable, the distribution of the 133 positions across regions and public reporting on how quickly the posts are filled."
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "publisher": "The Philippine STAR",
+      "title": "Hiring staff for disabled learners pushed",
+      "publishedAt": "2026-08-24T00:00:00+08:00",
+      "url": "https://www.philstar.com/headlines/2026/08/24/2551345/hiring-staff-disabled-learners-pushed"
+    },
+    {
+      "publisher": "The Lawphil Project",
+      "title": "Republic Act No. 11650",
+      "publishedAt": "2022-03-11T00:00:00+08:00",
+      "url": "https://www.lawphil.net/statutes/repacts/ra2022/ra_11650_2022.html"
+    }
+  ],
+  "image": {
+    "kind": "editorial-fallback",
+    "url": "/assets/images/news/fmb-news-editorial-fallback.svg",
+    "sourceUrl": null,
+    "creator": "FMB News",
+    "license": "FMB-owned editorial visual",
+    "licenseUrl": "https://www.francinemariebautista.com/news/",
+    "usageStatus": "FMB-owned editorial visual used because the bulletin did not provide a stable image file with independently verifiable reuse rights.",
+    "credit": "FMB News editorial visual",
+    "caption": "FMB News editorial visual accompanying coverage of disability-support positions in public education.",
+    "alt": "FMB News editorial visual for inclusive education and disability-support staffing",
+    "width": 1200,
+    "height": 675,
+    "focusX": 50,
+    "focusY": 50
+  },
+  "audit": {
+    "sourceCheckedAt": "2026-08-24T12:57:00+08:00",
+    "photoReferenceUrl": "https://www.pna.gov.ph/categories/national",
+    "notes": [
+      "The direct Philippine STAR report and the text of Republic Act No. 11650 were independently checked.",
+      "Unsupported figures, job classes and recruitment arrangements in the bulletin were omitted.",
+      "The recommended classroom photograph could not be resolved to a stable reusable file with verified rights, so the FMB-owned fallback is used."
+    ]
+  }
+}

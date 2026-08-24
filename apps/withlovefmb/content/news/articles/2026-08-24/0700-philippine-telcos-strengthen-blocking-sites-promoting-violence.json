@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-24-0700",
+  "emailSubject": "FMB News | Telcos to Block Violence Sites; DepEd Urged to Fill SPED Posts | August 24, 2026 | 7:00 AM PHT",
+  "slug": "philippine-telcos-strengthen-blocking-sites-promoting-violence",
+  "headline": "Philippine Telcos Strengthen Blocking of Sites Promoting Violence",
+  "seoTitle": "Philippine Telcos Strengthen Online Violence Blocking | FMB News",
+  "seoDescription": "Converge, Globe and PLDT detailed measures to restrict access to malicious, exploitative and violence-focused online content after renewed school-safety concerns.",
+  "keywords": [
+    "Philippine telcos block violent content",
+    "PLDT school violence sites",
+    "Globe online safety",
+    "Converge malicious domains"
+  ],
+  "category": "Technology",
+  "kicker": "Digital safety · Telecommunications",
+  "deck": "Converge, Globe and PLDT detailed existing and expanded controls against malicious, exploitative and violence-focused online content.",
+  "publishedAt": "2026-08-24T07:00:00+08:00",
+  "updatedAt": "2026-08-24T12:57:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {
+      "heading": "What happened",
+      "paragraphs": [
+        "Major Philippine internet providers are strengthening measures that restrict access to malicious online content, with Globe Telecom committing to block sites that host gore material and Converge ICT Solutions describing its continuing domain-blocking program.",
+        "PLDT had also blocked more than 100 sites streaming videos of school violence following the shooting at Ateneo de Zamboanga University, according to The Philippine STAR."
+      ]
+    },
+    {
+      "heading": "Context",
+      "paragraphs": [
+        "Converge said it blocked nearly 12 billion attempts to enter dangerous sites and blacklisted around 12,000 malicious domains in 2025. Globe said it blocked 438,446 attempts to access child sexual abuse and exploitation materials during the same year.",
+        "The source report does not support the bulletin's claims of a new industry-wide NTC-CICC agreement, participation by DITO Telecommunity, DNS filtering integrated on August 24 or a 15-minute emergency takedown bridge. Those details are excluded."
+      ]
+    },
+    {
+      "heading": "Why this matters",
+      "paragraphs": [
+        "The measures follow renewed concern about young people's exposure to violent online material after a deadly school shooting. They also raise an important due-process question about how providers identify harmful sites while protecting lawful expression and reporting."
+      ]
+    },
+    {
+      "heading": "What to watch next",
+      "paragraphs": [
+        "Watch for formal regulatory guidance, transparent blocking criteria and any public reporting by providers on newly restricted domains and appeal procedures."
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "publisher": "The Philippine STAR",
+      "title": "Telcos ready to block more sites promoting violence",
+      "publishedAt": "2026-08-24T01:00:00+08:00",
+      "url": "https://www.philstar.com/headlines/2026/08/24/2551359/telcos-ready-block-more-sites-promoting-violence"
+    }
+  ],
+  "image": {
+    "kind": "editorial-fallback",
+    "url": "/assets/images/news/fmb-news-editorial-fallback.svg",
+    "sourceUrl": null,
+    "creator": "FMB News",
+    "license": "FMB-owned editorial visual",
+    "licenseUrl": "https://www.francinemariebautista.com/news/",
+    "usageStatus": "FMB-owned editorial visual used because the bulletin did not provide a stable image file with independently verifiable reuse rights.",
+    "credit": "FMB News editorial visual",
+    "caption": "FMB News editorial visual accompanying coverage of Philippine telcos' online safety measures.",
+    "alt": "FMB News editorial visual for telecommunications and online safety coverage",
+    "width": 1200,
+    "height": 675,
+    "focusX": 50,
+    "focusY": 50
+  },
+  "audit": {
+    "sourceCheckedAt": "2026-08-24T12:57:00+08:00",
+    "photoReferenceUrl": "https://www.pna.gov.ph/categories/national",
+    "notes": [
+      "The bulletin supplied only publisher homepages. The direct Philippine STAR article was independently resolved and checked.",
+      "Unsupported claims about an NTC-CICC agreement, DITO participation and a 15-minute takedown bridge were removed.",
+      "The recommended photograph could not be resolved to a stable reusable file with verified rights, so the FMB-owned fallback is used."
+    ]
+  }
+}
