@@ -76,9 +76,16 @@ for (const file of await htmlFiles(newsRoot)) {
     const date = html.match(/<meta\b[^>]*property=(['"])article:published_time\1[^>]*content=(['"])([^'"]+)\2/i)?.[3] || '';
     if (!date || Number.isNaN(new Date(date).getTime())) briefFailures.push(`${relative}: valid publication date missing`);
     if (!/<figcaption\b[^>]*class=(['"])[^'"]*brief-credit[^'"]*\1[^>]*>[\s\S]*?(?:Photo|Image)[\s\S]*?<\/figcaption>/i.test(html)) briefFailures.push(`${relative}: visible photo credit missing`);
-    if (/fmb-news-editorial-fallback|newsroom-editorial-fallback/i.test(html)) briefFailures.push(`${relative}: generic fallback cannot serve as the related Brief image`);
+
+    const fallbackFigures = (html.match(/<figure\b[\s\S]*?<\/figure>/gi) || [])
+      .filter((figure) => /fmb-news-editorial-fallback|newsroom-editorial-fallback/i.test(figure));
+    for (const [index, figure] of fallbackFigures.entries()) {
+      if (!/<figcaption\b[^>]*class=(['"])[^'"]*brief-credit[^'"]*\1[^>]*>[\s\S]*?EDITORIAL FALLBACK[\s\S]*?<\/figcaption>/i.test(figure)) {
+        briefFailures.push(`${relative}: fallback figure ${index + 1} must be visibly labeled EDITORIAL FALLBACK`);
+      }
+    }
   }
 }
 
 if (briefFailures.length) throw new Error(`FMB Brief production audit failed:\n${briefFailures.join('\n')}`);
-console.log(`Protected ${held.length} FMB Brief route(s) from the legacy newsroom processor, applied the FMB News / Filipino Media Bulletin lockup, and passed the Brief-specific date, image, and credit audit.`);
+console.log(`Protected ${held.length} FMB Brief route(s) from the legacy newsroom processor, applied the FMB News / Filipino Media Bulletin lockup, and passed the Brief-specific date, image, credit, and labeled-fallback audit.`);
