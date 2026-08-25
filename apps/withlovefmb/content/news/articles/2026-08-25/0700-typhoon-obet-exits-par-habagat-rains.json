@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-25-0700",
+  "emailSubject": "FMB News | Typhoon Obet Exits PAR; DBM Releases ₱1-B for AI Flood Forecasting | August 25, 2026 | 7:00 AM PHT",
+  "slug": "typhoon-obet-exits-par-habagat-rains",
+  "headline": "Typhoon Obet Exits PAR as Habagat Rains Persist Over Western Luzon",
+  "seoTitle": "Typhoon Obet Exits PAR; Habagat Rains Persist | FMB News",
+  "seoDescription": "Typhoon Obet exited PAR before dawn on August 25 while PAGASA warned that Habagat rains would continue over parts of western Luzon.",
+  "keywords": ["Typhoon Obet exits PAR", "Habagat August 25 2026", "PAGASA Western Luzon"],
+  "category": "National",
+  "kicker": "Weather · Public Safety",
+  "deck": "The typhoon cleared the Philippine monitoring boundary before dawn, but the southwest monsoon remained the main rainmaker over western Luzon.",
+  "publishedAt": "2026-08-25T07:00:00+08:00",
+  "updatedAt": "2026-08-25T19:01:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {"heading": "What happened", "paragraphs": ["Typhoon Obet, internationally known as Saudel, exited the Philippine Area of Responsibility before dawn Tuesday, August 25, according to the approved FMB News weather brief citing PAGASA.", "The storm remained offshore, while the southwest monsoon continued to bring rain to parts of western Luzon."]},
+    {"heading": "Context", "paragraphs": ["The newsroom brief placed Obet outside PAR early Tuesday and said monsoon conditions remained relevant for Pangasinan, Zambales, Bataan and nearby western areas. Forecast details can change quickly and residents should continue following current PAGASA and local disaster advisories."]},
+    {"heading": "Why this matters", "paragraphs": ["A cyclone leaving PAR does not automatically end weather hazards. Enhanced monsoon flow can continue producing rain, rough seas and localized flooding after the storm center has moved away."]},
+    {"heading": "What to watch next", "paragraphs": ["Watch PAGASA rainfall and marine advisories and local government notices for areas with saturated ground, swollen waterways or continuing class and transport disruptions."]}
+  ],
+  "sources": [{"publisher": "DOST-PAGASA / FMB News approved brief", "title": "Typhoon Obet exits PAR; Habagat rains continue", "publishedAt": "2026-08-25T05:00:00+08:00", "url": "https://www.pagasa.dost.gov.ph/"}],
+  "image": {"kind": "editorial-fallback", "url": "/assets/images/news/fmb-news-editorial-fallback.svg", "sourceUrl": null, "creator": "FMB News", "license": "FMB-owned editorial visual", "licenseUrl": "https://www.francinemariebautista.com/news/", "usageStatus": "FMB-owned editorial visual used because the approved email referenced PAGASA imagery but did not provide a stable reusable original asset URL.", "credit": "FMB News editorial visual", "caption": "FMB News editorial visual accompanying the Obet and Habagat weather update.", "alt": "FMB News editorial visual for the Typhoon Obet weather update", "width": 1200, "height": 675, "focusX": 50, "focusY": 50},
+  "audit": {"sourceCheckedAt": "2026-08-25T19:01:00+08:00", "photoReferenceUrl": "https://www.pagasa.dost.gov.ph/", "notes": ["Published from the approved August 25 7:00 AM newsroom brief.", "Used a credited FMB-owned fallback because no stable original image asset was supplied."]}
+}
