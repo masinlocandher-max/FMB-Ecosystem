@@ -16,6 +16,7 @@ const steps = [
   '../apps/withlovefmb/scripts/check-orchestrator.mjs',
   './audit-fmb-image-integrity-exact.mjs',
   './check-dist-links.mjs',
+  './post-build-miss-intercontinental-isolation.mjs',
 ];
 
 for (const step of steps) {
