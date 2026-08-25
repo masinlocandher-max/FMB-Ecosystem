@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-26-0100",
+  "emailSubject": "FMB News | Impeachment Day 18 Adjourns; St. Luke's & PhilHealth Ink ₱1.4-B Pact | August 26, 2026 | 1:00 AM PHT",
+  "slug": "habagat-rains-western-luzon",
+  "headline": "Habagat Keeps Rain Risk Over Western and Northern Luzon After Tuesday Warnings",
+  "seoTitle": "Habagat Rain Risk Continues Over Western, Northern Luzon | FMB News",
+  "seoDescription": "PAGASA continued to monitor Habagat-driven rain over parts of Luzon into August 26 after Tuesday rainfall warnings affected Zambales and parts of Bataan.",
+  "keywords": ["Habagat August 26 2026", "Zambales Bataan rainfall", "PAGASA Luzon weather"],
+  "category": "News",
+  "kicker": "Weather · Public Safety",
+  "deck": "Tuesday's Yellow rainfall warning covered Zambales and parts of Bataan, while PAGASA's early-Wednesday advisories continued to flag monsoon rain across northern Luzon.",
+  "publishedAt": "2026-08-26T01:00:00+08:00",
+  "updatedAt": "2026-08-26T06:57:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {"heading":"What happened","paragraphs":["The Southwest Monsoon continued to influence Luzon into Wednesday after PAGASA placed Zambales and parts of Bataan under a Yellow rainfall warning on Tuesday, August 25.","The Tuesday warning covered Zambales and the Bataan municipalities of Dinalupihan, Hermosa and Morong, where flooding was possible in flood-prone areas. Other parts of Central Luzon and Metro Manila were also monitored for lighter to occasionally heavy rain during the day."]},
+    {"heading":"Early Wednesday outlook","paragraphs":["PAGASA's Northern Luzon regional advisory issued at 2:00 AM on August 26 continued to forecast light to moderate, at times heavy rain over parts of Batanes, Cagayan, La Union, Benguet, Ilocos Norte, Ilocos Sur and Pangasinan.","The public and local disaster offices were advised to continue monitoring conditions, particularly in communities vulnerable to flash floods and landslides."]},
+    {"heading":"Context","paragraphs":["The approved FMB News brief said heavy-rainfall advisories for Metro Manila had been terminated late Tuesday as the monsoon rainband shifted west. FMB News could independently confirm the Tuesday Zambales-Bataan warning and the continuing early-Wednesday northern Luzon advisories, but not a retrievable NCR termination bulletin carrying all of the brief's claimed details."]},
+    {"heading":"What to watch next","paragraphs":["Rainfall advisories can change within hours. Residents in western and northern Luzon should rely on the latest PAGASA regional warnings and local disaster-office instructions rather than older warning maps."]}
+  ],
+  "sources": [
+    {"publisher":"PAGASA","title":"Northern Luzon Regional Forecast and Rainfall Advisory","publishedAt":"2026-08-26T02:00:00+08:00","url":"https://staging.pagasa.dost.gov.ph/regional-forecast/nlprsd"},
+    {"publisher":"INQUIRER.net","title":"Pagasa: Yellow rainfall warning up in Zambales, parts of Bataan Tuesday","publishedAt":"2026-08-25T09:12:00+08:00","url":"https://newsinfo.inquirer.net/2291534/pagasa-yellow-rainfall-warning-up-in-zambales-parts-of-bataan-tuesday"}
+  ],
+  "image":{"kind":"editorial-fallback","url":"/assets/images/news/fmb-news-editorial-fallback.svg","sourceUrl":"https://staging.pagasa.dost.gov.ph/regional-forecast/nlprsd","creator":"FMB News","license":"FMB-owned editorial visual","licenseUrl":"https://www.francinemariebautista.com/news/","usageStatus":"FMB-owned editorial visual used because the approved email referenced PAGASA imagery but did not provide a stable original image file for repository ingestion.","credit":"FMB News editorial visual","caption":"FMB News editorial visual accompanying the August 26 Habagat weather update.","alt":"FMB News editorial visual for Habagat weather coverage","width":1200,"height":675,"focusX":50,"focusY":50},
+  "audit":{"sourceCheckedAt":"2026-08-26T06:57:00+08:00","photoReferenceUrl":"https://staging.pagasa.dost.gov.ph/regional-forecast/nlprsd","notes":["Tuesday Yellow warning over Zambales and parts of Bataan independently confirmed.","Early-Wednesday PAGASA advisory independently confirmed continuing Habagat rain risk over northern Luzon.","Headline narrowed because the approved brief's claimed NCR warning termination could not be independently reproduced in a retrievable bulletin."]}
+}
