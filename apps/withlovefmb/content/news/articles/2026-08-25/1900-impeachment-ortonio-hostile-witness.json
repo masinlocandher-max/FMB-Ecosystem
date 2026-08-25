@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-25-1900",
+  "emailSubject": "FMB News | 261 Filipino Seafarers Repatriated from Black Sea; Ortonio Declared Hostile Witness | August 25, 2026 | 7:00 PM PHT",
+  "slug": "impeachment-ortonio-hostile-witness",
+  "headline": "Senate Impeachment Court Declares OVP Aide Lemuel Ortonio a Hostile Witness",
+  "seoTitle": "Lemuel Ortonio Declared Hostile Witness in Sara Duterte Trial | FMB News",
+  "seoDescription": "The Senate impeachment court declared OVP Assistant Secretary Lemuel Ortonio a hostile witness on August 25, allowing prosecutors to ask leading questions during his examination.",
+  "keywords": ["Lemuel Ortonio hostile witness", "Sara Duterte impeachment August 25 2026", "OVP confidential funds trial"],
+  "category": "News",
+  "kicker": "Impeachment · Governance",
+  "deck": "The ruling came after Ortonio confirmed that he remains employed by Vice President Sara Duterte, reports directly to her and holds a coterminous post.",
+  "publishedAt": "2026-08-25T19:00:00+08:00",
+  "updatedAt": "2026-08-26T01:01:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {"heading": "What happened", "paragraphs": ["The Senate sitting as an impeachment court declared Office of the Vice President Assistant Secretary and Assistant Chief of Staff Lemuel Ortonio a hostile witness during the August 25 proceedings in the impeachment trial of Vice President Sara Duterte.", "Presiding Officer Sen. Francis Escudero issued the ruling after Ortonio confirmed that he serves at Duterte's pleasure, reports directly to her and holds a coterminous position. The ruling permits the prosecution to use leading questions, while the court stressed that misleading questions remain prohibited."]},
+    {"heading": "What Ortonio testified", "paragraphs": ["Ortonio testified that the OVP requested confidential funds without supporting documents detailing the planned confidential activities at the time of the request. He also confirmed under questioning that Duterte knew about, authorized and supervised the handling of OVP confidential funds from request through liquidation, according to Philippine News Agency reporting.", "Those statements form part of the prosecution's case alleging irregularities in the handling of confidential funds. They are testimony and prosecution evidence, not a final finding of liability against the Vice President."]},
+    {"heading": "Context", "paragraphs": ["The prosecution is using Ortonio's testimony to trace how confidential funds were requested, released, spent and liquidated. House prosecutors separately said his testimony showed the OVP's P125-million confidential fund allocation for late 2022 was reported disbursed within 11 days."]},
+    {"heading": "What to watch next", "paragraphs": ["The impeachment court is expected to continue examining witnesses and documentary evidence concerning the OVP and Department of Education confidential-fund allegations. The defense retains the opportunity to challenge testimony and present its own evidence under the court's rules."]}
+  ],
+  "sources": [
+    {"publisher": "Philippine News Agency", "title": "Senate impeachment court declares Ortonio hostile witness", "publishedAt": "2026-08-25T14:19:00+08:00", "url": "https://www.pna.gov.ph/articles/1282579"},
+    {"publisher": "Philippine News Agency", "title": "Ortonio: VP Sara knew, approved, supervised handling of secret funds", "publishedAt": "2026-08-25T18:42:00+08:00", "url": "https://www.pna.gov.ph/articles/1282623"}
+  ],
+  "image": {"kind": "editorial-fallback", "url": "/assets/images/news/fmb-news-editorial-fallback.svg", "sourceUrl": "https://www.pna.gov.ph/photos/84569", "creator": "FMB News", "license": "FMB-owned editorial visual", "licenseUrl": "https://www.francinemariebautista.com/news/", "usageStatus": "FMB-owned editorial visual used because the approved email referenced government/news imagery but did not provide a stable original image file for repository ingestion.", "credit": "FMB News editorial visual", "caption": "FMB News editorial visual accompanying coverage of the August 25 impeachment proceedings.", "alt": "FMB News editorial visual for the Senate impeachment trial", "width": 1200, "height": 675, "focusX": 50, "focusY": 50},
+  "audit": {"sourceCheckedAt": "2026-08-26T01:01:00+08:00", "photoReferenceUrl": "https://www.pna.gov.ph/photos/84569", "notes": ["Hostile-witness ruling independently confirmed by same-day PNA coverage.", "Article distinguishes testimony and prosecution allegations from adjudicated findings."]}
+}
