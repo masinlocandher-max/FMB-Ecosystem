@@ -30,6 +30,14 @@
   ],
   "rewrites": [
     {
+      "source": "/MissIntercontinental",
+      "destination": "/MissIntercontinental/index.html"
+    },
+    {
+      "source": "/MissIntercontinental/",
+      "destination": "/MissIntercontinental/index.html"
+    },
+    {
       "source": "/about-francine-marie-bautista/early-life-pageantry-advocacy",
       "destination": "/about-francine-marie-bautista/early-life-pageantry-advocacy/index.html"
     },
