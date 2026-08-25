@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-25-1300",
+  "emailSubject": "FMB News | Marcos Expands Local EV Perks; Senate Orders Medical Check on Fund Witness | August 25, 2026 | 1:00 PM PHT",
+  "slug": "visayas-grid-red-yellow-alerts",
+  "headline": "Visayas Grid Under Red and Yellow Alerts as Major Power Units Remain Offline",
+  "seoTitle": "Visayas Grid Under Red, Yellow Alerts August 25 | FMB News",
+  "seoDescription": "NGCP placed the Visayas grid under red and yellow alerts on August 25 as major generating units remained unavailable and capacity fell below peak demand.",
+  "keywords": ["Visayas grid red alert August 25 2026", "NGCP yellow alert Visayas", "Visayas power shortage"],
+  "category": "Business",
+  "kicker": "Energy · Grid Reliability",
+  "deck": "NGCP scheduled a red alert for the evening peak and yellow alerts around it as available capacity remained below projected demand.",
+  "publishedAt": "2026-08-25T13:00:00+08:00",
+  "updatedAt": "2026-08-25T19:01:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {"heading": "What happened", "paragraphs": ["The National Grid Corporation of the Philippines placed the Visayas grid under a red alert from 5 p.m. to 8 p.m. Tuesday, August 25, with yellow alerts scheduled before and after the evening peak.", "NGCP reported available capacity of about 2,421 megawatts against projected peak demand of about 2,570 MW."]},
+    {"heading": "Context", "paragraphs": ["Current PNA reporting identifies the unavailability of major Therma Visayas and Kepco SPC units among the key constraints. NGCP reported about 904.5 MW unavailable across forced outages and derated plants, a larger total than the 450-MW figure in the approved email summary."]},
+    {"heading": "Why this matters", "paragraphs": ["A red alert means supply is insufficient to meet demand and the grid's regulating requirement, increasing the risk of service interruptions if additional supply or demand-side measures are not available. A yellow alert means reserves are below contingency requirements."]},
+    {"heading": "What to watch next", "paragraphs": ["Watch NGCP and the Department of Energy for updated alert windows, restoration of generating units and any demand-management measures during the evening peak."]}
+  ],
+  "sources": [{"publisher": "Philippine News Agency", "title": "Visayas grid still on red alert on Tuesday", "publishedAt": "2026-08-25T10:23:00+08:00", "url": "https://www.pna.gov.ph/articles/1282564"}],
+  "image": {"kind": "editorial-fallback", "url": "/assets/images/news/fmb-news-editorial-fallback.svg", "sourceUrl": null, "creator": "FMB News", "license": "FMB-owned editorial visual", "licenseUrl": "https://www.francinemariebautista.com/news/", "usageStatus": "FMB-owned editorial visual used because the email referenced an NGCP graphic but did not provide a stable reusable original asset file.", "credit": "FMB News editorial visual", "caption": "FMB News editorial visual accompanying the Visayas grid alert report.", "alt": "FMB News editorial visual for the Visayas power grid alert", "width": 1200, "height": 675, "focusX": 50, "focusY": 50},
+  "audit": {"sourceCheckedAt": "2026-08-25T19:01:00+08:00", "photoReferenceUrl": "https://www.pna.gov.ph/articles/1282564", "notes": ["Same-day PNA reporting confirms the red and yellow alert schedule and 2,421 MW available capacity against 2,570 MW peak demand.", "Used NGCP/PNA's current 904.5-MW unavailable-capacity figure instead of the email summary's narrower 450-MW figure."]}
+}
