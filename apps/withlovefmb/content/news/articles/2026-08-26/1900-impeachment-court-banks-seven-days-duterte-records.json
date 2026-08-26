@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-26-1900",
+  "emailSubject": "FMB News | Impeachment Court Orders Bank Subpoenas; PAGASA Forecasts 7 More Cyclones | August 26, 2026 | 7:00 PM PHT",
+  "slug": "impeachment-court-banks-seven-days-duterte-records",
+  "headline": "Impeachment Court Gives Banks 7 Days to Submit Duterte Financial Records",
+  "seoTitle": "Banks Given 7 Days to Submit Duterte Records to Impeachment Court | FMB News",
+  "seoDescription": "The Senate Impeachment Court gave financial institutions until September 2 to submit peso-denominated records involving Vice President Sara Duterte, Manases Carpio and 20 entities.",
+  "keywords": ["Sara Duterte impeachment", "bank records subpoena", "Senate Impeachment Court", "September 2 deadline"],
+  "category": "National",
+  "kicker": "Impeachment · Judiciary",
+  "deck": "Financial institutions have until September 2 to submit subpoenaed peso-denominated records involving the Vice President, her husband and 20 entities.",
+  "publishedAt": "2026-08-26T19:00:00+08:00",
+  "updatedAt": "2026-08-26T19:00:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {"heading":"What happened","paragraphs":["The Senate Impeachment Court gave concerned banking and financial institutions seven calendar days, or until September 2, to submit subpoenaed peso-denominated financial records involving Vice President Sara Duterte, her husband Manases Carpio and 20 entities linked to them.","The fresh directive was announced during Day 19 of the impeachment trial on Wednesday, August 26."]},
+    {"heading":"What the order covers","paragraphs":["According to the Philippine News Agency's same-day report, the records are being sought under subpoenas previously granted by the court. The court has imposed confidentiality protections on sensitive financial material submitted for the proceedings.","The order concerns production of records for the impeachment trial and does not itself establish wrongdoing by any person or entity named in the subpoenas."]},
+    {"heading":"Context","paragraphs":["The impeachment court has been hearing evidence concerning allegations involving the Office of the Vice President's use of confidential funds. The Vice President denies wrongdoing and is entitled to contest the prosecution's evidence and allegations."]},
+    {"heading":"Why this matters","paragraphs":["The September 2 deadline creates a concrete timetable for financial evidence that could become significant to the prosecution and defense. Any records produced will still have to be assessed under the court's evidentiary rules and in the context of the articles of impeachment."]},
+    {"heading":"What to watch next","paragraphs":["Attention now turns to bank compliance with the September 2 deadline and to how the impeachment court handles any records produced under its confidentiality safeguards."]}
+  ],
+  "sources": [
+    {"publisher":"Philippine News Agency","title":"Banks given 7 days to submit VP records to impeachment court","publishedAt":"2026-08-26T17:01:00+08:00","url":"https://www.pna.gov.ph/articles/1282721"}
+  ],
+  "image":{"kind":"editorial-fallback","url":"/assets/images/news/fmb-news-editorial-fallback.svg","sourceUrl":null,"creator":"FMB News","license":"FMB-owned editorial visual","licenseUrl":"https://www.francinemariebautista.com/news/","usageStatus":"FMB-owned editorial visual used because the approved email referenced a Senate/PNA image but did not provide a stable original image file for repository ingestion.","credit":"FMB News editorial visual","caption":"FMB News editorial visual accompanying coverage of the Senate Impeachment Court's bank-record directive.","alt":"FMB News editorial visual for the Senate impeachment trial bank-record order","width":1200,"height":675,"focusX":50,"focusY":50},
+  "audit":{"sourceCheckedAt":"2026-08-27T01:00:00+08:00","photoReferenceUrl":"https://www.pna.gov.ph/articles/1282721","notes":["Independently verified the seven-day deadline, September 2 compliance date, and scope covering Vice President Sara Duterte, Manases Carpio and 20 entities against the same-day PNA report.","Kept the article focused on the verified subpoena order and avoided treating allegations or subpoenaed records as findings of wrongdoing."]}
+}
