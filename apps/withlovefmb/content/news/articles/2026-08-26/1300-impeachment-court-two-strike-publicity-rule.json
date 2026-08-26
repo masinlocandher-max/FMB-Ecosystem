@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-26-1300",
+  "emailSubject": "FMB News | AFP Concludes 19th MMCA in WPS; Impeachment Court Imposes Two-Strike Rule | August 26, 2026 | 1:00 PM PHT",
+  "slug": "impeachment-court-two-strike-publicity-rule",
+  "headline": "Impeachment Court Sets Two-Strike Rule for Publicity Breaches",
+  "seoTitle": "Impeachment Court Sets Two-Strike Rule on Publicity Breaches | FMB News",
+  "seoDescription": "The Senate impeachment court tightened enforcement of Rule 18, setting a reprimand for a first publicity breach and possible fines and speaking restrictions for repeat violations.",
+  "keywords": ["impeachment court two strike rule", "Rule 18 impeachment publicity", "Sara Duterte impeachment trial"],
+  "category": "National",
+  "kicker": "Impeachment · Court Procedure",
+  "deck": "Presiding Officer Francis Escudero said repeat violations may draw fines of up to ₱30,000 per offense and restrictions on courtroom participation.",
+  "publishedAt": "2026-08-26T13:00:00+08:00",
+  "updatedAt": "2026-08-26T19:00:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {"heading":"What happened","paragraphs":["The Senate impeachment court announced a two-strike system for enforcing restrictions on public discussion of the merits of Vice President Sara Duterte's pending impeachment case.","Presiding Officer Francis Escudero said the clarified standards will apply prospectively, with earlier statements treated more liberally as the court moves to curb trial by publicity."]},
+    {"heading":"How the rule works","paragraphs":["Under the system described by Escudero, a first violation carries a severe public reprimand and stern admonition entered into the court record.","For a second and succeeding violation, the court may impose a fine of up to ₱30,000 per offense and, when warranted, restrict an offending lawyer or party from speaking, objecting or examining witnesses on the floor.","Before a penalty is imposed, the alleged violator must receive a written show-cause order and has 24 hours to submit a verified response."]},
+    {"heading":"Context","paragraphs":["Rule 18 restricts the presiding officer, senator-judges, prosecutors, the impeached official, counsel and witnesses from publicly commenting on matters that go to the merits of a pending impeachment trial.","Escudero said procedural matters and fair, accurate reporting of what happened in court are treated differently from commentary assessing disputed facts, witness credibility, evidence or the likely outcome of the case."]},
+    {"heading":"Why this matters","paragraphs":["The rule attempts to keep arguments over evidence and witness credibility inside the impeachment court while preserving procedural reporting outside it. It also establishes due-process steps before sanctions are imposed."]},
+    {"heading":"What to watch next","paragraphs":["Future alleged breaches will test how the court applies the clarified standard, including when it considers fines, speaking restrictions or possible referrals of lawyers for separate professional discipline."]}
+  ],
+  "sources": [
+    {"publisher":"Philippine News Agency","title":"Impeachment court sets ‘2-strike rule’ on publicity breaches","publishedAt":"2026-08-26T13:49:00+08:00","url":"https://www.pna.gov.ph/articles/1282684"}
+  ],
+  "image":{"kind":"editorial-fallback","url":"/assets/images/news/fmb-news-editorial-fallback.svg","sourceUrl":"https://www.pna.gov.ph/articles/1282684","creator":"FMB News","license":"FMB-owned editorial visual","licenseUrl":"https://www.francinemariebautista.com/news/","usageStatus":"FMB-owned editorial visual used because the email referenced a Senate/PNA image but did not provide a stable original image file for repository ingestion.","credit":"FMB News editorial visual","caption":"FMB News editorial visual accompanying coverage of the impeachment court's Rule 18 enforcement policy.","alt":"FMB News editorial visual for the Senate impeachment court two-strike rule","width":1200,"height":675,"focusX":50,"focusY":50},
+  "audit":{"sourceCheckedAt":"2026-08-26T19:00:00+08:00","photoReferenceUrl":"https://www.pna.gov.ph/articles/1282684","notes":["Verified the two-strike framework and due-process procedure against the Senate impeachment court report carried by PNA.","Corrected the approved email's penalty description: the verified rule does not automatically banish counsel after a second violation. It allows a maximum ₱30,000 fine per offense and, when warranted, restrictions on speaking, objecting or examining witnesses.","Removed the email's unverified Day 19 witness-lineup details because they were not necessary to the rule announcement and were not supported by the verified source used for this article."]}
+}
