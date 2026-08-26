@@ -1,5 +1,6 @@
 import { readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { withMicrositeExclusions } from './lib/standalone-microsites.mjs';
 
 const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.join(repositoryRoot, 'dist');
@@ -10,7 +11,7 @@ const cssSource = path.join(source, 'assets', 'css', 'fmb-approved-launch.css');
 const jsSource = path.join(source, 'assets', 'js', 'fmb-approved-launch.js');
 const launchMarker = 'Approved FMB&CO. launch layer';
 
-const excludedPrefixes = ['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/'];
+const excludedPrefixes = withMicrositeExclusions(['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/']);
 const excludedFiles = new Set(['admin.html', 'login.html', 'signup.html', 'reset-password.html', 'confirm-email.html']);
 
 async function walk(directory) {
