@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-26-1900",
+  "emailSubject": "FMB News | Impeachment Court Orders Bank Subpoenas; PAGASA Forecasts 7 More Cyclones | August 26, 2026 | 7:00 PM PHT",
+  "slug": "pagasa-five-seven-cyclones-el-nino-outlook",
+  "headline": "PAGASA Outlook Flags More Cyclones as Strong El Niño Risk Builds Toward Year-End",
+  "seoTitle": "PAGASA Cyclone Outlook and Strong El Niño Risk for Late 2026 | FMB News",
+  "seoDescription": "PAGASA's late-2026 climate outlook warns of additional tropical cyclones while El Niño could strengthen toward very strong levels late in the year.",
+  "keywords": ["PAGASA cyclone outlook 2026", "El Nino Philippines 2026", "late 2026 climate outlook"],
+  "category": "National",
+  "kicker": "Climate · Weather",
+  "deck": "The approved newsroom brief reports five to seven additional tropical cyclones before year-end as forecasters also monitor the possibility of a very strong El Niño.",
+  "publishedAt": "2026-08-26T19:00:00+08:00",
+  "updatedAt": "2026-08-26T19:00:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {"heading":"What happened","paragraphs":["PAGASA's late-year climate outlook, as reported in the approved FMB News briefing, projects five to seven additional tropical cyclones forming within or entering the Philippine Area of Responsibility before the end of 2026.","The outlook comes as forecasters continue to monitor an El Niño event that could strengthen substantially toward the final months of the year."]},
+    {"heading":"El Niño risk","paragraphs":["PAGASA has previously said El Niño could intensify from moderate to strong conditions and potentially reach very strong levels late in 2026. The agency has also clarified that 'Super El Niño' is not an official PAGASA classification; very strong El Niño refers to sea-surface temperature anomalies of 2.0 degrees Celsius or higher.","Government climate guidance has warned that rainfall can decline significantly as El Niño strengthens, raising risks for agriculture, water supply and power systems even while individual tropical cyclones can still produce destructive rainfall and flooding."]},
+    {"heading":"Context","paragraphs":["The Philippines can face both drought risk and severe cyclone impacts during the same broad season. El Niño tends to suppress rainfall over many areas, but a passing tropical cyclone can still concentrate extreme rain, wind and storm-surge hazards over affected communities."]},
+    {"heading":"Why this matters","paragraphs":["The combination requires disaster planning in two directions: maintaining readiness for late-season cyclones while preparing water, food and energy systems for a potentially much drier final quarter and early 2027."]},
+    {"heading":"What to watch next","paragraphs":["PAGASA's succeeding monthly climate assessments will be important for refining the expected number of cyclones and the strength and duration of El Niño. Local governments, utilities and agricultural agencies are expected to adjust preparedness measures as those forecasts become more specific."]}
+  ],
+  "sources": [
+    {"publisher":"Philippine Information Agency","title":"El Niño to emerge in June, intensify into strong to very strong condition by year-end — PAGASA","publishedAt":"2026-06-01T00:00:00+08:00","url":"https://pia.gov.ph/news/el-nino-to-emerge-in-june-intensify-into-strong-to-very-strong-condition-by-year-end-pagasa/"},
+    {"publisher":"FMB News approved newsroom brief","title":"PAGASA forecasts up to 7 more tropical cyclones before end of 2026","publishedAt":"2026-08-26T19:00:00+08:00","url":null}
+  ],
+  "image":{"kind":"editorial-fallback","url":"/assets/images/news/fmb-news-editorial-fallback.svg","sourceUrl":null,"creator":"FMB News","license":"FMB-owned editorial visual","licenseUrl":"https://www.francinemariebautista.com/news/","usageStatus":"FMB-owned editorial visual used because the approved email referenced PAGASA/news imagery but did not provide a stable original image file for repository ingestion.","credit":"FMB News editorial visual","caption":"FMB News editorial visual accompanying coverage of PAGASA's late-2026 cyclone and El Niño outlook.","alt":"FMB News editorial visual for PAGASA late-2026 climate outlook","width":1200,"height":675,"focusX":50,"focusY":50},
+  "audit":{"sourceCheckedAt":"2026-08-27T01:00:00+08:00","photoReferenceUrl":null,"notes":["The five-to-seven cyclone figure is attributed to the approved August 26 newsroom brief because the exact same-day PAGASA climate-forum page was not independently retrievable in this run.","Corrected the brief's terminology: PAGASA has said 'Super El Niño' is not an official agency category; the formal wording is very strong El Niño.","Independently grounded the late-2026 strong-to-very-strong El Niño risk in government climate reporting."]}
+}
