@@ -1,0 +1,123 @@
+name: Miss Intercontinental production check
+
+# Smoke-tests the live application microsite on the custom domain.
+# Manual only: it verifies production, it does not gate any deployment.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  verify-production:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify https://www.francinemariebautista.com/MissIntercontinental
+        run: |
+          set -uo pipefail
+          BASE="https://www.francinemariebautista.com"
+          URL="$BASE/MissIntercontinental"
+          FAILURES=0
+          note() { printf '%s\n' "$1"; }
+          fail() { printf '::error::%s\n' "$1"; FAILURES=$((FAILURES+1)); }
+
+          note "=============================================="
+          note " 1. Route responds on the custom domain"
+          note "=============================================="
+          CODE=$(curl -sS -o /tmp/page.html -w '%{http_code}' -L --max-time 45 "$URL" || echo 000)
+          FINAL=$(curl -sS -o /dev/null -w '%{url_effective}' -L --max-time 45 "$URL" || echo none)
+          note "GET $URL -> $CODE (final: $FINAL)"
+          note "bytes: $(wc -c < /tmp/page.html)"
+          [ "$CODE" = "200" ] || fail "route did not return 200 (got $CODE)"
+          grep -q "Francine" /tmp/page.html || fail "page body does not contain the expected content"
+
+          note ""
+          note "=============================================="
+          note " 2. No FMB corporate shell"
+          note "=============================================="
+          for M in fmb-shell-header fmb-shell-footer fmb-shell-rail fmb-shell-nav \
+                   fmb-unified-public fmb-unified-system.css fmb-unified-system.js \
+                   fmb-sitewide-visual-fixes.css "Explore the ecosystem" "Work with FMB" "/work-with-fmb/"; do
+            if grep -qF -- "$M" /tmp/page.html; then fail "corporate shell marker present: $M"; else note "absent: $M"; fi
+          done
+
+          note ""
+          note "=============================================="
+          note " 3. No sibling-brand chrome"
+          note "=============================================="
+          for B in SENZ Cognita Yoni "FMB&CO." "FMB&amp;CO."; do
+            if grep -qiF -- "$B" /tmp/page.html; then fail "sibling brand present: $B"; else note "absent: $B"; fi
+          done
+
+          note ""
+          note "=============================================="
+          note " 4. Portfolio images referenced and reachable"
+          note "=============================================="
+          grep -oE '/MissIntercontinental/assets/img/[A-Za-z0-9._-]+\.webp' /tmp/page.html | sort -u > /tmp/imgs.txt
+          COUNT=$(wc -l < /tmp/imgs.txt)
+          note "distinct images referenced: $COUNT"
+          [ "$COUNT" -ge 25 ] || fail "expected at least 25 images, found $COUNT"
+          for G in study-pride study-queen study-pubmat study-sash study-crown \
+                   pageant-ms-gay-zambales speaking-01 portrait-front; do
+            grep -q "$G" /tmp/imgs.txt || fail "missing visual category or photograph: $G"
+          done
+          BAD=0
+          while read -r P; do
+            C=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 30 "$BASE$P" || echo 000)
+            if [ "$C" != "200" ]; then fail "image did not return 200 ($C): $P"; BAD=$((BAD+1)); fi
+          done < /tmp/imgs.txt
+          note "images returning 200: $((COUNT-BAD))/$COUNT"
+
+          note ""
+          note "=============================================="
+          note " 5. Audio gate"
+          note "=============================================="
+          grep -q 'id="gate"' /tmp/page.html || fail "entry gate markup missing"
+          grep -q 'id="gateSound"' /tmp/page.html || fail "'enter with music' control missing"
+          grep -q 'id="gateSilent"' /tmp/page.html || fail "'enter silently' control missing"
+          grep -q 'id="audioToggle"' /tmp/page.html || fail "music toggle missing"
+          if grep -qE '<audio[^>]*autoplay' /tmp/page.html; then fail "audio is set to autoplay"; else note "no autoplay attribute"; fi
+          AC=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 60 "$BASE/MissIntercontinental/assets/audio/opening-music.mp3" || echo 000)
+          AT=$(curl -sS -o /dev/null -w '%{content_type}' --max-time 60 "$BASE/MissIntercontinental/assets/audio/opening-music.mp3" || echo none)
+          note "opening-music.mp3 -> $AC ($AT)"
+          [ "$AC" = "200" ] || fail "opening music did not return 200 (got $AC)"
+
+          note ""
+          note "=============================================="
+          note " 6. Mobile layout contract"
+          note "=============================================="
+          grep -q 'viewport-fit=cover' /tmp/page.html || fail "viewport-fit=cover missing"
+          grep -q 'width=device-width' /tmp/page.html || fail "responsive viewport missing"
+          grep -q 'class="dock"' /tmp/page.html || fail "mobile dock missing"
+          curl -sS -L --max-time 45 "$BASE/MissIntercontinental/app.css" -o /tmp/app.css || true
+          grep -q 'env(safe-area-inset-bottom)' /tmp/app.css || fail "stylesheet lacks iPhone safe-area handling"
+          grep -q 'prefers-reduced-motion' /tmp/app.css || fail "stylesheet lacks reduced-motion handling"
+          grep -q 'max-width:680px' /tmp/app.css || grep -q 'max-width: 680px' /tmp/app.css || fail "mobile breakpoint missing from stylesheet"
+
+          note ""
+          note "=============================================="
+          note " 7. CSS / JS / favicon reachable"
+          note "=============================================="
+          for P in /MissIntercontinental/app.css /MissIntercontinental/app.js /MissIntercontinental/assets/favicon.svg; do
+            C=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 30 "$BASE$P" || echo 000)
+            note "$P -> $C"
+            [ "$C" = "200" ] || fail "$P did not return 200 (got $C)"
+          done
+
+          note ""
+          note "=============================================="
+          note " 8. No third-party media hosts"
+          note "=============================================="
+          if grep -qE 'raw\.githubusercontent\.com|drive\.google\.com|googleusercontent\.com' /tmp/page.html; then
+            fail "page references media from a third-party host"
+          else
+            note "all media is first-party"
+          fi
+
+          note ""
+          note "=============================================="
+          if [ "$FAILURES" -eq 0 ]; then
+            note "PRODUCTION VERIFICATION PASSED"
+          else
+            note "PRODUCTION VERIFICATION FAILED: $FAILURES problem(s)"
+          fi
+          note "=============================================="
+          exit $FAILURES
