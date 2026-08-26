@@ -16,7 +16,10 @@ const steps = [
   '../apps/withlovefmb/scripts/check-orchestrator.mjs',
   './audit-fmb-image-integrity-exact.mjs',
   './check-dist-links.mjs',
-  './post-build-miss-intercontinental-isolation.mjs',
+  // The Miss Intercontinental microsite is excluded from the unified-shell
+  // passes at source (scripts/lib/standalone-microsites.mjs). This gate proves
+  // the exclusion held and that the page shipped complete.
+  './check-miss-intercontinental.mjs',
 ];
 
 for (const step of steps) {

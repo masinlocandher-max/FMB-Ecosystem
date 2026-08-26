@@ -1,10 +1,11 @@
 import { readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { withMicrositeExclusions } from './lib/standalone-microsites.mjs';
 
 const root = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.join(root, 'dist');
 const homepage = path.join(dist, 'index.html');
-const protectedPrefixes = ['app/', '_sites/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/'];
+const protectedPrefixes = withMicrositeExclusions(['app/', '_sites/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/']);
 const yoniBookPrefix = 'app/content/books/';
 const retiredRoutes = [
   '/ebooks/',
