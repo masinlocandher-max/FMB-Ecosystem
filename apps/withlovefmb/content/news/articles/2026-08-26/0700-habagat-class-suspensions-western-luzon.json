@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-26-0700",
+  "emailSubject": "FMB News | COA Seeks ₱2.2-B to Revive Pre-Audit; Neighborhood Safety Poll Drops to 72% | August 26, 2026 | 7:00 AM PHT",
+  "slug": "habagat-class-suspensions-western-luzon",
+  "headline": "Habagat Rains Prompt Localized Class Suspensions in Western Luzon",
+  "seoTitle": "Habagat Prompts Localized Class Suspensions in Western Luzon | FMB News",
+  "seoDescription": "Several Western Luzon LGUs suspended in-person classes on August 26 as PAGASA forecast continued Habagat rains over Zambales, Bataan and nearby areas.",
+  "keywords": ["Walang Pasok August 26 2026", "Habagat Western Luzon", "Zambales Bataan class suspensions"],
+  "category": "Weather",
+  "kicker": "Weather · Education",
+  "deck": "The suspensions were localized rather than region-wide, while PAGASA continued to forecast occasional rains over parts of the western seaboard.",
+  "publishedAt": "2026-08-26T07:00:00+08:00",
+  "updatedAt": "2026-08-26T12:59:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {"heading":"What happened","paragraphs":["Several local governments in Western Luzon suspended in-person classes on Wednesday, August 26, as persistent Southwest Monsoon rains continued over flood- and landslide-prone areas.","The approved FMB News brief lists affected localities in Zambales, Bataan and Pangasinan and says schools in covered areas shifted to alternative delivery modes where applicable. The suspensions are localized and should not be read as a blanket shutdown across all of Central Luzon or Metro Manila."]},
+    {"heading":"Weather outlook","paragraphs":["PAGASA's weekly outlook for August 26 to 28 calls for occasional rains over Zambales, Bataan and Occidental Mindoro due to the Southwest Monsoon. Cloudy conditions with scattered rains and thunderstorms are also expected over Metro Manila, the rest of Luzon, Western Visayas and the Negros Island Region.","PAGASA's selected-city outlook shows occasional rains for the Subic Bay-Olongapo area on August 26, while Metro Manila is forecast to have cloudy skies with rainshowers and thunderstorms."]},
+    {"heading":"Context","paragraphs":["The approved newsroom package gives a more detailed list of affected municipalities and road-clearing operations. Because a same-day public LGU consolidation matching every locality in the email was not independently retrievable in this run, FMB News is keeping those operational details attributed to the approved brief rather than presenting them as independently reproduced facts."]},
+    {"heading":"Why this matters","paragraphs":["Localized class advisories can change quickly as rainfall, river levels and road access shift. Parents, students and school staff should rely on their own LGU or school division for the final status of classes in their municipality."]},
+    {"heading":"What to watch next","paragraphs":["Watch PAGASA rainfall advisories and LGU announcements through Wednesday afternoon, especially in Zambales and Bataan where the weekly outlook continues to show occasional Habagat rains."]}
+  ],
+  "sources": [
+    {"publisher":"PAGASA","title":"Weekly Weather Outlook valid until August 28, 2026","publishedAt":"2026-08-21T12:00:00+08:00","url":"https://origin.pagasa.dost.gov.ph/weather/weather-outlook-weekly"},
+    {"publisher":"PAGASA","title":"Weather Outlook for Selected Philippine Cities","publishedAt":"2026-08-23T12:00:00+08:00","url":"https://origin.pagasa.dost.gov.ph/weather/weather-outlook-selected-philippine-cities"},
+    {"publisher":"FMB News Editorial Intelligence Brief","title":"COA Seeks ₱2.2-B to Revive Pre-Audit; Neighborhood Safety Poll Drops to 72%","publishedAt":"2026-08-26T07:15:00+08:00","url":"https://mail.google.com/"}
+  ],
+  "image":{"kind":"editorial-fallback","url":"/assets/images/news/fmb-news-editorial-fallback.svg","sourceUrl":null,"creator":"FMB News","license":"FMB-owned editorial visual","licenseUrl":"https://www.francinemariebautista.com/news/","usageStatus":"FMB-owned editorial visual used because the email referenced a DPWH/PNA road image but did not provide a stable reusable original image file.","credit":"FMB News editorial visual","caption":"FMB News editorial visual accompanying the August 26 Western Luzon class-suspension update.","alt":"FMB News editorial visual for Habagat class suspensions in Western Luzon","width":1200,"height":675,"focusX":50,"focusY":50},
+  "audit":{"sourceCheckedAt":"2026-08-26T12:59:00+08:00","photoReferenceUrl":"https://www.pna.gov.ph/categories/national","notes":["PAGASA independently confirms continued Habagat rains over Zambales, Bataan and Occidental Mindoro for August 26-28.","Kept the email's detailed LGU suspension list attributed because the cited same-day GMA consolidation was not independently surfaced by search in this run.","Headline narrowed to localized suspensions to avoid implying province-wide or regional shutdowns."]}
+}
