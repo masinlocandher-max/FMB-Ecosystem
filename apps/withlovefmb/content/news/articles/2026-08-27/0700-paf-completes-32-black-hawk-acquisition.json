@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-27-0700",
+  "emailSubject": "FMB News | PAF Completes 32 Black Hawk Fleet; Senate Panel Backs Age 16 Social Media Cap | August 27, 2026 | 7:00 AM PHT",
+  "slug": "paf-completes-32-black-hawk-acquisition",
+  "headline": "PAF Completes 32-Helicopter Black Hawk Acquisition with Final Seven Aircraft",
+  "seoTitle": "PAF Completes 32-Helicopter Black Hawk Acquisition | FMB News",
+  "seoDescription": "The Philippine Air Force accepted and commissioned the final seven aircraft in its 32-helicopter S-70i Black Hawk acquisition on August 26.",
+  "keywords": [
+    "Philippine Air Force Black Hawk acquisition",
+    "32 S-70i Black Hawk helicopters",
+    "PAF modernization August 2026"
+  ],
+  "category": "National",
+  "kicker": "Defense · Air Mobility",
+  "deck": "The seven newly commissioned S-70i helicopters complete an additional 32-aircraft order intended to strengthen military airlift and disaster-response operations.",
+  "publishedAt": "2026-08-27T07:00:00+08:00",
+  "updatedAt": "2026-08-27T07:00:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {
+      "heading": "What happened",
+      "paragraphs": [
+        "The Philippine Air Force accepted and commissioned seven S-70i Black Hawk helicopters at Clark Air Base on August 26, completing delivery of the 32 additional aircraft ordered under the Armed Forces of the Philippines modernization program.",
+        "The helicopters were acquired from Polish manufacturer PZL Mielec. The final aircraft underwent the PAF's technical inspection and acceptance process before commissioning."
+      ]
+    },
+    {
+      "heading": "Context",
+      "paragraphs": [
+        "The acquisition expands the PAF's rotary-wing air-mobility capacity for troop and cargo transport, medical evacuation, search and rescue, and humanitarian assistance and disaster response.",
+        "Black Hawk helicopters are operated by the 205th Tactical Helicopter Wing, which supports military missions and emergency operations in areas that may be difficult to reach by road or sea."
+      ]
+    },
+    {
+      "heading": "Why this matters",
+      "paragraphs": [
+        "Additional operational aircraft can allow the PAF to sustain more simultaneous airlift and relief missions across an archipelago frequently affected by typhoons, earthquakes and other emergencies. Fleet size alone does not guarantee readiness, which also depends on trained crews, maintenance and available spare parts."
+      ]
+    },
+    {
+      "heading": "What to watch next",
+      "paragraphs": [
+        "The practical impact of the completed acquisition will depend on aircraft availability, crew training and long-term maintenance support as the PAF integrates the final seven helicopters into regular operations."
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "publisher": "Philippine News Agency",
+      "title": "PAF completes Black Hawk fleet acquisition with 7 new helicopters",
+      "publishedAt": "2026-08-25T15:35:00+08:00",
+      "url": "https://www.pna.gov.ph/articles/1282593"
+    },
+    {
+      "publisher": "ABS-CBN News",
+      "title": "PH Air Force completes Black Hawk fleet acquisition with 7 new helicopters",
+      "publishedAt": "2026-08-26T12:16:00+08:00",
+      "url": "https://www.abs-cbn.com/news/nation/2026/8/26/ph-air-force-completes-black-hawk-fleet-acquisition-with-7-new-helicopters-1216"
+    }
+  ],
+  "image": {
+    "kind": "editorial-fallback",
+    "url": "/assets/images/news/fmb-news-editorial-fallback.svg",
+    "sourceUrl": null,
+    "creator": "FMB News",
+    "license": "FMB-owned editorial visual",
+    "licenseUrl": "https://www.francinemariebautista.com/news/",
+    "usageStatus": "FMB-owned editorial visual used because the bulletin supplied only general source pages and no stable original photograph with independently verified reuse rights.",
+    "credit": "FMB News editorial visual",
+    "caption": "FMB News editorial visual accompanying the report on the Philippine Air Force Black Hawk acquisition.",
+    "alt": "FMB News editorial visual for the Philippine Air Force Black Hawk acquisition",
+    "width": 1200,
+    "height": 675,
+    "focusX": 50,
+    "focusY": 50
+  },
+  "audit": {
+    "sourceCheckedAt": "2026-08-27T13:05:00+08:00",
+    "photoReferenceUrl": "https://www.facebook.com/piopaf/",
+    "notes": [
+      "Corrected the bulletin's event date: the final seven helicopters were accepted and commissioned on August 26, not August 27.",
+      "Described the development as completion of a 32-aircraft acquisition rather than implying that the PAF's entire Black Hawk inventory contains only 32 helicopters.",
+      "Removed unsupported quotations and claims about specific maintenance contracts, simulator programs and spare-parts reserves."
+    ]
+  }
+}
