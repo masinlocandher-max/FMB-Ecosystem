@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-28-0100",
+  "emailSubject": "FMB News | BSP Hikes Rate to 5.00%; Orange Rainfall Alert Raised in Zambales | August 28, 2026 | 1:00 AM PHT",
+  "slug": "pagasa-orange-rainfall-warning-zambales-habagat",
+  "headline": "Habagat Brings Heavy Rain Risk to Zambales as PAGASA Warns of Floods and Landslides",
+  "seoTitle": "Habagat Heavy Rain Risk in Zambales Aug. 28 | FMB News",
+  "seoDescription": "PAGASA forecasts persistent Habagat rains over Zambales and nearby western Luzon areas on August 28, with flood and landslide risks in saturated communities.",
+  "keywords": ["Zambales rain August 28 2026", "PAGASA Habagat Zambales", "class suspensions August 28 2026"],
+  "category": "Weather",
+  "kicker": "Weather · Public Safety",
+  "deck": "Western Luzon faces another wet Friday as the southwest monsoon continues to feed rain into Zambales and nearby provinces, with local class suspensions reported in affected communities.",
+  "publishedAt": "2026-08-28T01:00:00+08:00",
+  "updatedAt": "2026-08-28T01:00:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {"heading":"What happened","paragraphs":["PAGASA continued to flag heavy-rain risk over western Luzon heading into Friday, August 28, as the Southwest Monsoon or Habagat remained active. The approved FMB News overnight brief reported an Orange-level rainfall warning for Zambales, with other western and northern Luzon areas under lower-level advisories.","The same newsroom brief reported localized class suspensions in parts of Zambales and Bataan as local governments shifted affected learners away from in-person classes."]},
+    {"heading":"What PAGASA shows","paragraphs":["PAGASA's official outlook for August 26 to 28 calls for occasional rains over Zambales, Bataan and Occidental Mindoro due to Habagat. Its selected-city outlook shows Olongapo/SBMA under occasional rains on Friday and monsoon rains over the weekend.","A PAGASA Northern Luzon rainfall advisory issued at 2:00 AM on August 28 also warned of light to moderate to at times heavy rains in parts of Pangasinan, Batanes, Abra, Ilocos Sur, Benguet, Nueva Vizcaya and La Union, with landslide, mudslide, rockslide and flash-flood precautions advised."]},
+    {"heading":"Context","paragraphs":["Soils across parts of western Luzon have already absorbed repeated rounds of rain. That raises the risk that additional rainfall can trigger localized flooding or slope failures even when rainfall intensity varies from one municipality to another."]},
+    {"heading":"Why this matters","paragraphs":["Residents in flood-prone and landslide-prone communities should follow the latest PAGASA rainfall warnings and local disaster-office instructions because warning levels and affected municipalities can change quickly."]},
+    {"heading":"What to watch next","paragraphs":["PAGASA forecasts continued wet conditions in Olongapo and western Luzon through the weekend. Updated rainfall warnings, river-basin advisories and local class or work suspensions should be treated as the controlling information for each locality."]}
+  ],
+  "sources": [
+    {"publisher":"DOST-PAGASA","title":"Extended Weather Outlook for Selected Cities","publishedAt":"2026-08-27T08:00:00+08:00","url":"https://origin.pagasa.dost.gov.ph/weather/weather-outlook-selected-philippine-cities"},
+    {"publisher":"DOST-PAGASA","title":"Weekly Weather Outlook","publishedAt":"2026-08-21T12:00:00+08:00","url":"https://origin.pagasa.dost.gov.ph/weather/weather-outlook-weekly"},
+    {"publisher":"ABS-CBN News","title":"Class suspensions for August 28, 2026 due to habagat rains","publishedAt":"2026-08-27T20:37:00+08:00","url":"https://www.abs-cbn.com/news/weather-traffic/2026/8/27/-walangpasok-class-suspensions-for-august-28-2026-due-to-habagat-rains-2037"}
+  ],
+  "image":{"kind":"editorial-fallback","url":"/assets/images/news/fmb-news-editorial-fallback.svg","sourceUrl":"https://origin.pagasa.dost.gov.ph/weather/weather-outlook-selected-philippine-cities","creator":"FMB News","license":"FMB-owned editorial visual","licenseUrl":"https://www.francinemariebautista.com/news/","usageStatus":"FMB-owned editorial visual used because the approved email referenced PAGASA/news imagery but did not supply a stable original image file for repository ingestion.","credit":"FMB News editorial visual","caption":"FMB News editorial visual accompanying the August 28 Habagat and heavy-rain report.","alt":"FMB News editorial visual for heavy Habagat rains in western Luzon","width":1200,"height":675,"focusX":50,"focusY":50},
+  "audit":{"sourceCheckedAt":"2026-08-28T06:58:00+08:00","photoReferenceUrl":"https://origin.pagasa.dost.gov.ph/weather/weather-outlook-selected-philippine-cities","notes":["Confirmed continued wet conditions for Zambales/Olongapo through current PAGASA outlooks.","Corrected the approved email's inconsistent headline: its fact sheet placed Bataan under a lower warning level rather than the Orange warning stated in the proposed headline.","Kept rapidly changing warning-level details attributed to the approved overnight brief and directed readers to current PAGASA/local advisories."]}
+}
