@@ -8,20 +8,21 @@
   "seoTitle": "PAGASA Tracks LPA East of Northern Luzon | FMB News",
   "seoDescription": "PAGASA spotted an LPA about 1,030 km east of Northern Luzon while the southwest monsoon continued to bring rain and rougher seas to parts of Luzon and western Visayas.",
   "keywords": ["PAGASA LPA August 27 2026", "Habagat Northern Luzon weather", "LPA 1030 km east Northern Luzon"],
-  "category": "Weather",
+  "category": "Environment",
   "kicker": "Weather · Public Safety",
   "deck": "The low-pressure area was about 1,030 kilometers east of Northern Luzon early Thursday, while the southwest monsoon continued to affect Luzon and the western Visayas.",
   "publishedAt": "2026-08-27T13:00:00+08:00",
-  "updatedAt": "2026-08-27T13:00:00+08:00",
+  "updatedAt": "2026-08-27T19:01:00+08:00",
   "author": "FMB News Desk",
   "articleType": "NewsArticle",
   "sections": [
     {"heading":"What happened","paragraphs":["PAGASA was monitoring a low-pressure area about 1,030 kilometers east of Northern Luzon at 3 a.m. Thursday, while the southwest monsoon continued to affect Luzon and the western section of the Visayas.","Zambales and Occidental Mindoro were forecast to experience occasional rains, while Metro Manila, the Ilocos Region, Cordillera Administrative Region, the rest of Central Luzon, Batanes, parts of Calabarzon, Palawan and several Western Visayas provinces were forecast to have scattered rains and thunderstorms."]},
     {"heading":"Risks and sea conditions","paragraphs":["PAGASA warned that moderate to heavy rain and severe thunderstorms could trigger flash floods or landslides in susceptible areas.","Moderate to strong southwesterly winds were forecast over Luzon and the western Visayas, with moderate to rough coastal waters and waves of about 1.5 to 3.4 meters."]},
+    {"heading":"Context","paragraphs":["An LPA is a developing area of relatively low atmospheric pressure and is not automatically a tropical cyclone. Its position and organization can change between forecast cycles, while the southwest monsoon can produce hazardous rain and seas independently of whether the disturbance becomes a named storm."]},
     {"heading":"Why this matters","paragraphs":["Communities already saturated by recent monsoon rains remain vulnerable even when rainfall becomes intermittent. Travelers, fishers and residents near slopes and waterways should use current local warnings rather than rely only on the LPA's distance from land."]},
     {"heading":"What to watch next","paragraphs":["PAGASA will continue monitoring the LPA and the southwest monsoon. Forecasts can change quickly, so rainfall, thunderstorm and marine advisories should be checked against the latest official bulletin before travel or outdoor activity."]}
   ],
-  "sources": [{"publisher":"Philippine News Agency","title":"Habagat to bring rains over Luzon, Visayas on Thursday","publishedAt":"2026-08-27T06:06:00+08:00","url":"https://www.pna.gov.ph/articles/1282748"}],
+  "sources": [{"publisher":"Philippine News Agency","title":"Habagat to bring rains over Luzon, Visayas on Thursday","publishedAt":"2026-08-27T06:06:00+08:00","url":"https://www.pna.gov.ph/articles/1282748"},{"publisher":"DOST-PAGASA","title":"Farm Weather Forecast","publishedAt":"2026-08-27T07:00:00+08:00","url":"https://pagasa.dost.gov.ph/agri-weather"}],
   "image":{"kind":"editorial-fallback","url":"/assets/images/news/fmb-news-editorial-fallback.svg","sourceUrl":"https://www.pna.gov.ph/articles/1282748","creator":"FMB News","license":"FMB-owned editorial visual","licenseUrl":"https://www.francinemariebautista.com/news/","usageStatus":"FMB-owned editorial visual used because no stable original PAGASA image file was supplied in the approved email for repository ingestion.","credit":"FMB News editorial visual","caption":"FMB News editorial visual accompanying the August 27 PAGASA weather update.","alt":"FMB News editorial visual for the August 27 LPA and habagat weather update","width":1200,"height":675,"focusX":50,"focusY":50},
   "audit":{"sourceCheckedAt":"2026-08-27T18:58:00+08:00","photoReferenceUrl":"https://www.pna.gov.ph/articles/1282748","notes":["Verified the LPA position at about 1,030 km east of Northern Luzon and continued habagat influence against the August 27 PNA/PAGASA report.","Removed the email's unsupported claim that the LPA was already inside PAR and its specific 50-100 mm yellow-warning framing because those details were not present in the retrieved current report.","Used the current PAGASA-backed area forecast and marine conditions instead of overstating cyclone-development risk."]}
 }
