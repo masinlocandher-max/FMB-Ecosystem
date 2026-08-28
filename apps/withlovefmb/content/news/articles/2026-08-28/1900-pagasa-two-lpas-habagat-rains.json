@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-28-1900",
+  "emailSubject": "FMB News | 6 Dead in Zambales Lake Boat Capsize; PAGASA Tracks 2 Developing LPAs | August 28, 2026 | 7:00 PM PHT",
+  "slug": "pagasa-two-lpas-habagat-rains-august-28-2026",
+  "headline": "PAGASA Monitors Two LPAs as Habagat Keeps Parts of Luzon Under Heavy-Rain Risk",
+  "seoTitle": "PAGASA Tracks 2 LPAs, Habagat Rain Risk | FMB News",
+  "seoDescription": "PAGASA was monitoring two low-pressure areas on August 28, both with a medium chance of developing into tropical depressions, as Habagat continued to bring heavy rain to parts of Luzon.",
+  "keywords": ["PAGASA two LPAs August 28 2026", "Habagat heavy rain Luzon", "LPA east of Batanes"],
+  "category": "Weather",
+  "kicker": "Weather · Public Safety",
+  "deck": "One disturbance was east-northeast of Itbayat inside PAR while another formed farther east outside PAR, with both assessed at medium development potential within 24 hours.",
+  "publishedAt": "2026-08-28T19:00:00+08:00",
+  "updatedAt": "2026-08-29T00:57:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {"heading":"What happened","paragraphs":["PAGASA was monitoring two low-pressure areas Friday afternoon as the southwest monsoon continued to bring rain over parts of the Philippines.","As of 2 p.m., the LPA inside the Philippine Area of Responsibility was about 560 kilometers east-northeast of Itbayat, Batanes. A newly formed LPA outside PAR was about 1,460 kilometers east of Central Luzon."]},
+    {"heading":"Development potential","paragraphs":["PAGASA assessed both disturbances as having a medium chance of developing into tropical depressions within the next 24 hours. Their future tracks and any eventual local cyclone names remained dependent on development and position."]},
+    {"heading":"Habagat remains a concern","paragraphs":["The southwest monsoon continued to affect Luzon, with heavy-rain warnings issued in several areas during the afternoon. Malacañang suspended government work and classes at all levels in Metro Manila and 16 provinces beginning at 1 p.m. because of the monsoon and the possibility of further enhancement by the LPA inside PAR."]},
+    {"heading":"Context","paragraphs":["Rainfall-warning colors and LPA positions can change within hours. This report therefore preserves the verified afternoon situation without treating individual warning levels or forecast tracks as fixed beyond their bulletin times."]},
+    {"heading":"Why this matters","paragraphs":["Saturated ground and swollen waterways can keep flood and landslide risks elevated even when rainfall temporarily weakens, particularly across western and central Luzon."]},
+    {"heading":"What to watch next","paragraphs":["Residents should follow the latest PAGASA rainfall warnings, local disaster advisories and any subsequent tropical cyclone bulletins if either LPA develops further."]}
+  ],
+  "sources": [
+    {"publisher":"DOST-PAGASA via Inquirer.net","title":"Pagasa monitors 2 LPAs, one with chance to develop into cyclone","publishedAt":"2026-08-28T16:37:00+08:00","url":"https://newsinfo.inquirer.net/2294291/pagasa-monitors-2-lpas-one-with-chance-to-develop-into-cyclone"},
+    {"publisher":"Philippine News Agency","title":"Work, classes suspended in NCR, 16 provinces","publishedAt":"2026-08-28T14:10:00+08:00","url":"https://www.pna.gov.ph/categories/national?p=2"}
+  ],
+  "image":{"kind":"editorial-fallback","url":"/assets/images/news/fmb-news-editorial-fallback.svg","sourceUrl":"https://newsinfo.inquirer.net/2294291/pagasa-monitors-2-lpas-one-with-chance-to-develop-into-cyclone","creator":"FMB News","license":"FMB-owned editorial visual","licenseUrl":"https://www.francinemariebautista.com/news/","usageStatus":"FMB-owned editorial visual used because the referenced PAGASA weather graphic was not supplied as a stable repository-ready original image file.","credit":"FMB News editorial visual; source reference: DOST-PAGASA","caption":"FMB News editorial visual accompanying the August 28 two-LPA and Habagat update.","alt":"FMB News editorial visual for PAGASA monitoring two low-pressure areas","width":1200,"height":675,"focusX":50,"focusY":50},
+  "audit":{"sourceCheckedAt":"2026-08-29T00:57:00+08:00","photoReferenceUrl":"https://newsinfo.inquirer.net/2294291/pagasa-monitors-2-lpas-one-with-chance-to-develop-into-cyclone","notes":["Verified two LPAs and their afternoon positions and medium development potential against same-day PAGASA-based reporting.","Did not freeze the email brief's rainfall-warning colors into the headline because warning levels are time-sensitive and changed through the afternoon.","Used the FMB-owned fallback because no stable repository-ready PAGASA image file was supplied."]}
+}
