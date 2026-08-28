@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-28-1300",
+  "emailSubject": "FMB News | LPA 08i Enhances Monsoon Rains; DBM Sets ₱45.67-B Disaster Fund | August 28, 2026 | 1:00 PM PHT",
+  "slug": "dbm-45-67-billion-disaster-fund-2027",
+  "headline": "DBM Earmarks ₱45.67 Billion for 2027 Disaster Fund as El Niño Risks Loom",
+  "seoTitle": "DBM Sets ₱45.67B 2027 Disaster Fund | FMB News",
+  "seoDescription": "The government earmarked ₱45.67 billion for the National Disaster Risk Reduction and Management Fund in the proposed 2027 budget as a fiscal buffer for El Niño and other disasters.",
+  "keywords": ["DBM 45.67 billion NDRRMF 2027", "Philippines disaster fund 2027", "El Niño Philippines budget"],
+  "category": "National",
+  "kicker": "Budget · Disaster Preparedness",
+  "deck": "The proposed calamity fund is 14.68% higher than the 2026 allocation and is intended to backstop regular agency resources during climate and disaster emergencies.",
+  "publishedAt": "2026-08-28T13:00:00+08:00",
+  "updatedAt": "2026-08-28T19:02:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {"heading":"What happened","paragraphs":["The government has earmarked about ₱45.67 billion for the National Disaster Risk Reduction and Management Fund under the proposed 2027 National Expenditure Program, according to the Department of Budget and Management.","Acting Budget Secretary Kim Robert de Leon said the proposed allocation is 14.68% higher than the 2026 level and is intended to provide a fiscal buffer for El Niño and other disasters."]},
+    {"heading":"How the fund would work","paragraphs":["De Leon told the Senate Finance Committee that the NDRRMF can be tapped when regular agency resources are no longer enough. He cited the Department of Agriculture's existing resources for food and water security as an example of funding that would be used before the standby disaster fund covers a shortfall.","The government is also using its Risk Resiliency Program to assess climate and disaster risks and determine the scale of interventions needed for El Niño preparedness."]},
+    {"heading":"Agriculture and food security","paragraphs":["DBM said the government has provided additional support for agricultural inputs, including fertilizer and fuel assistance, while the National Food Authority is using its existing budget for rice buffer stocking.","Public Works resources may also be used to repair or rehabilitate damaged rainwater collection facilities as part of preparedness measures."]},
+    {"heading":"Context","paragraphs":["The approved FMB News brief described broader disaster-preparedness initiatives, but its claims about a separate ₱1-billion Project NOAH allocation and a formal 'Super El Niño' designation were not reproduced in the primary same-day source reviewed for publication. Those details are therefore not presented here as established components of the ₱45.67-billion fund."]},
+    {"heading":"What to watch next","paragraphs":["The ₱45.67-billion allocation remains part of the proposed 2027 National Expenditure Program and will be subject to congressional budget deliberations before final enactment."]}
+  ],
+  "sources": [
+    {"publisher":"Philippine News Agency","title":"DBM: P45.67-B NDRRMF in 2027 to cushion El Niño, disasters","publishedAt":"2026-08-28T10:41:00+08:00","url":"https://www.pna.gov.ph/articles/1282851"}
+  ],
+  "image":{"kind":"editorial-fallback","url":"/assets/images/news/fmb-news-editorial-fallback.svg","sourceUrl":"https://www.pna.gov.ph/articles/1282851","creator":"FMB News","license":"FMB-owned editorial visual","licenseUrl":"https://www.francinemariebautista.com/news/","usageStatus":"FMB-owned editorial visual used because the referenced PNA government photo was available only through the source article rather than as a stable repository-ready original image file.","credit":"FMB News editorial visual; source reference: PNA","caption":"FMB News editorial visual accompanying the proposed 2027 disaster-fund report. Source reference: Philippine News Agency.","alt":"FMB News editorial visual for the proposed 2027 Philippine disaster fund","width":1200,"height":675,"focusX":50,"focusY":50},
+  "audit":{"sourceCheckedAt":"2026-08-28T19:02:00+08:00","photoReferenceUrl":"https://www.pna.gov.ph/articles/1282851","notes":["Verified the ₱45.67-billion NDRRMF amount, 14.68% increase and El Niño/disaster buffer purpose against PNA's same-day DBM report.","Corrected the brief's named budget secretary to Acting Budget Secretary Kim Robert de Leon, as reported by PNA.","Omitted unsupported claims about a separate ₱1-billion Project NOAH allocation and formal 'Super El Niño' terminology."]}
+}
