@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-28-1900",
+  "emailSubject": "FMB News | 6 Dead in Zambales Lake Boat Capsize; PAGASA Tracks 2 Developing LPAs | August 28, 2026 | 7:00 PM PHT",
+  "slug": "mapanuepe-lake-zambales-boat-capsize-six-dead",
+  "headline": "Six Dead, Four Rescued After Boat Capsizes in Mapanuepe Lake, Zambales",
+  "seoTitle": "6 Dead in Mapanuepe Lake Boat Capsize | FMB News",
+  "seoDescription": "Six people died, four were rescued and three remained missing after a motorboat carrying 13 passengers capsized in Mapanuepe Lake in San Marcelino, Zambales.",
+  "keywords": ["Mapanuepe Lake boat capsize", "San Marcelino Zambales boat accident", "PCG Zambales August 28 2026"],
+  "category": "National",
+  "kicker": "Zambales · Search and Rescue",
+  "deck": "The Philippine Coast Guard deployed divers after a motorboat carrying 13 members of an Aeta community capsized near the Sunken Church in Barangay Buhawen.",
+  "publishedAt": "2026-08-28T19:00:00+08:00",
+  "updatedAt": "2026-08-29T00:57:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {"heading":"What happened","paragraphs":["Six people died, four were rescued and three remained missing after a motorboat capsized in Mapanuepe Lake in San Marcelino, Zambales, according to the Philippine Coast Guard.","The vessel was carrying 13 passengers when it capsized at about 2 p.m. Thursday near the Sunken Church in Barangay Buhawen. The Coast Guard said the fatalities included three adults and three minors."]},
+    {"heading":"Search and rescue","paragraphs":["PCG spokesperson Commodore Noemie Cayabyab said divers were deployed for underwater search operations. Coast Guard Station Zambales and Coast Guard Sub-Station San Antonio coordinated with the municipal disaster office, police and other responders.","The Coast Guard said the passengers were members of an Aeta indigenous community from Sitio Lumibao who had gone to a community health center for food, medicine and a vaccination program before traveling back."]},
+    {"heading":"Weather conditions","paragraphs":["Survivors told authorities that wind and waves intensified suddenly during the crossing, causing the boat to encounter rough water before it capsized. The circumstances of the incident remain under investigation."]},
+    {"heading":"Context","paragraphs":["The incident occurred while the southwest monsoon was producing unsettled weather over western Luzon. FMB News is withholding unnecessary personal details of the victims, particularly the minors, while search operations continue."]},
+    {"heading":"Why this matters","paragraphs":["The tragedy underscores the vulnerability of small-vessel travel during rapidly changing monsoon conditions and the importance of timely local weather and water-safety advisories for communities that depend on lake crossings."]},
+    {"heading":"What to watch next","paragraphs":["Authorities are continuing the search for the three missing passengers and investigating the circumstances of the capsize."]}
+  ],
+  "sources": [
+    {"publisher":"Philippine News Agency","title":"6 dead, 4 rescued as motorboat capsizes in Zambales – PCG","publishedAt":"2026-08-28T15:21:00+08:00","url":"https://www.pna.gov.ph/articles/1282895"}
+  ],
+  "image":{"kind":"editorial-fallback","url":"/assets/images/news/fmb-news-editorial-fallback.svg","sourceUrl":"https://www.pna.gov.ph/articles/1282895","creator":"FMB News","license":"FMB-owned editorial visual","licenseUrl":"https://www.francinemariebautista.com/news/","usageStatus":"FMB-owned editorial visual used because the PCG/PNA incident photograph was referenced and verified but was not supplied as a stable repository-ready original image file.","credit":"FMB News editorial visual; source reference: Philippine Coast Guard / PNA","caption":"FMB News editorial visual accompanying the Mapanuepe Lake search-and-rescue report. The source report includes a PCG photograph of responders at the incident area.","alt":"FMB News editorial visual for the Mapanuepe Lake boat capsize in Zambales","width":1200,"height":675,"focusX":50,"focusY":50},
+  "audit":{"sourceCheckedAt":"2026-08-29T00:57:00+08:00","photoReferenceUrl":"https://www.pna.gov.ph/articles/1282895","notes":["Verified six deaths, four rescued, three missing, 13 passengers, the Mapanuepe Lake location and Aeta community context against PNA's same-day PCG report.","Removed unverified claims about provincial burial aid and grief counseling that were not reproduced in the independently checked source.","Used the FMB-owned fallback because the referenced PCG image was not available as a stable repository-ready original file."]}
+}
