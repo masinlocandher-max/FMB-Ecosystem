@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-29-0100",
+  "emailSubject": "FMB News | Habagat Triggers Red Rainfall Warning in Pampanga; Visayas Grid in Red Alert | August 29, 2026 | 1:00 AM PHT",
+  "slug": "visayas-grid-red-alert-limited-supply-august-29-2026",
+  "headline": "Visayas Grid Under Red Alert as Available Supply Falls Below Peak Demand",
+  "seoTitle": "Visayas Grid Under Red Alert as Supply Falls Short | FMB News",
+  "seoDescription": "NGCP placed the Visayas grid under a Red Alert on August 28 as available capacity stood at 2,307 MW against projected peak demand of 2,402 MW.",
+  "keywords": ["Visayas grid Red Alert", "NGCP August 28 2026", "Visayas power supply shortage"],
+  "category": "National",
+  "kicker": "Energy · Visayas",
+  "deck": "NGCP reported 2,307 MW of available capacity against 2,402 MW projected peak demand, with multiple plants unavailable or operating below rated capacity.",
+  "publishedAt": "2026-08-29T01:00:00+08:00",
+  "updatedAt": "2026-08-29T06:58:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {"heading":"What happened","paragraphs":["The National Grid Corporation of the Philippines placed the Visayas grid under a Red Alert from 5:00 PM to 8:00 PM on Friday, August 28, after available generation fell below projected evening demand.","NGCP put available capacity at 2,307 megawatts against projected peak demand of 2,402 MW. Yellow Alerts were also scheduled from 2:00 PM to 5:00 PM and from 8:00 PM to 10:00 PM."]},
+    {"heading":"Why supply was tight","paragraphs":["NGCP said several coal-fired generating units remained unavailable, while other plants were operating at reduced output. The total unavailable or derated capacity was about 979.6 MW.","Limited electricity imports from Mindanao also added pressure to the Visayas grid during the high-demand period."]},
+    {"heading":"What the alerts mean","paragraphs":["A Yellow Alert is issued when operating reserves are insufficient to meet contingency requirements. A Red Alert is raised when supply is insufficient to meet consumer demand and the grid's regulating requirement.","A Red Alert does not automatically mean all customers will lose power, but it signals a heightened risk of rotational outages or other grid-management measures if supply cannot be balanced with demand."]},
+    {"heading":"Context","paragraphs":["The Visayas grid has faced repeated Red and Yellow Alerts in August because of sustained generating-unit outages, deratings and limited reserve margins."]},
+    {"heading":"Why this matters","paragraphs":["Repeated tight-supply periods raise reliability concerns for households, hospitals, businesses and industrial users and underscore the importance of dependable generation, reserves and transmission support."]},
+    {"heading":"What to watch next","paragraphs":["Consumers should monitor NGCP and distribution-utility advisories for succeeding alert schedules, plant returns to service and any rotational-interruption notices."]}
+  ],
+  "sources": [
+    {"publisher":"Philippine News Agency","title":"Visayas grid on red alert anew due to limited supply","publishedAt":"2026-08-28T17:11:00+08:00","url":"https://www.pna.gov.ph/articles/1282891"}
+  ],
+  "image":{"kind":"editorial-fallback","url":"/assets/images/news/fmb-news-editorial-fallback.svg","sourceUrl":null,"creator":"FMB News","license":"FMB-owned editorial visual","licenseUrl":"https://www.francinemariebautista.com/news/","usageStatus":"FMB-owned editorial visual used because the briefing referenced grid and power-sector imagery but did not supply a stable original file with independently verified reuse rights.","credit":"FMB News editorial visual","caption":"FMB News editorial visual accompanying the Visayas grid Red Alert report.","alt":"FMB News editorial visual for the Visayas electricity grid Red Alert","width":1200,"height":675,"focusX":50,"focusY":50},
+  "audit":{"sourceCheckedAt":"2026-08-29T06:58:00+08:00","photoReferenceUrl":"https://www.pna.gov.ph/articles/1282891","notes":["Corrected the briefing's stale figures. PNA/NGCP reported 2,307 MW available capacity against 2,402 MW projected peak demand, not 2,175 MW versus 2,390 MW.","Corrected total unavailable or derated capacity to about 979.6 MW based on the current NGCP-backed report, rather than the briefing's 420 MW framing.","Kept the Red Alert schedule at 5:00 PM-8:00 PM and Yellow Alerts at 2:00 PM-5:00 PM and 8:00 PM-10:00 PM.","Did not state expanded ILP activation as fact because that specific same-day directive was not independently corroborated in the primary current report."]}
+}
