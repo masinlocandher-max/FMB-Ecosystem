@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-28-0700",
+  "emailSubject": "FMB News | PAGASA Issues Orange Rain Warning for Zambales; DAR Wipes Out ₱57.76-B Farm Debt | August 28, 2026 | 7:00 AM PHT",
+  "slug": "pagasa-monsoon-rains-zambales-bataan-lpa",
+  "headline": "PAGASA Warns of Heavy Monsoon Rains Over Zambales and Bataan as LPA Nears Northern Luzon",
+  "seoTitle": "PAGASA: Heavy Habagat Rains Over Zambales, Bataan | FMB News",
+  "seoDescription": "PAGASA warned of monsoon rains over Zambales and Bataan on August 28 as a low pressure area east of Itbayat continued to enhance unsettled weather across Luzon.",
+  "keywords": ["PAGASA weather August 28 2026", "Zambales Bataan monsoon rains", "Habagat LPA Northern Luzon"],
+  "category": "Weather",
+  "kicker": "Weather · Public Safety",
+  "deck": "Zambales and Bataan face heavy to intense monsoon rains and elevated flash-flood and landslide risk while PAGASA monitors a low pressure area east of Itbayat, Batanes.",
+  "publishedAt": "2026-08-28T07:00:00+08:00",
+  "updatedAt": "2026-08-28T07:00:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {"heading":"What happened","paragraphs":["PAGASA warned Friday morning that Zambales and Bataan would experience monsoon rains as the Southwest Monsoon continued to affect Luzon and Visayas.","In its 4:00 AM forecast on August 28, PAGASA located a low pressure area about 720 kilometers east of Itbayat, Batanes at 3:00 AM. The weather bureau said the combination of the LPA and Habagat was maintaining unsettled conditions across large parts of Luzon."]},
+    {"heading":"Where the heaviest rain is expected","paragraphs":["PAGASA classified Zambales and Bataan under monsoon rains, with possible flash floods or landslides due to heavy to intense rainfall. Metro Manila, the Ilocos Region, Abra, Benguet, Tarlac, Pampanga, Nueva Ecija, Bulacan, Rizal, Cavite, Batangas, Occidental Mindoro, Oriental Mindoro and Antique were forecast to receive occasional rains.","The approved FMB News morning brief also cited regional PAGASA rainfall warnings for parts of western Luzon. Because rainfall-warning levels are updated frequently, residents should follow the latest regional PAGASA bulletin for their locality rather than rely on an earlier warning color after conditions change."]},
+    {"heading":"Context","paragraphs":["PAGASA's weekly outlook had already projected occasional rains over Zambales, Bataan and Occidental Mindoro through August 28 because of Habagat. Its selected-city outlook showed a 100% chance of rain in the Subic Bay-Olongapo area on Friday, with monsoon rains expected during the weekend."]},
+    {"heading":"Why this matters","paragraphs":["Repeated rainfall over already saturated ground can trigger rapid flooding and slope failures even where rainfall temporarily weakens. Communities near rivers, drainage channels and steep terrain should follow evacuation and road-closure instructions from local disaster authorities."]},
+    {"heading":"What to watch next","paragraphs":["PAGASA continues to monitor the LPA east of Northern Luzon. Forecasts and rainfall-warning levels may change quickly as the disturbance evolves and interacts with the Southwest Monsoon."]}
+  ],
+  "sources": [
+    {"publisher":"DOST-PAGASA","title":"Daily Weather Forecast issued 4:00 AM, 28 August 2026","publishedAt":"2026-08-28T04:00:00+08:00","url":"https://www.pagasa.dost.gov.ph/weather"},
+    {"publisher":"DOST-PAGASA","title":"Extended Weather Outlook for Selected Philippine Cities","publishedAt":"2026-08-27T08:00:00+08:00","url":"https://www.pagasa.dost.gov.ph/weather/weather-outlook-selected-philippine-cities"}
+  ],
+  "image":{"kind":"editorial-fallback","url":"/assets/images/news/fmb-news-editorial-fallback.svg","sourceUrl":"https://www.pagasa.dost.gov.ph/weather","creator":"FMB News","license":"FMB-owned editorial visual","licenseUrl":"https://www.francinemariebautista.com/news/","usageStatus":"FMB-owned editorial visual used because the approved email referenced government weather imagery but did not supply a stable original image file for repository ingestion.","credit":"FMB News editorial visual","caption":"FMB News editorial visual accompanying the August 28 Habagat and LPA weather update.","alt":"FMB News editorial visual for the August 28 monsoon weather report","width":1200,"height":675,"focusX":50,"focusY":50},
+  "audit":{"sourceCheckedAt":"2026-08-28T12:58:00+08:00","photoReferenceUrl":"https://www.pagasa.dost.gov.ph/weather","notes":["Verified PAGASA's 4:00 AM August 28 forecast: monsoon rains over Zambales and Bataan with possible flash floods or landslides due to heavy to intense rains.","Verified the LPA position at about 720 km east of Itbayat, Batanes at 3:00 AM.","Did not hard-code the approved brief's Orange rainfall-warning level into the headline because regional warning colors are time-sensitive and the current primary PAGASA daily forecast provides the more durable verified framing.","Did not duplicate the DAR debt-condonation or PAF Black Hawk stories because both were already published in the August 27 newsroom cycle."]}
+}
