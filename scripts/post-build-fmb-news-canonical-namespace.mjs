@@ -7,6 +7,8 @@ const newsRoot = path.join(dist, 'news');
 const legacyRoot = path.join(dist, 'fmbnews');
 const canonicalOrigin = 'https://www.francinemariebautista.com';
 const protectedPrefixes = ['app/', '_sites/'];
+const canonicalAboutSource = path.join(root, 'apps', 'withlovefmb', 'news', 'about', 'index.html');
+const canonicalAboutOutput = path.join(newsRoot, 'about', 'index.html');
 
 async function walk(directory) {
   const files = [];
@@ -51,9 +53,22 @@ function containsLegacyPublicPath(value) {
   return /\/fmbnews(?:\/|(?=["'?#<\s]))/i.test(String(value));
 }
 
+function isSelfRedirectingAbout(html) {
+  return /http-equiv=["']refresh["'][^>]*content=["']0;\s*url=\/news\/about\/?["']/i.test(html)
+    || /FMB News has moved to\s*<a[^>]+href=["']\/news\/about\//i.test(html);
+}
+
 await access(path.join(newsRoot, 'index.html'));
-await access(path.join(newsRoot, 'about', 'index.html'));
+await access(canonicalAboutOutput);
 await access(path.join(newsRoot, 'fmb-brief', 'index.html'));
+
+let aboutRestored = false;
+const generatedAbout = await readFile(canonicalAboutOutput, 'utf8');
+if (isSelfRedirectingAbout(generatedAbout)) {
+  const sourceAbout = await readFile(canonicalAboutSource, 'utf8');
+  await writeFile(canonicalAboutOutput, sourceAbout, 'utf8');
+  aboutRestored = true;
+}
 
 let rewritten = 0;
 for (const file of await walk(dist)) {
@@ -135,8 +150,14 @@ try {
   violations.push('sitemap.xml is missing');
 }
 
+const finalAbout = await readFile(canonicalAboutOutput, 'utf8');
+if (isSelfRedirectingAbout(finalAbout)) violations.push('/news/about/ still redirects to itself');
+if (!/<link\b[^>]*rel=["']canonical["'][^>]*href=["']https:\/\/www\.francinemariebautista\.com\/news\/about\/["']/i.test(finalAbout)) {
+  violations.push('/news/about/ is missing its canonical /news/about/ URL');
+}
+
 if (violations.length) {
   throw new Error(`FMB News canonical namespace guard failed:\n${violations.slice(0, 40).join('\n')}`);
 }
 
-console.log(`FMB News canonical namespace guard passed: /news/ is the sole public namespace, ${briefRoutes.length} published FMB Brief route(s) are indexed, ${rewritten} legacy-reference file(s) normalized, and dist/fmbnews removed.`);
+console.log(`FMB News canonical namespace guard passed: /news/ is the sole public namespace, ${briefRoutes.length} published FMB Brief route(s) are indexed, ${rewritten} legacy-reference file(s) normalized, canonical About ${aboutRestored ? 'restored' : 'preserved'}, and dist/fmbnews removed.`);
