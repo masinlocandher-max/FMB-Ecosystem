@@ -3,19 +3,14 @@
   "version": "2.0.0",
   "private": true,
   "description": "GitHub monorepo for the independently deployed FMB/Yoni, SENZ, and Cognita applications.",
-  "workspaces": [
-    "apps/withlovefmb",
-    "apps/senz",
-    "apps/cognita",
-    "packages/*"
-  ],
+  "workspaces": ["apps/withlovefmb", "apps/senz", "apps/cognita", "packages/*"],
   "scripts": {
     "validate:content": "node scripts/validate-content.mjs",
     "build:apps": "node --import ./scripts/fetch-shim.mjs scripts/pipeline/build-apps.mjs",
     "generate:news": "node --import ./scripts/fetch-shim.mjs scripts/pipeline/generate-news.mjs",
     "apply:shared-shell": "node --import ./scripts/fetch-shim.mjs scripts/pipeline/apply-shared-shell.mjs",
     "verify:dist": "node --import ./scripts/fetch-shim.mjs scripts/pipeline/verify-dist.mjs",
-    "finalize:fmb-brief": "node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-brief-finalize-safe.mjs && node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-brief-existing-social.mjs && node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-news-final-public-surface.mjs && node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-news-modern-newspaper.mjs && node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-news-consistency-guard.mjs && node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-home-landing-clean.mjs && node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-brief-fallback-labels.mjs && node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-news-canonical-namespace.mjs && node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-news-safe-consolidation.mjs",
+    "finalize:fmb-brief": "node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-brief-finalize-safe.mjs && node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-brief-existing-social.mjs && node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-news-reference-design.mjs",
     "build": "npm run validate:content && npm run build:apps && npm run generate:news && npm run apply:shared-shell && npm run verify:dist && npm run finalize:fmb-brief",
     "build:legacy": "node --import ./scripts/fetch-shim.mjs scripts/build-release.mjs",
     "build:all": "npm run build:fmb && npm run build:senz && npm run build:cognita",
@@ -34,10 +29,6 @@
     "vercel:bootstrap": "node tooling/vercel-projects.mjs apply",
     "test": "npm run check && npm run check:orchestrator && npm run check:site"
   },
-  "dependencies": {
-    "sharp": "0.35.3"
-  },
-  "engines": {
-    "node": "24.x"
-  }
+  "dependencies": {"sharp": "0.35.3"},
+  "engines": {"node": "24.x"}
 }
