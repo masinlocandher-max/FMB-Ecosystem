@@ -16,11 +16,12 @@
   "author": "FMB News Desk",
   "articleType": "NewsArticle",
   "sections": [
-    {"heading":"What happened","paragraphs":["Olongapo City reported 1,395 people from 452 families staying in evacuation centers as of 9:30 a.m. Saturday after persistent Southwest Monsoon rains caused widespread flooding.","The latest independently reported city tally is higher than the earlier newsroom brief, which cited just over 1,000 evacuees. FMB News is using the newer 1,395 figure." ]},
+    {"heading":"What happened","paragraphs":["Olongapo City reported 1,395 people from 452 families staying in evacuation centers as of 9:30 a.m. Saturday after persistent Southwest Monsoon rains caused widespread flooding.","The latest independently reported city tally is higher than the earlier newsroom brief, which cited just over 1,000 evacuees. FMB News is using the newer 1,395 figure."]},
     {"heading":"Areas affected","paragraphs":["Flooding affected several communities as rivers and drainage channels overflowed. City authorities moved residents in vulnerable and low-lying areas to safer ground and continued monitoring rainfall, water levels and slope conditions."]},
-    {"heading":"Response","paragraphs":["Local disaster-response personnel continued evacuation and relief operations while residents were advised to avoid flooded roads and follow city safety advisories. Some displaced residents were reported to be staying outside formal evacuation centers because of local conditions." ]},
-    {"heading":"Context","paragraphs":["The flooding is part of a wider Habagat emergency affecting Central Luzon and nearby provinces. Saturated ground also raises the risk of erosion and rain-induced landslides in steep areas." ]},
-    {"heading":"What to watch next","paragraphs":["Watch for updated Olongapo evacuation counts, river and drainage conditions, landslide advisories and additional rainfall warnings from local authorities and PAGASA." ]}
+    {"heading":"Response","paragraphs":["Local disaster-response personnel continued evacuation and relief operations while residents were advised to avoid flooded roads and follow city safety advisories. Some displaced residents were reported to be staying outside formal evacuation centers because of local conditions."]},
+    {"heading":"Context","paragraphs":["The flooding is part of a wider Habagat emergency affecting Central Luzon and nearby provinces. Saturated ground also raises the risk of erosion and rain-induced landslides in steep areas."]},
+    {"heading":"Why this matters","paragraphs":["Large-scale evacuation is not only a rainfall story. It tests shelter capacity, relief distribution, transport access and the ability of local government to communicate changing risks quickly as water levels and slope conditions evolve."]},
+    {"heading":"What to watch next","paragraphs":["Watch for updated Olongapo evacuation counts, river and drainage conditions, landslide advisories and additional rainfall warnings from local authorities and PAGASA."]}
   ],
   "sources": [
     {"publisher":"Inquirer Northern Luzon","title":"Over 1,000 Olongapo City folk forced to evacuate due flooding","publishedAt":"2026-08-29T15:03:00+08:00","url":"https://newsinfo.inquirer.net/2294707/over-1000-olongapo-city-folk-forced-to-evacuate-due-flooding"}
