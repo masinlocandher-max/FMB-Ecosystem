@@ -25,6 +25,21 @@ async function walk(directory) {
   return files;
 }
 
+async function publishedBriefRoutes() {
+  const routes = [];
+  for (const entry of await readdir(newsRoot, { withFileTypes: true })) {
+    if (!entry.isDirectory() || !/^fmb-brief-[a-z]+-\d{1,2}-\d{4}$/i.test(entry.name)) continue;
+    const indexFile = path.join(newsRoot, entry.name, 'index.html');
+    try {
+      await access(indexFile);
+      routes.push(`/news/${entry.name}/`);
+    } catch (error) {
+      if (error?.code !== 'ENOENT') throw error;
+    }
+  }
+  return routes.sort();
+}
+
 function canonicalizeNewsNamespace(value) {
   return String(value)
     .replaceAll(`${canonicalOrigin}/fmbnews/`, `${canonicalOrigin}/news/`)
@@ -59,6 +74,7 @@ for (const file of await walk(dist)) {
   }
 }
 
+const briefRoutes = await publishedBriefRoutes();
 const sitemapFile = path.join(dist, 'sitemap.xml');
 try {
   let sitemap = await readFile(sitemapFile, 'utf8');
@@ -67,6 +83,15 @@ try {
     '',
   );
   sitemap = canonicalizeNewsNamespace(sitemap);
+
+  for (const route of ['/news/fmb-brief/', ...briefRoutes]) {
+    const canonical = `${canonicalOrigin}${route}`;
+    if (sitemap.includes(`<loc>${canonical}</loc>`)) continue;
+    sitemap = sitemap.replace(
+      '</urlset>',
+      `  <url><loc>${canonical}</loc><changefreq>${route === '/news/fmb-brief/' ? 'daily' : 'monthly'}</changefreq><priority>0.8</priority></url>\n</urlset>`,
+    );
+  }
   await writeFile(sitemapFile, sitemap, 'utf8');
 } catch (error) {
   if (error?.code !== 'ENOENT') throw error;
@@ -97,8 +122,21 @@ try {
   if (error?.code !== 'ENOENT') throw error;
 }
 
+try {
+  const sitemap = await readFile(sitemapFile, 'utf8');
+  for (const route of briefRoutes) {
+    if (!sitemap.includes(`<loc>${canonicalOrigin}${route}</loc>`)) {
+      violations.push(`sitemap.xml is missing published FMB Brief ${route}`);
+    }
+  }
+  if (containsLegacyPublicPath(sitemap)) violations.push('sitemap.xml still contains /fmbnews');
+} catch (error) {
+  if (error?.code !== 'ENOENT') throw error;
+  violations.push('sitemap.xml is missing');
+}
+
 if (violations.length) {
   throw new Error(`FMB News canonical namespace guard failed:\n${violations.slice(0, 40).join('\n')}`);
 }
 
-console.log(`FMB News canonical namespace guard passed: /news/ is the sole public namespace, ${rewritten} legacy-reference file(s) normalized, and dist/fmbnews removed.`);
+console.log(`FMB News canonical namespace guard passed: /news/ is the sole public namespace, ${briefRoutes.length} published FMB Brief route(s) are indexed, ${rewritten} legacy-reference file(s) normalized, and dist/fmbnews removed.`);
