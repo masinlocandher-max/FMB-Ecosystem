@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-30-0100",
+  "emailSubject": "FMB News | 8 Million Affected by Monsoon Storms; Habagat Rains to Persist Sunday | August 30, 2026 | 1:00 AM PHT",
+  "slug": "ocd-8-million-affected-32-dead-habagat-cyclones-august-30-2026",
+  "headline": "OCD: 32 Dead, 8 Million Affected by Habagat and Recent Cyclones",
+  "seoTitle": "OCD: 32 Dead, 8M Affected by Habagat, Cyclones | FMB News",
+  "seoDescription": "The Office of Civil Defense reported 32 deaths and around 8 million people affected by Habagat and recent cyclones, with 117 LGUs under a state of calamity.",
+  "keywords": ["OCD 8 million affected Habagat 2026", "32 dead Habagat cyclones Philippines", "August 30 2026 disaster update"],
+  "category": "National",
+  "kicker": "Disaster · National",
+  "deck": "Around 2.3 million families have been affected, while government assistance has reached about ₱1.65 billion, according to the latest OCD figures.",
+  "publishedAt": "2026-08-30T01:00:00+08:00",
+  "updatedAt": "2026-08-30T07:00:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {"heading":"Latest national toll","paragraphs":["At least 32 people have died and around 8 million people, equivalent to about 2.3 million families, have been affected by the combined effects of the Southwest Monsoon and tropical cyclones Luis, Maymay and Neneng, according to the Office of Civil Defense.","The OCD also reported 19 injured people and three people still missing. About 25,800 people remained in evacuation centers as of the latest situation report."]},
+    {"heading":"Damage and assistance","paragraphs":["Infrastructure damage has reached about ₱6.11 billion and agricultural losses about ₱2.32 billion. Nearly 3,000 houses were damaged, including 349 that were totally destroyed.","At least 117 local government units have declared a state of calamity. Government assistance to affected communities has reached about ₱1.65 billion."]},
+    {"heading":"Context","paragraphs":["The prolonged emergency follows successive tropical cyclones and renewed Habagat rains that have saturated communities across the country, increasing flood and landslide risks even after individual weather systems move away."]},
+    {"heading":"Why this matters","paragraphs":["The scale of the affected population and infrastructure losses means recovery will extend beyond immediate evacuation and relief distribution. Local governments must also restore transport links, homes, farms and public services while monitoring communities exposed to further rainfall."]},
+    {"heading":"What to watch next","paragraphs":["Watch for updated OCD and NDRRMC casualty validation, evacuation-center counts, damage assessments and additional government assistance as weather conditions evolve."]}
+  ],
+  "sources": [
+    {"publisher":"GMA News Online","title":"32 reported dead due to Habagat, cyclones; 8M people affected —OCD","publishedAt":"2026-08-29T13:51:00+08:00","url":"https://www.gmanetwork.com/news/topstories/nation/1000330/32-reported-dead-due-to-habagat-cyclones-8m-people-affected-ocd/story/"},
+    {"publisher":"Office of Civil Defense","title":"Latest consolidated disaster situation figures","publishedAt":"2026-08-29T00:00:00+08:00","url":"https://ocd.gov.ph/"}
+  ],
+  "image":{"kind":"editorial-fallback","url":"/assets/images/news/fmb-news-editorial-fallback.svg","sourceUrl":"https://www.gmanetwork.com/news/topstories/nation/1000330/32-reported-dead-due-to-habagat-cyclones-8m-people-affected-ocd/story/","creator":"FMB News","license":"FMB-owned editorial visual","licenseUrl":"https://www.francinemariebautista.com/news/","usageStatus":"The verified source page carries a Presidential Communications Office image, while the email recommends a DSWD/PNA relief image but supplies no stable repository-ready original image file. FMB News editorial fallback used rather than copying a hosted image without an ingestible original asset.","credit":"FMB News editorial visual","caption":"FMB News editorial visual accompanying the national disaster-impact update.","alt":"FMB News editorial visual for the August 30 national disaster impact report","width":1200,"height":675,"focusX":50,"focusY":50},
+  "audit":{"sourceCheckedAt":"2026-08-30T07:00:00+08:00","photoReferenceUrl":"https://www.gmanetwork.com/news/topstories/nation/1000330/32-reported-dead-due-to-habagat-cyclones-8m-people-affected-ocd/story/","notes":["Used the latest independently retrievable OCD-backed figures: around 8 million affected, 2.3 million families, 32 deaths, 19 injured, three missing, 25,800 in evacuation centers, ₱6.11B infrastructure damage, ₱2.32B agricultural damage and ₱1.65B government assistance.","Did not repeat the email's more specific 8,024,500 count or ₱1.42B aid figure because the newer OCD-backed report uses updated rounded totals and ₱1.65B assistance.","Did not reuse referenced imagery without a stable repository-ready original file."]}
+}
