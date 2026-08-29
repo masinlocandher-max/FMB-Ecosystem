@@ -6,6 +6,21 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/fmbnews",
+      "destination": "/news/",
+      "permanent": true
+    },
+    {
+      "source": "/fmbnews/",
+      "destination": "/news/",
+      "permanent": true
+    },
+    {
+      "source": "/fmbnews/:path*",
+      "destination": "/news/:path*",
+      "permanent": true
+    },
+    {
       "source": "/data-center/:path*",
       "has": [{"type": "host", "value": "www.francinemariebautista.com"}],
       "destination": "https://data.francinemariebautista.com/",
