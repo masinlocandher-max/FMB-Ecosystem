@@ -130,7 +130,7 @@ homepage = patchHomepage(homepage, latestBrief, creditHtml);
 await writeFile(homepageFile, homepage, 'utf8');
 
 // Keep the compatibility landing byte-synchronized with the canonical News
-// page instead of reinterpreting a legacy/redirect alias as a second homepage.
+// page until the canonical namespace cleanup runs later in the pipeline.
 const aliasFile = path.join(dist, 'fmbnews', 'index.html');
 const alias = homepage;
 await writeFile(aliasFile, alias, 'utf8');
@@ -148,5 +148,3 @@ if (!homepage.includes(`href="${latestBrief.href}"`)) throw new Error('Homepage 
 if (!homepage.includes('Daily newsletter · Separate from News')) throw new Error('Homepage does not explain that FMB Brief is separate from News.');
 
 console.log(`Final FMB News public surface locked to Filipino Media Bulletin identity and newest FMB Brief (${latestBrief.date}).`);
-
-await import('./post-build-fmb-news-modern-newspaper.mjs');
