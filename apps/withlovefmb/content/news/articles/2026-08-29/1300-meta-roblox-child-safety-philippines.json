@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-29-1300",
+  "emailSubject": "FMB News | PAGASA Hoists Red Rainfall Warning; Phivolcs Issues Pinatubo Lahar Alert | August 29, 2026 | 1:00 PM PHT",
+  "slug": "meta-roblox-child-safety-safeguards-philippines-august-2026",
+  "headline": "Meta and Roblox Agree to Strengthen Child-Safety Measures in the Philippines",
+  "seoTitle": "Meta, Roblox Strengthen Child Safety in Philippines | FMB News",
+  "seoDescription": "Meta and Roblox agreed to stronger child-safety protections in the Philippines, including age verification, parental controls and faster removal of harmful content.",
+  "keywords": ["Meta Roblox child safety Philippines", "DICT online safety August 2026", "Roblox age verification Philippines"],
+  "category": "National",
+  "kicker": "Technology · Child Safety",
+  "deck": "The platforms committed to stronger age checks, parental controls, faster harmful-content removal and closer cooperation with Philippine authorities.",
+  "publishedAt": "2026-08-29T13:00:00+08:00",
+  "updatedAt": "2026-08-29T18:58:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {"heading":"What happened","paragraphs":["Meta and Roblox agreed to strengthen child-safety protections for users in the Philippines following discussions with Philippine officials, according to Information and Communications Technology Secretary Henry Aguda.","The commitments include stronger age-verification systems, improved parental controls, quicker removal of harmful content and increased cooperation with law-enforcement authorities."]},
+    {"heading":"Platform commitments","paragraphs":["Roblox is expected to establish a Philippine office by October, while Meta plans to send a team to work on a timeline for expanding its local presence, according to Reuters.","Both companies also signaled willingness to work with lawmakers as Congress considers tighter rules governing minors' access to social-media and online platforms."]},
+    {"heading":"Context","paragraphs":["The agreement comes amid heightened concern over child exploitation, online threats and livestreamed violence. Philippine authorities have been pressing major platforms for faster response mechanisms and more effective safeguards for younger users."]},
+    {"heading":"Why this matters","paragraphs":["Age assurance, parental controls and rapid moderation can reduce exposure to harmful material, but implementation details, privacy protections and enforcement standards will determine whether the commitments produce meaningful safety improvements."]},
+    {"heading":"What to watch next","paragraphs":["DICT and other Philippine agencies are expected to work with the companies on implementation timelines while Congress continues debating broader online-safety legislation for minors."]}
+  ],
+  "sources": [
+    {"publisher":"Reuters","title":"Meta, Roblox agree to child-safety measures sought by Philippines, minister says","publishedAt":"2026-08-28T00:00:00+08:00","url":"https://www.reuters.com/world/asia-pacific/meta-roblox-agree-child-safety-measures-sought-by-philippines-minister-says-2026-08-27/"}
+  ],
+  "image":{"kind":"editorial-fallback","url":"/assets/images/news/fmb-news-editorial-fallback.svg","sourceUrl":null,"creator":"FMB News","license":"FMB-owned editorial visual","licenseUrl":"https://www.francinemariebautista.com/news/","usageStatus":"FMB-owned editorial visual used because the approved brief referenced publisher/agency imagery but did not supply a stable original image file with verified repository reuse rights.","credit":"FMB News editorial visual","caption":"FMB News editorial visual accompanying the Meta and Roblox child-safety report.","alt":"FMB News editorial visual for online child safety and digital platforms","width":1200,"height":675,"focusX":50,"focusY":50},
+  "audit":{"sourceCheckedAt":"2026-08-29T18:58:00+08:00","photoReferenceUrl":null,"notes":["Independently verified the core Meta and Roblox commitments through Reuters.","Did not publish the briefing's specific 15-minute takedown claim because the independently retrieved report supported faster removals but not that exact universal deadline.","Did not claim a formal real-time data-sharing protocol beyond the independently supported commitment to increased law-enforcement cooperation."]}
+}
