@@ -68,6 +68,12 @@ function tickerItems(stories, count) {
   return run + run;
 }
 
+function linkedTickerItems(stories, count) {
+  const source = stories.slice(0, count);
+  const run = source.map((story) => `<a href="/news/${esc(story.slug)}/">${esc(story.headline)}</a>`).join('');
+  return run + run;
+}
+
 function normalizeHomepage(html, stories) {
   if (!stories.length) throw new Error('No published structured FMB News stories found for homepage consolidation.');
 
@@ -88,9 +94,12 @@ function normalizeHomepage(html, stories) {
     '<nav class="mobile-nav" data-mobile-nav><a href="/news/">Latest</a><a href="/news/fmb-brief/">FMB Brief</a><a href="/news/archive/">Archive</a><a href="/news/about/">About FMB News</a><a href="mailto:withlovefmb@gmail.com?subject=Story%20Submission%20for%20FMB%20News">Submit a story</a></nav>');
   html = html.replace(/<div class="section-rail">[\s\S]*?<\/div>\s*<\/div>/i,
     '<div class="section-rail"><div class="shell section-links"><a href="/news/">Latest</a><a href="/news/fmb-brief/">FMB Brief</a><a href="/news/archive/">Archive</a><a href="/news/about/">About</a></div></div>');
+  html = html.replace(/<button class="icon-button"[^>]*aria-label=["']Search["'][^>]*>[\s\S]*?<\/button>/i,
+    '<a class="icon-button" href="/news/archive/" aria-label="Browse the FMB News archive">⌕</a>');
 
   html = html.replace(/<div class="wire-track">[\s\S]*?<\/div>/i, `<div class="wire-track">${tickerItems(stories, 6)}</div>`);
   html = html.replace(/<div class="hero-ticker-track">[\s\S]*?<\/div>/i, `<div class="hero-ticker-track">${tickerItems(stories, 3)}</div>`);
+  html = html.replace(/<div class="fmb-wire-track">[\s\S]*?<\/div>/i, `<div class="fmb-wire-track">${linkedTickerItems(stories, 8)}</div>`);
   html = html.replace(/<div class="story-grid">[\s\S]*?<\/div>\s*<\/div>\s*<\/section>/i,
     `<div class="story-grid">${cards(stories)}</div></div></section>`);
 
@@ -129,5 +138,6 @@ for (const marker of required) {
 }
 if (homepage.includes('data-fmb-asset="logo"')) throw new Error('FMB News homepage still depends on fragmented runtime logo assembly.');
 if (/button\s+type=["']button["'][^>]*>Subscribe/i.test(homepage)) throw new Error('FMB News newsletter button is still inert.');
+if (/aria-label=["']Search["']/i.test(homepage)) throw new Error('FMB News homepage still exposes an inert Search control.');
 
 console.log(`FMB News safe consolidation passed: homepage reflects ${stories.length} newest structured stories, stable logo assets, canonical navigation, and functional Daily Brief signup.`);
