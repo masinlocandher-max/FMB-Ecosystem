@@ -88,13 +88,26 @@ function installStablePublicationLogos(html) {
   html = html.replace(/<a\b([^>]*class=["'][^"']*fmb-consistent-brand[^"']*["'][^>]*)>[\s\S]*?<\/a>/i,
     `<a $1><img class="fmb-news-stable-logo" src="${logoColor}" width="909" height="210" alt="FMB News"><small>Filipino Media Bulletin</small></a>`);
 
-  html = html.replace(/<a\b([^>]*class=["'][^"']*(?:^|\s)brand(?:\s|$)[^"']*["'][^>]*href=["']\/news\/["'][^>]*)>[\s\S]*?<\/a>/i, (full, attrs) => {
-    if (full.includes(logoColor)) return full;
-    return `<a ${attrs}><img class="fmb-news-stable-logo" src="${logoColor}" width="909" height="210" alt="FMB News"><small>Filipino Media Bulletin</small></a>`;
-  });
+  html = html.replace(/<a\s+class=["']brand["']\s+href=["']\/news\/["'][^>]*>[\s\S]*?<\/a>/i,
+    `<a class="brand" href="/news/"><img class="fmb-news-stable-logo" src="${logoColor}" width="909" height="210" alt="FMB News"><small>Filipino Media Bulletin</small></a>`);
+
+  if (!html.includes(logoColor)) {
+    html = html.replace(/<a\b([^>]*href=["']\/news\/["'][^>]*)>\s*FMB News(?:\s*<small>[\s\S]*?<\/small>)?\s*<\/a>/i,
+      `<a $1><img class="fmb-news-stable-logo" src="${logoColor}" width="909" height="210" alt="FMB News"><small>Filipino Media Bulletin</small></a>`);
+  }
 
   html = html.replace(/<div\b([^>]*class=["'][^"']*fmb-consistent-footer-inner[^"']*["'][^>]*)>\s*<strong>FMB News<\/strong>/i,
     `<div $1><img class="fmb-news-stable-footer-logo" src="${logoWhite}" width="909" height="210" alt="FMB News">`);
+
+  if (!html.includes(logoWhite)) {
+    if (/<footer\b[^>]*class=["'][^"']*fmb-consistent-footer[^"']*["'][^>]*>/i.test(html)) {
+      html = html.replace(/(<footer\b[^>]*class=["'][^"']*fmb-consistent-footer[^"']*["'][^>]*>)/i,
+        `$1<div class="fmb-news-stable-footer-lockup"><img class="fmb-news-stable-footer-logo" src="${logoWhite}" width="909" height="210" alt="FMB News"></div>`);
+    } else if (/<footer\b[^>]*class=["'][^"']*footer[^"']*["'][^>]*>/i.test(html)) {
+      html = html.replace(/(<footer\b[^>]*class=["'][^"']*footer[^"']*["'][^>]*>)/i,
+        `$1<div class="shell fmb-news-stable-footer-lockup"><img class="fmb-news-stable-footer-logo" src="${logoWhite}" width="909" height="210" alt="FMB News"></div>`);
+    }
+  }
 
   return html;
 }
@@ -127,7 +140,7 @@ function normalizeHomepage(html, stories) {
 
   if (!html.includes('/assets/js/config.js')) html = html.replace('</head>', '<script src="/assets/js/config.js" defer></script></head>');
   if (!html.includes('/assets/js/fmb-news-newsletter.js')) html = html.replace('</body>', '<script src="/assets/js/fmb-news-newsletter.js" defer></script></body>');
-  if (!html.includes('id="fmb-news-consolidation-style"')) html = html.replace('</head>', '<style id="fmb-news-consolidation-style">.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}.fmb-news-stable-logo{display:block;width:min(360px,72vw)!important;height:auto!important;margin:0 auto}.fmb-news-stable-footer-logo{display:block;width:min(275px,70vw);height:auto;margin:0 0 14px}[data-fmb-newsletter-status]{grid-column:1/-1;margin:8px 0 0;color:#ded4e2;font-size:11px;min-height:1.3em}[data-fmb-newsletter-status][data-state="error"]{color:#ffd7d7}[data-fmb-newsletter-status][data-state="success"]{color:#e6d5f4}.footer form[aria-busy="true"] button{opacity:.65;cursor:wait}</style></head>');
+  if (!html.includes('id="fmb-news-consolidation-style"')) html = html.replace('</head>', '<style id="fmb-news-consolidation-style">.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}.fmb-news-stable-logo{display:block;width:min(360px,72vw)!important;height:auto!important;margin:0 auto}.fmb-news-stable-footer-lockup{width:min(1380px,calc(100% - 48px));margin:0 auto 18px}.fmb-news-stable-footer-logo{display:block;width:min(275px,70vw);height:auto;margin:0}[data-fmb-newsletter-status]{grid-column:1/-1;margin:8px 0 0;color:#ded4e2;font-size:11px;min-height:1.3em}[data-fmb-newsletter-status][data-state="error"]{color:#ffd7d7}[data-fmb-newsletter-status][data-state="success"]{color:#e6d5f4}.footer form[aria-busy="true"] button{opacity:.65;cursor:wait}@media(max-width:700px){.fmb-news-stable-footer-lockup{width:calc(100% - 28px)}}</style></head>');
 
   return html;
 }
