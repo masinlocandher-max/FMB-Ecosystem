@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '24'
       - run: node scripts/validate-content.mjs
 
   boundaries:
@@ -26,7 +26,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '24'
       - run: node scripts/check-release-contract.mjs
       - run: node tooling/check-monorepo.mjs
       - run: node tooling/check-deployment-boundaries.mjs
@@ -40,7 +40,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '24'
       - run: npm run build:fmb
       - run: test -f apps/withlovefmb/dist/index.html
       - run: test -f apps/withlovefmb/dist/app/index.html
@@ -57,7 +57,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '24'
           cache: npm
           cache-dependency-path: apps/cognita/package-lock.json
       - run: npm ci --workspaces=false
@@ -66,13 +66,12 @@ jobs:
 
   deploy-fmb-prebuilt-production:
     needs: [content-schema, boundaries, static-builds, cognita-build]
-    if: >-
-      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'pull_request' &&
-       github.event.pull_request.head.ref == 'main' &&
-       github.event.pull_request.head.repo.full_name == github.repository)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 35
+    concurrency:
+      group: fmb-production-deploy
+      cancel-in-progress: false
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -98,4 +97,41 @@ jobs:
       - name: Build audited production output locally
         run: npx --yes vercel@56.5.0 build --prod --token="$VERCEL_TOKEN"
       - name: Upload prebuilt production release
-        run: npx --yes vercel@56.5.0 deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          deploy_status=1
+          for attempt in 1 2 3; do
+            echo "Production upload attempt ${attempt} of 3"
+            set +e
+            npx --yes vercel@56.5.0 deploy --prebuilt --prod --token="$VERCEL_TOKEN" 2>&1 | tee deployment-url.txt
+            deploy_status=${PIPESTATUS[0]}
+            set -e
+
+            if [ "$deploy_status" -eq 0 ]; then
+              break
+            fi
+
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 30))
+            fi
+          done
+
+          if [ "$deploy_status" -ne 0 ]; then
+            exit "$deploy_status"
+          fi
+
+          production_url=$(grep -Eo 'https://[^[:space:]]+' deployment-url.txt | tail -n 1 || true)
+          test -n "$production_url"
+          printf '%s\n' "$production_url" > production-url.txt
+      - name: Preserve deployment reference
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fmb-production-deployment-${{ github.run_id }}
+          path: |
+            deployment-url.txt
+            production-url.txt
+          if-no-files-found: warn
+          retention-days: 7
