@@ -9,6 +9,7 @@ const sourceNewsRoot = path.join(root, 'apps', 'withlovefmb', 'news');
 const socialRoot = path.join(dist, 'assets', 'images', 'news', 'social');
 const heroRoot = path.join(dist, 'assets', 'images', 'news', 'brief');
 const origin = 'https://www.francinemariebautista.com';
+const fallbackImage = '/assets/images/news/fmb-news-editorial-fallback.svg';
 const identityCss = '<link rel="stylesheet" href="/assets/css/fmb-news-identity-lockup.css?v=20260820">';
 
 const attr = (tag, name) => tag.match(new RegExp(`\\b${name}=(['"])(.*?)\\1`, 'i'))?.[2] || '';
@@ -33,13 +34,36 @@ function replaceMeta(html, key, value, content) {
 }
 
 async function sourceBuffer(src) {
-  if (src.startsWith('/')) return readFile(path.join(dist, src.slice(1)));
-  if (src.startsWith(origin)) return readFile(path.join(dist, new URL(src).pathname.slice(1)));
-  const response = await fetch(src, { redirect:'follow', headers:{ 'user-agent':'FMBNewsBuild/1.0 (+https://www.francinemariebautista.com/news/about/)' } });
-  if (!response.ok) throw new Error(`FMB Brief social source failed: ${src} (HTTP ${response.status})`);
-  const type = response.headers.get('content-type') || '';
-  if (!type.startsWith('image/')) throw new Error(`FMB Brief social source did not resolve to an image: ${src} (${type || 'unknown type'})`);
-  return Buffer.from(await response.arrayBuffer());
+  if (!src) return null;
+  try {
+    if (src.startsWith('/')) return await readFile(path.join(dist, src.slice(1)));
+    if (src.startsWith(origin)) return await readFile(path.join(dist, new URL(src).pathname.slice(1)));
+    const response = await fetch(src, { redirect:'follow', headers:{ 'user-agent':'FMBNewsBuild/1.0 (+https://www.francinemariebautista.com/news/about/)' } });
+    if (!response.ok) {
+      console.warn(`FMB Brief social source unavailable: ${src} (HTTP ${response.status}); trying a local recovery source.`);
+      return null;
+    }
+    const type = response.headers.get('content-type') || '';
+    if (!type.startsWith('image/')) {
+      console.warn(`FMB Brief social source did not resolve to an image: ${src} (${type || 'unknown type'}); trying a local recovery source.`);
+      return null;
+    }
+    return Buffer.from(await response.arrayBuffer());
+  } catch (error) {
+    console.warn(`FMB Brief social source could not be read: ${src} (${error.message}); trying a local recovery source.`);
+    return null;
+  }
+}
+
+async function recoverSourceBuffer(candidates) {
+  const seen = new Set();
+  for (const src of candidates) {
+    if (!src || seen.has(src)) continue;
+    seen.add(src);
+    const buffer = await sourceBuffer(src);
+    if (buffer?.length) return { buffer, src };
+  }
+  throw new Error(`FMB Brief social image could not be recovered from any approved source: ${[...seen].join(', ')}`);
 }
 
 async function cropSocial(buffer, output) {
@@ -120,7 +144,15 @@ for (const entry of entries) {
   const heroAlt = renderedHero.alt || sourceHero.alt || 'FMB Brief editorial image';
   if (!heroSrc) throw new Error(`${entry.name}: FMB Brief has no recoverable hero image`);
 
-  const buffer = await sourceBuffer(heroSrc);
+  // The safe finalizer normally creates this local 1200×630 crop first. Prefer
+  // it when available so transient publisher/CDN rate limits cannot abort the
+  // entire release. The original hero remains the first remote recovery source
+  // when no local crop exists, and the newsroom-owned fallback is last resort.
+  const candidates = [];
+  if (await exists(path.join(dist, socialUrl.slice(1)))) candidates.push(socialUrl);
+  candidates.push(heroSrc, currentOg, sourceHero.src, fallbackImage);
+  const recovered = await recoverSourceBuffer(candidates);
+  const buffer = recovered.buffer;
   const output = path.join(dist, socialUrl.slice(1));
   const dimensions = await cropSocial(buffer, output);
   await localHero(buffer, path.join(dist, localHeroUrl.slice(1)));
@@ -134,7 +166,7 @@ for (const entry of entries) {
   html = replaceMeta(html, 'name', 'twitter:image', absolute);
   html = replaceMeta(html, 'name', 'twitter:card', 'summary_large_image');
   await writeFile(file, html, 'utf8');
-  generated.push({ date, route:`/news/${entry.name}/`, sourceImage:heroSrc, localHeroUrl, socialUrl, ...dimensions });
+  generated.push({ date, route:`/news/${entry.name}/`, sourceImage:heroSrc, recoveredFrom:recovered.src, localHeroUrl, socialUrl, ...dimensions });
 }
 
 const archiveFile = path.join(newsRoot, 'fmb-brief', 'index.html');
