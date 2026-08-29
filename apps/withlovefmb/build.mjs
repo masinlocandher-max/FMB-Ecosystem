@@ -164,12 +164,113 @@ if (!sitemapXml.includes(mediaArchiveUrl)) {
 const { publishNewsFeed } = await import('./scripts/publish-news-feed.mjs');
 await publishNewsFeed({ distRoot: output });
 
-// FMB Brief is a distinct daily newsletter, not another item in the supplied-news feed.
-// publishNewsFeed owns the generated newsroom landing page, so the newsletter entry point
-// is added only after that publisher has finished rendering the regular FMB News feed.
-const newsLandingPath = path.join(output, 'news', 'index.html');
+function decodeEntities(value = '') {
+  return value
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;|&apos;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
+}
+
+function stripTags(value = '') {
+  return decodeEntities(value.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim());
+}
+
+function escapeHtml(value = '') {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function extractMeta(html, name) {
+  const pattern = new RegExp(`<meta[^>]+(?:name|property)=["']${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}["'][^>]+content=["']([^"']+)["']`, 'i');
+  return decodeEntities(html.match(pattern)?.[1] || '');
+}
+
+function extractFirst(html, pattern, fallback = '') {
+  return stripTags(html.match(pattern)?.[1] || fallback);
+}
+
+const monthNames = new Map([
+  ['january', 0], ['february', 1], ['march', 2], ['april', 3], ['may', 4], ['june', 5],
+  ['july', 6], ['august', 7], ['september', 8], ['october', 9], ['november', 10], ['december', 11],
+]);
+
+function editionDateFromSlug(slug) {
+  const match = slug.match(/^fmb-brief-([a-z]+)-(\d{1,2})-(\d{4})$/i);
+  if (!match) return null;
+  const month = monthNames.get(match[1].toLowerCase());
+  if (month == null) return null;
+  const date = new Date(Date.UTC(Number(match[3]), month, Number(match[2])));
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function formatArchiveDate(date) {
+  return new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(date);
+}
+
+function formatFeatureDate(date) {
+  return new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', timeZone: 'UTC' }).format(date);
+}
+
+async function collectBriefEditions() {
+  const entries = await readdir(newsRoot, { withFileTypes: true });
+  const editions = [];
+
+  for (const entry of entries) {
+    if (!entry.isDirectory() || !entry.name.startsWith('fmb-brief-')) continue;
+    const date = editionDateFromSlug(entry.name);
+    if (!date) continue;
+
+    const file = path.join(newsRoot, entry.name, 'index.html');
+    let html;
+    try {
+      html = await readFile(file, 'utf8');
+    } catch (error) {
+      if (error?.code === 'ENOENT') continue;
+      throw error;
+    }
+
+    const title = extractFirst(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i, extractMeta(html, 'og:title')) || `FMB Brief, ${formatArchiveDate(date)}`;
+    const description = extractMeta(html, 'description') || extractMeta(html, 'og:description') || 'The complete daily FMB Brief from FMB News.';
+    const image = extractMeta(html, 'og:image') || 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Manila_skyline,_Philippines.jpg';
+    const imageAlt = extractFirst(html, /<img[^>]+alt=["']([^"']+)["'][^>]*>/i, 'FMB Brief editorial image');
+
+    editions.push({ slug: entry.name, date, title, description, image, imageAlt });
+  }
+
+  return editions.sort((a, b) => b.date - a.date);
+}
+
+const briefEditions = await collectBriefEditions();
+if (!briefEditions.length) {
+  throw new Error('FMB Brief build guard failed: no fmb-brief-* editions were found.');
+}
+
+const briefArchivePath = path.join(newsRoot, 'fmb-brief', 'index.html');
+let briefArchiveHtml = await readFile(briefArchivePath, 'utf8');
+const archiveCards = briefEditions.map((edition) => {
+  const isoDate = edition.date.toISOString().slice(0, 10);
+  return `<a class="brief-issue" href="/news/${edition.slug}/"><time datetime="${isoDate}">${escapeHtml(formatArchiveDate(edition.date))}</time><div><h2>${escapeHtml(edition.title)}</h2><p>${escapeHtml(edition.description)}</p></div><img src="${escapeHtml(edition.image)}" alt="${escapeHtml(edition.imageAlt)}" loading="lazy"></a>`;
+}).join('');
+
+briefArchiveHtml = briefArchiveHtml.replace(
+  /(<div class="brief-issue-list">)[\s\S]*?(<\/div><\/div><\/section><section class="brief-method">)/i,
+  `$1${archiveCards}$2`,
+);
+await writeFile(briefArchivePath, briefArchiveHtml, 'utf8');
+
+const latestBrief = briefEditions[0];
+const latestHref = `/news/${latestBrief.slug}/`;
+const briefFeature = `<section class="brief-feature" data-fmb-brief-feature aria-labelledby="fmbBriefFeatureTitle"><div class="fnc-shell brief-feature-grid"><div class="brief-feature-copy"><h2 id="fmbBriefFeatureTitle">FMB Brief<span>One complete daily newsletter</span></h2><p>Separate from individual FMB News reports. FMB Brief brings the Philippines and the world into one issue, with the developments, context, business signals and implications worth knowing before the day gets noisy.</p><div class="brief-feature-actions"><a href="${latestHref}">Read latest brief</a><a href="/news/fmb-brief/">All editions</a></div></div><article class="brief-feature-latest"><img src="${escapeHtml(latestBrief.image)}" alt="${escapeHtml(latestBrief.imageAlt)}"><div><small>${escapeHtml(formatFeatureDate(latestBrief.date))} · Philippines + World</small><h3>${escapeHtml(latestBrief.title)}</h3><p>${escapeHtml(latestBrief.description)}</p><a href="${latestHref}">Open the full newsletter →</a></div></article></div></section>`;
+
+const newsLandingPath = path.join(newsRoot, 'index.html');
 let newsLandingHtml = await readFile(newsLandingPath, 'utf8');
-const briefStylesheet = '<link rel="stylesheet" href="/assets/css/fmb-brief.css?v=20260820">';
+const briefStylesheet = '<link rel="stylesheet" href="/assets/css/fmb-brief.css?v=20260830">';
 if (!newsLandingHtml.includes('/assets/css/fmb-brief.css')) {
   newsLandingHtml = newsLandingHtml.replace('</head>', `${briefStylesheet}\n</head>`);
 }
@@ -179,10 +280,20 @@ if (!newsLandingHtml.includes('href="/news/fmb-brief/"')) {
     '<div class="fnc-nav-links"><a href="/news/fmb-brief/">FMB Brief</a>',
   );
 }
-const briefFeature = `<section class="brief-feature" data-fmb-brief-feature aria-labelledby="fmbBriefFeatureTitle"><div class="fnc-shell brief-feature-grid"><div class="brief-feature-copy"><h2 id="fmbBriefFeatureTitle">FMB Brief<span>One complete daily newsletter</span></h2><p>Separate from individual FMB News reports. FMB Brief brings the Philippines and the world into one issue, with the developments, context, business signals and implications worth knowing before the day gets noisy.</p><div class="brief-feature-actions"><a href="/news/fmb-brief-august-20-2026/">Read today’s brief</a><a href="/news/fmb-brief/">All editions</a></div></div><article class="brief-feature-latest"><img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Humanoid_Robot_at_International_Exhibitions.jpg" alt="Humanoid robot displayed at an international exhibition"><div><small>August 20 · Philippines + World</small><h3>Robots rally, school safety moves to the national agenda, and energy risk travels through prices.</h3><p>China robotics, Philippine school safety, Hormuz, U.S. bond markets, Korea diplomacy, Gaza accountability and the startup signals worth watching.</p><a href="/news/fmb-brief-august-20-2026/">Open the full newsletter →</a></div></article></div></section>`;
-if (!newsLandingHtml.includes('data-fmb-brief-feature')) {
+if (newsLandingHtml.includes('data-fmb-brief-feature')) {
+  newsLandingHtml = newsLandingHtml.replace(/<section class="brief-feature" data-fmb-brief-feature[\s\S]*?<\/section>/i, briefFeature);
+} else {
   newsLandingHtml = newsLandingHtml.replace('<section class="fnc-tools">', `${briefFeature}<section class="fnc-tools">`);
 }
 await writeFile(newsLandingPath, newsLandingHtml, 'utf8');
 
-console.log(`Built and audited ${newsHtmlFiles.length} FMB News pages with a Philippine-centered, globally aware editorial identity and the complete article archive retained.`);
+for (const edition of briefEditions) {
+  const url = `https://www.francinemariebautista.com/news/${edition.slug}/`;
+  if (!sitemapXml.includes(`<loc>${url}</loc>`)) {
+    const sitemapEntry = `  <url><loc>${url}</loc><lastmod>${edition.date.toISOString().slice(0, 10)}</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>\n`;
+    sitemapXml = sitemapXml.replace('</urlset>', `${sitemapEntry}</urlset>`);
+  }
+}
+await writeFile(sitemapPath, sitemapXml, 'utf8');
+
+console.log(`Built and audited ${newsHtmlFiles.length} FMB News pages and automatically published ${briefEditions.length} FMB Brief editions, newest first.`);
