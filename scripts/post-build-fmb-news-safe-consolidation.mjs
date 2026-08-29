@@ -74,19 +74,35 @@ function linkedTickerItems(stories, count) {
   return run + run;
 }
 
+function installStablePublicationLogos(html) {
+  html = html.replace(/<img\b([^>]*?)data-fmb-asset=["']logo["']([^>]*?)>/gi, (tag, before, after) => {
+    const isFooter = /footer-logo/i.test(tag);
+    const src = isFooter ? logoWhite : logoColor;
+    let out = `<img${before}${after}>`;
+    out = out.replace(/\sdata-fmb-asset=["']logo["']/i, '');
+    if (/\ssrc=["'][^"']*["']/i.test(out)) out = out.replace(/\ssrc=["'][^"']*["']/i, ` src="${src}"`);
+    else out = out.replace('<img', `<img src="${src}"`);
+    return out;
+  });
+
+  html = html.replace(/<a\b([^>]*class=["'][^"']*fmb-consistent-brand[^"']*["'][^>]*)>[\s\S]*?<\/a>/i,
+    `<a $1><img class="fmb-news-stable-logo" src="${logoColor}" width="909" height="210" alt="FMB News"><small>Filipino Media Bulletin</small></a>`);
+
+  html = html.replace(/<a\b([^>]*class=["'][^"']*(?:^|\s)brand(?:\s|$)[^"']*["'][^>]*href=["']\/news\/["'][^>]*)>[\s\S]*?<\/a>/i, (full, attrs) => {
+    if (full.includes(logoColor)) return full;
+    return `<a ${attrs}><img class="fmb-news-stable-logo" src="${logoColor}" width="909" height="210" alt="FMB News"><small>Filipino Media Bulletin</small></a>`;
+  });
+
+  html = html.replace(/<div\b([^>]*class=["'][^"']*fmb-consistent-footer-inner[^"']*["'][^>]*)>\s*<strong>FMB News<\/strong>/i,
+    `<div $1><img class="fmb-news-stable-footer-logo" src="${logoWhite}" width="909" height="210" alt="FMB News">`);
+
+  return html;
+}
+
 function normalizeHomepage(html, stories) {
   if (!stories.length) throw new Error('No published structured FMB News stories found for homepage consolidation.');
 
-  html = html
-    .replace(/<img\b([^>]*?)data-fmb-asset=["']logo["']([^>]*?)>/gi, (tag, before, after) => {
-      const isFooter = /footer-logo/i.test(tag);
-      const src = isFooter ? logoWhite : logoColor;
-      let out = `<img${before}${after}>`;
-      out = out.replace(/\sdata-fmb-asset=["']logo["']/i, '');
-      if (/\ssrc=["'][^"']*["']/i.test(out)) out = out.replace(/\ssrc=["'][^"']*["']/i, ` src="${src}"`);
-      else out = out.replace('<img', `<img src="${src}"`);
-      return out;
-    });
+  html = installStablePublicationLogos(html);
 
   html = html.replace(/<nav class="desktop-nav">[\s\S]*?<\/nav>/i,
     '<nav class="desktop-nav"><a href="/news/">Latest</a><a href="/news/fmb-brief/">FMB Brief</a><a href="/news/archive/">Archive</a><a href="/news/about/">About</a></nav>');
@@ -111,7 +127,7 @@ function normalizeHomepage(html, stories) {
 
   if (!html.includes('/assets/js/config.js')) html = html.replace('</head>', '<script src="/assets/js/config.js" defer></script></head>');
   if (!html.includes('/assets/js/fmb-news-newsletter.js')) html = html.replace('</body>', '<script src="/assets/js/fmb-news-newsletter.js" defer></script></body>');
-  if (!html.includes('.sr-only{')) html = html.replace('</head>', '<style id="fmb-news-consolidation-style">.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}[data-fmb-newsletter-status]{grid-column:1/-1;margin:8px 0 0;color:#ded4e2;font-size:11px;min-height:1.3em}[data-fmb-newsletter-status][data-state="error"]{color:#ffd7d7}[data-fmb-newsletter-status][data-state="success"]{color:#e6d5f4}.footer form[aria-busy="true"] button{opacity:.65;cursor:wait}</style></head>');
+  if (!html.includes('id="fmb-news-consolidation-style"')) html = html.replace('</head>', '<style id="fmb-news-consolidation-style">.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}.fmb-news-stable-logo{display:block;width:min(360px,72vw)!important;height:auto!important;margin:0 auto}.fmb-news-stable-footer-logo{display:block;width:min(275px,70vw);height:auto;margin:0 0 14px}[data-fmb-newsletter-status]{grid-column:1/-1;margin:8px 0 0;color:#ded4e2;font-size:11px;min-height:1.3em}[data-fmb-newsletter-status][data-state="error"]{color:#ffd7d7}[data-fmb-newsletter-status][data-state="success"]{color:#e6d5f4}.footer form[aria-busy="true"] button{opacity:.65;cursor:wait}</style></head>');
 
   return html;
 }
@@ -127,7 +143,8 @@ homepage = normalizeHomepage(homepage, stories);
 await writeFile(homepageFile, homepage, 'utf8');
 
 const required = [
-  '/assets/images/fmb-approved/fmb-news-official-transparent.webp',
+  logoColor,
+  logoWhite,
   'data-fmb-newsletter-form',
   '/assets/js/fmb-news-newsletter.js',
   `/news/${stories[0].slug}/`,
