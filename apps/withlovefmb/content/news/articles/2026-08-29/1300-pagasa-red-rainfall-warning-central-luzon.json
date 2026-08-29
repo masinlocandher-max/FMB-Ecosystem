@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-29-1300",
+  "emailSubject": "FMB News | PAGASA Hoists Red Rainfall Warning; Phivolcs Issues Pinatubo Lahar Alert | August 29, 2026 | 1:00 PM PHT",
+  "slug": "pagasa-red-rainfall-warning-central-luzon-august-29-2026",
+  "headline": "PAGASA Raises Red Rainfall Warning Across Much of Central Luzon as Habagat Flood Risk Intensifies",
+  "seoTitle": "Red Rainfall Warning Across Central Luzon | FMB News",
+  "seoDescription": "PAGASA placed Zambales, Bataan, Pampanga and Bulacan under red rainfall warnings on August 29 as Habagat rains raised serious flooding risks.",
+  "keywords": ["PAGASA red rainfall warning August 29 2026", "Habagat Central Luzon flooding", "Zambales Bataan Pampanga Bulacan rain"],
+  "category": "National",
+  "kicker": "Weather · Public Safety",
+  "deck": "Serious flooding remained a threat as monsoon rains intensified across western and central Luzon on Saturday.",
+  "publishedAt": "2026-08-29T13:00:00+08:00",
+  "updatedAt": "2026-08-29T18:58:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {"heading":"What happened","paragraphs":["PAGASA maintained red rainfall warnings over Zambales, Bataan, Pampanga and Bulacan on Saturday, August 29, as the southwest monsoon continued to bring intense rain and serious flooding risk across parts of Luzon.","By 11:00 a.m., the red-warning area had expanded to include Metro Manila and parts of Tarlac, Batangas, Cavite and Rizal. PAGASA's warning means serious flooding is expected in flood-prone areas."]},
+    {"heading":"Weather setup","paragraphs":["PAGASA's early-morning forecast placed a low-pressure area about 520 kilometers north-northeast of Itbayat, Batanes, while the southwest monsoon remained the dominant rain-producing system over western Luzon.","The bureau warned that flash floods and landslides remain possible where heavy to intense rain falls over already saturated ground."]},
+    {"heading":"Context","paragraphs":["Rainfall-warning coverage can change within hours as radar observations update. Residents should rely on the latest PAGASA regional heavy-rainfall warning rather than an older warning map when making safety decisions."]},
+    {"heading":"Why this matters","paragraphs":["Repeated heavy rain over Central Luzon increases the risk of river flooding, urban inundation and slope failures even after rainfall temporarily weakens."]},
+    {"heading":"What to watch next","paragraphs":["PAGASA continues issuing three-hour heavy-rainfall warnings and broader weather advisories. Local disaster offices may order evacuations or road closures as conditions change."]}
+  ],
+  "sources": [
+    {"publisher":"PAGASA","title":"Heavy Rainfall Warning No. 15, NCR-PRSD","publishedAt":"2026-08-29T11:00:00+08:00","url":"https://pagasa.dost.gov.ph/"},
+    {"publisher":"Philippine News Agency","title":"Habagat to continue drenching Luzon, Visayas","publishedAt":"2026-08-29T06:34:00+08:00","url":"https://www.pna.gov.ph/articles/1282926"}
+  ],
+  "image":{"kind":"editorial-fallback","url":"/assets/images/news/fmb-news-editorial-fallback.svg","sourceUrl":"https://www.pna.gov.ph/categories/national","creator":"FMB News","license":"FMB-owned editorial visual","licenseUrl":"https://www.francinemariebautista.com/news/","usageStatus":"FMB-owned editorial visual used because the briefing referenced OCD/PNA flood-rescue imagery but did not supply a stable original image file for repository ingestion.","credit":"FMB News editorial visual","caption":"FMB News editorial visual accompanying the August 29 severe-rainfall update.","alt":"FMB News editorial visual for severe monsoon rainfall and flooding in Central Luzon","width":1200,"height":675,"focusX":50,"focusY":50},
+  "audit":{"sourceCheckedAt":"2026-08-29T18:58:00+08:00","photoReferenceUrl":"https://www.pna.gov.ph/categories/national","notes":["Verified the red-warning scope against same-day PAGASA warning reproductions and current PNA weather reporting.","Did not use the briefing's claim that the LPA itself was 520 km east of Luzon; the same-day PAGASA forecast placed the LPA 520 km north-northeast of Itbayat, Batanes.","Avoided freezing rapidly changing warning coverage into permanent safety guidance."]}
+}
