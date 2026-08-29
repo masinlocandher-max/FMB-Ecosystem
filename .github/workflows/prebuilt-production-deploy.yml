@@ -1,21 +1,9 @@
 name: Prebuilt production deploy
 
-# Main-branch fallback for the audited FMB ecosystem production release.
-# Keep production in sync when Vercel's Git integration cancels or skips rapid News updates.
+# Manual fallback for the audited FMB ecosystem production release.
+# The automatic production path lives in Monorepo checks so every release is gated
+# by content, boundary, static-build, and Cognita checks before deployment.
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'apps/withlovefmb/**'
-      - 'scripts/pipeline/**'
-      - 'scripts/post-build-fmb*.mjs'
-      - 'package.json'
-      - 'package-lock.json'
-      - '.github/workflows/prebuilt-production-deploy.yml'
-  workflow_run:
-    workflows: ['Monorepo checks']
-    types: [completed]
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -27,11 +15,6 @@ concurrency:
 
 jobs:
   deploy-prebuilt:
-    if: >-
-      github.event_name != 'workflow_run' ||
-      (github.event.workflow_run.conclusion == 'success' &&
-       github.event.workflow_run.head_branch == 'main' &&
-       github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
