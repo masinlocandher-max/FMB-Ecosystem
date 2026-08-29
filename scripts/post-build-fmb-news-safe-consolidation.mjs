@@ -1,0 +1,133 @@
+import { access, readFile, readdir, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+
+const root = path.resolve(new URL('..', import.meta.url).pathname);
+const dist = path.join(root, 'dist');
+const contentRoot = path.join(root, 'apps', 'withlovefmb', 'content', 'news', 'articles');
+const newsRoot = path.join(dist, 'news');
+const homepageFile = path.join(newsRoot, 'index.html');
+const logoColor = '/assets/images/fmb-approved/fmb-news-official-transparent.webp';
+const logoWhite = '/assets/images/fmb-approved/fmb-news-logo-white-supplied.webp';
+const fallbackImage = '/assets/images/news/fmb-news-editorial-fallback.svg';
+
+const esc = (value = '') => String(value)
+  .replaceAll('&', '&amp;')
+  .replaceAll('<', '&lt;')
+  .replaceAll('>', '&gt;')
+  .replaceAll('"', '&quot;')
+  .replaceAll("'", '&#39;');
+
+async function walk(directory) {
+  const files = [];
+  let entries = [];
+  try { entries = await readdir(directory, { withFileTypes: true }); }
+  catch (error) { if (error?.code === 'ENOENT') return files; throw error; }
+  for (const entry of entries) {
+    const target = path.join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...await walk(target));
+    else if (entry.isFile() && entry.name.endsWith('.json')) files.push(target);
+  }
+  return files;
+}
+
+function safeImage(raw) {
+  const value = String(raw?.image?.url || '').trim();
+  if (value.startsWith('/') && !value.startsWith('//')) return value;
+  return fallbackImage;
+}
+
+async function latestPublished(limit = 12) {
+  const stories = [];
+  for (const file of await walk(contentRoot)) {
+    try {
+      const raw = JSON.parse(await readFile(file, 'utf8'));
+      if (raw.status !== 'published' || !raw.slug || !raw.headline || !raw.publishedAt) continue;
+      stories.push({
+        slug: raw.slug,
+        headline: raw.headline,
+        deck: raw.deck || raw.seoDescription || '',
+        category: raw.category || 'Latest',
+        publishedAt: raw.publishedAt,
+        image: safeImage(raw),
+        alt: raw.image?.alt || raw.headline,
+      });
+    } catch (error) {
+      console.warn(`Skipping invalid FMB News article JSON ${path.relative(root, file)}: ${error.message}`);
+    }
+  }
+  return stories.sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt)).slice(0, limit);
+}
+
+function cards(stories) {
+  return stories.slice(0, 4).map((story) => `<a class="story-card" href="/news/${esc(story.slug)}/"><img src="${esc(story.image)}" alt="${esc(story.alt)}" loading="lazy" decoding="async" onerror="if(!this.dataset.fmbFallback){this.dataset.fmbFallback='1';this.src='${fallbackImage}'}"><div><em>${esc(story.category)}</em><h3>${esc(story.headline)}</h3><p>${esc(story.deck)}</p></div></a>`).join('');
+}
+
+function tickerItems(stories, count) {
+  const source = stories.slice(0, count);
+  const run = source.map((story) => `<span>${esc(story.headline)}</span>`).join('');
+  return run + run;
+}
+
+function normalizeHomepage(html, stories) {
+  if (!stories.length) throw new Error('No published structured FMB News stories found for homepage consolidation.');
+
+  html = html
+    .replace(/<img\b([^>]*?)data-fmb-asset=["']logo["']([^>]*?)>/gi, (tag, before, after) => {
+      const isFooter = /footer-logo/i.test(tag);
+      const src = isFooter ? logoWhite : logoColor;
+      let out = `<img${before}${after}>`;
+      out = out.replace(/\sdata-fmb-asset=["']logo["']/i, '');
+      if (/\ssrc=["'][^"']*["']/i.test(out)) out = out.replace(/\ssrc=["'][^"']*["']/i, ` src="${src}"`);
+      else out = out.replace('<img', `<img src="${src}"`);
+      return out;
+    });
+
+  html = html.replace(/<nav class="desktop-nav">[\s\S]*?<\/nav>/i,
+    '<nav class="desktop-nav"><a href="/news/">Latest</a><a href="/news/fmb-brief/">FMB Brief</a><a href="/news/archive/">Archive</a><a href="/news/about/">About</a></nav>');
+  html = html.replace(/<nav class="mobile-nav"[^>]*>[\s\S]*?<\/nav>/i,
+    '<nav class="mobile-nav" data-mobile-nav><a href="/news/">Latest</a><a href="/news/fmb-brief/">FMB Brief</a><a href="/news/archive/">Archive</a><a href="/news/about/">About FMB News</a><a href="mailto:withlovefmb@gmail.com?subject=Story%20Submission%20for%20FMB%20News">Submit a story</a></nav>');
+  html = html.replace(/<div class="section-rail">[\s\S]*?<\/div>\s*<\/div>/i,
+    '<div class="section-rail"><div class="shell section-links"><a href="/news/">Latest</a><a href="/news/fmb-brief/">FMB Brief</a><a href="/news/archive/">Archive</a><a href="/news/about/">About</a></div></div>');
+
+  html = html.replace(/<div class="wire-track">[\s\S]*?<\/div>/i, `<div class="wire-track">${tickerItems(stories, 6)}</div>`);
+  html = html.replace(/<div class="hero-ticker-track">[\s\S]*?<\/div>/i, `<div class="hero-ticker-track">${tickerItems(stories, 3)}</div>`);
+  html = html.replace(/<div class="story-grid">[\s\S]*?<\/div>\s*<\/div>\s*<\/section>/i,
+    `<div class="story-grid">${cards(stories)}</div></div></section>`);
+
+  html = html.replace(/<div class="section-heading">[\s\S]*?<\/div>\s*<div class="story-grid">/i,
+    '<div class="section-heading"><div><h2>Latest FMB News</h2><p>Current reports, explainers and analysis from the FMB News Desk.</p></div><a href="/news/archive/">All reports →</a></div><div class="story-grid">');
+
+  const newsletterForm = `<form data-fmb-newsletter-form novalidate><label class="sr-only" for="fmb-newsletter-email">Email address</label><input id="fmb-newsletter-email" name="email" type="email" autocomplete="email" inputmode="email" aria-label="Email address" placeholder="Your email address" required><input data-fmb-newsletter-honeypot name="company" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px"><button type="submit">Subscribe</button><p data-fmb-newsletter-status role="status" aria-live="polite"></p></form>`;
+  html = html.replace(/<form>\s*<input type="email"[\s\S]*?<\/form>/i, newsletterForm);
+
+  if (!html.includes('/assets/js/config.js')) html = html.replace('</head>', '<script src="/assets/js/config.js" defer></script></head>');
+  if (!html.includes('/assets/js/fmb-news-newsletter.js')) html = html.replace('</body>', '<script src="/assets/js/fmb-news-newsletter.js" defer></script></body>');
+  if (!html.includes('.sr-only{')) html = html.replace('</head>', '<style id="fmb-news-consolidation-style">.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}[data-fmb-newsletter-status]{grid-column:1/-1;margin:8px 0 0;color:#ded4e2;font-size:11px;min-height:1.3em}[data-fmb-newsletter-status][data-state="error"]{color:#ffd7d7}[data-fmb-newsletter-status][data-state="success"]{color:#e6d5f4}.footer form[aria-busy="true"] button{opacity:.65;cursor:wait}</style></head>');
+
+  return html;
+}
+
+await access(homepageFile);
+await access(path.join(dist, logoColor.replace(/^\//, '')));
+await access(path.join(dist, logoWhite.replace(/^\//, '')));
+await access(path.join(dist, fallbackImage.replace(/^\//, '')));
+
+const stories = await latestPublished();
+let homepage = await readFile(homepageFile, 'utf8');
+homepage = normalizeHomepage(homepage, stories);
+await writeFile(homepageFile, homepage, 'utf8');
+
+const required = [
+  '/assets/images/fmb-approved/fmb-news-official-transparent.webp',
+  'data-fmb-newsletter-form',
+  '/assets/js/fmb-news-newsletter.js',
+  `/news/${stories[0].slug}/`,
+  '/news/archive/',
+];
+for (const marker of required) {
+  if (!homepage.includes(marker)) throw new Error(`FMB News safe consolidation missing ${marker}`);
+}
+if (homepage.includes('data-fmb-asset="logo"')) throw new Error('FMB News homepage still depends on fragmented runtime logo assembly.');
+if (/button\s+type=["']button["'][^>]*>Subscribe/i.test(homepage)) throw new Error('FMB News newsletter button is still inert.');
+
+console.log(`FMB News safe consolidation passed: homepage reflects ${stories.length} newest structured stories, stable logo assets, canonical navigation, and functional Daily Brief signup.`);
