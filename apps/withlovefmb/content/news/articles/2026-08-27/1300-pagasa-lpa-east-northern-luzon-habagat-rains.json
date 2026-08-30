@@ -4,29 +4,28 @@
   "bulletinKey": "2026-08-27-1300",
   "emailSubject": "FMB News | DAR Condones ₱57.76-B Farmers' Debt; GSIS Opens ₱4.4-B Calamity Loan | August 27, 2026 | 1:00 PM PHT",
   "slug": "pagasa-lpa-east-northern-luzon-habagat-rains",
-  "headline": "PAGASA Keeps Metro Manila and Broad Areas of Luzon Under Red Rainfall Warning",
-  "seoTitle": "PAGASA Keeps Red Rainfall Warning Across Luzon | FMB News",
-  "seoDescription": "PAGASA's 5 p.m. warning placed Metro Manila and broad areas of Luzon under the Red level as the Habagat raised serious flooding risks on August 29.",
-  "keywords": ["PAGASA Red rainfall warning August 29 2026", "Habagat Red warning Metro Manila Luzon", "Heavy Rainfall Warning No. 17"],
+  "headline": "PAGASA Raises Red Rainfall Warning in Zambales, Bataan and Pampanga",
+  "seoTitle": "PAGASA Raises Red Rainfall Warning in Central Luzon | FMB News",
+  "seoDescription": "PAGASA placed Zambales, Bataan, Pampanga and parts of Tarlac and Bulacan under a red rainfall warning early August 30 as Habagat rains continued.",
+  "keywords": ["PAGASA red rainfall warning August 30 2026", "Habagat warning Zambales Bataan Pampanga", "Central Luzon flood warning"],
   "category": "Environment",
   "kicker": "Weather · Public Safety",
-  "deck": "The 5 p.m. warning placed Metro Manila, eight provinces and parts of Batangas under the highest rainfall-warning level as the Habagat continued to affect Luzon and the Visayas.",
+  "deck": "The 5 a.m. warning indicated serious flooding risk in flood-prone areas as prolonged Habagat rain continued across western and central Luzon.",
   "publishedAt": "2026-08-27T13:00:00+08:00",
-  "updatedAt": "2026-08-29T18:59:00+08:00",
+  "updatedAt": "2026-08-30T13:05:00+08:00",
   "author": "FMB News Desk",
   "articleType": "NewsArticle",
   "sections": [
-    {"heading":"What happened","paragraphs":["PAGASA's Heavy Rainfall Warning No. 17 placed Zambales, Tarlac, Pampanga, Bataan, Bulacan, Metro Manila, Rizal and Cavite under the Red level at 5 p.m. Saturday, August 29. The Red warning also covered Nasugbu, Lian, Tuy, Balayan and Calatagan in Batangas.","PAGASA said serious flooding was expected in flood-prone areas under the Red level. Nueva Ecija, Laguna and other specified Batangas areas were under Orange, while specified parts of Quezon and Batangas were under Yellow."]},
-    {"heading":"Weather systems","paragraphs":["PAGASA identified the Southwest Monsoon or Habagat as the weather system behind the warning. Its 4 p.m. national forecast said the Habagat was affecting Luzon and the Visayas; the updated synopsis no longer listed a low-pressure area.","The forecast called for heavy to intense monsoon rains over Metro Manila and parts of northern, central and southern Luzon, with possible flash floods or landslides."]},
-    {"heading":"Habagat remains a concern","paragraphs":["Moderate to strong southwesterly winds were forecast over Luzon, with moderate to rough coastal waters of 1.5 to 3.4 meters.","Rainfall-warning boundaries can change within hours. Residents should use the latest regional warning for immediate decisions rather than relying on an earlier province list."]},
-    {"heading":"Context","paragraphs":["This update replaces a duplicate weather route created from the same bulletin and keeps the developing event on FMB News' established canonical route.","Claims in the emailed brief about forced evacuations, relief-stock figures and ferry suspensions were not included because they were not established by the cited PAGASA warning and forecast."]},
+    {"heading":"What happened","paragraphs":["PAGASA placed Zambales, Bataan, Pampanga and specified parts of Tarlac and Bulacan under a red rainfall warning at 5 a.m. on Sunday, August 30, as the Southwest Monsoon continued to bring heavy rain.","A red warning indicates serious flooding in flood-prone areas. Other parts of Central and Southern Luzon, including Metro Manila, were under orange or yellow warnings at that issuance."]},
+    {"heading":"Heavy-rain outlook","paragraphs":["PAGASA's outlook projected 100 to 200 millimeters of rain from Saturday to Sunday noon over Ilocos Sur, Pangasinan, La Union, Benguet, Bataan, Zambales, Tarlac and Pampanga.","The bureau said rainfall could be higher in mountainous areas and that impacts could be worsened by significant rain already received."]},
+    {"heading":"Context","paragraphs":["This update keeps the developing Habagat event on FMB News' established canonical route and removes a separate August 30 weather route created from the same sequence.","Rainfall-warning boundaries can change within hours. The 5 a.m. locations are a timestamped record, not a substitute for the latest PAGASA advisory."]},
     {"heading":"Why this matters","paragraphs":["Repeated rain can quickly worsen flooding and slope instability. Communities near rivers, drainage channels and steep terrain should follow evacuation, road-closure and safety instructions from local disaster authorities."]},
     {"heading":"What to watch next","paragraphs":["Residents should follow the latest PAGASA rainfall warnings and local disaster advisories because warning levels and covered locations may change at the next issuance."]}
   ],
   "sources": [
-    {"publisher":"DOST-PAGASA","title":"Daily Weather Forecast","publishedAt":"2026-08-29T16:00:00+08:00","url":"https://www.pagasa.dost.gov.ph/weather"},
-    {"publisher":"DOST-PAGASA NCR PRSD","title":"Heavy Rainfall Warning No. 17","publishedAt":"2026-08-29T17:00:00+08:00","url":"https://www.pagasa.dost.gov.ph/regional-forecast/ncrprsd"}
+    {"publisher":"GMA News Online","title":"RAINFALL ALERT: Red warning up over 4 areas, parts of Tarlac, Bulacan (Sunday, 5 a.m.)","publishedAt":"2026-08-30T06:13:00+08:00","url":"https://www.gmanetwork.com/news/weather/content/1000387/rainfall-alert-red-warning-up-over-4-areas-parts-of-tarlac-bulacan/story/"},
+    {"publisher":"GMA News Online","title":"Heavy rainfall in parts of Luzon expected until Monday —PAGASA","publishedAt":"2026-08-29T12:14:00+08:00","url":"https://www.gmanetwork.com/news/weather/content/1000322/heavy-rainfall-in-parts-of-luzon-expected-until-monday-pagasa/story/"}
   ],
   "image":{"kind":"editorial-fallback","url":"/assets/images/news/fmb-news-editorial-fallback.svg","sourceUrl":null,"creator":"FMB News","license":"FMB-owned editorial visual","licenseUrl":"https://www.francinemariebautista.com/news/","usageStatus":"FMB-owned editorial visual used because no stable reusable source image with independently verified publication permission was supplied.","credit":"FMB News editorial visual","caption":"FMB News editorial visual accompanying the August 28 two-LPA and Habagat update; it does not depict current conditions.","alt":"FMB News editorial visual for PAGASA monitoring two low-pressure areas and Habagat rain risks","width":1200,"height":675,"focusX":50,"focusY":50},
-  "audit":{"sourceCheckedAt":"2026-08-29T18:59:00+08:00","photoReferenceUrl":"https://www.pagasa.dost.gov.ph/regional-forecast/ncrprsd","notes":["Updated the established weather canonical route using PAGASA's 5 p.m. warning and 4 p.m. national forecast.","Removed the earlier LPA framing because PAGASA's updated synopsis identified only the Southwest Monsoon as affecting Luzon and the Visayas.","Omitted unsupported forced-evacuation, relief-stock, ferry-suspension and quoted specialist claims from the emailed brief.","Removed the duplicate weather route created from this bulletin.","Used the FMB-owned fallback because no stable reusable source image with independently verified publication permission was supplied."]}
+  "audit":{"sourceCheckedAt":"2026-08-30T13:05:00+08:00","photoReferenceUrl":"https://www.gmanetwork.com/news/weather/content/1000387/rainfall-alert-red-warning-up-over-4-areas-parts-of-tarlac-bulacan/story/","notes":["Updated the established weather canonical route using PAGASA-backed 5 a.m. rainfall-warning reporting and the verified heavy-rain outlook.","Removed the duplicate August 30 route created for the same developing Habagat event.","Omitted the bulletin's unsupported LPA position, invented specialist quotation, fixed marine-ban claims and unverified rainfall totals.","Used the FMB-owned fallback because no stable reusable source image with independently verified publication permission was supplied."]}
 }
