@@ -4,8 +4,8 @@ import path from 'node:path';
 const root = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.join(root, 'dist');
 const cssDir = path.join(dist, 'assets', 'css');
-const finalCssHref = '/assets/css/fmb-news-unified-final.css?v=20260830-news-unified-v1';
-const worldCssHref = '/assets/css/fmb-worldwide.css?v=20260830-worldwide-v1';
+const finalCssHref = '/assets/css/fmb-news-unified-final.css?v=20260830-news-unified-v2';
+const worldCssHref = '/assets/css/fmb-worldwide.css?v=20260830-worldwide-v2';
 
 async function exists(file) {
   try { await readFile(file); return true; } catch { return false; }
@@ -25,6 +25,11 @@ async function htmlFiles(directory) {
     else if (entry.isFile() && entry.name.endsWith('.html')) out.push(target);
   }
   return out;
+}
+
+function isRedirect(html) {
+  return /http-equiv=(['"])refresh\1/i.test(html)
+    || /<meta\b[^>]*(?:name|property)=(['"])robots\1[^>]*content=(['"])[^'"]*noindex/i.test(html);
 }
 
 function ensureClass(html, className) {
@@ -55,18 +60,27 @@ function activeKey(relative) {
 
 function newsbar(active = '') {
   const links = [
-    ['home', '/fmbnews/', 'News Home'],
+    ['home', '/news/', 'News Home'],
     ['brief', '/news/fmb-brief/', 'FMB Brief'],
     ['worldwide', '/news/world/', 'FMB Worldwide'],
-    ['national', '/fmbnews/?section=national#reports', 'Philippines'],
-    ['business', '/fmbnews/?section=business#reports', 'Economy'],
-    ['culture', '/fmbnews/?section=culture#reports', 'Culture'],
-    ['about', '/fmbnews/about/', 'About'],
+    ['national', '/news/?section=national#reports', 'Philippines'],
+    ['business', '/news/?section=business#reports', 'Economy'],
+    ['culture', '/news/?section=culture#reports', 'Culture'],
+    ['about', '/news/about/', 'About'],
   ];
-  return `<nav class="fmb-shell-newsbar" aria-label="FMB News sections"><a class="fmb-shell-newsbar__brand" href="/fmbnews/"><strong>FMB News</strong><span>Filipino Media Bulletin</span></a><div class="fmb-shell-newsbar__links">${links.map(([key, href, label]) => `<a href="${href}"${active === key ? ' aria-current="page"' : ''}>${label}</a>`).join('')}</div></nav>`;
+  return `<nav class="fmb-shell-newsbar" aria-label="FMB News sections"><a class="fmb-shell-newsbar__brand" href="/news/"><strong>FMB News</strong><span>Filipino Media Bulletin</span></a><div class="fmb-shell-newsbar__links">${links.map(([key, href, label]) => `<a href="${href}"${active === key ? ' aria-current="page"' : ''}>${label}</a>`).join('')}</div></nav>`;
 }
 
 const worldwideSpotlight = `<section class="fmb-worldwide-spotlight" id="fmb-worldwide" aria-labelledby="fmbWorldwideTitle"><div class="fmb-worldwide-spotlight__inner"><div class="fmb-worldwide-spotlight__head"><div><p class="fmb-worldwide-spotlight__eyebrow">Global Desk · Past 24 Hours</p><h2 id="fmbWorldwideTitle">FMB Worldwide</h2><p>A separate FMB News desk for consequential verified developments across the world, organized by country and explained with Filipino relevance. FMB Brief remains the complete daily newsletter. FMB Worldwide is the dedicated global desk.</p></div><a class="fmb-worldwide-spotlight__cta" href="/news/world/">Open FMB Worldwide →</a></div><div class="fmb-worldwide-spotlight__grid"><a class="fmb-worldwide-spotlight__card" href="/news/world/august-30-2026/#nepal-china"><small>Nepal + China · Climate</small><strong>Himalayan disaster response remains a major global humanitarian story.</strong></a><a class="fmb-worldwide-spotlight__card" href="/news/world/august-30-2026/#us-roman"><small>United States · Science</small><strong>NASA launches the Nancy Grace Roman Space Telescope.</strong></a><a class="fmb-worldwide-spotlight__card" href="/news/world/august-30-2026/#malaysia"><small>Malaysia · Business + AI</small><strong>Cost-of-living measures arrive alongside new youth AI access.</strong></a></div></div></section>`;
+
+function injectSpotlight(html) {
+  html = html.replace(/<section\b[^>]*class=(['"])[^'"]*\bfmb-worldwide-spotlight\b[^'"]*\1[^>]*>[\s\S]*?<\/section>\s*/gi, '');
+  const insertionTarget = html.match(/<section\b[^>]*class=(['"])[^'"]*\bfnc-tools\b[^'"]*\1[^>]*>/i)?.[0]
+    || html.match(/<section\b[^>]*class=(['"])[^'"]*\bfnc-content\b[^'"]*\1[^>]*>/i)?.[0]
+    || html.match(/<section\b[^>]*class=(['"])[^'"]*\bfnc-report-overview\b[^'"]*\1[^>]*>/i)?.[0];
+  if (insertionTarget) return html.replace(insertionTarget, `${worldwideSpotlight}${insertionTarget}`);
+  return html.replace('</main>', `${worldwideSpotlight}</main>`);
+}
 
 await mkdir(cssDir, { recursive: true });
 await writeFile(
@@ -86,41 +100,45 @@ for (const base of roots) {
   for (const file of await htmlFiles(base)) {
     let html = await readFile(file, 'utf8');
     const relative = path.relative(dist, file).replaceAll(path.sep, '/');
-    const redirect = /http-equiv=(['"])refresh\1/i.test(html) || /<meta\b[^>]*(?:name|property)=(['"])robots\1[^>]*content=(['"])[^'"]*noindex/i.test(html);
+    const redirect = isRedirect(html);
     const isWorld = /^news\/world(?:\/|$)/.test(relative);
+    const isLanding = relative === 'news/index.html' || relative === 'fmbnews/index.html';
 
     html = stripStylesheet(html, 'fmb-news-unified-final.css');
     html = stripStylesheet(html, 'fmb-worldwide.css');
-    html = html.replace('</head>', `<link rel="stylesheet" href="${finalCssHref}">${isWorld || relative === 'fmbnews/index.html' ? `<link rel="stylesheet" href="${worldCssHref}">` : ''}</head>`);
+    html = html.replace('</head>', `<link rel="stylesheet" href="${finalCssHref}">${isWorld || isLanding ? `<link rel="stylesheet" href="${worldCssHref}">` : ''}</head>`);
 
     if (isWorld) html = ensureClass(html, 'fmb-worldwide-route');
 
     html = html.replace(/<nav\b[^>]*class=(['"])[^'"]*\bfmb-shell-newsbar\b[^'"]*\1[^>]*>[\s\S]*?<\/nav>\s*/gi, '');
-    if (!redirect && html.includes('class="fmb-shell-header"')) {
-      html = html.replace(/(<header\b[^>]*class=(['"])[^'"]*\bfmb-shell-header\b[^'"]*\2[^>]*>[\s\S]*?<\/header>)/i, `$1${newsbar(activeKey(relative))}`);
+    if (!redirect) {
+      const shellHeader = html.match(/<header\b[^>]*class=(['"])[^'"]*\bfmb-shell-header\b[^'"]*\1[^>]*>[\s\S]*?<\/header>/i)?.[0];
+      if (shellHeader) html = html.replace(shellHeader, `${shellHeader}${newsbar(activeKey(relative))}`);
     }
 
-    if (relative === 'fmbnews/index.html') {
-      html = html.replace(/<section\b[^>]*class=(['"])[^'"]*\bfmb-worldwide-spotlight\b[^'"]*\1[^>]*>[\s\S]*?<\/section>\s*/gi, '');
-      const insertionTarget = html.match(/<section\b[^>]*class=(['"])[^'"]*\bfnc-tools\b[^'"]*\1[^>]*>/i)?.[0]
-        || html.match(/<section\b[^>]*class=(['"])[^'"]*\bfnc-content\b[^'"]*\1[^>]*>/i)?.[0];
-      if (insertionTarget) html = html.replace(insertionTarget, `${worldwideSpotlight}${insertionTarget}`);
-    }
+    if (isLanding && !redirect) html = injectSpotlight(html);
 
     await writeFile(file, html, 'utf8');
     processed += 1;
   }
 }
 
-const canonical = path.join(dist, 'fmbnews', 'index.html');
-if (await exists(canonical)) {
-  const html = await readFile(canonical, 'utf8');
+const landingFiles = [path.join(dist, 'news', 'index.html'), path.join(dist, 'fmbnews', 'index.html')];
+const liveLandings = [];
+for (const file of landingFiles) {
+  if (!(await exists(file))) continue;
+  const html = await readFile(file, 'utf8');
+  if (!isRedirect(html) && /\bfmb-shell-header\b/i.test(html)) liveLandings.push({ file, html });
+}
+
+if (!liveLandings.length) throw new Error('FMB News final unification failed: no active unified newsroom landing found');
+for (const { file, html } of liveLandings) {
   const failures = [];
   if (!html.includes('fmb-news-unified-final.css')) failures.push('final news stylesheet missing');
   if (!html.includes('fmb-shell-newsbar')) failures.push('contextual newsroom menu missing');
   if (!html.includes('FMB Worldwide')) failures.push('FMB Worldwide menu/overview missing');
   if (!html.includes('fmb-worldwide-spotlight')) failures.push('FMB Worldwide homepage overview missing');
-  if (failures.length) throw new Error(`FMB News final unification failed: ${failures.join(', ')}`);
+  if (failures.length) throw new Error(`FMB News final unification failed for ${path.relative(dist, file).replaceAll(path.sep, '/')}: ${failures.join(', ')}`);
 }
 
-console.log(`Applied final FMB News navigation, redundancy cleanup, and visual system across ${processed} newsroom page(s).`);
+console.log(`Applied final FMB News navigation, redundancy cleanup, and visual system across ${processed} newsroom page(s); validated ${liveLandings.length} active landing route(s).`);
