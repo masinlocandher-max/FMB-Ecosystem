@@ -1,14 +1,10 @@
 name: Prebuilt production deploy
 
 # Manual fallback for the audited FMB ecosystem production release.
-# Temporary path trigger is scoped to one marker file and will be removed after this release.
+# The automatic production path lives in Monorepo checks so every release is gated
+# by content, boundary, static-build, and Cognita checks before deployment.
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - '.github/fmb-production-trigger'
 
 permissions:
   contents: read
