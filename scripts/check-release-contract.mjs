@@ -33,7 +33,8 @@ for (const required of [
   "- 'apps/withlovefmb/**'",
   "- 'scripts/**'",
   'workflow_dispatch:',
-  'vercel deploy --prebuilt --prod',
+  'deploy --prebuilt --prod',
+  'cancel-in-progress: true',
 ]) {
   if (!deployWorkflow.includes(required)) {
     throw new Error(`Dedicated FMB deployment contract is missing: ${required}`);
@@ -45,4 +46,4 @@ if (monorepoWorkflow.includes('deploy-fmb-prebuilt-production')) {
   throw new Error('Monorepo checks must not deploy FMB production on every unrelated main push.');
 }
 
-console.log(`Release contract passed: ${stages.join(' -> ')}. FMB News has a final publication QA gate and a dedicated path-scoped production deployment.`);
+console.log(`Release contract passed: ${stages.join(' -> ')}. FMB News has a final publication QA gate and a dedicated path-scoped production deployment that cancels superseded releases.`);
