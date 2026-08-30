@@ -15,6 +15,9 @@ for (const stage of stages) {
 if (/post-build-[^\s&]+\.mjs/.test(pkg.scripts.build)) {
   throw new Error('Root build has regressed to a post-build serial patch ledger.');
 }
+if (pkg.scripts?.['finalize:fmb-brief'] !== 'node --import ./scripts/fetch-shim.mjs scripts/finalize-fmb-news-publication.mjs') {
+  throw new Error('FMB News finalization must use the single controlled publication finalizer entry point.');
+}
 
 for (const relative of [
   'scripts/validate-content.mjs',
@@ -22,6 +25,7 @@ for (const relative of [
   'scripts/pipeline/generate-news.mjs',
   'scripts/pipeline/apply-shared-shell.mjs',
   'scripts/pipeline/verify-dist.mjs',
+  'scripts/finalize-fmb-news-publication.mjs',
   'scripts/verify-fmb-news-publication.mjs',
   '.github/workflows/deploy-fmb.yml',
 ]) {
@@ -46,4 +50,4 @@ if (monorepoWorkflow.includes('deploy-fmb-prebuilt-production')) {
   throw new Error('Monorepo checks must not deploy FMB production on every unrelated main push.');
 }
 
-console.log(`Release contract passed: ${stages.join(' -> ')}. FMB News has a final publication QA gate and a dedicated path-scoped production deployment that cancels superseded releases.`);
+console.log(`Release contract passed: ${stages.join(' -> ')}. FMB News has one controlled publication finalizer, a final publication QA gate, and a dedicated path-scoped production deployment that cancels superseded releases.`);
