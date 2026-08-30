@@ -1,0 +1,220 @@
+/* Final FMB News layer
+ * Keeps one ecosystem shell, one contextual newsroom menu, and removes competing legacy chrome.
+ */
+
+body.fmb-unified-public .fmb-shell-newsbar {
+  position: sticky;
+  z-index: 996;
+  top: 70px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(18px, 3vw, 40px);
+  min-height: 54px;
+  padding: 0 var(--fmb-gutter, clamp(20px,4vw,64px));
+  border-bottom: 1px solid rgba(63,21,127,.12);
+  background: rgba(252,249,254,.94);
+  color: #18033f;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 10px 30px rgba(28,4,61,.045);
+}
+
+.fmb-shell-newsbar__brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  color: #18033f;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.fmb-shell-newsbar__brand strong {
+  font: 800 13px/1 Arial, sans-serif;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+
+.fmb-shell-newsbar__brand span {
+  color: #766781;
+  font: 700 9px/1 Arial, sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.fmb-shell-newsbar__links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(14px, 2.2vw, 28px);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.fmb-shell-newsbar__links::-webkit-scrollbar { display: none; }
+
+.fmb-shell-newsbar__links a {
+  position: relative;
+  flex: 0 0 auto;
+  padding: 19px 0 17px;
+  color: #6d6074;
+  font: 800 10px/1 Arial, sans-serif;
+  letter-spacing: .075em;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.fmb-shell-newsbar__links a::after {
+  position: absolute;
+  right: 0;
+  bottom: 9px;
+  left: 0;
+  height: 2px;
+  content: "";
+  transform: scaleX(0);
+  transform-origin: center;
+  border-radius: 999px;
+  background: #7b42a1;
+  transition: transform 160ms ease;
+}
+
+.fmb-shell-newsbar__links a:hover,
+.fmb-shell-newsbar__links a[aria-current="page"] {
+  color: #25122f;
+}
+
+.fmb-shell-newsbar__links a:hover::after,
+.fmb-shell-newsbar__links a[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+/* One visible header and footer only. The contextual bar replaces legacy newsroom chrome. */
+body.fmb-unified-public .masthead,
+body.fmb-unified-public .top-wire,
+body.fmb-unified-public .section-rail,
+body.fmb-unified-public .fnc-livebar,
+body.fmb-unified-public .fnc-header,
+body.fmb-unified-public .fnc-nav-backdrop,
+body.fmb-unified-public .nc-site-header,
+body.fmb-unified-public .nc-broadcast-header,
+body.fmb-unified-public > footer.footer,
+body.fmb-unified-public > footer.fnc-footer,
+body.fmb-unified-public > footer.nc-footer {
+  display: none !important;
+}
+
+/* News pages need editorial-scale typography, not portfolio-scale display type. */
+body.fmb-unified-news h1,
+body.fmb-unified-news-article h1 {
+  font-size: clamp(42px, 6.5vw, 88px) !important;
+  line-height: .96 !important;
+}
+
+body.fmb-unified-news .fnc-content h2,
+body.fmb-unified-news .fnc-developing h2,
+body.fmb-unified-news .fnc-briefings h2,
+body.fmb-unified-news-article .country-entry h2,
+body.fmb-unified-news-article .nc-story-body h2 {
+  font-size: clamp(30px, 4vw, 52px) !important;
+  line-height: 1.02 !important;
+}
+
+body.fmb-unified-news .fnc-report-card h3,
+body.fmb-unified-news .fnc-support-story h3,
+body.fmb-unified-news-article .country-card h3,
+body.fmb-unified-news-article .nc-brief-card h3 {
+  font-size: clamp(22px, 2.4vw, 32px) !important;
+  line-height: 1.08 !important;
+}
+
+/* Prevent the portfolio section rhythm from over-spacing publication modules. */
+body.fmb-unified-news main > .fnc-identity-band,
+body.fmb-unified-news main > .fnc-frontdesk,
+body.fmb-unified-news main > .fnc-tools,
+body.fmb-unified-news main > .fnc-content {
+  padding-top: clamp(42px, 5vw, 72px) !important;
+  padding-bottom: clamp(42px, 5vw, 72px) !important;
+}
+
+body.fmb-unified-news-article main > .world-hero,
+body.fmb-unified-news-article main > .edition-hero {
+  padding: clamp(54px, 7vw, 96px) var(--fmb-gutter) clamp(42px, 5vw, 72px) !important;
+}
+
+body.fmb-unified-news-article main > .world-feed,
+body.fmb-unified-news-article main > .archive,
+body.fmb-unified-news-article main > .edition-body {
+  padding: clamp(44px, 5vw, 76px) var(--fmb-gutter) !important;
+}
+
+body.fmb-unified-news-article main > .edition-art {
+  padding: 28px var(--fmb-gutter) 18px !important;
+}
+
+body.fmb-unified-news-article main > .nc-story-media {
+  padding: 0 var(--fmb-gutter) clamp(28px, 4vw, 54px) !important;
+}
+
+body.fmb-unified-news-article .nc-article-hero,
+body.fmb-unified-news-article .nc-story-masthead,
+body.fmb-unified-news-article .nc-article,
+body.fmb-unified-news .fnc-content,
+body.fmb-unified-news .fnc-frontdesk,
+body.fmb-unified-news .fnc-tools {
+  position: relative;
+  z-index: 2;
+}
+
+body.fmb-unified-news-article .nc-article-hero {
+  background:
+    radial-gradient(circle at 85% 10%, rgba(111,53,216,.1), transparent 28rem),
+    linear-gradient(180deg, #fff, #faf5fc);
+}
+
+body.fmb-unified-news-article .nc-story-body {
+  max-width: 780px;
+}
+
+body.fmb-unified-news-article .nc-story-body > p {
+  font-size: clamp(16px, 1.25vw, 18px);
+  line-height: 1.82;
+}
+
+body.fmb-unified-news-article .nc-philippine-stakes,
+body.fmb-unified-news-article .nc-factbox,
+body.fmb-unified-news-article .nc-reflection {
+  border-radius: 20px;
+}
+
+/* Canonical newsroom spacing around the new Worldwide overview. */
+body.fmb-unified-news .fmb-worldwide-spotlight {
+  padding: clamp(52px, 7vw, 86px) var(--fmb-gutter) !important;
+}
+
+body.fmb-unified-news .fmb-worldwide-spotlight__inner {
+  width: min(var(--fmb-container, 1240px), 100%);
+}
+
+@media (max-width: 1080px) {
+  body.fmb-unified-public .fmb-shell-newsbar {
+    top: 70px;
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding-top: 10px;
+    padding-bottom: 8px;
+  }
+
+  .fmb-shell-newsbar__brand { display: none; }
+  .fmb-shell-newsbar__links { justify-content: flex-start; }
+  .fmb-shell-newsbar__links a { padding: 12px 0 14px; }
+  .fmb-shell-newsbar__links a::after { bottom: 6px; }
+}
+
+@media (max-width: 640px) {
+  body.fmb-unified-public .fmb-shell-newsbar {
+    padding-inline: 18px;
+  }
+
+  .fmb-shell-newsbar__links { gap: 20px; }
+}
