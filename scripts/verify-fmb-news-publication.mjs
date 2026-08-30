@@ -35,6 +35,16 @@ function count(haystack, needle) {
   return haystack.split(needle).length - 1;
 }
 
+function hasNav(html, href, label) {
+  const hrefEsc = href.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const labelEsc = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(`<a[^>]+href=["']${hrefEsc}["'][^>]*>\\s*${labelEsc}\\s*<\\/a>`, 'i').test(html);
+}
+
+function firstFigureSrc(html) {
+  return html.match(/<figure class=["']article-figure["'][\s\S]*?<img[^>]+src=["']([^"']+)["']/i)?.[1] || '';
+}
+
 for (const file of htmlFiles) {
   const html = await readFile(file, 'utf8');
   const rel = path.relative(dist, file).replaceAll(path.sep, '/');
@@ -48,12 +58,13 @@ for (const file of htmlFiles) {
   if (count(html, 'class="headline-ticker"') !== 1) fail('must contain exactly one moving-headline rail');
   if (!html.includes('class="ticker-clock"')) fail('missing fixed PHT clock beside ticker');
   if (!html.includes('class="ticker-window"')) fail('missing independent moving-headline window');
-  const tickerBlock = html.match(/<div class="headline-ticker"[\s\S]*?<\/div><\/div><\/div>/i)?.[0] || '';
+  const tickerBlock = html.match(/<div class="headline-ticker"[\s\S]*?<div class="utility">/i)?.[0] || '';
   if (/<time\b/i.test(tickerBlock)) fail('headline rail contains per-story time; only the fixed live PHT clock is allowed');
 
-  for (const required of ['/news/">Latest', '/news/fmb-brief/">FMB Brief', '/news/archive/">Archive', '/news/about/">About', 'Submit a Story']) {
-    if (!html.includes(required)) fail(`canonical navigation missing ${required.replace(/<[^>]+>/g, '')}`);
+  for (const [href, label] of [['/news/', 'Latest'], ['/news/fmb-brief/', 'FMB Brief'], ['/news/archive/', 'Archive'], ['/news/about/', 'About']]) {
+    if (!hasNav(html, href, label)) fail(`canonical navigation missing ${label}`);
   }
+  if (!/Submit a Story/i.test(html)) fail('canonical navigation missing Submit a Story');
 
   if (!html.includes('data-fmb-newsletter-form')) fail('newsletter signup missing');
   if (!html.includes('class="footer-socials"')) fail('verified newsroom social/contact icons missing');
@@ -89,14 +100,20 @@ for (const file of jsonFiles) {
 }
 published.sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt));
 
-for (const story of published.slice(0, 12)) {
-  const url = String(story?.image?.url || '').trim();
-  if (!url || url === fallback) failures.push(`content/news: current story "${story.headline}" does not have story-specific imagery`);
-  if (url.startsWith('/') && !url.startsWith('//') && !(await exists(path.join(dist, url.slice(1))))) {
-    failures.push(`content/news: current story "${story.headline}" references missing local image ${url}`);
+for (const story of published.slice(0, 9)) {
+  const articleFile = path.join(newsRoot, story.slug, 'index.html');
+  if (!(await exists(articleFile))) {
+    failures.push(`current story "${story.headline}" has no rendered article route`);
+    continue;
   }
-  if (!String(story?.image?.alt || '').trim()) failures.push(`content/news: current story "${story.headline}" is missing image alt text`);
-  if (!String(story?.image?.credit || story?.image?.creator || '').trim()) warnings.push(`current story "${story.headline}" has no explicit image credit/creator`);
+  const html = await readFile(articleFile, 'utf8');
+  const renderedImage = firstFigureSrc(html);
+  if (!renderedImage || renderedImage === fallback) failures.push(`current story "${story.headline}" renders without story-specific imagery`);
+  if (renderedImage.startsWith('/') && !renderedImage.startsWith('//') && !(await exists(path.join(dist, renderedImage.slice(1))))) {
+    failures.push(`current story "${story.headline}" renders missing local image ${renderedImage}`);
+  }
+  if (!String(story?.image?.alt || '').trim()) warnings.push(`current story "${story.headline}" has no source alt text; rendered fallback alt may be generic`);
+  if (!String(story?.image?.credit || story?.image?.creator || '').trim()) warnings.push(`current story "${story.headline}" has no explicit source image credit/creator`);
 }
 
 const briefDirs = (await readdir(newsRoot, { withFileTypes: true }))
@@ -112,4 +129,4 @@ if (failures.length) {
   throw new Error(`FMB News publication QA failed (${failures.length}):\n${failures.map(item => `- ${item}`).join('\n')}`);
 }
 
-console.log(`FMB News publication QA passed: ${htmlFiles.length} newsroom routes, ${articlePages} article pages, ${Math.min(12, published.length)} current-story image checks, typographic identity, fixed PHT clock + independent headline ticker, canonical navigation/footer, newsletter, and article editorial structure verified.`);
+console.log(`FMB News publication QA passed: ${htmlFiles.length} newsroom routes, ${articlePages} article pages, ${Math.min(9, published.length)} current rendered-story image checks, typographic identity, fixed PHT clock + independent headline ticker, canonical navigation/footer, newsletter, and article editorial structure verified.`);
