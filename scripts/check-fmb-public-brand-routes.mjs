@@ -14,8 +14,6 @@ const retiredPublicRoutes = [
   'skin-care-makeup.html',
   'womens-health.html',
 ];
-const suppliedPrimaryNewsLogo = '/assets/images/news/fmb-news-primary-logo-2026.webp';
-const suppliedWhiteNewsLogo = '/assets/images/news/fmb-news-white-transparent-2026.webp';
 const unifiedHomeLogo = '/assets/images/fmbandco/fmbandco-primary-reversed.png';
 const warnings = [];
 const fatal = (message) => { throw new Error(`FMB public-route integrity audit: ${message}`); };
@@ -89,7 +87,11 @@ if (!/FMB News|Filipino ang Mismong Balita\./i.test(newsIndex)) {
 }
 const masthead = newsIndex.match(/<header\b[^>]*>[\s\S]*?<\/header>/i)?.[0] || '';
 const footer = newsIndex.match(/<footer\b[^>]*>[\s\S]*?<\/footer>/i)?.[0] || '';
-if (!masthead.includes(suppliedPrimaryNewsLogo)) warn('news/index.html is missing the supplied FMB News masthead logo');
-if (!footer.includes(suppliedWhiteNewsLogo)) warn('news/index.html is missing the supplied white FMB News footer logo');
+const typographicWordmark = '<span class="brand-fmb">FMB</span><span class="brand-news">News</span>';
+if (!masthead.includes(typographicWordmark)) fatal('news/index.html masthead is missing the approved typographic FMB bold + News regular identity');
+if (!footer.includes(typographicWordmark)) fatal('news/index.html footer is missing the same approved typographic FMB News identity');
+if (/fmb-news-(?:primary-logo|white-transparent|official)[^"']*\.(?:webp|png|svg)/i.test(masthead + footer)) {
+  fatal('news/index.html has regressed to an image-logo identity instead of the approved typographic wordmark');
+}
 
-console.log(`FMB public-route integrity audit passed ${publicPages} public pages and ${newsPages} News routes; retired Reading/Music routes are absent and the homepage has one unified FMB&CO. shell, with ${warnings.length} non-blocking visual warning(s).`);
+console.log(`FMB public-route integrity audit passed ${publicPages} public pages and ${newsPages} News routes; retired Reading/Music routes are absent, the homepage has one unified FMB&CO. shell, and FMB News uses the approved typographic wordmark consistently, with ${warnings.length} non-blocking visual warning(s).`);
