@@ -2,30 +2,120 @@
   "schemaVersion": 1,
   "status": "published",
   "bulletinKey": "2026-08-30-0100",
-  "emailSubject": "FMB News | 8 Million Affected by Monsoon Storms; Habagat Rains to Persist Sunday | August 30, 2026 | 1:00 AM PHT",
+  "emailSubject": "FMB News Update | 8.4 Million Affected by Habagat and Recent Cyclones; 32 Deaths Confirmed | August 30, 2026",
   "slug": "ocd-8-million-affected-32-dead-habagat-cyclones-august-30-2026",
-  "headline": "OCD: 32 Dead, 8 Million Affected by Habagat and Recent Cyclones",
-  "seoTitle": "OCD: 32 Dead, 8M Affected by Habagat, Cyclones | FMB News",
-  "seoDescription": "The Office of Civil Defense reported 32 deaths and around 8 million people affected by Habagat and recent cyclones, with 117 LGUs under a state of calamity.",
-  "keywords": ["OCD 8 million affected Habagat 2026", "32 dead Habagat cyclones Philippines", "August 30 2026 disaster update"],
+  "headline": "8.4 Million Filipinos Affected by Habagat and Recent Cyclones; 32 Deaths Confirmed",
+  "seoTitle": "Habagat, Cyclones Affect 8.4M Filipinos; 32 Dead | FMB News",
+  "seoDescription": "The latest 6 p.m. disaster tally shows 8.4 million people affected, 32 confirmed deaths, 122,500 people in evacuation centers and 117 areas under a state of calamity.",
+  "keywords": [
+    "8.4 million affected Habagat August 30 2026",
+    "32 dead Habagat cyclones Philippines",
+    "NDRRMC August 30 2026 disaster update",
+    "Pilandok Habagat Philippines",
+    "Zambales flooding August 2026"
+  ],
   "category": "National",
-  "kicker": "Disaster · National",
-  "deck": "Around 2.3 million families have been affected, while government assistance has reached about ₱1.65 billion, according to the latest OCD figures.",
+  "kicker": "Disaster · Climate · Public safety",
+  "deck": "The 6 p.m. disaster tally shows about 122,500 people in evacuation centers and 117 areas under a state of calamity, while Tropical Depression Pilandok remains offshore but keeps monsoon-rain risk elevated.",
   "publishedAt": "2026-08-30T01:00:00+08:00",
-  "updatedAt": "2026-08-30T07:00:00+08:00",
+  "updatedAt": "2026-08-30T22:55:00+08:00",
   "author": "FMB News Desk",
   "articleType": "NewsArticle",
   "sections": [
-    {"heading":"What happened","paragraphs":["At least 32 people have died and around 8 million people, equivalent to about 2.3 million families, have been affected by the combined effects of the Southwest Monsoon and tropical cyclones Luis, Maymay and Neneng, according to the Office of Civil Defense.","The OCD also reported 19 injured people and three people still missing. About 25,800 people remained in evacuation centers as of the latest situation report."]},
-    {"heading":"Damage and assistance","paragraphs":["Infrastructure damage has reached about ₱6.11 billion and agricultural losses about ₱2.32 billion. Nearly 3,000 houses were damaged, including 349 that were totally destroyed.","At least 117 local government units have declared a state of calamity. Government assistance to affected communities has reached about ₱1.65 billion."]},
-    {"heading":"Context","paragraphs":["The prolonged emergency follows successive tropical cyclones and renewed Habagat rains that have saturated communities across the country, increasing flood and landslide risks even after individual weather systems move away."]},
-    {"heading":"Why this matters","paragraphs":["The scale of the affected population and infrastructure losses means recovery will extend beyond immediate evacuation and relief distribution. Local governments must also restore transport links, homes, farms and public services while monitoring communities exposed to further rainfall."]},
-    {"heading":"What to watch next","paragraphs":["Watch for updated OCD and NDRRMC casualty validation, evacuation-center counts, damage assessments and additional government assistance as weather conditions evolve."]}
+    {
+      "heading": "What happened",
+      "paragraphs": [
+        "Around 8.4 million people, equivalent to about 2.4 million families, have now been affected by the Southwest Monsoon and the recent sequence of tropical cyclones Luis, Maymay and Neneng, according to the government's latest disaster update as of 6 p.m. Sunday.",
+        "The Office of Civil Defense said the confirmed death toll remained at 32. Nineteen people were reported injured and three remained missing. NDRRMC figures also showed approximately 122,500 people, or 35,500 families, staying in 1,115 evacuation centers."
+      ]
+    },
+    {
+      "heading": "Damage, displacement and assistance",
+      "paragraphs": [
+        "The NDRRMC estimated infrastructure damage at about ₱6.16 billion and agricultural damage at about ₱2.32 billion. Around ₱1.7 billion worth of assistance had been provided to affected families.",
+        "A state of calamity has been declared in 117 areas across Pangasinan, Benguet, Bataan, Bulacan, Pampanga, Zambales, Rizal, Cavite, Batangas and Occidental Mindoro. The figures show that the emergency is no longer a collection of isolated flood incidents but a prolonged national recovery problem affecting homes, transport, farms, schools and public services."
+      ]
+    },
+    {
+      "heading": "Pilandok stays offshore, but the rain threat continues",
+      "paragraphs": [
+        "Tropical Depression Pilandok remained far east of Extreme Northern Luzon on Sunday afternoon. PAGASA's 5 p.m. bulletin placed the cyclone about 1,180 kilometers east of Extreme Northern Luzon at 4 p.m., with maximum sustained winds of 45 kilometers per hour and gusts of up to 55 kilometers per hour.",
+        "PAGASA said Pilandok is unlikely to make landfall and is expected to remain far from the Philippine landmass. The important indirect effect is its interaction with the Southwest Monsoon, which is expected to continue bringing monsoon rains over parts of western and northern Luzon, including Bataan, Zambales, Tarlac and Pampanga."
+      ]
+    },
+    {
+      "heading": "Context",
+      "paragraphs": [
+        "The danger is cumulative. Repeated rainfall can leave slopes saturated, rivers high and drainage systems overwhelmed even after one weather system moves away. That means communities can remain exposed to flooding and landslides without a direct tropical cyclone landfall.",
+        "Central Luzon remains one of the areas requiring close monitoring. Zambales, Bataan, Tarlac and Pampanga are within the monsoon-rain corridor identified by PAGASA, while damaged roads, bridges, flood-control works and riverbanks can create additional local hazards."
+      ]
+    },
+    {
+      "heading": "Why this matters",
+      "paragraphs": [
+        "The increase from roughly 8 million people affected in the earlier disaster tally to 8.4 million in the latest update shows that the impact is still expanding even as individual storms weaken or move away.",
+        "For households, the practical risk is not determined only by the name or track of a cyclone. Accumulated rainfall, river conditions, saturated ground and local infrastructure determine whether communities remain safe. Verified local warnings therefore matter more than waiting for a dramatic landfall headline."
+      ]
+    },
+    {
+      "heading": "What to watch next",
+      "paragraphs": [
+        "Watch for updated NDRRMC and OCD casualty validation, evacuation-center counts, rainfall and flood advisories, river and dam conditions, and additional local evacuation orders as Habagat conditions continue.",
+        "Residents in flood- and landslide-prone areas should follow PAGASA and local disaster-office instructions, avoid crossing fast-moving floodwater and move early when evacuation is advised."
+      ]
+    }
   ],
   "sources": [
-    {"publisher":"GMA News Online","title":"32 reported dead due to Habagat, cyclones; 8M people affected —OCD","publishedAt":"2026-08-29T13:51:00+08:00","url":"https://www.gmanetwork.com/news/topstories/nation/1000330/32-reported-dead-due-to-habagat-cyclones-8m-people-affected-ocd/story/"},
-    {"publisher":"Office of Civil Defense","title":"Latest consolidated disaster situation figures","publishedAt":"2026-08-29T00:00:00+08:00","url":"https://ocd.gov.ph/"}
+    {
+      "publisher": "GMA News Online",
+      "title": "Flooding affects 2.4 million families in 10 regions —OCD",
+      "publishedAt": "2026-08-30T21:34:00+08:00",
+      "url": "https://www.gmanetwork.com/news/topstories/nation/1000460/flooding-affects-2-4-million-families-in-10-regions-ocd/story/"
+    },
+    {
+      "publisher": "INQUIRER.net",
+      "title": "NDRRMC: 8.4 million people affected by monsoon, cyclones",
+      "publishedAt": "2026-08-30T20:02:00+08:00",
+      "url": "https://newsinfo.inquirer.net/2295332/8-4-million-individuals-affected-by-habagat-tcs-luis-maymay-neneng"
+    },
+    {
+      "publisher": "GMA News Online / PAGASA",
+      "title": "Pilandok maintains strength, not expected to make landfall over PH",
+      "publishedAt": "2026-08-30T17:40:00+08:00",
+      "url": "https://www.gmanetwork.com/news/weather/content/1000449/pilandok-maintains-strength-not-expected-to-make-landfall-over-ph/story/"
+    },
+    {
+      "publisher": "DOST-PAGASA",
+      "title": "Official weather information",
+      "publishedAt": "2026-08-30T16:00:00+08:00",
+      "url": "https://pagasa.dost.gov.ph/weather"
+    }
   ],
-  "image":{"kind":"editorial-fallback","url":"/assets/images/news/fmb-news-editorial-fallback.svg","sourceUrl":"https://www.gmanetwork.com/news/topstories/nation/1000330/32-reported-dead-due-to-habagat-cyclones-8m-people-affected-ocd/story/","creator":"FMB News","license":"FMB-owned editorial visual","licenseUrl":"https://www.francinemariebautista.com/news/","usageStatus":"The verified source page carries a Presidential Communications Office image, while the email recommends a DSWD/PNA relief image but supplies no stable repository-ready original image file. FMB News editorial fallback used rather than copying a hosted image without an ingestible original asset.","credit":"FMB News editorial visual","caption":"FMB News editorial visual accompanying the national disaster-impact update.","alt":"FMB News editorial visual for the August 30 national disaster impact report","width":1200,"height":675,"focusX":50,"focusY":50},
-  "audit":{"sourceCheckedAt":"2026-08-30T07:00:00+08:00","photoReferenceUrl":"https://www.gmanetwork.com/news/topstories/nation/1000330/32-reported-dead-due-to-habagat-cyclones-8m-people-affected-ocd/story/","notes":["Used the latest independently retrievable OCD-backed figures: around 8 million affected, 2.3 million families, 32 deaths, 19 injured, three missing, 25,800 in evacuation centers, ₱6.11B infrastructure damage, ₱2.32B agricultural damage and ₱1.65B government assistance.","Did not repeat the email's more specific 8,024,500 count or ₱1.42B aid figure because the newer OCD-backed report uses updated rounded totals and ₱1.65B assistance.","Did not reuse referenced imagery without a stable repository-ready original file."]}
+  "image": {
+    "kind": "open-license-photo",
+    "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Quiapo,_Manila_Floods_Habagat-Carina_2024-1.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Quiapo,_Manila_Floods_Habagat-Carina_2024-1.jpg",
+    "creator": "Michael Peronce",
+    "license": "Creative Commons Attribution-ShareAlike 4.0 International",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "usageStatus": "CC BY-SA 4.0 license verified on Wikimedia Commons. Used strictly as an archival illustration of Habagat flooding; it does not depict the August 30, 2026 flooding.",
+    "credit": "Michael Peronce / Wikimedia Commons, CC BY-SA 4.0",
+    "caption": "Archival photo: flooding in Quiapo, Manila during Habagat on July 24, 2024. This image illustrates monsoon flood risk and does not depict the August 30, 2026 flooding.",
+    "alt": "Archival photograph of Habagat flooding in Quiapo, Manila, taken July 24, 2024",
+    "width": 4096,
+    "height": 3072,
+    "focusX": 50,
+    "focusY": 50
+  },
+  "audit": {
+    "sourceCheckedAt": "2026-08-30T22:55:00+08:00",
+    "photoReferenceUrl": "https://commons.wikimedia.org/wiki/File:Quiapo,_Manila_Floods_Habagat-Carina_2024-1.jpg",
+    "notes": [
+      "Updated the earlier August 30 report rather than publishing a duplicate story about the same disaster event.",
+      "Verified the 6 p.m. figures through separate OCD-backed GMA News and NDRRMC-backed INQUIRER.net reports: 8.4M affected, about 2.4M families, 32 confirmed deaths, 19 injured and three missing.",
+      "Verified approximately 122,500 people in 1,115 evacuation centers, ₱6.16B infrastructure damage, ₱2.32B agricultural damage, ₱1.7B assistance and 117 areas under a state of calamity from the latest NDRRMC figures.",
+      "Verified PAGASA's 5 p.m. Pilandok bulletin: no Philippine landfall is expected, while continued Habagat rainfall remains the relevant indirect hazard.",
+      "The featured image is an archival July 2024 Habagat photograph and is explicitly labeled so it cannot be mistaken for documentary imagery of the current event. CC BY-SA 4.0 reuse terms were verified on Wikimedia Commons."
+    ]
+  }
 }
