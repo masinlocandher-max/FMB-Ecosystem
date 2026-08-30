@@ -2,6 +2,7 @@ const stages = [
   './post-build-fmb-brief-finalize-safe.mjs',
   './post-build-fmb-brief-existing-social.mjs',
   './post-build-fmb-news-reference-design.mjs',
+  './post-build-fmb-news-editorial-lens-guard.mjs',
   './post-build-fmb-news-reference-polish.mjs',
   './post-build-fmb-news-polish-css.mjs',
   './post-build-fmb-news-image-overrides.mjs',
