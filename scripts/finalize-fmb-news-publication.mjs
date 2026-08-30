@@ -7,9 +7,10 @@ const stages = [
   './post-build-fmb-news-polish-css.mjs',
   './post-build-fmb-news-image-overrides.mjs',
   // Final authority: no late newsroom or Brief pass may leave a second shell,
-  // competing menu, or page-specific design system behind.
+  // competing menu, page-specific design system, or retired navigation behind.
   './post-build-fmb-unified-design.mjs',
   './post-build-fmb-news-unified-final.mjs',
+  './post-build-retired-public-nav-clean.mjs',
 ];
 
 for (const stage of stages) {
