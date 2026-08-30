@@ -1,0 +1,31 @@
+/* Final FMB News reference corrections: supplied identity, live headline rail, hero photograph. */
+.fmb-ref .headline-ticker{overflow:hidden;background:linear-gradient(90deg,#25072e 0%,#5d1265 48%,#2b0835 100%);color:#fff;border-bottom:1px solid #210526}
+.fmb-ref .ticker-track{display:flex;width:max-content;will-change:transform;animation:fmbNewsTicker 44s linear infinite}
+.fmb-ref .ticker-run{display:flex;flex:none;align-items:center;white-space:nowrap}
+.fmb-ref .ticker-run a{display:block;padding:10px 20px;color:#fff;font:700 11px/1.15 var(--fmb-sans);letter-spacing:.012em;text-decoration:none}
+.fmb-ref .ticker-run a:hover{text-decoration:underline}
+.fmb-ref .ticker-dot{opacity:.5;font-size:8px}
+.fmb-ref .headline-ticker:hover .ticker-track{animation-play-state:paused}
+@keyframes fmbNewsTicker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* Use the exact supplied FMB News lockup once. */
+.fmb-ref .mast img{width:min(700px,74vw);height:auto}
+.fmb-ref .mast .tagline{display:none!important}
+.fmb-ref .footer-logo{width:220px;height:auto;filter:brightness(0) invert(1)}
+
+/* Reference hero: photographic Philippine flag, monochrome editorial treatment. */
+.fmb-ref .hero-image{position:relative;overflow:hidden;background:#e5e5e5;aspect-ratio:1.72/1}
+.fmb-ref .hero-image img{display:block!important;width:100%;height:100%!important;opacity:1!important;object-fit:cover;object-position:center 48%;filter:grayscale(1) contrast(1.08)}
+.fmb-ref .hero-credit{position:absolute;right:8px;bottom:6px;padding:3px 5px;background:rgba(255,255,255,.78);color:#393239;font:9px/1.2 var(--fmb-sans);text-decoration:none}
+
+@media(max-width:680px){
+  .fmb-ref .ticker-run a{padding:9px 15px;font-size:10px}
+  .fmb-ref .mast img{width:min(440px,92vw)}
+  .fmb-ref .footer-logo{width:205px}
+  .fmb-ref .hero-image{aspect-ratio:1.52/1}
+}
+@media(prefers-reduced-motion:reduce){
+  .fmb-ref .headline-ticker{overflow-x:auto}
+  .fmb-ref .ticker-track{animation:none}
+  .fmb-ref .ticker-run[aria-hidden="true"]{display:none}
+}
