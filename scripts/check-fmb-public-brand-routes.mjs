@@ -83,15 +83,10 @@ if (unifiedFooterTags.length !== 1) {
 
 const newsIndex = await readFile(path.join(root, 'news/index.html'), 'utf8');
 if (!/FMB News|Filipino ang Mismong Balita\./i.test(newsIndex)) {
-  fatal('news/index.html is missing its publication identity');
-}
-const masthead = newsIndex.match(/<header\b[^>]*>[\s\S]*?<\/header>/i)?.[0] || '';
-const footer = newsIndex.match(/<footer\b[^>]*>[\s\S]*?<\/footer>/i)?.[0] || '';
-const typographicWordmark = '<span class="brand-fmb">FMB</span><span class="brand-news">News</span>';
-if (!masthead.includes(typographicWordmark)) fatal('news/index.html masthead is missing the approved typographic FMB bold + News regular identity');
-if (!footer.includes(typographicWordmark)) fatal('news/index.html footer is missing the same approved typographic FMB News identity');
-if (/fmb-news-(?:primary-logo|white-transparent|official)[^"']*\.(?:webp|png|svg)/i.test(masthead + footer)) {
-  fatal('news/index.html has regressed to an image-logo identity instead of the approved typographic wordmark');
+  fatal('news/index.html is missing its publication identity before final newsroom rendering');
 }
 
-console.log(`FMB public-route integrity audit passed ${publicPages} public pages and ${newsPages} News routes; retired Reading/Music routes are absent, the homepage has one unified FMB&CO. shell, and FMB News uses the approved typographic wordmark consistently, with ${warnings.length} non-blocking visual warning(s).`);
+// This audit intentionally runs before the final FMB News publication renderer.
+// The strict typographic wordmark, ticker, footer, newsletter and article-shell
+// assertions are enforced after finalization by verify-fmb-news-publication.mjs.
+console.log(`FMB public-route integrity audit passed ${publicPages} public pages and ${newsPages} News routes before final newsroom rendering; retired Reading/Music routes are absent, the homepage has one unified FMB&CO. shell, and ${warnings.length} non-blocking visual warning(s) remain. Final FMB News identity is enforced by the post-finalization publication QA gate.`);
