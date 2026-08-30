@@ -59,21 +59,12 @@ async function latestHeadlines(){
     .slice(0,7);
 }
 
-function phtTime(iso){
-  return new Intl.DateTimeFormat('en-PH',{
-    timeZone:'Asia/Manila',
-    hour:'numeric',
-    minute:'2-digit',
-    hour12:true
-  }).format(new Date(iso))+' PHT';
-}
-
 function tickerMarkup(stories){
   const run=stories.map((story,index)=>{
     const separator=index<stories.length-1?'<span class="ticker-dot" aria-hidden="true">◆</span>':'';
-    return `<a href="/news/${esc(story.slug)}/"><time datetime="${esc(story.publishedAt)}">${esc(phtTime(story.publishedAt))}</time><span class="ticker-headline">${esc(story.headline)}</span></a>${separator}`;
+    return `<a href="/news/${esc(story.slug)}/"><span class="ticker-headline">${esc(story.headline)}</span></a>${separator}`;
   }).join('');
-  return `<div class="headline-ticker" role="region" aria-label="Latest FMB News headlines"><div class="ticker-label"><span class="ticker-pulse" aria-hidden="true"></span>LATEST</div><div class="ticker-window"><div class="ticker-track"><div class="ticker-run">${run}</div><div class="ticker-run" aria-hidden="true">${run}</div></div></div></div>`;
+  return `<div class="headline-ticker" role="region" aria-label="Latest FMB News headlines"><div class="ticker-clock" aria-label="Current Philippine time"><span data-pht-ticker-clock>--:--</span><small>PHT</small></div><div class="ticker-label"><span class="ticker-pulse" aria-hidden="true"></span>LATEST</div><div class="ticker-window"><div class="ticker-track"><div class="ticker-run">${run}</div><div class="ticker-run" aria-hidden="true">${run}</div></div></div></div>`;
 }
 
 function wordmarkMarkup(footer=false){
@@ -84,6 +75,7 @@ function wordmarkMarkup(footer=false){
 
 const searchIcon=`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>`;
 const footerSocials=`<div class="footer-socials" aria-label="FMB News social links"><a href="https://www.facebook.com/BinibiningFrancineMarie" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="fill-icon" d="M13.5 21v-8h2.8l.4-3h-3.2V8.1c0-.9.3-1.6 1.7-1.6H17V3.8c-.3 0-1.4-.1-2.6-.1-2.6 0-4.4 1.6-4.4 4.5V10H7v3h3v8h3.5Z"></path></svg></a><a href="https://www.instagram.com/bb.fmb/" target="_blank" rel="noopener noreferrer" aria-label="Instagram @bb.fmb"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"></rect><circle cx="12" cy="12" r="3.5"></circle><circle class="fill-icon" cx="17.2" cy="6.8" r="1"></circle></svg></a><a href="mailto:withlovefmb@gmail.com" aria-label="Email FMB News"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m4 7 8 6 8-6"></path></svg></a></div>`;
+const tickerClockScript=`<script data-pht-ticker-script>(()=>{const nodes=[...document.querySelectorAll('[data-pht-ticker-clock]')];if(!nodes.length)return;const tick=()=>{const value=new Intl.DateTimeFormat('en-PH',{timeZone:'Asia/Manila',hour:'numeric',minute:'2-digit',hour12:true}).format(new Date());nodes.forEach(node=>{node.textContent=value})};tick();setInterval(tick,30000)})();</script>`;
 
 const headlines=await latestHeadlines();
 const ticker=tickerMarkup(headlines);
@@ -99,7 +91,7 @@ for(const file of await walkIndexHtml(newsRoot)){
     html=html.replace('</head>','<link rel="stylesheet" href="/assets/css/fmb-news-reference-hardfix.css?v=20260830a"></head>');
   }
   if(!html.includes('/assets/css/fmb-news-reference-final.css')){
-    html=html.replace('</head>','<link rel="stylesheet" href="/assets/css/fmb-news-reference-final.css?v=20260830c"></head>');
+    html=html.replace('</head>','<link rel="stylesheet" href="/assets/css/fmb-news-reference-final.css?v=20260830d"></head>');
   }
 
   html=html
@@ -110,6 +102,10 @@ for(const file of await walkIndexHtml(newsRoot)){
 
   if(!html.includes('class="headline-ticker"')){
     html=html.replace('<div class="utility">',`${ticker}<div class="utility">`);
+  }
+
+  if(!html.includes('data-pht-ticker-script')){
+    html=html.replace('</body>',`${tickerClockScript}</body>`);
   }
 
   if(!html.includes('class="footer-socials"')){
@@ -124,4 +120,4 @@ for(const file of await walkIndexHtml(newsRoot)){
   await writeFile(file,html);
 }
 
-console.log(`FMB News hard correction applied: typographic FMB/News identity, ${headlines.length} timestamped moving headlines, verified social icons, metallic-purple broadcast styling hook, and Rizal Park hero.`);
+console.log(`FMB News hard correction applied: typographic FMB/News identity, live PHT clock beside ${headlines.length} moving headlines, verified social icons, metallic-purple broadcast styling hook, and Rizal Park hero.`);
