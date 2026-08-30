@@ -101,7 +101,7 @@ function verifyCanonicalPage(file, { article = false } = {}) {
 
     if (article) {
       articlePages += 1;
-      if (!html.includes('class="article-shell"')) fail('canonical article shell missing');
+      if (!/<main\b[^>]*class=["'][^"']*\barticle-shell\b[^"']*["']/i.test(html)) fail('canonical article shell missing');
       if (!html.includes('class="article-grid"')) fail('article layout grid missing');
       if (!html.includes('class="article-figure"')) fail('article hero/figure missing');
       if (!html.includes('class="related"')) fail('related reports rail missing');
