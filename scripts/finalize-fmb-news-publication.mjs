@@ -6,9 +6,9 @@ const stages = [
   './post-build-fmb-news-reference-polish.mjs',
   './post-build-fmb-news-polish-css.mjs',
   './post-build-fmb-news-image-overrides.mjs',
-  // The shared-shell stage has already applied the one public ecosystem shell
-  // across the site. After Brief finalization, reassert only the newsroom layer
-  // so compatibility redirects such as /fmbnews/ are not treated as full pages.
+  // Late newsroom renderers can replace the shared shell. Restore the one
+  // approved ecosystem shell first, then apply the FMB News / Worldwide layer.
+  './post-build-fmb-news-shell-final.mjs',
   './post-build-fmb-news-unified-final.mjs',
   './post-build-retired-public-nav-clean.mjs',
 ];
