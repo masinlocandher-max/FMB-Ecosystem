@@ -17,7 +17,7 @@
   "kicker": "Zambales · Infrastructure · Public safety",
   "deck": "DPWH assessments put damage to dikes, revetments and slope-protection works at ₱569.27 million, while recovery, rehabilitation and reconstruction are estimated at about ₱1.28 billion.",
   "publishedAt": "2026-08-30T21:56:00+08:00",
-  "updatedAt": "2026-08-30T21:56:00+08:00",
+  "updatedAt": "2026-08-30T22:00:00+08:00",
   "author": "FMB News Desk",
   "articleType": "NewsArticle",
   "sections": [
@@ -66,29 +66,29 @@
     }
   ],
   "image": {
-    "kind": "editorial-fallback",
-    "url": "/assets/images/news/fmb-news-editorial-fallback.svg",
-    "sourceUrl": "https://newsinfo.inquirer.net/2295078/p569-m-flood-control-structures-in-zambales-damaged-amid-heavy-rains",
-    "creator": "FMB News",
-    "license": "FMB-owned editorial visual",
-    "licenseUrl": "https://www.francinemariebautista.com/news/",
-    "usageStatus": "The source report carries a photograph credited as courtesy of the Botolan LGU, but redistribution rights for the hosted image were not independently verified. FMB News editorial fallback used rather than copying the source image without confirmed reuse rights.",
-    "credit": "FMB News editorial visual",
-    "caption": "FMB News editorial visual accompanying the August 30 report on damaged flood-control infrastructure in Zambales.",
-    "alt": "FMB News editorial visual for the Zambales flood-control infrastructure damage report",
-    "width": 1200,
-    "height": 675,
+    "kind": "open-license-photo",
+    "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/BarangaysTaliptip-Perez_BulaKan_July_7_2026_Bulacan_03.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:BarangaysTaliptip-Perez_BulaKan_July_7_2026_Bulacan_03.jpg",
+    "creator": "P1898",
+    "license": "Creative Commons Attribution 4.0 International",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "usageStatus": "CC BY 4.0 license verified on Wikimedia Commons. Used strictly as an illustrative file photograph of Philippine flood-control infrastructure; it does not depict the damaged structures in Zambales reported in this story.",
+    "credit": "P1898 / Wikimedia Commons, CC BY 4.0",
+    "caption": "Illustrative file photo: flood-control structures in Bulakan, Bulacan, photographed in July 2026. This image does not show the damaged Zambales sites covered in this report.",
+    "alt": "Illustrative file photograph of flood-control structures beside waterways in Bulakan, Bulacan",
+    "width": 3977,
+    "height": 2524,
     "focusX": 50,
     "focusY": 50
   },
   "audit": {
-    "sourceCheckedAt": "2026-08-30T21:56:00+08:00",
-    "photoReferenceUrl": "https://newsinfo.inquirer.net/2295078/p569-m-flood-control-structures-in-zambales-damaged-amid-heavy-rains",
+    "sourceCheckedAt": "2026-08-30T22:00:00+08:00",
+    "photoReferenceUrl": "https://commons.wikimedia.org/wiki/File:BarangaysTaliptip-Perez_BulaKan_July_7_2026_Bulacan_03.jpg",
     "notes": [
       "Verified ₱569.27M in reported flood-control damage and about ₱1.28B in estimated recovery, rehabilitation and reconstruction requirements from the August 30 report citing the combined DPWH district assessment.",
       "Verified the report specifically lists totally damaged slope protection along the Tapuac River in Masinloc.",
       "The story deliberately separates documented infrastructure damage from any claim that the damage caused the wider flooding; no such general causal finding was established by the source.",
-      "Did not reuse the source photograph because redistribution rights were not independently verified."
+      "The source report's Botolan LGU photograph was not reused because redistribution rights were not independently verified. A separately licensed CC BY 4.0 flood-control file photo is used and clearly labeled illustrative."
     ]
   }
 }
