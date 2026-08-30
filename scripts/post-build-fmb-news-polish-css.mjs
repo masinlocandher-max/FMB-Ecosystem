@@ -11,7 +11,8 @@ const finalOut = path.join(root,'dist','assets','css','fmb-news-reference-final.
 const newsRoot = path.join(root,'dist','news');
 const articleRoot = path.join(root,'apps','withlovefmb','content','news','articles');
 const suppliedLogo = '/assets/images/fmb-approved/fmb-news-logo-color-supplied.webp';
-const heroPhoto = 'https://commons.wikimedia.org/wiki/Special:Redirect/file/PHILIPPINE_FLAG_WITH_SKY_BACKGROUND.jpg';
+const heroPhoto = 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Rizal_Park,_PH_flag_-_Rizal_day_ceremony_(Manila)(2017-12-30).jpg';
+const heroSource = 'https://commons.wikimedia.org/wiki/File:Rizal_Park,_PH_flag_-_Rizal_day_ceremony_(Manila)(2017-12-30).jpg';
 
 await cp(polishSource,polishOut,{force:true});
 await cp(hardfixSource,hardfixOut,{force:true});
@@ -93,11 +94,11 @@ for(const file of await walkIndexHtml(newsRoot)){
   }
 
   if(path.resolve(file)===path.resolve(homeFile)){
-    const hero=`<div class="hero-image"><img src="${heroPhoto}" alt="Philippine flag flying against a bright sky" fetchpriority="high"><a class="hero-credit" href="https://commons.wikimedia.org/wiki/File:PHILIPPINE_FLAG_WITH_SKY_BACKGROUND.jpg" target="_blank" rel="noopener noreferrer">Photo: Alloizajean / Wikimedia Commons · CC BY-SA 4.0</a></div>`;
+    const hero=`<div class="hero-image"><img src="${heroPhoto}" alt="Philippine flag at Rizal Park in Manila" fetchpriority="high"><a class="hero-credit" href="${heroSource}" target="_blank" rel="noopener noreferrer">Photo: Patrick Roque / Wikimedia Commons · CC BY-SA 4.0</a></div>`;
     html=html.replace(/<div class="hero-image">[\s\S]*?<\/div>/,hero);
   }
 
   await writeFile(file,html);
 }
 
-console.log(`FMB News final reference pass applied: one supplied logo source, ${headlines.length} live ticker headlines, and photographic Philippine flag hero.`);
+console.log(`FMB News final reference pass applied: one supplied logo source, ${headlines.length} live ticker headlines, and Rizal Park Philippine flag hero.`);
