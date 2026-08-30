@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-30-1300",
+  "emailSubject": "FMB News | Tropical Depression Pilandok Forms; 2 Bulacan Dams Breach Spilling Level | August 30, 2026 | 1:00 PM PHT",
+  "slug": "tropical-depression-pilandok-habagat-august-30-2026",
+  "headline": "Tropical Depression Pilandok Maintains Strength East of Northern Luzon as Habagat Persists",
+  "seoTitle": "Tropical Depression Pilandok, Habagat Update Aug. 30 | FMB News",
+  "seoDescription": "PAGASA says Tropical Depression Pilandok remains east of Extreme Northern Luzon while the Southwest Monsoon continues to affect Luzon and Visayas.",
+  "keywords": ["Tropical Depression Pilandok August 30 2026", "PAGASA Pilandok update", "Habagat Philippines August 30"],
+  "category": "National",
+  "kicker": "Weather · Public Safety",
+  "deck": "PAGASA's latest bulletin places Pilandok far east of Extreme Northern Luzon with 45 km/h sustained winds, while Habagat continues to bring hazardous weather to parts of the country.",
+  "publishedAt": "2026-08-30T13:00:00+08:00",
+  "updatedAt": "2026-08-30T19:00:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {"heading":"What happened","paragraphs":["Tropical Depression Pilandok remained over the Philippine Sea east of Extreme Northern Luzon on Sunday as the Southwest Monsoon continued to affect Luzon and the Visayas, according to the latest PAGASA bulletin available Sunday evening.","PAGASA placed Pilandok about 1,180 kilometers east of Extreme Northern Luzon, with maximum sustained winds of 45 kilometers per hour and gusts of up to 55 km/h. It was moving northwestward slowly."]},
+    {"heading":"What changed","paragraphs":["The approved 1:00 PM newsroom brief carried earlier formation-stage estimates, including stronger winds and a much closer position. FMB News updated the article to the later official PAGASA bulletin rather than publishing superseded cyclone data.","PAGASA's latest bulletin showed no Tropical Cyclone Wind Signal in effect. The agency nevertheless warned that the Southwest Monsoon could bring strong to gale-force gusts over many areas."]},
+    {"heading":"Context","paragraphs":["Pilandok developed after days of monsoon-driven flooding and heavy rain in parts of Luzon. Even when a tropical cyclone remains offshore, its circulation can interact with the Southwest Monsoon and contribute to hazardous winds, rough seas and rainfall away from the cyclone center."]},
+    {"heading":"Why this matters","paragraphs":["Residents should rely on the newest PAGASA bulletins because cyclone position, wind strength and warning signals can change substantially within hours. Flood-prone communities also remain vulnerable after prolonged rainfall has saturated watersheds and drainage systems."]},
+    {"heading":"What to watch next","paragraphs":["Watch PAGASA's succeeding tropical cyclone bulletins and rainfall advisories for changes in Pilandok's track, intensity and monsoon impacts through Monday and Tuesday."]}
+  ],
+  "sources": [
+    {"publisher":"DOST-PAGASA","title":"Tropical Cyclone Bulletin: Pilandok","publishedAt":"2026-08-30T17:00:00+08:00","url":"https://www.pagasa.dost.gov.ph/tropical-cyclone/severe-weather-bulletin"},
+    {"publisher":"DOST-PAGASA","title":"Daily Weather Forecast","publishedAt":"2026-08-30T04:00:00+08:00","url":"https://pagasa.dost.gov.ph/weather"}
+  ],
+  "image":{"kind":"editorial-fallback","url":"/assets/images/news/fmb-news-editorial-fallback.svg","sourceUrl":"https://www.pagasa.dost.gov.ph/tropical-cyclone/severe-weather-bulletin","creator":"FMB News","license":"FMB-owned editorial visual","licenseUrl":"https://www.francinemariebautista.com/news/","usageStatus":"The email references PAGASA/PNA satellite imagery but does not provide a stable repository-ready original image file. FMB News editorial fallback used rather than copying a hosted image without an ingestible original asset.","credit":"FMB News editorial visual; source data: DOST-PAGASA","caption":"FMB News editorial visual accompanying the Tropical Depression Pilandok update.","alt":"FMB News editorial visual for Tropical Depression Pilandok and Habagat update","width":1200,"height":675,"focusX":50,"focusY":50},
+  "audit":{"sourceCheckedAt":"2026-08-30T19:00:00+08:00","photoReferenceUrl":"https://www.pagasa.dost.gov.ph/tropical-cyclone/severe-weather-bulletin","notes":["Updated superseded formation-stage figures from the email using the later official PAGASA bulletin.","Latest bulletin used: 45 km/h sustained winds, gusts to 55 km/h, about 1,180 km east of Extreme Northern Luzon, moving northwestward slowly, with no TCWS in effect.","Did not reuse referenced satellite imagery because no stable repository-ready original was supplied."]}
+}
