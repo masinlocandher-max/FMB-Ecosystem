@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-30-1300",
+  "emailSubject": "FMB News | Tropical Depression Pilandok Forms; 2 Bulacan Dams Breach Spilling Level | August 30, 2026 | 1:00 PM PHT",
+  "slug": "jenny-barzaga-wins-cavite-4th-district-special-election-august-30-2026",
+  "headline": "Jenny Barzaga Wins Cavite 4th District Special Election with 201,893 Votes",
+  "seoTitle": "Jenny Barzaga Wins Cavite 4th District Special Election | FMB News",
+  "seoDescription": "Former Dasmariñas Mayor Jenny Barzaga won the Cavite 4th District special election with 201,893 votes and was proclaimed early August 30.",
+  "keywords": ["Jenny Barzaga Cavite special election 2026", "Cavite 4th district election result", "Dasmarinas special election August 29"],
+  "category": "Politics",
+  "kicker": "Elections · Cavite",
+  "deck": "The former Dasmariñas mayor defeated four other candidates in the special poll, with Comelec reporting a 57.75% voter turnout.",
+  "publishedAt": "2026-08-30T13:00:00+08:00",
+  "updatedAt": "2026-08-30T19:00:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {"heading":"What happened","paragraphs":["Former Dasmariñas City Mayor Jennifer 'Jenny' Barzaga won the special election for Cavite's 4th Legislative District, receiving 201,893 votes, according to the Commission on Elections results reported by the Philippine News Agency.","The District Board of Canvassers proclaimed Barzaga at 3:30 a.m. Sunday at the City of Dasmariñas Arena after Saturday's special election."]},
+    {"heading":"The results","paragraphs":["Barzaga finished well ahead of Raul Rex Mangubat, who received 30,361 votes, and Jacinto Frani Jr., who received 24,350. Marvin Dupal-Ag received 1,184 votes and Lysander Ordenes received 561.","Comelec reported 258,361 voters cast ballots out of 447,387 registered voters, equivalent to a 57.75% turnout. Voting hours were extended by two hours because of heavy afternoon rain."]},
+    {"heading":"Context","paragraphs":["The special election was called after Francisco 'Kiko' Barzaga Jr. was expelled from the House of Representatives in June for disorderly behavior, conduct unbecoming of a member and violations of the House Code of Conduct. Jenny Barzaga is his mother."]},
+    {"heading":"Why this matters","paragraphs":["The result fills Cavite's 4th District vacancy and restores representation for the district in the House. The election also tested turnout and election administration during severe weather affecting parts of Luzon."]},
+    {"heading":"What to watch next","paragraphs":["Watch for Barzaga's assumption of office, House committee assignments and the resulting transition in Dasmariñas City leadership."]}
+  ],
+  "sources": [
+    {"publisher":"Philippine News Agency","title":"Jenny Barzaga wins Cavite congressional seat after son's expulsion","publishedAt":"2026-08-30T09:00:00+08:00","url":"https://www.pna.gov.ph/articles/1282948"},
+    {"publisher":"Commission on Elections / PNA","title":"Comelec to proclaim winner of Dasmariñas special polls on Aug. 30","publishedAt":"2026-07-23T17:08:00+08:00","url":"https://www.pna.gov.ph/articles/1280149"}
+  ],
+  "image":{"kind":"editorial-fallback","url":"/assets/images/news/fmb-news-editorial-fallback.svg","sourceUrl":"https://www.pna.gov.ph/articles/1282948","creator":"FMB News","license":"FMB-owned editorial visual","licenseUrl":"https://www.francinemariebautista.com/news/","usageStatus":"The verified PNA article includes a Comelec video screengrab of the proclamation, but the qualifying email supplies no stable repository-ready original image file. FMB News editorial fallback used rather than copying the hosted screengrab.","credit":"FMB News editorial visual; source reference: Comelec/PNA","caption":"FMB News editorial visual accompanying the Cavite 4th District special-election result.","alt":"FMB News editorial visual for Jenny Barzaga's Cavite 4th District special election victory","width":1200,"height":675,"focusX":50,"focusY":50},
+  "audit":{"sourceCheckedAt":"2026-08-30T19:00:00+08:00","photoReferenceUrl":"https://www.pna.gov.ph/articles/1282948","notes":["Verified 201,893 votes, 57.75% turnout, 3:30 a.m. proclamation and opponent vote totals through PNA's same-day Comelec-backed report.","Corrected the newsroom brief's succession framing: the vacancy followed the expulsion of Francisco Barzaga Jr., not the death of Elpidio Barzaga Jr.","Did not copy the PNA/Comelec screengrab because no stable repository-ready original image was supplied in the email."]}
+}
