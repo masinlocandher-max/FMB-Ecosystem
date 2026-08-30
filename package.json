@@ -10,7 +10,7 @@
     "generate:news": "node --import ./scripts/fetch-shim.mjs scripts/pipeline/generate-news.mjs",
     "apply:shared-shell": "node --import ./scripts/fetch-shim.mjs scripts/pipeline/apply-shared-shell.mjs",
     "verify:dist": "node --import ./scripts/fetch-shim.mjs scripts/pipeline/verify-dist.mjs",
-    "finalize:fmb-brief": "node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-brief-finalize-safe.mjs && node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-brief-existing-social.mjs && node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-news-reference-design.mjs && node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-news-reference-polish.mjs && node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-news-polish-css.mjs",
+    "finalize:fmb-brief": "node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-brief-finalize-safe.mjs && node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-brief-existing-social.mjs && node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-news-reference-design.mjs && node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-news-reference-polish.mjs && node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-news-polish-css.mjs && node --import ./scripts/fetch-shim.mjs scripts/post-build-fmb-news-image-overrides.mjs",
     "build": "npm run validate:content && npm run build:apps && npm run generate:news && npm run apply:shared-shell && npm run verify:dist && npm run finalize:fmb-brief",
     "build:legacy": "node --import ./scripts/fetch-shim.mjs scripts/build-release.mjs",
     "build:all": "npm run build:fmb && npm run build:senz && npm run build:cognita",
