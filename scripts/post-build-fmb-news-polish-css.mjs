@@ -83,7 +83,7 @@ function wordmarkMarkup(footer=false){
 }
 
 const searchIcon=`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>`;
-const footerSocials=`<div class="footer-socials" aria-label="FMB News social links"><a href="https://www.facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="fill-icon" d="M13.5 21v-8h2.8l.4-3h-3.2V8.1c0-.9.3-1.6 1.7-1.6H17V3.8c-.3 0-1.4-.1-2.6-.1-2.6 0-4.4 1.6-4.4 4.5V10H7v3h3v8h3.5Z"></path></svg></a><a href="https://x.com/" target="_blank" rel="noopener noreferrer" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4l14 16M19 4 5 20"></path></svg></a><a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"></rect><circle cx="12" cy="12" r="3.5"></circle><circle class="fill-icon" cx="17.2" cy="6.8" r="1"></circle></svg></a><a href="mailto:withlovefmb@gmail.com" aria-label="Email FMB News"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m4 7 8 6 8-6"></path></svg></a></div>`;
+const footerSocials=`<div class="footer-socials" aria-label="FMB News social links"><a href="https://www.facebook.com/BinibiningFrancineMarie" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="fill-icon" d="M13.5 21v-8h2.8l.4-3h-3.2V8.1c0-.9.3-1.6 1.7-1.6H17V3.8c-.3 0-1.4-.1-2.6-.1-2.6 0-4.4 1.6-4.4 4.5V10H7v3h3v8h3.5Z"></path></svg></a><a href="https://www.instagram.com/bb.fmb/" target="_blank" rel="noopener noreferrer" aria-label="Instagram @bb.fmb"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="4"></rect><circle cx="12" cy="12" r="3.5"></circle><circle class="fill-icon" cx="17.2" cy="6.8" r="1"></circle></svg></a><a href="mailto:withlovefmb@gmail.com" aria-label="Email FMB News"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m4 7 8 6 8-6"></path></svg></a></div>`;
 
 const headlines=await latestHeadlines();
 const ticker=tickerMarkup(headlines);
@@ -124,4 +124,4 @@ for(const file of await walkIndexHtml(newsRoot)){
   await writeFile(file,html);
 }
 
-console.log(`FMB News hard correction applied: typographic FMB/News identity, ${headlines.length} timestamped moving headlines, unified icons, metallic-purple broadcast styling hook, and Rizal Park hero.`);
+console.log(`FMB News hard correction applied: typographic FMB/News identity, ${headlines.length} timestamped moving headlines, verified social icons, metallic-purple broadcast styling hook, and Rizal Park hero.`);
