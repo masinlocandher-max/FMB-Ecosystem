@@ -1,4 +1,4 @@
-/* Final FMB News reference corrections: supplied identity, live headline rail, hero photograph. */
+/* Final FMB News reference corrections: supplied identity, live headline rail, hero photograph. Production lock. */
 .fmb-ref .headline-ticker{overflow:hidden;background:linear-gradient(90deg,#25072e 0%,#5d1265 48%,#2b0835 100%);color:#fff;border-bottom:1px solid #210526}
 .fmb-ref .ticker-track{display:flex;width:max-content;will-change:transform;animation:fmbNewsTicker 44s linear infinite}
 .fmb-ref .ticker-run{display:flex;flex:none;align-items:center;white-space:nowrap}
