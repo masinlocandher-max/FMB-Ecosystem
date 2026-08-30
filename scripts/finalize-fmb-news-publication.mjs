@@ -6,9 +6,9 @@ const stages = [
   './post-build-fmb-news-reference-polish.mjs',
   './post-build-fmb-news-polish-css.mjs',
   './post-build-fmb-news-image-overrides.mjs',
-  // Final authority: no late newsroom or Brief pass may leave a second shell,
-  // competing menu, page-specific design system, or retired navigation behind.
-  './post-build-fmb-unified-design.mjs',
+  // The shared-shell stage has already applied the one public ecosystem shell
+  // across the site. After Brief finalization, reassert only the newsroom layer
+  // so compatibility redirects such as /fmbnews/ are not treated as full pages.
   './post-build-fmb-news-unified-final.mjs',
   './post-build-retired-public-nav-clean.mjs',
 ];
