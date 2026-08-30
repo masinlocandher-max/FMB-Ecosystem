@@ -9,6 +9,10 @@ const articleRoot = path.join(root, 'apps', 'withlovefmb', 'content', 'news', 'a
 const fallback = '/assets/images/news/fmb-news-editorial-fallback.svg';
 const utilityRoutes = new Set(['', 'archive', 'about', 'fmb-brief']);
 
+function isWorldwideRoute(route) {
+  return route === 'world' || route.startsWith('world/');
+}
+
 async function exists(target) {
   try { await access(target); return true; } catch { return false; }
 }
@@ -132,6 +136,14 @@ for (const story of published) {
   await verifyCanonicalPage(file, { article: true });
 }
 
+const worldPath = fileByRoute.get('world');
+if (!worldPath) failures.push('FMB Worldwide: canonical /news/world/ desk is missing');
+else {
+  const world = await readFile(worldPath, 'utf8');
+  if (!/FMB Worldwide/i.test(world)) failures.push('news/world/index.html: FMB Worldwide identity missing');
+  if (!world.includes('fmb-worldwide')) failures.push('news/world/index.html: Worldwide visual-system hook missing');
+}
+
 const homePath = fileByRoute.get('');
 const archivePath = fileByRoute.get('archive');
 if (homePath) {
@@ -143,11 +155,13 @@ if (homePath) {
 }
 
 // Active discovery surfaces may never send readers back into the old compatibility newsroom.
+// FMB Worldwide is a first-class desk with its own landing and dated editions, so its nested
+// routes are explicitly canonical even though they are not structured-article JSON slugs.
 for (const [label, file] of [['homepage', homePath], ['archive', archivePath]]) {
   if (!file) continue;
   const html = await readFile(file, 'utf8');
   for (const route of newsroomLinks(html)) {
-    if (!route || utilityRoutes.has(route) || publishedSlugs.has(route) || /^fmb-brief-[a-z]+-\d{1,2}-\d{4}$/i.test(route)) continue;
+    if (!route || utilityRoutes.has(route) || publishedSlugs.has(route) || isWorldwideRoute(route) || /^fmb-brief-[a-z]+-\d{1,2}-\d{4}$/i.test(route)) continue;
     failures.push(`${label} links to noncanonical legacy newsroom route /news/${route}/`);
   }
 }
@@ -172,7 +186,7 @@ if (!briefDirs.length) failures.push('FMB Brief: no dated editions found');
 
 // Historical compatibility routes remain accessible, but they are no longer allowed to define the active publication UI.
 const compatibilityRoutes = [...fileByRoute.keys()]
-  .filter(route => !canonicalRoutes.has(route) && !/^fmb-brief-[a-z]+-\d{1,2}-\d{4}$/i.test(route))
+  .filter(route => !canonicalRoutes.has(route) && !isWorldwideRoute(route) && !/^fmb-brief-[a-z]+-\d{1,2}-\d{4}$/i.test(route))
   .sort();
 if (compatibilityRoutes.length) {
   warnings.push(`${compatibilityRoutes.length} historical compatibility route(s) remain outside the canonical renderer; active homepage/archive links are verified not to depend on them.`);
@@ -188,4 +202,4 @@ if (failures.length) {
   throw new Error(`FMB News publication QA failed (${failures.length}):\n${failures.slice(0, 120).map(item => `- ${item}`).join('\n')}${failures.length > 120 ? `\n- ... ${failures.length - 120} additional failure(s) suppressed` : ''}`);
 }
 
-console.log(`FMB News publication QA passed: ${published.length} structured article routes + ${utilityRoutes.size} active newsroom surfaces verified; ${Math.min(9, published.length)} current rendered-story image checks passed; typographic identity, fixed PHT clock + independent moving headlines, canonical navigation/footer, newsletter, and active-route isolation are enforced. ${compatibilityRoutes.length} historical compatibility route(s) remain isolated from active discovery surfaces.`);
+console.log(`FMB News publication QA passed: ${published.length} structured article routes + ${utilityRoutes.size} active newsroom surfaces + FMB Worldwide verified; ${Math.min(9, published.length)} current rendered-story image checks passed; typographic identity, fixed PHT clock + independent moving headlines, canonical navigation/footer, newsletter, and active-route isolation are enforced. ${compatibilityRoutes.length} historical compatibility route(s) remain isolated from active discovery surfaces.`);
