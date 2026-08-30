@@ -136,7 +136,7 @@ const homePath = fileByRoute.get('');
 const archivePath = fileByRoute.get('archive');
 if (homePath) {
   const home = await readFile(homePath, 'utf8');
-  if (!home.includes('class="home-hero"')) failures.push('news/index.html: homepage hero missing');
+  if (!/<section\b[^>]*class=["'][^"']*\bhome-hero\b[^"']*["']/i.test(home)) failures.push('news/index.html: homepage hero missing');
   if (!home.includes('class="brief-promo"')) failures.push('news/index.html: FMB Brief promotion missing');
   if (home.includes(fallback)) failures.push('news/index.html: generic editorial fallback is visible on the current homepage');
   if (!/Philippine flag at Rizal Park in Manila/i.test(home)) failures.push('news/index.html: approved civic Philippine hero image treatment is missing');
