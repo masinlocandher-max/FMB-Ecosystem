@@ -16,12 +16,23 @@ async function patchFile(file, fn) {
   if (next !== html) await writeFile(file, next);
 }
 
-function replaceFirstAfter(html, needle, from, replacement) {
-  const start = html.indexOf(needle);
+function patchCard(html, slug, image) {
+  const href = `href="/news/${slug}/"`;
+  const start = html.indexOf(href);
   if (start < 0) return html;
-  const at = html.indexOf(from, start);
-  if (at < 0 || at - start > 1400) return html;
-  return html.slice(0, at) + replacement + html.slice(at + from.length);
+  const windowEnd = Math.min(html.length, start + 1600);
+  const slice = html.slice(start, windowEnd);
+  const srcMatch = slice.match(new RegExp(`src="${fallback.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}"`));
+  if (!srcMatch) return html;
+  const srcAt = start + srcMatch.index;
+  let out = html.slice(0, srcAt) + `src="${esc(image.url)}"` + html.slice(srcAt + srcMatch[0].length);
+  const afterSrc = out.slice(srcAt, Math.min(out.length, srcAt + 900));
+  const altMatch = afterSrc.match(/alt="[^"]*"/);
+  if (altMatch) {
+    const altAt = srcAt + altMatch.index;
+    out = out.slice(0, altAt) + `alt="${esc(image.alt)}"` + out.slice(altAt + altMatch[0].length);
+  }
+  return out;
 }
 
 for (const [slug, image] of Object.entries(overrides)) {
@@ -40,12 +51,7 @@ for (const [slug, image] of Object.entries(overrides)) {
   });
 
   for (const file of [path.join(newsRoot,'index.html'), path.join(newsRoot,'archive','index.html')]) {
-    await patchFile(file, html => {
-      const href = `href="/news/${slug}/"`;
-      let out = replaceFirstAfter(html, href, `src="${fallback}"`, `src="${esc(image.url)}"`);
-      out = replaceFirstAfter(out, href, /alt="[^"]*"/.source, /alt="[^"]*"/.source);
-      return out;
-    });
+    await patchFile(file, html => patchCard(html, slug, image));
   }
 }
 
@@ -55,9 +61,12 @@ await patchFile(aboutFile, html => {
   const end = html.indexOf('</main>');
   if (start < 0 || end < 0) return html;
   const about = `<main class="about-page"><section class="about-hero"><div class="shell"><p class="eyebrow">ABOUT FMB NEWS</p><h1>Independent reporting, explained for Filipinos.</h1><p class="about-lead">FMB News, Filipino Media Bulletin, is an independent digital publication built to make important developments easier to verify, understand and follow.</p></div></section><section class="shell about-grid"><div class="about-main"><section><h2>What we do</h2><p>We publish verified reports, explainers and the FMB Brief, our daily curated briefing. Our role is not to increase the volume of information. It is to reduce confusion by separating confirmed facts, context, implications and what still needs to be watched.</p></section><section id="standards"><h2>Editorial standards</h2><div class="standards-grid"><article><h3>Verification before speed</h3><p>Claims are checked against primary records, official statements and credible reporting whenever available. Unverified claims are not presented as established fact.</p></article><article><h3>Clear attribution</h3><p>Readers should be able to see where a material claim came from. Articles identify their sources and distinguish direct reporting from sourced information.</p></article><article><h3>Context without distortion</h3><p>We explain why a development matters without turning analysis into fact. Context, interpretation and forward-looking judgment are labeled as such.</p></article><article><h3>Corrections are part of the record</h3><p>Material errors are corrected promptly and transparently. We do not quietly preserve a known factual error for the sake of consistency.</p></article></div></section><section><h2>Images and visual integrity</h2><p>News images must either be owned by FMB News, supplied with permission, public domain, openly licensed, or used under another valid right. Contextual file photographs are labeled so they are not mistaken for photographs of the reported event.</p><p>We do not use synthetic images as documentary evidence of real events. When an original event photograph is unavailable, we prefer clearly labeled contextual or informational visuals rather than inventing a scene.</p></section><section><h2>Independence</h2><p>FMB News is privately operated and is not an official government newsroom. Coverage decisions are made according to public relevance, evidence and editorial judgment. Advertising, partnerships or personal relationships do not change the factual standard applied to a report.</p></section><section><h2>Technology and AI</h2><p>Technology may assist research, organization, production and quality control, but publication responsibility remains human. AI-generated text or automation is not treated as a source. Factual claims still require traceable evidence.</p></section><section><h2>Send a correction or story lead</h2><p>If you find a factual error, have a document we should review, or want to submit a story lead, contact the newsroom at <a href="mailto:withlovefmb@gmail.com">withlovefmb@gmail.com</a>. Include the article link and the specific claim or material that should be checked.</p></section></div><aside class="about-side"><div class="about-card"><h3>FMB News</h3><p><strong>Filipino Media Bulletin</strong></p><p>Verified reporting. Useful context. Clearer decisions.</p></div><div class="about-card"><h3>Core sections</h3><a href="/news/">Latest</a><a href="/news/fmb-brief/">FMB Brief</a><a href="/news/archive/">Archive</a></div><div class="about-card"><h3>Corrections</h3><p>Send the article URL and the exact point that needs review.</p><a href="mailto:withlovefmb@gmail.com?subject=FMB%20News%20Correction">Request a correction →</a></div></aside></section></main>`;
-  return html.slice(0, start) + about + html.slice(end + 7)
-    .replace('<title>FMB News</title>','<title>About FMB News | Filipino Media Bulletin</title>')
-    .replace('content="FMB News canonical newsroom redirect."','content="Learn how FMB News verifies reports, handles corrections, uses images, maintains editorial independence and publishes the FMB Brief."');
+  let out = html.slice(0, start) + about + html.slice(end + 7);
+  out = out.replace('<title>FMB News</title>','<title>About FMB News | Filipino Media Bulletin</title>');
+  out = out.replace('content="FMB News canonical newsroom redirect."','content="Learn how FMB News verifies reports, handles corrections, uses images, maintains editorial independence and publishes the FMB Brief."');
+  out = out.replace('<meta property="og:title" content="FMB News">','<meta property="og:title" content="About FMB News | Filipino Media Bulletin">');
+  out = out.replace('<meta name="twitter:title" content="FMB News">','<meta name="twitter:title" content="About FMB News | Filipino Media Bulletin">');
+  return out;
 });
 
-console.log(`FMB News polish complete: About restored, FMB Brief styling hooks retained, and ${Object.keys(overrides).length} rights-cleared contextual image override(s) applied.`);
+console.log(`FMB News polish complete: About restored, metadata corrected, FMB Brief styling hooks retained, and ${Object.keys(overrides).length} rights-cleared contextual image override(s) applied.`);
