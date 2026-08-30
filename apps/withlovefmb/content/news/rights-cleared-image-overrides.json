@@ -1,10 +1,10 @@
 {
   "ocd-8-million-affected-32-dead-habagat-cyclones-august-30-2026": {
-    "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Flood_damage_in_Manila,_Philippines_2012._Photo-_AusAID_(10695550404).jpg",
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Flood_damage_in_Manila,_Philippines_2012._Photo-_AusAID_(10695550404).jpg",
-    "credit": "Photo: Australian Department of Foreign Affairs and Trade / Wikimedia Commons, CC BY 2.0",
-    "caption": "File photograph of flood damage in Manila in 2012. Used as contextual imagery; it does not depict the August 2026 disaster itself.",
-    "alt": "Flood damage in Manila used as contextual imagery for a national Habagat disaster report"
+    "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Quiapo,_Manila_Floods_Habagat-Carina_2024-1.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Quiapo,_Manila_Floods_Habagat-Carina_2024-1.jpg",
+    "credit": "Photo: Michael Peronce / Wikimedia Commons, CC BY-SA 4.0",
+    "caption": "Archival file photograph of Habagat flooding in Quiapo, Manila on July 24, 2024. It illustrates monsoon flood risk and does not depict the August 30, 2026 flooding.",
+    "alt": "Archival photograph of Habagat flooding in Quiapo, Manila, taken July 24, 2024"
   },
   "pagasa-habagat-rains-luzon-visayas-sunday-august-30-2026": {
     "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Flood_control_in_Philippines_(Manila;_2023-07-02)_E911a_02.jpg",
@@ -82,5 +82,19 @@
     "credit": "Commission on Elections / Wikimedia Commons, public domain (Philippine government work)",
     "caption": "Official Commission on Elections seal. Used as an institutional contextual visual for the Cavite special-election report.",
     "alt": "Commission on Elections seal used as contextual imagery for the Cavite special election"
+  },
+  "nearly-10000-classrooms-damaged-habagat-cyclones-august-30-2026": {
+    "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/DepEd_Basey_Division_Office.JPG",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:DepEd_Basey_Division_Office.JPG",
+    "credit": "Photo: Lawrence Ruiz / Wikimedia Commons, CC BY-SA 4.0",
+    "caption": "Illustrative file photo: the former Basey I Elementary School building serving as a DepEd division office in Basey, Samar. It does not depict classrooms damaged in the August 2026 weather emergency.",
+    "alt": "Illustrative file photograph of a Philippine public-school building in Basey, Samar"
+  },
+  "zambales-flood-control-damage-569-million-august-30-2026": {
+    "url": "https://commons.wikimedia.org/wiki/Special:Redirect/file/BarangaysTaliptip-Perez_BulaKan_July_7_2026_Bulacan_03.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:BarangaysTaliptip-Perez_BulaKan_July_7_2026_Bulacan_03.jpg",
+    "credit": "Photo: P1898 / Wikimedia Commons, CC BY 4.0",
+    "caption": "Illustrative file photo: flood-control structures in Bulakan, Bulacan, photographed in July 2026. This image does not show the damaged Zambales sites covered in the report.",
+    "alt": "Illustrative file photograph of flood-control structures beside waterways in Bulakan, Bulacan"
   }
 }
