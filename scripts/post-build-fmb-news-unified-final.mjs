@@ -102,11 +102,9 @@ for (const base of roots) {
 
     if (relative === 'fmbnews/index.html') {
       html = html.replace(/<section\b[^>]*class=(['"])[^'"]*\bfmb-worldwide-spotlight\b[^'"]*\1[^>]*>[\s\S]*?<\/section>\s*/gi, '');
-      if (/<section\b[^>]*class=(['"])[^'"]*\bfnc-tools\b/i.test(html)) {
-        html = html.replace(/<section\b[^>]*class=(['"])[^'"]*\bfnc-tools\b/i, `${worldwideSpotlight}<section class="fnc-tools"`);
-      } else if (/<section\b[^>]*class=(['"])[^'"]*\bfnc-content\b/i.test(html)) {
-        html = html.replace(/<section\b[^>]*class=(['"])[^'"]*\bfnc-content\b/i, `${worldwideSpotlight}<section class="fnc-content"`);
-      }
+      const insertionTarget = html.match(/<section\b[^>]*class=(['"])[^'"]*\bfnc-tools\b[^'"]*\1[^>]*>/i)?.[0]
+        || html.match(/<section\b[^>]*class=(['"])[^'"]*\bfnc-content\b[^'"]*\1[^>]*>/i)?.[0];
+      if (insertionTarget) html = html.replace(insertionTarget, `${worldwideSpotlight}${insertionTarget}`);
     }
 
     await writeFile(file, html, 'utf8');
