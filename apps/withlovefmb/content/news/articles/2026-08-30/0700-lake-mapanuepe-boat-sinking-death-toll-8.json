@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "status": "published",
+  "bulletinKey": "2026-08-30-0700",
+  "emailSubject": "FMB News | Zambales Boat Tragedy Toll Rises to 8; Olongapo Hospital Hits Full Capacity | August 30, 2026 | 7:00 AM PHT",
+  "slug": "lake-mapanuepe-boat-sinking-death-toll-8-august-30-2026",
+  "headline": "Lake Mapanuepe Boat Sinking Death Toll Rises to 8 in Zambales",
+  "seoTitle": "Lake Mapanuepe Boat Sinking Death Toll Rises to 8 | FMB News",
+  "seoDescription": "Two more victims were recovered after a motorized boat capsized in Lake Mapanuepe, Zambales, raising the confirmed death toll to eight as the search continues for one missing passenger.",
+  "keywords": ["Lake Mapanuepe boat sinking", "Zambales boat mishap August 30 2026", "San Marcelino Zambales Coast Guard"],
+  "category": "National",
+  "kicker": "Zambales · Search and Rescue",
+  "deck": "The Philippine Coast Guard confirmed two additional bodies were recovered after the Lake Mapanuepe capsizing, bringing the toll to eight while one passenger remains missing.",
+  "publishedAt": "2026-08-30T07:00:00+08:00",
+  "updatedAt": "2026-08-30T07:00:00+08:00",
+  "author": "FMB News Desk",
+  "articleType": "NewsArticle",
+  "sections": [
+    {"heading":"What happened","paragraphs":["The death toll from the motorized boat sinking in Lake Mapanuepe in San Marcelino, Zambales, rose to eight after two of the three previously missing passengers were recovered, the Philippine Coast Guard confirmed.","The recovered victims were minors. Search operations are continuing for the remaining missing adult passenger."]},
+    {"heading":"What authorities have confirmed","paragraphs":["The PCG initially reported six fatalities, three missing passengers and four survivors after the boat capsized while crossing Lake Mapanuepe during bad weather.","The passengers were members of an indigenous community who were returning home after attending a vaccination activity across the lake."]},
+    {"heading":"Context","paragraphs":["The accident occurred as prolonged Southwest Monsoon rains affected Zambales and other parts of western Luzon, creating hazardous conditions for small watercraft and inland crossings."]},
+    {"heading":"Why this matters","paragraphs":["The continuing recovery operation underscores the risks faced by remote communities that rely on small boats for access to health services and other essential trips during severe weather."]},
+    {"heading":"What to watch next","paragraphs":["Authorities are continuing the search for the remaining missing passenger and may issue further updates on the final casualty count and the circumstances of the capsizing."]}
+  ],
+  "sources": [
+    {"publisher":"The Philippine Star","title":"Zambales boat mishap death toll climbs to 8","publishedAt":"2026-08-30T00:00:00+08:00","url":"https://www.philstar.com/nation/2026/08/30/2552682/zambales-boat-mishap-death-toll-climbs-8"}
+  ],
+  "image":{"kind":"editorial-fallback","url":"/assets/images/news/fmb-news-editorial-fallback.svg","sourceUrl":"https://www.philstar.com/nation/2026/08/30/2552682/zambales-boat-mishap-death-toll-climbs-8","creator":"FMB News","license":"FMB-owned editorial visual","licenseUrl":"https://www.francinemariebautista.com/news/","usageStatus":"The source article shows a Philippine Coast Guard social-media image, but the email did not provide a stable repository-ready original file or sufficiently clear reusable asset. FMB News editorial fallback used instead.","credit":"FMB News editorial visual","caption":"FMB News editorial visual accompanying the Lake Mapanuepe search-and-recovery update.","alt":"FMB News editorial visual for the Lake Mapanuepe boat sinking update in Zambales","width":1200,"height":675,"focusX":50,"focusY":50},
+  "audit":{"sourceCheckedAt":"2026-08-30T13:00:00+08:00","photoReferenceUrl":"https://www.philstar.com/nation/2026/08/30/2552682/zambales-boat-mishap-death-toll-climbs-8","notes":["Verified the eight confirmed fatalities, two newly recovered victims, four survivors and one remaining missing passenger against same-day reporting citing the Philippine Coast Guard.","Avoided repeating unsupported details about the missing passenger's pregnancy, exact ages, vessel overloading or relief packages where these were not independently reproduced in the retrieved source.","Did not reuse the publisher-hosted social-media image without a stable repository-ready original asset."]}
+}
