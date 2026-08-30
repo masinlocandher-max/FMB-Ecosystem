@@ -8,4 +8,5 @@ await runModules('apply:shared-shell', [
   './apply-newsroom-shell-legacy.mjs',
   '../post-build-fmb-unified-design.mjs',
   '../post-build-fmb-news-unified-final.mjs',
+  '../post-build-retired-public-nav-clean.mjs',
 ]);
