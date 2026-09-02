@@ -53,6 +53,14 @@
       "destination": "/MissIntercontinental/index.html"
     },
     {
+      "source": "/officialpco",
+      "destination": "/officialpco/index.html"
+    },
+    {
+      "source": "/officialpco/",
+      "destination": "/officialpco/index.html"
+    },
+    {
       "source": "/about-francine-marie-bautista/early-life-pageantry-advocacy",
       "destination": "/about-francine-marie-bautista/early-life-pageantry-advocacy/index.html"
     },

@@ -22,6 +22,9 @@ export const STANDALONE_MICROSITE_PREFIXES = Object.freeze([
   // Francine's personal application profile for the Miss Intercontinental
   // organization. Deliberately independent of the corporate ecosystem.
   'MissIntercontinental/',
+  // Francine's own portfolio — strategist, creative director, storyteller.
+  // Its own art direction, opening frame and audio; no ecosystem chrome.
+  'officialpco/',
 ]);
 
 /* Prefixes excluded from unified-shell passes for reasons other than being a
