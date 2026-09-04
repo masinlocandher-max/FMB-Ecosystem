@@ -1,5 +1,5 @@
 name: One-time move production domains to PCO
-# 2026-09-04 repair trigger 2: detach production domains from FMB-Ecosystem and repair /news.
+# 2026-09-04 repair trigger 3: use verified existing PCO deployment and complete the domain cutover.
 
 on:
   push:
@@ -14,11 +14,10 @@ jobs:
   migrate:
     if: github.event.head_commit.message == 'One-time move production domains to PCO'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     env:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_TEAM_ID: team_KRSlI8wfigrmTrcCfbLIu9C6
-      VERCEL_TEAM_SLUG: senz3
       OLD_PROJECT: withlovefmb
       NEW_PROJECT: fmb-pco
       PCO_REPO: masinlocandher-max/PCO
@@ -27,43 +26,20 @@ jobs:
         shell: bash
         run: test -n "${VERCEL_TOKEN:-}"
 
-      - name: Create or reuse PCO-owned Vercel project
+      - name: Resolve PCO-owned Vercel project
         shell: bash
         run: |
           set -euo pipefail
-          api='https://api.vercel.com'
-          auth="Authorization: Bearer ${VERCEL_TOKEN}"
-
-          status="$(curl -sS -o /tmp/project.json -w '%{http_code}' \
-            -H "$auth" \
-            "${api}/v9/projects/${NEW_PROJECT}?teamId=${VERCEL_TEAM_ID}")"
-
-          if [ "$status" = '404' ]; then
-            payload="$(jq -nc --arg name "$NEW_PROJECT" --arg repo "$PCO_REPO" '{name:$name,framework:null,gitRepository:{type:"github",repo:$repo}}')"
-            create_status="$(curl -sS -o /tmp/project.json -w '%{http_code}' -X POST \
-              -H "$auth" -H 'Content-Type: application/json' \
-              "${api}/v11/projects?teamId=${VERCEL_TEAM_ID}" \
-              --data "$payload")"
-            if [ "$create_status" != '200' ] && [ "$create_status" != '201' ]; then
-              echo 'Git-linked project creation failed; creating the PCO project without a Git link, then connecting it from the PCO checkout.'
-              cat /tmp/project.json
-              payload="$(jq -nc --arg name "$NEW_PROJECT" '{name:$name,framework:null}')"
-              create_status="$(curl -sS -o /tmp/project.json -w '%{http_code}' -X POST \
-                -H "$auth" -H 'Content-Type: application/json' \
-                "${api}/v11/projects?teamId=${VERCEL_TEAM_ID}" \
-                --data "$payload")"
-              test "$create_status" = '200' -o "$create_status" = '201'
-            fi
-          else
-            test "$status" = '200'
-          fi
-
-          NEW_PROJECT_ID="$(jq -r '.id' /tmp/project.json)"
+          project="$(curl --fail --silent --show-error \
+            -H "Authorization: Bearer ${VERCEL_TOKEN}" \
+            "https://api.vercel.com/v9/projects/${NEW_PROJECT}?teamId=${VERCEL_TEAM_ID}")"
+          NEW_PROJECT_ID="$(printf '%s' "$project" | jq -r '.id')"
           test -n "$NEW_PROJECT_ID" -a "$NEW_PROJECT_ID" != 'null'
+          test "$(printf '%s' "$project" | jq -r '.name')" = "$NEW_PROJECT"
           echo "NEW_PROJECT_ID=$NEW_PROJECT_ID" >> "$GITHUB_ENV"
           echo "PCO Vercel project: $NEW_PROJECT_ID"
 
-      - name: Deploy latest canonical PCO source
+      - name: Verify canonical PCO source and ready production deployment
         shell: bash
         run: |
           set -euo pipefail
@@ -71,41 +47,27 @@ jobs:
           git clone --depth=1 "https://github.com/${PCO_REPO}.git" /tmp/fmb-pco
           cd /tmp/fmb-pco
           test -f index.html
+          grep -qi 'Francine' index.html
           test -f vercel.json
           grep -q 'fmb-news.info-senz-pr.workers.dev/news/' vercel.json
           ! grep -q 'FMB-Ecosystem' vercel.json
-          mkdir -p .vercel
-          printf '{"projectId":"%s","orgId":"%s"}\n' "$NEW_PROJECT_ID" "$VERCEL_TEAM_ID" > .vercel/project.json
 
-          npx --yes vercel@56.5.0 deploy --prod --yes \
-            --token="$VERCEL_TOKEN" \
-            --scope="$VERCEL_TEAM_SLUG"
-
-          project="$(curl --fail --silent --show-error \
+          deployments="$(curl --fail --silent --show-error \
             -H "Authorization: Bearer ${VERCEL_TOKEN}" \
-            "https://api.vercel.com/v9/projects/${NEW_PROJECT_ID}?teamId=${VERCEL_TEAM_ID}")"
-          linked_repo="$(printf '%s' "$project" | jq -r '.link.repo // empty')"
-          if [ "$linked_repo" != 'PCO' ] && [ "$linked_repo" != "$PCO_REPO" ]; then
-            echo "Current Git link is '${linked_repo:-none}'. Attempting to connect the PCO checkout."
-            npx --yes vercel@56.5.0 git connect --yes \
-              --token="$VERCEL_TOKEN" \
-              --scope="$VERCEL_TEAM_SLUG" || true
-          fi
+            "https://api.vercel.com/v13/deployments?projectId=${NEW_PROJECT_ID}&target=production&limit=1&teamId=${VERCEL_TEAM_ID}")"
+          state="$(printf '%s' "$deployments" | jq -r '.deployments[0].readyState // .deployments[0].state // empty')"
+          host="$(printf '%s' "$deployments" | jq -r '.deployments[0].url // empty')"
+          test "$state" = 'READY'
+          test -n "$host"
+          echo "Ready PCO production deployment: https://${host}"
 
-      - name: Verify new PCO deployment before domain move
-        shell: bash
-        run: |
-          set -euo pipefail
-          base='https://fmb-pco.vercel.app'
-          echo "Verifying ${base}"
-          curl --fail --location --silent --show-error --max-time 30 "${base}/?preflight=${GITHUB_SHA}" -o /tmp/root.html
-          grep -qi 'Francine' /tmp/root.html
-          curl --fail --location --silent --show-error --max-time 30 "${base}/news/?preflight=${GITHUB_SHA}" -o /tmp/news.html
+          curl --fail --location --silent --show-error --max-time 30 \
+            'https://fmb-news.info-senz-pr.workers.dev/news/' -o /tmp/news.html
           grep -qi 'FMB News' /tmp/news.html
           curl --fail --location --silent --show-error --max-time 30 \
-            "${base}/news/sara-duterte-arrest-warrant-grave-threats-september-4-2026/?preflight=${GITHUB_SHA}" -o /tmp/article.html
+            'https://fmb-news.info-senz-pr.workers.dev/news/sara-duterte-arrest-warrant-grave-threats-september-4-2026/' -o /tmp/article.html
           grep -qi 'QC Court Issues Arrest Warrant Against VP Sara Duterte' /tmp/article.html
-          echo 'New PCO deployment and FMB News rewrite verified before domain move.'
+          echo 'PCO source, PCO production deployment, and FMB News origin verified.'
 
       - name: Move apex and www from legacy project to PCO
         shell: bash
@@ -113,6 +75,23 @@ jobs:
           set -euo pipefail
           api='https://api.vercel.com'
           for domain in www.francinemariebautista.com francinemariebautista.com; do
+            old="$(curl --silent --show-error \
+              -H "Authorization: Bearer ${VERCEL_TOKEN}" \
+              "${api}/v9/projects/${OLD_PROJECT}/domains/${domain}?teamId=${VERCEL_TEAM_ID}" || true)"
+            new="$(curl --silent --show-error \
+              -H "Authorization: Bearer ${VERCEL_TOKEN}" \
+              "${api}/v9/projects/${NEW_PROJECT_ID}/domains/${domain}?teamId=${VERCEL_TEAM_ID}" || true)"
+
+            if printf '%s' "$new" | jq -e --arg d "$domain" '.name == $d' >/dev/null 2>&1; then
+              echo "Already on PCO: ${domain}"
+              continue
+            fi
+
+            if ! printf '%s' "$old" | jq -e --arg d "$domain" '.name == $d' >/dev/null 2>&1; then
+              echo "::error::${domain} is neither on the legacy project nor already on PCO; refusing to guess."
+              exit 1
+            fi
+
             echo "Moving ${domain} to ${NEW_PROJECT_ID}"
             response="$(curl --fail --silent --show-error -X POST \
               -H "Authorization: Bearer ${VERCEL_TOKEN}" \
@@ -150,7 +129,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for attempt in $(seq 1 15); do
+          for attempt in $(seq 1 20); do
             root_status="$(curl -sS -L -o /tmp/root.html -D /tmp/root.h -w '%{http_code}' --max-time 30 -H 'Cache-Control: no-cache' "https://www.francinemariebautista.com/?cutover=${GITHUB_SHA}-${attempt}" || true)"
             news_status="$(curl -sS -L -o /tmp/news.html -D /tmp/news.h -w '%{http_code}' --max-time 30 -H 'Cache-Control: no-cache' "https://www.francinemariebautista.com/news/?cutover=${GITHUB_SHA}-${attempt}" || true)"
             article_status="$(curl -sS -L -o /tmp/article.html -D /tmp/article.h -w '%{http_code}' --max-time 30 -H 'Cache-Control: no-cache' "https://www.francinemariebautista.com/news/sara-duterte-arrest-warrant-grave-threats-september-4-2026/?cutover=${GITHUB_SHA}-${attempt}" || true)"
@@ -159,9 +138,10 @@ jobs:
               && grep -qi 'Francine' /tmp/root.html \
               && grep -qi 'FMB News' /tmp/news.html \
               && grep -qi 'QC Court Issues Arrest Warrant Against VP Sara Duterte' /tmp/article.html; then
+              echo 'Canonical routes verified.'
               break
             fi
-            if [ "$attempt" = '15' ]; then
+            if [ "$attempt" = '20' ]; then
               echo '::error::Canonical production routes did not verify after domain move.'
               cat /tmp/root.h || true
               cat /tmp/news.h || true
@@ -180,13 +160,10 @@ jobs:
           old_project="$(curl --fail --silent --show-error \
             -H "Authorization: Bearer ${VERCEL_TOKEN}" \
             "https://api.vercel.com/v9/projects/${OLD_PROJECT}?teamId=${VERCEL_TEAM_ID}")"
-          printf '%s' "$old_project" | jq -e '.link == null' >/dev/null
           if printf '%s' "$old_project" | jq -e '.domains[]? | select(test("(^|\\.)francinemariebautista\\.com$|(^|\\.)thecognitainstitute\\.com$"))' >/dev/null; then
             echo '::error::Legacy withlovefmb still owns a protected production domain.'
             printf '%s' "$old_project" | jq '.domains'
             exit 1
           fi
 
-          linked_repo="$(printf '%s' "$new_project" | jq -r '.link.repo // empty')"
-          echo "PCO project Git link: ${linked_repo:-none}"
           echo 'RESOLVED: production domains moved off withlovefmb; PCO owns the main site and /news resolves to FMB News.'
