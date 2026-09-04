@@ -96,6 +96,16 @@ await cp(personalWebsite, outputDirectory, {
 });
 await rm(path.join(outputDirectory, 'news'), { recursive: true, force: true });
 
+// The parent-site sitemap must not advertise routes that belong to FMBNews.
+const sitemapPath = path.join(outputDirectory, 'sitemap.xml');
+let sitemapXml = await readFile(sitemapPath, 'utf8');
+sitemapXml = sitemapXml.replace(/^\s*<url>.*<loc>https:\/\/www\.francinemariebautista\.com\/news\/.*<\/url>\s*$/gm, '');
+sitemapXml = sitemapXml.replace(/\n{3,}/g, '\n\n');
+if (sitemapXml.includes('https://www.francinemariebautista.com/news/')) {
+  throw new Error('Legacy sitemap guard failed: parent-site sitemap still advertises FMB News URLs.');
+}
+await writeFile(sitemapPath, sitemapXml, 'utf8');
+
 run('npm', ['run', 'build'], senzWebsite);
 await cp(senzOutput, path.join(privateSitesDirectory, 'senz'), { recursive: true });
 await materializeHomeImages({ outputDirectory });
