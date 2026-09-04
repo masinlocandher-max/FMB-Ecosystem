@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260821-public-media-retired-v27';
+const CACHE_NAME='fmb-app-shell-20260904-news-detached-v28';
 const YONI_HOSTS=new Set(['yoni.francinemariebautista.com']);
 const PUBLIC_PAGES=new Set([
   '/',
@@ -13,7 +13,6 @@ const PUBLIC_PAGES=new Set([
   '/communityengagements/',
   '/gethelp/',
   '/fmbandco/',
-  '/news/',
   '/privacy-policy.html',
   '/membership-agreement.html',
   '/community-guidelines.html',
@@ -70,6 +69,9 @@ self.addEventListener('activate',event=>{event.waitUntil((async()=>{const keys=a
 self.addEventListener('message',event=>{if(event.data?.type==='SKIP_WAITING')self.skipWaiting()});
 self.addEventListener('fetch',event=>{
   const request=event.request;if(request.method!=='GET')return;const url=new URL(request.url);if(url.origin!==self.location.origin)return;if(url.pathname==='/api/music'||request.headers.has('range'))return;
+  // FMB News is owned by the standalone FMBNews deployment. The legacy service
+  // worker must never intercept, cache, or provide an offline fallback for it.
+  if(url.pathname==='/news'||url.pathname.startsWith('/news/'))return;
   if(request.mode==='navigate'){
     event.respondWith((async()=>{try{const response=await fetch(request);if(response.ok&&PUBLIC_PAGES.has(url.pathname)){const cache=await caches.open(CACHE_NAME);cache.put(request,response.clone()).catch(()=>{})}return response}catch{const cached=await caches.match(request,{ignoreSearch:true});const yoniNavigation=YONI_HOSTS.has(url.hostname)||url.pathname.startsWith('/app/');return cached||await caches.match(yoniNavigation?'/app/index.html':'/index.html')||Response.error()}})());return;
   }
