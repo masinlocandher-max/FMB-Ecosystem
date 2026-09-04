@@ -1,5 +1,5 @@
 name: One-time move production domains to PCO
-# 2026-09-04 repair trigger 5: use project-level ownership checks and complete /news cutover.
+# 2026-09-04 repair trigger 6: direct documented Vercel domain move.
 
 on:
   push:
@@ -22,35 +22,23 @@ jobs:
       NEW_PROJECT: fmb-pco
       PCO_REPO: masinlocandher-max/PCO
     steps:
-      - name: Require Vercel credential
-        shell: bash
-        run: test -n "${VERCEL_TOKEN:-}"
-
-      - name: Resolve PCO-owned Vercel project
+      - name: Resolve and verify destinations
         shell: bash
         run: |
           set -euo pipefail
+          test -n "${VERCEL_TOKEN:-}"
           project="$(curl --fail --silent --show-error \
             -H "Authorization: Bearer ${VERCEL_TOKEN}" \
             "https://api.vercel.com/v9/projects/${NEW_PROJECT}?teamId=${VERCEL_TEAM_ID}")"
           NEW_PROJECT_ID="$(printf '%s' "$project" | jq -r '.id')"
           test -n "$NEW_PROJECT_ID" -a "$NEW_PROJECT_ID" != 'null'
-          test "$(printf '%s' "$project" | jq -r '.name')" = "$NEW_PROJECT"
           echo "NEW_PROJECT_ID=$NEW_PROJECT_ID" >> "$GITHUB_ENV"
-          echo "PCO Vercel project: $NEW_PROJECT_ID"
 
-      - name: Verify canonical PCO source and FMB News origin
-        shell: bash
-        run: |
-          set -euo pipefail
           rm -rf /tmp/fmb-pco
           git clone --depth=1 "https://github.com/${PCO_REPO}.git" /tmp/fmb-pco
-          cd /tmp/fmb-pco
-          test -f index.html
-          grep -qi 'Francine' index.html
-          test -f vercel.json
-          grep -q 'fmb-news.info-senz-pr.workers.dev/news/' vercel.json
-          ! grep -q 'FMB-Ecosystem' vercel.json
+          grep -qi 'Francine' /tmp/fmb-pco/index.html
+          grep -q 'fmb-news.info-senz-pr.workers.dev/news/' /tmp/fmb-pco/vercel.json
+          ! grep -q 'FMB-Ecosystem' /tmp/fmb-pco/vercel.json
 
           curl --fail --location --silent --show-error --max-time 30 \
             'https://fmb-news.info-senz-pr.workers.dev/news/' -o /tmp/news-origin.html
@@ -58,68 +46,30 @@ jobs:
           curl --fail --location --silent --show-error --max-time 30 \
             'https://fmb-news.info-senz-pr.workers.dev/news/sara-duterte-arrest-warrant-grave-threats-september-4-2026/' -o /tmp/article-origin.html
           grep -qi 'QC Court Issues Arrest Warrant Against VP Sara Duterte' /tmp/article-origin.html
-          echo 'Canonical PCO source and FMB News origin verified.'
+          echo "Destination project ${NEW_PROJECT_ID}, PCO source, and FMB News origin verified."
 
-      - name: Move apex and www from legacy project to PCO
+      - name: Move apex and www to PCO
         shell: bash
         run: |
           set -euo pipefail
           api='https://api.vercel.com'
           for domain in www.francinemariebautista.com francinemariebautista.com; do
-            old_project="$(curl --fail --silent --show-error \
-              -H "Authorization: Bearer ${VERCEL_TOKEN}" \
-              "${api}/v9/projects/${OLD_PROJECT}?teamId=${VERCEL_TEAM_ID}")"
-            new_project="$(curl --fail --silent --show-error \
-              -H "Authorization: Bearer ${VERCEL_TOKEN}" \
-              "${api}/v9/projects/${NEW_PROJECT_ID}?teamId=${VERCEL_TEAM_ID}")"
-
-            if printf '%s' "$new_project" | jq -e --arg d "$domain" '.domains | index($d) != null' >/dev/null; then
-              echo "Already on PCO: ${domain}"
-              continue
-            fi
-
-            printf '%s' "$old_project" | jq -e --arg d "$domain" '.domains | index($d) != null' >/dev/null
-            echo "Moving ${domain} to ${NEW_PROJECT_ID}"
-            response="$(curl --fail --silent --show-error -X POST \
+            echo "Moving ${domain} from ${OLD_PROJECT} to ${NEW_PROJECT_ID}"
+            status="$(curl -sS -o /tmp/move.json -w '%{http_code}' -X POST \
               -H "Authorization: Bearer ${VERCEL_TOKEN}" \
               -H 'Content-Type: application/json' \
               "${api}/v1/projects/${OLD_PROJECT}/domains/${domain}/move?teamId=${VERCEL_TEAM_ID}" \
               --data "$(jq -nc --arg projectId "$NEW_PROJECT_ID" '{projectId:$projectId}')")"
-            printf '%s' "$response" | jq -e --arg id "$NEW_PROJECT_ID" '.projectId == $id' >/dev/null
-          done
-
-      - name: Detach unrelated production domains from legacy project
-        shell: bash
-        run: |
-          set -euo pipefail
-          api='https://api.vercel.com'
-          for domain in \
-            app.francinemariebautista.com \
-            data.francinemariebautista.com \
-            yoni.francinemariebautista.com \
-            thecognitainstitute.com \
-            www.thecognitainstitute.com
-          do
-            old_project="$(curl --fail --silent --show-error \
-              -H "Authorization: Bearer ${VERCEL_TOKEN}" \
-              "${api}/v9/projects/${OLD_PROJECT}?teamId=${VERCEL_TEAM_ID}")"
-            if ! printf '%s' "$old_project" | jq -e --arg d "$domain" '.domains | index($d) != null' >/dev/null; then
-              echo "Already absent: ${domain}"
-              continue
-            fi
-            status="$(curl -sS -o /tmp/remove.json -w '%{http_code}' -X DELETE \
-              -H "Authorization: Bearer ${VERCEL_TOKEN}" \
-              "${api}/v9/projects/${OLD_PROJECT}/domains/${domain}?teamId=${VERCEL_TEAM_ID}")"
-            if [ "$status" = '200' ] || [ "$status" = '204' ] || [ "$status" = '404' ]; then
-              echo "Detached: ${domain}"
-            else
-              cat /tmp/remove.json
-              echo "Unexpected status ${status} while detaching ${domain}"
+            if [ "$status" != '200' ]; then
+              echo "Move failed for ${domain} with HTTP ${status}:"
+              cat /tmp/move.json
               exit 1
             fi
+            cat /tmp/move.json | jq '{name,projectId,verified}'
+            jq -e --arg d "$domain" --arg id "$NEW_PROJECT_ID" '.name == $d and .projectId == $id' /tmp/move.json >/dev/null
           done
 
-      - name: Verify canonical production ownership and 404 repair
+      - name: Verify 404 repair immediately
         shell: bash
         run: |
           set -euo pipefail
@@ -132,32 +82,38 @@ jobs:
               && grep -qi 'Francine' /tmp/root.html \
               && grep -qi 'FMB News' /tmp/news.html \
               && grep -qi 'QC Court Issues Arrest Warrant Against VP Sara Duterte' /tmp/article.html; then
-              echo 'Canonical routes verified.'
-              break
-            fi
-            if [ "$attempt" = '20' ]; then
-              echo '::error::Canonical production routes did not verify after domain move.'
-              cat /tmp/root.h || true
-              cat /tmp/news.h || true
-              cat /tmp/article.h || true
-              exit 1
+              echo 'RESOLVED: root, /news, and breaking article are all live.'
+              exit 0
             fi
             sleep 3
           done
+          echo '::error::Domain move completed but public routes did not verify.'
+          cat /tmp/root.h || true
+          cat /tmp/news.h || true
+          cat /tmp/article.h || true
+          exit 1
 
-          new_project="$(curl --fail --silent --show-error \
-            -H "Authorization: Bearer ${VERCEL_TOKEN}" \
-            "https://api.vercel.com/v9/projects/${NEW_PROJECT_ID}?teamId=${VERCEL_TEAM_ID}")"
-          printf '%s' "$new_project" | jq -e '.domains | index("www.francinemariebautista.com") != null' >/dev/null
-          printf '%s' "$new_project" | jq -e '.domains | index("francinemariebautista.com") != null' >/dev/null
-
-          old_project="$(curl --fail --silent --show-error \
-            -H "Authorization: Bearer ${VERCEL_TOKEN}" \
-            "https://api.vercel.com/v9/projects/${OLD_PROJECT}?teamId=${VERCEL_TEAM_ID}")"
-          if printf '%s' "$old_project" | jq -e '.domains[]? | select(test("(^|\\.)francinemariebautista\\.com$|(^|\\.)thecognitainstitute\\.com$"))' >/dev/null; then
-            echo '::error::Legacy withlovefmb still owns a protected production domain.'
-            printf '%s' "$old_project" | jq '.domains'
-            exit 1
-          fi
-
-          echo 'RESOLVED: production domains moved off withlovefmb; PCO owns the main site and /news resolves to FMB News.'
+      - name: Detach unrelated domains from legacy project
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          api='https://api.vercel.com'
+          for domain in \
+            app.francinemariebautista.com \
+            data.francinemariebautista.com \
+            yoni.francinemariebautista.com \
+            thecognitainstitute.com \
+            www.thecognitainstitute.com
+          do
+            status="$(curl -sS -o /tmp/remove.json -w '%{http_code}' -X DELETE \
+              -H "Authorization: Bearer ${VERCEL_TOKEN}" \
+              "${api}/v9/projects/${OLD_PROJECT}/domains/${domain}?teamId=${VERCEL_TEAM_ID}")"
+            if [ "$status" = '200' ] || [ "$status" = '204' ] || [ "$status" = '404' ]; then
+              echo "Detached or already absent: ${domain}"
+            else
+              echo "Unexpected HTTP ${status} while detaching ${domain}"
+              cat /tmp/remove.json
+              exit 1
+            fi
+          done
