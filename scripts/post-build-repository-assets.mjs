@@ -116,9 +116,7 @@ await writeFile(cognitaAliasPath,`<svg xmlns="http://www.w3.org/2000/svg" viewBo
 
 const assignments={
   'index.html':[publicPath('masterTransparent'),publicPath('standingLandscape'),publicPath('seatedLandscape')],
-  'news/index.html':[publicPath('news')],
-  'music/index.html':[publicPath('music')],
-  'ebooks/index.html':[publicPath('ebook')]
+  'news/index.html':[publicPath('news')]
 };
 for(const [relative,markers] of Object.entries(assignments)){
   const html=await readFile(path.join(root,relative),'utf8');
@@ -137,4 +135,4 @@ for(const file of files){
   for(const marker of retired)if(text.includes(marker))throw new Error(`${path.relative(root,file)} still renders retired asset ${marker}`);
 }
 
-console.log(`Verified ${manifest.assets.length} exact uploaded masters, normalized nested route paths, added the official Cognita compatibility alias, and replaced ${changedReferences} retired references across ${changedFiles} final files.`);
+console.log(`Verified ${manifest.assets.length} exact uploaded masters, normalized nested route paths, added the official Cognita compatibility alias, and replaced ${changedReferences} retired references across ${changedFiles} final files; retired Reading/Music pages are no longer required.`);

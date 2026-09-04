@@ -3,8 +3,6 @@ import path from 'node:path';
 
 const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
 const newsRoot = path.join(repositoryRoot, 'dist', 'news');
-const fallbackPath = '/assets/images/news/newsroom-editorial-fallback.svg';
-const fallbackUrl = `https://www.francinemariebautista.com${fallbackPath}`;
 const retiredRelative = [
   '/assets/images/fmb-approved/fmb-news-official-transparent.webp',
   '/assets/images/news/fmb-news-official.svg',
@@ -26,7 +24,7 @@ function footerMasthead() {
 }
 
 let cleanedPages = 0;
-let fallbackPages = 0;
+let withheldMediaPages = 0;
 for (const filePath of await walk(newsRoot)) {
   let html = await readFile(filePath, 'utf8');
   if (!/\bnews-story-route\b/.test(html)) continue;
@@ -37,32 +35,12 @@ for (const filePath of await walk(newsRoot)) {
   );
 
   const hadRetiredMedia = [...retiredRelative, ...retiredAbsolute].some(value => html.includes(value));
-  for (const value of retiredRelative) html = html.replaceAll(value, fallbackPath);
-  for (const value of retiredAbsolute) html = html.replaceAll(value, fallbackUrl);
-
   if (hadRetiredMedia) {
     html = html
-      .replace(/<meta property="og:image:width" content="[^"]*">/i, '<meta property="og:image:width" content="1536">')
-      .replace(/<meta property="og:image:height" content="[^"]*">/i, '<meta property="og:image:height" content="864">')
-      .replace(/<meta property="og:image:alt" content="[^"]*">/i, '<meta property="og:image:alt" content="FMB News Center editorial report title card">')
-      .replace(/<meta name="twitter:card" content="summary">/i, '<meta name="twitter:card" content="summary_large_image">')
-      .replace(/FMB News identity\.?/gi, 'Original FMB News Center editorial title card.')
-      .replace(/Official FMB News identity/gi, 'FMB News Center editorial report title card');
-
-    html = html.replace(
-      /<img\b[^>]*\bsrc=["']\/assets\/images\/news\/newsroom-editorial-fallback\.svg["'][^>]*>/gi,
-      tag => {
-        let next = tag
-          .replace(/\bwidth=["'][^"']*["']/i, 'width="1536"')
-          .replace(/\bheight=["'][^"']*["']/i, 'height="864"')
-          .replace(/\balt=["'][^"']*["']/i, 'alt="FMB News Center editorial report title card"');
-        if (!/\bwidth=/i.test(next)) next = next.replace('<img', '<img width="1536"');
-        if (!/\bheight=/i.test(next)) next = next.replace('<img', '<img height="864"');
-        if (!/\balt=/i.test(next)) next = next.replace('<img', '<img alt="FMB News Center editorial report title card"');
-        return next;
-      },
-    );
-    fallbackPages += 1;
+      .replace(/<source\b[^>]*(?:fmb-news-official-transparent\.webp|fmb-news-official\.svg)[^>]*>\s*/gi, '')
+      .replace(/<img\b[^>]*(?:fmb-news-official-transparent\.webp|fmb-news-official\.svg)[^>]*>\s*/gi, '')
+      .replace(/<meta\b[^>]*content=["'][^"']*(?:fmb-news-official-transparent\.webp|fmb-news-official\.svg)[^"']*["'][^>]*>\s*/gi, '');
+    withheldMediaPages += 1;
   }
 
   if (/<(?:img|source)\b[^>]*(?:src|srcset)=["'][^"']*(?:fmb-news-official-transparent\.webp|fmb-news-official\.svg)/i.test(html)) {
@@ -72,4 +50,4 @@ for (const filePath of await walk(newsRoot)) {
   cleanedPages += 1;
 }
 
-console.log(`Normalized ${cleanedPages} FMB News Center report footers and replaced retired-logo media with an editorial fallback on ${fallbackPages} page(s).`);
+console.log(`Normalized ${cleanedPages} FMB News Center report footers and removed retired-logo media from ${withheldMediaPages} page(s); those reports stay out of image-led listings until a real photo is attached.`);

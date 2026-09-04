@@ -8,7 +8,7 @@ const dist=path.join(root,'dist');
 const news=path.join(dist,'news');
 const fmb=path.join(dist,'fmbnews');
 function mainLandmark(main){return main.replace(/<main\b([^>]*)>/i,(whole,attrs='')=>{attrs=attrs.replace(/\s+id=(['"])[^'"]*\1/i,'');return `<main id="main"${attrs}>`})}
-function cleanArticle(html,route,publishedAt=''){
+function cleanArticle(html,route,publishedAt='',attachedImage=''){
   const rawMain=html.match(/<main\b[^>]*>[\s\S]*?<\/main>/i)?.[0];
   if(!rawMain)return html;
   const brokenCognitaImage='/assets/images/cognita/ads/cognita-brand-banner.webp';
@@ -17,7 +17,7 @@ function cleanArticle(html,route,publishedAt=''){
   const title=cap(html,/<title>([\s\S]*?)<\/title>/i)||cap(main,/<h1\b[^>]*>([\s\S]*?)<\/h1>/i);
   const description=tag(html,/<meta\b[^>]*name=(['"])description\1[^>]*>/i,'content')||cap(main,/<p\b[^>]*class=(['"])[^'"]*\bnc-article-deck\b[^'"]*\1[^>]*>([\s\S]*?)<\/p>/i);
   const canonical=tag(html,/<link\b[^>]*rel=(['"])canonical\1[^>]*>/i,'href')||`https://www.francinemariebautista.com${route}`;
-  const rawImage=tag(html,/<meta\b[^>]*property=(['"])og:image\1[^>]*>/i,'content')||tag(main,/<img\b[^>]*>/i,'src')||logo;
+  const rawImage=attachedImage||tag(html,/<meta\b[^>]*property=(['"])og:image\1[^>]*>/i,'content')||tag(main,/<img\b[^>]*>/i,'src')||'';
   const image=rawImage.replace(brokenCognitaImage,cognitaFallback);
   const sourcePublished=tag(html,/<meta\b[^>]*property=(['"])article:published_time\1[^>]*>/i,'content')||publishedAt;
   const sourceUpdated=tag(html,/<meta\b[^>]*property=(['"])article:modified_time\1[^>]*>/i,'content');
@@ -45,7 +45,17 @@ const aboutAlias=redirectPage('/fmbnews/about/').replace('<meta name="robots"','
 await writeFile(path.join(news,'about','index.html'),aboutAlias,'utf8');
 let count=0;
 const recordsByRoute=new Map(records.map(record=>[record.route,record]));
-for(const file of await walk(news)){if(file===path.join(news,'index.html')||file===path.join(news,'about','index.html'))continue;const rel=path.relative(news,file).split(path.sep).join('/');if(!rel.endsWith('/index.html'))continue;const route=`/news/${rel.replace(/index\.html$/,'')}`;const before=await readFile(file,'utf8');const after=cleanArticle(before,route,recordsByRoute.get(route)?.publishedAt);if(after!==before){await writeFile(file,after,'utf8');count++}}
+for(const file of await walk(news)){
+  if(file===path.join(news,'index.html')||file===path.join(news,'about','index.html'))continue;
+  const rel=path.relative(news,file).split(path.sep).join('/');
+  if(!rel.endsWith('/index.html'))continue;
+  const route=`/news/${rel.replace(/index\.html$/,'')}`;
+  const record=recordsByRoute.get(route);
+  if(!record)continue;
+  const before=await readFile(file,'utf8');
+  const after=cleanArticle(before,route,record.publishedAt,record.image);
+  if(after!==before){await writeFile(file,after,'utf8');count++}
+}
 const final=await readFile(path.join(fmb,'index.html'),'utf8');
 if((final.match(/class="fnc-header"/g)||[]).length!==1||(final.match(/class="fnc-footer"/g)||[]).length!==1||/fmb-shell-header|fmb-shell-footer|fmb-news-livebar|fmb-news-channel-command/.test(final)||!final.includes(`data-published-at="${records[0].publishedAt}"`))throw new Error('FMB News clean recovery validation failed.');
-console.log(`Recovered FMB News with one canonical newsroom, ${records.length} reports and ${count} clean article pages.`);
+console.log(`Recovered FMB News with one canonical newsroom, ${records.length} image-backed reports and ${count} clean article pages; final route withholding runs after all article processors.`);

@@ -1,13 +1,14 @@
 import { createHash } from 'node:crypto';
 import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
+import { withMicrositeExclusions } from './lib/standalone-microsites.mjs';
 
 const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
 const sourceRoot=path.resolve(new URL('..',import.meta.url).pathname);
 const manifest=JSON.parse(await readFile(path.join(sourceRoot,'config/fmb-approved-assets.json'),'utf8'));
 const imageExtensions=new Set(['.png','.jpg','.jpeg','.webp','.gif','.svg']);
 const textExtensions=new Set(['.html','.css','.js','.json','.webmanifest','.xml']);
-const protectedPrefixes=['_sites/senz/','_sites/cognita/'];
+const protectedPrefixes=withMicrositeExclusions(['_sites/senz/','_sites/cognita/']);
 const errors=[];
 const verified=[];
 

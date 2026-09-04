@@ -6,6 +6,21 @@
   "trailingSlash": false,
   "redirects": [
     {
+      "source": "/fmbnews",
+      "destination": "/news/",
+      "permanent": true
+    },
+    {
+      "source": "/fmbnews/",
+      "destination": "/news/",
+      "permanent": true
+    },
+    {
+      "source": "/fmbnews/:path*",
+      "destination": "/news/:path*",
+      "permanent": true
+    },
+    {
       "source": "/data-center/:path*",
       "has": [{"type": "host", "value": "www.francinemariebautista.com"}],
       "destination": "https://data.francinemariebautista.com/",
@@ -30,6 +45,14 @@
   ],
   "rewrites": [
     {
+      "source": "/MissIntercontinental",
+      "destination": "/MissIntercontinental/index.html"
+    },
+    {
+      "source": "/MissIntercontinental/",
+      "destination": "/MissIntercontinental/index.html"
+    },
+    {
       "source": "/about-francine-marie-bautista/early-life-pageantry-advocacy",
       "destination": "/about-francine-marie-bautista/early-life-pageantry-advocacy/index.html"
     },
@@ -46,6 +69,36 @@
       "source": "/",
       "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
       "destination": "/app/index.html"
+    },
+    {
+      "source": "/reading.html",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/app/content/books/reading.html"
+    },
+    {
+      "source": "/womens-health.html",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/app/content/books/womens-health.html"
+    },
+    {
+      "source": "/skin-care-makeup.html",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/app/content/books/skin-care-makeup.html"
+    },
+    {
+      "source": "/coming-out-respect.html",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/app/content/books/coming-out-respect.html"
+    },
+    {
+      "source": "/men-can-cry.html",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/app/content/books/men-can-cry.html"
+    },
+    {
+      "source": "/dress-with-intention.html",
+      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "destination": "/app/content/books/dress-with-intention.html"
     },
     {
       "source": "/app/:path*",

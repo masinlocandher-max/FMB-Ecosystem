@@ -1,9 +1,10 @@
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { withMicrositeExclusions } from './lib/standalone-microsites.mjs';
 
 const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.join(repositoryRoot, 'dist');
-const excludedPrefixes = ['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/'];
+const excludedPrefixes = withMicrositeExclusions(['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/']);
 const excludedFiles = new Set([
   'admin.html',
   'admin-login.html',
@@ -44,3 +45,8 @@ for (const file of await walk(dist)) {
 }
 
 console.log(`Vercel Web Analytics and Speed Insights added to ${updated} public FMB page(s).`);
+
+// The chronology renderer is deliberately last in the public-news mutation chain.
+// It makes publication date + exact Philippine time authoritative regardless of
+// older category, archive, or visual post-build layers.
+await import('./post-build-fmbnews-chronology-final.mjs');
