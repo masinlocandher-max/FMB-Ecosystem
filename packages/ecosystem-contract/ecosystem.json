@@ -2,8 +2,8 @@
   "$schema": "./ecosystem.schema.json",
   "repository": "masinlocandher-max/FMB-Ecosystem",
   "policy": {
-    "sourceControl": "One GitHub monorepo",
-    "deployment": "One independently configured Vercel project per application boundary",
+    "sourceControl": "This monorepo is authoritative only for the applications listed in this contract. Standalone FMB applications may have separate canonical repositories; FMB News is explicitly external at masinlocandher-max/FMBNews.",
+    "deployment": "One independently configured Vercel project per application boundary listed here. FMB News is excluded and deploys independently through Cloudflare from masinlocandher-max/FMBNews.",
     "data": "No production database, authentication tenant, service-role key, or private environment variable may be shared across FMB/Yoni, SENZ, and Cognita unless explicitly approved and documented."
   },
   "applications": {
@@ -22,7 +22,6 @@
         "FMB public website",
         "With love, FMB",
         "Yoni",
-        "FMB News",
         "FMB Music",
         "FMB eBooks",
         "Mabayani public pages"
