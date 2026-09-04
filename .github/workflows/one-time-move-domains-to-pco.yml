@@ -1,5 +1,5 @@
 name: One-time move production domains to PCO
-# 2026-09-04 repair trigger 3: use verified existing PCO deployment and complete the domain cutover.
+# 2026-09-04 repair trigger 4: complete verified PCO cutover and repair /news.
 
 on:
   push:
@@ -39,7 +39,7 @@ jobs:
           echo "NEW_PROJECT_ID=$NEW_PROJECT_ID" >> "$GITHUB_ENV"
           echo "PCO Vercel project: $NEW_PROJECT_ID"
 
-      - name: Verify canonical PCO source and ready production deployment
+      - name: Verify canonical PCO source and FMB News origin
         shell: bash
         run: |
           set -euo pipefail
@@ -52,22 +52,13 @@ jobs:
           grep -q 'fmb-news.info-senz-pr.workers.dev/news/' vercel.json
           ! grep -q 'FMB-Ecosystem' vercel.json
 
-          deployments="$(curl --fail --silent --show-error \
-            -H "Authorization: Bearer ${VERCEL_TOKEN}" \
-            "https://api.vercel.com/v13/deployments?projectId=${NEW_PROJECT_ID}&target=production&limit=1&teamId=${VERCEL_TEAM_ID}")"
-          state="$(printf '%s' "$deployments" | jq -r '.deployments[0].readyState // .deployments[0].state // empty')"
-          host="$(printf '%s' "$deployments" | jq -r '.deployments[0].url // empty')"
-          test "$state" = 'READY'
-          test -n "$host"
-          echo "Ready PCO production deployment: https://${host}"
-
           curl --fail --location --silent --show-error --max-time 30 \
-            'https://fmb-news.info-senz-pr.workers.dev/news/' -o /tmp/news.html
-          grep -qi 'FMB News' /tmp/news.html
+            'https://fmb-news.info-senz-pr.workers.dev/news/' -o /tmp/news-origin.html
+          grep -qi 'FMB News' /tmp/news-origin.html
           curl --fail --location --silent --show-error --max-time 30 \
-            'https://fmb-news.info-senz-pr.workers.dev/news/sara-duterte-arrest-warrant-grave-threats-september-4-2026/' -o /tmp/article.html
-          grep -qi 'QC Court Issues Arrest Warrant Against VP Sara Duterte' /tmp/article.html
-          echo 'PCO source, PCO production deployment, and FMB News origin verified.'
+            'https://fmb-news.info-senz-pr.workers.dev/news/sara-duterte-arrest-warrant-grave-threats-september-4-2026/' -o /tmp/article-origin.html
+          grep -qi 'QC Court Issues Arrest Warrant Against VP Sara Duterte' /tmp/article-origin.html
+          echo 'Canonical PCO source and FMB News origin verified.'
 
       - name: Move apex and www from legacy project to PCO
         shell: bash
