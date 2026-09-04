@@ -96,19 +96,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          deployments="$(curl --fail --silent --show-error \
-            -H "Authorization: Bearer ${VERCEL_TOKEN}" \
-            "https://api.vercel.com/v13/deployments?projectId=${NEW_PROJECT_ID}&target=production&limit=1&teamId=${VERCEL_TEAM_ID}")"
-          host="$(printf '%s' "$deployments" | jq -r '.deployments[0].url')"
-          test -n "$host" -a "$host" != 'null'
-          base="https://${host}"
+          base='https://fmb-pco.vercel.app'
           echo "Verifying ${base}"
-          curl --fail --location --silent --show-error --max-time 30 "${base}/" -o /tmp/root.html
+          curl --fail --location --silent --show-error --max-time 30 "${base}/?preflight=${GITHUB_SHA}" -o /tmp/root.html
           grep -qi 'Francine' /tmp/root.html
-          curl --fail --location --silent --show-error --max-time 30 "${base}/news/" -o /tmp/news.html
+          curl --fail --location --silent --show-error --max-time 30 "${base}/news/?preflight=${GITHUB_SHA}" -o /tmp/news.html
           grep -qi 'FMB News' /tmp/news.html
           curl --fail --location --silent --show-error --max-time 30 \
-            "${base}/news/sara-duterte-arrest-warrant-grave-threats-september-4-2026/" -o /tmp/article.html
+            "${base}/news/sara-duterte-arrest-warrant-grave-threats-september-4-2026/?preflight=${GITHUB_SHA}" -o /tmp/article.html
           grep -qi 'QC Court Issues Arrest Warrant Against VP Sara Duterte' /tmp/article.html
           echo 'New PCO deployment and FMB News rewrite verified before domain move.'
 
