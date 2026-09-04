@@ -1,5 +1,5 @@
 name: One-time move production domains to PCO
-# 2026-09-04 repair trigger 4: complete verified PCO cutover and repair /news.
+# 2026-09-04 repair trigger 5: use project-level ownership checks and complete /news cutover.
 
 on:
   push:
@@ -66,23 +66,19 @@ jobs:
           set -euo pipefail
           api='https://api.vercel.com'
           for domain in www.francinemariebautista.com francinemariebautista.com; do
-            old="$(curl --silent --show-error \
+            old_project="$(curl --fail --silent --show-error \
               -H "Authorization: Bearer ${VERCEL_TOKEN}" \
-              "${api}/v9/projects/${OLD_PROJECT}/domains/${domain}?teamId=${VERCEL_TEAM_ID}" || true)"
-            new="$(curl --silent --show-error \
+              "${api}/v9/projects/${OLD_PROJECT}?teamId=${VERCEL_TEAM_ID}")"
+            new_project="$(curl --fail --silent --show-error \
               -H "Authorization: Bearer ${VERCEL_TOKEN}" \
-              "${api}/v9/projects/${NEW_PROJECT_ID}/domains/${domain}?teamId=${VERCEL_TEAM_ID}" || true)"
+              "${api}/v9/projects/${NEW_PROJECT_ID}?teamId=${VERCEL_TEAM_ID}")"
 
-            if printf '%s' "$new" | jq -e --arg d "$domain" '.name == $d' >/dev/null 2>&1; then
+            if printf '%s' "$new_project" | jq -e --arg d "$domain" '.domains | index($d) != null' >/dev/null; then
               echo "Already on PCO: ${domain}"
               continue
             fi
 
-            if ! printf '%s' "$old" | jq -e --arg d "$domain" '.name == $d' >/dev/null 2>&1; then
-              echo "::error::${domain} is neither on the legacy project nor already on PCO; refusing to guess."
-              exit 1
-            fi
-
+            printf '%s' "$old_project" | jq -e --arg d "$domain" '.domains | index($d) != null' >/dev/null
             echo "Moving ${domain} to ${NEW_PROJECT_ID}"
             response="$(curl --fail --silent --show-error -X POST \
               -H "Authorization: Bearer ${VERCEL_TOKEN}" \
@@ -104,11 +100,18 @@ jobs:
             thecognitainstitute.com \
             www.thecognitainstitute.com
           do
+            old_project="$(curl --fail --silent --show-error \
+              -H "Authorization: Bearer ${VERCEL_TOKEN}" \
+              "${api}/v9/projects/${OLD_PROJECT}?teamId=${VERCEL_TEAM_ID}")"
+            if ! printf '%s' "$old_project" | jq -e --arg d "$domain" '.domains | index($d) != null' >/dev/null; then
+              echo "Already absent: ${domain}"
+              continue
+            fi
             status="$(curl -sS -o /tmp/remove.json -w '%{http_code}' -X DELETE \
               -H "Authorization: Bearer ${VERCEL_TOKEN}" \
               "${api}/v9/projects/${OLD_PROJECT}/domains/${domain}?teamId=${VERCEL_TEAM_ID}")"
             if [ "$status" = '200' ] || [ "$status" = '204' ] || [ "$status" = '404' ]; then
-              echo "Detached or already absent: ${domain}"
+              echo "Detached: ${domain}"
             else
               cat /tmp/remove.json
               echo "Unexpected status ${status} while detaching ${domain}"
