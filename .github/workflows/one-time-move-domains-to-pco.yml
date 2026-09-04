@@ -1,4 +1,5 @@
 name: One-time move production domains to PCO
+# 2026-09-04 repair trigger: detach production domains from FMB-Ecosystem and repair /news.
 
 on:
   push:
