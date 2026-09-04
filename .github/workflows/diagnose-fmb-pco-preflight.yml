@@ -1,4 +1,5 @@
 name: Diagnose fmb-pco preflight
+# rerun after PCO trailing-slash rewrite fix
 
 on:
   push:
