@@ -6,10 +6,11 @@
   "workspaces": ["apps/withlovefmb", "apps/senz", "apps/cognita", "packages/*"],
   "scripts": {
     "validate:content": "node scripts/validate-content.mjs",
+    "build:ecosystem": "node --import ./scripts/fetch-shim.mjs scripts/build-ecosystem.mjs",
     "apply:shared-shell": "node --import ./scripts/fetch-shim.mjs scripts/pipeline/apply-shared-shell.mjs",
     "verify:dist": "node --import ./scripts/fetch-shim.mjs scripts/pipeline/verify-dist.mjs",
-    "build": "npm run build:fmb && npm run build:senz && npm run build:cognita",
-    "build:all": "npm run build:fmb && npm run build:senz && npm run build:cognita",
+    "build": "npm run build:ecosystem",
+    "build:all": "npm run build:ecosystem",
     "build:fmb": "npm --workspace @fmb/withlovefmb run build",
     "build:senz": "npm --workspace @fmb/senz run build",
     "build:cognita": "npm --workspace base44-app run build",
