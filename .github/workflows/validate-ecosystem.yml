@@ -124,7 +124,7 @@ jobs:
           exit $STATUS
       - name: Preserve hard-audit log
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: fmb-hard-audit-${{ github.run_id }}
           path: fmb-hard-audit.log
@@ -142,7 +142,7 @@ jobs:
           grep -qi 'SENZ' dist/_sites/senz/index.html
           grep -qi 'Cognita' dist/_sites/cognita/index.html
       - name: Preserve audited preview output
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: fmb-audited-preview-${{ github.run_id }}
           path: dist
