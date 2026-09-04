@@ -11,18 +11,24 @@ permissions:
   contents: read
 
 jobs:
-  content-schema:
+  enforce-news-boundary:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: Validate FMB News content before builds
-        run: node scripts/validate-content.mjs
+      - name: Enforce standalone FMB News boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          test ! -d apps/withlovefmb/news
+          test ! -d apps/withlovefmb/content/news
+          test ! -e scripts/validate-content.mjs
+          ! grep -Eq '"validate:content"' package.json
+          ! grep -Eq '"source"[[:space:]]*:[[:space:]]*"/(news|fmbnews)' vercel.json
+          ! grep -Eq '"destination"[[:space:]]*:[[:space:]]*"/(news|fmbnews)' vercel.json
+          echo "FMB News boundary clean: newsroom code and routing are absent from FMB-Ecosystem."
 
   validate-static-sites:
-    needs: content-schema
+    needs: enforce-news-boundary
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -65,7 +71,7 @@ jobs:
           grep -qi 'SENZ' /tmp/senz-home.html
 
   validate-cognita:
-    needs: content-schema
+    needs: enforce-news-boundary
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -98,7 +104,7 @@ jobs:
           grep -qi 'Cognita' /tmp/cognita-home.html
 
   validate-unified-vercel-build:
-    needs: content-schema
+    needs: enforce-news-boundary
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -131,6 +137,7 @@ jobs:
           test -f dist/app/index.html
           test -f dist/_sites/senz/index.html
           test -f dist/_sites/cognita/index.html
+          test ! -d dist/news
           grep -qi 'Francine Marie Bautista\|With love, FMB' dist/index.html
           grep -qi 'SENZ' dist/_sites/senz/index.html
           grep -qi 'Cognita' dist/_sites/cognita/index.html
