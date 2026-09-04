@@ -5,7 +5,6 @@
   "description": "Legacy monorepo for the FMB personal site, SENZ, and Cognita applications. FMB News is maintained separately.",
   "workspaces": ["apps/withlovefmb", "apps/senz", "apps/cognita", "packages/*"],
   "scripts": {
-    "validate:content": "node scripts/validate-content.mjs",
     "build:ecosystem": "node --import ./scripts/fetch-shim.mjs scripts/build-ecosystem.mjs",
     "apply:shared-shell": "node --import ./scripts/fetch-shim.mjs scripts/pipeline/apply-shared-shell.mjs",
     "verify:dist": "node --import ./scripts/fetch-shim.mjs scripts/pipeline/verify-dist.mjs",
