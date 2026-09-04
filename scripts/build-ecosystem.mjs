@@ -80,7 +80,11 @@ await Promise.all([
 
 await rm(outputDirectory, { recursive: true, force: true });
 await mkdir(privateSitesDirectory, { recursive: true });
-const personalWebsiteBuildExclusions = new Set(['content', 'dist', 'node_modules']);
+
+// FMB News now lives exclusively in masinlocandher-max/FMBNews. Excluding the
+// legacy news and content trees here prevents the old monorepo from emitting
+// or rebuilding any /news surface.
+const personalWebsiteBuildExclusions = new Set(['content', 'dist', 'news', 'node_modules']);
 await cp(personalWebsite, outputDirectory, {
   recursive: true,
   filter: (source) => {
@@ -90,12 +94,13 @@ await cp(personalWebsite, outputDirectory, {
       && !['.rsync-tmp', '.DS_Store'].includes(path.basename(source));
   },
 });
+await rm(path.join(outputDirectory, 'news'), { recursive: true, force: true });
+
 run('npm', ['run', 'build'], senzWebsite);
 await cp(senzOutput, path.join(privateSitesDirectory, 'senz'), { recursive: true });
 await materializeHomeImages({ outputDirectory });
 
 await Promise.all([
-  injectStylesheet('news/index.html', '/assets/css/fmb-sitewide-gateway.css?v=20260721-responsive-v2'),
   injectStylesheet('aboutfmb/index.html', '/assets/css/aboutfmb-seamless.css?v=20260721-responsive-v2'),
   lockYoniFirstPaintIdentity(),
 ]);
@@ -112,10 +117,15 @@ await Promise.all([
   requireFile(path.join(outputDirectory, 'assets', 'images', 'home', 'francine-home-hero-hd.webp')),
   requireFile(path.join(outputDirectory, 'assets', 'images', 'home', 'francine-home-founder-hd.webp')),
   requireFile(path.join(outputDirectory, 'assets', 'images', 'home', 'home-image-manifest.json')),
-  requireFile(path.join(outputDirectory, 'assets', 'images', 'news', 'amor-deloso-share-1200x630.jpg')),
-  requireFile(path.join(outputDirectory, 'assets', 'images', 'news', 'fmbco-ai-water-founder-hero.svg')),
   requireFile(path.join(privateSitesDirectory, 'senz', 'index.html')),
   requireFile(path.join(privateSitesDirectory, 'cognita', 'index.html')),
 ]);
 
-console.log('FMB ecosystem build completed successfully with unified entity authority, repository-backed news images, direct HD homepage images, and retired public Reading/Music routes excluded.');
+try {
+  await stat(path.join(outputDirectory, 'news'));
+  throw new Error('Legacy FMB News build guard failed: dist/news must not exist.');
+} catch (error) {
+  if (error?.code !== 'ENOENT') throw error;
+}
+
+console.log('FMB ecosystem build completed without an FMB News surface. FMB News is owned by masinlocandher-max/FMBNews.');
