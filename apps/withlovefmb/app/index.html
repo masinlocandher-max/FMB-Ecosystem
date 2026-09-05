@@ -122,7 +122,6 @@ img{display:block;max-width:100%}
 .quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.quick-card{position:relative;min-height:155px;padding:18px;text-align:left;border:1px solid var(--line);border-radius:24px;background:rgba(255,255,255,.76);color:var(--ink);box-shadow:0 12px 34px rgba(76,43,25,.055);overflow:hidden}.quick-card:after{content:"";position:absolute;width:65px;height:65px;right:-22px;bottom:-24px;border-radius:50%;background:var(--orange-100);transition:transform .22s ease}.quick-card:hover:after{transform:scale(1.35)}.quick-card.wide{grid-column:1/-1;min-height:auto}.quick-card.quiet{background:rgba(247,242,255,.76)}.quick-card small{display:block;color:var(--orange-800);font-size:9px;font-weight:880;letter-spacing:.12em;text-transform:uppercase}.quick-card h3{margin-top:9px;font-size:16px;font-weight:850;line-height:1.2;color:var(--orange-900)}.quick-card p{margin-top:7px;color:var(--muted);font-size:11px;line-height:1.48}.quick-icon{display:grid;width:38px;height:38px;place-items:center;margin-bottom:12px;border-radius:13px;background:linear-gradient(145deg,var(--orange-100),#fff);color:var(--orange-700);font-size:17px}
 .today-card{padding:20px}.today-card h3{font-size:24px;letter-spacing:-.035em;color:var(--orange-900)}.today-card p{margin-top:8px;color:var(--muted);font-size:12px}.today-row{display:flex;align-items:center;gap:13px;margin-top:15px;padding-top:15px;border-top:1px solid var(--line)}.mood-mark,.mood-emoji{display:grid;width:49px;height:49px;flex:0 0 49px;place-items:center;border:1px solid rgba(86,54,35,.08);border-radius:17px;background:linear-gradient(145deg,#fff,var(--orange-100));font-size:29px;line-height:1;box-shadow:0 8px 22px rgba(87,50,28,.07)}.today-row strong{display:block;color:var(--orange-900);font-size:13px}.today-row span{display:block;color:var(--muted);font-size:10.5px}.notice{margin-top:18px;padding:15px 17px;border:1px solid rgba(217,91,23,.2);border-radius:19px;background:rgba(255,245,235,.75);color:#78502e;font-size:11px}
 
-
 /* Home action hierarchy: actions live in the page, destinations live in the bottom navigation */
 .home-action-heading{align-items:flex-end}.home-action-heading>div{min-width:0}.home-action-heading .kicker{margin-bottom:6px}.home-action-heading h2{font-size:clamp(28px,5vw,36px)}
 .home-action-deck{display:grid;gap:12px}.journal-feature{position:relative;display:grid;grid-template-columns:74px minmax(0,1fr) auto;gap:17px;align-items:center;width:100%;padding:19px 20px;text-align:left;overflow:hidden;border-color:rgba(244,119,33,.18);background:radial-gradient(circle at 92% 8%,rgba(255,255,255,.9),transparent 27%),linear-gradient(135deg,rgba(255,246,236,.96),rgba(239,231,255,.82));transition:transform .22s ease,box-shadow .22s ease}.journal-feature:hover{transform:translateY(-2px);box-shadow:0 20px 45px rgba(77,44,25,.11)}.journal-feature:after{content:"";position:absolute;right:-40px;bottom:-65px;width:150px;height:150px;border:1px solid rgba(244,119,33,.14);border-radius:50%}.journal-feature-icon{position:relative;z-index:1;display:grid;width:72px;height:72px;place-items:center;border-radius:24px;background:linear-gradient(145deg,var(--orange-700),var(--orange-500));color:#fff;box-shadow:0 14px 30px rgba(217,91,23,.22)}.journal-feature-icon svg{width:40px;height:40px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.journal-feature-copy{position:relative;z-index:1;display:grid;min-width:0}.journal-feature-copy small{color:var(--orange-800);font-size:9px;font-weight:900;letter-spacing:.13em;text-transform:uppercase}.journal-feature-copy strong{margin-top:5px;color:var(--orange-900);font-size:20px;line-height:1.15;letter-spacing:-.035em}.journal-feature-copy span{margin-top:6px;color:var(--muted);font-size:10.5px;line-height:1.5}.journal-feature-cta{position:relative;z-index:1;display:flex;align-items:center;gap:7px;padding:10px 12px;border-radius:999px;background:#fff;color:var(--orange-800);font-size:10px;font-weight:900;white-space:nowrap;box-shadow:0 8px 20px rgba(73,42,24,.07)}.journal-feature-cta b{font-size:15px}
@@ -177,7 +176,6 @@ img{display:block;max-width:100%}
 }
 @media(max-width:420px){.quick-grid{grid-template-columns:1fr}.quick-card.wide{grid-column:auto}.fruit-picker{grid-template-columns:repeat(4,1fr)}.access-intro h1{font-size:48px}.access-mascot{width:85%;right:-62px}.hero-card{min-height:530px}.hero-card h1{font-size:48px}.tabbar span{font-size:8px}.mood-option{grid-template-columns:48px minmax(0,1fr)}.mood-arrow{display:none}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important;transition:none!important}.screen{animation:none}}
-
 
 /* Post-login welcome and partner message */
 body.modal-open{overflow:hidden}
@@ -246,11 +244,9 @@ body.modal-open{overflow:hidden}
 }
 @media(prefers-reduced-motion:reduce){.post-login-layer,.post-login-modal{transition:none}}
 
-
 /* Final responsive overrides for emoji-only mood selector */
 @media(max-width:680px){.mood-list{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}}
 @media(max-width:430px){.mood-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.mood-option{grid-template-columns:1fr!important;border-radius:20px}.mood-emoji{font-size:42px}}
-
 
 /* ============================================================
    Yoni Apple-like interaction layer
@@ -469,7 +465,6 @@ textarea{resize:none}
   .screen.enter-forward,.screen.exit-forward,.screen.enter-back,.screen.exit-back{animation-duration:.01ms!important}
 }
 
-
 /* Calm Apple-style home and listener experience */
 body{background:linear-gradient(180deg,#fffdfb 0%,#fbfaf8 48%,#f6f4f2 100%)}
 .app-shell{width:min(1040px,100%)}
@@ -482,7 +477,6 @@ body{background:linear-gradient(180deg,#fffdfb 0%,#fbfaf8 48%,#f6f4f2 100%)}
 .listener-card{display:flex;align-items:center;gap:14px;margin-top:20px;padding:14px 16px;border-radius:22px;background:linear-gradient(145deg,rgba(255,255,255,.9),rgba(240,246,237,.82))}.listener-card img{width:54px;height:54px;object-fit:contain}.listener-card div{display:grid}.listener-card strong{color:#38322e;font-size:13px}.listener-card span{margin-top:3px;color:#7e756e;font-size:10.5px}.response-mode{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px;padding:5px;border:1px solid rgba(58,50,45,.07);border-radius:18px;background:rgba(238,236,233,.74)}.response-mode button{min-height:42px;padding:8px;border:0;border-radius:14px;background:transparent;color:#766e68;font-size:10px;font-weight:790;transition:.2s ease}.response-mode button.active{background:#fff;color:#bc5b27;box-shadow:0 6px 18px rgba(52,45,40,.08)}.chat-shell{border-radius:30px}.chat-head{background:linear-gradient(145deg,rgba(255,255,255,.95),rgba(246,244,241,.88))}.chat-log{background:linear-gradient(180deg,rgba(253,252,251,.9),rgba(247,246,244,.82))}.user .bubble{background:linear-gradient(135deg,#bc6b3d,#df8551)}.chat-chips{background:rgba(247,246,244,.82)}.chat-compose textarea:focus{border-color:rgba(188,107,61,.38);box-shadow:0 0 0 4px rgba(188,107,61,.08)}.chat-send{background:linear-gradient(135deg,#a95d34,#dc804d);box-shadow:0 10px 22px rgba(143,76,39,.16)}.chat-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 16px 14px;background:rgba(255,255,255,.9)}.chat-foot .chat-note{padding:0;background:transparent;flex:1}.chat-foot button{flex:0 0 auto;border:0;background:transparent;color:#8a7f78;font-size:9px;font-weight:780;text-decoration:underline;text-underline-offset:3px}
 @media(max-width:760px){.app-shell{padding-inline:0}.home-welcome{grid-template-columns:1fr;min-height:445px;margin-inline:12px;padding:27px 25px 0}.home-welcome-copy{padding-bottom:0}.home-welcome h1{font-size:52px}.home-welcome-copy>p:last-of-type{font-size:14px}.home-yoni-stage{height:205px}.home-yoni-stage img{right:2%;height:230px;width:250px}.home-yoni-glow{right:3%;width:190px;height:190px}.home-journal{margin-inline:12px;grid-template-columns:60px minmax(0,1fr);padding:18px}.home-journal .journal-feature-cta{grid-column:2;justify-self:start;margin-top:2px}.home-action-grid.redesigned{grid-template-columns:repeat(2,1fr);padding-inline:12px}.home-care-heading,.home-today-heading{padding-inline:12px}.today-card,.home-privacy-note{margin-inline:12px}.response-mode{grid-template-columns:1fr 1fr}.chat-foot{align-items:flex-start;flex-direction:column}}
 @media(max-width:430px){.home-welcome{min-height:465px}.home-welcome h1{font-size:47px}.home-welcome-actions{gap:7px}.home-talk-button{gap:16px}.home-action-grid.redesigned{grid-template-columns:repeat(2,1fr)}.home-action-grid.redesigned .home-action-card{min-height:170px;padding:15px}.home-journal .journal-feature-copy strong{font-size:20px}.home-journal .journal-feature-copy span{font-size:9.7px}}
-
 
 /* Production hostname refinements */
 .preview-strip{display:none!important}
@@ -506,7 +500,6 @@ body{background:linear-gradient(180deg,#fffdfb 0%,#fbfaf8 48%,#f6f4f2 100%)}
     <div class="app-launch-pulse"><i></i><span>Private on this device</span></div>
   </div>
 </div>
-
 
 <section class="access-gate" id="accessGate" aria-labelledby="accessTitle">
   <div class="access-stage">
@@ -566,7 +559,6 @@ body{background:linear-gradient(180deg,#fffdfb 0%,#fbfaf8 48%,#f6f4f2 100%)}
   </div>
 </section>
 
-
 <!-- Sequential post-login experience. These appear once per signed-in browser session. -->
 <div class="post-login-layer" id="fmbWelcomeModal" hidden role="dialog" aria-modal="true" aria-labelledby="fmbWelcomeTitle">
   <article class="post-login-modal founder-modal">
@@ -580,7 +572,6 @@ body{background:linear-gradient(180deg,#fffdfb 0%,#fbfaf8 48%,#f6f4f2 100%)}
     </section>
     <figure class="founder-portrait-stage">
       <img class="founder-portrait" src="/assets/images/founder.webp" alt="Portrait of Francine Marie Bautista">
-      
     </figure>
   </article>
 </div>
@@ -637,22 +628,10 @@ body{background:linear-gradient(180deg,#fffdfb 0%,#fbfaf8 48%,#f6f4f2 100%)}
 
       <div class="section-heading home-care-heading"><h2>More ways to care for yourself</h2><span>Choose only what helps.</span></div>
       <div class="home-action-grid redesigned">
-        <button class="home-action-card card" type="button" data-go="checkin">
-          <span class="home-action-icon mood" aria-hidden="true"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14"/><path d="M14.5 18h.01M25.5 18h.01M14.5 25c2.7 2.2 8.3 2.2 11 0"/></svg></span>
-          <span><strong>Check in</strong><em>Name the feeling.</em><b aria-hidden="true">→</b></span>
-        </button>
-        <button class="home-action-card card" type="button" data-go="tools">
-          <span class="home-action-icon breathe" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M20 7c4.2 4.5 7 8.1 7 12.4A7 7 0 0 1 13 19.4C13 15.1 15.8 11.5 20 7Z"/><path d="M11 29c3-2.2 6-3.3 9-3.3s6 1.1 9 3.3"/><path d="M14 33h12"/></svg></span>
-          <span><strong>Ground yourself</strong><em>Breathe and return.</em><b aria-hidden="true">→</b></span>
-        </button>
-        <button class="home-action-card card" type="button" data-go="listen">
-          <span class="home-action-icon sound" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M12 24V13l17-3v11"/><circle cx="9.5" cy="27" r="4.5"/><circle cx="26.5" cy="24" r="4.5"/></svg></span>
-          <span><strong>Play a soft sound</strong><em>Lower the noise.</em><b aria-hidden="true">→</b></span>
-        </button>
-        <button class="home-action-card card" type="button" data-go="read">
-          <span class="home-action-icon read" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M8 10.5h10a4 4 0 0 1 4 4V31H12a4 4 0 0 0-4 4Z"/><path d="M32 10.5H22a4 4 0 0 0-4 4V31h10a4 4 0 0 1 4 4Z"/></svg></span>
-          <span><strong>Open a gentle guide</strong><em>Read at your pace.</em><b aria-hidden="true">→</b></span>
-        </button>
+        <button class="home-action-card card" type="button" data-go="checkin"><span class="home-action-icon mood" aria-hidden="true"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="14"/><path d="M14.5 18h.01M25.5 18h.01M14.5 25c2.7 2.2 8.3 2.2 11 0"/></svg></span><span><strong>Check in</strong><em>Name the feeling.</em><b aria-hidden="true">→</b></span></button>
+        <button class="home-action-card card" type="button" data-go="tools"><span class="home-action-icon breathe" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M20 7c4.2 4.5 7 8.1 7 12.4A7 7 0 0 1 13 19.4C13 15.1 15.8 11.5 20 7Z"/><path d="M11 29c3-2.2 6-3.3 9-3.3s6 1.1 9 3.3"/><path d="M14 33h12"/></svg></span><span><strong>Ground yourself</strong><em>Breathe and return.</em><b aria-hidden="true">→</b></span></button>
+        <button class="home-action-card card" type="button" data-go="listen"><span class="home-action-icon sound" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M12 24V13l17-3v11"/><circle cx="9.5" cy="27" r="4.5"/><circle cx="26.5" cy="24" r="4.5"/></svg></span><span><strong>Play a soft sound</strong><em>Lower the noise.</em><b aria-hidden="true">→</b></span></button>
+        <button class="home-action-card card" type="button" data-go="read"><span class="home-action-icon read" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M8 10.5h10a4 4 0 0 1 4 4V31H12a4 4 0 0 0-4 4Z"/><path d="M32 10.5H22a4 4 0 0 0-4 4V31h10a4 4 0 0 1 4 4Z"/></svg></span><span><strong>Open a gentle guide</strong><em>Read at your pace.</em><b aria-hidden="true">→</b></span></button>
       </div>
 
       <div class="section-heading home-today-heading"><h2>Today</h2><span id="todayLabel"></span></div>
@@ -660,111 +639,56 @@ body{background:linear-gradient(180deg,#fffdfb 0%,#fbfaf8 48%,#f6f4f2 100%)}
       <p class="notice home-privacy-note">Your check-ins, journal entries, and conversations stay in this browser on this device. Clearing browser data may remove them.</p>
     </section>
 
-        <section class="screen" id="screen-companion" data-screen="companion">
+    <section class="screen" id="screen-companion" data-screen="companion">
       <p class="kicker">A space to say it as it is</p><h1 class="page-title">You can vent here.</h1><p class="page-lede">You do not have to make your story neat, positive, or easy to understand. Yoni can listen, comfort you, help you sort one thought, or guide a grounding pause. He is a digital companion, not a therapist or emergency service.</p>
-      <article class="listener-card card">
-        <span class="listener-mark" aria-hidden="true">Y</span><div><strong>No fixing without permission.</strong><span>Choose how you want Yoni to respond. You can change it anytime.</span></div>
-      </article>
-      <div class="response-mode" id="responseMode" role="radiogroup" aria-label="How Yoni should respond">
-        <button class="active" type="button" data-mode="listen" role="radio" aria-checked="true">Just listen</button>
-        <button type="button" data-mode="comfort" role="radio" aria-checked="false">Comfort me</button>
-        <button type="button" data-mode="think" role="radio" aria-checked="false">Help me think</button>
-        <button type="button" data-mode="ground" role="radio" aria-checked="false">Ground me</button>
-      </div>
-      <article class="chat-shell card">
-        <div class="chat-head"><span class="bubble-avatar-mark" aria-hidden="true">Y</span><div><strong>Yoni</strong><span><i class="online-dot"></i> ready to listen</span></div><small>digital companion</small></div>
-        <div class="chat-log" id="chatLog" aria-live="polite"></div>
-        <div class="chat-chips" id="chatChips"><button class="chat-chip" type="button">I just need to vent</button><button class="chat-chip" type="button">medyo mabigat</button><button class="chat-chip" type="button">kinakabahan ako</button><button class="chat-chip" type="button">samahan mo lang ako</button></div>
-        <form class="chat-compose" id="chatForm"><textarea id="chatInput" rows="1" maxlength="1200" placeholder="Say everything. You don’t need to make it neat..."></textarea><button class="chat-send" type="submit" aria-label="Send">↑</button></form>
-        <div class="chat-foot"><p class="chat-note">Yoni’s replies come from a reviewed response library. Unrecognized questions are saved only on this device for future review and are not automatically uploaded.</p><button id="clearChat" type="button">Clear conversation</button></div>
-      </article>
+      <article class="listener-card card"><span class="listener-mark" aria-hidden="true">Y</span><div><strong>No fixing without permission.</strong><span>Choose how you want Yoni to respond. You can change it anytime.</span></div></article>
+      <div class="response-mode" id="responseMode" role="radiogroup" aria-label="How Yoni should respond"><button class="active" type="button" data-mode="listen" role="radio" aria-checked="true">Just listen</button><button type="button" data-mode="comfort" role="radio" aria-checked="false">Comfort me</button><button type="button" data-mode="think" role="radio" aria-checked="false">Help me think</button><button type="button" data-mode="ground" role="radio" aria-checked="false">Ground me</button></div>
+      <article class="chat-shell card"><div class="chat-head"><span class="bubble-avatar-mark" aria-hidden="true">Y</span><div><strong>Yoni</strong><span><i class="online-dot"></i> ready to listen</span></div><small>digital companion</small></div><div class="chat-log" id="chatLog" aria-live="polite"></div><div class="chat-chips" id="chatChips"><button class="chat-chip" type="button">I just need to vent</button><button class="chat-chip" type="button">medyo mabigat</button><button class="chat-chip" type="button">kinakabahan ako</button><button class="chat-chip" type="button">samahan mo lang ako</button></div><form class="chat-compose" id="chatForm"><textarea id="chatInput" rows="1" maxlength="1200" placeholder="Say everything. You don’t need to make it neat..."></textarea><button class="chat-send" type="submit" aria-label="Send">↑</button></form><div class="chat-foot"><p class="chat-note">Yoni’s replies come from a reviewed response library. Unrecognized questions are saved only on this device for future review and are not automatically uploaded.</p><button id="clearChat" type="button">Clear conversation</button></div></article>
     </section>
 
-        <section class="screen" id="screen-checkin" data-screen="checkin">
+    <section class="screen" id="screen-checkin" data-screen="checkin">
       <p class="kicker">Daily emotional check-in</p><h1 class="page-title">What is closest to how you feel?</h1><p class="page-lede">Choose honestly. Yoni will not diagnose you or assume what you are experiencing. This simply gives the feeling a place to land.</p>
-      <div class="mood-list" id="moodList" aria-label="Choose the emoji closest to how you feel">
-        <button class="mood-option" type="button" data-mood="5" data-emoji="😄" data-label="Great" aria-label="Great" title="Great"><span class="mood-emoji" aria-hidden="true">😄</span></button>
-        <button class="mood-option" type="button" data-mood="5" data-emoji="🥹" data-label="Grateful" aria-label="Grateful" title="Grateful"><span class="mood-emoji" aria-hidden="true">🥹</span></button>
-        <button class="mood-option" type="button" data-mood="4" data-emoji="🙂" data-label="Good" aria-label="Good" title="Good"><span class="mood-emoji" aria-hidden="true">🙂</span></button>
-        <button class="mood-option" type="button" data-mood="4" data-emoji="😌" data-label="Calm" aria-label="Calm" title="Calm"><span class="mood-emoji" aria-hidden="true">😌</span></button>
-        <button class="mood-option" type="button" data-mood="3" data-emoji="😐" data-label="Okay" aria-label="Okay" title="Okay"><span class="mood-emoji" aria-hidden="true">😐</span></button>
-        <button class="mood-option" type="button" data-mood="3" data-emoji="😴" data-label="Tired" aria-label="Tired" title="Tired"><span class="mood-emoji" aria-hidden="true">😴</span></button>
-        <button class="mood-option" type="button" data-mood="2" data-emoji="😢" data-label="Sad" aria-label="Sad" title="Sad"><span class="mood-emoji" aria-hidden="true">😢</span></button>
-        <button class="mood-option" type="button" data-mood="2" data-emoji="😵‍💫" data-label="Overwhelmed" aria-label="Overwhelmed" title="Overwhelmed"><span class="mood-emoji" aria-hidden="true">😵‍💫</span></button>
-        <button class="mood-option" type="button" data-mood="2" data-emoji="😣" data-label="Frustrated" aria-label="Frustrated" title="Frustrated"><span class="mood-emoji" aria-hidden="true">😣</span></button>
-        <button class="mood-option" type="button" data-mood="2" data-emoji="😠" data-label="Angry" aria-label="Angry" title="Angry"><span class="mood-emoji" aria-hidden="true">😠</span></button>
-        <button class="mood-option" type="button" data-mood="2" data-emoji="🥺" data-label="Lonely" aria-label="Lonely" title="Lonely"><span class="mood-emoji" aria-hidden="true">🥺</span></button>
-        <button class="mood-option" type="button" data-mood="1" data-emoji="😰" data-label="Unsafe or afraid" aria-label="I may not feel safe" title="I may not feel safe"><span class="mood-emoji" aria-hidden="true">😰</span></button>
-      </div>
+      <div class="mood-list" id="moodList" aria-label="Choose the emoji closest to how you feel"><button class="mood-option" type="button" data-mood="5" data-emoji="😄" data-label="Great" aria-label="Great" title="Great"><span class="mood-emoji" aria-hidden="true">😄</span></button><button class="mood-option" type="button" data-mood="5" data-emoji="🥹" data-label="Grateful" aria-label="Grateful" title="Grateful"><span class="mood-emoji" aria-hidden="true">🥹</span></button><button class="mood-option" type="button" data-mood="4" data-emoji="🙂" data-label="Good" aria-label="Good" title="Good"><span class="mood-emoji" aria-hidden="true">🙂</span></button><button class="mood-option" type="button" data-mood="4" data-emoji="😌" data-label="Calm" aria-label="Calm" title="Calm"><span class="mood-emoji" aria-hidden="true">😌</span></button><button class="mood-option" type="button" data-mood="3" data-emoji="😐" data-label="Okay" aria-label="Okay" title="Okay"><span class="mood-emoji" aria-hidden="true">😐</span></button><button class="mood-option" type="button" data-mood="3" data-emoji="😴" data-label="Tired" aria-label="Tired" title="Tired"><span class="mood-emoji" aria-hidden="true">😴</span></button><button class="mood-option" type="button" data-mood="2" data-emoji="😢" data-label="Sad" aria-label="Sad" title="Sad"><span class="mood-emoji" aria-hidden="true">😢</span></button><button class="mood-option" type="button" data-mood="2" data-emoji="😵‍💫" data-label="Overwhelmed" aria-label="Overwhelmed" title="Overwhelmed"><span class="mood-emoji" aria-hidden="true">😵‍💫</span></button><button class="mood-option" type="button" data-mood="2" data-emoji="😣" data-label="Frustrated" aria-label="Frustrated" title="Frustrated"><span class="mood-emoji" aria-hidden="true">😣</span></button><button class="mood-option" type="button" data-mood="2" data-emoji="😠" data-label="Angry" aria-label="Angry" title="Angry"><span class="mood-emoji" aria-hidden="true">😠</span></button><button class="mood-option" type="button" data-mood="2" data-emoji="🥺" data-label="Lonely" aria-label="Lonely" title="Lonely"><span class="mood-emoji" aria-hidden="true">🥺</span></button><button class="mood-option" type="button" data-mood="1" data-emoji="😰" data-label="Unsafe or afraid" aria-label="I may not feel safe" title="I may not feel safe"><span class="mood-emoji" aria-hidden="true">😰</span></button></div>
       <article class="feeling-ack card" id="feelingAck" hidden><div class="ack-head"><span id="ackEmoji"></span><div><p class="kicker">Yoni hears you</p><h2 id="ackTitle"></h2></div></div><p id="ackMessage"></p></article>
-      <div id="checkinFollowup" hidden>
-        <article class="support-inline card" id="supportInline"><h3>Your safety comes first.</h3><p>If you may be in immediate danger, might hurt yourself, are experiencing abuse, or have a medical emergency, contact 911, an available crisis line, or a trusted person nearby now. Yoni cannot send emergency help.</p><button class="button danger" type="button" data-go="help">Open support contacts</button></article>
-        <div class="field"><label for="checkinNote">Anything you want to put down? Optional</label><textarea id="checkinNote" placeholder="Write only what feels safe to write."></textarea></div>
-        <div class="gentle-options"><button class="gentle-option" type="button" data-go="companion">Talk to Yoni</button><button class="gentle-option" type="button" data-go="journal">Write privately</button><button class="gentle-option" type="button" data-go="tools">Try slow breathing</button><button class="gentle-option" type="button" data-go="help">View support</button></div>
-        <div class="form-actions"><button class="button orange" id="saveCheckin" type="button">Save my check-in</button><button class="button soft" type="button" data-go="home">Back to home</button></div>
-      </div>
+      <div id="checkinFollowup" hidden><article class="support-inline card" id="supportInline"><h3>Your safety comes first.</h3><p>If you may be in immediate danger, might hurt yourself, are experiencing abuse, or have a medical emergency, contact 911, an available crisis line, or a trusted person nearby now. Yoni cannot send emergency help.</p><button class="button danger" type="button" data-go="help">Open support contacts</button></article><div class="field"><label for="checkinNote">Anything you want to put down? Optional</label><textarea id="checkinNote" placeholder="Write only what feels safe to write."></textarea></div><div class="gentle-options"><button class="gentle-option" type="button" data-go="companion">Talk to Yoni</button><button class="gentle-option" type="button" data-go="journal">Write privately</button><button class="gentle-option" type="button" data-go="tools">Try slow breathing</button><button class="gentle-option" type="button" data-go="help">View support</button></div><div class="form-actions"><button class="button orange" id="saveCheckin" type="button">Save my check-in</button><button class="button soft" type="button" data-go="home">Back to home</button></div></div>
       <article class="confirmation card" id="checkinConfirmation"><h3>Noted, with care.</h3><p>Your feelings deserve space. Thank you for checking in today.</p></article>
     </section>
 
-    <section class="screen" id="screen-journal" data-screen="journal">
-      <p class="kicker">Private journal</p><h1 class="page-title">Put the weight somewhere.</h1><p class="page-lede">Entries remain private in this browser on this device. They are never used as community content and are not a medical record.</p>
-      <article class="journal-form card"><div class="field" style="margin-top:0"><label for="journalText">Today’s reflection</label><textarea id="journalText" placeholder="Write freely. You can delete it whenever you choose."></textarea></div><div class="journal-meta"><span id="journalDate"></span><span id="journalCount">0 characters</span></div><div class="form-actions"><button class="button orange" id="saveJournal" type="button">Save this entry</button></div></article>
-      <div class="section-heading"><h2>Previous entries</h2><button class="button soft" type="button" data-go="history">Open calendar</button></div><div class="journal-list" id="journalList"></div>
-    </section>
+    <section class="screen" id="screen-journal" data-screen="journal"><p class="kicker">Private journal</p><h1 class="page-title">Put the weight somewhere.</h1><p class="page-lede">Entries remain private in this browser on this device. They are never used as community content and are not a medical record.</p><article class="journal-form card"><div class="field" style="margin-top:0"><label for="journalText">Today’s reflection</label><textarea id="journalText" placeholder="Write freely. You can delete it whenever you choose."></textarea></div><div class="journal-meta"><span id="journalDate"></span><span id="journalCount">0 characters</span></div><div class="form-actions"><button class="button orange" id="saveJournal" type="button">Save this entry</button></div></article><div class="section-heading"><h2>Previous entries</h2><button class="button soft" type="button" data-go="history">Open calendar</button></div><div class="journal-list" id="journalList"></div></section>
 
     <section class="screen" id="screen-community" data-screen="community">
-      <p class="kicker">The Kind Wall</p><h1 class="page-title">Pass something good forward.</h1><p class="page-lede">Share a positive story, small win, gratitude, or kind thought. Your real name stays private. The wall shows only your username.</p>
-      <article class="community-compose card"><div class="community-identity"><span class="profile-avatar compact" id="communityAvatar">F</span><div><small>Posting as</small><strong id="communityUsername">@friend</strong></div><span class="moderation-pill">Moderator reviewed</span></div><form id="wallForm"><label class="field" for="wallContent"><span>What positive thought or story would you like to share?</span><textarea id="wallContent" maxlength="2000" placeholder="A small win, a kind reminder, gratitude, or a hopeful moment..."></textarea></label><div class="community-compose-meta"><span id="wallCount">0 / 2000</span><span>Public only after approval</span></div><label class="community-consent"><input id="wallConsent" type="checkbox"><span>I am sharing something constructive and understand that a moderator will review it before publication.</span></label><button class="button orange community-submit" type="submit">Send for moderator review</button><div class="inline-status" id="wallStatus"></div></form></article>
-      <div class="section-heading"><h2>Approved stories</h2><span>Small goodness from the community</span></div><div class="community-feed" id="wallFeed"></div>
-      <div class="section-heading"><h2>Your submissions</h2><span>Private review status</span></div><div class="community-queue" id="wallQueue"></div>
-      <p class="notice">The Kind Wall is supportive community content, not professional advice or emergency help. Harmful, unsafe, discriminatory, identifying, or promotional posts will not be published.</p>
+      <p class="kicker">The Kind Wall</p><h1 class="page-title">Pass something good forward.</h1><p class="page-lede">The Kind Wall is currently a preview only. No public community feed or moderator submission is active. Nothing typed here is sent or published.</p>
+      <article class="community-compose card"><div class="community-identity"><span class="profile-avatar compact" id="communityAvatar">F</span><div><small>Previewing as</small><strong id="communityUsername">@friend</strong></div><span class="moderation-pill">Preview only</span></div><form id="wallForm"><label class="field" for="wallContent"><span>Preview a positive thought or story</span><textarea id="wallContent" maxlength="2000" placeholder="A small win, a kind reminder, gratitude, or a hopeful moment..."></textarea></label><div class="community-compose-meta"><span id="wallCount">0 / 2000</span><span>Not submitted or published</span></div><label class="community-consent"><input id="wallConsent" type="checkbox"><span>I understand this preview is not connected to a moderator or public community feed.</span></label><button class="button orange community-submit" type="submit" disabled aria-disabled="true">Community posting not active</button><div class="inline-status visible" id="wallStatus">Preview only: nothing from this form is sent to a moderator, stored in a public community database, or published.</div></form></article>
+      <div class="section-heading"><h2>Example stories</h2><span>Fictional samples — not real member submissions</span></div><div class="community-feed" id="wallFeed"></div>
+      <div class="section-heading"><h2>Local preview drafts</h2><span>Stored only in this browser from earlier preview use</span></div><div class="community-queue" id="wallQueue"></div>
+      <p class="notice">The Kind Wall is not a live community feature today. The visible stories are fictional examples, and no moderator queue or public publishing flow is active.</p>
     </section>
 
     <section class="screen" id="screen-profile" data-screen="profile">
-      <p class="kicker">Your profile</p><h1 class="page-title">Make this space feel like you.</h1><p class="page-lede">Your real name is part of your private account identity. It never appears on the public Kind Wall. Your username is what the community sees.</p>
+      <p class="kicker">Your profile</p><h1 class="page-title">Make this space feel like you.</h1><p class="page-lede">Your real name is part of your private account identity. Your username and fruit avatar are profile settings; no public Kind Wall is active today.</p>
       <article class="profile-hero card"><span class="profile-avatar" id="profileAvatar">F</span><div><small>Private Yoni profile</small><h2 id="profileName">Friend</h2><p id="profileUsername">@friend</p></div></article>
-      <article class="profile-settings card"><div class="profile-setting-heading"><div><p class="kicker">Avatar</p><h2>Choose your fruit with shades</h2></div></div><p class="profile-help">Every public Yoni avatar is a fruit wearing shades. Your real photo stays private and is not used on the Kind Wall.</p><div class="fruit-picker" id="fruitPicker"><button type="button" data-fruit="orange" aria-label="Use Orange avatar"><span class="fruit-avatar" aria-hidden="true"><span class="fruit-glyph">🍊</span><span class="fruit-shades">🕶️</span></span><small>Orange</small></button><button type="button" data-fruit="apple" aria-label="Use Apple avatar"><span class="fruit-avatar" aria-hidden="true"><span class="fruit-glyph">🍎</span><span class="fruit-shades">🕶️</span></span><small>Apple</small></button><button type="button" data-fruit="grapes" aria-label="Use Grapes avatar"><span class="fruit-avatar" aria-hidden="true"><span class="fruit-glyph">🍇</span><span class="fruit-shades">🕶️</span></span><small>Grapes</small></button><button type="button" data-fruit="cherry" aria-label="Use Cherry avatar"><span class="fruit-avatar" aria-hidden="true"><span class="fruit-glyph">🍒</span><span class="fruit-shades">🕶️</span></span><small>Cherry</small></button><button type="button" data-fruit="peach" aria-label="Use Peach avatar"><span class="fruit-avatar" aria-hidden="true"><span class="fruit-glyph">🍑</span><span class="fruit-shades">🕶️</span></span><small>Peach</small></button><button type="button" data-fruit="lemon" aria-label="Use Lemon avatar"><span class="fruit-avatar" aria-hidden="true"><span class="fruit-glyph">🍋</span><span class="fruit-shades">🕶️</span></span><small>Lemon</small></button><button type="button" data-fruit="blueberry" aria-label="Use Berry avatar"><span class="fruit-avatar" aria-hidden="true"><span class="fruit-glyph">🫐</span><span class="fruit-shades">🕶️</span></span><small>Berry</small></button><button type="button" data-fruit="watermelon" aria-label="Use Melon avatar"><span class="fruit-avatar" aria-hidden="true"><span class="fruit-glyph">🍉</span><span class="fruit-shades">🕶️</span></span><small>Melon</small></button></div></article>
+      <article class="profile-settings card"><div class="profile-setting-heading"><div><p class="kicker">Avatar</p><h2>Choose your fruit with shades</h2></div></div><p class="profile-help">Your fruit avatar is a profile setting. Yoni does not use your real photo here, and no public Kind Wall is active today.</p><div class="fruit-picker" id="fruitPicker"><button type="button" data-fruit="orange" aria-label="Use Orange avatar"><span class="fruit-avatar" aria-hidden="true"><span class="fruit-glyph">🍊</span><span class="fruit-shades">🕶️</span></span><small>Orange</small></button><button type="button" data-fruit="apple" aria-label="Use Apple avatar"><span class="fruit-avatar" aria-hidden="true"><span class="fruit-glyph">🍎</span><span class="fruit-shades">🕶️</span></span><small>Apple</small></button><button type="button" data-fruit="grapes" aria-label="Use Grapes avatar"><span class="fruit-avatar" aria-hidden="true"><span class="fruit-glyph">🍇</span><span class="fruit-shades">🕶️</span></span><small>Grapes</small></button><button type="button" data-fruit="cherry" aria-label="Use Cherry avatar"><span class="fruit-avatar" aria-hidden="true"><span class="fruit-glyph">🍒</span><span class="fruit-shades">🕶️</span></span><small>Cherry</small></button><button type="button" data-fruit="peach" aria-label="Use Peach avatar"><span class="fruit-avatar" aria-hidden="true"><span class="fruit-glyph">🍑</span><span class="fruit-shades">🕶️</span></span><small>Peach</small></button><button type="button" data-fruit="lemon" aria-label="Use Lemon avatar"><span class="fruit-avatar" aria-hidden="true"><span class="fruit-glyph">🍋</span><span class="fruit-shades">🕶️</span></span><small>Lemon</small></button><button type="button" data-fruit="blueberry" aria-label="Use Berry avatar"><span class="fruit-avatar" aria-hidden="true"><span class="fruit-glyph">🫐</span><span class="fruit-shades">🕶️</span></span><small>Berry</small></button><button type="button" data-fruit="watermelon" aria-label="Use Melon avatar"><span class="fruit-avatar" aria-hidden="true"><span class="fruit-glyph">🍉</span><span class="fruit-shades">🕶️</span></span><small>Melon</small></button></div></article>
       <form class="profile-settings card" id="profileForm"><div class="profile-setting-heading"><div><p class="kicker">Identity</p><h2>Your profile details</h2></div></div><label class="field"><span>Real name</span><input id="realName" readonly></label><p class="profile-help">Locked for account integrity and visible only inside your private profile.</p><label class="field"><span>Public username</span><div class="username-field"><span>@</span><input id="username" maxlength="24" pattern="[a-z0-9_]{3,24}" autocapitalize="none"></div></label><p class="profile-help">After saving a new username, the next change becomes available in 60 days.</p><label class="field"><span>Private profile note</span><textarea id="profileBio" maxlength="500" placeholder="A short note for your own profile"></textarea></label><button class="button orange profile-save" type="submit">Save profile details</button><div class="inline-status" id="profileStatus"></div></form>
       <article class="profile-settings card"><div class="profile-setting-heading"><div><p class="kicker">Theme</p><h2>Choose your color</h2></div></div><p class="profile-help">Every palette keeps the same calm, accessible layout.</p><div class="theme-picker" id="themePicker"><button class="active" type="button" data-theme-choice="sunrise"><span class="theme-swatch sunrise"></span><span><strong>Sunrise orange</strong><small>Warm and optimistic</small></span></button><button type="button" data-theme-choice="dusk"><span class="theme-swatch dusk"></span><span><strong>Lavender dusk</strong><small>Soft and reflective</small></span></button><button type="button" data-theme-choice="forest"><span class="theme-swatch forest"></span><span><strong>Forest mint</strong><small>Grounded and calm</small></span></button><button type="button" data-theme-choice="midnight"><span class="theme-swatch midnight"></span><span><strong>Midnight blue</strong><small>Cool and focused</small></span></button></div></article>
       <article class="profile-settings card"><div class="profile-setting-heading"><div><p class="kicker">Account</p><h2>Security and control</h2></div></div><div class="profile-account-actions"><button class="button soft" id="profileResetPassword" type="button">Send password reset link</button><button class="button soft" type="button" data-go="privacy">Privacy and local data</button><button class="button danger" id="signOut" type="button">Sign out on this device</button></div></article>
     </section>
 
-    <section class="screen" id="screen-history" data-screen="history">
-      <p class="kicker">Private history</p><h1 class="page-title">Your days, held gently.</h1><p class="page-lede">Emotion emojis show saved check-ins. A green dot shows one or more journal entries. Tap any date for a private view.</p>
-      <article class="calendar-card card"><div class="calendar-head"><button class="calendar-nav" id="calendarPrev" type="button">‹</button><h2 id="calendarMonth"></h2><button class="calendar-nav" id="calendarNext" type="button">›</button></div><div class="calendar-weekdays"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div><div class="calendar-grid" id="calendarGrid"></div><div class="calendar-legend"><span><span>🙂</span> Check-in</span><span><i class="legend-dot"></i> Journal</span></div></article><article class="history-detail card" id="historyDetail"></article><div class="history-actions"><button class="button soft" type="button" data-go="privacy">Manage or export records</button></div><p class="notice">This history stays only in this browser on this device. It is not automatically synced, shared, or visible to other members.</p>
-    </section>
+    <section class="screen" id="screen-history" data-screen="history"><p class="kicker">Private history</p><h1 class="page-title">Your days, held gently.</h1><p class="page-lede">Emotion emojis show saved check-ins. A green dot shows one or more journal entries. Tap any date for a private view.</p><article class="calendar-card card"><div class="calendar-head"><button class="calendar-nav" id="calendarPrev" type="button">‹</button><h2 id="calendarMonth"></h2><button class="calendar-nav" id="calendarNext" type="button">›</button></div><div class="calendar-weekdays"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div><div class="calendar-grid" id="calendarGrid"></div><div class="calendar-legend"><span><span>🙂</span> Check-in</span><span><i class="legend-dot"></i> Journal</span></div></article><article class="history-detail card" id="historyDetail"></article><div class="history-actions"><button class="button soft" type="button" data-go="privacy">Manage or export records</button></div><p class="notice">This history stays only in this browser on this device. It is not automatically synced, shared, or visible to other members.</p></section>
 
-    <section class="screen" id="screen-tools" data-screen="tools">
-      <p class="kicker">Grounding and reset</p><h1 class="page-title">Come back to the present.</h1><p class="page-lede">These tools may help you pause and orient yourself. Stop any exercise that makes you feel worse.</p>
-      <div class="tool-stack"><article class="tool-card card breathe-area"><h2>Slow breathing</h2><p>Follow the circle for one gentle cycle. Do not force a deep breath.</p><div class="breathe-orb" id="breatheOrb"><strong id="breatheLabel">Ready</strong></div><div class="breathe-time">4 in, 2 hold, 6 out</div><button class="button orange" id="startBreathing" type="button">Begin one cycle</button></article><article class="tool-card card"><h2>5-4-3-2-1 grounding</h2><p>Notice what is around you without rushing.</p><ol class="ground-list"><li>5 things you can see</li><li>4 things you can feel</li><li>3 things you can hear</li><li>2 things you can smell</li><li>1 thing you can taste or appreciate</li></ol></article><article class="tool-card card"><p class="kicker">A word for today</p><blockquote class="affirmation" id="affirmation">You do not have to solve everything in this moment.</blockquote><button class="button soft" id="newAffirmation" type="button">Show another gentle word</button></article></div>
-    </section>
+    <section class="screen" id="screen-tools" data-screen="tools"><p class="kicker">Grounding and reset</p><h1 class="page-title">Come back to the present.</h1><p class="page-lede">These tools may help you pause and orient yourself. Stop any exercise that makes you feel worse.</p><div class="tool-stack"><article class="tool-card card breathe-area"><h2>Slow breathing</h2><p>Follow the circle for one gentle cycle. Do not force a deep breath.</p><div class="breathe-orb" id="breatheOrb"><strong id="breatheLabel">Ready</strong></div><div class="breathe-time">4 in, 2 hold, 6 out</div><button class="button orange" id="startBreathing" type="button">Begin one cycle</button></article><article class="tool-card card"><h2>5-4-3-2-1 grounding</h2><p>Notice what is around you without rushing.</p><ol class="ground-list"><li>5 things you can see</li><li>4 things you can feel</li><li>3 things you can hear</li><li>2 things you can smell</li><li>1 thing you can taste or appreciate</li></ol></article><article class="tool-card card"><p class="kicker">A word for today</p><blockquote class="affirmation" id="affirmation">You do not have to solve everything in this moment.</blockquote><button class="button soft" id="newAffirmation" type="button">Show another gentle word</button></article></div></section>
 
-    <section class="screen" id="screen-listen" data-screen="listen">
-      <p class="kicker">Yoni’s quiet room</p><h1 class="page-title">Choose what the moment needs.</h1><p class="page-lede">These simple soundscapes are generated locally in your browser. Choose a comfortable volume and stop when sound feels overstimulating.</p><div class="playlist-tabs" id="playlistTabs"><button class="active" data-sound="rain" type="button">Rain hush</button><button data-sound="hum" type="button">Warm hum</button><button data-sound="forest" type="button">Soft forest</button></div><article class="listen-player card"><div class="listen-now"><div class="sound-cover" id="soundCover">☂</div><div><p class="kicker">Ambient pause</p><h2 id="soundTitle">Rain hush</h2><p id="soundDescription">A low, even texture for moments when silence feels too sharp.</p></div></div><div class="ambient-viz" id="ambientViz"><i></i><i></i><i></i><i></i><i></i></div><div class="form-actions"><button class="button orange" id="toggleSound" type="button">Start sound</button><button class="button soft" id="stopSound" type="button">Stop</button></div></article><p class="notice">Audio is optional and is not treatment. Yoni does not autoplay sound.</p>
-    </section>
+    <section class="screen" id="screen-listen" data-screen="listen"><p class="kicker">Yoni’s quiet room</p><h1 class="page-title">Choose what the moment needs.</h1><p class="page-lede">These simple soundscapes are generated locally in your browser. Choose a comfortable volume and stop when sound feels overstimulating.</p><div class="playlist-tabs" id="playlistTabs"><button class="active" data-sound="rain" type="button">Rain hush</button><button data-sound="hum" type="button">Warm hum</button><button data-sound="forest" type="button">Soft forest</button></div><article class="listen-player card"><div class="listen-now"><div class="sound-cover" id="soundCover">☂</div><div><p class="kicker">Ambient pause</p><h2 id="soundTitle">Rain hush</h2><p id="soundDescription">A low, even texture for moments when silence feels too sharp.</p></div></div><div class="ambient-viz" id="ambientViz"><i></i><i></i><i></i><i></i><i></i></div><div class="form-actions"><button class="button orange" id="toggleSound" type="button">Start sound</button><button class="button soft" id="stopSound" type="button">Stop</button></div></article><p class="notice">Audio is optional and is not treatment. Yoni does not autoplay sound.</p></section>
 
-    <section class="screen" id="screen-read" data-screen="read">
-      <p class="kicker">Supportive reading</p><h1 class="page-title">Read only what feels useful today.</h1><p class="page-lede">Short guides for reflection and general education. They do not diagnose or replace professional care.</p><div class="reading-grid"><button class="reading-card card" type="button" data-article="return"><span class="reading-mark">01</span><div><small>Feeling lost</small><h2>Finding your way back</h2><p>A gentle reset when you feel disconnected from yourself.</p></div></button><button class="reading-card card" type="button" data-article="anxiety"><span class="reading-mark">02</span><div><small>Loud thoughts</small><h2>When anxiety fills the room</h2><p>Small ways to come back to what is happening now.</p></div></button><button class="reading-card card" type="button" data-article="rest"><span class="reading-mark">03</span><div><small>Exhaustion</small><h2>Rest is not a reward</h2><p>A reminder that your body does not need to earn care.</p></div></button></div><article class="reader-panel card" id="readerPanel" hidden><div class="reader-head"><div><p class="kicker">Yoni reading room</p><h2 id="readerTitle"></h2></div><button class="reader-close" id="readerClose" type="button">Close</button></div><div class="reader-content" id="readerContent"></div></article><p class="notice">Keep what helps and leave what does not. For immediate danger or crisis, use Support instead of relying on a reading guide.</p>
-    </section>
+    <section class="screen" id="screen-read" data-screen="read"><p class="kicker">Supportive reading</p><h1 class="page-title">Read only what feels useful today.</h1><p class="page-lede">Short guides for reflection and general education. They do not diagnose or replace professional care.</p><div class="reading-grid"><button class="reading-card card" type="button" data-article="return"><span class="reading-mark">01</span><div><small>Feeling lost</small><h2>Finding your way back</h2><p>A gentle reset when you feel disconnected from yourself.</p></div></button><button class="reading-card card" type="button" data-article="anxiety"><span class="reading-mark">02</span><div><small>Loud thoughts</small><h2>When anxiety fills the room</h2><p>Small ways to come back to what is happening now.</p></div></button><button class="reading-card card" type="button" data-article="rest"><span class="reading-mark">03</span><div><small>Exhaustion</small><h2>Rest is not a reward</h2><p>A reminder that your body does not need to earn care.</p></div></button></div><article class="reader-panel card" id="readerPanel" hidden><div class="reader-head"><div><p class="kicker">Yoni reading room</p><h2 id="readerTitle"></h2></div><button class="reader-close" id="readerClose" type="button">Close</button></div><div class="reader-content" id="readerContent"></div></article><p class="notice">Keep what helps and leave what does not. For immediate danger or crisis, use Support instead of relying on a reading guide.</p></section>
 
-    <section class="screen" id="screen-privacy" data-screen="privacy">
-      <p class="kicker">Privacy and personal control</p><h1 class="page-title">Your private records belong to you.</h1><p class="page-lede">Yoni stores check-ins, journal entries, chat history, and preferences locally in this browser. It does not publish them or turn them into community posts.</p><article class="privacy-summary card"><div><span>Saved check-ins</span><strong id="privacyCheckins">0</strong></div><div><span>Journal entries</span><strong id="privacyJournals">0</strong></div><div><span>Storage</span><strong>This device</strong></div></article><article class="privacy-card card"><h2>Export your records</h2><p>Download a copy of your local check-ins, journal entries, chat, profile, and reminder preference as a JSON file.</p><button class="button orange" id="exportRecords" type="button">Export personal records</button></article><article class="privacy-card card"><h2>Gentle reminder preference</h2><p>Your choice is saved locally. Scheduled notifications are not active yet.</p><label class="preference-field"><span>Reminder setting</span><select id="reminderPreference"><option value="off">Off</option><option value="morning">Gentle morning reminder</option><option value="evening">Gentle evening reminder</option></select></label></article><article class="privacy-card card"><h2>Delete local records</h2><p>Deletion affects only this browser on this device and cannot be undone.</p><div class="privacy-actions"><button class="button soft" id="deleteCheckins" type="button">Delete check-in history</button><button class="button soft" id="deleteJournals" type="button">Delete all journal entries</button><button class="button danger" id="deleteAll" type="button">Delete all local Yoni data</button></div></article>
-    </section>
+    <section class="screen" id="screen-privacy" data-screen="privacy"><p class="kicker">Privacy and personal control</p><h1 class="page-title">Your private records belong to you.</h1><p class="page-lede">Yoni stores check-ins, journal entries, chat history, and preferences locally in this browser. It does not publish them or turn them into community posts.</p><article class="privacy-summary card"><div><span>Saved check-ins</span><strong id="privacyCheckins">0</strong></div><div><span>Journal entries</span><strong id="privacyJournals">0</strong></div><div><span>Storage</span><strong>This device</strong></div></article><article class="privacy-card card"><h2>Export your records</h2><p>Download a copy of your local check-ins, journal entries, chat, profile, and reminder preference as a JSON file.</p><button class="button orange" id="exportRecords" type="button">Export personal records</button></article><article class="privacy-card card"><h2>Gentle reminder preference</h2><p>Your choice is saved locally. Scheduled notifications are not active yet.</p><label class="preference-field"><span>Reminder setting</span><select id="reminderPreference"><option value="off">Off</option><option value="morning">Gentle morning reminder</option><option value="evening">Gentle evening reminder</option></select></label></article><article class="privacy-card card"><h2>Delete local records</h2><p>Deletion affects only this browser on this device and cannot be undone.</p><div class="privacy-actions"><button class="button soft" id="deleteCheckins" type="button">Delete check-in history</button><button class="button soft" id="deleteJournals" type="button">Delete all journal entries</button><button class="button danger" id="deleteAll" type="button">Delete all local Yoni data</button></div></article></section>
 
-    <section class="screen" id="screen-help" data-screen="help">
-      <span id="supportYoni"></span><p class="kicker">Reach a real person</p><h1 class="page-title">Human help comes first.</h1><p class="page-lede">Yoni is a digital companion for reflection and general support. He is not an emergency, medical, psychological, legal, or crisis-response service.</p><div class="hotline-list"><a class="hotline urgent" href="tel:911"><small>Immediate danger or emergency</small><h2>911</h2><p>For police, fire, ambulance, violence, or an immediate threat to safety.</p></a><a class="hotline" href="tel:1553"><small>National Center for Mental Health</small><h2>1553</h2><p>Nationwide NCMH crisis hotline.</p></a><a class="hotline" href="tel:09178998727"><small>NCMH mobile line</small><h2>0917 899 8727</h2><p>Tap to call from a mobile phone.</p></a><a class="hotline" href="tel:09663514518"><small>NCMH mobile line</small><h2>0966 351 4518</h2><p>Tap to call from a mobile phone.</p></a><a class="hotline" href="https://loveyourself.ph/mental-health/" target="_blank" rel="noopener"><small>Inclusive community support</small><h2>LoveYourself</h2><p>Mental-health and affirming community support, including LGBTQIA+ focused services.</p></a><a class="hotline" href="/gethelp/"><small>Maintained public directory</small><h2>Get Help</h2><p>Open the full list of official safety, health, child-protection, and assistance resources.</p></a></div><p class="disclaimer">Contacts were checked on 23 July 2026. Hotline availability and phone routing can change. When a number does not connect and there is immediate danger, call 911, contact a trusted person nearby, or go to the nearest emergency department.</p>
-    </section>
+    <section class="screen" id="screen-help" data-screen="help"><span id="supportYoni"></span><p class="kicker">Reach a real person</p><h1 class="page-title">Human help comes first.</h1><p class="page-lede">Yoni is a digital companion for reflection and general support. He is not an emergency, medical, psychological, legal, or crisis-response service.</p><div class="hotline-list"><a class="hotline urgent" href="tel:911"><small>Immediate danger or emergency</small><h2>911</h2><p>For police, fire, ambulance, violence, or an immediate threat to safety.</p></a><a class="hotline" href="tel:1553"><small>National Center for Mental Health</small><h2>1553</h2><p>Nationwide NCMH crisis hotline.</p></a><a class="hotline" href="tel:09178998727"><small>NCMH mobile line</small><h2>0917 899 8727</h2><p>Tap to call from a mobile phone.</p></a><a class="hotline" href="tel:09663514518"><small>NCMH mobile line</small><h2>0966 351 4518</h2><p>Tap to call from a mobile phone.</p></a><a class="hotline" href="https://loveyourself.ph/mental-health/" target="_blank" rel="noopener"><small>Inclusive community support</small><h2>LoveYourself</h2><p>Mental-health and affirming community support, including LGBTQIA+ focused services.</p></a><a class="hotline" href="/gethelp/"><small>Maintained public directory</small><h2>Get Help</h2><p>Open the full list of official safety, health, child-protection, and assistance resources.</p></a></div><p class="disclaimer">Contacts were checked on 23 July 2026. Hotline availability and phone routing can change. When a number does not connect and there is immediate danger, call 911, contact a trusted person nearby, or go to the nearest emergency department.</p></section>
   </main>
   <footer class="app-footer"><p><strong>Yoni</strong> is a digital companion, not a therapist, doctor, or emergency service.</p></footer>
 </div>
 
-<nav class="tabbar" id="tabbar" hidden aria-label="Yoni app navigation">
-  <button class="active" type="button" data-tab="home" data-go="home"><svg viewBox="0 0 24 24"><path d="m4 10.5 8-7 8 7V20h-5.5v-6h-5v6H4Z"/></svg><span>Home</span></button>
-  <button type="button" data-tab="history" data-go="history"><svg viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="3"/><path d="M8 3v5M16 3v5M4 10h16"/><path d="M8 14h2M12 14h2M16 14h.01M8 17h2M12 17h2"/></svg><span>Calendar</span></button>
-  <button class="companion-tab" type="button" data-tab="companion" data-go="companion"><span class="yoni-nav-face" aria-hidden="true">Y</span><span>Yoni</span></button>
-  <button type="button" data-tab="community" data-go="community"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4Z"/><path d="M8 9h8M8 12.5h5"/></svg><span>Kind Wall</span></button>
-  <button type="button" data-tab="profile" data-go="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"/></svg><span>Profile</span></button>
-</nav>
+<nav class="tabbar" id="tabbar" hidden aria-label="Yoni app navigation"><button class="active" type="button" data-tab="home" data-go="home"><svg viewBox="0 0 24 24"><path d="m4 10.5 8-7 8 7V20h-5.5v-6h-5v6H4Z"/></svg><span>Home</span></button><button type="button" data-tab="history" data-go="history"><svg viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="3"/><path d="M8 3v5M16 3v5M4 10h16"/><path d="M8 14h2M12 14h2M16 14h.01M8 17h2M12 17h2"/></svg><span>Calendar</span></button><button class="companion-tab" type="button" data-tab="companion" data-go="companion"><span class="yoni-nav-face" aria-hidden="true">Y</span><span>Yoni</span></button><button type="button" data-tab="community" data-go="community"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4Z"/><path d="M8 9h8M8 12.5h5"/></svg><span>Kind Wall</span></button><button type="button" data-tab="profile" data-go="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c.7-4 3-6 7-6s6.3 2 7 6"/></svg><span>Profile</span></button></nav>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -798,31 +722,9 @@ const YONI_URL='https://yoni.francinemariebautista.com/';
 const themeFromDb=value=>({violet:'dusk',navy:'midnight',forest:'forest',slate:'sunrise',sunrise:'sunrise',dusk:'dusk',midnight:'midnight'})[value]||'sunrise';
 const themeToDb=value=>({sunrise:'slate',dusk:'violet',forest:'forest',midnight:'navy'})[value]||'slate';
 const memberName=(user,db)=>db?.full_name||db?.display_name||user?.user_metadata?.full_name||user?.email?.split('@')[0]?.replace(/[._-]+/g,' ')||'Friend';
-const memberProfileToLocal=(user,db)=>{
-  const existing=read(keys.profile,{});
-  return {
-    ...existing,
-    name:memberName(user,db),
-    username:db?.username||existing.username||window.FMB?.usernameFrom?.(user?.email?.split('@')[0])||'friend',
-    fruit:fruit[db?.avatar_preset]?db.avatar_preset:(fruit[existing.fruit]?existing.fruit:'orange'),
-    bio:db?.bio||existing.bio||''
-  };
-};
-async function loadMemberProfile(user){
-  if(!authClient||!user)return null;
-  try{
-    const {data,error}=await authClient.from('profiles').select('*').eq('id',user.id).maybeSingle();
-    if(error)throw error;
-    return data||null;
-  }catch(error){console.warn('Profile load failed',error);return null}
-}
-async function saveMemberPatch(patch){
-  if(!authClient||!authUser)return {error:null,localOnly:true};
-  try{
-    const {error}=await authClient.from('profiles').update(patch).eq('id',authUser.id);
-    return {error,localOnly:false};
-  }catch(error){return {error,localOnly:false}}
-}
+const memberProfileToLocal=(user,db)=>{const existing=read(keys.profile,{});return {...existing,name:memberName(user,db),username:db?.username||existing.username||window.FMB?.usernameFrom?.(user?.email?.split('@')[0])||'friend',fruit:fruit[db?.avatar_preset]?db.avatar_preset:(fruit[existing.fruit]?existing.fruit:'orange'),bio:db?.bio||existing.bio||''}};
+async function loadMemberProfile(user){if(!authClient||!user)return null;try{const {data,error}=await authClient.from('profiles').select('*').eq('id',user.id).maybeSingle();if(error)throw error;return data||null}catch(error){console.warn('Profile load failed',error);return null}}
+async function saveMemberPatch(patch){if(!authClient||!authUser)return {error:null,localOnly:true};try{const {error}=await authClient.from('profiles').update(patch).eq('id',authUser.id);return {error,localOnly:false}}catch(error){return {error,localOnly:false}}}
 
 let navHistory=['home'];
 const motionReduced=()=>matchMedia('(prefers-reduced-motion:reduce)').matches;
@@ -830,50 +732,12 @@ const safeSessionGet=k=>{try{return sessionStorage.getItem(k)}catch{return null}
 const safeSessionSet=(k,v)=>{try{sessionStorage.setItem(k,v);return true}catch{return false}};
 const safeSessionRemove=k=>{try{sessionStorage.removeItem(k)}catch{}};
 const navRank={home:0,history:1,companion:2,community:3,profile:4,checkin:1,journal:1,tools:1,listen:1,read:1,privacy:4,help:4};
-function setButtonLoading(button,on,label='Loading'){
-  if(!button)return;
-  if(on){button.dataset.label=button.textContent;button.classList.add('is-loading');button.disabled=true;button.setAttribute('aria-label',label)}
-  else{button.classList.remove('is-loading');button.disabled=false;if(button.dataset.label){button.textContent=button.dataset.label;delete button.dataset.label}button.removeAttribute('aria-label')}
-}
-function setLaunch(open,{title='Opening Yoni',text='Preparing your private space...'}={}){
-  const layer=$('#appLaunch');if(!layer)return;
-  $('#appLaunchTitle').textContent=title;$('#appLaunchText').textContent=text;
-  if(open){layer.hidden=false;requestAnimationFrame(()=>layer.classList.add('visible'))}
-  else{layer.classList.remove('visible');setTimeout(()=>layer.hidden=true,motionReduced()?10:300)}
-}
+function setButtonLoading(button,on,label='Loading'){if(!button)return;if(on){button.dataset.label=button.textContent;button.classList.add('is-loading');button.disabled=true;button.setAttribute('aria-label',label)}else{button.classList.remove('is-loading');button.disabled=false;if(button.dataset.label){button.textContent=button.dataset.label;delete button.dataset.label}button.removeAttribute('aria-label')}}
+function setLaunch(open,{title='Opening Yoni',text='Preparing your private space...'}={}){const layer=$('#appLaunch');if(!layer)return;$('#appLaunchTitle').textContent=title;$('#appLaunchText').textContent=text;if(open){layer.hidden=false;requestAnimationFrame(()=>layer.classList.add('visible'))}else{layer.classList.remove('visible');setTimeout(()=>layer.hidden=true,motionReduced()?10:300)}}
 function subtleHaptic(){try{navigator.vibrate?.(8)}catch{}}
-function primeSignInSound(){
-  try{
-    signInAudioContext=signInAudioContext||new (window.AudioContext||window.webkitAudioContext)();
-    signInAudioContext.resume?.();
-  }catch{}
-}
-function playSignInSound(){
-  try{
-    primeSignInSound();
-    const ctx=signInAudioContext;if(!ctx)return;
-    const start=ctx.currentTime+.025;
-    const master=ctx.createGain();
-    master.gain.setValueAtTime(.0001,start);
-    master.gain.exponentialRampToValueAtTime(.12,start+.035);
-    master.gain.exponentialRampToValueAtTime(.0001,start+.78);
-    master.connect(ctx.destination);
-    [[523.25,0,.42],[659.25,.11,.5],[783.99,.24,.54]].forEach(([frequency,delay,length])=>{
-      const oscillator=ctx.createOscillator(),gain=ctx.createGain();
-      oscillator.type='sine';oscillator.frequency.setValueAtTime(frequency,start+delay);
-      gain.gain.setValueAtTime(.0001,start+delay);
-      gain.gain.exponentialRampToValueAtTime(.34,start+delay+.025);
-      gain.gain.exponentialRampToValueAtTime(.0001,start+delay+length);
-      oscillator.connect(gain);gain.connect(master);
-      oscillator.start(start+delay);oscillator.stop(start+delay+length+.03);
-    });
-  }catch{}
-}
-function prepareScreen(name){
-  if(name==='home')renderToday();if(name==='journal')renderJournals();if(name==='history')renderCalendar();if(name==='privacy')renderPrivacy();if(name==='community')renderWall();if(name==='profile')applyProfile();
-}
-
-
+function primeSignInSound(){try{signInAudioContext=signInAudioContext||new (window.AudioContext||window.webkitAudioContext)();signInAudioContext.resume?.()}catch{}}
+function playSignInSound(){try{primeSignInSound();const ctx=signInAudioContext;if(!ctx)return;const start=ctx.currentTime+.025;const master=ctx.createGain();master.gain.setValueAtTime(.0001,start);master.gain.exponentialRampToValueAtTime(.12,start+.035);master.gain.exponentialRampToValueAtTime(.0001,start+.78);master.connect(ctx.destination);[[523.25,0,.42],[659.25,.11,.5],[783.99,.24,.54]].forEach(([frequency,delay,length])=>{const oscillator=ctx.createOscillator(),gain=ctx.createGain();oscillator.type='sine';oscillator.frequency.setValueAtTime(frequency,start+delay);gain.gain.setValueAtTime(.0001,start+delay);gain.gain.exponentialRampToValueAtTime(.34,start+delay+.025);gain.gain.exponentialRampToValueAtTime(.0001,start+delay+length);oscillator.connect(gain);gain.connect(master);oscillator.start(start+delay);oscillator.stop(start+delay+length+.03)})}catch{}}
+function prepareScreen(name){if(name==='home')renderToday();if(name==='journal')renderJournals();if(name==='history')renderCalendar();if(name==='privacy')renderPrivacy();if(name==='community')renderWall();if(name==='profile')applyProfile()}
 function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('visible');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('visible'),2500)}
 function firstName(){return String(profile.name||'friend').trim().split(/\s+/)[0]||'friend'}
 function initials(){return String(profile.name||'F').trim().split(/\s+/).slice(0,2).map(x=>x[0]?.toUpperCase()).join('')||'F'}
@@ -883,151 +747,28 @@ function setModal(layer,open){if(!layer)return;if(open){layer.hidden=false;docum
 function openWorkWithFmb(){setModal($('#fmbWelcomeModal'),false);setTimeout(()=>setModal($('#workWithFmbModal'),true),250)}
 function closeWorkWithFmb(){setModal($('#workWithFmbModal'),false)}
 function openPostLoginSequence(force=false){if(!force&&safeSessionGet(loginPopupSessionKey))return;safeSessionSet(loginPopupSessionKey,'1');if(force)setTimeout(()=>toast('Welcome back. Your Yoni space is ready.'),420)}
-function enterApp(name,forcePopups=false){
-  if(name){profile.name=name;write(keys.profile,profile)}
-  setLaunch(true,{title:'Opening Yoni',text:'Preparing your calm, private space...'});
-  document.body.classList.add('screen-content-loading');
-  setTimeout(()=>{
-    $('#accessGate').hidden=true;$('#appShell').hidden=false;$('#tabbar').hidden=false;
-    applyProfile();const requested=location.hash.replace('#','');show($(`[data-screen="${requested}"]`)?requested:'home',{instant:true});window.scrollTo(0,0);
-    setTimeout(()=>{setLaunch(false);document.body.classList.remove('screen-content-loading');openPostLoginSequence(forcePopups)},motionReduced()?20:460);
-  },motionReduced()?20:620)
-}
-async function signOut(){
-  setLaunch(true,{title:'Closing your space',text:'Signing out securely...'});
-  try{await authClient?.auth.signOut({scope:'local'})}catch{}
-  authUser=null;accountProfile=null;
-  setTimeout(()=>{$('#appShell').hidden=true;$('#tabbar').hidden=true;$('#accessGate').hidden=false;window.scrollTo(0,0);setLaunch(false)},motionReduced()?20:420)
-}
-function authStatus(element,message,type=''){
-  element.textContent=message||'';
-  element.dataset.type=type;
-  element.classList.toggle('visible',Boolean(message));
-}
-async function openAuthenticatedUser(user,forcePopups=false){
-  authUser=user;
-  accountProfile=await loadMemberProfile(user);
-  profile=memberProfileToLocal(user,accountProfile);
-  write(keys.profile,profile);
-  const chosenTheme=themeFromDb(accountProfile?.app_theme)||read(keys.theme,'sunrise');
-  document.body.dataset.theme=chosenTheme;write(keys.theme,chosenTheme);
-  if(forcePopups)playSignInSound();
-  enterApp(profile.name,forcePopups);
-}
-async function initializeAuth(){
-  if(!window.FMB?.configured){
-    authStatus($('#signinStatus'),'Account service is temporarily unavailable. Please try again later.','error');
-    return;
-  }
-  authClient=window.FMB.createClient('local');
-  const hashError=new URLSearchParams(location.hash.replace(/^#/,'')).get('error_description');
-  if(hashError)authStatus($('#signinStatus'),decodeURIComponent(hashError),'error');
-  try{
-    const {data:{session}}=await authClient.auth.getSession();
-    if(session?.user?.email_confirmed_at){await openAuthenticatedUser(session.user);return}
-  }catch(error){console.warn('Session check failed',error)}
-  $('#accessGate').hidden=false;
-}
+function enterApp(name,forcePopups=false){if(name){profile.name=name;write(keys.profile,profile)}setLaunch(true,{title:'Opening Yoni',text:'Preparing your calm, private space...'});document.body.classList.add('screen-content-loading');setTimeout(()=>{$('#accessGate').hidden=true;$('#appShell').hidden=false;$('#tabbar').hidden=false;applyProfile();const requested=location.hash.replace('#','');show($(`[data-screen="${requested}"]`)?requested:'home',{instant:true});window.scrollTo(0,0);setTimeout(()=>{setLaunch(false);document.body.classList.remove('screen-content-loading');openPostLoginSequence(forcePopups)},motionReduced()?20:460)},motionReduced()?20:620)}
+async function signOut(){setLaunch(true,{title:'Closing your space',text:'Signing out securely...'});try{await authClient?.auth.signOut({scope:'local'})}catch{}authUser=null;accountProfile=null;setTimeout(()=>{$('#appShell').hidden=true;$('#tabbar').hidden=true;$('#accessGate').hidden=false;window.scrollTo(0,0);setLaunch(false)},motionReduced()?20:420)}
+function authStatus(element,message,type=''){element.textContent=message||'';element.dataset.type=type;element.classList.toggle('visible',Boolean(message))}
+async function openAuthenticatedUser(user,forcePopups=false){authUser=user;accountProfile=await loadMemberProfile(user);profile=memberProfileToLocal(user,accountProfile);write(keys.profile,profile);const chosenTheme=themeFromDb(accountProfile?.app_theme)||read(keys.theme,'sunrise');document.body.dataset.theme=chosenTheme;write(keys.theme,chosenTheme);if(forcePopups)playSignInSound();enterApp(profile.name,forcePopups)}
+async function initializeAuth(){if(!window.FMB?.configured){authStatus($('#signinStatus'),'Account service is temporarily unavailable. Please try again later.','error');return}authClient=window.FMB.createClient('local');const hashError=new URLSearchParams(location.hash.replace(/^#/,'')).get('error_description');if(hashError)authStatus($('#signinStatus'),decodeURIComponent(hashError),'error');try{const {data:{session}}=await authClient.auth.getSession();if(session?.user?.email_confirmed_at){await openAuthenticatedUser(session.user);return}}catch(error){console.warn('Session check failed',error)}$('#accessGate').hidden=false}
 $('#signupTab').onclick=()=>{$('#signupPanel').hidden=true;$('#signinPanel').hidden=false};
 $('#signinTab').onclick=()=>{$('#signinTab').classList.add('active');$('#signupTab').classList.remove('active');$('#signinPanel').hidden=false;$('#signupPanel').hidden=true};
-$('#signupForm').onsubmit=e=>{
-  e.preventDefault();
-  authStatus($('#signupStatus'),'Registration is closed. Existing members may sign in.','error');
-  $('#signinTab').click();
-};
-$('#signinForm').onsubmit=async e=>{
-  e.preventDefault();
-  primeSignInSound();
-  const email=$('#signinEmail').value.trim().toLowerCase(),password=$('#signinPassword').value;
-  const button=e.currentTarget.querySelector('[type="submit"]'),st=$('#signinStatus');
-  if(!window.FMB?.configured){authStatus(st,'Account service is temporarily unavailable.','error');return}
-  authClient=authClient||window.FMB.createClient('local');
-  setButtonLoading(button,true,'Signing in');
-  authStatus(st,'Opening your member account...');
-  const {data,error}=await authClient.auth.signInWithPassword({email,password});
-  setButtonLoading(button,false);
-  if(error){authStatus(st,error.message,'error');return}
-  if(!data?.user?.email_confirmed_at){authStatus(st,'Please verify your email before signing in.','error');return}
-  authStatus(st,'');
-  await openAuthenticatedUser(data.user,true);
-};
-async function requestPasswordReset(email){
-  const address=String(email||authUser?.email||'').trim().toLowerCase();
-  if(!address){toast('Enter your email first.');return}
-  authClient=authClient||window.FMB?.createClient('local');
-  if(!authClient){toast('Account service is temporarily unavailable.');return}
-  const {error}=await authClient.auth.resetPasswordForEmail(address,{redirectTo:'https://www.francinemariebautista.com/reset-password.html'});
-  toast(error?error.message:'Password reset link sent. Check your email.');
-}
-$('#resetPassword').onclick=()=>requestPasswordReset($('#signinEmail').value||$('#signupEmail').value);
-$('#profileResetPassword').onclick=()=>requestPasswordReset(authUser?.email);
+$('#signupForm').onsubmit=e=>{e.preventDefault();authStatus($('#signupStatus'),'Registration is closed. Existing members may sign in.','error');$('#signinTab').click()};
+$('#signinForm').onsubmit=async e=>{e.preventDefault();primeSignInSound();const email=$('#signinEmail').value.trim().toLowerCase(),password=$('#signinPassword').value;const button=e.currentTarget.querySelector('[type="submit"]'),st=$('#signinStatus');if(!window.FMB?.configured){authStatus(st,'Account service is temporarily unavailable.','error');return}authClient=authClient||window.FMB.createClient('local');setButtonLoading(button,true,'Signing in');authStatus(st,'Opening your member account...');const {data,error}=await authClient.auth.signInWithPassword({email,password});setButtonLoading(button,false);if(error){authStatus(st,error.message,'error');return}if(!data?.user?.email_confirmed_at){authStatus(st,'Please verify your email before signing in.','error');return}authStatus(st,'');await openAuthenticatedUser(data.user,true)};
+async function requestPasswordReset(email){const address=String(email||authUser?.email||'').trim().toLowerCase();if(!address){toast('Enter your email first.');return}authClient=authClient||window.FMB?.createClient('local');if(!authClient){toast('Account service is temporarily unavailable.');return}const {error}=await authClient.auth.resetPasswordForEmail(address,{redirectTo:'https://www.francinemariebautista.com/reset-password.html'});toast(error?error.message:'Password reset link sent. Check your email.')}
+$('#resetPassword').onclick=()=>requestPasswordReset($('#signinEmail').value||$('#signupEmail').value);$('#profileResetPassword').onclick=()=>requestPasswordReset(authUser?.email);
 
-$('#fmbWelcomeContinue').onclick=openWorkWithFmb;
-$('#fmbWelcomeClose').onclick=openWorkWithFmb;
-$('#workWithFmbLater').onclick=closeWorkWithFmb;
-$('#workWithFmbClose').onclick=closeWorkWithFmb;
-[$('#fmbWelcomeModal'),$('#workWithFmbModal')].forEach(layer=>layer?.addEventListener('click',e=>{if(e.target===layer){if(layer.id==='fmbWelcomeModal')openWorkWithFmb();else closeWorkWithFmb()}}));
-document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if($('#workWithFmbModal')?.classList.contains('visible'))closeWorkWithFmb();else if($('#fmbWelcomeModal')?.classList.contains('visible'))openWorkWithFmb()});
+$('#fmbWelcomeContinue').onclick=openWorkWithFmb;$('#fmbWelcomeClose').onclick=openWorkWithFmb;$('#workWithFmbLater').onclick=closeWorkWithFmb;$('#workWithFmbClose').onclick=closeWorkWithFmb;[$('#fmbWelcomeModal'),$('#workWithFmbModal')].forEach(layer=>layer?.addEventListener('click',e=>{if(e.target===layer){if(layer.id==='fmbWelcomeModal')openWorkWithFmb();else closeWorkWithFmb()}}));document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if($('#workWithFmbModal')?.classList.contains('visible'))closeWorkWithFmb();else if($('#fmbWelcomeModal')?.classList.contains('visible'))openWorkWithFmb()});
 
-
-function show(name,{instant=false,back=false}={}){
-  const current=$('.screen.active');
-  if(current?.dataset.screen===name){prepareScreen(name);return}
-  const next=$(`[data-screen="${name}"]`);if(!next)return;
-  const currentName=current?.dataset.screen||'home';
-  const navTarget=({journal:'history',checkin:'home',tools:'home',listen:'home',read:'home',help:'home',privacy:'profile'})[name]||name;
-  const goingBack=back||(navRank[name]??0)<(navRank[currentName]??0);
-  prepareScreen(name);
-  $$('.screen').forEach(s=>s.classList.remove('enter-forward','exit-forward','enter-back','exit-back'));
-  if(current&&!instant&&!motionReduced()){
-    current.classList.add(goingBack?'exit-back':'exit-forward');
-    setTimeout(()=>{current.classList.remove('active','exit-back','exit-forward')},300)
-  }else current?.classList.remove('active');
-  next.classList.add('active');
-  if(!instant&&!motionReduced()){
-    next.classList.add(goingBack?'enter-back':'enter-forward');
-    setTimeout(()=>next.classList.remove('enter-back','enter-forward'),560)
-  }
-  $$('[data-tab]').forEach(t=>t.classList.toggle('active',t.dataset.tab===navTarget));
-  if(navHistory.at(-1)!==name){if(goingBack&&navHistory.length>1)navHistory.pop();else navHistory.push(name)}
-  history.replaceState({screen:name},'',`#${name}`);
-  window.scrollTo({top:0,behavior:'auto'});subtleHaptic();
-}
+function show(name,{instant=false,back=false}={}){const current=$('.screen.active');if(current?.dataset.screen===name){prepareScreen(name);return}const next=$(`[data-screen="${name}"]`);if(!next)return;const currentName=current?.dataset.screen||'home';const navTarget=({journal:'history',checkin:'home',tools:'home',listen:'home',read:'home',help:'home',privacy:'profile'})[name]||name;const goingBack=back||(navRank[name]??0)<(navRank[currentName]??0);prepareScreen(name);$$('.screen').forEach(s=>s.classList.remove('enter-forward','exit-forward','enter-back','exit-back'));if(current&&!instant&&!motionReduced()){current.classList.add(goingBack?'exit-back':'exit-forward');setTimeout(()=>{current.classList.remove('active','exit-back','exit-forward')},300)}else current?.classList.remove('active');next.classList.add('active');if(!instant&&!motionReduced()){next.classList.add(goingBack?'enter-back':'enter-forward');setTimeout(()=>next.classList.remove('enter-back','enter-forward'),560)}$$('[data-tab]').forEach(t=>t.classList.toggle('active',t.dataset.tab===navTarget));if(navHistory.at(-1)!==name){if(goingBack&&navHistory.length>1)navHistory.pop();else navHistory.push(name)}history.replaceState({screen:name},'',`#${name}`);window.scrollTo({top:0,behavior:'auto'});subtleHaptic()}
 $$('[data-go]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();show(b.dataset.go)}));
-const pressables='button,.card[role="button"],.journal-feature,.home-action-card,.mood-option,.fruit-choice,.theme-choice';
-document.addEventListener('pointerdown',e=>{const el=e.target.closest(pressables);if(el&&!el.disabled)el.classList.add('is-pressed')},{passive:true});
-['pointerup','pointercancel','pointerleave'].forEach(type=>document.addEventListener(type,e=>e.target.closest?.(pressables)?.classList.remove('is-pressed'),{passive:true}));
-let lastScroll=0;addEventListener('scroll',()=>{const y=scrollY;$('.app-header')?.classList.toggle('is-compact',y>18);const bar=$('#tabbar');if(bar&&!bar.hidden){bar.classList.toggle('is-hidden',y>lastScroll&&y>180);lastScroll=y}}, {passive:true});
-addEventListener('hashchange',()=>{const name=location.hash.replace('#','');if(name&&$(`[data-screen="${name}"]`)&&!$('.post-login-layer.visible'))show(name,{back:true})});
-$('#signOut').onclick=signOut;
+const pressables='button,.card[role="button"],.journal-feature,.home-action-card,.mood-option,.fruit-choice,.theme-choice';document.addEventListener('pointerdown',e=>{const el=e.target.closest(pressables);if(el&&!el.disabled)el.classList.add('is-pressed')},{passive:true});['pointerup','pointercancel','pointerleave'].forEach(type=>document.addEventListener(type,e=>e.target.closest?.(pressables)?.classList.remove('is-pressed'),{passive:true}));let lastScroll=0;addEventListener('scroll',()=>{const y=scrollY;$('.app-header')?.classList.toggle('is-compact',y>18);const bar=$('#tabbar');if(bar&&!bar.hidden){bar.classList.toggle('is-hidden',y>lastScroll&&y>180);lastScroll=y}},{passive:true});addEventListener('hashchange',()=>{const name=location.hash.replace('#','');if(name&&$(`[data-screen="${name}"]`)&&!$('.post-login-layer.visible'))show(name,{back:true})});$('#signOut').onclick=signOut;
 
 function applyProfile(){if(!fruit[profile.fruit])profile.fruit='orange';const av=fruitAvatarHtml(profile.fruit);['accountAvatar','communityAvatar','profileAvatar'].forEach(id=>{const el=$('#'+id);if(!el)return;el.innerHTML=av;el.style.backgroundImage='none'});$('#profileName').textContent=profile.name||'Friend';$('#profileUsername').textContent='@'+(profile.username||'friend');$('#communityUsername').textContent='@'+(profile.username||'friend');$('#realName').value=profile.name||'';$('#username').value=profile.username||'friend';$('#profileBio').value=profile.bio||'';updateHomeGreeting();$$('[data-fruit]').forEach(b=>{const active=b.dataset.fruit===profile.fruit;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))})}
-$('#profileForm').onsubmit=async e=>{
-  e.preventDefault();
-  const username=$('#username').value.trim().toLowerCase().replace(/[^a-z0-9_]/g,'');
-  const bio=$('#profileBio').value.trim();
-  if(username.length<3){toast('Username needs at least 3 characters.');return}
-  const button=e.currentTarget.querySelector('[type="submit"]');
-  setButtonLoading(button,true,'Saving profile');
-  const result=await saveMemberPatch({username,bio});
-  setButtonLoading(button,false);
-  if(result.error){toast(result.error.message||'Profile could not be saved.');return}
-  profile.username=username;profile.bio=bio;write(keys.profile,profile);applyProfile();
-  $('#profileStatus').textContent=result.localOnly?'Saved on this device.':'Profile details saved.';
-  $('#profileStatus').classList.add('visible');
-};
-$$('[data-fruit]').forEach(b=>b.onclick=async()=>{
-  const next=b.dataset.fruit;
-  const result=await saveMemberPatch({avatar_preset:next});
-  if(result.error){toast(result.error.message||'Avatar could not be saved.');return}
-  profile.fruit=next;write(keys.profile,profile);applyProfile();toast(`${b.querySelector('small').textContent} with shades selected.`);
-});
-$$('[data-theme-choice]').forEach(b=>b.onclick=async()=>{
-  const t=b.dataset.themeChoice;
-  const result=await saveMemberPatch({app_theme:themeToDb(t)});
-  if(result.error){toast(result.error.message||'Theme could not be saved.');return}
-  document.body.dataset.theme=t;write(keys.theme,t);$$('[data-theme-choice]').forEach(x=>x.classList.toggle('active',x===b));toast('Theme updated.');
-});
+$('#profileForm').onsubmit=async e=>{e.preventDefault();const username=$('#username').value.trim().toLowerCase().replace(/[^a-z0-9_]/g,'');const bio=$('#profileBio').value.trim();if(username.length<3){toast('Username needs at least 3 characters.');return}const button=e.currentTarget.querySelector('[type="submit"]');setButtonLoading(button,true,'Saving profile');const result=await saveMemberPatch({username,bio});setButtonLoading(button,false);if(result.error){toast(result.error.message||'Profile could not be saved.');return}profile.username=username;profile.bio=bio;write(keys.profile,profile);applyProfile();$('#profileStatus').textContent=result.localOnly?'Saved on this device.':'Profile details saved.';$('#profileStatus').classList.add('visible')};
+$$('[data-fruit]').forEach(b=>b.onclick=async()=>{const next=b.dataset.fruit;const result=await saveMemberPatch({avatar_preset:next});if(result.error){toast(result.error.message||'Avatar could not be saved.');return}profile.fruit=next;write(keys.profile,profile);applyProfile();toast(`${b.querySelector('small').textContent} with shades selected.`)});
+$$('[data-theme-choice]').forEach(b=>b.onclick=async()=>{const t=b.dataset.themeChoice;const result=await saveMemberPatch({app_theme:themeToDb(t)});if(result.error){toast(result.error.message||'Theme could not be saved.');return}document.body.dataset.theme=t;write(keys.theme,t);$$('[data-theme-choice]').forEach(x=>x.classList.toggle('active',x===b));toast('Theme updated.')});
 const savedTheme=read(keys.theme,'sunrise');document.body.dataset.theme=savedTheme;$$('[data-theme-choice]').forEach(b=>b.classList.toggle('active',b.dataset.themeChoice===savedTheme));
 
 const ACK={5:['It sounds like there is some steadiness today.','Thank you for noticing it. You can save this moment, write what is helping, or simply continue with your day.'],4:['Mostly okay still deserves a check-in.','There may be tension beside the okay parts. You do not need to force either feeling away.'],3:['Heavy or uncertain can be difficult to hold.','Thank you for naming it. You may write a little, try one slow breathing cycle, or talk to Yoni without explaining everything.'],2:['It sounds like today is taking a lot from you.','You do not have to solve the whole day here. Consider reaching out to someone you trust or opening Support.'],1:['Your safety matters more than completing this check-in.','Please contact emergency services, an available crisis line, or a trusted person nearby now. Yoni cannot send help.']};
@@ -1039,10 +780,10 @@ $('#journalDate').textContent=formatDate(new Date());$('#journalText').oninput=(
 $('#saveJournal').onclick=()=>{const text=$('#journalText').value.trim();if(!text){toast('Write something before saving.');return}const items=read(keys.journals,[]);items.unshift({id:Date.now(),date:dateKey(),text,createdAt:new Date().toISOString()});write(keys.journals,items);$('#journalText').value='';$('#journalCount').textContent='0 characters';renderJournals();toast('Journal entry saved privately.')};
 function renderJournals(){const items=read(keys.journals,[]);$('#journalList').innerHTML=items.length?items.map(x=>`<article class="journal-entry card"><time>${formatDate(new Date(x.createdAt))}</time><p>${escapeHtml(x.text)}</p><div class="entry-bottom"><button type="button" data-delete-journal="${x.id}">Delete</button></div></article>`).join(''):'<div class="empty card">No saved entries yet.</div>';$$('[data-delete-journal]').forEach(b=>b.onclick=()=>{write(keys.journals,items.filter(x=>String(x.id)!==b.dataset.deleteJournal));renderJournals();toast('Entry deleted.')})}
 
-const approvedStories=[{avatar:'orange',user:'@littlewins',time:'Today',text:'I finally answered the message I had been avoiding. It was small, but I feel lighter.',tag:'Small win'},{avatar:'grapes',user:'@softreset',time:'Yesterday',text:'Reminder: resting before you completely burn out still counts as being responsible.',tag:'Kind reminder'},{avatar:'lemon',user:'@sunny_side',time:'2 days ago',text:'A stranger held the door for me today. Tiny kindness, surprisingly big effect.',tag:'Gratitude'}];
-function renderWall(){const queue=read(keys.queue,[]);$('#wallFeed').innerHTML=approvedStories.map(s=>`<article class="story-card card"><div class="story-head"><span class="story-avatar">${fruitAvatarHtml(s.avatar)}</span><div><strong>${s.user}</strong><span>${s.time}</span></div></div><p>${s.text}</p><span class="story-tag">${s.tag}</span></article>`).join('');$('#wallQueue').innerHTML=queue.length?queue.map(q=>`<article class="queue-card"><strong>Awaiting moderator review</strong><p>${escapeHtml(q.text)}</p></article>`).join(''):'<div class="empty card">Your submitted stories will appear here.</div>'}
+const exampleStories=[{avatar:'orange',user:'@littlewins',time:'Fictional example',text:'I finally answered the message I had been avoiding. It was small, but I feel lighter.',tag:'Small win'},{avatar:'grapes',user:'@softreset',time:'Fictional example',text:'Reminder: resting before you completely burn out still counts as being responsible.',tag:'Kind reminder'},{avatar:'lemon',user:'@sunny_side',time:'Fictional example',text:'A stranger held the door for me today. Tiny kindness, surprisingly big effect.',tag:'Gratitude'}];
+function renderWall(){const queue=read(keys.queue,[]);$('#wallFeed').innerHTML=exampleStories.map(s=>`<article class="story-card card"><div class="story-head"><span class="story-avatar">${fruitAvatarHtml(s.avatar)}</span><div><strong>${s.user}</strong><span>${s.time}</span></div></div><p>${s.text}</p><span class="story-tag">${s.tag}</span></article>`).join('');$('#wallQueue').innerHTML=queue.length?queue.map(q=>`<article class="queue-card"><strong>Saved locally — not submitted</strong><p>${escapeHtml(q.text)}</p></article>`).join(''):'<div class="empty card">No older local preview drafts are stored in this browser.</div>'}
 $('#wallContent').oninput=()=>$('#wallCount').textContent=`${$('#wallContent').value.length} / 2000`;
-$('#wallForm').onsubmit=e=>{e.preventDefault();const text=$('#wallContent').value.trim();if(!text||!$('#wallConsent').checked){toast('Add a constructive post and confirm the review notice.');return}const q=read(keys.queue,[]);q.unshift({id:Date.now(),text,date:new Date().toISOString()});write(keys.queue,q);$('#wallContent').value='';$('#wallConsent').checked=false;$('#wallCount').textContent='0 / 2000';$('#wallStatus').textContent='Sent for moderator review. It is not public yet.';$('#wallStatus').classList.add('visible');renderWall()};
+$('#wallForm').onsubmit=e=>{e.preventDefault();e.stopImmediatePropagation();$('#wallStatus').textContent='Community posting is not active. Nothing was submitted or transmitted.';$('#wallStatus').classList.add('visible')};
 
 function renderCalendar(){const y=calendarCursor.getFullYear(),m=calendarCursor.getMonth();$('#calendarMonth').textContent=new Intl.DateTimeFormat('en-PH',{month:'long',year:'numeric'}).format(calendarCursor);const first=new Date(y,m,1),start=new Date(y,m,1-first.getDay());const checks=read(keys.checkins,[]), journals=read(keys.journals,[]);let html='';for(let i=0;i<42;i++){const d=new Date(start);d.setDate(start.getDate()+i);const k=dateKey(d),c=checks.find(x=>x.date===k),hasJ=journals.some(x=>x.date===k);html+=`<button class="calendar-day ${d.getMonth()!==m?'outside':''} ${(c||hasJ)?'has-data':''} ${k===selectedHistory?'selected':''} ${k===dateKey()?'today':''}" data-day="${k}" type="button"><span class="day-number">${d.getDate()}</span><span class="day-emoji">${c?c.emoji:''}</span>${hasJ?'<i class="day-journal"></i>':''}</button>`}$('#calendarGrid').innerHTML=html;$$('[data-day]').forEach(b=>b.onclick=()=>{selectedHistory=b.dataset.day;renderCalendar()});renderHistoryDetail()}
 function renderHistoryDetail(){const c=read(keys.checkins,[]).find(x=>x.date===selectedHistory),j=read(keys.journals,[]).filter(x=>x.date===selectedHistory);const d=new Date(selectedHistory+'T12:00:00');let html=`<h3>${formatDate(d)}</h3>`;if(!c&&!j.length)html+='<p>No private records saved for this date.</p>';if(c)html+=`<div class="history-record"><strong>${c.emoji} ${escapeHtml(c.label)}</strong><span>${c.note?escapeHtml(c.note):'No note added.'}</span></div>`;j.forEach(x=>html+=`<div class="history-record"><strong>Journal entry</strong><span>${escapeHtml(x.text)}</span></div>`);$('#historyDetail').innerHTML=html}
@@ -1052,216 +793,10 @@ const affirmations=['You do not have to solve everything in this moment.','Rest 
 $('#newAffirmation').onclick=()=>{$('#affirmation').textContent=affirmations[Math.floor(Math.random()*affirmations.length)]};
 $('#startBreathing').onclick=()=>{const orb=$('#breatheOrb'),label=$('#breatheLabel');orb.classList.remove('active');void orb.offsetWidth;orb.classList.add('active');label.textContent='Breathe in';setTimeout(()=>label.textContent='Hold gently',4000);setTimeout(()=>label.textContent='Breathe out',6000);setTimeout(()=>{label.textContent='Done';orb.classList.remove('active')},12000)};
 
-const responseBanks={
-listen:[
-'Naririnig kita. Ilabas mo lang. Hindi ko muna aayusin o huhusgahan ang kwento mo.',
-'Nandito ako sa conversation na ito. You can keep going, kahit magulo, paulit-ulit, o mabigat.',
-'You do not need to make this sound reasonable. Sabihin mo lang kung paano talaga nangyari para sa’yo.',
-'Okay. No advice muna. I’m listening. Ano pa ang gusto mong mailabas?',
-'That sounds like a lot to carry quietly. You can put more of it here.',
-'Hindi kita mamadaliin. Take your time. Kahit fragments lang, mababasa ko.',
-'You have space here to be angry, tired, confused, or hurt. Go on when you’re ready.',
-'Walang kailangan patunayan. I’m following your story. What happened next?',
-'I hear that this has been sitting with you. You can say the part you have not been able to say out loud.',
-'You can pause, continue, or repeat yourself. There is no correct way to vent.'
-],
-comfort:[
-'Ang bigat nun. I’m sorry you are carrying this right now. Hindi mo kailangang maging okay agad.',
-'Your feelings make sense in the context of what happened. You deserve gentleness while you move through it.',
-'You are not weak for being affected. Nasaktan ka because something mattered.',
-'One hard moment does not erase your worth. You are still you, even while hurting.',
-'Please be softer with yourself tonight. You have already been doing a lot just to keep going.',
-'You do not have to earn comfort. Puwede kang huminga at magpahinga bago mo malaman ang next step.',
-'I’m glad you said it instead of carrying it alone in silence. Your experience deserves to be acknowledged.',
-'This feeling is real, but it is not a final verdict about your life or your future.',
-'You are allowed to need support. Reaching out is not pagiging pabigat.',
-'For this moment, let us make the world smaller: one breath, one glass of water, one safe next step.'
-],
-think:[
-'Let us separate what happened, what you are feeling, and what you need next. Which one feels easiest to name?',
-'What part is within your control today, and what part can wait without being solved tonight?',
-'Before making a big decision, what facts do you know for sure, and what are you afraid might be true?',
-'What would you advise someone you care about if they were in your exact situation?',
-'You do not need the whole answer. What is the smallest useful next move?',
-'Would it help to sort this into: urgent, important, and not yours to carry?',
-'What boundary, request, or pause might protect your energy here?',
-'Let us look for the choice that respects both your feelings and your future self.',
-'What outcome are you hoping for, and what would be an acceptable outcome if the ideal one is not possible?',
-'You can take time before responding. A delayed decision can still be a strong decision.'
-],
-ground:[
-'Let us return to the room. Name five things you can see, four you can feel, and three you can hear.',
-'Put both feet on the floor if you can. Press down gently and notice that the ground is holding you.',
-'Look around and name where you are, what day it is, and one thing that is safe in this exact moment.',
-'Breathe in gently for four, hold for two, then breathe out for six. No need to force a deep breath.',
-'Unclench your jaw. Lower your shoulders. Let your hands rest somewhere supported.',
-'Choose one object near you. Describe its color, shape, texture, and temperature.',
-'Take one sip of water if available. Notice the temperature and the movement as you swallow.',
-'Your mind is sounding an alarm. We can acknowledge it without obeying every thought it produces.',
-'Place a hand over your chest or arm. Say: “I am here. This moment is happening, and I can take it slowly.”',
-'For the next sixty seconds, your only task is to stay with your breathing and the surface beneath you.'
-],
-sad:[
-'Ang sakit pakinggan. You do not have to turn the sadness into a lesson right now.',
-'Minsan ang lungkot ay hindi naghahanap ng solution. Gusto lang nitong mapansin. I’m noticing it with you.',
-'You can cry, go quiet, or keep talking. None of those responses make you weak.',
-'What part hurts most: what happened, what it means, or what you lost?',
-'Please do not use your hardest day as proof that nothing will change.',
-'You are allowed to grieve the version of things you hoped would happen.'
-],
-anxious:[
-'Okay, bagalan natin. Anxiety can make possibilities feel like facts. Ano ang alam nating totoo right now?',
-'You do not have to solve every future scenario. What needs attention in the next ten minutes only?',
-'Your body may be trying to protect you, even if the alarm feels too loud. Let us help it settle first.',
-'Name the thought that keeps repeating. We can look at it without treating it as an instruction.',
-'Would you prefer grounding, reassurance, or help making a simple plan?',
-'You can postpone non-urgent decisions until your body feels steadier.'
-],
-panic:[
-'You are here with me in this conversation. Look for one stable object and keep your eyes on it.',
-'Panic feels dangerous, but the feeling itself can rise and fall. Exhale longer than you inhale.',
-'If you have chest pain, fainting, severe trouble breathing, or a medical emergency, call 911 or seek urgent medical help.',
-'Do not force a huge breath. Try a small inhale and a slow, gentle exhale.',
-'Name your location and the current time. Remind yourself: “This is a wave. I can ride it minute by minute.”'
-],
-tired:[
-'Mukhang ubos ang energy mo. Baka pahinga ang kailangan, hindi another lecture.',
-'Okay lang na maliit lang ang kaya mo today. What can be postponed, shortened, or dropped?',
-'Rest is not a reward for finishing everything. It is part of staying functional.',
-'Before asking more from yourself, check the basics: water, food, medicine, sleep, and a quieter environment.',
-'You do not need to be productive to be worthy of care.',
-'What is the minimum version of today that would still be enough?'
-],
-burnout:[
-'Burnout is not fixed by squeezing more performance out of an exhausted person.',
-'Your capacity may be giving you information, not failing you. What has been demanding too much for too long?',
-'Let us identify one responsibility to renegotiate, one boundary to protect, and one form of rest that is actually available.',
-'You cannot sustainably recover while pretending the workload is normal.',
-'What would “good enough” look like for the next twenty-four hours?'
-],
-lonely:[
-'Loneliness can make the room feel much bigger. You do not have to make your story entertaining here.',
-'I can stay with you in this conversation, and I also want you to have human connection beyond the screen. Is there one safe person you could message?',
-'Being lonely does not mean you are unwanted. It means your need for connection is asking to be noticed.',
-'Would a simple message like “Can you keep me company for a bit?” feel possible?',
-'You deserve relationships where you do not have to disappear to be accepted.',
-'For tonight, can we identify one place, person, or community where you feel even ten percent more seen?'
-],
-rejection:[
-'Rejection can hurt both the heart and the ego. It does not automatically describe your value.',
-'What they chose may be information about fit, timing, or capacity, not a verdict on who you are.',
-'You can be disappointed without turning against yourself.',
-'Let yourself feel the loss before forcing a confident comeback.',
-'What would help you protect your dignity while still honoring what you wanted?'
-],
-relationship:[
-'You can care about someone and still need clarity, consistency, and respect.',
-'What happened is important, but so is the pattern. Is this an isolated moment or something that keeps repeating?',
-'Love should not require you to abandon your boundaries or your sense of self.',
-'Before replying, ask: am I responding from fear, anger, or the kind of self-respect I want to keep?',
-'What do you need from this relationship that you have been afraid to say clearly?'
-],
-family:[
-'Family situations can be painful because love, history, duty, and boundaries all overlap.',
-'You are allowed to care about your family without accepting every behavior from them.',
-'What boundary would reduce harm, even if it does not solve the whole relationship?',
-'You do not have to explain your pain perfectly for it to be real.',
-'Is there someone outside the conflict who can help you feel grounded and supported?'
-],
-work:[
-'Work stress can follow you home, but it does not get to define your whole identity.',
-'Let us separate what is urgent from what is merely loud.',
-'What expectation needs clarification, documentation, delegation, or a boundary?',
-'You are a person before you are a role, title, output, or deadline.',
-'What is one professional next step that protects both the work and your wellbeing?'
-],
-school:[
-'Your academic performance is information about a moment, not a complete measure of your intelligence or future.',
-'When everything feels urgent, choose the task with the clearest next action, not necessarily the biggest fear.',
-'Would a smaller study block, asking for clarification, or requesting support make the next step more possible?',
-'You are allowed to learn imperfectly. Struggling is not the same as being incapable.',
-'What deadline or requirement needs to be confirmed instead of assumed?'
-],
-shame:[
-'Shame says “I am bad,” while responsibility says “I did something I need to address.” Those are not the same.',
-'You can face what happened without destroying your sense of worth.',
-'What would repair look like: honesty, apology, changed behavior, or accepting a consequence?',
-'You are more than the moment you regret.',
-'Growth becomes possible when accountability is specific and self-punishment is not the plan.'
-],
-anger:[
-'Your anger may be pointing to hurt, unfairness, fear, or a crossed boundary.',
-'Pwede kang magalit nang hindi nananakit. What happened right before the anger rose?',
-'Let us slow the action, not deny the feeling. Avoid sending the message while your body is still on fire.',
-'What boundary or value feels violated?',
-'Move the energy safely: walk, stretch, write the uncensored version without sending it, or step away.'
-],
-overwhelmed:[
-'You do not need to carry every problem at the same time. Let us choose one thing for now.',
-'Overwhelm often means the brain has lost the edges between tasks. Can we list only the next three?',
-'What can wait until tomorrow without creating immediate harm?',
-'Reduce the size of the moment: one room, one task, one conversation, one breath.',
-'You are not failing. Your system may simply be receiving more than it can process at once.'
-],
-selfworth:[
-'Your worth is not a performance score, relationship status, body measurement, income, or public opinion.',
-'You may not feel confident right now, but you can still act with self-respect.',
-'The way someone treated you is not proof of what you deserved.',
-'You do not have to become extraordinary before you are allowed to take up space.',
-'What is one thing about you that remains true even on a bad day?'
-],
-grief:[
-'Grief does not follow a clean timeline. Missing someone or something can return in waves.',
-'You do not have to “move on” in order to keep living. You can carry love and continue forward.',
-'What do you miss most today?',
-'There is no perfect way to grieve. Numbness, anger, tears, and ordinary moments can all exist together.',
-'Would it feel right to write one memory, one message, or one thing you wish you could say?'
-],
-identity:[
-'You deserve space to understand yourself without being rushed, shamed, or forced into someone else’s timeline.',
-'Your identity is yours to name. You do not owe everyone immediate access to parts of you that still need safety.',
-'Being misunderstood can be painful, but it does not make your experience less real.',
-'What environment or person helps you feel most like yourself?',
-'You can choose disclosure based on safety, trust, and readiness. There is no moral requirement to come out before you are ready.'
-],
-okay:[
-'I’m glad there is some steadiness today. What helped, even a little?',
-'Not every check-in needs a problem. You can notice what feels okay and let that count.',
-'Would you like to save this moment, celebrate something small, or simply enjoy the calm?',
-'What do you want to carry forward from today?',
-'You are allowed to feel okay without waiting for something to go wrong.'
-],
-default:[
-'Naririnig kita. Tell me what kind of response you need: listening, comfort, help thinking, or grounding.',
-'You can say more. I will not judge the shape of the story.',
-'That matters because it is affecting you. What part feels most important to say first?',
-'I may not fully understand yet. Can you tell me what happened and what you need from me right now?',
-'You do not have to solve this in one message. We can take it one piece at a time.',
-'Thank you for trusting this space with that. What feels heaviest about it?'
-]
-};
+const responseBanks={listen:['Naririnig kita. Ilabas mo lang. Hindi ko muna aayusin o huhusgahan ang kwento mo.','Nandito ako sa conversation na ito. You can keep going, kahit magulo, paulit-ulit, o mabigat.','You do not need to make this sound reasonable. Sabihin mo lang kung paano talaga nangyari para sa’yo.','Okay. No advice muna. I’m listening. Ano pa ang gusto mong mailabas?','That sounds like a lot to carry quietly. You can put more of it here.','Hindi kita mamadaliin. Take your time. Kahit fragments lang, mababasa ko.','You have space here to be angry, tired, confused, or hurt. Go on when you’re ready.','Walang kailangan patunayan. I’m following your story. What happened next?','I hear that this has been sitting with you. You can say the part you have not been able to say out loud.','You can pause, continue, or repeat yourself. There is no correct way to vent.'],comfort:['Ang bigat nun. I’m sorry you are carrying this right now. Hindi mo kailangang maging okay agad.','Your feelings make sense in the context of what happened. You deserve gentleness while you move through it.','You are not weak for being affected. Nasaktan ka because something mattered.','One hard moment does not erase your worth. You are still you, even while hurting.','Please be softer with yourself tonight. You have already been doing a lot just to keep going.','You do not have to earn comfort. Puwede kang huminga at magpahinga bago mo malaman ang next step.','I’m glad you said it instead of carrying it alone in silence. Your experience deserves to be acknowledged.','This feeling is real, but it is not a final verdict about your life or your future.','You are allowed to need support. Reaching out is not pagiging pabigat.','For this moment, let us make the world smaller: one breath, one glass of water, one safe next step.'],think:['Let us separate what happened, what you are feeling, and what you need next. Which one feels easiest to name?','What part is within your control today, and what part can wait without being solved tonight?','Before making a big decision, what facts do you know for sure, and what are you afraid might be true?','What would you advise someone you care about if they were in your exact situation?','You do not need the whole answer. What is the smallest useful next move?','Would it help to sort this into: urgent, important, and not yours to carry?','What boundary, request, or pause might protect your energy here?','Let us look for the choice that respects both your feelings and your future self.','What outcome are you hoping for, and what would be an acceptable outcome if the ideal one is not possible?','You can take time before responding. A delayed decision can still be a strong decision.'],ground:['Let us return to the room. Name five things you can see, four you can feel, and three you can hear.','Put both feet on the floor if you can. Press down gently and notice that the ground is holding you.','Look around and name where you are, what day it is, and one thing that is safe in this exact moment.','Breathe in gently for four, hold for two, then breathe out for six. No need to force a deep breath.','Unclench your jaw. Lower your shoulders. Let your hands rest somewhere supported.','Choose one object near you. Describe its color, shape, texture, and temperature.','Take one sip of water if available. Notice the temperature and the movement as you swallow.','Your mind is sounding an alarm. We can acknowledge it without obeying every thought it produces.','Place a hand over your chest or arm. Say: “I am here. This moment is happening, and I can take it slowly.”','For the next sixty seconds, your only task is to stay with your breathing and the surface beneath you.'],sad:['Ang sakit pakinggan. You do not have to turn the sadness into a lesson right now.','Minsan ang lungkot ay hindi naghahanap ng solution. Gusto lang nitong mapansin. I’m noticing it with you.','You can cry, go quiet, or keep talking. None of those responses make you weak.','What part hurts most: what happened, what it means, or what you lost?','Please do not use your hardest day as proof that nothing will change.','You are allowed to grieve the version of things you hoped would happen.'],anxious:['Okay, bagalan natin. Anxiety can make possibilities feel like facts. Ano ang alam nating totoo right now?','You do not have to solve every future scenario. What needs attention in the next ten minutes only?','Your body may be trying to protect you, even if the alarm feels too loud. Let us help it settle first.','Name the thought that keeps repeating. We can look at it without treating it as an instruction.','Would you prefer grounding, reassurance, or help making a simple plan?','You can postpone non-urgent decisions until your body feels steadier.'],panic:['You are here with me in this conversation. Look for one stable object and keep your eyes on it.','Panic feels dangerous, but the feeling itself can rise and fall. Exhale longer than you inhale.','If you have chest pain, fainting, severe trouble breathing, or a medical emergency, call 911 or seek urgent medical help.','Do not force a huge breath. Try a small inhale and a slow, gentle exhale.','Name your location and the current time. Remind yourself: “This is a wave. I can ride it minute by minute.”'],tired:['Mukhang ubos ang energy mo. Baka pahinga ang kailangan, hindi another lecture.','Okay lang na maliit lang ang kaya mo today. What can be postponed, shortened, or dropped?','Rest is not a reward for finishing everything. It is part of staying functional.','Before asking more from yourself, check the basics: water, food, medicine, sleep, and a quieter environment.','You do not need to be productive to be worthy of care.','What is the minimum version of today that would still be enough?'],burnout:['Burnout is not fixed by squeezing more performance out of an exhausted person.','Your capacity may be giving you information, not failing you. What has been demanding too much for too long?','Let us identify one responsibility to renegotiate, one boundary to protect, and one form of rest that is actually available.','You cannot sustainably recover while pretending the workload is normal.','What would “good enough” look like for the next twenty-four hours?'],lonely:['Loneliness can make the room feel much bigger. You do not have to make your story entertaining here.','I can stay with you in this conversation, and I also want you to have human connection beyond the screen. Is there one safe person you could message?','Being lonely does not mean you are unwanted. It means your need for connection is asking to be noticed.','Would a simple message like “Can you keep me company for a bit?” feel possible?','You deserve relationships where you do not have to disappear to be accepted.','For tonight, can we identify one place, person, or community where you feel even ten percent more seen?'],rejection:['Rejection can hurt both the heart and the ego. It does not automatically describe your value.','What they chose may be information about fit, timing, or capacity, not a verdict on who you are.','You can be disappointed without turning against yourself.','Let yourself feel the loss before forcing a confident comeback.','What would help you protect your dignity while still honoring what you wanted?'],relationship:['You can care about someone and still need clarity, consistency, and respect.','What happened is important, but so is the pattern. Is this an isolated moment or something that keeps repeating?','Love should not require you to abandon your boundaries or your sense of self.','Before replying, ask: am I responding from fear, anger, or the kind of self-respect I want to keep?','What do you need from this relationship that you have been afraid to say clearly?'],family:['Family situations can be painful because love, history, duty, and boundaries all overlap.','You are allowed to care about your family without accepting every behavior from them.','What boundary would reduce harm, even if it does not solve the whole relationship?','You do not have to explain your pain perfectly for it to be real.','Is there someone outside the conflict who can help you feel grounded and supported?'],work:['Work stress can follow you home, but it does not get to define your whole identity.','Let us separate what is urgent from what is merely loud.','What expectation needs clarification, documentation, delegation, or a boundary?','You are a person before you are a role, title, output, or deadline.','What is one professional next step that protects both the work and your wellbeing?'],school:['Your academic performance is information about a moment, not a complete measure of your intelligence or future.','When everything feels urgent, choose the task with the clearest next action, not necessarily the biggest fear.','Would a smaller study block, asking for clarification, or requesting support make the next step more possible?','You are allowed to learn imperfectly. Struggling is not the same as being incapable.','What deadline or requirement needs to be confirmed instead of assumed?'],shame:['Shame says “I am bad,” while responsibility says “I did something I need to address.” Those are not the same.','You can face what happened without destroying your sense of worth.','What would repair look like: honesty, apology, changed behavior, or accepting a consequence?','You are more than the moment you regret.','Growth becomes possible when accountability is specific and self-punishment is not the plan.'],anger:['Your anger may be pointing to hurt, unfairness, fear, or a crossed boundary.','Pwede kang magalit nang hindi nananakit. What happened right before the anger rose?','Let us slow the action, not deny the feeling. Avoid sending the message while your body is still on fire.','What boundary or value feels violated?','Move the energy safely: walk, stretch, write the uncensored version without sending it, or step away.'],overwhelmed:['You do not need to carry every problem at the same time. Let us choose one thing for now.','Overwhelm often means the brain has lost the edges between tasks. Can we list only the next three?','What can wait until tomorrow without creating immediate harm?','Reduce the size of the moment: one room, one task, one conversation, one breath.','You are not failing. Your system may simply be receiving more than it can process at once.'],selfworth:['Your worth is not a performance score, relationship status, body measurement, income, or public opinion.','You may not feel confident right now, but you can still act with self-respect.','The way someone treated you is not proof of what you deserved.','You do not have to become extraordinary before you are allowed to take up space.','What is one thing about you that remains true even on a bad day?'],grief:['Grief does not follow a clean timeline. Missing someone or something can return in waves.','You do not have to “move on” in order to keep living. You can carry love and continue forward.','What do you miss most today?','There is no perfect way to grieve. Numbness, anger, tears, and ordinary moments can all exist together.','Would it feel right to write one memory, one message, or one thing you wish you could say?'],identity:['You deserve space to understand yourself without being rushed, shamed, or forced into someone else’s timeline.','Your identity is yours to name. You do not owe everyone immediate access to parts of you that still need safety.','Being misunderstood can be painful, but it does not make your experience less real.','What environment or person helps you feel most like yourself?','You can choose disclosure based on safety, trust, and readiness. There is no moral requirement to come out before you are ready.'],okay:['I’m glad there is some steadiness today. What helped, even a little?','Not every check-in needs a problem. You can notice what feels okay and let that count.','Would you like to save this moment, celebrate something small, or simply enjoy the calm?','What do you want to carry forward from today?','You are allowed to feel okay without waiting for something to go wrong.'],default:['Naririnig kita. Tell me what kind of response you need: listening, comfort, help thinking, or grounding.','You can say more. I will not judge the shape of the story.','That matters because it is affecting you. What part feels most important to say first?','I may not fully understand yet. Can you tell me what happened and what you need from me right now?','You do not have to solve this in one message. We can take it one piece at a time.','Thank you for trusting this space with that. What feels heaviest about it?']};
 const crisis=/\b(suicidal|i (?:want|wanna) to die|i do not want to live|i don't want to live|better off dead|kill myself|end my life|hurt myself|self[- ]?harm|saktan (?:ko )?ang sarili|magpakamatay|ayoko na mabuhay|gusto ko nang mamatay|papatayin ko sarili ko|not safe from myself|cannot keep myself safe)\b/i;
 const immediateDanger=/\b(someone is attacking me|being attacked|may nananakit sa akin|papaluin ako|may baril|has a gun|immediate danger|kidnapped|held against my will)\b/i;
-const categoryPatterns={
- panic:/panic|hyperventilat|di makahinga|hindi makahinga|heart racing|palpitations/i,
- grief:/grief|namatay|death|died|funeral|bereav|miss (?:him|her|them)|wala na siya/i,
- burnout:/burnout|burned out|overworked|trabaho nang trabaho|ubos na ubos/i,
- sad:/lungkot|sad|iyak|crying|depress|mabigat|heartbroken|down ako/i,
- anxious:/kabado|anx|worried|worry|takot|overthink|praning|nerbiyos/i,
- tired:/pagod|puyat|hapo|exhaust|drained|antok|low energy/i,
- lonely:/lonely|alone|mag-isa|walang kausap|nobody cares|isolated/i,
- rejection:/reject|rejected|iniwan|ghosted|not chosen|di pinili|hindi pinili/i,
- relationship:/boyfriend|girlfriend|partner|jowa|asawa|relationship|cheat|niloko|breakup|ex/i,
- family:/family|nanay|tatay|mother|father|parents|kapatid|brother|sister|pamilya/i,
- work:/work|boss|coworker|office|trabaho|client|deadline|career/i,
- school:/school|exam|grades|teacher|professor|college|university|assignment|thesis/i,
- shame:/shame|hiya|nakakahiya|guilty|kasalanan ko|regret|pinagsisisihan/i,
- anger:/galit|inis|bwisit|angry|furious|rage|pikon/i,
- overwhelmed:/overwhelm|too much|sabay.sabay|di ko na kaya lahat|hindi ko na kaya lahat/i,
- selfworth:/worthless|walang kwenta|not enough|ugly|pangit ako|failure|loser|hate myself/i,
- identity:/trans|lgbt|gay|lesbian|bisexual|queer|identity|coming out|gender|pronoun/i,
- okay:/\b(okay|fine|good|masaya|happy|calm|grateful)\b/i
-};
+const categoryPatterns={panic:/panic|hyperventilat|di makahinga|hindi makahinga|heart racing|palpitations/i,grief:/grief|namatay|death|died|funeral|bereav|miss (?:him|her|them)|wala na siya/i,burnout:/burnout|burned out|overworked|trabaho nang trabaho|ubos na ubos/i,sad:/lungkot|sad|iyak|crying|depress|mabigat|heartbroken|down ako/i,anxious:/kabado|anx|worried|worry|takot|overthink|praning|nerbiyos/i,tired:/pagod|puyat|hapo|exhaust|drained|antok|low energy/i,lonely:/lonely|alone|mag-isa|walang kausap|nobody cares|isolated/i,rejection:/reject|rejected|iniwan|ghosted|not chosen|di pinili|hindi pinili/i,relationship:/boyfriend|girlfriend|partner|jowa|asawa|relationship|cheat|niloko|breakup|ex/i,family:/family|nanay|tatay|mother|father|parents|kapatid|brother|sister|pamilya/i,work:/work|boss|coworker|office|trabaho|client|deadline|career/i,school:/school|exam|grades|teacher|professor|college|university|assignment|thesis/i,shame:/shame|hiya|nakakahiya|guilty|kasalanan ko|regret|pinagsisisihan/i,anger:/galit|inis|bwisit|angry|furious|rage|pikon/i,overwhelmed:/overwhelm|too much|sabay.sabay|di ko na kaya lahat|hindi ko na kaya lahat/i,selfworth:/worthless|walang kwenta|not enough|ugly|pangit ako|failure|loser|hate myself/i,identity:/trans|lgbt|gay|lesbian|bisexual|queer|identity|coming out|gender|pronoun/i,okay:/\b(okay|fine|good|masaya|happy|calm|grateful)\b/i};
 function classify(t){for(const [category,pattern] of Object.entries(categoryPatterns))if(pattern.test(t))return category;return'default'}
 function currentResponseMode(){return read(keys.responseMode,'listen')}
 function setResponseMode(mode){write(keys.responseMode,mode);$$('[data-mode]').forEach(button=>{const active=button.dataset.mode===mode;button.classList.toggle('active',active);button.setAttribute('aria-checked',String(active))});const hints={listen:'Say everything. I’ll listen without fixing it...',comfort:'Tell me what hurts. I’ll respond gently...',think:'Tell me what happened. We can sort one piece...',ground:'Tell me what you notice in your body right now...'};$('#chatInput').placeholder=hints[mode]||hints.listen}
@@ -1274,8 +809,7 @@ function renderChat(){let items=chatHistory();if(!items.length){items=[{role:'yo
 function supportiveAnswer(text){const mode=currentResponseMode();const category=classify(text);if(mode==='listen')return choose(responseBanks.listen,text);if(mode==='comfort')return choose([...(responseBanks[category]||[]),...responseBanks.comfort],text);if(mode==='think')return choose(responseBanks.think,text);if(mode==='ground')return choose(responseBanks.ground,text);return choose(responseBanks[category]||responseBanks.default,text)}
 function respond(text){const log=$('#chatLog');const typing=document.createElement('div');typing.className='bubble-row';typing.innerHTML='<span class="bubble-avatar bubble-avatar-mark" aria-hidden="true">Y</span><div class="bubble typing"><i></i><i></i><i></i></div>';log.appendChild(typing);log.scrollTop=log.scrollHeight;setTimeout(()=>{typing.remove();let answer;if(crisis.test(text)){answer='I’m really glad you told me. Your safety comes first. Please call 911 if you may act now or are in immediate danger. You can also call the NCMH crisis hotline at 1553 or 0917 899 8727. Move away from anything you could use to hurt yourself and stay with a trusted person nearby. I cannot contact emergency services for you.'}else if(immediateDanger.test(text)){answer='This may be an immediate safety emergency. Please call 911 now if you can, move toward a public or safer place, and contact a trusted person nearby. I cannot dispatch help or see your location.'}else{const category=classify(text);answer=supportiveAnswer(text);if(category==='default'&&/\?|how|what|why|paano|ano|bakit/i.test(text))logUnknown(text)}addBubble('yoni',answer);if(crisis.test(text)||immediateDanger.test(text))setTimeout(()=>show('help'),1100)},motionReduced()?40:620)}
 $$('[data-mode]').forEach(button=>button.onclick=()=>setResponseMode(button.dataset.mode));setResponseMode(currentResponseMode());
-$('#chatForm').onsubmit=e=>{e.preventDefault();const t=$('#chatInput').value.trim();if(!t)return;$('#chatInput').value='';addBubble('user',t);respond(t)};$$('.chat-chip').forEach(b=>b.onclick=()=>{addBubble('user',b.textContent);if(/vent/i.test(b.textContent))setResponseMode('listen');respond(b.textContent)});
-$('#clearChat').onclick=()=>{if(confirm('Clear this conversation from this device?')){localStorage.removeItem(keys.chat);renderChat();toast('Conversation cleared.')}};
+$('#chatForm').onsubmit=e=>{e.preventDefault();const t=$('#chatInput').value.trim();if(!t)return;$('#chatInput').value='';addBubble('user',t);respond(t)};$$('.chat-chip').forEach(b=>b.onclick=()=>{addBubble('user',b.textContent);if(/vent/i.test(b.textContent))setResponseMode('listen');respond(b.textContent)});$('#clearChat').onclick=()=>{if(confirm('Clear this conversation from this device?')){localStorage.removeItem(keys.chat);renderChat();toast('Conversation cleared.')}};
 
 const articles={return:{title:'Finding your way back',html:'<p>Feeling lost does not always mean you have failed. Sometimes it means the version of life that used to fit you no longer does.</p><blockquote>You do not need a complete map. You need one honest next step.</blockquote><h3>Begin with what is still true</h3><p>Name one thing you care about, one person who feels safe, and one task that can wait. Clarity often returns after pressure becomes smaller.</p><h3>Do less, but make it real</h3><p>A shower, a meal, a message, or ten quiet minutes can be a meaningful return. Small actions are not fake progress.</p>'},anxiety:{title:'When anxiety fills the room',html:'<p>Anxiety can make possibilities feel like facts. The goal is not to argue with every thought. The first step is to return to what is happening now.</p><blockquote>A thought can feel urgent without being an instruction.</blockquote><h3>Orient before solving</h3><p>Look around and name where you are, what time it is, and what your body is touching. Then choose one thing that needs attention within the next ten minutes.</p><h3>Reduce the audience</h3><p>You do not need to solve tomorrow, next month, and everyone’s opinion at the same time.</p>'},rest:{title:'Rest is not a reward',html:'<p>Your body does not need to prove exhaustion before it deserves care. Rest is part of functioning, not a prize after perfect productivity.</p><blockquote>You can pause before you collapse.</blockquote><h3>Choose a lower gear</h3><p>Lower brightness, reduce noise, drink water, eat something, or stop one optional task. Rest can be practical and unglamorous.</p><h3>Notice the guilt</h3><p>Guilt does not automatically mean you are doing something wrong. Sometimes it means you are breaking an old rule that was never kind to you.</p>'}};
 $$('[data-article]').forEach(b=>b.onclick=()=>{const a=articles[b.dataset.article];$('#readerTitle').textContent=a.title;$('#readerContent').innerHTML=a.html;$('#readerPanel').hidden=false;$('#readerPanel').scrollIntoView({behavior:'smooth',block:'start'})});$('#readerClose').onclick=()=>$('#readerPanel').hidden=true;
@@ -1293,10 +827,8 @@ $('#exportRecords').onclick=()=>{const data={exportedAt:new Date().toISOString()
 $('#deleteCheckins').onclick=()=>{if(confirm('Delete all local check-ins?')){localStorage.removeItem(keys.checkins);renderPrivacy();renderToday();toast('Check-ins deleted.')}};$('#deleteJournals').onclick=()=>{if(confirm('Delete all local journal entries?')){localStorage.removeItem(keys.journals);renderPrivacy();renderJournals();toast('Journal entries deleted.')}};$('#deleteAll').onclick=()=>{if(confirm('Delete all local Yoni data?')){Object.values(keys).forEach(k=>localStorage.removeItem(k));location.reload()}};
 
 applyProfile();renderToday();renderJournals();renderWall();renderChat();
-
 function updateHomeGreeting(){const hour=new Date().getHours();const period=hour<12?'morning':hour<18?'afternoon':'evening';const name=(profile.name||'friend').trim().split(/\s+/)[0]||'friend';$('#homeTitle').innerHTML=`Good ${period}, ${escapeHtml(name)} <span aria-hidden="true">✦</span>`;$('#homeDateLine').textContent=new Intl.DateTimeFormat('en-PH',{weekday:'long',month:'long',day:'numeric'}).format(new Date())}
 updateHomeGreeting();
-
 initializeAuth();
 })();
 </script>
