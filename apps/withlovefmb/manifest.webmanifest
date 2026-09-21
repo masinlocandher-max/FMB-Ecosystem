@@ -2,7 +2,7 @@
   "name": "With love, FMB",
   "short_name": "With love, FMB",
   "id": "/",
-  "description": "An inclusive digital space for open reading, calm music, positive reflections, and public support resources.",
+  "description": "An inclusive digital space for positive reflections, community participation, and public support resources.",
   "start_url": "/?source=installed-app",
   "scope": "/",
   "display": "standalone",
@@ -33,19 +33,9 @@
   ],
   "shortcuts": [
     {
-      "name": "Reading room",
-      "short_name": "Read",
-      "url": "/ebooks/"
-    },
-    {
       "name": "Freedom Wall",
       "short_name": "Wall",
       "url": "/freedom-wall.html"
-    },
-    {
-      "name": "Calm music",
-      "short_name": "Music",
-      "url": "/music/"
     },
     {
       "name": "Support contacts",

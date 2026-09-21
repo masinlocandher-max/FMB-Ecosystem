@@ -8,6 +8,7 @@ const steps = [
   './post-build-image-dimensions.mjs',
   './post-build-release-hardening.mjs',
   './post-build-fmb-performance-cleanup.mjs',
+  './post-build-fmb-home-landing-clean.mjs',
   './check-fmb-unified-design.mjs',
   './check-fmb-public-brand-routes.mjs',
   './audit-fmb-enterprise.mjs',
@@ -15,6 +16,10 @@ const steps = [
   '../apps/withlovefmb/scripts/check-orchestrator.mjs',
   './audit-fmb-image-integrity-exact.mjs',
   './check-dist-links.mjs',
+  // The Miss Intercontinental microsite is excluded from the unified-shell
+  // passes at source (scripts/lib/standalone-microsites.mjs). This gate proves
+  // the exclusion held and that the page shipped complete.
+  './check-miss-intercontinental.mjs',
 ];
 
 for (const step of steps) {
@@ -24,4 +29,4 @@ for (const step of steps) {
   console.log(`[FMB release] completed ${step} in ${Date.now() - started}ms`);
 }
 
-console.log('\nFMB release build completed with the unified public design system and all technical gates.');
+console.log('\nFMB release build completed with the unified public design system, retired public Reading/Music routes scrubbed before audits, and all technical gates.');

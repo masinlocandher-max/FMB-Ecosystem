@@ -106,24 +106,11 @@ const dashboard=`<section class="fmb-approved-control-center" aria-label="FMB au
     <div class="fmb-approved-map-grid"><article><small>Personal practice</small><h3>FMB</h3><p>Strategy, creative direction and storytelling for brands, organizations and communities.</p></article><article><small>Company</small><h3>FMB&amp;CO.</h3><p><a href="https://senzpr.com/">SENZ</a><span>Strategic communications and digital solutions</span><a href="https://thecognitainstitute.com/">Cognita</a><span>Learning, research and knowledge-building</span></p></article><article><small>Public projects and channels</small><h3>Independent platforms</h3><nav><a href="https://yoni.francinemariebautista.com/">Yoni</a><a href="/mabayani/">Mabayani</a><a href="/withlovefmb/">With Love, FMB</a><a href="/news/">FMB News</a></nav></article></div>
   </section>
 
-  <div class="fmb-approved-library-grid fmb-approved-editorial-grid">
+  <div class="fmb-approved-library-grid fmb-approved-editorial-grid fmb-approved-news-only">
     <section class="fmb-approved-library-panel fmb-approved-glass" aria-labelledby="approvedNewsTitle">
       <header class="fmb-approved-section-head"><div><p class="fmb-approved-overline">Editorial platform</p><h2 id="approvedNewsTitle">FMB News</h2></div><a href="/news/">View all reports →</a></header>
       <article class="fmb-approved-news-lead"><img src="/assets/images/news/2026-08-08/cleopatra-barrera-reina-filipinas-2026.jpeg" width="1200" height="675" loading="lazy" decoding="async" alt="Cleopatra Barrera of Zambales"><div><small>Lead report</small><h3>Who Is Cleopatra Barrera? How Binibining Masinloc 2026 Rose to the Reina Filipinas National Stage</h3></div></article>
       <div class="fmb-approved-news-list"><a href="/news/who-is-lorna-kapunan-famous-cases-biography/"><span>Who Is Atty. Lorna Kapunan? Her famous cases, career and role in the Sara Duterte impeachment</span><time>Profile</time></a><a href="/news/cleopatra-barrera/"><span>Masinloc crowned her first. Months later, she carried Zambales to the national stage.</span><time>Pageantry</time></a></div>
-    </section>
-
-    <section class="fmb-approved-library-panel fmb-approved-glass" aria-labelledby="approvedMusicTitle">
-      <header class="fmb-approved-section-head"><h2 id="approvedMusicTitle">Music Library</h2><a href="/music/">View all music →</a></header>
-      <div class="fmb-approved-tags"><span>All</span><span>Calm</span><span>70s Feel Good</span><span>80s Feel Good</span><span>With Love OST</span></div>
-      <div class="fmb-approved-albums"><a class="fmb-approved-album" href="/music/"><img src="/assets/images/music/fmb-calm-official-album-cover.jpg" loading="lazy" decoding="async" alt="FMB Calm album cover"><strong>Calm</strong><span>10 tracks</span></a><a class="fmb-approved-album" href="/music/"><img src="/assets/images/music/fmb-70s-feel-good-cover.svg" loading="lazy" decoding="async" alt="FMB 70s Feel Good album cover"><strong>70s Feel Good</strong><span>11 tracks</span></a><a class="fmb-approved-album" href="/music/"><img src="/assets/images/music/fmb-80s-feel-good-cover.svg" loading="lazy" decoding="async" alt="FMB 80s Feel Good album cover"><strong>80s Feel Good</strong><span>8 tracks</span></a><a class="fmb-approved-album" href="/music/"><img src="/assets/images/music/fmb-ost-with-love-fmb-cover.png" loading="lazy" decoding="async" alt="With Love, FMB original soundtrack cover"><strong>With Love OST</strong><span>2 tracks</span></a></div>
-      <div class="fmb-approved-player"><div><strong>Quiet Enough to Breathe</strong><span>FMB Music</span></div><button type="button" aria-label="Open the FMB Music player" onclick="location.href='/music/'">▶</button></div>
-    </section>
-
-    <section class="fmb-approved-library-panel fmb-approved-glass" aria-labelledby="approvedBooksTitle">
-      <header class="fmb-approved-section-head"><h2 id="approvedBooksTitle">eBook Library</h2><a href="/ebooks/">View all eBooks →</a></header>
-      <div class="fmb-approved-tags"><span>All</span><span>Wellbeing</span><span>Identity and Belonging</span><span>Fully Open</span><span>First Chapter</span></div>
-      <div class="fmb-approved-books"><a class="fmb-approved-book" href="/reading.html"><img src="/assets/images/reading/finding-your-way-back-cover.svg" loading="lazy" decoding="async" alt="Finding Your Way Back to Yourself cover"><strong>Finding Your Way Back</strong><span>Fully open</span></a><a class="fmb-approved-book" href="/coming-out-respect.html"><img src="/assets/images/reading/07883274-1340-48DC-A112-C4AD44B5ABD1.png" loading="lazy" decoding="async" alt="Pride. Identity. Love. cover"><strong>Pride. Identity. Love.</strong><span>Fully open</span></a><a class="fmb-approved-book" href="/men-can-cry.html"><img src="/assets/images/reading/E9562EB3-F505-4736-B5E8-E4D54C769059.png" loading="lazy" decoding="async" alt="Men Can Cry cover"><strong>Men Can Cry</strong><span>Fully open</span></a><a class="fmb-approved-book" href="/womens-health.html"><img src="/assets/images/reading/B4DDDB01-C125-4E08-8908-09A5FE5157E7.png" loading="lazy" decoding="async" alt="Women’s Health Matters cover"><strong>Women’s Health Matters</strong><span>First chapter</span></a></div>
     </section>
   </div>
   <section class="fmb-approved-inquiry" aria-labelledby="approvedInquiryTitle"><div><p class="fmb-approved-overline">Work with FMB</p><h2 id="approvedInquiryTitle">Bring us the real objective.</h2><p>Tell us what you are trying to achieve, who it needs to reach, and what decision must move next.</p></div><a href="/work-with-fmb/">Start a clear inquiry <span>→</span></a></section>
@@ -147,16 +134,16 @@ home=home.replace(/(<\/section>\s*)(?=\s*<section[^>]*class="fmb-approved-contro
 home=home.replace(/<div class="hero-actions">[\s\S]*?<\/div>/i,'<div class="hero-actions"><a class="button primary" href="/work-with-fmb/">Work with FMB <span>→</span></a><a class="button secondary" href="#fmb-authority">Explore selected work</a></div>');
 if(!home.includes('class="fmb-approved-control-center"'))home=home.replace(/(<\/section>\s*)(?=\s*<section[^>]*class="bottom-grid)/i,`$1\n${dashboard}\n`);
 if(!home.includes('class="fmb-approved-control-center"'))home=home.replace('</main>',`${dashboard}\n</main>`);
+if(!home.includes('class="fmb-approved-hero-stack"'))home=home.replace(/(<\/div>\s*<\/section>)/i,`${heroStack}$1`);
 await writeFile(homeFile,home,'utf8');
 
-for(const page of ['news/index.html','music/index.html','ebooks/index.html']){
-  const file=path.join(dist,page);
-  let html=await readFile(file,'utf8');
-  html=injectAssets(html);
-  await writeFile(file,html,'utf8');
-}
+const newsFile=path.join(dist,'news/index.html');
+let news=await readFile(newsFile,'utf8');
+news=injectAssets(news);
+await writeFile(newsFile,news,'utf8');
 
 for(const required of ['fmb-approved-dashboard','fmb-approved-control-center','Direction<br>before <em>noise.</em>','fmb-approved-inquiry','fmb-authority-map']){
   if(!home.includes(required))throw new Error(`Approved homepage is missing ${required}`);
 }
-console.log('Built the approved FMB corporate luxury dashboard, project stories, News Center, Music Library, categorized eBook Library, and repaired homepage portrait placement.');
+if(/approvedMusicTitle|approvedBooksTitle|href=["']\/music\/["']|href=["']\/ebooks\/["']/i.test(home))throw new Error('Approved homepage reintroduced retired Reading/Music surfaces.');
+console.log('Built the approved FMB corporate luxury dashboard, project stories, News Center, and repaired homepage portrait placement without retired Reading/Music surfaces.');

@@ -1,10 +1,11 @@
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { withMicrositeExclusions } from './lib/standalone-microsites.mjs';
 
 const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.join(repositoryRoot, 'dist');
 const rootManifest = '<link rel="manifest" href="/manifest.webmanifest">';
-const excludedPrefixes = ['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'data-center/', 'yoni/'];
+const excludedPrefixes = withMicrositeExclusions(['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'data-center/', 'yoni/']);
 const excludedFiles = new Set([
   'admin.html',
   'admin-activate.html',

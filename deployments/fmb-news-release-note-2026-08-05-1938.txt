@@ -1,3 +1,0 @@
-FMB News release note
-
-The August 5 newsroom recovery includes the 3:00 PM, 1:00 PM, and 12:00 PM PHT reports in newest-first order. Visual audit differences are logged without blocking publication, while article files, timestamps, sitemap entries, and timeline order remain enforced.

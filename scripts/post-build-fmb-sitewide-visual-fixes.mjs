@@ -1,5 +1,6 @@
 import { copyFile, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { withMicrositeExclusions } from './lib/standalone-microsites.mjs';
 
 const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.join(repositoryRoot, 'dist');
@@ -23,7 +24,7 @@ const distCss = path.join(dist, 'assets', 'css', 'fmb-sitewide-visual-fixes.css'
 const homepageRepairTarget = path.join(dist, 'assets', 'css', 'fmb-homepage-repair.css');
 const stylesheetHref = '/assets/css/fmb-sitewide-visual-fixes.css?v=20260726-readability-v2';
 const homepageRepairHref = '/assets/css/fmb-homepage-repair.css?v=20260726-landing-repair-v1';
-const excludedPrefixes = ['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/'];
+const excludedPrefixes = withMicrositeExclusions(['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/']);
 const excludedFiles = new Set([
   'admin.html',
   'login.html',

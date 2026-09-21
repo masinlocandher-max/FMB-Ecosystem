@@ -103,15 +103,11 @@ const volunteerSection=`<section class="fmb-v2-volunteer-proof" aria-labelledby=
 
 const modal=`<div class="fmb-v2-modal" data-fmb-v2-modal aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="fmbV2ModalTitle"><div class="fmb-v2-modal-panel fmb-v2-glass-dark"><button class="fmb-v2-modal-close" type="button" data-fmb-v2-modal-close aria-label="Close project story">×</button><small style="color:#d9bd83;text-transform:uppercase;letter-spacing:.14em;font-weight:800">FMB project story</small><h2 id="fmbV2ModalTitle" data-fmb-v2-modal-title></h2><p data-fmb-v2-modal-copy></p><div class="fmb-v2-modal-columns" data-fmb-v2-modal-columns></div><div class="fmb-v2-actions" style="margin-top:34px"><a data-fmb-v2-modal-link href="#" style="background:#fff;color:#170d20"></a></div></div></div>`;
 
-const bookCategories=`<nav class="fmb-v2-book-categories" aria-label="Browse eBook categories"><button type="button" data-fmb-v2-book-category="all" aria-pressed="true">All books</button><button type="button" data-fmb-v2-book-category="wellbeing" aria-pressed="false">Wellbeing</button><button type="button" data-fmb-v2-book-category="identity" aria-pressed="false">Identity and belonging</button><button type="button" data-fmb-v2-book-category="open" aria-pressed="false">Fully open</button><button type="button" data-fmb-v2-book-category="preview" aria-pressed="false">First chapter</button></nav>`;
-
 const newsCommand=`<section class="fmb-v2-news-command" aria-label="FMB News center overview" style="padding:18px clamp(18px,4vw,60px);background:#fff;border-bottom:1px solid rgba(40,20,29,.1)"><div style="max-width:1480px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap"><strong style="font-size:13px;letter-spacing:.12em;text-transform:uppercase">FMB News Center</strong><span style="color:#70636a;font-size:13px">Public-interest reporting · Context · Source visibility · Corrections</span><a href="#editorial-standard" style="font-weight:800;color:#8b1538;text-decoration:none">Editorial standards →</a></div></section>`;
 
 const pages=[
   ['index.html','fmb-unified-home'],
   ['news/index.html','fmb-unified-news'],
-  ['music/index.html','fmb-unified-music'],
-  ['ebooks/index.html','fmb-unified-ebooks'],
   ['aboutfmb/index.html','fmb-unified-about'],
   ['projects/index.html','fmb-unified-projects'],
   ['mabayani/index.html','fmb-unified-mabayani'],
@@ -132,9 +128,8 @@ for(const [name,className] of pages){
     html=html.replace(/<p class="hero-tagline">[\s\S]*?<\/p>/i,'<p class="hero-tagline">Why FMB? Because clarity changes what becomes possible.</p>');
     html=html.replace(/<p class="hero-lede">[\s\S]*?<\/p>/i,'<p class="hero-lede">For people and organizations that need a clearer position, stronger public meaning, disciplined creative direction, and one connected path from idea to execution.</p>');
   }
-  if(name==='ebooks/index.html'&&!html.includes('data-fmb-v2-book-category'))html=html.replace(/(<div class="ebook-toolbar[^>]*>)/i,`${bookCategories}\n$1`);
   if(name==='news/index.html'&&!html.includes('fmb-v2-news-command'))html=html.replace(/(<main\b)/i,`${newsCommand}\n$1`);
   if(html!==before){await writeFile(file,html,'utf8');changed+=1;}
 }
 
-console.log(`Applied the FMB corporate luxury redesign to ${changed} generated pages with a Why FMB value story, transparent modals, project narratives, news-center treatment, Spotify-inspired music, categorized reading, and original volunteer photography.`);
+console.log(`Applied the FMB corporate luxury redesign to ${changed} generated public pages with a Why FMB value story, transparent modals, project narratives, news-center treatment, and original volunteer photography; retired Reading/Music routes are excluded.`);

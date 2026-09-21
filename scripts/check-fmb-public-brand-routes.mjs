@@ -1,11 +1,20 @@
-import { readdir, readFile } from 'node:fs/promises';
+import { access, readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const root = path.resolve(new URL('../dist/', import.meta.url).pathname);
 const protectedRoots = ['app/', '_sites/senz/', '_sites/cognita/'];
-const controlledReadingRoutes = ['coming-out-respect.html', 'dress-with-intention.html', 'men-can-cry.html', 'reading.html', 'skin-care-makeup.html', 'womens-health.html'];
-const suppliedPrimaryNewsLogo = '/assets/images/news/fmb-news-primary-logo-2026.webp';
-const suppliedWhiteNewsLogo = '/assets/images/news/fmb-news-white-transparent-2026.webp';
+const retiredPublicRoutes = [
+  'ebooks/index.html',
+  'music/index.html',
+  'music.html',
+  'coming-out-respect.html',
+  'dress-with-intention.html',
+  'men-can-cry.html',
+  'reading.html',
+  'skin-care-makeup.html',
+  'womens-health.html',
+];
+const unifiedHomeLogo = '/assets/images/fmbandco/fmbandco-primary-reversed.png';
 const warnings = [];
 const fatal = (message) => { throw new Error(`FMB public-route integrity audit: ${message}`); };
 const warn = (message) => { warnings.push(message); console.warn(`FMB public-route visual QA: ${message}`); };
@@ -48,30 +57,36 @@ for (const file of await walk(root)) {
   ]) {
     if (html.includes(marker)) warn(`${name} still contains retired visual identity ${marker}`);
   }
+}
 
-  if (controlledReadingRoutes.includes(name) && !html.includes('membership-gate.js')) {
-    fatal(`${name} is missing its controlled reading gate`);
+for (const retired of retiredPublicRoutes) {
+  try {
+    await access(path.join(root, retired));
+    fatal(`${retired} was retired and must not be emitted as a public FMB route`);
+  } catch (error) {
+    if (error?.code !== 'ENOENT') throw error;
   }
 }
 
-const required = {
-  'index.html': '/assets/images/fmb-approved/fmb-master-transparent.webp',
-  'music/index.html': '/assets/images/fmb-approved/fmb-music-official-transparent.webp',
-  'ebooks/index.html': '/assets/images/fmb-approved/fmb-ebook-official-transparent.webp',
-  'womens-health.html': 'membership-gate.js',
-};
-for (const [fileName, marker] of Object.entries(required)) {
-  const html = await readFile(path.join(root, fileName), 'utf8');
-  if (!html.includes(marker)) fatal(`${fileName} is missing required functional marker ${marker}`);
+const homepage = await readFile(path.join(root, 'index.html'), 'utf8');
+const unifiedHeaderTags = homepage.match(/<header\b(?=[^>]*class=["'][^"']*\bfmb-shell-header\b)[^>]*>/gi) || [];
+const unifiedFooterTags = homepage.match(/<footer\b(?=[^>]*class=["'][^"']*\bfmb-shell-footer\b)[^>]*>/gi) || [];
+if (!homepage.includes(unifiedHomeLogo) || unifiedHeaderTags.length !== 1) {
+  fatal('index.html is missing the unified FMB&CO. public identity');
+}
+if (unifiedHeaderTags.length !== 1) {
+  fatal('index.html must contain exactly one unified public header');
+}
+if (unifiedFooterTags.length !== 1) {
+  fatal('index.html must contain exactly one unified public footer');
 }
 
 const newsIndex = await readFile(path.join(root, 'news/index.html'), 'utf8');
 if (!/FMB News|Filipino ang Mismong Balita\./i.test(newsIndex)) {
-  fatal('news/index.html is missing its publication identity');
+  fatal('news/index.html is missing its publication identity before final newsroom rendering');
 }
-const masthead = newsIndex.match(/<header\b[^>]*>[\s\S]*?<\/header>/i)?.[0] || '';
-const footer = newsIndex.match(/<footer\b[^>]*>[\s\S]*?<\/footer>/i)?.[0] || '';
-if (!masthead.includes(suppliedPrimaryNewsLogo)) warn('news/index.html is missing the supplied FMB News masthead logo');
-if (!footer.includes(suppliedWhiteNewsLogo)) warn('news/index.html is missing the supplied white FMB News footer logo');
 
-console.log(`FMB public-route integrity audit passed ${publicPages} public pages, ${newsPages} News routes and ${controlledReadingRoutes.length} controlled reading routes with ${warnings.length} non-blocking visual warning(s).`);
+// This audit intentionally runs before the final FMB News publication renderer.
+// The strict typographic wordmark, ticker, footer, newsletter and article-shell
+// assertions are enforced after finalization by verify-fmb-news-publication.mjs.
+console.log(`FMB public-route integrity audit passed ${publicPages} public pages and ${newsPages} News routes before final newsroom rendering; retired Reading/Music routes are absent, the homepage has one unified FMB&CO. shell, and ${warnings.length} non-blocking visual warning(s) remain. Final FMB News identity is enforced by the post-finalization publication QA gate.`);

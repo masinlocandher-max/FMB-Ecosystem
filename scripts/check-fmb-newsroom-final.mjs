@@ -1,65 +1,101 @@
-import { readFile, readdir } from 'node:fs/promises';
+import { access, readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 
-const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
-const newsRoot=path.join(root,'news');
-const newsroom=await readFile(path.join(root,'fmbnews','index.html'),'utf8');
-const about=await readFile(path.join(root,'fmbnews','about','index.html'),'utf8');
-const alias=await readFile(path.join(newsRoot,'index.html'),'utf8');
-const requiredStories=['magnitude-54-quake-hits-off-occidental-mindoro','enrique-razon-tops-forbes-philippines-50-richest-list','western-visayas-ai-festival-2026','pax-silica-new-clark-city-jobs-2026','sb19-lollapalooza-filipino-heritage-branding','katrina-llegado-miss-supranational-2026','myanmar-min-aung-hlaing-thailand-visit-2026','san-marcelino-scholarship-requirements-august-2026'];
-const nonEditorialCompatibilityPages=new Set(['news/why-websites-cost-and-how-senz-makes-them-accessible/index.html','news/filipino-centered-training-institution-cognita-vision/index.html']);
-const retired=/fmb-shell-header|fmb-shell-footer|fmb-news-livebar|fmb-news-channel-command|fmb-v2-news-command/;
-const fatal=m=>{throw new Error(`FMB News clean publication audit: ${m}`)};
-const count=(html,token)=>(html.match(new RegExp(token,'g'))||[]).length;
+const dist = path.resolve(new URL('../dist/', import.meta.url).pathname);
+const newsRoot = path.join(dist, 'news');
+const morningRoot = path.join(newsRoot, 'morning-special');
+const origin = 'https://www.francinemariebautista.com';
+const fatal = (message) => { throw new Error(`FMB News clean publication audit: ${message}`); };
+const count = (html, token) => (html.match(new RegExp(token, 'g')) || []).length;
+const genericVisual = /(?:newsroom-editorial-fallback|fmb-news-(?:primary-logo|white-transparent|official)|(?:^|[-_/])(?:logo|wordmark|masthead)(?:[-_.?/]|$))/i;
 
-function auditLanding(html,name){
-  if(!html.includes('fmb-news-clean'))fatal(`${name} is not using the clean publication system`);
-  if(count(html,'class="fnc-header"')!==1)fatal(`${name} must contain exactly one newsroom masthead`);
-  if(count(html,'class="fnc-footer"')!==1)fatal(`${name} must contain exactly one newsroom footer`);
-  if(retired.test(html))fatal(`${name} still contains a retired corporate or newsroom shell`);
-  if(!/Latest (?:reports|news)/i.test(html))fatal(`${name} is missing the latest-news desk`);
-  if(!html.includes('data-news-updated'))fatal(`${name} is missing its update timestamp`);
-  if(!html.includes('The news that matters.')||!html.includes('Made clear for Filipinos.'))fatal(`${name} is missing the approved newsroom positioning`);
-  if(!html.includes('fnc-livebar')||!html.includes('data-pht-time'))fatal(`${name} is missing moving headlines or PHT time`);
-  if(!html.includes('Moving headlines'))fatal(`${name} is missing the moving-headlines label`);
-  if(!html.includes('/assets/images/news/fmb-news-primary-logo-2026.webp'))fatal(`${name} is missing the supplied FMB News logo`);
-  if(!html.includes('/assets/images/news/fmb-news-white-transparent-2026.webp'))fatal(`${name} is missing the supplied white footer identity`);
-  if(!html.includes('News menu')||!html.includes('News categories'))fatal(`${name} does not distinguish site navigation from news categories`);
-  if(!html.includes('data-fnc-menu-close')||!html.includes('aria-controls="fncNav"'))fatal(`${name} is missing accessible menu controls`);
-  if(!html.includes('fnc-identity-band'))fatal(`${name} is missing the compact FMB News identity band`);
-  if(!html.includes('fnc-desk-grid')||!html.includes('fnc-developing')||!html.includes('fnc-briefings'))fatal(`${name} is missing the intentional lead, developing, or briefings columns`);
-  if(!html.includes('fnc-report-columns')||!html.includes('fnc-context'))fatal(`${name} is missing balanced report columns or the context rail`);
-  if(!html.includes('data-fnc-result-card'))fatal(`${name} is missing the complete searchable report index`);
-  for(const slug of requiredStories)if(!html.includes(`/news/${slug}/`))fatal(`${name} is missing ${slug}`);
+function imageSources(html) {
+  const out = [];
+  for (const match of String(html || '').matchAll(/<(?:img|source)\b[^>]*>/gi)) {
+    const tag = match[0];
+    for (const name of ['src', 'srcset']) {
+      const value = tag.match(new RegExp(`\\b${name}\\s*=\\s*(["'])([\\s\\S]*?)\\1`, 'i'))?.[2] || '';
+      for (const candidate of value.split(',').map((part) => part.trim().split(/\s+/)[0]).filter(Boolean)) out.push(candidate);
+    }
+  }
+  return out;
 }
 
-auditLanding(newsroom,'fmbnews/index.html');
-auditLanding(alias,'news/index.html');
-// /fmbnews/ is canonical; /news/ remains a noindex compatibility surface for
-// old bookmarks and article navigation.
+function localEditorialImage(value) {
+  try {
+    const parsed = new URL(value, origin);
+    return parsed.origin === origin && parsed.pathname.startsWith('/assets/') && !genericVisual.test(parsed.pathname);
+  } catch { return false; }
+}
 
-async function walk(dir){const out=[];for(const entry of await readdir(dir,{withFileTypes:true})){const file=path.join(dir,entry.name);if(entry.isDirectory())out.push(...await walk(file));else if(entry.isFile()&&entry.name.endsWith('.html'))out.push(file)}return out}
-let articles=0;
-let sourceWarnings=0;
-for(const file of await walk(newsRoot)){
-  if(file===path.join(newsRoot,'index.html')||file===path.join(newsRoot,'about','index.html'))continue;
-  const html=await readFile(file,'utf8');
-  if(/http-equiv=(["'])refresh\1/i.test(html)||/<meta\b[^>]*(?:name|property)=(["'])robots\1[^>]*content=(["'])[^"']*noindex/i.test(html))continue;
-  if(!html.includes('news-story-route'))continue;
-  const name=path.relative(root,file).replaceAll(path.sep,'/');
-  if(nonEditorialCompatibilityPages.has(name))continue;
-  articles++;
-  if(!html.includes('fmb-news-clean'))fatal(`${name} is not using the clean article shell`);
-  if(count(html,'class="fnc-header"')!==1||count(html,'class="fnc-footer"')!==1)fatal(`${name} has duplicate or missing publication chrome`);
-  if(retired.test(html))fatal(`${name} still contains a retired shell`);
-  if(!/<main\b[^>]*>[\s\S]{300,}<\/main>/i.test(html))fatal(`${name} has no substantial readable article content`);
-  if(!/<h1\b[^>]*>[\s\S]*?<\/h1>/i.test(html))fatal(`${name} has no article headline`);
-  if(!/<link\b[^>]*rel=["']canonical["'][^>]*href=["'][^"']+["']/i.test(html))fatal(`${name} has no canonical URL`);
-  if(!html.includes('/assets/images/news/fmb-news-primary-logo-2026.webp'))fatal(`${name} is missing the supplied FMB News identity`);
-  if(!/nc-sources|nc-source-box|class=(["'])[^"']*\bsources\b[^"']*\1|Sources and (?:public record|documents)|Source:/i.test(html))sourceWarnings++;
+function genuineAttachedImage(html) {
+  return imageSources(html).some(localEditorialImage);
 }
-if(articles<1)fatal('no article pages were audited');
-for(const marker of ['Our mission','Our vision','What happened?','What is the context?','Why does it matter to Filipinos?','What should readers watch next?','Evidence first','Context always']){
-  if(!about.includes(marker))fatal(`fmbnews/about/index.html is missing ${marker}`);
+
+async function assertLocalImagesExist(html, name) {
+  for (const value of imageSources(html)) {
+    let parsed;
+    try { parsed = new URL(value, origin); } catch { continue; }
+    if (parsed.origin !== origin || !parsed.pathname.startsWith('/assets/')) continue;
+    if (genericVisual.test(parsed.pathname)) fatal(`${name} exposes generic editorial artwork: ${parsed.pathname}`);
+    try { await access(path.join(dist, parsed.pathname.replace(/^\/+/, ''))); }
+    catch { fatal(`${name} references a missing image file: ${parsed.pathname}`); }
+  }
 }
-console.log(`FMB News clean publication audit passed one canonical newsroom and ${articles} editorial article pages with ${sourceWarnings} source-label warning(s).`);
+
+const canonicalLanding = await readFile(path.join(newsRoot, 'index.html'), 'utf8');
+const aliasLanding = await readFile(path.join(dist, 'fmbnews', 'index.html'), 'utf8');
+const archive = await readFile(path.join(morningRoot, 'index.html'), 'utf8');
+
+for (const [html, name] of [[canonicalLanding, 'news/index.html'], [aliasLanding, 'fmbnews/index.html']]) {
+  if (!html.includes('fmb-news-clean') || !html.includes('fmb-news-landing')) fatal(`${name} is not using the clean newsroom system`);
+  if (!html.includes('/news/morning-special/') || !html.includes('/news/archive/') || !html.includes('/news/about/')) fatal(`${name} is missing newsroom navigation`);
+  if (!genuineAttachedImage(html)) fatal(`${name} exposes no genuine image-backed report`);
+  await assertLocalImagesExist(html, name);
+}
+
+if (!archive.includes('Today &amp; Archive') || !archive.includes('one continuous magazine-style article')) fatal('Morning Special archive is missing its complete-edition explanation');
+
+const editionDates = (await readdir(morningRoot, { withFileTypes: true }))
+  .filter((entry) => entry.isDirectory() && /^\d{4}-\d{2}-\d{2}$/.test(entry.name))
+  .map((entry) => entry.name)
+  .sort()
+  .reverse();
+
+if (!editionDates.length) fatal('no dated Morning Special editions were generated');
+const newest = editionDates[0];
+if (!canonicalLanding.includes(`href="/news/morning-special/${newest}/"`)) fatal(`news/index.html is missing newest Morning Special ${newest}`);
+
+let totalChapters = 0;
+for (const date of editionDates) {
+  const route = `/news/morning-special/${date}/`;
+  if (!archive.includes(`href="${route}"`)) fatal(`Morning Special archive is missing ${date}`);
+  const file = path.join(morningRoot, date, 'index.html');
+  const html = await readFile(file, 'utf8');
+  const name = `news/morning-special/${date}/index.html`;
+  const chapters = count(html, 'class="chapter"');
+  const sourceBoxes = count(html, 'class="sources"');
+  const chapterFigures = count(html, 'class="chapter-figure"');
+  const captions = count(html, 'class="figcaption"');
+
+  if (count(html, 'class="morning-edition"') !== 1) fatal(`${name} must contain exactly one complete magazine article`);
+  if (!html.includes(`data-edition-date="${date}"`)) fatal(`${name} has the wrong edition date`);
+  if (chapters < 1) fatal(`${name} has no magazine chapters`);
+  if (sourceBoxes !== chapters) fatal(`${name} must expose sources for every chapter`);
+  if (count(html, 'class="edition-hero"') !== 1) fatal(`${name} must expose exactly one edition hero`);
+  if (captions !== 1 + chapterFigures) fatal(`${name} is missing a visible caption or credit for an attached image`);
+  if (!html.includes('<nav class="toc"')) fatal(`${name} is missing magazine navigation`);
+  const chapterLabel = `${chapters} chapter${chapters === 1 ? '' : 's'} · One complete edition`;
+  if (!html.includes(chapterLabel)) fatal(`${name} has an inaccurate chapter-count label`);
+  if (!html.includes(`rel="canonical" href="${origin}${route}"`)) fatal(`${name} has the wrong canonical URL`);
+  if (!genuineAttachedImage(html)) fatal(`${name} has no genuine attached local image`);
+  if (!/loading="eager"[^>]*fetchpriority="high"/i.test(html)) fatal(`${name} does not prioritize its hero image`);
+  if (!/<main\b[^>]*>[\s\S]{2500,}<\/main>/i.test(html)) fatal(`${name} is not a substantial readable edition`);
+  await assertLocalImagesExist(html, name);
+  totalChapters += chapters;
+}
+
+const about = await readFile(path.join(dist, 'fmbnews', 'about', 'index.html'), 'utf8');
+for (const marker of ['Our mission', 'Our vision', 'Evidence first', 'Context always']) if (!about.includes(marker)) fatal(`fmbnews/about/index.html is missing ${marker}`);
+
+console.log(`FMB News audit passed ${editionDates.length} complete Morning Special editions from ${editionDates.at(-1)} through ${newest}, covering ${totalChapters} sourced chapters with local credited imagery.`);

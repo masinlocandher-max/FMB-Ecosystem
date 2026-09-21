@@ -1,5 +1,6 @@
 import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
+import { withMicrositeExclusions } from './lib/standalone-microsites.mjs';
 
 const root = path.resolve('dist');
 const warnings = [];
@@ -7,7 +8,7 @@ const fail = (message) => {
   warnings.push(message);
   console.warn(`FMB unified design gate: ${message}`);
 };
-const excludedPrefixes = ['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/'];
+const excludedPrefixes = withMicrositeExclusions(['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/']);
 const excludedFiles = new Set(['admin.html', 'login.html', 'signup.html', 'reset-password.html', 'confirm-email.html']);
 
 async function walk(directory) {

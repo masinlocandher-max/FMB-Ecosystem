@@ -1,0 +1,109 @@
+name: One-time cutover existing PCO deployment
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/one-time-cutover-existing-pco.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  cutover:
+    if: github.event.head_commit.message == 'Cut over production domains to verified PCO'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TEAM_ID: team_KRSlI8wfigrmTrcCfbLIu9C6
+      OLD_PROJECT: withlovefmb
+      NEW_PROJECT_ID: prj_Tv0lMNTJY4eJX68N5EkH8aQZMbwX
+    steps:
+      - name: Verify PCO project and deployment before cutover
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${VERCEL_TOKEN:-}"
+          project="$(curl --fail --silent --show-error \
+            -H "Authorization: Bearer ${VERCEL_TOKEN}" \
+            "https://api.vercel.com/v9/projects/${NEW_PROJECT_ID}?teamId=${VERCEL_TEAM_ID}")"
+          test "$(printf '%s' "$project" | jq -r '.name')" = 'fmb-pco'
+          linked_repo="$(printf '%s' "$project" | jq -r '.link.repo // empty')"
+          echo "PCO project Git link: ${linked_repo:-none}"
+          if [ "$linked_repo" != 'PCO' ] && [ "$linked_repo" != 'masinlocandher-max/PCO' ]; then
+            echo '::error::Refusing cutover: fmb-pco is not Git-linked to the canonical PCO repository.'
+            exit 1
+          fi
+
+          base='https://fmb-pco.vercel.app'
+          curl --fail --location --silent --show-error --max-time 30 "${base}/?preflight=${GITHUB_SHA}" -o /tmp/root.html
+          grep -qi 'Francine' /tmp/root.html
+          curl --fail --location --silent --show-error --max-time 30 "${base}/news/?preflight=${GITHUB_SHA}" -o /tmp/news.html
+          grep -qi 'FMB News' /tmp/news.html
+          curl --fail --location --silent --show-error --max-time 30 \
+            "${base}/news/sara-duterte-arrest-warrant-grave-threats-september-4-2026/?preflight=${GITHUB_SHA}" -o /tmp/article.html
+          grep -qi 'QC Court Issues Arrest Warrant Against VP Sara Duterte' /tmp/article.html
+          echo 'Preflight passed: PCO root, FMB News home, and breaking article are healthy.'
+
+      - name: Move canonical domains to PCO project
+        shell: bash
+        run: |
+          set -euo pipefail
+          for domain in www.francinemariebautista.com francinemariebautista.com; do
+            response="$(curl --fail --silent --show-error -X POST \
+              -H "Authorization: Bearer ${VERCEL_TOKEN}" \
+              -H 'Content-Type: application/json' \
+              "https://api.vercel.com/v1/projects/${OLD_PROJECT}/domains/${domain}/move?teamId=${VERCEL_TEAM_ID}" \
+              --data "$(jq -nc --arg projectId "$NEW_PROJECT_ID" '{projectId:$projectId}')")"
+            printf '%s' "$response" | jq -e --arg id "$NEW_PROJECT_ID" '.projectId == $id' >/dev/null
+            echo "Moved ${domain} to fmb-pco."
+          done
+
+      - name: Detach other protected domains from legacy project
+        shell: bash
+        run: |
+          set -euo pipefail
+          for domain in \
+            app.francinemariebautista.com \
+            data.francinemariebautista.com \
+            yoni.francinemariebautista.com \
+            thecognitainstitute.com \
+            www.thecognitainstitute.com
+          do
+            status="$(curl -sS -o /tmp/remove.json -w '%{http_code}' -X DELETE \
+              -H "Authorization: Bearer ${VERCEL_TOKEN}" \
+              "https://api.vercel.com/v9/projects/${OLD_PROJECT}/domains/${domain}?teamId=${VERCEL_TEAM_ID}")"
+            case "$status" in
+              200|204|404) echo "Detached or already absent: ${domain}" ;;
+              *) cat /tmp/remove.json; exit 1 ;;
+            esac
+          done
+
+      - name: Verify live 404 repair and ownership separation
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 15); do
+            root="$(curl -sS -L -o /tmp/root.html -w '%{http_code}' --max-time 30 -H 'Cache-Control: no-cache' "https://www.francinemariebautista.com/?fix=${GITHUB_SHA}-${attempt}" || true)"
+            news="$(curl -sS -L -o /tmp/news.html -w '%{http_code}' --max-time 30 -H 'Cache-Control: no-cache' "https://www.francinemariebautista.com/news/?fix=${GITHUB_SHA}-${attempt}" || true)"
+            article="$(curl -sS -L -o /tmp/article.html -w '%{http_code}' --max-time 30 -H 'Cache-Control: no-cache' "https://www.francinemariebautista.com/news/sara-duterte-arrest-warrant-grave-threats-september-4-2026/?fix=${GITHUB_SHA}-${attempt}" || true)"
+            echo "attempt ${attempt}: root=${root}, news=${news}, article=${article}"
+            if [ "$root" = 200 ] && [ "$news" = 200 ] && [ "$article" = 200 ] \
+              && grep -qi 'Francine' /tmp/root.html \
+              && grep -qi 'FMB News' /tmp/news.html \
+              && grep -qi 'QC Court Issues Arrest Warrant Against VP Sara Duterte' /tmp/article.html; then
+              break
+            fi
+            [ "$attempt" != 15 ] || exit 1
+            sleep 3
+          done
+
+          old="$(curl --fail --silent --show-error -H "Authorization: Bearer ${VERCEL_TOKEN}" "https://api.vercel.com/v9/projects/${OLD_PROJECT}?teamId=${VERCEL_TEAM_ID}")"
+          printf '%s' "$old" | jq -e '.link == null' >/dev/null
+          if printf '%s' "$old" | jq -e '.domains[]? | select(test("(^|\\.)francinemariebautista\\.com$|(^|\\.)thecognitainstitute\\.com$"))' >/dev/null; then
+            echo '::error::withlovefmb still owns a protected domain.'
+            printf '%s' "$old" | jq '.domains'
+            exit 1
+          fi
+          echo 'RESOLVED: 404 fixed; PCO owns the production domains and FMB News is live under /news.'
