@@ -1,5 +1,9 @@
 # SENZ Strategic Communications and Digital Solutions
 
+> **Historical workspace, not the production source.**
+>
+> The canonical repository is `masinlocandher-max/Senz`, branch `main`, repository root. Make production changes for `www.senzpr.com` and `senzpr.com` there, not in this monorepo. The material below is retained for reference; it must not override the standalone website or its publishing configuration.
+
 **Influence Through Clarity.**
 
 SENZ helps businesses, organizations, institutions, leaders, professionals, and public-facing brands communicate clearly, build trust, strengthen public perception, grow visibility, improve customer experience, and use digital systems more effectively.
@@ -124,11 +128,9 @@ Strategist | Creative Director | Communications Practitioner
 
 ## Repository Purpose
 
-This workspace contains the active SENZ website, inquiries, business-facing systems, commercial architecture, and related digital resources inside the FMB Ecosystem monorepo.
+This workspace preserves a historical SENZ code and commercial-architecture copy. It is not the active website, deployment source, or owner of either SENZ domain. The source of truth is `masinlocandher-max/Senz`.
 
-masinlocandher-max/FMB-Ecosystem → apps/senz
-
-Never commit environment files, API secrets, database credentials, private client data, or confidential training/client materials to this public repository.
+Do not delete this reference material or copy its different public build over the standalone website without a reviewed, owner-authorized change. Never commit environment files, API secrets, database credentials, private client data, or confidential training/client materials to this public repository.
 
 ---
 

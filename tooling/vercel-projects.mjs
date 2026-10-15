@@ -8,6 +8,7 @@
  * - Never copies environment variables.
  * - Never deletes or modifies the legacy `withlovefmb` project.
  * - Existing desired projects are verified, not silently rewritten.
+ * - SENZ is external at masinlocandher-max/Senz, not a monorepo target.
  *
  * Usage:
  *   node tooling/vercel-projects.mjs plan
@@ -23,13 +24,6 @@ const projects = [
   {
     name: "fmb-public-and-yoni",
     rootDirectory: "apps/withlovefmb",
-    buildCommand: "npm run build",
-    outputDirectory: "dist",
-    installCommand: "npm install --no-audit --no-fund"
-  },
-  {
-    name: "senz",
-    rootDirectory: "apps/senz",
     buildCommand: "npm run build",
     outputDirectory: "dist",
     installCommand: "npm install --no-audit --no-fund"
