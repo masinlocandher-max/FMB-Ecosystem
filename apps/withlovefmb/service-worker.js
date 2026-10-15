@@ -1,4 +1,4 @@
-const CACHE_NAME='fmb-app-shell-20260721-complete-yoni-v26';
+const CACHE_NAME='fmb-app-shell-20260904-news-detached-v28';
 const YONI_HOSTS=new Set(['yoni.francinemariebautista.com']);
 const PUBLIC_PAGES=new Set([
   '/',
@@ -11,17 +11,8 @@ const PUBLIC_PAGES=new Set([
   '/projects/',
   '/withlovefmb/',
   '/communityengagements/',
-  '/ebooks/',
-  '/music/',
   '/gethelp/',
   '/fmbandco/',
-  '/news/',
-  '/reading.html',
-  '/womens-health.html',
-  '/skin-care-makeup.html',
-  '/coming-out-respect.html',
-  '/men-can-cry.html',
-  '/dress-with-intention.html',
   '/privacy-policy.html',
   '/membership-agreement.html',
   '/community-guidelines.html',
@@ -46,6 +37,12 @@ const APP_SHELL=[
   '/app/install/index.html',
   '/app/install/install.css',
   '/app/install/install.js',
+  '/app/content/books/reading.html',
+  '/app/content/books/womens-health.html',
+  '/app/content/books/skin-care-makeup.html',
+  '/app/content/books/coming-out-respect.html',
+  '/app/content/books/men-can-cry.html',
+  '/app/content/books/dress-with-intention.html',
   '/manifest.webmanifest',
   '/assets/css/site.css',
   '/assets/css/yoni-app-refresh.css',
@@ -58,12 +55,6 @@ const APP_SHELL=[
   '/assets/js/yoni-native-music.js',
   '/assets/js/yoni-native-ebooks.js',
   '/assets/data/music-library.json',
-  '/reading.html',
-  '/womens-health.html',
-  '/skin-care-makeup.html',
-  '/coming-out-respect.html',
-  '/men-can-cry.html',
-  '/dress-with-intention.html',
   '/app/assets/yoni/manifest.json',
   '/assets/images/music/fmb-calm-official-album-cover.jpg',
   '/assets/images/music/fmb-70s-feel-good-cover.svg',
@@ -78,6 +69,9 @@ self.addEventListener('activate',event=>{event.waitUntil((async()=>{const keys=a
 self.addEventListener('message',event=>{if(event.data?.type==='SKIP_WAITING')self.skipWaiting()});
 self.addEventListener('fetch',event=>{
   const request=event.request;if(request.method!=='GET')return;const url=new URL(request.url);if(url.origin!==self.location.origin)return;if(url.pathname==='/api/music'||request.headers.has('range'))return;
+  // FMB News is owned by the standalone FMBNews deployment. The legacy service
+  // worker must never intercept, cache, or provide an offline fallback for it.
+  if(url.pathname==='/news'||url.pathname.startsWith('/news/'))return;
   if(request.mode==='navigate'){
     event.respondWith((async()=>{try{const response=await fetch(request);if(response.ok&&PUBLIC_PAGES.has(url.pathname)){const cache=await caches.open(CACHE_NAME);cache.put(request,response.clone()).catch(()=>{})}return response}catch{const cached=await caches.match(request,{ignoreSearch:true});const yoniNavigation=YONI_HOSTS.has(url.hostname)||url.pathname.startsWith('/app/');return cached||await caches.match(yoniNavigation?'/app/index.html':'/index.html')||Response.error()}})());return;
   }

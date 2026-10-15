@@ -37,8 +37,8 @@ if (rootPackage) {
   for (const workspace of expectedWorkspaces) {
     if (!workspaces.includes(workspace)) errors.push(`Root package.json is missing workspace ${workspace}.`);
   }
-  if (!rootPackage.scripts?.['build:legacy']) {
-    errors.push('Root package.json must preserve build:legacy until the Vercel migration is complete.');
+  if (!rootPackage.scripts?.['build:ecosystem']) {
+    errors.push('Root package.json must declare the isolated build:ecosystem entry point.');
   }
 }
 

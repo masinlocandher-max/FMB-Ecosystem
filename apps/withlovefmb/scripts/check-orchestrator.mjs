@@ -69,8 +69,6 @@ const publicFiles = [
   'aboutfmb/index.html',
   'news/index.html',
   'projects/index.html',
-  'ebooks/index.html',
-  'music/index.html',
   'withlovefmb/index.html',
   'communityengagements/index.html',
   'volunteer.html',

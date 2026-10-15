@@ -1,7 +1,0 @@
-FMB News production recovery marker
-
-Final release base: 736c2ad7323b7736f1a31dcabd7a4a9035b63059
-Primary timeline: 3:00 PM -> 1:00 PM -> 12:00 PM briefing -> 12:00 PM Falcon 9 -> 11:00 AM UN -> 11:00 AM Italy heat -> 10:55 AM PSA inflation
-Recovered archive: 5 August fuel report -> 4 August North Korea/Japan report -> 28, 24, 20 and 15 July impeachment reports
-Purpose: publish the complete backlog through the normal design and audit pipeline, remove internal production notes, and preserve transparent original report dates.
-Controlled production release: 5 August 2026, 10:34 p.m. PHT

@@ -1,9 +1,10 @@
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { withMicrositeExclusions } from './lib/standalone-microsites.mjs';
 
 const repositoryRoot = path.resolve(new URL('..', import.meta.url).pathname);
 const dist = path.join(repositoryRoot, 'dist');
-const excludedPrefixes = ['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/'];
+const excludedPrefixes = withMicrositeExclusions(['_sites/', 'app/', 'api/', 'auth/', 'admin/', 'data/', 'yoni/']);
 const excludedFiles = new Set(['admin.html', 'login.html', 'signup.html', 'reset-password.html', 'confirm-email.html']);
 
 async function walk(directory) {
@@ -44,4 +45,3 @@ function enforceImageBudget(html,eagerBudget=4){let eagerImages=0;return html.re
 let bundledPages=0,imageBudgetPages=0;
 for(const pageFile of publicHtml){const name=relative(pageFile);let html=await readFile(pageFile,'utf8');const before=html;const stylesheetTags=[...html.matchAll(/<link\b[^>]*rel=["'][^"']*stylesheet[^"']*["'][^>]*href=["']([^"']+)["'][^>]*>/gi)];if(stylesheetTags.length>8){const selected=[];for(const match of stylesheetTags){const tag=match[0],href=match[1];if(/\bmedia=["'](?!all["'])/i.test(tag))continue;if(/^(?:https?:|\/\/)/i.test(href)||href.includes('fmb-unified-system.css'))continue;const file=resolveLocal(pageFile,html,href);if(!file)continue;try{selected.push({tag,href,file,css:await readFile(file,'utf8')})}catch{}}if(selected.length>1){const key=name.replace(/\/index\.html$/i,'').replace(/\.html$/i,'').replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'')||'home',bundlePath=path.join(dist,'assets','css',`fmb-functional-${key}.css`),bundle=selected.map(item=>`/* ${item.href} */\n${rewriteCssUrls(item.css,item.file)}`).join('\n\n');await writeFile(bundlePath,bundle,'utf8');const link=`<link rel="stylesheet" href="${publicUrl(bundlePath)}?v=20260724-clean-release">`;let inserted=false;for(const item of selected){if(!inserted){html=html.replace(item.tag,link);inserted=true}else html=html.replace(item.tag,'')}bundledPages+=1}}const imageBudgeted=enforceImageBudget(html);if(imageBudgeted!==html)imageBudgetPages+=1;html=imageBudgeted;if(html!==before)await writeFile(pageFile,html,'utf8')}
 console.log(`Performance cleanup consolidated legacy functional CSS on ${bundledPages} page(s) and enforced eager-image budgets on ${imageBudgetPages} page(s).`);
-await import('./post-build-fmbnews-standalone-masthead-guard.mjs');

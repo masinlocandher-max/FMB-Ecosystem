@@ -1,10 +1,11 @@
 import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
+import { withMicrositeExclusions } from './lib/standalone-microsites.mjs';
 
 const root=path.resolve(new URL('../dist/',import.meta.url).pathname);
 const textExtensions=new Set(['.html','.css','.js','.json','.webmanifest']);
 const imageExtensions=new Set(['.png','.jpg','.jpeg','.webp','.gif','.svg']);
-const protectedPrefixes=['_sites/senz/','_sites/cognita/'];
+const protectedPrefixes=withMicrositeExclusions(['_sites/senz/','_sites/cognita/']);
 const forbiddenPathPatterns=[/placeholder/i,/ai-generated/i,/generated-(?:hero|image|portrait|photo)/i,/\/generated\//i,/\/mockups?\//i,/\/temp(?:orary)?\//i];
 
 async function walk(directory){

@@ -1,0 +1,86 @@
+name: One-time verify domain separation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/one-time-verify-domain-separation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TEAM_ID: team_KRSlI8wfigrmTrcCfbLIu9C6
+      VERCEL_TEAM_SLUG: senz3
+      PCO_PROJECT_ID: prj_Boxtw8qNjYDaRglSonw2pUuteiVq
+      OLD_PROJECT: withlovefmb
+      NEW_PROJECT: pco
+
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Deploy current canonical PCO main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch main https://github.com/masinlocandher-max/PCO.git /tmp/pco
+          test -f /tmp/pco/vercel.json
+          grep -q 'fmb-news.info-senz-pr.workers.dev' /tmp/pco/vercel.json
+          mkdir -p /tmp/pco/.vercel
+          printf '{"projectId":"%s","orgId":"%s"}\n' "$PCO_PROJECT_ID" "$VERCEL_TEAM_ID" > /tmp/pco/.vercel/project.json
+          cd /tmp/pco
+          npx --yes vercel@56.5.0 deploy --prod --yes --token="$VERCEL_TOKEN" --scope="$VERCEL_TEAM_SLUG"
+
+      - name: Verify domain ownership and old-project separation
+        shell: bash
+        run: |
+          set -euo pipefail
+          api='https://api.vercel.com'
+          auth=(-H "Authorization: Bearer $VERCEL_TOKEN")
+          old="$(curl --fail --silent --show-error "${auth[@]}" "$api/v9/projects/$OLD_PROJECT/domains?teamId=$VERCEL_TEAM_ID")"
+          new="$(curl --fail --silent --show-error "${auth[@]}" "$api/v9/projects/$NEW_PROJECT/domains?teamId=$VERCEL_TEAM_ID")"
+          old_project="$(curl --fail --silent --show-error "${auth[@]}" "$api/v9/projects/$OLD_PROJECT?teamId=$VERCEL_TEAM_ID")"
+
+          echo 'OLD_PROJECT_DOMAIN_NAMES:'
+          printf '%s' "$old" | jq -r '.domains[].name' | sort
+          echo 'NEW_PROJECT_DOMAIN_NAMES:'
+          printf '%s' "$new" | jq -r '.domains[].name' | sort
+
+          if printf '%s' "$old" | jq -e '.domains | map(.name) | index("francinemariebautista.com") != null or index("www.francinemariebautista.com") != null' >/dev/null; then
+            echo 'FAIL: old project still owns a main domain.'
+            exit 1
+          fi
+          printf '%s' "$new" | jq -e '.domains | map(.name) | index("francinemariebautista.com") != null' >/dev/null
+          printf '%s' "$new" | jq -e '.domains | map(.name) | index("www.francinemariebautista.com") != null' >/dev/null
+          repo="$(printf '%s' "$old_project" | jq -r '.link.repo // empty')"
+          test -z "$repo"
+          echo 'PASS: apex and www belong to PCO; withlovefmb has no Git repository link.'
+
+      - name: Verify live PCO and standalone FMB News
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4 5 6; do
+            root_code="$(curl --silent --show-error --location -o /tmp/root.html -w '%{http_code}' https://www.francinemariebautista.com/ || true)"
+            news_code="$(curl --silent --show-error --location -D /tmp/news.headers -o /tmp/news.html -w '%{http_code}' https://www.francinemariebautista.com/news/ || true)"
+            if [ "$root_code" = '200' ] && [ "$news_code" = '200' ] && grep -qi 'Francine Marie Bautista' /tmp/root.html && grep -Eqi 'FMB News|FILIPINO MEDIA BULLETIN' /tmp/news.html; then
+              echo "PASS on attempt $attempt"
+              echo 'LIVE_NEWS_RESPONSE_MARKERS:'
+              grep -Ei '^(server|x-fmb-news-worker|x-vercel-id|cf-ray|via|content-type):' /tmp/news.headers || true
+              exit 0
+            fi
+            echo "attempt=$attempt root=$root_code news=$news_code"
+            sleep 10
+          done
+          echo 'FAIL: live root or /news did not stabilize.'
+          cat /tmp/news.headers || true
+          head -c 400 /tmp/news.html || true
+          exit 1

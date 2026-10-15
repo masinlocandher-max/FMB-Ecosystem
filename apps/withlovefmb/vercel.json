@@ -7,13 +7,23 @@
   "redirects": [
     {
       "source": "/data-center/:path*",
-      "has": [{"type": "host", "value": "www.francinemariebautista.com"}],
+      "has": [
+        {
+          "type": "host",
+          "value": "www.francinemariebautista.com"
+        }
+      ],
       "destination": "https://data.francinemariebautista.com/",
       "permanent": true
     },
     {
       "source": "/:path*",
-      "has": [{"type": "host", "value": "app.francinemariebautista.com"}],
+      "has": [
+        {
+          "type": "host",
+          "value": "app.francinemariebautista.com"
+        }
+      ],
       "destination": "https://yoni.francinemariebautista.com/:path*",
       "permanent": true
     },
@@ -30,6 +40,14 @@
   ],
   "rewrites": [
     {
+      "source": "/MissIntercontinental",
+      "destination": "/MissIntercontinental/index.html"
+    },
+    {
+      "source": "/MissIntercontinental/",
+      "destination": "/MissIntercontinental/index.html"
+    },
+    {
       "source": "/about-francine-marie-bautista/early-life-pageantry-advocacy",
       "destination": "/about-francine-marie-bautista/early-life-pageantry-advocacy/index.html"
     },
@@ -39,37 +57,133 @@
     },
     {
       "source": "/:path*",
-      "has": [{"type": "host", "value": "data.francinemariebautista.com"}],
+      "has": [
+        {
+          "type": "host",
+          "value": "data.francinemariebautista.com"
+        }
+      ],
       "destination": "/admin.html"
     },
     {
       "source": "/",
-      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
       "destination": "/app/index.html"
     },
     {
+      "source": "/reading.html",
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
+      "destination": "/app/content/books/reading.html"
+    },
+    {
+      "source": "/womens-health.html",
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
+      "destination": "/app/content/books/womens-health.html"
+    },
+    {
+      "source": "/skin-care-makeup.html",
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
+      "destination": "/app/content/books/skin-care-makeup.html"
+    },
+    {
+      "source": "/coming-out-respect.html",
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
+      "destination": "/app/content/books/coming-out-respect.html"
+    },
+    {
+      "source": "/men-can-cry.html",
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
+      "destination": "/app/content/books/men-can-cry.html"
+    },
+    {
+      "source": "/dress-with-intention.html",
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
+      "destination": "/app/content/books/dress-with-intention.html"
+    },
+    {
       "source": "/app/:path*",
-      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
       "destination": "/app/:path*"
     },
     {
       "source": "/assets/:path*",
-      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
       "destination": "/assets/:path*"
     },
     {
       "source": "/:path*",
-      "has": [{"type": "host", "value": "yoni.francinemariebautista.com"}],
+      "has": [
+        {
+          "type": "host",
+          "value": "yoni.francinemariebautista.com"
+        }
+      ],
       "destination": "/app/index.html"
     }
   ],
   "headers": [
     {
       "source": "/:path*",
-      "has": [{"type": "host", "value": "data.francinemariebautista.com"}],
+      "has": [
+        {
+          "type": "host",
+          "value": "data.francinemariebautista.com"
+        }
+      ],
       "headers": [
-        {"key": "Cache-Control", "value": "private, no-store, max-age=0"},
-        {"key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive"}
+        {
+          "key": "Cache-Control",
+          "value": "private, no-store, max-age=0"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
+        }
       ]
     }
   ]

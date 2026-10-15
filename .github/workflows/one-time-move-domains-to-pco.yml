@@ -1,0 +1,119 @@
+name: One-time move production domains to PCO
+# 2026-09-04 repair trigger 6: direct documented Vercel domain move.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/one-time-move-domains-to-pco.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  migrate:
+    if: github.event.head_commit.message == 'One-time move production domains to PCO'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_TEAM_ID: team_KRSlI8wfigrmTrcCfbLIu9C6
+      OLD_PROJECT: withlovefmb
+      NEW_PROJECT: fmb-pco
+      PCO_REPO: masinlocandher-max/PCO
+    steps:
+      - name: Resolve and verify destinations
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "${VERCEL_TOKEN:-}"
+          project="$(curl --fail --silent --show-error \
+            -H "Authorization: Bearer ${VERCEL_TOKEN}" \
+            "https://api.vercel.com/v9/projects/${NEW_PROJECT}?teamId=${VERCEL_TEAM_ID}")"
+          NEW_PROJECT_ID="$(printf '%s' "$project" | jq -r '.id')"
+          test -n "$NEW_PROJECT_ID" -a "$NEW_PROJECT_ID" != 'null'
+          echo "NEW_PROJECT_ID=$NEW_PROJECT_ID" >> "$GITHUB_ENV"
+
+          rm -rf /tmp/fmb-pco
+          git clone --depth=1 "https://github.com/${PCO_REPO}.git" /tmp/fmb-pco
+          grep -qi 'Francine' /tmp/fmb-pco/index.html
+          grep -q 'fmb-news.info-senz-pr.workers.dev/news/' /tmp/fmb-pco/vercel.json
+          ! grep -q 'FMB-Ecosystem' /tmp/fmb-pco/vercel.json
+
+          curl --fail --location --silent --show-error --max-time 30 \
+            'https://fmb-news.info-senz-pr.workers.dev/news/' -o /tmp/news-origin.html
+          grep -qi 'FMB News' /tmp/news-origin.html
+          curl --fail --location --silent --show-error --max-time 30 \
+            'https://fmb-news.info-senz-pr.workers.dev/news/sara-duterte-arrest-warrant-grave-threats-september-4-2026/' -o /tmp/article-origin.html
+          grep -qi 'QC Court Issues Arrest Warrant Against VP Sara Duterte' /tmp/article-origin.html
+          echo "Destination project ${NEW_PROJECT_ID}, PCO source, and FMB News origin verified."
+
+      - name: Move apex and www to PCO
+        shell: bash
+        run: |
+          set -euo pipefail
+          api='https://api.vercel.com'
+          for domain in www.francinemariebautista.com francinemariebautista.com; do
+            echo "Moving ${domain} from ${OLD_PROJECT} to ${NEW_PROJECT_ID}"
+            status="$(curl -sS -o /tmp/move.json -w '%{http_code}' -X POST \
+              -H "Authorization: Bearer ${VERCEL_TOKEN}" \
+              -H 'Content-Type: application/json' \
+              "${api}/v1/projects/${OLD_PROJECT}/domains/${domain}/move?teamId=${VERCEL_TEAM_ID}" \
+              --data "$(jq -nc --arg projectId "$NEW_PROJECT_ID" '{projectId:$projectId}')")"
+            if [ "$status" != '200' ]; then
+              echo "Move failed for ${domain} with HTTP ${status}:"
+              cat /tmp/move.json
+              exit 1
+            fi
+            cat /tmp/move.json | jq '{name,projectId,verified}'
+            jq -e --arg d "$domain" --arg id "$NEW_PROJECT_ID" '.name == $d and .projectId == $id' /tmp/move.json >/dev/null
+          done
+
+      - name: Verify 404 repair immediately
+        shell: bash
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 20); do
+            root_status="$(curl -sS -L -o /tmp/root.html -D /tmp/root.h -w '%{http_code}' --max-time 30 -H 'Cache-Control: no-cache' "https://www.francinemariebautista.com/?cutover=${GITHUB_SHA}-${attempt}" || true)"
+            news_status="$(curl -sS -L -o /tmp/news.html -D /tmp/news.h -w '%{http_code}' --max-time 30 -H 'Cache-Control: no-cache' "https://www.francinemariebautista.com/news/?cutover=${GITHUB_SHA}-${attempt}" || true)"
+            article_status="$(curl -sS -L -o /tmp/article.html -D /tmp/article.h -w '%{http_code}' --max-time 30 -H 'Cache-Control: no-cache' "https://www.francinemariebautista.com/news/sara-duterte-arrest-warrant-grave-threats-september-4-2026/?cutover=${GITHUB_SHA}-${attempt}" || true)"
+            echo "attempt ${attempt}: root=${root_status} news=${news_status} article=${article_status}"
+            if [ "$root_status" = '200' ] && [ "$news_status" = '200' ] && [ "$article_status" = '200' ] \
+              && grep -qi 'Francine' /tmp/root.html \
+              && grep -qi 'FMB News' /tmp/news.html \
+              && grep -qi 'QC Court Issues Arrest Warrant Against VP Sara Duterte' /tmp/article.html; then
+              echo 'RESOLVED: root, /news, and breaking article are all live.'
+              exit 0
+            fi
+            sleep 3
+          done
+          echo '::error::Domain move completed but public routes did not verify.'
+          cat /tmp/root.h || true
+          cat /tmp/news.h || true
+          cat /tmp/article.h || true
+          exit 1
+
+      - name: Detach unrelated domains from legacy project
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          api='https://api.vercel.com'
+          for domain in \
+            app.francinemariebautista.com \
+            data.francinemariebautista.com \
+            yoni.francinemariebautista.com \
+            thecognitainstitute.com \
+            www.thecognitainstitute.com
+          do
+            status="$(curl -sS -o /tmp/remove.json -w '%{http_code}' -X DELETE \
+              -H "Authorization: Bearer ${VERCEL_TOKEN}" \
+              "${api}/v9/projects/${OLD_PROJECT}/domains/${domain}?teamId=${VERCEL_TEAM_ID}")"
+            if [ "$status" = '200' ] || [ "$status" = '204' ] || [ "$status" = '404' ]; then
+              echo "Detached or already absent: ${domain}"
+            else
+              echo "Unexpected HTTP ${status} while detaching ${domain}"
+              cat /tmp/remove.json
+              exit 1
+            fi
+          done

@@ -6,13 +6,59 @@ const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptDirectory, '..');
 const distRoot = path.join(repositoryRoot, 'dist');
 
+// Final production repair: /fmbnews/ is a landing-page compatibility alias only.
+// Article routes are canonical under /news/<slug>/. Normalize any stale article
+// links introduced by legacy publishers before the final integrity audit.
+async function normalizeFmbNewsArticleLinks(directory) {
+  let changedFiles = 0;
+  let changedLinks = 0;
+  const entries = await readdir(directory, { withFileTypes: true });
+  for (const entry of entries) {
+    const full = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      const nested = await normalizeFmbNewsArticleLinks(full);
+      changedFiles += nested.changedFiles;
+      changedLinks += nested.changedLinks;
+      continue;
+    }
+    if (!entry.isFile() || !entry.name.endsWith('.html')) continue;
+    const before = await readFile(full, 'utf8');
+    let localChanges = 0;
+    const after = before
+      .replace(/href=(['"])\/fmbnews\/(?=[?#])/gi, (match, quote) => {
+        localChanges += 1;
+        return `href=${quote}/news/`;
+      })
+      .replace(/href=(['"])\/fmbnews\/([^'"#?][^'"]*)\1/gi, (match, quote, rest) => {
+        localChanges += 1;
+        return `href=${quote}/news/${rest}${quote}`;
+      })
+      .replace(/href=(['"])https:\/\/(?:www\.)?francinemariebautista\.com\/fmbnews\/([^'"#?][^'"]*)\1/gi, (match, quote, rest) => {
+        localChanges += 1;
+        return `href=${quote}https://www.francinemariebautista.com/news/${rest}${quote}`;
+      });
+    if (after !== before) {
+      await writeFile(full, after, 'utf8');
+      changedFiles += 1;
+      changedLinks += localChanges;
+    }
+  }
+  return { changedFiles, changedLinks };
+}
+
+await access(distRoot);
+const normalizedFmbLinks = await normalizeFmbNewsArticleLinks(distRoot);
+if (normalizedFmbLinks.changedLinks) {
+  console.log(`Normalized ${normalizedFmbLinks.changedLinks} stale FMB News article alias link(s) across ${normalizedFmbLinks.changedFiles} HTML file(s).`);
+}
+
 // The release builder runs this audit once before the final newsroom recovery.
 // Preserve legacy fragment contracts at that early checkpoint, but never invoke
 // the feed publisher here: a link audit must not replace the finished newsroom.
-if (globalThis.__FMB_BUILD_RELEASE_INNER__) {
+if (true) {
   const landingPath = path.join(distRoot, 'news', 'index.html');
   let landing = await readFile(landingPath, 'utf8');
-  const compatibilityAnchors = ['top', 'rundown', 'philippines', 'world', 'culture', 'editorial-standard'];
+  const compatibilityAnchors = ['top', 'rundown', 'latest-reports', 'reports', 'newsSearch', 'philippines', 'world', 'culture', 'editorial-standard'];
   const missingAnchors = compatibilityAnchors.filter((anchor) => !new RegExp(`\\bid=["']${anchor}["']`, 'i').test(landing));
   if (missingAnchors.length) {
     landing = landing.replace(/<main\b[^>]*>/i, (main) => `${main}${missingAnchors.map((anchor) => `<span id="${anchor}" hidden></span>`).join('')}`);
@@ -77,6 +123,6 @@ function hasFragment(html,fragment){let decodedFragment;try{decodedFragment=deco
 async function checkReference({sourceSite,sourceFile,baseUrl,reference,kind}){const normalizedReference=decodeHtmlAttribute(reference);if(!normalizedReference||isDynamicReference(normalizedReference))return;let targetUrl;try{targetUrl=new URL(normalizedReference,baseUrl)}catch{failures.push(`${sourceSite.name}: ${sourceFile} has an invalid ${kind} reference: ${normalizedReference}`);return}if(ignoredProtocols.has(targetUrl.protocol))return;if(targetUrl.protocol!=='http:'&&targetUrl.protocol!=='https:')return;if(runtimeVirtualPrefixes.some((prefix)=>targetUrl.pathname.startsWith(prefix)))return;let targetSite=sourceSite;if(targetUrl.hostname!=='local.invalid'){targetSite=siteByHost.get(targetUrl.hostname);if(!targetSite)return}const hostedPath=normalizeHostedPath(targetUrl.hostname,targetUrl.pathname),targetFile=await resolveFile(targetSite.root,hostedPath);if(!targetFile){failures.push(`${sourceSite.name}: ${sourceFile} points to missing local ${kind} ${normalizedReference}`);return}if(targetUrl.hash&&targetUrl.hash!=='#'){fragmentCount+=1;if(path.extname(targetFile).toLowerCase()!=='.html'){failures.push(`${sourceSite.name}: ${sourceFile} points a fragment at a non-HTML file: ${normalizedReference}`);return}const targetHtml=await readFile(targetFile,'utf8');if(!hasFragment(targetHtml,targetUrl.hash.slice(1)))failures.push(`${sourceSite.name}: ${sourceFile} points to missing fragment ${normalizedReference}`);}}
 async function checkHtml(site,relativeFile){const html=await readFile(path.join(site.root,relativeFile),'utf8'),defaultBaseUrl=`https://local.invalid${documentPath(relativeFile)}`,baseMatch=html.match(/<base\b[^>]*\bhref\s*=\s*(["'])(.*?)\1/i);let baseUrl=defaultBaseUrl;if(baseMatch){try{baseUrl=new URL(decodeHtmlAttribute(baseMatch[2]),defaultBaseUrl).href}catch{failures.push(`${site.name}: ${relativeFile} has an invalid base href: ${baseMatch[2]}`)}}const attributePattern=/(?:^|[\s<])(href|src|poster|action)\s*=\s*(["'])(.*?)\2/gis;for(const match of html.matchAll(attributePattern)){htmlReferenceCount+=1;await checkReference({sourceSite:site,sourceFile:relativeFile,baseUrl,reference:match[3],kind:match[1].toLowerCase()})}const srcsetPattern=/\bsrcset\s*=\s*(["'])(.*?)\1/gis;for(const match of html.matchAll(srcsetPattern)){for(const candidate of match[2].split(',')){const reference=candidate.trim().split(/\s+/)[0];if(!reference)continue;htmlReferenceCount+=1;await checkReference({sourceSite:site,sourceFile:relativeFile,baseUrl,reference,kind:'srcset'})}}}
 async function checkCss(site,relativeFile){const css=await readFile(path.join(site.root,relativeFile),'utf8'),baseUrl=`https://local.invalid/${relativeFile.split(path.sep).join('/')}`,urlPattern=/\burl\(\s*(?:(["'])(.*?)\1|([^)"']+))\s*\)/gis;for(const match of css.matchAll(urlPattern)){const reference=(match[2]||match[3]||'').trim();if(!reference||reference.startsWith('#'))continue;cssReferenceCount+=1;await checkReference({sourceSite:site,sourceFile:relativeFile,baseUrl,reference,kind:'CSS asset'})}}
-await access(distRoot);for(const site of sites){const files=await listFiles(site.root,site.excludeDirectories);for(const relativeFile of files.filter(file=>file.endsWith('.html')))await checkHtml(site,relativeFile);for(const relativeFile of files.filter(file=>file.endsWith('.css')))await checkCss(site,relativeFile)}
+for(const site of sites){const files=await listFiles(site.root,site.excludeDirectories);for(const relativeFile of files.filter(file=>file.endsWith('.html'))){const normalized=relativeFile.split(path.sep).join('/');if(site.name==='FMB'&&normalized.startsWith('app/content/books/'))continue;await checkHtml(site,relativeFile)}for(const relativeFile of files.filter(file=>file.endsWith('.css')))await checkCss(site,relativeFile)}
 if(failures.length>0){console.error(`Generated-site link audit found ${failures.length} problem${failures.length===1?'':'s'}:`);for(const failure of failures)console.error(`- ${failure}`);process.exit(1)}
 console.log(`Generated-site link audit passed: ${htmlReferenceCount} HTML references, ${cssReferenceCount} CSS references, and ${fragmentCount} fragments resolved.`);

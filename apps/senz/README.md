@@ -1,103 +1,137 @@
-SENZ Strategic Communications
+# SENZ Strategic Communications and Digital Solutions
 
-"SENZ Logo" (./assets/logo.png)
+> **Historical workspace, not the production source.**
+>
+> The canonical repository is `masinlocandher-max/Senz`, branch `main`, repository root. Make production changes for `www.senzpr.com` and `senzpr.com` there, not in this monorepo. The material below is retained for reference; it must not override the standalone website or its publishing configuration.
 
-Influence Through Clarity.
+**Influence Through Clarity.**
 
-SENZ Strategic Communications is a creative strategy and communications company helping brands, organizations, and individuals become clearer, sharper, and harder to ignore.
+SENZ helps businesses, organizations, institutions, leaders, professionals, and public-facing brands communicate clearly, build trust, strengthen public perception, grow visibility, improve customer experience, and use digital systems more effectively.
 
-We build powerful identities through the combination of strategy, storytelling, design, technology, and public perception.
+We work across strategy, communications, public relations, reputation, brand, social media, digital products, AI, automation, and training.
 
----
+## Core Practice Areas
 
-🚀 About SENZ
+### Strategic Communications
+Communication strategy, message architecture, stakeholder communication, narrative development, executive messaging, internal and external communications, issue management, and strategic advisory.
 
-In a world where everyone is competing for attention, clarity creates influence.
+### Public Relations and Reputation
+PR strategy, media relations, press materials, thought leadership, media training, reputation management, crisis communication, public statements, and perception strategy.
 
-SENZ develops communication systems that help ideas become recognized, trusted, and remembered.
+### Brand and Creative
+Brand strategy, positioning, identity, creative direction, storytelling, content systems, photography, visual communication, and campaign development.
 
-Our approach combines:
+### Social Media and Marketing
+Social strategy, content planning, campaign development, short-form content, community guidelines, social listening, analytics, lead generation, digital marketing, and conversion strategy.
 
-- Strategic thinking
-- Creative direction
-- Brand identity
-- Digital experiences
-- Public relations
-- Storytelling
-- Visual communication
+### Digital and AI
+Websites, landing pages, portals, CRM, automation, customer systems, business apps, AI-enabled workflows, white-label systems, and own-brand digital products.
 
----
+### Training and Development
+Communication skills, professional and workplace communication, public speaking, presentation skills, media training, leadership communication, customer-service communication, sales communication, social media, PR, digital marketing, and AI for business.
 
-Divisions
+### Strategic Advisory
+High-level consulting across communications, brand, reputation, growth, digital transformation, executive visibility, and organizational communication.
 
-🎵 SENZ Music
+## Flagship Solution Families
 
-Music production, songwriting, audio branding, and emotional storytelling.
+SENZ organizes its broad capability set into six simple public-facing solution families:
 
-💻 SENZ Digital
+1. **Brand and Visibility**
+2. **PR and Reputation**
+3. **Marketing and Growth**
+4. **Digital and AI**
+5. **People and Communication**
+6. **Strategic Advisory**
 
-Web development, digital platforms, online experiences, and technology solutions.
+The full internal service, product, training, and revenue architecture is documented here:
 
-📈 SENZ Marketing
+[Service and Product Architecture](./docs/SERVICE-AND-PRODUCT-ARCHITECTURE.md)
 
-Campaign strategy, content systems, audience growth, and brand promotion.
+## Training
 
-📸 SENZ Imaging
+Training is a core SENZ business line, not an add-on.
 
-Photography, visual storytelling, creative production, and media creation.
+Programs may be delivered as short workshops, half-day sessions, full-day programs, multi-session learning tracks, or customized corporate engagements.
 
-🧰 SENZ Kits
+Key training areas include:
 
-Creative resources, templates, communication tools, and brand assets.
-
-📰 SENZ Strategic PR
-
-Public relations, reputation management, messaging, media strategy, and narrative development.
-
----
-
-Services
-
-- Brand Strategy
-- Creative Direction
-- Public Relations
-- Digital Communication
-- Website Development
+- Communication Skills
+- Business and Professional Communication
+- Workplace Communication
+- Public Speaking and Presentation Skills
+- Media Training
+- Leadership Communication
+- Customer Communication
+- Sales Communication
+- PR and Media Relations
+- Social Media Strategy
 - Content Strategy
-- Photography & Production
-- Social Media Systems
-- Campaign Development
-- Reputation Management
+- Personal Branding
+- Digital Marketing
+- AI for Business
+- AI for Communications and Marketing
 
----
+SENZ also develops customized communication-transformation programs that combine audit, strategy, training, implementation, coaching, and measurement.
 
-Vision
+## White Label and Own-Brand Products
 
-To become a leading creative communications company that connects strategy, culture, technology, and storytelling to create brands with lasting impact.
+SENZ may provide white-label and own-brand systems for qualified clients and resellers, including:
 
----
+- websites
+- CRM
+- booking systems
+- workflow automation
+- customer portals
+- marketing systems
+- AI assistants
+- branded web apps and PWAs
+- own-brand business apps
 
-Founder
+Only capabilities that are operationally and technically production-ready should be marketed as available.
+
+## Commercial Model
+
+SENZ can generate revenue through:
+
+- strategic and creative projects
+- monthly retainers
+- training and corporate programs
+- consulting and transformation engagements
+- recurring software subscriptions
+- white-label platform subscriptions
+- usage-based digital services
+- intellectual property, frameworks, templates, and licensing
+
+## Brand Positioning
+
+SENZ should not be reduced to a PR agency, digital agency, or training company.
+
+The higher-value proposition is:
+
+**SENZ improves how an organization is understood, trusted, experienced, and remembered.**
+
+That may involve strategy, people, communication, public perception, brand, customer experience, technology, and systems.
+
+## Brand Statement
+
+**We make them clearer, sharper, and harder to ignore.**
+
+SENZ Strategic Communications and Digital Solutions  
+**Influence Through Clarity.**
+
+## Founder
 
 Francine Marie Bautista (FMB)
 
-Creative Director | Strategist | Storyteller
+Strategist | Creative Director | Communications Practitioner
+
+## Repository Purpose
+
+This workspace preserves a historical SENZ code and commercial-architecture copy. It is not the active website, deployment source, or owner of either SENZ domain. The source of truth is `masinlocandher-max/Senz`.
+
+Do not delete this reference material or copy its different public build over the standalone website without a reviewed, owner-authorized change. Never commit environment files, API secrets, database credentials, private client data, or confidential training/client materials to this public repository.
 
 ---
 
-Repository Purpose
-
-This repository contains SENZ digital projects, creative systems, prototypes, development files, and brand resources.
-
----
-
-Brand Statement
-
-«We make them clearer, sharper, and harder to ignore.»
-
-SENZ Strategic Communications
-Influence Through Clarity.
-
----
-
-© 2026 SENZ Strategic Communications
+© 2026 SENZ Strategic Communications and Digital Solutions

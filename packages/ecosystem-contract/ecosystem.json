@@ -2,8 +2,8 @@
   "$schema": "./ecosystem.schema.json",
   "repository": "masinlocandher-max/FMB-Ecosystem",
   "policy": {
-    "sourceControl": "One GitHub monorepo",
-    "deployment": "One independently configured Vercel project per application boundary",
+    "sourceControl": "This monorepo is authoritative only for applications listed in applications. SENZ is external at masinlocandher-max/Senz; apps/senz is historical. FMB News is external at masinlocandher-max/FMBNews.",
+    "deployment": "One independently configured Vercel project per active application boundary listed in applications. SENZ is excluded and publishes independently from masinlocandher-max/Senz. FMB News is excluded and deploys independently through Cloudflare from masinlocandher-max/FMBNews.",
     "data": "No production database, authentication tenant, service-role key, or private environment variable may be shared across FMB/Yoni, SENZ, and Cognita unless explicitly approved and documented."
   },
   "applications": {
@@ -22,25 +22,9 @@
         "FMB public website",
         "With love, FMB",
         "Yoni",
-        "FMB News",
         "FMB Music",
         "FMB eBooks",
         "Mabayani public pages"
-      ]
-    },
-    "senz": {
-      "workspace": "apps/senz",
-      "package": "@fmb/senz",
-      "vercelProject": "senz",
-      "domains": [
-        "www.senzpr.com",
-        "senzpr.com"
-      ],
-      "dataBoundary": "senz-business-client",
-      "owns": [
-        "SENZ public website",
-        "SENZ inquiries",
-        "SENZ business and client systems"
       ]
     },
     "cognita": {
@@ -57,6 +41,16 @@
         "Cognita learning application",
         "Cognita learner and institutional systems"
       ]
+    }
+  },
+  "externalApplications": {
+    "senz": {
+      "repository": "masinlocandher-max/Senz",
+      "productionBranch": "main",
+      "sourceRoot": ".",
+      "domains": ["www.senzpr.com", "senzpr.com"],
+      "publisher": "github-pages",
+      "legacyWorkspace": "apps/senz"
     }
   }
 }

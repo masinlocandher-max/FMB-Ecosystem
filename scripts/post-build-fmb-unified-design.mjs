@@ -1,12 +1,13 @@
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { withMicrositeExclusions } from './lib/standalone-microsites.mjs';
 
 const dist = path.resolve('dist');
 const cssHref = '/assets/css/fmb-unified-system.css?v=20260724-total-makeover-v1';
 const jsSrc = '/assets/js/fmb-unified-system.js?v=20260724-total-makeover-v1';
 const logoSrc = '/assets/images/fmbandco/fmbandco-primary-reversed.png';
 
-const excludedPrefixes = [
+const excludedPrefixes = withMicrositeExclusions([
   '_sites/',
   'app/',
   'api/',
@@ -14,7 +15,7 @@ const excludedPrefixes = [
   'admin/',
   'data/',
   'yoni/',
-];
+]);
 
 const excludedFiles = new Set([
   'admin.html',

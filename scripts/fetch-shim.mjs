@@ -112,7 +112,11 @@ globalThis.fetch = async function resilientBuildFetch(input, init = {}) {
   let response;
   try {
     response = await nativeFetch(input, { ...init, headers });
-    if (response.ok) return response;
+    const receivedType = response.headers.get('content-type') || '';
+    if (response.ok && receivedType.startsWith('image/')) return response;
+    if (response.ok) {
+      console.warn(`Remote image endpoint returned ${receivedType || 'an unknown content type'} for ${url}; using repository fallback.`);
+    }
   } catch (error) {
     console.warn(`Remote image request failed for ${url}: ${error?.message || error}`);
   }

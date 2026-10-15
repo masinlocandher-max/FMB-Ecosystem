@@ -124,22 +124,14 @@ home=replaceImage(home,'/assets/images/home/work/community-projects.svg',{
 home=replaceImage(home,'/assets/images/home/work/fmb-news.svg',{
   src:'/assets/images/news/subic-aeta-dumpsite-iwitness.jpg',width:800,height:533,alt:'FMB News reporting image from the Subic Aeta dumpsite investigation'
 });
-home=replaceImage(home,'/assets/images/home/work/fmb-music.svg',{
-  src:'/assets/images/music/fmb-ost-with-love-fmb-cover.png',width:1254,height:1254,alt:'With Love, FMB original soundtrack cover'
-});
-home=replaceImage(home,'/assets/images/home/work/fmb-ebooks.svg',{
-  src:'/assets/images/reading/07883274-1340-48DC-A112-C4AD44B5ABD1.png',width:1086,height:1448,alt:'Pride. Identity. Love. reading cover by Francine Marie Bautista'
-});
 await writeFile(homeFile,home,'utf8');
 
 const finalHome=await readFile(homeFile,'utf8');
 for(const required of [
   newGalleryPortrait,
   '/assets/images/volunteer/francine-leading-with-love-fmb.webp',
-  '/assets/images/news/subic-aeta-dumpsite-iwitness.jpg',
-  '/assets/images/music/fmb-ost-with-love-fmb-cover.png',
-  '/assets/images/reading/07883274-1340-48DC-A112-C4AD44B5ABD1.png'
+  '/assets/images/news/subic-aeta-dumpsite-iwitness.jpg'
 ]){
   if(!finalHome.includes(required))throw new Error(`Homepage final visual polish is missing ${required}`);
 }
-console.log('Applied the compact FMB gallery, real work imagery, and brand-specific logo surfaces.');
+console.log('Applied the compact FMB gallery, real work imagery, and brand-specific logo surfaces without retired Reading/Music homepage dependencies.');
