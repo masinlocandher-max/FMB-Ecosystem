@@ -32,7 +32,9 @@ for (let index = 0; index < files.length; index++) {
 }
 
 const forbiddenFmbNewsPaths = [
-  /^api\/news-/,
+  /^(?:apps\/withlovefmb\/)?api\/news-/,
+  /^scripts\/.*(?:fmb-?news|newsroom|morning-special)/i,
+  /^(?:apps\/withlovefmb\/)?assets\/(?:css|js)\/(?:fmb-?news|news-channel|news-center)/i,
   /^apps\/withlovefmb\/news\//,
   /^apps\/withlovefmb\/content\/news\//,
   /^apps\/withlovefmb\/\.fmb-brief-.*publish-trigger$/,
@@ -40,6 +42,16 @@ const forbiddenFmbNewsPaths = [
 for (const relative of relativeFiles) {
   if (forbiddenFmbNewsPaths.some(pattern => pattern.test(relative))) {
     errors.push(`FMB News must not be restored in FMB-Ecosystem: ${relative}. Use masinlocandher-max/FMBNews instead.`);
+  }
+}
+
+// Validate every hosting config, not only the root config.
+for (const relative of relativeFiles.filter(file => path.basename(file) === 'vercel.json')) {
+  const config = JSON.parse(await readFile(path.join(root, relative), 'utf8'));
+  for (const entry of [...(config.redirects || []), ...(config.rewrites || []), ...(config.routes || [])]) {
+    if ([entry.source, entry.src, entry.destination, entry.dest].some(value => typeof value === 'string' && /^\/(?:news|fmbnews)(?:\/|$)/i.test(value))) {
+      errors.push(`${relative} must not own newsroom routing: ${JSON.stringify(entry)}`);
+    }
   }
 }
 

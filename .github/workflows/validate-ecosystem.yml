@@ -25,6 +25,7 @@ jobs:
           ! grep -Eq '"validate:content"' package.json
           ! grep -Eq '"source"[[:space:]]*:[[:space:]]*"/(news|fmbnews)' vercel.json
           ! grep -Eq '"destination"[[:space:]]*:[[:space:]]*"/(news|fmbnews)' vercel.json
+          node tooling/check-deployment-boundaries.mjs
           echo "FMB News boundary clean: newsroom code and routing are absent from FMB-Ecosystem."
 
   validate-static-sites:

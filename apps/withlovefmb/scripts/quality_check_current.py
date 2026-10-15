@@ -19,7 +19,6 @@ ROOT = Path(__file__).resolve().parents[1]
 CRITICAL_HTML = (
     "index.html",
     "aboutfmb/index.html",
-    "news/index.html",
     "app/index.html",
     "fmbandco/index.html",
     "gethelp/index.html",
