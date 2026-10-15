@@ -18,7 +18,7 @@
     },
     "applications": {
       "type": "object",
-      "minProperties": 3,
+      "minProperties": 2,
       "additionalProperties": {
         "type": "object",
         "required": ["workspace", "package", "vercelProject", "domains", "dataBoundary", "owns"],
@@ -40,6 +40,27 @@
             "uniqueItems": true,
             "items": { "type": "string", "minLength": 1 }
           }
+        }
+      }
+    },
+    "externalApplications": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["repository", "productionBranch", "sourceRoot", "domains", "publisher", "legacyWorkspace"],
+        "additionalProperties": false,
+        "properties": {
+          "repository": { "type": "string", "minLength": 1 },
+          "productionBranch": { "type": "string", "minLength": 1 },
+          "sourceRoot": { "type": "string", "minLength": 1 },
+          "domains": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "publisher": { "type": "string", "minLength": 1 },
+          "legacyWorkspace": { "type": "string", "pattern": "^apps/" }
         }
       }
     }
