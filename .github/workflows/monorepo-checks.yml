@@ -10,17 +10,17 @@ permissions:
   contents: read
 
 jobs:
-  content-schema:
+  source-boundary:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - run: node scripts/validate-content.mjs
+      - run: node tooling/check-deployment-boundaries.mjs
 
   boundaries:
-    needs: content-schema
+    needs: source-boundary
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -34,7 +34,7 @@ jobs:
       - run: node --check apps/senz/api/handler.js
 
   static-builds:
-    needs: content-schema
+    needs: source-boundary
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -48,7 +48,7 @@ jobs:
       - run: test -f apps/senz/dist/index.html
 
   cognita-build:
-    needs: content-schema
+    needs: source-boundary
     runs-on: ubuntu-latest
     defaults:
       run:
