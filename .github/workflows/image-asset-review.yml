@@ -43,7 +43,7 @@ jobs:
         run: npm run build
       - name: Preserve image sources for failed-run review
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: fmb-image-review-${{ github.run_id }}
           path: |
