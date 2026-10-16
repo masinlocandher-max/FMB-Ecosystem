@@ -114,6 +114,27 @@
 
   installYoniRegistrationGuard();
 
+  function installYoniTruthfulnessGuard(){
+    const wallForm=document.getElementById('wallForm');
+    if(!wallForm)return;
+    const wallButton=wallForm.querySelector('button[type="submit"]');
+    const wallStatus=document.getElementById('wallStatus');
+
+    if(wallButton){
+      wallButton.disabled=true;
+      wallButton.setAttribute('aria-disabled','true');
+    }
+
+    wallForm.addEventListener('submit',event=>{
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if(wallStatus){
+        wallStatus.textContent='Community posting is not active. Nothing was submitted or transmitted.';
+        wallStatus.classList.add('visible');
+      }
+    },true);
+  }
+
   const YONI_ROOT='/app/assets/yoni/';
   const officialHero=YONI_ROOT+'yoni-hero.webp';
   const officialBackground=YONI_ROOT+'yoni-theme-background.webp';
@@ -160,6 +181,11 @@
     await loadScript(`/assets/js/yoni-experience-loader.js?v=${experienceVersion}`,'data-yoni-final-loader');
   };
 
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',loadExperience,{once:true});
-  else loadExperience();
+  const finishYoniSetup=()=>{
+    installYoniTruthfulnessGuard();
+    loadExperience();
+  };
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',finishYoniSetup,{once:true});
+  else finishYoniSetup();
 })();
